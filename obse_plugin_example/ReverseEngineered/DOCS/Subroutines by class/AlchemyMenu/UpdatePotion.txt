@@ -1,0 +1,269 @@
+void AlchemyMenu::UpdatePotion() {
+   auto ebx = esp20 = this;
+   auto esp34[4] = { nullptr, nullptr, nullptr, nullptr };
+   this->potion->magicItem.list.Clear();
+   auto& eax = this->effectList;
+   auto  esi = eax->childList.start;
+   if (esi) {
+      do {
+         auto ecx = esi->data;
+         esi = esi->next;
+         if (!ecx)
+            continue;
+         ecx->Dispose(true); // pointers get cleared later
+      } while (esi);
+   }
+   ebp = &this->effects;
+   if (ebp->next) { // at 0x00593D5A
+      do {
+         auto eax = ebp->next;
+         auto esi = eax->next;
+         delete eax; // FormHeap_Free
+         ebp->next = esi;
+      } while (esi);
+   }
+   ebp->data = nullptr; // effect list is now reset
+   auto esi = this->effectList;
+   auto edi = esi->childList.start;
+   auto esi = &esi->childList;
+   auto eax = nullptr;
+   if (edi) {
+      do {
+         eax = edi;
+         edi = edi->next;
+         esi->FreeNode(eax); // pointers from above are now gone
+      } while (edi);
+      eax = 0;
+   }
+   esi->numItems = 0;
+   esi->start = nullptr;
+   esi->end = nullptr;
+   this->effectList->HandleChangeFlags(); // call at 0x00593DB0
+   esi = 0;
+   auto esp44 = 0;
+   ExtraContainerChanges::EntryData** ebx = &this->ingreds;
+   auto revealedEffectCount = AlchemySkillLevelToRevealedEffectCount((*g_thePlayer)->GetSkillLevel()); // esp28
+   auto esp24 = 0;
+   auto esp2C = ebx;
+   do { // at 0x00593DE3
+      auto ecx = esp2C;
+      auto eax = *ecx;
+      if (!eax)
+         continue;
+      eax = OBLIVION_CAST(eax->type, TESBoundObject, MagicItem);
+      edx = revealedEffectCount; // revealed effect count
+      esp44++;
+      esp34[edx] = eax;
+      auto eax = esp2C;
+      auto ecx = *eax;
+      ebx = ecx->type;
+      edi = 0;
+      if (!ebx)
+         continue;
+      ecx = 0;
+      eax = &ebx->magicItem.list.effectList; // at 00593E2D
+      esp14 = ecx;
+      if (eax) {
+         do {
+            if (eax->effectItem)
+               ecx++;
+         } while (eax = eax->next);
+         esp14 = ecx;
+      }
+      if (ecx <= 0)
+         continue;
+      do { // at 0x00593E4F
+         if (edi >= revealedEffectCount) // effect not revealed
+            continue;
+            esi = &ebx->magicItem.list;
+            eax = esi->GetEffectItemByIndex(edi);
+            ecx = ebp;
+            if (ecx) {
+               do {
+                  if (ecx->data == eax)
+                     continue 3; // continue outermost loop
+               } while (ecx = ecx->next);
+            }
+            esi = esi->GetEffectItemByIndex(edi);
+            if (!esi)
+               continue 2; // continue outermost loop
+            if (!*ebp) {
+               *ebp = esi;
+               continue 2; // continue outermost loop
+            }
+            eax = new AlchemyMenu::EffectEntry;
+            eax->data = ebp->data;
+            eax->next = ebp->next;
+            ebp->next = eax;
+            ebp->data = esi;
+      } while (++edi < esp14); // at 0x00593EB6
+   } while (++esp24 < 4, esp2C += 4); // at 0x00593ECB
+   auto revealedEffectCount = AlchemySkillLevelToRevealedEffectCount((*g_thePlayer)->GetSkillLevel(0x13)); // esp18
+   auto esp1C = 0; // number of new items added to an EffectItemList
+   eax = (*g_thePlayer)->GetSkillMasteryLevelBySkill(/*Alchemy AV*/ 0x13);
+   if (eax >= /*Master*/ 4 && esp44 == 1) { // at 0x00593F0E
+      ecx = 0;
+      eax = 0;
+      do {
+         if (esp34[eax]) {
+            ecx = esp34[eax];
+            break;
+         }
+      } while (++eax < 4);
+      EffectItem* esi = ecx->list.GetEffectItemByIndex(0);
+      if (esi) {
+         eax = new EffectItem(esi); // copy-constructor
+         edx = this;
+         esp98 = -1;
+         this->potion->magicItem.list.AddEffectItem(eax);
+         esp1C = 1;
+      }
+   } else { // at 0x00593F8F
+      //
+      // Outer two for-loops are unrolled in the compiled code.
+      //
+      for(UInt8 aIndex = 0; aIndex < 4; aIndex++) {
+         auto aMagic = esp34[aIndex];
+         if (aMagic) {
+            for(UInt8 bIndex = aIndex + 1; bIndex < 4; bIndex++) {
+               auto bMagic = esp34[bIndex];
+               auto i = 0;
+               do {
+                  auto iEffect = aMagic->list.GetEffectItemByIndex(i);
+                  auto j = 0;
+                  do {
+                     auto jEffect = bMagic->list.GetEffectItemByIndex(j);
+                     if (!iEffect || !jEffect)
+                        continue;
+                     if (!iEffect->SameAlchemyEffectAs(jEffect))
+                        continue;
+                     auto copied = new EffectItem(iEffect); // copy
+                     if (this->potion->magicItem.list.HasEffectMatchingAlch(copied->effectCode, copied->actorValueOrOther))
+                        continue;
+                     this->potion->magicItem.list.AddEffectItem(copied);
+                     esp1C++;
+                  } while (++j < revealedCount);
+               } while (++i < revealedCount);
+            }
+         }
+      }
+   }
+   auto ebp = this; // at 0x0059485E
+   ExtraContainerChanges::EntryData* ebx = this->apparatus[0];
+   bool  esp20 = 0;
+   float esp28 = /*SInt8*/ GetFormQuality(edx->type);
+   float esp48 = 0.0F;
+   float esp44 = 0.0F;
+   float revealedEffectCount = 0.0F;
+   if (this->potion->magicItem.list.HasNonPoisonousEffects()) // at 0x005948A3
+      esp20 = true;
+   if (ExtraContainerChanges::EntryData* eax = this->apparatus[1]) {
+      esp48 = /*SInt8*/ GetFormQuality(eax->type);
+   }
+   if (ExtraContainerChanges::EntryData* eax = this->apparatus[3]) {
+      esp44 = /*SInt8*/ GetFormQuality(eax->type);
+   }
+   if (ExtraContainerChanges::EntryData* eax = this->apparatus[2]) {
+      esp18 = /*SInt8*/ GetFormQuality(eax->type);
+   }
+   esi = 0;
+   float esp14 = (*g_thePlayer)->GetLuckModifiedSkill(0x13);
+   this->luckModifiedSkill = esp14; // at 0x00594930
+   float esp24 = ApplyMortarAndPestleMult(esp28, this->luckModifiedSkill);
+   size_t ebx = 0;
+   do { // at 0x0059494F
+      float esp2C = 1.0F; // duration
+      float esp30 = 1.0F; // magnitude
+      auto edi = this->potion->magicItem.list.GetEffectItemByIndex(ebx);
+      if (edi) { // at 0x0059496C
+         EffectSetting* ecx = edi->setting;
+         bool esp28 = bool eax = edi->IsHostile();
+         if (eax && this->apparatus[1]) {
+            esi = this->apparatus[2] ? 3 : 0;
+            esi += 2;
+         } else {
+            if (this->apparatus[1] && this->apparatus[3]) {
+               esi = this->apparatus[2] ? 3 : 0;
+               esi += 1;
+            } else {
+               if (this->apparatus[2])
+                  esi = 3;
+            }
+         }
+         float esp14 = ecx->baseCost; // at 0x005949CD
+         ecx = ecx->effectFlags;
+         //
+         // These next funcs use, as their args:
+         //  - Float*: Out var(s)
+         //  - Float:  EffectSetting base cost
+         //  - Float:  Result of a ApplyMortarAndPesleResult call
+         //  - UInt8:  Unknown enum:
+         //
+         //                   |  EFFECT  | APPARATUS 1 | APPARATUS 2 | APPARATUS 3
+         //            Result | Hostile? |   Alembic?  | Calcinator? |   Retort?     // according to OBSE documentation
+         //    --------------+----------+-------------+-------------+------------
+         //                 1 |       No |   Either/Or |        None |      Exists
+         //                 4 |       No |   Either/Or |      Exists |        None
+         //     Previous or 0 |      Yes |        None |        None |   Either/Or
+         //                 3 |      Yes |        None |      Exists |   Either/Or
+         //                 2 |      Yes |      Exists |        None |   Either/Or
+         //                 5 |      Yes |      Exists |      Exists |   Either/Or
+         //
+         //  - Bool:   Whether the effect is hostile (use EffectItem::IsHostile)
+         //  - Float:  Quality of apparatus[3]
+         //  - Float:  Quality of apparatus[1]
+         //  - Float:  Quality of apparatus[2]
+         //  - Bool:   Whether the effect's containing list has any non-hostile effects (use EffectItemList::HasNonPoisonousEffects). If false, result is a poison.
+         //
+         if (ecx & kEffect_NoDuration == 0 && ecx & kEffect_NoMagnitude == 0) { // at 0x005949E0
+            ComputeType1PotionEffectStrength(&esp30, &esp2C, esp14, esp24, esi, esp28, esp44, esp48, esp18, esp20);
+         } else { // at 0x00594A2B
+            if (ecx & kEffect_NoDuration == 0 && ecx->kEffect_NoMagnitude) { // at 0x00594A3C
+               ComputeType2PotionEffectStrength(&esp2C, esp14, esp24, esi, esp28, esp44, esp48, esp18, esp20);
+            } else {
+               ComputeType3PotionEffectStrength(&esp30, esp14, esp24, esi, esp28, esp44, esp48, esp18, esp20);
+            }
+         }
+         esp2C = round(esp2C); // inlined // duration
+         esp30 = round(esp30); // inlined // magnitude
+         edi->SetDurationIfPossible(max((SInt32)esp2C, 1)); // at 0x00594B47
+         edi->SetMagnitudeIfPossible(max((SInt32)esp30, 1)); // at 0x00594B62
+         edi->SetAreaIfPossible(0);
+         this->TES4_00593B20(edi, ebx); // creates a templated list item, probably // ebx is probably our listindex
+         if (this->unkA4 != 2 && this->unkA4 != 3) { // at 0x00594B97
+            if (!ebx) { // name the potion based on its first effect, right? ebx == 0?
+               const char* esp4C;
+               edi->GetName(&esp4C);
+               this->potionNameInputState->SetStringsTo(&esp4C);
+               this->unkA4 = 1;
+               this->UpdateTextField();
+            }
+         } else { // at 0x00594BC7
+            eax = this->nameText->GetStringTileValue(kTileValue_string);
+            this->potion->magicItem.name.Replace_MinBufLen(eax, 0);
+         }
+         this->createButton->UpdateFloat(kTileValue_user1, 2.0F);
+      } else { // at 0x00594BFE
+         if (!ebx) // If the first magic effect in the potion's list is invalid, assume they all are and abort?
+            break;
+      }
+      this->potion->goldValue = (SInt32) (esp24 * GMST:fPotionGoldValueMult);
+      this->potion->moreFlags |= kAlchemy_NoAutocalc;
+      if (++ebx >= esp1C)
+         //
+         // All effects added to the potion have been processed?
+         //
+         return;
+   } while (true); // at 0x00594C2F
+   //
+   // We will only reach this point if we run into some sort of value while running through the effects 
+   // (or if there are no effects?) causing us to break from the loop without returning
+   //
+   if (this->unkA4 != 2) { // at 0x00594C3B // unkA4 is some sort of name entry state enum, e.g. are we default, are we invalid, etc., but I don't know exactly what the values mean
+      this->potionNameInputState.SetStringsTo("Name Potion");
+      this->UpdateTextField();
+      this->unkA4 = 0;
+   }
+   this->createButton->UpdateFloat(kTileValue_user1, 1.0F); // disable the button
+   return;
+};

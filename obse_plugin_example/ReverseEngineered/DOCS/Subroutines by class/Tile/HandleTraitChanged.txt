@@ -1,0 +1,110 @@
+Tile* Tile::HandleTraitChanged(unsigned int traitID, float fValue, const char* sValue) {
+   auto esi = traitID
+   auto edi = this;
+   switch (traitID) {
+      case kTileValue_x:
+      case kTileValue_y:
+      case kTileValue_depth:
+         if (traitID == kTileValue_depth) { // at 0x0058B562
+            auto eax = this;
+            float absoluteDepth = fValue; // esp + 0x14
+            if (auto ecx = eax->parent) {
+               auto ebx = ecx;
+               do {
+                  if (!ebx->parent)
+                     break;
+                  auto edx = eax->GetTrait(kTileValue_locus); // inlined
+                  if (!edx || 2.0F != edx->num)
+                     continue;
+                  float depthMod = (auto edx = eax->GetTrait(kTileValue_depth)) ? edx->num : 0.0F;
+                  absoluteDepth += depthMod;
+               } while (ebx = (eax = ebx)->parent);
+            }
+            // at 0x0058B5EF
+            auto menu = this->GetContainingMenu();
+            auto rootTile = this;
+            do {
+               auto ecx = rootTile->parent;
+               if (!ecx || !ecx->parent)
+                  break;
+               rootTile = ecx;
+            } while (rootTile);
+            if (menu && rootTile && rootTile != this && menu->maxDepth < absoluteDepth)
+               menu->maxDepth = (SInt32) absoluteDepth;
+         }
+         if (this->GetFloatTraitValue(kTileValue_clipwindow) >= 2.0F) // at 0x0058B644
+            this->flags |= kTileFlag_ChangedClipwindow; // 0x00000100
+         this->flags |= kTileFlag_ChangedCoords;
+         return this;
+   }
+   if (this->GetTypeID == 0x387) { // text // at 0x0058B331
+      switch (traitID) {
+         case kTileValue_wrapwidth:
+         case kTileValue_wraplimit:
+         case kTileValue_wraplines:
+         case kTileValue_pagenum:
+         case kTileValue_isHTML:
+         case kTileValue_font:
+            this->flags |= kTileFlag_ChangedText;
+            return this;
+      }
+   }
+   switch (traitID) { // at 0x0058B36F
+      case kTileValue_width:
+      case kTileValue_height:
+      case kTileValue_cropoffsetx:
+      case kTileValue_cropoffsety:
+         if (this->GetTileID() == TileImage::kID || this->GetTileID() == 0x385) {
+            // jumped to 0x0058B52A
+            if (this->GetFloatTraitValue(kTileValue_clipwindow) >= 2.0F)
+               this->flags |= 0x100;
+            this->flags |= kTileFlag_ChangedSize; // 0x00000010
+            return this;
+         }
+   }
+   if (traitID == 0xFA4) { // clipwindow // at 0x0058B3B7
+      if (this->GetTileID() != TileImage::kID) { // image
+         if (this->GetTileID() != 0x385) return nullptr;
+      }
+      this->flags |= kTileFlag_ChangedClipwindow; // 0x00000100
+      return this;
+   } // at 0x0058B3F2
+   if (traitID == kTileValue_clips) {
+      if (this->GetTileID() != TileImage::kID && this->GetTileID() != 0x385) {
+         if (this->GetTileID() != TileText::kID)
+            return nullptr;
+      }
+      this->flags |= kTileFlag_ChangedClips; // 0x00000200
+      return this;
+   }
+   // at 0x0058B443
+   switch (traitID) {
+      case kTileValue_visible:
+      case kTileValue_listclip:
+         this->flags |= kTileFlag_ChangedVisible; // 0x00000004
+         return this;
+      case kTileValue_alpha:
+      case kTileValue_red:
+      case kTileValue_green:
+      case kTileValue_blue:
+         this->flags |= kTileFlag_ChangedColor; // 0x00000008
+         return this;
+   }
+   if (traitID == filename) { // at 0x0058B48B
+      if (this->GetTileID() == TileImage::kID && this->GetStringTraitValue(traitID)) {
+         this->flags |= kTileFlag_ChangedImage; // 0x00000020
+         return this;
+      }
+      // at 0x0058B4B5
+      if (this->GetTileID() == Tile3D::kID && this->GetStringTraitValue(0xFE6)) { // NIF
+         this->flags |= kTileFlag_Changed3DModel; // 0x00000040
+         return this;
+      }
+   }
+   // at 0x0058B4E1
+   Menu* esi;
+   if (traitID == kTileValue_id && esi = this->GetContainingMenu()) {
+      esi->HandleTileIDChange((int) fValue, this);
+   }
+   return nullptr; // at 0x0058B50A
+};

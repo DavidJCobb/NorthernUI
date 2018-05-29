@@ -1,0 +1,278 @@
+void InterfaceManager::HandleNavigationKeypress(UInt32 keypress) {
+   auto  edi   = this;
+   auto  input = Singleton00B33398::GetInstance()->unk20;
+   auto  esp10 = this;  // later esp14 due to a push
+   auto  esp0C = input; // later esp10 due to a push
+   Menu* ebx   = Unknown00B3A708::GetInstance()->GetTopmostMenuByDepth();
+   Tile* esi   = ebx ? ebx->tile : nullptr;
+   Tile* esp14 = esi; // later esp18 due to a push
+   SInt32 esp2C;
+   if (!ebx)
+      return;
+   // push ebp;
+   auto ebp = keypress;
+   if (ebx->HandleNavigationInput(keypress, 1.0F))
+      return;
+   if (!esi || !keypress)
+      return;
+   if (keypress != 1 && keypress != 2 && keypress != 4 && keypress == 3) { // at 0x00580C2D
+      auto ebx = this->menuRoot->childList.start;
+      if (ebx) {
+         do {
+            Tile* esi = ebx->data;
+            ebx = ebx->next;
+            if (!esi)
+               continue;
+            auto edi = esi->GetContainingMenu();
+            if (!edi)
+               continue;
+            if (!esi->NiNodeIsNotCulled())
+               continue;
+            esp2C = 1;
+            if (edi->HandleNavigationInput(1, 1.0F)) {
+               input->noop(1);
+               return;
+            }
+         } while (ebx);
+      }
+      if (keypress == 5) { // Xbox start button // at 0x00580C9A
+         auto singleton = Unknown00B3A708::GetInstance();
+         if (!singleton->TES4_005878B0(0x3F5))
+            if (!singleton->TES4_005878B0(0x414))
+               if (!singleton->TES4_005878B0(0x3EF))
+                  if (*(bool*)(0x00B143AE))
+                     ShowPauseMenuIfPermitted();
+      }
+      switch (keypress) {
+         case 9: // at 0x00580CF7
+            esp2C = kTileValue_xbuttona;
+            break;
+         case 0xA: // at 0x00580D28
+            esp2C = kTileValue_xbuttonb;
+            break;
+         case 0xB:
+            esp2C = kTileValue_xbuttonx;
+            break;
+         case 0xC:
+            esp2C = kTileValue_xbuttony;
+            break;
+         case 0xE:
+            esp2C = kTileValue_xbuttonrt;
+            break;
+         case 0xD:
+            esp2C = kTileValue_xbuttonlt;
+            break;
+         case 0x10:
+            esp2C = kTileValue_xbuttonrb;
+            break;
+         case 0xF:
+            esp2C = kTileValue_xbuttonlb;
+            break;
+         case 5:
+            esp2C = kTileValue_xbuttonstart;
+            break;
+      }
+      auto esi = this->altActiveTile; // at 0x00580D9B
+      if (!esi) {
+         esi = this->activeTile;
+         if (!esi)
+            esi = esp14;
+      }
+      do {
+         if (esi->NiNodeIsNotCulled())
+            break;
+      } while (esi = esi->parent);
+      if (!esi)
+         return;
+      //
+      // esi == active tile, if visible, or its nearest visible ancestor
+      //
+      auto   ecx = keypress; // at 0x00580DD7
+      SInt32 targetTrait; // esp18
+      Tile*  edi = esi->ResolveTraitReference(ecx, &targetTrait);
+      Tile*  ebx = esi;
+      if (!edi) { // at 0x00580DEE
+         //
+         // We were unable to resolve the trait reference at esi. Traverse up the 
+         // tile hierarchy and keep trying until we manage to resolve the trait 
+         // reference.
+         //
+         do {
+            if (!ebx)
+               continue;
+            ebx = ebx->parent;
+            if (!ebx)
+               continue;
+            edi = ebx->ResolveTraitReference(keypress, &targetTrait);
+         } while (edi);
+      }
+      if (keypress == -2) {
+         edi = esi;
+         keypress = 9;
+      }
+      if (edi && edi->NiNodeIsNotCulled()) { // at 0x00580E2F
+         //
+         // Successfully resolved the trait reference, and it points to a visible tile.
+         //
+         if (edi->GetFloatTraitValue(kTileValue_target) == 2.0F) {
+            if (targetTrait == kTileValue_clicked || targetTrait == kTileValue_shiftclicked) {
+               //
+               // Keyboard navigation wants to fire a click. Fire it, and then return:
+               //
+               if (targetTrait != kTileValue_clicked)
+                  this->unk118 |= 4; // set modifier key state
+               if (SInt32 eax = edi->GetFloatTraitValue(kTileValue_clicksound))
+                  PlayUIClicksound(eax);
+               float a = edi->GetFloatTraitValue(kTileValue_clickcountbefore);
+               edi->UpdateFloat(kTileValue_clickcountafter, a + 1);
+               edi->UpdateFloat(kTileValue_clicked, 1.0);
+               edi->UpdateFloat(kTileValue_clicked, 0.0);
+               auto b = edi->GetContainingMenu();
+               SInt32 eax = edi->GetFloatTraitValue(kTileValue_id);
+               b->HandleMouseUp(eax, esi);
+               if (targetTrait == kTileValue_shiftclicked)
+                  this->unk118 &= ~4; // clear modifier key state
+               esi = esp10;
+               return;
+            }
+         }
+      }
+      if (keypress != 9) // Xbox A button or -2
+         return; // at 0x00580F44
+      //
+      // ...
+      //
+      return;
+   }
+   // at 0x0058100F
+   //
+   // Branch for directional inputs, i.e. arrow keys, D-Pad, joystick
+   //
+   this->unkB9 = 0;
+   SInt32 targetTrait = kTileValue_mouseover; // esp10
+   SInt32 keynavTrait = 0; // esp2C
+   switch (keypress) { // at 0x00581029
+      case 1:
+         keynavTrait = kTileValue_xup;
+         break;
+      case 2:
+         keynavTrait = kTileValue_xdown;
+         break;
+      case 4:
+         keynavTrait = kTileValue_xleft;
+         break;
+      case 3:
+         keynavTrait = kTileValue_xright;
+         break;
+   }
+   Tile* esi = this->altActiveTile; // at 0x00581060
+   Tile* currentKeynav = esi;
+   if (!esi) { // at 0x0058106C
+      //
+      // No tile has focus from keyboard navigation.
+      //
+      Tile* esi = this->TES4_0057DA90(&currentKeynav, nullptr);
+      this->TES4_0057F9F0(esi, kTileValue_mouseover, 0);
+      if (esi)
+         return;
+      esi = esp18->ResolveTraitReference(keynavTrait, &targetTrait);
+      if (!esi)
+         return; // at 0x005810B7
+      //
+      // ...
+      //
+      return;
+   }
+   Tile* edi = esi->ResolveTraitReference(keynavTrait, &targetTrait); // near 0x00581151
+   ebx = 0;
+   //
+   // esp20: List of all found tiles that DO NOT meet all three of the following 
+   // conditions: visible; targetable, and xdefault == -99. The tile that our 
+   // trait reference resolves to is among those tested against these conditions. 
+   // Moreover, the tile containing the trait reference is added to the list 
+   // without being vetted.
+   //
+   LinkedPointerList<Tile> esp20;
+   esp20.Prepend(esi);
+   if (edi) { // at 0x0058117A
+      do {
+         if (esp20.Contains(edi)) // inline-compiled
+            break;
+         if (edi->GetFloatTraitValue(kTileValue_visible) != 1.0) { // at 0x005811AA
+            if (edi->GetFloatTraitValue(kTileValue_target) == 2.0F) {
+               if (edi->GetFloatTraitValue(kTileValue_xdefault) != -99.0F)
+                  break;
+            }
+         }
+         esp20.Prepend(edi);
+         if (edi->GetFloatTraitValue(kTileValue_xlist) == 108.0F) { // &xlist;
+            //
+            // The current tile has been flagged as a list container. Look at its 
+            // children.
+            //
+            ebp = edi->childList.end; // at 0x00581205
+            ebx = 0;
+            Tile* esp18 = nullptr; // child with the largest positive xdefault value
+            if (ebp) {
+               do {
+                  esi = ebp->data;
+                  ebp = ebp->prev;
+                  if (esi->NiNodeIsNotCulled()) {
+                     if (esi->GetTrait(kTileValue_xdefault)) {
+                        SInt32 eax = esi->GetFloatTraitValue(kTileValue_xdefault);
+                        if (eax > ebx) {
+                           ebx = eax;
+                           esp18 = esi;
+                        }
+                     }
+                  }
+               } while (ebp);
+               if (esp18) {
+                  edi = esp18;
+                  continue;
+               }
+            }
+            edi = edi->ResolveTraitReference(keynavTrait, &targetTrait);
+         } else {
+            //
+            // The current tile was not flagged as a list container.
+            //
+            edi = edi->ResolveTraitReference(keynavTrait, &targetTrait);
+         }
+      } while (edi); // at 0x00581282
+      //
+      // ebx   == highest found xdefault value
+      // esp18 == Tile* with that xdefault value
+      // edi   == any Tile* that we ended up looking at twice, or nullptr
+      //
+      if (edi && esp20.Contains(edi)) { // at 0x0058129A
+         Tile* keep = edi;
+         edi = nullptr;
+         if (keep->GetFloatTraitValue(kTileValue_visible) != 1.0F) {
+            if (keep->GetFloatTraitValue(kTileValue_target) == 2.0F) {
+               if (keep->GetFloatTraitValue(kTileValue_xdefault) != -99.0F)
+                  edi = keep;
+      }
+   }
+   esp20.~LinkedPointerList(); // at 0x005812E9
+   if (edi) { // at 0x005812F4
+      if (edi != currentKeynav) {
+         //
+         // Play mouseover sound:
+         //
+         if (targetTrait == kTileValue_mouseover) {
+            if (Singleton00B33398::Unk24* ecx = Singleton00B33398::GetInstance()->unk24) { // sound manager
+               Singleton00B33398::Unk24::Sound* esi = ecx->TES4_006ADE50("UIMenuFocus", 0x121, 1);
+               if (esi) { // at 0x00581327
+                  esi->TES4_006B7190(0);
+                  esi->~Sound();
+                  FormHeap_Free(esi);
+               }
+            }
+         }
+      }
+      this->TES4_0057F9F0(edi, targetTrait, keynavTrait);
+      return;
+   }
+   this->TES4_0057F9F0(currentKeynav, targetTrait, keynavTrait);
+}

@@ -1,0 +1,333 @@
+//
+// Function aligns the stack to eight bytes and uses SEH.
+//
+bool Tile::HandleChangeFlags() {
+   auto esi = this;
+   auto ecx = this->flags;
+   bool esp15 = false; // result bool?
+   if (!ecx)
+      return false;
+   if (!this->renderedNode && (this->flags & kTileFlag_ChangedClips)) { // at 0x0058E8BF
+      bool ebx = this->GetFloatTraitValue(kTileValue_clipwindow) >= 2.0F;
+      if (this->GetTypeID() == 0x386) { // image
+		 //
+		 // Here, TileImage co-opts the text changeflag to force its rendered node to 
+		 // be rebuilt in the next branch.
+		 //
+         if (ebx) {
+            if (!this->unk48)
+               this->flags |= kTileFlag_ChangedText;
+         } else {
+            if (this->unk48)
+               this->flags |= kTileFlag_ChangedText;
+         }
+      }
+   }
+   if (this->flags & kTileFlag_ChangedText) { // at 0x0058E90A
+	  //
+	  // This branch runs if:
+	  //  - The tile is a TileText and any of its text properties have changed.
+	  //  - The tile is a TileImage, it has no rendered node, and its clip status has changed
+	  //  - The tile is newly-created (Tile::Unk_01 sets the "text" changeflag to ensure a rendered node is generated)
+	  //
+      if (this->GetContainingMenu()) {
+         if (this->GetContainingMenu()->GetID() == 0x3EF) // LoadingMenu
+            TES4_00578E00();
+      }
+      this->DiscardRenderedNode();
+      NiNode* eax = this->CreateRenderedNode(); // Tile virtual method 02
+      if (eax) {
+         esp15 = true;
+         if (this->flags & kTileFlag_ChangedText)
+            this->flags = this->flags xor kTileFlag_ChangedText; // toggle flag 2
+      }
+   }
+   if (this->flags & 0x80 && this->unk28) { // animated traits
+      do {
+         auto edi = this->unk28;
+         if (!edi)
+            continue;
+         bool loop = false;
+         do {
+            if (edi->TES4_0058D960()) {
+               loop = true;
+               break;
+            }
+            edi = edi->unk14;
+         } while (edi);
+         if (!loop)
+            break;
+      } while (edi);
+      //
+      // Note that we DON'T clear the changeflag in this case.
+   }
+   NiNode* edi;
+   if (this->flags & kTileFlag_ChangedVisible && edi = this->renderedNode) { // at 0x0058E993
+      bool eax;
+      if (this->GetFloatTraitValue(kTileValue_visible) != 1.0F) {
+         eax = this->GetFloatTraitValue(kTileValue_listclip) == 2.0F;
+      } else
+         eax = true;
+      if (eax) {
+         edi->m_flags |= NiNode::kFlag_AppCulled;
+      } else {
+         edi->m_flags &= ~NiNode::kFlag_AppCulled; // bitwise NOT
+      }
+      esp15 = true;
+      if (this->flags & kTileFlag_ChangedVisible) { // redundant; inlined?
+         this->flags = this->flags xor kTileFlag_ChangedVisible;
+      }
+   }
+   //
+   bool ebx;
+   bool esp16;
+   NiNode* eax;
+   if (eax = this->renderedNode) {
+      ebx = esp16 = eax->m_flags & NiNode::kFlag_AppCulled;
+   } else {
+      ebx = esp16 = true;
+   }
+   if (eax) { // at 0x0058EA0E
+      do {
+         if (ebx)
+            break;
+         eax = eax->m_parent;
+         if (!eax)
+            break;
+         ebx = esp16 = eax->m_flags & NiNode::kFlag_AppCulled;
+      } while (true);
+   }
+   //
+   // ebx == esp16 == true if the tile's NiNode or any of its ancestors are invisible
+   //
+   bool esp17 = this->GetTypeID() == 0x386; // is image
+   UInt8 eax = InterfaceManager_GetSingleton(0, 1)->unkB8;
+   if (eax && ebx) { // IM::unkB8 && tile's node is hidden
+      NiNode* eax = this->renderedNode;
+      NiAVObject* edi;
+      if (eax->m_children.firstFreeEntry <= 0)
+         edi = nullptr;
+      else
+         edi = eax->m_children.data[0];
+      if (this->GetTypeID() == 0x386 && edi) { // is image
+         NiTexturingProperty* eax = edi->GetPropertyByType(NiTexturingProperty::kType);
+         if (eax) {
+            eax->SetFirstMapTexture(nullptr);
+            this->flags |= kTileFlag_ChangedImage;
+         }
+      }
+   }
+   NiNode* ecx;
+   if (esp17 && (this->flags & kTileFlag_ChangedImage) && (ecx = this->renderedNode)) { // at 0x0058EAB4
+      if (!ebx || *(UInt8)(0x00B3B0A2)) { // rendered node isn't culled || unknown byte is truthy
+         auto eax = this->renderedNode->GetChildByIndex(0);
+         if (eax) {
+            NiTexturingProperty* ebx = eax->GetPropertyByType(NiTexturingProperty::kType);
+            if (ebx) {
+               NiPointer<NiTexture> esp1C(nullptr);
+               auto esp68 = 0;
+               edi = this->GetStringTraitValue(kTileValue_filename);
+               if (edi) { // at 0x0058EB04
+                  NiPointer<void> esp34;
+                  float a = this->GetFloatTraitValue(kTileValue_zoom);
+                  float* ebp = &this->unk40;
+                  NiPointer<NiTexture> eax = TES4_00591360(&esp34, edi, BSStringT(this->name.m_data), ebp, a, NiPointer<NiNode>(this->unk44));
+                  UInt8 esp68 = 2;
+                  esp1C.CopyFromNiPointer(eax);
+                  esp68 = 0;
+                  esp34.DecRef();
+                  NiTexture* edi = esp1C.data;
+                  if (edi) { // at 0x0058EB7E
+                     ebx->SetFirstMapTexture(edi);
+                     ebx->SetFirstMapClampMode(this->GetFloatTraitValue(kTileValue_tile) >= 2.0F ? 3 : 0);
+                     float esp18 = this->GetFloatTraitValue_kTileValue_zoom);
+                     auto eax = this->GetStringTraitValue(kTileValue_filename);
+                     BSStringT esp2C(eax);
+                     esp68 = 3;
+                     //
+                     // Begin: code to update the filewidth and fileheight traits.
+                     //
+                     if (this->GetFloatTraitValue(kTileValue_tile) >= -1.0) { // at 0x0058EBF4
+                        BSStringT* x = &esp2C;
+                        if (x->m_data && x->Length() && !x->TES4_005755D0(" ")) {
+                           float esp38 = (float)edi->GetWidth() / *ebp;
+                           this->UpdateFloat(kTileValue_filewidth, esp38);
+                           float esp38 = (float)edi->GetHeight() / *ebp;
+                           this->UpdateFloat(kTileValue_fileheight, esp38);
+                           this->flags |= kTileFlag_ChangedSize;
+                        } else { // at 0x0058EC98
+                           this->UpdateFloat(kTileValue_filewidth,  edi->GetWidth());
+                           this->UpdateFloat(kTileValue_fileheight, edi->GetHeight());
+                           this->flags |= kTileFlag_ChangedSize;
+                        }
+                     } else { // at 0x0058ECCD
+                        float zoom = this->GetFloatTraitValue(kTileValue_zoom);
+                        if (zoom >= 0.0F) {
+                           if (zoom == 0.0F) {
+                              zoom = 100.0F;
+                           }
+                           if (esp2C.m_data) {
+                              BSStringT* x = &esp2C;
+                              if (x->m_data && !x->TES4_005755D0(" ")) {
+                                 float a = zoom; // esp24
+                                 a /= 100.0;
+                                 this->UpdateFloat(kTileValue_filewidth,  edi->GetWidth()  * a / *ebp);
+                                 this->UpdateFloat(kTileValue_fileheight, edi->GetHeight() * a / *ebp);
+                              }
+                           } else { // at 0x0058ED98
+                              float a = zoom; // esp24
+                              a /= 100.0;
+                              this->UpdateFloat(kTileValue_filewidth,  edi->GetWidth()  * a);
+                              this->UpdateFloat(kTileValue_fileheight, edi->GetHeight() * a);
+                           }
+                        }
+                     }
+                     //
+                     // End: code to update the filewidth and fileheight traits.
+                     //
+                     esp15 = true;
+                     if (this->flags & kTileFlag_ChangedImage) {
+                        this->flags = this->flags xor kTileFlag_ChangedImage; // clear the flag
+                     }
+                     esp68 = 0;
+                     esp2C.~BSStringT();
+                  }
+               }
+               esp68 = -1;
+               esp1C.DecRef();
+            }
+            bool ebx = esp16;
+         }
+      }
+   }
+   if (this->flags & kTileFlag_ChangedSize) { // at 0x0058EE59
+      if (this->renderedNode && !ebx) {
+         auto ebp = this->renderedNode->GetChildByIndex(0);
+         float esp20 = this->GetFloatTraitValue(kTileValue_width);
+         float esp24 = this->GetFloatTraitValue(kTileValue_height);
+         float esp2C = this->GetFloatTraitValue(kTileValue_cropX);
+         float esp38 = this->GetFloatTraitValue(kTileValue_cropY);
+         if (ebp) {
+            auto eax = ebp->geomData->m_pkVertex; // array
+            eax[0].x = 0.0;
+            eax[0].y = 0.0;
+            eax[0].z = 0.0;
+            float esp34 = -0.0;
+            eax[1].x = 0.0;
+            eax[1].y = 0.0;
+            eax[1].z = -0.0;
+            eax[2].x = esp20;
+            eax[2].y = -0.0;
+            float esp50 = ?;
+            eax[2].z = ?;
+            eax[3].x = ?;
+            float esp54 = ?;
+            eax[3].y = ?;
+            float esp18 = ?;
+            float esp1C = ?;
+            eax[3].z = ?;
+            NiTexturingProperty* edi = ebp->GetPropertyByType(NiTexturingProperty::kType); // at 0x0058EF79
+            if (edi && esp17) {
+               auto eax = edi->m_maps.data[0];
+               if (eax && eax->texture) { // at 0x0058EFA3
+                  float tile = this->GetFloatTraitValue(kTileValue_tile);
+                  edi->SetFirstMapClampMode(tile >= 2.0F ? 3 : 0);
+                  float zoom = this->GetFloatTraitValue(kTileValue_zoom); // esp18
+                  if (this->GetFloatTraitValue(kTileValue_tile) != -1.0F) {
+                     if (zoom >= 0.0) {
+                        if (zoom <= 0.0) { // at 0x0058F016
+                           zoom = 100.0F;
+                        }
+                        auto eax = this->GetStringTraitValue(kTileValue_filename);
+                        BSStringT esp4C(eax);
+                        esp68 = 4;
+                        float esp18; // width
+                        float esp1C; // height
+                        if (esp4C.m_data && ...) {
+                           
+                        } else { // at 0x0058F0F6
+                           auto eax = edi->m_maps.data[0];
+                           float esp3C = zoom / 100.0F;
+                           esp18 = eax->texture->GetWidth()  * esp3C;
+                           esp1C = eax->texture->GetHeight() * esp3C;
+                        }
+                        esp68 = -1;
+                        esp4C.~BSStringT();
+                        jump to 0x0058F191;
+                     } else { // at 0x0058F17D
+                        // just FPU manip; no actual code here
+                     }
+                  }
+                  esp18 = esp20;
+                  esp1C = esp24;
+               }
+            } // at 0x0058F191
+            auto eax = ebp->geomData->m_pkTexture; // UVs // at 0x0058F197
+            if (eax) {
+               
+            }
+            ebp->geomData->m_usDirtyFlags |= 9; // at 0x0058F263
+            auto eax = ebp->geomData;
+            auto ecx = eax->m_usVertices;
+            auto edx = eax->m_pkVertex; // array
+            eax->m_kBound.TES4_0072A0F0(ecx, edx);
+            eax = this->flags;
+            esp15 = true;
+            this->flags &= ~kTileFlag_ChangedSize; // original does: if set, then xor
+            auto ebp = ebp->geomData;
+            if (ebp) { // at 0x0058F299
+               ebp->m_usDirtyFlags = ebp->m_usDirtyFlags & 0x0FFF | 0x8000;
+            }
+         }
+      }
+   }
+   if (this->flags & kTileFlag_Changed3DModel && this->renderedNode && !ebx) { // at 0x0058F2BB
+      if (this->GetTypeID() == Tile3D::kID)
+         this->UpdateRenderedContentsFromFile();
+      esp15 = true;
+      this->flags &= ~kTileFlag_Unk040; // original does: if set, then xor
+   }
+   if (this->flags & kTileFlag_ChangedCoords) { // at 0x0058F2EA
+      if (!this->renderedNode) jump to 0x0058F899; // below
+      if (ebx) jump to 0x0058F5C2; // skip all if hidden
+      
+   }
+   if (this->renderedNode) { // at 0x0058F5C6
+      //
+      // Handle both clips and clipwindow stuff. I think I understand what 
+      // BSScissorTriShape is for now.
+      //
+      if (this->flags & kTileFlag_ChangedClipwindow) {
+         
+      }
+      if (this->renderedNode) {
+         if (this->flags & kTileFlag_ChangedClips) {
+            auto edi = this->parent;
+            if (edi) { // at 0x0058F6D2
+               
+            }
+            esp15 = true;
+            this->flags &= ~kTileFlag_ChangedClips;
+         }
+      }
+   }
+   // at 0x0058F899
+   if (this->flags & kTileFlag_ChangedColor) { // at 0x0058F89D
+      if (ebx)
+         return esp15;
+      auto eax = this->renderedNode;
+      if (!eax)
+         return esp15;
+      if (eax->m_children.numObjs > 0) {
+         do {
+            //
+            // Loops over every descendant NiNode with a "tileptr" (i.e. every auto-
+            // generated NiNode keeping a pointer to its Tile using NiExtraData) and 
+            // sets either its material emittance or its vertex colors, as available.
+            //
+            
+         } while (
+      }
+   }
+   return esp15;
+}

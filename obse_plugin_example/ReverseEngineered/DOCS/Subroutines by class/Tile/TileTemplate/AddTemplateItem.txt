@@ -1,0 +1,199 @@
+bool IsOperator(UInt32 id) {
+   return (id >= 0x7D1 && id <= 0x7EB);
+}
+bool IsTile(UInt32 id) {
+   return (id >= 0x386 && id <= 0x38B);
+}
+bool IsTrait(UInt32 id) {
+   return ((id >= ParseCode::kCode_EndTagA1 && id <= 0x1001) || id > 0x2710);
+}
+//
+// Vanilla doesn't use function calls; these are here for ease of reading.
+
+
+
+// at 0x0058D2F0
+//
+void TileTemplate::AddTemplateItem(UInt32 aId, const char* aValue, UInt32 aLineNo, bool Arg4) {
+   typedef   RE::Tile::TileTemplateItem::Code   ParseCode;
+   constexpr UInt32 kTileValue_value = 0xBB9;
+   constexpr UInt32 kTileValue_name  = 0xBBA;
+   constexpr UInt32 kTileValue_src   = 0xBBB;
+   constexpr UInt32 kTileValue_trait = 0xBBC;
+   //
+   auto  esp18 = this;
+   float esp14 = 0.0; // tagIdOrTraitValue
+   if (!Arg4)
+      esp14 = TileStrToStrId(aValue);
+   if (!esp14 && aValue[0] == '_')
+      esp14 = GetOrCreateTempTagID(aValue, -1);
+   auto ebp = new Tile::TileTemplateItem(Arg1, esp14, aValue, (SInt32)esp14, aLineNo); // newTemplateItem
+   {
+      bool   isNumber = true;
+      UInt32 i = 0; // edx
+      UInt32 L = strlen(aValue);
+      for (UInt32 i = 0; i < L; i++) { // at 0x0058D3CB
+         char c = aValue[i];
+         if ((c < '0' || c > '9') && c != '-' && c != '.') {
+            isNumber = false;
+            break;
+         }
+      }
+      if (isNumber) {
+         if (-1.0 == esp14) // at 0x0058D40E
+            sscanf(value, "%f", &esp14);
+         if (0.0 == esp14)
+            sscanf(value, "%f", &esp14);
+         ebp->string.Replace_MinBufLen("", 0);
+         ebp->tagType = esp14;
+         ebp->unk10 = (SInt32)esp14;
+      }
+   }
+   auto edx = this; // at 0x0058D465
+   Tile::TemplateItem* ebx = nullptr; // = node[length - 1].data // Z
+   Tile::TemplateItem* esi = nullptr; // = node[length - 2].data // Y
+   Tile::TemplateItem* edi = nullptr; // = node[length - 3].data // X
+   {
+      auto eax = this->items.end;
+      if (eax) {
+         ebx = eax->data;
+         eax = eax->prev;
+         if (eax) {
+            esi = eax->data;
+            eax = eax->prev;
+            if (eax)
+               edi = eax->data;
+         }
+      }
+   }
+   // at 0x0058D493
+   // ecx == ebx->unk00
+   if (aId == kTileValue_name) {
+      if (ebx && ebx->unk00 == ParseCode::kCode_StartTag) {
+         if (ebx->tagType == (float)0x3E7) {
+            auto owner = this->owner; // 0x0058D4C9
+            if (owner->unk0C) {
+               Log004A7A60("Can't have nested template definitions in an XML file.";
+               ebx = nullptr;
+            } else {
+               TileTemplate* eax = owner->GetTileTemplate(aValue);
+               owner->unk0C = eax;
+               if (!owner->unk0C) { // at 0x0058D503
+                  owner->unk0C = owner->AppendTileTemplate(aValue);
+               }
+            }
+            auto item = this->items.RemoveLast();
+            if (item) {
+               item->~TileTemplateItem(); // FormHeap_Free(item->string.m_data);
+               delete item;               // FormHeap_Free(item);
+            }
+            if (ebp) {
+               ebp->~TileTemplateItem();
+               delete ebp;
+            }
+            return; // jumps to 0x0058D85F
+         }
+         // jumped to 0x0058D5CD
+         if (ebx->unk00 == ParseCode::kCode_StartTag && IsTile(ebx->tagType)) {
+            ebx->unk00 = ParseCode::kCode_TileStart;
+            ebx->string.Replace_MinBufLen(aValue, 0);
+            if (ebp) {
+               ebp->~TileTemplateItem();
+               FormHeap_Free(ebp);
+            }
+            return; // jumps to 0x0058D943
+         }
+      }
+      // jumped to 0x0058D632
+      ebp->unk00 = ParseCode::kCode_Trait;
+      ebp->unk10 = kTileValue_name;
+      this->items.Append(ebp);
+      return;
+   }
+   if (aId == ParseCode::kCode_EndTag) { // at 0x0058D570
+      if (esp14 == (float)0x3E7 && this->owner->unk0C) {
+         this->owner->unk0C = nullptr;
+         if (ebp) {
+            ebp->~TileTemplateItem();
+            FormHeap_Free(ebp);
+         }
+         return; // jumps to 0x0058D943
+      }
+      // at 0x0058D66F
+      if (ebx) {
+         if (ebx->unk00 == kTileValue_value && esi) {
+            if (esi->unk00 == ParseCode::kCode_SetNextTagname || esi->unk00 == ParseCode::kCode_TraitActionStart) { // at 0x0058D697
+               if (esi->tagType == esp14) { // at 0x0058D6A9
+                  if (IsTrait(ebp->tagType)) {
+                     esi->unk00 = ParseCode::kCode_Trait; // near 0x0058D6DA
+                  } else if (IsOperator(ebp->tagType) { // near 0x0058D6E2
+                     esi->unk00 = ParseCode::kCode_TraitActionDefinition;
+                  } else {
+                     esi->unk00 = -1;
+                     Log004A7A60("Bad trait/action type in XML");
+                  }
+                  // at 0x0058D71D
+                  esi->unk10 = (SInt32)esi->tagType;
+                  esi->tagType = ebx->tagType;
+                  esi->string.Replace_MinBufLen(ebx->string.m_data, 0);
+                  auto esi = this->items.RemoveLast();
+                  if (esi) {
+                     esi->~TileTemplateItem();
+                     FormHeap_Free(esi);
+                  }
+                  if (ebp) {
+                     ebp->~TileTemplateItem();
+                     FormHeap_Free(ebp);
+                  }
+                  return; // jumps to 0x0058D943
+               }
+            }
+         }
+         // at 0x0058D78E
+         if (
+            ebx->unk00 == kTileValue_trait
+         && esi && esi->unk00 == kTileValue_src
+         && edi && edi->unk00 == ParseCode::kCode_TraitActionStart && edi->unk04 == (float)???
+         ) {
+            edi->unk00 = ParseCode::kCode_TraitActionLink;
+            edi->unk10 = (SInt32)edi->tagType;
+            edi->tagType = ebx->tagType;
+            edi->string.CopyNameFromOther(&esi->string);
+            auto esi = this->items.RemoveLast();
+            if (esi) {
+               esi->~TileTemplateItem();
+               FormHeap_Free(esi);
+            }
+            esi = this->items.RemoveLast();
+            if (esi) {
+               esi->~TileTemplateItem();
+               FormHeap_Free(esi);
+            }
+            if (ebp) {
+               ebp->~TileTemplateItem();
+               FormHeap_Free(ebp);
+            }
+            return; // jumps to 0x0058D943
+         }
+      }
+      ; // just FPU manip // at 0x0058D87D
+   }
+   // at 0x0058D87F
+   if (IsTrait(ebp->unk10)) { // at 0x0058D895
+      if (ebp->unk00 == ParseCode::kCode_StartTag)
+         ebp->unk00 = ParseCode::kCode_SetNextTagname;
+      else if (ebp->unk00 == ParseCode::kCode_EndTag)
+         ebp->unk00 = ParseCode::kCode_ClearNextTagname;
+   } else if (IsOperator(ebp->unk10)) { // at 0x0058D8C2
+      if (ebp->unk00 == ParseCode::kCode_StartTag)
+         ebp->unk00 = ParseCode::kCode_TraitActionStart;
+      else if (ebp->unk00 == ParseCode::kCode_EndTag)
+         ebp->unk00 = ParseCode::kCode_TraitActionEnd;
+   } else if (ebp->unk00 == ParseCode::kCode_EndTag) { // at 0x0058D8E7
+      if (IsTile(ebp->tagType))
+         ebp->unk00 = ParseCode::kCode_TileEnd;
+   }
+   // at 0x0058D910
+   this->items.Append(ebp); // inlined
+   return; // at 0x0058D943
+}

@@ -1,0 +1,50 @@
+UInt32 InterfaceManager::ProcessRepeatableKey(float Arg1) {
+   UInt32 edi = g_timeInfo->unk10; // ms
+   auto   esi = this;
+   if (0.0 > RE::INI::Interface::fKeyRepeatTime->f)
+      return 0;
+   if (this->unk11C == kSpecialKey_ArrowLeft) {
+      auto eax = RE::Singleton00B33398->unk20->QueryKeyboardKeyState(DIK_LEFT, RE::kKeyQuery_Hold);
+      if (!eax)
+         return (this->unk11C = 0);
+   }
+   if (this->unk11C == kSpecialKey_ArrowRight) {
+      auto eax = RE::Singleton00B33398->unk20->QueryKeyboardKeyState(DIK_RIGHT, RE::kKeyQuery_Hold);
+      if (!eax)
+         return (this->unk11C = 0);
+   }
+   if (this->unk11C == kSpecialKey_ArrowUp) {
+      auto eax = RE::Singleton00B33398->unk20->QueryKeyboardKeyState(DIK_UP, RE::kKeyQuery_Hold);
+      if (!eax)
+         return (this->unk11C = 0);
+   }
+   if (this->unk11C == kSpecialKey_ArrowDown) {
+      auto eax = RE::Singleton00B33398->unk20->QueryKeyboardKeyState(DIK_DOWN, RE::kKeyQuery_Hold);
+      if (!eax)
+         return (this->unk11C = 0);
+   }
+   //
+   // Here's the computation currently in play:
+   //
+   //  - You need to hold an arrow key for fKeyRepeatTime in order for inputs to start 
+   //    repeating.
+   //
+   //  - Once inputs have started repeating, they will repeat every fKeyRepeatInterval 
+   //    seconds.
+   //
+   UInt32 eax; // milliseconds
+   float a, b;
+   if ((eax = this->lastRepeatableKeyFire) == 0) {
+      UInt32 ecx = edi - this->repeatableKeyStartTime;
+      a = (float)ecx;
+      b = RE::INI::Interface::fKeyRepeatTime->f;
+   } else {
+      UInt32 edx = edi - eax;
+      a = (float)edx;
+      b = RE::INI::Interface::fKeyRepeatInterval->f;
+   }
+   if (b > a)
+      return 0;
+   this->lastRepeatableKeyFire = edi;
+   return this->unk11C;
+};

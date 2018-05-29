@@ -1,0 +1,361 @@
+void InterfaceManager::Update() {
+   auto ebx = *g_Singleton00B33398->unk20; // input manager
+   auto esi = this;
+   auto edi = 0;
+   auto esp50 = ebx;
+   TES4_005A6040(this->unk008 != 1, 0);
+   UpdateHUDReticleTileOpacities();
+   if (this->unk008 == 1) { // not in menu mode
+      if (!GetMenuByType(0x3EC))
+         ShowHUDMainMenu();
+      if (!GetMenuByType(0x3ED))
+         ShowHUDInfoMenu();
+      if (this->playerQueuedToGoToJail) {
+         this->playerQueuedToGoToJail = 0;
+         *g_thePlayer->GoToJail(1);
+      }
+      if (this->unk110) {
+         this->unk110 = 0;
+         *g_thePlayer->TES4_00670CA0(1);
+      }
+      if (*(UInt8*)(0x00B3A6D0)) {
+         this->cursor->UpdateString(kTileValue_filename, "Menus\Misc\cursor.dds");
+         this->cursor->HandleChangeFlags();
+         *(UInt8*)(0x00B3A6D0) = false;
+      }
+      if (*bPlayerLevelUpIsQueued) {
+         AdvancePCLevel();
+         *bPlayerLevelUpIsQueued = false;
+      }
+      *g_thePlayer->TES4_006623A0();
+      *g_thePlayer->TES4_00662D10();
+   }
+   if (this->unk008 == 2 || this->unk008 == 5) { // at 0x00582320
+      esp3C = BSStringT();
+      auto edx = this->cursor;
+      edx->unk24->m_flags &= 0xFFFE; // clear "culled" flag
+      edx->UpdateFloat(kTileValue_visible, 2.0);
+      this->UpdateCursorState();
+      if (!this->unk0B9) {
+         auto ecx = this->altActiveTile; // at 0x0058236E
+         if (!ecx || !ecx->NiNodeIsCulled() || ecx->GetFloatTraitValue(kTileValue_target) != 2.0) {
+            this->TES4_0057FD60(); // fires mouse events on menus
+         }
+      }
+      bLMBDown = ebx->QueryMouseKeyState(kMouseControl_Left, kKeyQuery_Down); // esp4C
+      bLMBUp   = ebx->QueryMouseKeyState(kMouseControl_Left, kKeyQuery_Up);   // esp48
+      bLMBHold = ebx->QueryMouseKeyState(kMouseControl_Left, kKeyQuery_Hold); // esp54
+      if (bLMBHold)
+         this->mouseLMBDownTime += 0.001; // seconds
+      else
+         this->mouseLMBDownTime = 0.0;
+      this->mouseZAxisMovement = (float) ebx->GetMouseAxisMovement(3); // Z-axis (scroll wheel)
+      if (this->unk0B9) { // at 0x005823FD
+         Tile* mouseTarget = this->GetTargetableTileWithIDUnderMouse(0); // ebx
+         Tile* esp2C = mouseTarget;
+         Menu* esp30 = nullptr;
+         if (mouseTarget) {
+            esp30 = mouseTarget->GetContainingMenu();
+            if (auto ecx = this->altActiveTile) {
+               ecx->UpdateFloat(kTileValue_mouseover, 0.0);
+               auto ebx = ecx->GetContainingMenu();
+               SInt32 eax = ecx->GetFloatTraitValue(kTileValue_id);
+               ebx->HandleMouseout(eax, this->activeTile);
+            }
+         }
+         //
+         // Handle unkA4/unkA0:
+         //
+         if (mouseTarget != this->activeTile && bLMBHold) { // at 0x00582495
+            auto eax = this->unkA4;
+            if (eax && eax->unk24 == 1) {
+               SInt32 id = this->unkA0->GetFloatTraitValue(kTileValue_id);
+               this->unkA4->Unk_07(id, this->unkA0, this->activeTile);
+               edi = 0;
+            }
+            eax = esp30;
+            this->unkA0 = mouseTarget;
+            this->unkA4 = eax; // mouseTarget's menu
+            if (eax && eax->unk24 == 1) {
+               SInt32 id = mouseTarget->GetFloatTraitValue(kTileValue_id);
+               this->unkA4->Unk_06(id, mouseTarget, this->activeTile);
+            }
+         }
+         //
+         // Handle activeMenu/activeTile:
+         //
+         if (bLMBUp && this->activeMenu) { // at 0x0058252B
+            auto eax = this->unkA0;
+            if (!eax || eax == this->activeTile) {
+               if (auto eax = this->activeTile->GetTrait(kTileValue_id)) {
+                  auto ecx = this->activeMenu;
+                  if (ecx->unk24 == 1) {
+                     auto clicksound = this->activeTile->GetFloatTraitValue(kTileValue_clicksound);
+                     if (clicksound != 0.0) {
+                        PlayUIClickSound((SInt32) clicksound);
+                     }
+                  }
+                  auto ecx = this->activeTile;
+                  ecx->UpdateFloat(kTileValue_clickcountafter, ecx->GetFloatTraitValue(kTileValue_clickcountbefore) + 1);
+                  ecx->UpdateFloat(kTileValue_clicked, 1.0);
+                  ecx->UpdateFloat(kTileValue_clicked, 0.0);
+                  SInt32 eax = ecx->GetFloatTraitValue(kTileValue_id);
+                  this->activeMenu->HandleMouseUp(eax, ecx);
+                  if (this->activeTile == nullptr)
+                     esp30 = mouseTarget = nullptr;
+               }
+            }
+         }
+         this->unkA0 = nullptr;
+         this->unkA4 = nullptr;
+         auto ecx = this->activeTile;
+         if (mouseTarget != ecx && !bLMBHold) { // at 0x00582661
+            if ((auto eax = this->activeMenu) && eax->unk24 == 1) {
+               this->activeTile->UpdateFloat(kTileValue_mouseover, 0.0);
+               SInt32 id = this->activeTile->GetFloatTraitValue(kTileValue_id);
+               this->activeMenu->HandleMouseout(eax, this->activeTile);
+               edi = 0;
+            }
+            if ((auto eax = esp30) && eax->unk24 == 1) {
+               this->activeTile = mouseTarget;
+               this->activeMenu = eax;
+            } else {
+               this->activeTile = nullptr;
+               this->activeMenu = nullptr;
+            }
+            if ((auto eax = this->activeMenu) && eax->unk24 == 1) {
+               this->activeTile->UpdateFloat(kTileValue_mouseover, 1.0);
+               SInt32 id = this->activeTile->GetFloatTraitValue(kTileValue_id);
+               this->activeMenu->HandleMouseover(eax, this->activeTile);
+            }
+            this->altActiveTile = nullptr;
+         }
+         if (this->unkB9 && bLMBDown) { // at 0x0058275B
+            auto ecx = this->activeTile;
+            if (ecx && (auto eax = this->activeMenu) && eax->unk24 == 1) {
+               SInt32 id = ecx->GetFloatTraitValue(kTileValue_id);
+               this->activeMenu->HandleMouseDown(id, ecx);
+            } else {
+               if (GetGlobalScriptStateObj()->unk31 > 0) { // at 0x005827AE
+                  //
+                  // ...
+                  //
+               }
+            }
+         }
+      }
+      if (bLMBHold) { // at 0x00583400
+         if (Menu* eax = this->activeMenu) {
+            SInt32 id = this->activeTile->GetFloatTraitValue(kTileValue_id);
+            this->activeMenu->HandleFrameMousedown(eax, this->activeTile);
+         }
+         if ((Menu* eax = this->unkA4) && (auto ecx = this->activeTile)) {
+            SInt32 id = ecx->GetFloatTraitValue(kTileValue_id);
+            this->unkA4->Unk_09(eax, this->activeTile);
+         }
+      } else { // at 0x00583468
+         if (0.0 != this->mouseZAxisMovement) {
+            if (this->activeMenu) {
+               SInt32 id = this->activeTile->GetFloatTraitValue(kTileValue_id);
+               this->activeMenu->HandleFrameMouseWheel(id, this->activeTile);
+            }
+         }
+      }
+      // at 0x005834A8
+      Keyboard_Device esp30 = 0; // keycode, basically
+      eax = *(0x00B33398)->unk20->GetBufferedKeyStateChange(&esp30);
+      if (eax == 2) { // key up // at 0x005834C1
+         do {
+            ecx = g_timeInfo->unk10; // current time in ms, though I don't know if it's since the executable booted, the timing system started running, etc..
+            edx = esp30;
+            this->unk120 = ecx;
+            this->unk124 = 0;
+            this->unk11C = 0;
+            this->KeyStateChangeToChar(2, esp30);
+            eax = *(0x00B33398)->unk20->GetBufferedKeyStateChange(&esp30);
+         } while (eax == 2)
+      }
+      //
+      // eax == a keycode that has been pressed down
+      //
+      UInt32 edi = this->KeyStateChangeToChar(eax, esp30);
+      if (!edi) {
+         edi = this->ProcessRepeatableKey(1.0);
+      }
+      //
+      // edi == char typed in, or special code
+      //
+      auto eax = esp2C = GetGlobalScriptStateObj(0);
+      if (edi) { // at 0x00583531
+         if (eax) {
+            //
+            // ...
+            //
+         }
+         Tile* ecx = GetMenuByType(this->GetTopmostMenuID());
+         Menu* eax = ecx->GetContainingMenu();
+         if (!eax || !eax->HandleKeyboardInput(edi)) {
+            auto eax = 0;
+            switch (edi) {
+               case kSpecialKey_ArrowUp:
+                  eax = 1;
+                  break;
+               case kSpecialKey_ArrowDown:
+                  eax = 2;
+                  break;
+               case kSpecialKey_ArrowLeft:
+                  eax = 4;
+                  if (this->unk118 & 4) // SHIFT
+                     eax = 0xD;
+                  break;
+               case kSpecialKey_ArrowRight:
+                  eax = 3;
+                  if (this->unk118 & 4) // SHIFT
+                     eax = 0xE;
+                  break;
+               case kSpecialKey_Newline:
+                  eax = !this->unkB9 ? 2 : 0;
+            }
+            this->HandleNavigationKeypress(eax); // fires Menu::Unk_0E // at 0x00583677
+            esp50->FlushKeyboardBuffer();
+         }
+      }
+      // at 0x0058368C
+      eax = esp50->QueryControlState(0x1A, kKeyQuery_Down); // quicksave
+      ebx = 0x2B;
+      if (eax) {
+         if (*(UInt16*)(0x00B1397A) <= 0x2B || *(0x00B13974)->unkAC == 0) {
+            QueueUIMessage("You can't Quicksave while the game is paused.", 0, 1, 1.0);
+         }
+      }
+      eax = esp50->QueryControlState(0x1B, kKeyQuery_Down); // quickload
+      if (eax) {
+         if (*(UInt16*)(0x00B1397A) <= 0x2B || *(0x00B13974)->unkAC == 0) {
+            QueueUIMessage("You can't Quickload while the game is paused.", 0, 1, 1.0);
+         }
+      }
+      esp200 = -1;
+      delete esp3C;
+      ebx = esp50;
+   }
+   eax = esp50->QueryControlState(kControl_SpecialConsole, kKeyQuery_Down); // 1E
+   if (eax && TES4_00579060() != 0x414) { // MainMenu
+      //
+      // this code toggles the debug console?
+      //
+      edi = GetGlobalScriptStateObj(1);
+      ebx->FlushKeyboardBuffer();
+      if (edi->TES4_005859C0()) { // related to the debug console
+         this->AddMenuToActiveIDStack(kMenuMode_Console);
+      } else {
+         this->TES4_0057CFE0(kMenuMode_Console, 0);
+      }
+   }
+   eax = esp50->QueryControlState(kControl_SpecialPause, kKeyQuery_Down); // 1D
+   if (eax) {
+      UInt8 eax = Unknown00B3A708_GetSingleton(1)->TES4_005878B0(0x414); // MainMenu ID
+      if (!eax) { // at 0x005837A7
+         //
+         // ...
+         //
+      }
+   }
+   eax = esp50->QueryControlState(kControl_SpecialPause, kKeyQuery_Down);
+   if (eax) { // at 0x0058384B
+      //
+      // ...
+      //
+   }
+   edi = GetMenuByType(0x3EA); // InventoryMenu
+   ebx = GetMenuByType(0x3FE); // MagicMenu
+   if (!edi && edi->GetFloatTraitValue(kTileValue_visible) >= 1.0) {
+      if (ebx) {
+         ebx->GetFloatTraitValue(kTileValue_visible); // value is discarded without being used?!
+      }
+   }
+   TES4_00572170();
+   //
+   // Fire unconditional per-frame event on all menus:
+   //
+   auto ecx = this->menuRoot;
+   auto edi = ecx->childList.start;
+   if (edi) { // at 0x00583982
+      do {
+         ecx = edi->data;
+         edi = edi->next;
+         if (!ecx)
+            continue;
+         eax = ecx->GetContainingMenu();
+         if (eax)
+            eax->HandleFrame();
+      } while (edi);
+   }
+   //
+   // Code to open one of the "big four" menus?:
+   //
+   esp38 = 0;
+   if (esp50->QueryKeyboardState(DIK_F1, kKeyQuery_Down)) {
+      edi = 0x3EB; // StatsMenu
+   } else if (esp50->QueryKeyboardState(DIK_F2, kKeyQuery_Down)) {
+      edi = 0x3EA;
+   } else if (esp50->QueryKeyboardState(DIK_F3, kKeyQuery_Down)) {
+      edi = 0x3FE;
+   } else if (esp50->QueryKeyboardState(DIK_F4, kKeyQuery_Down)) {
+      edi = 0x3FF;
+   }
+   UInt32 esp38 = edi;
+   SInt32 eax = this->menuRoot->GetFloatTraitValue(0x1771); // not a registered trait ID
+   SInt32 unk2C = eax; // the trait's value is one of the "big four" menu IDs, likely the currently selected menu
+   if (edi) {
+      //
+      // I think this first condition may need to be !=. Double-check the ASM.
+      //
+      if ((this->GetTopmostMenuID() == 1 || this->unk08 != 1) && edi != esp2C && !*g_thePlayer->unk5C0) {
+         if (!*g_thePlayer->IsDead(0)) { // at 0x00583A59
+            switch (edi) {
+               case 0x3EB:
+                  TES4_005A5E80();
+                  break;
+               case 0x3EA:
+                  TES4_005A5EF0();
+                  break;
+               case 0x3FE:
+                  TES4_005A5F60();
+                  break;
+               case 0x3FF:
+                  TES4_005A5FD0();
+                  break;
+            }
+         }
+      }
+   }
+   if (ebx->QueryControlState(DIK_TAB, kKeyQuery_Down) || edi) { // at 0x00583AA6
+      //
+      // ...
+      //
+   } else { // at 0x00583B15
+      eax = ebx->QueryControlState(DIK_TAB, kKeyQuery_Down);
+      if (eax || (edi && edi == esp2C)) { // at 0x00583B35
+         //
+         // ...
+         //
+      }
+   }
+   //
+   // ---
+   //
+   if (this->unk08 != 1 && *g_thePlayer) { // at 0x00583BB8
+      auto eax = *(0x00B3A6E0)->unk60; // possibly NiNode*?
+      if (eax && eax->unk18 & 1 == 0)
+         //
+         // Blind, deaf, and dumb random guess: cull first-person geometry? 
+         // If eax is a NiNode*, then we run this if it's not culled.
+         //
+         *g_thePlayer->TES4_00664C40();
+   }
+   if (auto eax = this->unk0B4) { // message handler
+      this->unk0B4 = nullptr;
+      eax();
+   }
+   return;
+}

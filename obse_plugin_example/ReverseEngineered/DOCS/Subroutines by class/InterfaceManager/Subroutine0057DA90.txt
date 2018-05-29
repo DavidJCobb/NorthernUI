@@ -1,0 +1,104 @@
+/*
+   Given an int to write to and no input tile, this function accesses the root tile of 
+   the topmost menu (by depth). If that root tile somehow isn't a menu tile (which 
+   should never happen), or if certain menu parameters are not met, then this function 
+   aborts after setting the output-int to LONG_MIN. Otherwise, this function behaves 
+   as if it were supplied the output-int and that menu root tile.
+
+   Given an int to write to and an input tile, this function behaves as follows:
+
+    - Loop/recurse over all of the input-tile's descendants. Identify the descendant 
+      with the lowest listindex or highest process-result. The process-result is 
+      identified as the output-integer of the recursive call, and is initialized to 
+      LONG_MIN before the call.
+
+    - After the loop, if the input-tile isn't targetable and visible, return the tile 
+      identified in the loop.
+
+    - If the input-tile has an xdefault trait greater than the listindex/process-result 
+      identified in the loop, then that xdefault trait's value shall be written to the 
+      output-int, and the input-tile shall be returned as the call result.
+   
+    - Otherwise, the tile identified in the loop shall be the call result, and its 
+      listindex trait shall be written to the output-int.
+
+   The result tile is used in the following instances:
+
+    - InterfaceManager::Update. If the mouse is not being held down and altActiveTile 
+      is non-existent, invisible, or non-targetable, then call SendMouseoverToSafeTile. 
+      That method calls this subroutine to obtain a tile, and then fires a mouseover 
+      event on that tile.
+
+   The apparent goal is to be able to route mouse events to a safe "default" tile, i.e. 
+   the first tile in a list (lowest listindex) or the visible, targetable tile with the 
+   highest xdefault.
+
+*/
+Tile* InterfaceManager::Subroutine0057DA90(int* Arg1, Tile* searchRoot) const { // at 0057DA90
+   *Arg1 = LONG_MIN;
+   if (!searchRoot) {
+      Menu* eax = Unknown00B3A708_GetSingleton(1)->GetTopmostMenuByDepth();
+      if (eax) {
+         searchRoot = eax->tile;
+         bool x = searchRoot->GetTypeID() != kTagID_menu || searchRoot->GetContainingMenu()->unk24 == 1;
+         if (!x && searchRoot->GetContainingMenu()->unk24 != 8) {
+            return nullptr;
+         }
+      }
+   }
+   if (searchRoot->GetFloatTraitValue(kTileValue_visible) == 1.0)
+      return nullptr;
+   //auto esp18 = this;
+   auto  edi   = searchRoot->childList.start;
+   int   lowestListindex = LONG_MAX; // esp14
+   Tile* lowestListTile  = nullptr; // esp0C
+   int   ebp   = *Arg1; // highest result-int
+   for(auto edi = searchRoot->childList.start; edi; edi = edi->next) {
+      int   esp10 = LONG_MIN;
+      Tile* child = edi->data;
+      edi   = edi->next;
+      esp10 = LONG_MIN;
+      Tile* esi = this->TES4_0057DA90(&esp10, child); // recurse
+      if (!esi)
+         continue;
+      if (esp10 > ebp) {
+         ebp = esp10;
+         lowestListTile = esi;
+      } else {
+         auto trait = esi->GetTrait(kTileValue_listindex);
+         if (!trait)
+            continue;
+         SInt32 eax = trait->value;
+         if (eax < lowestListindex) {
+            lowestListindex = eax;
+            lowestListTile = esi;
+         }
+      }
+   }
+   if (searchRoot->GetFloatTraitValue(kTileValue_target) != 2.0F)
+      return lowestListTile;
+   if (searchRoot->GetFloatTraitValue(kTileValue_visible) == 1.0F)
+      return lowestListTile;
+   auto eax = searchRoot->GetTrait(kTileValue_xdefault);
+   if (!eax)
+      return lowestListTile;
+   if (eax->value > ebp) {
+      *Arg1 = eax->value;
+      return searchRoot;
+   }
+   eax = searchRoot->GetTrait(kTileValue_listindex);
+   if (eax) {
+      if (eax->value < lowestListindex)
+         return searchRoot;
+   }
+   return lowestListTile;
+};
+
+
+
+
+
+
+
+
+

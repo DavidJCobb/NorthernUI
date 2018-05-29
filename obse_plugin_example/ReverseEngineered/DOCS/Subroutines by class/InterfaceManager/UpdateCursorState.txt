@@ -1,0 +1,41 @@
+void InterfaceManager::UpdateCursorState() {
+   Singleton00B33398::InputManager* edi = *(0x00B33398)->unk20;
+   if (edi->unk0008 & 8)
+      if (!INI:Display:bFullScreen)
+         return;
+   this->cursor->renderedNode->m_flags &= 0xFFFE; // clear "culled" flag
+   this->cursor->UpdateFloat(kTileValue_visible, 2.0);
+   NiVector3 esp2C = this->cursor->renderedNode->m_localTranslate;
+   {
+      double maxX = GetNormalizedScreenMaxX() - 2.0;
+      float normalizedXMovement = edi->GetMouseAxisMovement(/*x-axis*/1) * GetNormalizedScreenWidth() / *SInt32ScreenWidth;
+      double unboundedCursorPos = normalizedXMovement + esp2C.x;
+      float esp08 = min(unboundedCursorPos, maxX);
+      float z = GetNormalizedScreenMinX() - 2.0;
+      if (esp08 >= z)
+         z = min(maxX, unboundedCursorPos);
+      esp2C.x = z;
+   }
+   esp2C.y = this->cursor->GetFloatTraitValue(kTileValue_depth) * -0.008;
+   {
+      double yCenterPos = GetNormalizedScreenMaxY() + 1.0;
+      float normalizedYMovement = edi->GetMouseAxisMovement(/*y-axis*/2) * (GetNormalizedScreenHeight() / *SInt32ScreenHeight);
+      float unboundedCursorPos = esp2C.z - normalizedYMovement;
+      esp18 = min(yCenterPos, unboundedCursorPos);
+      float u = GetNormalizedScreenMinY() + 1.0;
+      if (esp18 >= u)
+         u = min(yCenterPos, unboundedCursorPos);
+      esp2C.z = u;
+   }
+   this->cursor->renderedNode->m_localTranslate = esp2C;
+   if (esp2C.x != this->unk20.x || this->unk20.z != esp2C.z) { // non-depth coordinate has changed
+      this->cursorPos = esp2C;
+      this->unkB9 = 1;
+      float sWidth = *SInt32ScreenWidth;
+      this->unk2C = (sWidth / GetNormalizedScreenWidth() * this->cursorPos.x) + (sWidth / 2);
+      this->unk30 = this->cursor->GetFloatTraitValue(depth) * -0.008;
+      float sHeight = *SInt32ScreenHeight;
+      this->unk34 = (sHeight * 0.5) - (sHeight / GetNormalizedScreenHeight() * this->cursorPos.z);
+   }
+   this->cursor->renderedNode->TES4_00707370(0.0, 1);
+}
