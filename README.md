@@ -1,5 +1,5 @@
 # NorthernUI
-Source code for a DLL that modifies Oblivion's UI engine.
+Source code for a DLL that modifies Oblivion's UI engine. The mod is currently available for distribution [on NexusMods](https://www.nexusmods.com/oblivion/mods/48577).
 
 ## Setup
 
