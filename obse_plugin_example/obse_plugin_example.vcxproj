@@ -1,0 +1,344 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{D4DDA734-7E93-4581-8F82-32BB738F69FE}</ProjectGuid>
+    <RootNamespace>obse_plugin_example</RootNamespace>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>NorthernUI</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\..;$(SolutionDir)\..\obse\obse;$(SolutionDir)\..\obse\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;OBLIVION_VERSION=0x010201A0;OBLIVION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ForcedIncludeFiles>stdafx.h;obse_common/obse_prefix.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <PrecompiledHeaderFile>../obse/stdafx.h</PrecompiledHeaderFile>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir);$(SolutionDir)\..;$(SolutionDir)\..\obse\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_NO_VA_START_VALIDATION;_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS;WIN32;NDEBUG;_WINDOWS;_USRDLL;OBLIVION_VERSION=0x010201A0;OBLIVION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ForcedIncludeFiles>stdafx.h;obse_common/obse_prefix.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ObjectFileName>$(IntDir)/%(RelativeDir)/</ObjectFileName>
+    </ClCompile>
+    <Link>
+      <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+    <PostBuildEvent>
+      <Message>
+      </Message>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\common\common.vcxproj">
+      <Project>{20c6411c-596f-4b85-be4e-8bc91f59d8a6}</Project>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\obse\obse\obse.vcxproj">
+      <Project>{01b76b21-f851-436e-acea-64fa03be8c59}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Miscellaneous\math.cpp" />
+    <ClCompile Include="Patches\AudioMenu.cpp" />
+    <ClCompile Include="Patches\ClassMenu.cpp" />
+    <ClCompile Include="Patches\ContainerMenu.cpp" />
+    <ClCompile Include="Patches\EffectSettingMenu.cpp" />
+    <ClCompile Include="Patches\EnchantingAndSigilStoneMenus.cpp" />
+    <ClCompile Include="Patches\HUDMainMenu.cpp" />
+    <ClCompile Include="Patches\InventoryMenu.cpp" />
+    <ClCompile Include="Patches\LockPickMenu.cpp" />
+    <ClCompile Include="Patches\NewMenus\Helpers\Checkbox.cpp" />
+    <ClCompile Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.cpp" />
+    <ClCompile Include="Patches\NewMenus\XXNControlsMenu.cpp" />
+    <ClCompile Include="Patches\NewMenus\XXNOptionsMenu.cpp" />
+    <ClCompile Include="Patches\OptionsMenu.cpp" />
+    <ClCompile Include="Patches\PersuasionMenu.cpp" />
+    <ClCompile Include="Patches\QuestAddedMenu.cpp" />
+    <ClCompile Include="Patches\SavegameSafeDelete.cpp" />
+    <ClCompile Include="Patches\RaceSexMenu.cpp" />
+    <ClCompile Include="Patches\SaveMenu.cpp" />
+    <ClCompile Include="Patches\TagIDs\Main.cpp" />
+    <ClCompile Include="Patches\TagIDs\Operators.cpp" />
+    <ClCompile Include="Patches\TagIDs\Traits.cpp" />
+    <ClCompile Include="Patches\UIDiagnostics.cpp" />
+    <ClCompile Include="Patches\VideoMenu.cpp" />
+    <ClCompile Include="Patches\XboxGamepad\CustomControls.cpp" />
+    <ClCompile Include="ReverseEngineered\NetImmerse\NiTypes.cpp" />
+    <ClCompile Include="ReverseEngineered\Systems\Core.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\AudioMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\GameplayMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\LockPickMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\OptionsMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\TextEditMenu.cpp" />
+    <ClCompile Include="Services\PatchManagement.cpp" />
+    <ClCompile Include="shared.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\LoadgameMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\MapMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\VideoMenu.cpp" />
+    <ClCompile Include="Services\Translations.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" Exclude="..\obse\obse\Commands_*.cpp" />
+    <ClCompile Include="..\obse\StdAfx.cpp" />
+    <ClCompile Include="dllmain.c">
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="Fun\x86Writer.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Miscellaneous\CRC24.cpp" />
+    <ClCompile Include="Miscellaneous\CRC32.cpp" />
+    <ClCompile Include="Miscellaneous\strings.cpp" />
+    <ClCompile Include="Patches\AlchemyMenu.cpp" />
+    <ClCompile Include="Patches\Exploratory.cpp" />
+    <ClCompile Include="Patches\Fonts.cpp" />
+    <ClCompile Include="Patches\CleanUpAfterMenuQue.cpp" />
+    <ClCompile Include="Patches\GameplayMenu.cpp" />
+    <ClCompile Include="Patches\HUDInfoMenu.cpp" />
+    <ClCompile Include="Patches\Logging.cpp" />
+    <ClCompile Include="Patches\MenuTextInputState.cpp" />
+    <ClCompile Include="Patches\Miscellaneous.cpp" />
+    <ClCompile Include="Patches\NewMenus\XXNAlchemyMenu.cpp" />
+    <ClCompile Include="Patches\NewMenus\XXNHUDClockMenu.cpp" />
+    <ClCompile Include="Patches\NewMenus\XXNHUDDebugMenu.cpp" />
+    <ClCompile Include="Patches\NewMenus\XXNLockPickMenu.cpp" />
+    <ClCompile Include="Patches\NewMenus\XXNSampleInventoryMenu.cpp" />
+    <ClCompile Include="Patches\Selectors.cpp" />
+    <ClCompile Include="Patches\VanillaHUDReticle.cpp" />
+    <ClCompile Include="Patches\VanillaMapMenu.cpp" />
+    <ClCompile Include="Patches\XboxGamepad\Main.cpp" />
+    <ClCompile Include="Patches\XboxGamepad\Patch.cpp" />
+    <ClCompile Include="Patches\XXNMenus.cpp" />
+    <ClCompile Include="ReverseEngineered\Forms\AlchemyItem.cpp" />
+    <ClCompile Include="ReverseEngineered\Forms\EffectItem.cpp" />
+    <ClCompile Include="ReverseEngineered\Forms\PlayerCharacter.cpp" />
+    <ClCompile Include="ReverseEngineered\Forms\TESObjectREFR.cpp" />
+    <ClCompile Include="ReverseEngineered\GameSettings.cpp" />
+    <ClCompile Include="ReverseEngineered\INISettings.cpp" />
+    <ClCompile Include="ReverseEngineered\Miscellaneous.cpp" />
+    <ClCompile Include="ReverseEngineered\Systems\Timing.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\FontManager.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\General.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\InterfaceManager.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\AlchemyMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\HUDReticle.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\QuickKeysMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\MenuTextInputState.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Tile.cpp" />
+    <ClCompile Include="ReverseEngineered\_BASE.cpp" />
+    <ClCompile Include="ScriptCommands\OBSESamples.cpp" />
+    <ClCompile Include="Services\FontShim.cpp" />
+    <ClCompile Include="Services\INISettings.cpp" />
+    <ClCompile Include="Services\serialization.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- <ClInclude Include="..\obse\obse\*.h" Exclude="..\obse\obse\Commands_*.h" />
+    <ClInclude Include="..\obse\StdAfx.h" /> -->
+    <ClInclude Include="dds.h" />
+    <ClInclude Include="Fun\x86Writer.h" />
+    <ClInclude Include="Miscellaneous\CRC24.h" />
+    <ClInclude Include="Miscellaneous\CRC32.h" />
+    <ClInclude Include="Miscellaneous\large_bitset.h" />
+    <ClInclude Include="Miscellaneous\math.h" />
+    <ClInclude Include="Miscellaneous\strings.h" />
+    <ClInclude Include="Patches\AlchemyMenu.h" />
+    <ClInclude Include="Patches\AudioMenu.h" />
+    <ClInclude Include="Patches\ClassMenu.h" />
+    <ClInclude Include="Patches\CleanUpAfterMenuQue.h" />
+    <ClInclude Include="Patches\ContainerMenu.h" />
+    <ClInclude Include="Patches\EffectSettingMenu.h" />
+    <ClInclude Include="Patches\EnchantingAndSigilStoneMenus.h" />
+    <ClInclude Include="Patches\Exploratory.h" />
+    <ClInclude Include="Patches\Fonts.h" />
+    <ClInclude Include="Patches\GameplayMenu.h" />
+    <ClInclude Include="Patches\HUDInfoMenu.h" />
+    <ClInclude Include="Patches\HUDMainMenu.h" />
+    <ClInclude Include="Patches\InventoryMenu.h" />
+    <ClInclude Include="Patches\LockPickMenu.h" />
+    <ClInclude Include="Patches\NewMenus\Helpers\Checkbox.h" />
+    <ClInclude Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.h" />
+    <ClInclude Include="Patches\NewMenus\XXNControlsMenu.h" />
+    <ClInclude Include="Patches\NewMenus\XXNOptionsMenu.h" />
+    <ClInclude Include="Patches\OptionsMenu.h" />
+    <ClInclude Include="Patches\PersuasionMenu.h" />
+    <ClInclude Include="Patches\QuestAddedMenu.h" />
+    <ClInclude Include="Patches\SavegameSafeDelete.h" />
+    <ClInclude Include="Patches\Logging.h" />
+    <ClInclude Include="Patches\MenuTextInputState.h" />
+    <ClInclude Include="Patches\Miscellaneous.h" />
+    <ClInclude Include="Patches\NewMenus\XXNAlchemyMenu.h" />
+    <ClInclude Include="Patches\NewMenus\XXNHUDClockMenu.h" />
+    <ClInclude Include="Patches\NewMenus\XXNHUDDebugMenu.h" />
+    <ClInclude Include="Patches\NewMenus\XXNLockPickMenu.h" />
+    <ClInclude Include="Patches\NewMenus\XXNSampleInventoryMenu.h" />
+    <ClInclude Include="Patches\RaceSexMenu.h" />
+    <ClInclude Include="Patches\SaveMenu.h" />
+    <ClInclude Include="Patches\Selectors.h" />
+    <ClInclude Include="Patches\TagIDs\Main.h" />
+    <ClInclude Include="Patches\TagIDs\Operators.h" />
+    <ClInclude Include="Patches\TagIDs\Traits.h" />
+    <ClInclude Include="Patches\UIDiagnostics.h" />
+    <ClInclude Include="Patches\VanillaHUDReticle.h" />
+    <ClInclude Include="Patches\VanillaMapMenu.h" />
+    <ClInclude Include="Patches\VideoMenu.h" />
+    <ClInclude Include="Patches\XboxGamepad\CustomControls.h" />
+    <ClInclude Include="Patches\XboxGamepad\Main.h" />
+    <ClInclude Include="Patches\XboxGamepad\Patch.h" />
+    <ClInclude Include="Patches\XXNMenus.h" />
+    <ClInclude Include="ReverseEngineered\ExtraData\ExtraContainerChanges.h" />
+    <ClInclude Include="ReverseEngineered\Files\BSFile.h" />
+    <ClInclude Include="ReverseEngineered\Forms\Actor.h" />
+    <ClInclude Include="ReverseEngineered\Forms\AlchemyItem.h" />
+    <ClInclude Include="ReverseEngineered\Forms\EffectItem.h" />
+    <ClInclude Include="ReverseEngineered\Forms\hardcoded.h" />
+    <ClInclude Include="ReverseEngineered\Forms\MobileObject.h" />
+    <ClInclude Include="ReverseEngineered\Forms\PlayerCharacter.h" />
+    <ClInclude Include="ReverseEngineered\Forms\TESObjectREFR.h" />
+    <ClInclude Include="ReverseEngineered\Forms\TESWorldSpace.h" />
+    <ClInclude Include="ReverseEngineered\GameSettings.h" />
+    <ClInclude Include="ReverseEngineered\INISettings.h" />
+    <ClInclude Include="ReverseEngineered\Miscellaneous.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\NiGeometry.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\NiObject.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\NiPixelData.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\NiProperty.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\NiScreen.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\NiTexture.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\NiTypes.h" />
+    <ClInclude Include="ReverseEngineered\Systems\AI.h" />
+    <ClInclude Include="ReverseEngineered\Systems\Core.h" />
+    <ClInclude Include="ReverseEngineered\Systems\Input.h" />
+    <ClInclude Include="ReverseEngineered\Systems\Sound.h" />
+    <ClInclude Include="ReverseEngineered\Systems\Timing.h" />
+    <ClInclude Include="ReverseEngineered\TESSaveLoadGame.h" />
+    <ClInclude Include="ReverseEngineered\UI\FontManager.h" />
+    <ClInclude Include="ReverseEngineered\UI\General.h" />
+    <ClInclude Include="ReverseEngineered\UI\InterfaceManager.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\AlchemyMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\AudioMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\EnchantmentMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\GameplayMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\HUDInfoMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\HUDReticle.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\InventoryMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\LoadgameMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\LockPickMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\MapMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\OptionsMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\PersuasionMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\QuickKeysMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\RaceSexMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\RepairMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\SigilStoneMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\SpellMakingMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\TextEditMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\VideoMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\MenuTextInputState.h" />
+    <ClInclude Include="ReverseEngineered\UI\TagIDs.h" />
+    <ClInclude Include="ReverseEngineered\UI\Tile.h" />
+    <ClInclude Include="ReverseEngineered\_BASE.h" />
+    <ClInclude Include="ScriptCommands\OBSESamples.h" />
+    <ClInclude Include="Services\FontShim.h" />
+    <ClInclude Include="Services\INISettings.h" />
+    <ClInclude Include="Services\PatchManagement.h" />
+    <ClInclude Include="Services\Translations.h" />
+    <ClInclude Include="shared.h" />
+    <ClInclude Include="Services\serialization.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\obse\obse\GameRTTI_1_1.inl" />
+    <None Include="..\obse\obse\GameRTTI_1_2.inl" />
+    <None Include="..\obse\obse\GameRTTI_1_2_416.inl" />
+    <None Include="exports.def" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
