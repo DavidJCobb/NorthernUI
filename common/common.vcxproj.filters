@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="streams">
+      <UniqueIdentifier>{7a28742d-8065-4dd0-9b8b-89b781eda82d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="debug">
+      <UniqueIdentifier>{34fd11a2-2b19-4256-a01a-b97b9a15f0cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="threads">
+      <UniqueIdentifier>{fe988394-f27b-409b-9899-8b4ad799fbff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="datatypes">
+      <UniqueIdentifier>{f946d7a6-9b3f-4be9-ac95-db8cae1900e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utilities">
+      <UniqueIdentifier>{2f8b0d5f-e876-491a-942f-253b8953c79b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{329719d3-4563-4a9c-8001-6ee5c561f0fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pipe">
+      <UniqueIdentifier>{a729cf34-a8ce-4df9-9af9-7ad5d1d1b13c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="files">
+      <UniqueIdentifier>{4fc68cca-58a0-4270-a446-cd008fa3d1d4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="IBufferStream.cpp">
+      <Filter>streams</Filter>
+    </ClCompile>
+    <ClCompile Include="IDataStream.cpp">
+      <Filter>streams</Filter>
+    </ClCompile>
+    <ClCompile Include="IFileStream.cpp">
+      <Filter>streams</Filter>
+    </ClCompile>
+    <ClCompile Include="ISegmentStream.cpp">
+      <Filter>streams</Filter>
+    </ClCompile>
+    <ClCompile Include="IDebugLog.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="IErrors.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="IEvent.cpp">
+      <Filter>threads</Filter>
+    </ClCompile>
+    <ClCompile Include="IInterlockedLong.cpp">
+      <Filter>threads</Filter>
+    </ClCompile>
+    <ClCompile Include="IMutex.cpp">
+      <Filter>threads</Filter>
+    </ClCompile>
+    <ClCompile Include="IReadWriteLock.cpp">
+      <Filter>threads</Filter>
+    </ClCompile>
+    <ClCompile Include="IThread.cpp">
+      <Filter>threads</Filter>
+    </ClCompile>
+    <ClCompile Include="IArchive.cpp">
+      <Filter>datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="IDatabase.cpp">
+      <Filter>datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="IFIFO.cpp">
+      <Filter>datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="IRangeMap.cpp">
+      <Filter>datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="ISingleton.cpp">
+      <Filter>datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="ITextParser.cpp">
+      <Filter>datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="ITypes.cpp">
+      <Filter>datatypes</Filter>
+    </ClCompile>
+    <ClCompile Include="IConsole.cpp">
+      <Filter>utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="IDynamicCreate.cpp">
+      <Filter>utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="ITimer.cpp">
+      <Filter>utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="IMemPool.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="IPipeClient.cpp">
+      <Filter>pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="IPipeServer.cpp">
+      <Filter>pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="IDirectoryIterator.cpp">
+      <Filter>files</Filter>
+    </ClCompile>
+    <ClCompile Include="IPrefix.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IBufferStream.h">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="IDataStream.h">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="IFileStream.h">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="ISegmentStream.h">
+      <Filter>streams</Filter>
+    </ClInclude>
+    <ClInclude Include="IDebugLog.h">
+      <Filter>debug</Filter>
+    </ClInclude>
+    <ClInclude Include="IErrors.h">
+      <Filter>debug</Filter>
+    </ClInclude>
+    <ClInclude Include="ICriticalSection.h">
+      <Filter>threads</Filter>
+    </ClInclude>
+    <ClInclude Include="IEvent.h">
+      <Filter>threads</Filter>
+    </ClInclude>
+    <ClInclude Include="IInterlockedLong.h">
+      <Filter>threads</Filter>
+    </ClInclude>
+    <ClInclude Include="IMutex.h">
+      <Filter>threads</Filter>
+    </ClInclude>
+    <ClInclude Include="IReadWriteLock.h">
+      <Filter>threads</Filter>
+    </ClInclude>
+    <ClInclude Include="IThread.h">
+      <Filter>threads</Filter>
+    </ClInclude>
+    <ClInclude Include="IArchive.h">
+      <Filter>datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="IDatabase.h">
+      <Filter>datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="IFIFO.h">
+      <Filter>datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ILinkedList.h">
+      <Filter>datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="IRangeMap.h">
+      <Filter>datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ISingleton.h">
+      <Filter>datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ITextParser.h">
+      <Filter>datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="ITypes.h">
+      <Filter>datatypes</Filter>
+    </ClInclude>
+    <ClInclude Include="IConsole.h">
+      <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="IDynamicCreate.h">
+      <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="ITimer.h">
+      <Filter>utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="IMemPool.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="IPipeClient.h">
+      <Filter>pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="IPipeServer.h">
+      <Filter>pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="IDirectoryIterator.h">
+      <Filter>files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPrefix.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="IDatabase.inc">
+      <Filter>datatypes</Filter>
+    </None>
+  </ItemGroup>
+</Project>
