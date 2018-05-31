@@ -33,7 +33,7 @@ namespace RE {
          virtual void	Unk_77(void) = 0;
          virtual float	GetZRotation(void) = 0;
          virtual void	Unk_79(void) = 0;
-         virtual void	Unk_7A(void) = 0;
+         virtual void	SetZRotation(float) = 0;
          virtual void	Unk_7B(void) = 0;
          virtual void	Unk_7C(void) = 0;
          virtual float	GetJumpScale(void) = 0;

@@ -218,7 +218,9 @@ namespace RE {
          UInt8  isAMurderer; // 611
          UInt8  pad612[2];						// 612
          float  amountSoldStolen; // 614
-         UInt32 unk618[(0x624 - 0x618) >> 2];	// 618
+         UInt32 unk618;
+         float  unk61C; // 61C // rotation angle; probably yaw; limited to the range [-PI/2, PI/2]
+         UInt32 unk620;
          MagicItem* activeMagicItem;				// 624
          TESObjectBOOK* book;						// 628 /MAybe last activated book or last activated skill book 
          NiVector3 unk62C; // 62C
@@ -242,8 +244,8 @@ namespace RE {
          UInt32 unk714;
          UInt32 unk718;
          UInt8  unk71C;
-         UInt8  unk71D;
-         UInt8  unk71E;
+         UInt8  unk71D; // 71D // bool? related to player or camera yaw
+         UInt8  unk71E; // 71E // bool? related to player or camera yaw
          bool   unk71F; // 71F // indicates that some task has been queued
          NiVector3 lastSafePosition; // 720 // last safe position of the player's mount, or the player if no mount; used to enforce border regions
          void*     lastSafeWorld;    // 72C // used in conjunction with lastSafePosition
