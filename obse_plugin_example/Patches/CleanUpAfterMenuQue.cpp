@@ -6,6 +6,7 @@
 
 #include "obse/GameTiles.h"
 #include "ReverseEngineered/NetImmerse/NiTypes.h"
+#include "ReverseEngineered/UI/Menu.h"
 #include "ReverseEngineered/UI/Tile.h"
 
 #include "Patches/TagIDs/Main.h"
@@ -73,6 +74,61 @@ namespace CobbPatches {
          //
       };
 
+      namespace MenuQueFixes {
+         //
+         // One of MenuQue's patches crashes when menus with extended IDs are open, 
+         // and we can't reasonably stop it from running into that case. The only 
+         // option is to patch MenuQue itself.
+         //
+         // The problem occurs in a hook that MenuQue applies to the interface's 
+         // frame handler, to operate on the mouseTarget tile. MenuQue tries to 
+         // retrieve a TileLink (a new Tile subclass) and then call a method on 
+         // it. If the TileLink is nullptr, MenuQue crashes, because there's no 
+         // check for that. The pointer will be null if the mouseTarget belongs to 
+         // a menu with an extended ID, or if the mouseTarget belongs to a menu 
+         // that is not the InterfaceManager::activeMenu.
+         //
+         // The solution is to patch this TileLink method to check whether the 
+         // this pointer is null.
+         //
+         static UInt32 s_mqReturnFail    = 0;
+         static UInt32 s_mqReturnProceed = 0;
+         __declspec(naked) void Outer() {
+            _asm {
+               test ebx, ebx;
+               jz   lFail;
+               cmp  dword ptr [ebx + 0x40], eax;
+               je   lFail;
+               mov  eax, s_mqReturnProceed;
+               jmp  eax;
+            lFail:
+               mov  eax, s_mqReturnFail;
+               jmp  eax;
+            };
+         };
+         void Apply() {
+            if (!g_detectedMenuQue)
+               return;
+            if (!g_detectedMenuQueBaseAddress) {
+               _MESSAGE(" - MenuQue's base address is missing. Unable to apply safety patches; attempting to open menus with extended IDs will crash due to missing nullptr checks in MenuQue.");
+               return;
+            }
+            if (*(UInt8*)(0x0058251B) != 0xE9) // check for patched-in JMP
+               return;
+            UInt32 existingPatch = *(UInt32*)(0x0058251C);
+            existingPatch -= g_detectedMenuQueBaseAddress;
+            existingPatch += 0x0058251B + 5;
+            if (existingPatch != 0x00011E30) { // MQ subroutine
+               _MESSAGE(" - Check for MQ_11E30 failed; something else patched there instead. Jump target read as MQ_%08X (%08X).", existingPatch, *(UInt32*)(0x0051251C));
+               return;
+            }
+            s_mqReturnFail    = g_detectedMenuQueBaseAddress + 0x0001486F;
+            s_mqReturnProceed = g_detectedMenuQueBaseAddress + 0x00014878;
+            WriteRelJump(g_detectedMenuQueBaseAddress + 0x0001486A, (UInt32)&Outer); // patched MenuQue.
+            _MESSAGE(" - Detected compatibility-hazardous MenuQue patch (hook MQ_11E30). Patched applied to MQ:0x0001486A.");
+         };
+      };
+
       struct Call {
          UInt32 address = 0;
          UInt8  brokenByteCount = 0;
@@ -90,6 +146,7 @@ namespace CobbPatches {
             {0x0057FEF7, 10}, // possibly MenuTextInputState::~MenuTextInputState
             {0x0057FF50,  1}, // MenuTextInputState::HandleKeypress
             {0x00580120,  1}, // MenuTextInputState::Subroutine00580120
+            {0x0058251B,  5}, // InterfaceManager::Update
             {0x00583A4B,  3}, // InterfaceManager::Update
             {0x00583AE3,  3}, // InterfaceManager::Update
             {0x00583B59,  1}, // InterfaceManager::Update
@@ -141,6 +198,7 @@ namespace CobbPatches {
             } else if (g_detectedMenuQue)
                _MESSAGE(" - Unable to identify MenuQue's base address! Some of our compatibility patches will not function!");
          }
+         MenuQueFixes::Apply();
       }
    }
 }
