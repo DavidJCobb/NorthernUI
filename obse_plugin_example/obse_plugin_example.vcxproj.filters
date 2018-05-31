@@ -95,6 +95,7 @@
     <ClCompile Include="ReverseEngineered\UI\Menus\AudioMenu.cpp" />
     <ClCompile Include="Patches\AudioMenu.cpp" />
     <ClCompile Include="Patches\VideoMenu.cpp" />
+    <ClCompile Include="Patches\NewMenus\Helpers\Slider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -2146,6 +2147,7 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="dds.h" />
+    <ClInclude Include="Patches\NewMenus\Helpers\Slider.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\obse\obse\GameRTTI_1_1.inl">

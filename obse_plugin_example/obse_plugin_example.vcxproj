@@ -134,6 +134,7 @@
     <ClCompile Include="Patches\LockPickMenu.cpp" />
     <ClCompile Include="Patches\NewMenus\Helpers\Checkbox.cpp" />
     <ClCompile Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.cpp" />
+    <ClCompile Include="Patches\NewMenus\Helpers\Slider.cpp" />
     <ClCompile Include="Patches\NewMenus\XXNControlsMenu.cpp" />
     <ClCompile Include="Patches\NewMenus\XXNOptionsMenu.cpp" />
     <ClCompile Include="Patches\OptionsMenu.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="Patches\LockPickMenu.h" />
     <ClInclude Include="Patches\NewMenus\Helpers\Checkbox.h" />
     <ClInclude Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.h" />
+    <ClInclude Include="Patches\NewMenus\Helpers\Slider.h" />
     <ClInclude Include="Patches\NewMenus\XXNControlsMenu.h" />
     <ClInclude Include="Patches\NewMenus\XXNOptionsMenu.h" />
     <ClInclude Include="Patches\OptionsMenu.h" />
