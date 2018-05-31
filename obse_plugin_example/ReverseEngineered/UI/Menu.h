@@ -193,7 +193,7 @@ namespace RE {
             kScrollDragBehavior_ClickStep, // MapMenu (quest list)
             kScrollDragBehavior_Advanced,  // StatsMenu (all lists)
          };
-         static void HandleScrollbarThumbDrag (Tile* bar, Tile* thumb, ScrollDragBehavior); // call from Menu::HandleFrameMouseDown if the event target is the scrollbar thumb
+         static void HandleScrollbarThumbDrag (Tile* bar, Tile* thumb, ScrollDragBehavior, bool isHorizontal = false); // call from Menu::HandleFrameMouseDown if the event target is the scrollbar thumb
          static void HandleScrollbarMouseWheel(Tile* thumb); // call from Menu::HandleFrameMouseWheel
    };
 };

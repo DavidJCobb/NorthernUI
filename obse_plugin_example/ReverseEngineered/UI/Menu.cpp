@@ -75,12 +75,17 @@ namespace RE {
          CALL_MEMBER_FN(focusBox, UpdateFloat)(kTileValue_visible, 1.0F);
       }
    };
-   void Menu::HandleScrollbarThumbDrag(Tile* bar, Tile* thumb, ScrollDragBehavior behavior) {
-      float yOffset;
+   void Menu::HandleScrollbarThumbDrag(Tile* bar, Tile* thumb, ScrollDragBehavior behavior, bool isHorizontal) {
+      float offset;
       {
          auto ui = RE::InterfaceManager::GetInstance();
-         float a = (RE::GetNormalizedScreenHeight() / 2) - ui->cursorPos.z;
-         yOffset = ((SInt32) a) - CALL_MEMBER_FN(bar, GetAbsoluteYCoordinate)();
+         if (isHorizontal) {
+            float a = (RE::GetNormalizedScreenWidth() / 2) + ui->cursorPos.x;
+            offset = ((SInt32)a) - CALL_MEMBER_FN(bar, GetAbsoluteXCoordinate)();
+         } else {
+            float a = (RE::GetNormalizedScreenHeight() / 2) - ui->cursorPos.z;
+            offset = ((SInt32)a) - CALL_MEMBER_FN(bar, GetAbsoluteYCoordinate)();
+         }
       }
       //
       Tile*  target;
@@ -94,7 +99,7 @@ namespace RE {
          //
          default:
          case kScrollDragBehavior_Interval:
-            {  // Based on DialogMenu and InventoryMenu drag behavior.
+            {  // Based on AudioMenu, DialogMenu, and InventoryMenu drag behavior.
                // Seems to scroll based on pixels from the scrollbar track top.
                //
                // We don't clamp the scroll position here because we aren't directly modifying it. Instead, 
@@ -103,8 +108,8 @@ namespace RE {
                // other things, this means that we don't need to clamp the scroll value to the scrollbar's 
                // specified minimum or maximum; the thumb's XML already does that.
                //
-               final  = yOffset / CALL_MEMBER_FN(bar, GetFloatTraitValue)(RE::kScrollThumbTraitValue_DragInterval);
-               trait  = kTileValue_user9;
+               final = offset / CALL_MEMBER_FN(thumb, GetFloatTraitValue)(RE::kScrollThumbTraitValue_DragInterval);
+               trait = kTileValue_user9;
                target = thumb;
             }
             break;
@@ -120,7 +125,7 @@ namespace RE {
                //
                // I don't yet understand how this is meant to differ from the "Interval" behavior.
                //
-               final = yOffset / CALL_MEMBER_FN(bar, GetFloatTraitValue)(RE::kScrollThumbTraitValue_DragInterval);
+               final = offset / CALL_MEMBER_FN(thumb, GetFloatTraitValue)(RE::kScrollThumbTraitValue_DragInterval);
                final /= CALL_MEMBER_FN(bar, GetFloatTraitValue)(RE::kScrollbarTraitValue_ArrowClickStep); // ?!?!?!
                trait = kTileValue_user9;
                target = thumb;
@@ -137,13 +142,13 @@ namespace RE {
                //
                float minScroll = CALL_MEMBER_FN(bar, GetFloatTraitValue)(kScrollbarTraitValue_MinScroll);
                float maxScroll = CALL_MEMBER_FN(bar, GetFloatTraitValue)(kScrollbarTraitValue_MaxScroll);
-               float percentage = yOffset / CALL_MEMBER_FN(bar, GetFloatTraitValue)(kTileValue_height);
+               float percentage = offset / CALL_MEMBER_FN(bar, GetFloatTraitValue)(isHorizontal ? kTileValue_width : kTileValue_height);
                if (percentage < 0.0F)
                   percentage = 0.0F;
                else if (percentage > 1.0F)
                   percentage = 1.0F;
-               final  = ((maxScroll - minScroll) * percentage) + minScroll;
-               trait  = kScrollbarTraitValue_InitialScroll;
+               final = ((maxScroll - minScroll) * percentage) + minScroll;
+               trait = kScrollbarTraitValue_InitialScroll;
                target = bar;
             }
             break;
