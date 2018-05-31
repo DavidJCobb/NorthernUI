@@ -309,6 +309,22 @@ void XXNGamepadConfigManager::LoadCustomProfiles() {
                std::swap(this->currentScheme, value); // fast assign
                continue;
             }
+            {
+               bool isX = _stricmp(key.c_str(), "fSensitivityX");
+               bool isY = _stricmp(key.c_str(), "fSensitivityY");
+               if (isX || isY) {
+                  float f;
+                  if (!cobb::string_to_float(value.c_str(), f))
+                     continue;
+                  if (f) {
+                     if (isX)
+                        this->sensitivityX = f;
+                     else
+                        this->sensitivityY = f;
+                  }
+                  continue;
+               }
+            }
             SInt32 i;
             if (!cobb::string_to_int(value.c_str(), i))
                continue;
@@ -372,6 +388,10 @@ void XXNGamepadConfigManager::SaveCustomProfiles() {
       snprintf(line, sizeof(line), "%s=%d\n", "bSwapSticksGameplay", this->swapSticksGameplay);
       oFile.write(line, strlen(line));
       snprintf(line, sizeof(line), "%s=%d\n", "bSwapSticksMenuMode", this->swapSticksMenuMode);
+      oFile.write(line, strlen(line));
+      snprintf(line, sizeof(line), "%s=%f\n", "fSensitivityX", this->sensitivityX);
+      oFile.write(line, strlen(line));
+      snprintf(line, sizeof(line), "%s=%f\n", "fSensitivityY", this->sensitivityY);
       oFile.write(line, strlen(line));
       {  // Write current profile name
          std::string line = "sUseSchemeName=";

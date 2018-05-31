@@ -20,10 +20,12 @@ class XXNGamepadConfigManager {
       std::mutex initLock;
 
    public:
-      bool initialized = false;
+      bool  initialized = false;
       std::string currentScheme; // outside callers should prefer SetProfile(...) over writing to this directly
-      bool swapSticksGameplay = false; // if true, then LS = look and RS = move
-      bool swapSticksMenuMode = false; // if true, then use RS for menus instead of LS
+      bool  swapSticksGameplay = false; // if true, then LS = look and RS = move
+      bool  swapSticksMenuMode = false; // if true, then use RS for menus instead of LS
+      float sensitivityX = 0.0005F; // recommended upper bound: 0.001
+      float sensitivityY = 0.0003F;
       //
       struct Profile : public RE::OSInputGlobals::Scheme {
          Profile() {

@@ -170,6 +170,163 @@ namespace CobbPatches {
             SafeWrite32 (0x00403AB1, 0x90909090); // courtesy NOPs
          };
       };
+      namespace SensitivityFix {
+         //
+         // Oblivion multiplies the joystick sensitivity into the joystick input, 
+         // adds that to the mouse input, and then multiplies the lot of it by 
+         // the mouse sensitivity. This means that joystick input is downscaled 
+         // twice, rendering the look stick inoperable.
+         //
+         // The various get and multiply operations are scattered all over the 
+         // movement code. Since it's only looking that's broken, it's easiest 
+         // to let everything else just work with the broken input, and then 
+         // re-retrieve the inputs and scale them properly at look-time.
+         //
+         namespace Registrations {
+            //
+            // The first part of the movement code grabs the joystick input, 
+            // scales it by a float, and stuffs it into a signed int. However, 
+            // the scaling factor needs to be extremely small; even a scaling 
+            // factor of 0.02 is WAY too large and results in uncontrollably 
+            // fast turning.
+            //
+            // As such, if we're scaling by factors on the order of 0.002, then 
+            // it is impossible for any joystick input to produce a value that 
+            // won't simply be truncated to zero when cast to an int. This is 
+            // a problem because no movement is carried out if the target value 
+            // is an int.
+            //
+            // The solution is to just add 1 or -1 to the ints if there is any 
+            // joystick movement, since the ints themselves aren't used to 
+            // produce the look changes anyway.
+            //
+            SInt32 __stdcall Inner(float value) {
+               return ((0.0F < value) - (value < 0.0F));
+            };
+            __declspec(naked) void OuterX() {
+               _asm {
+                  push ecx;
+                  fstp [esp];
+                  call Inner; // stdcall
+                  mov  ecx, 0x006719A1;
+                  jmp  ecx;
+               }
+            };
+            __declspec(naked) void OuterY() {
+               _asm {
+                  push ecx;
+                  fstp [esp];
+                  call Inner; // stdcall
+                  mov  ecx, 0x006719CC;
+                  jmp  ecx;
+               }
+            };
+            void Apply() {
+               //
+               // X:
+               //
+               SafeWrite16 (0x00671996, 0x9090);
+               SafeWrite32 (0x00671998, 0x90909090); // NOP out multiplication by joystick X-sensitivity INI setting
+               WriteRelJump(0x0067199C, (UInt32)&OuterX);
+               //
+               // Y:
+               //
+               SafeWrite16 (0x006719C1, 0x9090);
+               SafeWrite32 (0x006719C3, 0x90909090); // NOP out multiplication by joystick X-sensitivity INI setting
+               WriteRelJump(0x006719C7, (UInt32)&OuterY);
+            };
+         };
+         namespace XAxis {
+            float Inner() {
+               auto input = RE::OSInputGlobals::GetInstance();
+               float x = (float)CALL_MEMBER_FN(input, GetMouseAxisMovement)(RE::kMouseAxis_X) * RE::INI::Controls::fMouseSensitivity->f;
+               //
+               auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(0);
+               if (gamepad) {
+                  auto& config = XXNGamepadConfigManager::GetInstance();
+                  float g = (float)gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookLeftRight->i) * config.sensitivityX;
+                  x += g;
+               }
+               return x;
+            }
+            __declspec(naked) void Outer() {
+               _asm {
+                  call Inner;
+                  mov  ecx, 0x00671C5E;
+                  jmp  ecx;
+               };
+            };
+            void Apply() {
+               WriteRelJump(0x00671C54, (UInt32)&Outer);
+               SafeWrite8  (0x00671C59, 0x90);       // courtesy NOP
+               SafeWrite32 (0x00671C5A, 0x90909090); // courtesy NOPs
+            }
+         };
+         namespace XAxisUnknown {
+            float Inner() {
+               auto input = RE::OSInputGlobals::GetInstance();
+               float x = (float)CALL_MEMBER_FN(input, GetMouseAxisMovement)(RE::kMouseAxis_X) / 24.0F;
+               //
+               auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(0);
+               if (gamepad) {
+                  auto& config = XXNGamepadConfigManager::GetInstance();
+                  float g = (float)gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookLeftRight->i) / 24.0F;
+                  x += g;
+               }
+               return x;
+            };
+            __declspec(naked) void Outer() {
+               _asm {
+                  call Inner;
+                  mov  ecx, 0x00671D51;
+                  jmp  ecx;
+               };
+            };
+            void Apply() {
+               WriteRelJump(0x00671D43, (UInt32)&Outer);
+               SafeWrite8  (0x00671D48, 0x90);       // NOPs to indicate skipped instructions
+               SafeWrite16 (0x00671D49, 0x9090);     // NOPs to indicate skipped instructions
+               SafeWrite32 (0x00671D4B, 0x90909090); // NOPs to indicate skipped instructions
+               SafeWrite16 (0x00671D4F, 0x9090);     // NOPs to indicate skipped instructions
+            };
+         };
+         namespace YAxis {
+            float Inner() {
+               auto input = RE::OSInputGlobals::GetInstance();
+               float y = (float)CALL_MEMBER_FN(input, GetMouseAxisMovement)(RE::kMouseAxis_Y) * RE::INI::Controls::fMouseSensitivity->f;
+               //
+               auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(0);
+               if (gamepad) {
+                  auto& config = XXNGamepadConfigManager::GetInstance();
+                  float g = (float)gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookUpDown->i) * config.sensitivityY;
+                  y += g;
+               }
+               if (RE::INI::Controls::bInvertYValues->b)
+                  y = -y;
+               return y;
+            };
+            __declspec(naked) void Outer() {
+               _asm {
+                  call Inner;
+                  push esi;      // reproduce patched-over instruction
+                  mov  ecx, ebx; // reproduce patched-over instruction (actually, skipped)
+                  mov  eax, 0x00671D90;
+                  jmp  eax;
+               };
+            };
+            void Apply() {
+               WriteRelJump(0x00671D83, (UInt32)&Outer);
+               SafeWrite32 (0x00671D88, 0x90909090); // NOPs to denote skipped instructions
+               SafeWrite32 (0x00671D8C, 0x90909090); // NOPs to denote skipped instructions
+            };
+         };
+         void Apply() {
+            Registrations::Apply();
+            XAxis::Apply();
+            YAxis::Apply();
+            XAxisUnknown::Apply();
+         };
+      };
 	   namespace UICursorGamepadControl {
          //
          // Allow the gamepad to control the cursor: LS to move; RS vertical for scroll wheel. 
@@ -541,6 +698,7 @@ namespace CobbPatches {
             UICursorGamepadControl::Apply();
             UISupport::Apply();
             FixMovementZeroing::Apply();
+            SensitivityFix::Apply();
             //
             _MESSAGE("[Patch] XboxGamepad: Subroutines patched.");
             //
