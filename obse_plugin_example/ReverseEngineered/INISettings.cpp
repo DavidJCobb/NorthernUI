@@ -23,8 +23,12 @@ namespace RE {
          SettingInfo* const bDoHighDynamicRange = (SettingInfo*) 0x00B06DE4; // default value is !!TES4_005DDD00();
       };
       namespace Controls {
+         SettingInfo* const bInvertYValues = (SettingInfo*) 0x00B14F38;
+         //
          SettingInfo* const fJoystickMoveFBMult = (SettingInfo*) 0x00B14EF0;
          SettingInfo* const fJoystickMoveLRMult = (SettingInfo*) 0x00B14EF8;
+         SettingInfo* const fMouseSensitivity   = (SettingInfo*) 0x00B14EE8;
+         //
          SettingInfo* const iJoystickLookLeftRight = (SettingInfo*) 0x00B14EE0;
          SettingInfo* const iJoystickLookUpDown    = (SettingInfo*) 0x00B14ED8;
          SettingInfo* const iJoystickMoveLeftRight = (SettingInfo*) 0x00B14ED0;

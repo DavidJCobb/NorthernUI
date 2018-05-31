@@ -25,8 +25,12 @@ namespace RE {
          extern SettingInfo* const bDoHighDynamicRange; // default value is !!TES4_005DDD00();
       };
       namespace Controls {
+         extern SettingInfo* const bInvertYValues;
+         //
          extern SettingInfo* const fJoystickMoveFBMult;
          extern SettingInfo* const fJoystickMoveLRMult;
+         extern SettingInfo* const fMouseSensitivity;
+         //
          extern SettingInfo* const iJoystickLookLeftRight;
          extern SettingInfo* const iJoystickLookUpDown;
          extern SettingInfo* const iJoystickMoveLeftRight;
