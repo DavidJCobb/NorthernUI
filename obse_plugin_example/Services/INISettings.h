@@ -47,6 +47,8 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(uMenuJoystickRateMin,     "XInput", 75);
          XXN_MAKE_INI_SETTING(uMenuJoystickRateUsedFor, "XInput", 3);
          XXN_MAKE_INI_SETTING(fMapMenuPanSpeed,         "XInput", 4.5F);
+         XXN_MAKE_INI_SETTING(fMaxJoystickSensForUI,    "XInput", 0.0010F);
+         XXN_MAKE_INI_SETTING(fMinJoystickSensForUI,    "XInput", 0.0001F);
       };
       #undef XXN_MAKE_INI_SETTING
       //
