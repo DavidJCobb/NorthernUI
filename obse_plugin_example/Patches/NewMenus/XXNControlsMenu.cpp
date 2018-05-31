@@ -5,6 +5,7 @@
 #include "ReverseEngineered/UI/Menus/TextEditMenu.h"
 #include "ReverseEngineered/GameSettings.h"
 #include "Miscellaneous/strings.h"
+#include "Services/INISettings.h"
 #include "Services/Translations.h"
 #include "obse/GameAPI.h"
 #include "obse/GameMenus.h"
@@ -158,6 +159,12 @@ void XXNControlsMenu::HandleTileIDChange(SInt32 newID, RE::Tile* tile) {
       case kTileID_OptionMappableControl:
          this->optionMappableControls.handle_new_tile_id(tile);
          return;
+      case kTileID_OptionLookSensXSlider:
+         this->optionSensitivityX.tile = tile;
+         return;
+      case kTileID_OptionLookSensYSlider:
+         this->optionSensitivityY.tile = tile;
+         return;
    }
 };
 void XXNControlsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
@@ -267,6 +274,20 @@ void XXNControlsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
 void XXNControlsMenu::HandleMouseover(SInt32 tileID, RE::Tile* target) {
 };
 void XXNControlsMenu::HandleMouseout(SInt32 tileID, RE::Tile* target) {
+};
+void XXNControlsMenu::HandleFrameMouseDown(SInt32 tileID, RE::Tile* target) {
+   if (tileID == kTileID_ListScrollThumb) {
+      this->HandleScrollbarThumbDrag(this->tileListScrollbar, target, RE::Menu::kScrollDragBehavior_Advanced);
+      return;
+   }
+   if (tileID == kTileID_OptionLookSensXThumb) {
+      this->HandleScrollbarThumbDrag(this->optionSensitivityX.tile, target, RE::Menu::kScrollDragBehavior_Interval, true);
+      return;
+   }
+   if (tileID == kTileID_OptionLookSensYThumb) {
+      this->HandleScrollbarThumbDrag(this->optionSensitivityY.tile, target, RE::Menu::kScrollDragBehavior_Interval, true);
+      return;
+   }
 };
 void XXNControlsMenu::HandleFrameMouseWheel(SInt32 tileID, RE::Tile* target) {
    if (tileID == -1) { // tile is targetable but has no specific ID
@@ -399,6 +420,14 @@ void XXNControlsMenu::Setup() {
       this->optionSwapSticksGameplay.Render();
       this->optionSwapSticksMenuMode.index = manager.swapSticksMenuMode;
       this->optionSwapSticksMenuMode.Render();
+      {  // look sensitivity
+         this->optionSensitivityX.valueMin = NorthernUI::INI::XInput::fMinJoystickSensForUI.fCurrent;
+         this->optionSensitivityX.valueMax = NorthernUI::INI::XInput::fMaxJoystickSensForUI.fCurrent;
+         this->optionSensitivityY.valueMin = NorthernUI::INI::XInput::fMinJoystickSensForUI.fCurrent;
+         this->optionSensitivityY.valueMax = NorthernUI::INI::XInput::fMaxJoystickSensForUI.fCurrent;
+         this->optionSensitivityX.Set(manager.sensitivityX);
+         this->optionSensitivityY.Set(manager.sensitivityY);
+      }
    }
    this->RenderScheme();
 };
@@ -735,6 +764,16 @@ void XXNControlsMenu::Save(bool prefs, bool scheme) {
    if (prefs) {
       manager.swapSticksGameplay = this->optionSwapSticksGameplay.index;
       manager.swapSticksMenuMode = this->optionSwapSticksMenuMode.index;
+      {  // look sensitivity
+         float f;
+         f = this->optionSensitivityX.Get();
+         if (f)
+            manager.sensitivityX = f;
+         //
+         f = this->optionSensitivityY.Get();
+         if (f)
+            manager.sensitivityY = f;
+      }
    }
    if (prefs || scheme) {
       auto name = this->optionControlScheme.Get();

@@ -242,6 +242,20 @@ void XXNAlchemyMenu::HandleMouseout(SInt32 tileID, RE::Tile* target) {
       return;
    Menu::HandleFocusBox(this->tileFocusBox, nullptr);
 };
+void XXNAlchemyMenu::HandleFrameMouseDown(SInt32 tileID, RE::Tile* target) {
+   if (tileID == kTileID_EffectListScrollThumb) {
+      this->HandleScrollbarThumbDrag(this->effectList.scrollBar, this->effectList.scrollThumb, RE::Menu::kScrollDragBehavior_Advanced);
+      return;
+   }
+   if (tileID == kTileID_IngredientListScrollThumb) {
+      this->HandleScrollbarThumbDrag(this->ingredientList.scrollBar, this->ingredientList.scrollThumb, RE::Menu::kScrollDragBehavior_Advanced);
+      return;
+   }
+   if (tileID == kTileID_PotionEffectListScrollThumb) {
+      this->HandleScrollbarThumbDrag(this->potionEffectList.scrollBar, this->potionEffectList.scrollThumb, RE::Menu::kScrollDragBehavior_Advanced);
+      return;
+   }
+};
 void XXNAlchemyMenu::HandleFrameMouseWheel(SInt32 tileID, RE::Tile* target) {
    if (tileID == -1) { // tile is targetable but has no specific ID
       //

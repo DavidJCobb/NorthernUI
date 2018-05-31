@@ -240,7 +240,7 @@ class XXNAlchemyMenu : public RE::Menu {
       virtual void	HandleMouseUp(SInt32 tileID, RE::Tile* target);
       virtual void	HandleMouseover(SInt32 tileID, RE::Tile* target);
       virtual void	HandleMouseout(SInt32 tileID, RE::Tile* target);
-      //virtual void	HandleFrameMouseDown(SInt32 tileID, RE::Tile* target);
+      virtual void	HandleFrameMouseDown(SInt32 tileID, RE::Tile* target);
       virtual void	HandleFrameMouseWheel(SInt32 tileID, RE::Tile* target);
       virtual void	HandleFrame();
       virtual bool	HandleKeyboardInput(UInt32 inputChar);

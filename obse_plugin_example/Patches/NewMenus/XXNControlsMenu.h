@@ -7,6 +7,8 @@
 using namespace XXNMenuHelpers;
 #include "Helpers/EnumpickerNonTmpl.h"
 using namespace XXNMenuHelpers;
+#include "Helpers/Slider.h"
+using namespace XXNMenuHelpers;
 
 class XXNControlsMenu : public RE::Menu {
    private:
@@ -58,6 +60,10 @@ class XXNControlsMenu : public RE::Menu {
          kTileID_OptionControlSchemeName_Left = 13,
          kTileID_OptionControlSchemeName_Right = 14,
          kTileID_OptionMappableControl = 15, // same ID for all controls; use traits to distinguish
+         kTileID_OptionLookSensXSlider = 16,
+         kTileID_OptionLookSensXThumb  = 17,
+         kTileID_OptionLookSensYSlider = 18,
+         kTileID_OptionLookSensYThumb  = 19,
          kTileID_ButtonRename      = 20, // rename current scheme
          kTileID_ButtonSaveChanges = 21, // save changes to current scheme
          kTileID_ButtonDelete      = 22, // delete current scheme
@@ -69,6 +75,8 @@ class XXNControlsMenu : public RE::Menu {
          kTraitID_Root_ControlOldKey = kTileValue_user2, // user2 - int identifying the gamepad keycode already mapped to the game function being remapped
          kTraitID_Root_IsDefault     = kTileValue_user3, // user3 - bool: current scheme is the default and cannot be edited or deleted
          kTraitID_Root_IsModified    = kTileValue_user4, // user4 - bool: current scheme has been modified
+         kTraitID_Root_SensMin       = kTileValue_user5,
+         kTraitID_Root_SensMax       = kTileValue_user6,
          //
          kTraitID_Control_Mapping    = kTileValue_user0, // user0 - int identifying the game function
          kTraitID_Control_Key        = kTileValue_user1, // user1 - int identifying the gamepad keycode
@@ -109,6 +117,8 @@ class XXNControlsMenu : public RE::Menu {
       EnumpickerStr optionSwapSticksGameplay;
       EnumpickerStr optionSwapSticksMenuMode;
       EnumpickerStr optionControlScheme = EnumpickerStr(true);
+      Slider        optionSensitivityX;
+      Slider        optionSensitivityY;
       ControlList   optionMappableControls;
 
       ControlList::iterator assigning; // key we're currently assigning
@@ -125,7 +135,7 @@ class XXNControlsMenu : public RE::Menu {
       virtual void	HandleMouseUp(SInt32 tileID, RE::Tile* target);
       virtual void	HandleMouseover(SInt32 tileID, RE::Tile* target);
       virtual void	HandleMouseout(SInt32 tileID, RE::Tile* target);
-      //virtual void	HandleFrameMouseDown(SInt32 tileID, RE::Tile* target);
+      virtual void	HandleFrameMouseDown(SInt32 tileID, RE::Tile* target);
       virtual void	HandleFrameMouseWheel(SInt32 tileID, RE::Tile* target);
       virtual void	HandleFrame();
       //virtual bool	HandleKeyboardInput(UInt32 inputChar);
