@@ -45,6 +45,7 @@ namespace RE {
             kTileID_LocalMapRenderTarget  = 47,
             kTileID_LocalMapIconContainer = 48,
             kTileID_LocalMapIcon          = 49,
+            kTileID_QuestListItem      = 51,
             kTileID_WorldMapXboxCursor = 61,
             kTileID_LocalMapXboxCursor = 62,
             kTileID_WorldMapWindow     = 63,
