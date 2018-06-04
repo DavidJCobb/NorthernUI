@@ -33,6 +33,7 @@ namespace NorthernUI {
       };
       namespace XInput {
          XXN_MAKE_INI_SETTING(bEnabled,                 "XInput", true);
+         XXN_MAKE_INI_SETTING(bToggleAlwaysRunWorks,    "XInput", false); // controls whether Toggle Always Run affects joystick-initiated movement
          XXN_MAKE_INI_SETTING(uMenuJoystickRateInitial, "XInput", 300);
          XXN_MAKE_INI_SETTING(uMenuJoystickRateMod,     "XInput", 75);
          XXN_MAKE_INI_SETTING(uMenuJoystickRateMin,     "XInput", 75);
