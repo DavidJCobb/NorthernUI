@@ -231,4 +231,28 @@ namespace RE {
       } else
          _MESSAGE("%s - End of operator-siblings.", i.c_str());
    };
+
+   void Tile3D::SetAnimationTimePercentage(float percentage) {
+      //
+      // Based on the code for the enemy health bar in subroutine 0x005A8980.
+      //
+      NiControllerSequence* eax = this->unk44;
+      if (!eax) {
+         CALL_MEMBER_FN(this, UpdateAnimationState)(CALL_MEMBER_FN(this, GetStringTraitValue)(kTagID_animation));
+         eax = this->unk44;
+         if (!eax)
+            return;
+      }
+      float t = eax->end;
+      //
+      // NOTE: Right now, we just multiply the animation end time by the percentage. 
+      // Shouldn't we do ((percentage * (eax->end - eax->begin)) + eax->begin) instead? 
+      // Granted, I don't know of any animations with a non-zero start time.
+      //
+      if (percentage <= 1.0F)
+         t *= percentage;
+      if (percentage < 0.0F)
+         t = 0.0F;
+      this->unk58 = t;
+   };
 }

@@ -46,7 +46,7 @@ namespace RE {
       // closing a menu that was opened as a submenu of the "big four:"
       //
       if (RE::GetTopmostMenuIDUnderUnkCondition() == 1)
-         RE::Subroutine0057CAC0();
+         RE::ShowOrRefreshBigFour();
    };
    void Menu::HandleFocusBox(Tile* focusBox, Tile* target) {
       // based on AlchemyMenu's mouseover handler

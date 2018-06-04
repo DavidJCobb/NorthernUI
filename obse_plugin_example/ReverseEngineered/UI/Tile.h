@@ -520,6 +520,7 @@ namespace RE {
          inline bool IsAnimating() {
             return !!this->unk44;
          }
+         void SetAnimationTimePercentage(float);
    };
    class TileRect : public Tile { // sizeof == 0x44
       public:

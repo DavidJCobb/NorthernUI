@@ -53,7 +53,8 @@ namespace RE {
    DEFINE_SUBROUTINE_EXTERN(void,   PlayUIClicksound,                  0x0057DE50, UInt32 index);
    DEFINE_SUBROUTINE_EXTERN(void,   SetInterfaceManagerCursorAlpha,    0x00583DF0, UInt32 alpha); // alpha out of 255
    //
-   DEFINE_SUBROUTINE_EXTERN(void,   Subroutine0057CAC0, 0x0057CAC0);
+   DEFINE_SUBROUTINE_EXTERN(void,   HideBigFour,          0x0057CC00);
+   DEFINE_SUBROUTINE_EXTERN(void,   ShowOrRefreshBigFour, 0x0057CAC0);
 
    class InterfaceManager {
       public:
@@ -132,7 +133,7 @@ namespace RE {
          NiNode* mainScene;   // 054 // "Main Root"
          NiNode* cursorScene; // 058 // "Cursor Root"
          NiNode* unk05C; // 05C
-         NiNode* unk060; // 060
+         NiNode* unk060; // 060 // containing node for player model in menus?
          ShadowSceneNode* playerScene; // 064
          Tile*   menuRoot; // 068
          Tile*   strings;  // 06C
@@ -170,7 +171,7 @@ namespace RE {
          UInt32  unk0D4; // D4
          UInt32  unk0D8; // D8
          UInt32  unk0DC; // DC
-         UInt32  activeMenuIDs[9]; // E0 ... 104 // lists open menus with certain stackingtypes // the "big four" menus are represented as 1, not with their IDs; empty slots are zero
+         UInt32  activeMenuIDs[9]; // E0 ... 104 // lists open menus with certain stackingtypes, in order from bottom to top // the "big four" menus are represented as 1, not with their IDs; empty slots are zero
          UInt32  unk104;
          void*   unk108; // struct, size 0xC bytes; no VTBL or RTTI; constructor at 00538B20
          UInt32  playerQueuedToGoToJail; // 10C // if truthy, player is queued to go to jail and will be sent there by InterfaceManager::Update; this field then gets reset to 0
@@ -225,6 +226,8 @@ namespace RE {
          DEFINE_MEMBER_FN(SetHUDReticleVisibility,      void,   0x0057D940, UInt8); // arg: 0, 1, 2 == force hide, force show, toggle
          DEFINE_MEMBER_FN(SetSafeZoneSize,              void,   0x0057FDC0, SInt32 x, SInt32 y); // writes to the INI values in memory if x > 0; uses x for both axes if y <= 0
          DEFINE_MEMBER_FN(SetSafeZoneState,             void,   0x0057FDC0, UInt32);
+         DEFINE_MEMBER_FN(Subroutine0057CFE0,           SInt32, 0x0057CFE0, UInt32 menuID, bool);
+         DEFINE_MEMBER_FN(Subroutine0057D240,           bool,   0x0057D240, UInt32);
          DEFINE_MEMBER_FN(Subroutine0057DA90,           Tile*,  0x0057DA90, UInt32* out, Tile* searchRoot); // getter; see file in _DOCS\
          //
          // Things you should probably never need to call:

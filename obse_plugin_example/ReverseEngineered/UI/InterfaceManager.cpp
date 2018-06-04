@@ -26,7 +26,8 @@ namespace RE {
    DEFINE_SUBROUTINE(void,   PlayUIClicksound,                  0x0057DE50, UInt32 index);
    DEFINE_SUBROUTINE(void,   SetInterfaceManagerCursorAlpha,    0x00583DF0, UInt32 alpha); // alpha out of 255
    //
-   DEFINE_SUBROUTINE(void,   Subroutine0057CAC0, 0x0057CAC0);
+   DEFINE_SUBROUTINE(void, HideBigFour,          0x0057CC00);
+   DEFINE_SUBROUTINE(void, ShowOrRefreshBigFour, 0x0057CAC0);
 
    float InterfaceManager::GetNormalizedMouseAxisMovement(UInt8 axis) { // 1, 2, 3 = x, y, z
       if (axis < 1)
