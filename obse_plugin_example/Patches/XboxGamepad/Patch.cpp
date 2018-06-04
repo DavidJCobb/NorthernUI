@@ -11,6 +11,7 @@
 #include "ReverseEngineered/Forms/PlayerCharacter.h"
 #include "ReverseEngineered/GameSettings.h"
 #include "ReverseEngineered/Systems/Input.h"
+#include "ReverseEngineered/Systems/Sound.h"
 #include "ReverseEngineered/Systems/Timing.h"
 #include "ReverseEngineered/UI/InterfaceManager.h"
 #include "ReverseEngineered/UI/Menus/LockPickMenu.h"
@@ -44,7 +45,7 @@ namespace CobbPatches {
          // one. (It won't affect anything if the joystick is zeroed and WASD isn't 
          // being pressed.)
          //
-         void Inner() {
+         /*void Inner() {
             if (*(float*)(0x00B14E58) == 0.0F)
                *(float*)(0x00B14E58) = 1.0F;
          };
@@ -61,9 +62,29 @@ namespace CobbPatches {
                mov  eax, 0x006721AE;
                jmp  eax;
             };
+         };*/
+         __declspec(naked) void Outer() {
+            _asm {
+               // vanilla: test eax, eax;
+               jz   lZero;
+               jge  lPositive;
+               push 0; // reproduce patched-over instruction
+               mov  ecx, 0x00672166;
+               jmp  ecx;
+            lPositive:
+               mov  ecx, 0x00672168;
+               jmp  ecx;
+            lZero:
+               mov  eax, 0x00B14E58;
+               mov  dword ptr [eax], 0x3F800000;
+               mov  eax, 0x0067218B;
+               jmp  eax;
+            };
          };
          void Apply() {
-            WriteRelJump(0x006721A4, (UInt32)&Outer);
+            /*WriteRelJump(0x006721A4, (UInt32)&Outer);*/
+            WriteRelJump(0x00672160, (UInt32)&Outer);
+            SafeWrite8  (0x00672165, 0x90); // courtesy NOP
          };
       };
       namespace PauseKey {
@@ -327,6 +348,74 @@ namespace CobbPatches {
             XAxisUnknown::Apply();
          };
       };
+      namespace AlwaysRunFix {
+         //
+         // Vanilla Oblivion handles running like this:
+         //
+         //  - If the gamepad joystick is in the outer 2%, send the Run key.
+         //
+         //  - If Auto-Run is enabled and the Run key isn't being sent, send 
+         //    the Run key and set a movement flag on the player.
+         //
+         //     - Otherwise, if the Run key is being sent, set that same flag 
+         //       on the player.
+         //
+         // As a result of this, if Auto-Run is enabled and the gamepad joy-
+         // stick is in the outer 2%, that movement flag doesn't get set... 
+         // causing Auto-Run to actually *invert* running behavior for the 
+         // player. (This also has the effect of making it so that holding 
+         // Run while Auto-Run is enabled causes you to walk.)
+         //
+         // I'd rather "always run" behavior not ever affect joystick input, 
+         // but that would require more substantial changes to the input code.
+         //
+         bool Inner() {
+            return NorthernUI::INI::XInput::bToggleAlwaysRunWorks.bCurrent;
+         };
+         __declspec(naked) void OuterA() {
+            //
+            // Hook for when the joystick is in the outer 2% (i.e. the player 
+            // should run).
+            //
+            _asm {
+               mov  eax, 0x00403380; // OSInputGlobals::SendControlPress
+               call eax;             // reproduce patched-over call
+               or   dword ptr [esp + 0x14], 0x200;
+               push 1;   // reproduce skipped instruction
+               push 0xA; // reproduce skipped instruction
+               mov  eax, 0x006721F6;
+               jmp  eax;
+            };
+         };
+         __declspec(naked) void OuterB() {
+            //
+            // Hook for when auto-run is checking whether Run is pressed, in 
+            // order to know whether to fire a Run press.
+            //
+            _asm {
+               test edi, edi;
+               jnz  lJoystickHandling;
+               mov  ecx, dword ptr [esp + 0x24]; // esp1C, but two args were already pushed by vanilla code
+               test ecx, ecx;
+               jnz  lJoystickHandling;
+            lStandardExit:
+               mov  edi, dword ptr [esp + 0x2C]; // reproduce patched-over instruction
+               mov  ecx, edi;                    // reproduce patched-over instruction
+               mov  eax, 0x006721CC;
+               jmp  eax;
+            lJoystickHandling:
+               call Inner;
+               test al, al;
+               jnz  lStandardExit;
+               mov  eax, 0x006721F6;
+               jmp  eax;
+            };
+         };
+         void Apply() {
+            WriteRelJump(0x006721B4, (UInt32)&OuterA);
+            WriteRelJump(0x006721C6, (UInt32)&OuterB);
+         };
+      };
 	   namespace UICursorGamepadControl {
          //
          // Allow the gamepad to control the cursor: LS to move; RS vertical for scroll wheel. 
@@ -398,6 +487,95 @@ namespace CobbPatches {
          };
 	   };
       namespace UISupport {
+         namespace JournalHandler {
+            __declspec(naked) void LimitCheckToKeyboard(UInt32 control, UInt32 state) {
+               _asm {
+                  // this == OSInputGlobals*
+                  mov   eax, dword ptr[esp + 0x4];
+                  mov   al, byte ptr[eax + ecx + 0x1B7E]; // eax = this->keyboard[control]
+                  movzx eax, al;
+                  mov   edx, dword ptr[esp + 0x8];
+                  push  edx;
+                  push  al;
+                  push  0; // force to keyboard scheme
+                  mov   eax, 0x00403490; // OSInputGlobals::QueryControlState
+                  call  eax;
+                  retn  8;
+               };
+            };
+            void Apply() {
+               //
+               // Limit the vanilla journal input checks to keyboard-only. We'll reproduce 
+               // the journal functionality for the gamepad.
+               //
+               //WriteRelCall(0x00583A9B, (UInt32)&LimitCheckToKeyboard); // close
+               WriteRelCall(0x00583B20, (UInt32)&LimitCheckToKeyboard); // open
+            };
+
+            void DoJournalOpen() {
+               XXNGamepad* gamepad = XXNGamepadSupportCore::GetInstance()->GetAnyGamepad();
+               if (!gamepad)
+                  return;
+               auto ui    = RE::InterfaceManager::GetInstance();
+               auto input = RE::OSInputGlobals::GetInstance();
+               bool press = gamepad->GetButtonState(input->joystick[RE::kControl_MenuMode], RE::kKeyQuery_Down);
+               SInt32 already = CALL_MEMBER_FN(ui->menuRoot, GetFloatTraitValue)(0x1771);
+               UInt32 shortcutTo = 0; // vanilla code would set this to a Big Four menu ID if F1 - F4 are pressed
+               if ((press || shortcutTo) // at 0x00583AA6
+               && (
+                  (*(RE::PlayerCharacter**)g_thePlayer)->unk5C0 == false
+                  && !(*g_thePlayer)->IsDead(0)
+                  && CALL_MEMBER_FN(ui, Subroutine0057D240)(0)
+                  && ui->unk008 == 1
+                  && ui->activeMenuIDs[0] == 0
+                  )
+               ) {
+                  // at 0x00583AE7
+                  CALL_MEMBER_FN(ui->menuRoot, UpdateFloat)(0x1771, shortcutTo); // Big Four menu ID to show?
+                  ThisStdCall(0x00663920, *g_thePlayer); // (*g_thePlayer)->TES4_00663920();
+                  CALL_MEMBER_FN(ui, AddMenuToActiveIDStack)(RE::InterfaceManager::kMenuMode_BigFour);
+                  RE::ShowOrRefreshBigFour();
+               }
+            };
+            bool DoJournalClose() { // returns true if the menu is closed
+               XXNGamepad* gamepad = XXNGamepadSupportCore::GetInstance()->GetAnyGamepad();
+               if (!gamepad)
+                  return false;
+               auto ui    = RE::InterfaceManager::GetInstance();
+               auto input = RE::OSInputGlobals::GetInstance();
+               bool press = gamepad->GetButtonState(XXNGamepad::kGamepadButton_B, RE::kKeyQuery_Down);
+               SInt32 already = CALL_MEMBER_FN(ui->menuRoot, GetFloatTraitValue)(0x1771);
+               UInt32 shortcutTo = 0; // vanilla code would set this to a Big Four menu ID if F1 - F4 are pressed
+               if ( // at 0x00583B15
+                  (press || (shortcutTo && shortcutTo == already))
+               && (
+                  (*(RE::PlayerCharacter**)g_thePlayer)->unk5C0 == false
+                  && CALL_MEMBER_FN(ui, Subroutine0057D240)(0)
+                  && ui->unk008 == 2
+                  && CALL_MEMBER_FN(ui, Subroutine0057CFE0)(RE::InterfaceManager::kMenuMode_BigFour, 0) >= 0 // pretty sure this is responsible for most of the work done to close the menu
+                  )
+               ) {
+                  auto sound = RE::OSSoundGlobals::GetInstance();
+                  if (sound) {
+                     auto edi = CALL_MEMBER_FN(sound, Subroutine006ADE50)("UIInventoryClose", 0x121, 1); // this sound is silent/unused, so no, it doesn't prove that this is "close" code
+                     if (edi) {
+                        CALL_MEMBER_FN(edi, Subroutine006B7190)(0);
+                        CALL_MEMBER_FN(edi, Destructor)();
+                        FormHeap_Free(edi);
+                     }
+                  }
+                  RE::HideBigFour(); // pretty sure this just does some non-essential cleanup // at 0x00583BA5
+                  return true;
+               }
+               return false;
+            };
+         };
+
+         inline void _CheckUIKey(RE::InterfaceManager* ui, XXNGamepad* gamepad, XXNGamepad::Button key, UInt32 send) {
+            if (gamepad->GetButtonState(key, XXNGamepad::KeyQuery::kKeyQuery_Down))
+               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(send);
+         };
+
          void Inner(RE::InterfaceManager* ui) {
             XXNGamepad* gamepad = XXNGamepadSupportCore::GetInstance()->GetAnyGamepad();
             if (!gamepad)
@@ -408,45 +586,32 @@ namespace CobbPatches {
             // a menu opened can trigger keyboard navigation in that menu when released. In the worst cases, a 
             // menu that was opened by a gamepad keypress can end up responding to that same keypress.
             //
-            /*// Commented out.
-              //
-              // The vanilla game checks for the Start button KeyUp in order to toggle the start menu. However, 
-              // HandleNavigationKeypress also pops the start menu (and, like, why?!). This means that if we 
-              // try to listen for Start KeyDown, then we'll end up toggling the start menu twice every time 
-              // the Start button is pressed in menu mode (so pressing Start with any other menu open would 
-              // just open and instnatly close the start menu, and trying to close the start menu with Start 
-              // would just close and instantly reopen it).
-              //
-              // Commenting this check out means that xbuttonstart handlers in menus won't work, but I'm not 
-              // sure they would work anyway. Code analysis suggests that the existence of such a handler 
-              // wouldn't have prevented the game from handling Start as normal and opening the start menu.
-              //
-            if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_Start, XXNGamepad::KeyQuery::kKeyQuery_Down))
-               //
-               // TODO: We need to make sure this doesn't activate the pause control if the UI intercepts it.
-               //
-               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxStart);
-            //*/
             #if XXN_USE_UI_SIDE_PAUSE == 1
-               if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_Start, XXNGamepad::KeyQuery::kKeyQuery_Down))
-                  CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxStart);
+               //
+               // The vanilla game checks for the Start button KeyUp in order to toggle the start menu. However,
+               // HandleNavigationKeypress also pops the start menu (and, like, why?!). This means that if we
+               // try to listen for Start KeyDown, then we'll end up toggling the start menu twice every time
+               // the Start button is pressed in menu mode (so pressing Start with any other menu open would
+               // just open and instnatly close the start menu, and trying to close the start menu with Start
+               // would just close and instantly reopen it).
+               //
+               _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_Start, RE::InterfaceManager::kNavigationKeypress_XboxStart);
             #endif
-            if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_A, XXNGamepad::KeyQuery::kKeyQuery_Down))
-               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxA);
-            if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_B, XXNGamepad::KeyQuery::kKeyQuery_Down))
-               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxB);
-            if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_X, XXNGamepad::KeyQuery::kKeyQuery_Down))
-               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxX);
-            if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_Y, XXNGamepad::KeyQuery::kKeyQuery_Down))
-               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxY);
-            if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_LB, XXNGamepad::KeyQuery::kKeyQuery_Down))
-               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxLB);
-            if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_RB, XXNGamepad::KeyQuery::kKeyQuery_Down))
-               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxRB);
-            if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_SpecialCaseLT, XXNGamepad::KeyQuery::kKeyQuery_Down))
-               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxLT);
-            if (gamepad->GetButtonState(XXNGamepad::kGamepadButton_SpecialCaseRT, XXNGamepad::KeyQuery::kKeyQuery_Down))
-               CALL_MEMBER_FN(ui, HandleNavigationKeypress)(RE::InterfaceManager::kNavigationKeypress_XboxRT);
+            _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_A, RE::InterfaceManager::kNavigationKeypress_XboxA);
+            {  // We reroute the B button for closing the Big Four.
+               if (ui->activeMenuIDs[0] == RE::InterfaceManager::kMenuMode_BigFour && ui->activeMenuIDs[1] == 0) {
+                  if (JournalHandler::DoJournalClose())
+                     return;
+               } else {
+                  _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_B, RE::InterfaceManager::kNavigationKeypress_XboxB);
+               }
+            }
+            _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_X, RE::InterfaceManager::kNavigationKeypress_XboxX);
+            _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_Y, RE::InterfaceManager::kNavigationKeypress_XboxY);
+            _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_LB, RE::InterfaceManager::kNavigationKeypress_XboxLB);
+            _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_RB, RE::InterfaceManager::kNavigationKeypress_XboxRB);
+            _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_SpecialCaseLT, RE::InterfaceManager::kNavigationKeypress_XboxLT);
+            _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_SpecialCaseRT, RE::InterfaceManager::kNavigationKeypress_XboxRT);
             {  // directions
                static UInt32 joystickLastFire  = 0;
                static UInt32 joystickRate      = NorthernUI::INI::XInput::uMenuJoystickRateInitial.iCurrent;
@@ -576,6 +741,8 @@ namespace CobbPatches {
          };
          void Apply() {
             WriteRelJump(0x00583696, (UInt32)&Outer);
+            JournalHandler::Apply();
+            // TODO: Have the Inner hook call Journal::Recreate() when appropriate!
          };
       };
 
@@ -699,6 +866,7 @@ namespace CobbPatches {
             UISupport::Apply();
             FixMovementZeroing::Apply();
             SensitivityFix::Apply();
+            AlwaysRunFix::Apply();
             //
             _MESSAGE("[Patch] XboxGamepad: Subroutines patched.");
             //

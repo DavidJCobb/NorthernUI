@@ -41,7 +41,6 @@ class XXNGamepad {
       bool           isConnected = false; // assembly code assumes this is at offset 01 within the class
       XINPUT_GAMEPAD lastFrame;
       XINPUT_GAMEPAD thisFrame;
-      XINPUT_GAMEPAD uiIgnore; // if a menu opens/closes while a button is down, ignore that button being down until it goes back up
 
       typedef RE::KeyQuery KeyQuery;
 
