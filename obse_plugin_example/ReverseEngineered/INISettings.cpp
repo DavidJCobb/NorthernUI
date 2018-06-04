@@ -52,6 +52,7 @@ namespace RE {
          SettingInfo* const bDialogueSubtitles = (SettingInfo*) 0x00B13200;
          SettingInfo* const bDisableDynamicCrosshair = (SettingInfo*) 0x00B13238;
          SettingInfo* const bGeneralSubtitles  = (SettingInfo*) 0x00B13208;
+         SettingInfo* const bHealthBarShowings = (SettingInfo*) 0x00B14E90;
          SettingInfo* const bSaveOnInteriorExteriorSwitch = (SettingInfo*) 0x00B13230;
          SettingInfo* const bSaveOnRest        = (SettingInfo*) 0x00B13218;
          SettingInfo* const bSaveOnTravel      = (SettingInfo*) 0x00B13228;

@@ -53,6 +53,7 @@ namespace RE {
          extern SettingInfo* const bDialogueSubtitles;
          extern SettingInfo* const bDisableDynamicCrosshair;
          extern SettingInfo* const bGeneralSubtitles;
+         extern SettingInfo* const bHealthBarShowing;
          extern SettingInfo* const bSaveOnInteriorExteriorSwitch;
          extern SettingInfo* const bSaveOnRest;
          extern SettingInfo* const bSaveOnTravel;
