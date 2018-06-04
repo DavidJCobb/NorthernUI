@@ -23,6 +23,9 @@ namespace CobbPatches {
             }
             RE::SetHUDReticleStateIfPlayerHasNode(state); // the original call we patched over
          };
+         void Apply() {
+            WriteRelCall(0x00673442, (UInt32)&Shim);
+         };
       }
       namespace DetailedSneak {
          namespace OpacityControls { // forward-declare
@@ -125,7 +128,7 @@ namespace CobbPatches {
       };
 
       void Apply() {
-         WriteRelCall(0x00673442, (UInt32) &AllowThirdPerson::Shim); // handles reticle visibility when the player switches in or out of third-person
+         AllowThirdPerson::Apply(); // handles reticle visibility when the player switches in or out of third-person
          DetailedSneak::Apply();
       }
    }

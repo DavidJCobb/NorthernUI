@@ -76,11 +76,32 @@ namespace CobbPatches {
                   jmp  eax;
                }
             };
+            bool InnerNoCreate(RE::Tile* tile) {
+               return CALL_MEMBER_FN(tile, GetFloatTraitValue)(CobbPatches::TagIDs::_traitKeepNiProperties) == 2.0F;
+            };
+            __declspec(naked) void OuterNoCreate() {
+               _asm {
+                  push esi;
+                  call InnerNoCreate;
+                  add  esp, 4;
+                  test al, al;
+                  jnz  lSkip;
+                  mov  eax, 0x00401F00; // FormHeap_Allocate
+                  call eax;
+                  mov  ecx, 0x00590B0F;
+                  jmp  ecx;
+               lSkip:
+                  add  esp, 4;
+                  mov  eax, 0x00590B80;
+                  jmp  eax;
+               };
+            };
             void Apply() {
                WriteRelJump(0x00590827, (UInt32)&Outer1);
                WriteRelJump(0x0059085B, (UInt32)&Outer2);
                WriteRelJump(0x005908D5, (UInt32)&Outer3);
                WriteRelJump(0x00590909, (UInt32)&Outer4);
+               WriteRelJump(0x00590B0A, (UInt32)&OuterNoCreate); // prevent the game from adding a new NiMaterialProperty and the IM alpha property
             };
          }
          namespace Scale {

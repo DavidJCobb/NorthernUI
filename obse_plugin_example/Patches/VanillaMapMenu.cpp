@@ -113,7 +113,7 @@ namespace CobbPatches {
             __declspec(naked) void Outer() {
                _asm {
                   mov  eax, 0x00573880; // NiTList::DestroyAllNodes
-                  call eax;
+                  call eax;             // reproduce patched-over call
                   //
                   // At this point, if edi->hoveredMapIcon is not null, then it is a 
                   // bad pointer. We can't call edi->ForceDismissTooltip to clear it, 
@@ -280,27 +280,46 @@ namespace CobbPatches {
             // USER20 trait to the Y-coordinate of the last generated list item plus the height of 
             // that list item.
             //
-            void Inner(RE::MapMenu* menu, RE::Tile* lastGenerated) {
-               auto pane = (RE::Tile*) menu->journalPane;
-               float end = CALL_MEMBER_FN(lastGenerated, GetFloatTraitValue)(kTileValue_y);
-               end += CALL_MEMBER_FN(lastGenerated, GetFloatTraitValue)(kTileValue_height);
+            // There's a hurdle, though. We can't just do that when the list is generated, because 
+            // list items might vary their heights based on external factors. NorthernUI, for exam-
+            // ple, has list items vary in height based on visibility of the "Back" button. (If 
+            // the "Back" button is visible, then the list items are quest objectives, not quests. 
+            // In that case, we only have the first one show an icon and quest name.) The "Back" 
+            // button's visibility is not always updated before the list items are generated.
+            //
+            // The easiest way to avoid edge-cases like these is to just patch the frame handler to 
+            // blindly update the list pane every frame.
+            //
+            void Inner(RE::MapMenu* menu) {
+               auto pane = menu->journalPane;
+               if (!pane)
+                  return;
+               float end = 0.0F;
+               {
+                  auto node = pane->childList.start;
+                  if (node) {
+                     auto tile = node->data;
+                     if (tile) {
+                        end = CALL_MEMBER_FN(tile, GetFloatTraitValue)(kTileValue_y);
+                        end += CALL_MEMBER_FN(tile, GetFloatTraitValue)(kTileValue_height);
+                     }
+                  }
+               }
                CALL_MEMBER_FN(pane, UpdateFloat)(kTileValue_user20, end);
             };
             __declspec(naked) void Outer() {
                _asm {
                   push esi;
-                  push edi;
                   call Inner;
-                  add  esp, 8;
-                  //
-                  fild dword ptr [esp + 0x14]; // reproduce patched-over instruction
-                  push ecx;                    // reproduce patched-over instruction
-                  mov  eax, 0x005BB121;
+                  add  esp, 4;
+                  cmp  byte ptr [esi + 0x84], 0; // reproduce patched-over instruction
+                  mov  eax, 0x005B7119;
                   jmp  eax;
                };
             };
             void Apply() {
-               WriteRelJump(0x005BB11C, (UInt32)&Outer);
+               WriteRelJump(0x005B7112, (UInt32)&Outer);
+               SafeWrite16 (0x005B7117, 0x9090); // courtesy NOPs
             };
          };
          namespace SelectionBehavior {

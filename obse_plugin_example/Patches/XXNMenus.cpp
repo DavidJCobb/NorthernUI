@@ -190,11 +190,16 @@ namespace CobbPatches {
             // instead, consistent with Oblivion XML bools.
             //
             void InnerFade(bool fadeOut) {
+               //
+               // Don't get this mixed up: passing 1 HIDES the menus, and passing 0 
+               // SHOWS them. Yeah, that's backwards from usual, but there are *some* 
+               // benefits on the x86 end.
+               //
                for (UInt32 i = 0; i < std::extent<decltype(menuIDs)>::value; i++) {
-                  auto tile = g_TileMenuArray->data[menuIDs[i] - kMenuType_Message];
+                  auto tile = (RE::TileMenu*) g_TileMenuArray->data[menuIDs[i] - kMenuType_Message];
                   if (!tile)
                      continue;
-                  auto menu = (RE::Menu*) tile->menu;
+                  auto menu = tile->menu;
                   if (!menu)
                      continue;
                   if (fadeOut)
@@ -253,6 +258,26 @@ namespace CobbPatches {
                   retn 8;
                };
             };
+
+            __declspec(naked) void PossibleLoadScreenHook(bool show) {
+               _asm {
+                  //
+                  // Reproduce shimmed call:
+                  //
+                  mov  eax, dword ptr [esp + 0x4];
+                  push eax;
+                  mov  eax, 0x0057D940; // InterfaceManager::SetHUDReticleVisibility
+                  call eax;
+                  mov  eax, dword ptr [esp + 0x4];
+                  test al, al;
+                  setz al;
+                  push al;
+                  call InnerFade;
+                  add  esp, 4;
+                  retn 4;
+               };
+            };
+
             void Apply() {
                WriteRelCall(0x005A6162, (UInt32)&OuterTrait);
                WriteRelCall(0x005A616C, (UInt32)&OuterFadeOut);
@@ -261,6 +286,10 @@ namespace CobbPatches {
                WriteRelJump(0x005A61B2, (UInt32)&OuterFadeIn); // this NEEDS to be a jump, NOT a call
                WriteRelCall(0x005A61C5, (UInt32)&OuterTrait);
                WriteRelCall(0x005A61F8, (UInt32)&OuterFadeIn);
+               //
+               WriteRelCall(0x005A8748, (UInt32)&OuterTrait); // hide when MainMenu is open
+               WriteRelCall(0x00583ED2, (UInt32)&PossibleLoadScreenHook); // pre-load-screen?
+               WriteRelCall(0x005842B7, (UInt32)&PossibleLoadScreenHook); // post-load-screen?
             };
          };
          //
