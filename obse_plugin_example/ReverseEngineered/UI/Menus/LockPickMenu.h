@@ -74,10 +74,10 @@ namespace RE {
          Tile*  buttonAutoAttempt = nullptr; // 34 // ID #5 // string gets set by the executable
          TESObjectREFR* lockedRef = nullptr; // 38 // locked ref being picked
          UInt32 lockpickCount = 0; // 3C // includes the Skeleton Key; set when the menu is opened
-         UInt32 unk40; // skill? gets capped to 0x64 (100) in some places
-         UInt32 unk44; // related to unk40
+         UInt32 unk40; // 40 // skill? gets capped to 0x64 (100) in some places
+         UInt32 unk44; // 44 // related to unk40
          UInt32 lockLevel = 0; // 48 // set when the menu is opened
-         UInt32 unk4C = 0; // int: tumbler index or number of tumblers, for something
+         UInt32 solvedTumblerCount = 0; // 4C
             //
             // Set to the following values for the following lock levels:
             // 1: Very Easy
@@ -93,7 +93,7 @@ namespace RE {
          UInt32 unk50; // set to   5 when the menu is first opened
          UInt32 unk54; // set to 300 when the menu is first opened
          float  unk58; // set to 0.9 when the menu is first opened
-         UInt32 unk5C;
+         float  unk5C;
          float  unk60 = 8.0; // set to 0.020 when the menu is first opened
          float  unk64 = 4.0; // set to 0.003 when the menu is first opened
          float  unk68; // set to 0.005000 when the menu is first opened
@@ -158,7 +158,7 @@ namespace RE {
          UInt32 unk170;
          Tile*  unk174 = nullptr; // apparently set to the tile in a Tumbler
          Tile3D* tileLockpick; // 0178 // ID #3 // nif#lockpick_pick // filename is set by the executable based on whether the player has a Skeleton Key
-         UInt8  unk17C = 0;
+         bool   sentTrespassAlarm = false; // 17C
             // - gets set to 1 when the player starts lockpicking (Menu::Unk_02), if a SendTrespassAlarm on the lock owner returns a result != -1
             // - of course, it then gets set to 1 immediately after, either way... inlined code, maybe?
             // - I think there's an inlined method to send a trespass alarm on the locked ref, and this bool tracks whether we've done it yet
@@ -177,11 +177,11 @@ namespace RE {
 
          void SendTrespassAlarm() { // gets inlined in Bethesda's code
             auto owner = CALL_MEMBER_FN(this->lockedRef, GetOwner)();
-            if (owner && this->unk17C == 0) {
+            if (owner && !this->sentTrespassAlarm) {
                auto player = (RE::Actor*) *g_thePlayer;
                SInt32 alarmResult = player->SendTrespassAlarm(this->lockedRef, owner, -1);
                if (alarmResult != -1)
-                  this->unk17C = 1;
+                  this->sentTrespassAlarm = true;
             }
          };
    };

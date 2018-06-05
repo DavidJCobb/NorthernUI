@@ -5,6 +5,7 @@
 #include "obse/GameAPI.h"
 #include "obse/GameData.h" // FileFinder
 #include "obse/GameMenus.h"
+#include "Miscellaneous/InGameDate.h"
 
 XXNHUDClockMenu* XXNHUDClockMenu::Create() {
    void* memory = FormHeap_Allocate(sizeof(XXNHUDClockMenu));
@@ -49,8 +50,7 @@ void XXNHUDClockMenu::Render() {
    }
 };
 void XXNHUDClockMenu::Synch() {
-   auto timeGlobals = RE::g_timeGlobals;
-   timeGlobals->GetInGameDate(&this->date);
+   this->date.SetFromTime(RE::g_timeGlobals);
 };
 
 // ------------------------

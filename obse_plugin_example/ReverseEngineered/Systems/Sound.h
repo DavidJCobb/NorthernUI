@@ -55,6 +55,13 @@ namespace RE {
             kFlags_HasHardware3D = 1 << 2,
          };
 
+         static OSSoundGlobals* GetInstance() {
+            auto core = OSGlobals::GetInstance();
+            if (!core)
+               return nullptr;
+            return core->sound;
+         };
+
          typedef NiTPointerMap<TESGameSound> TESGameSoundMap;
          typedef NiTPointerMap<NiAVObject>   NiAVObjectMap;
 

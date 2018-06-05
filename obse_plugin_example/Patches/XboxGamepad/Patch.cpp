@@ -348,6 +348,38 @@ namespace CobbPatches {
             XAxisUnknown::Apply();
          };
       };
+      namespace RunFix {
+         //
+         // Gamepad movement controls have you run if either the X- or Y-axis joystick 
+         // movement is in the outer 2%. This means that diagonal movement doesn't count 
+         // as running, because X and Y are only in the outer 70%, circles being the 
+         // tricky sirens they are.
+         //
+         bool ShouldRun(SInt32 x, SInt32 y) {
+            float distance = (x*x) + (y*y);
+            distance = sqrt(distance);
+            return (distance > 98.0);
+         };
+         __declspec(naked) void Outer() {
+            _asm {
+               push ecx;
+               push edi;
+               call ShouldRun;
+               add  esp, 8;
+               test al, al;
+               jnz  lShouldRun;
+            lShouldNotRun:
+               mov  eax, 0x006721B9;
+               jmp  eax;
+            lShouldRun:
+               mov  eax, 0x006721AE;
+               jmp  eax;
+            };
+         };
+         void Apply() {
+            WriteRelJump(0x006721A4, (UInt32)&Outer);
+         };
+      };
       namespace AlwaysRunFix {
          //
          // Vanilla Oblivion handles running like this:
@@ -867,6 +899,7 @@ namespace CobbPatches {
             FixMovementZeroing::Apply();
             SensitivityFix::Apply();
             AlwaysRunFix::Apply();
+            RunFix::Apply();
             //
             _MESSAGE("[Patch] XboxGamepad: Subroutines patched.");
             //

@@ -3,6 +3,7 @@
 #include "ReverseEngineered/UI/Menu.h"
 #include "ReverseEngineered/UI/Tile.h"
 #include "ReverseEngineered/Systems/Timing.h"
+#include "Miscellaneous/InGameDate.h"
 
 class XXNHUDClockMenu : public RE::Menu {
 	public:

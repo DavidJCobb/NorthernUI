@@ -4,7 +4,7 @@
 #include "ReverseEngineered/UI/Menu.h"
 #include "ReverseEngineered/UI/Tile.h"
 #include "ReverseEngineered/UI/InterfaceManager.h"
-#include "ReverseEngineered/UI/Menus/VideoMenu.h"
+#include "ReverseEngineered/UI/Menus/LockPickMenu.h"
 
 #include "obse/GameTiles.h"
 
@@ -13,6 +13,7 @@ namespace CobbPatches {
       //
 
       void Apply() {
+         //
       };
    };
 };
