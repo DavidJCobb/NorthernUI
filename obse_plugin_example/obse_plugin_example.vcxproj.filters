@@ -96,6 +96,7 @@
     <ClCompile Include="Patches\AudioMenu.cpp" />
     <ClCompile Include="Patches\VideoMenu.cpp" />
     <ClCompile Include="Patches\NewMenus\Helpers\Slider.cpp" />
+    <ClCompile Include="Miscellaneous\InGameDate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -2148,6 +2149,7 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="dds.h" />
     <ClInclude Include="Patches\NewMenus\Helpers\Slider.h" />
+    <ClInclude Include="Miscellaneous\InGameDate.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\obse\obse\GameRTTI_1_1.inl">

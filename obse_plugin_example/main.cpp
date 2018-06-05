@@ -116,7 +116,7 @@ extern "C" {
 	   // fill out the info structure
 	   info->infoVersion = PluginInfo::kInfoVersion;
 	   info->name        = "NorthernUI";
-	   info->version     = 0x01000300; // major, minor, patch, build
+	   info->version     = 0x01000400; // major, minor, patch, build
 
 	   // version checks
 	   if(!obse->isEditor) {
@@ -233,7 +233,7 @@ extern "C" {
             man.RegisterPatch("HUDMainMenu",    &CobbPatches::HUDMainMenu::Apply, {});
             man.RegisterPatch("HUDReticle",     &CobbPatches::HUDReticle::Apply, {});
             man.RegisterPatch("InventoryMenu",  &CobbPatches::InventoryMenu::Apply, {});
-            man.RegisterPatch("LockPickMenu",   &CobbPatches::LockPickMenu::Apply, { PatchManager::Req::P_XInput });
+            man.RegisterPatch("LockPickMenu",   &CobbPatches::LockPickMenu::Apply, {});
             man.RegisterPatch("MapMenu",        &CobbPatches::MapMenu::Apply, { PatchManager::Req::P_XInput });
             man.RegisterPatch("OptionsMenu",    &CobbPatches::OptionsMenu::Apply, {});
             man.RegisterPatch("PersuasionMenu", &CobbPatches::PersuasionMenu::Apply, {});

@@ -123,6 +123,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Miscellaneous\InGameDate.cpp" />
     <ClCompile Include="Miscellaneous\math.cpp" />
     <ClCompile Include="Patches\AudioMenu.cpp" />
     <ClCompile Include="Patches\ClassMenu.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="Fun\x86Writer.h" />
     <ClInclude Include="Miscellaneous\CRC24.h" />
     <ClInclude Include="Miscellaneous\CRC32.h" />
+    <ClInclude Include="Miscellaneous\InGameDate.h" />
     <ClInclude Include="Miscellaneous\large_bitset.h" />
     <ClInclude Include="Miscellaneous\math.h" />
     <ClInclude Include="Miscellaneous\strings.h" />
