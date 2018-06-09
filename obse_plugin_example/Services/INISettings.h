@@ -34,6 +34,7 @@ namespace NorthernUI {
       };
       namespace Features {
          XXN_MAKE_INI_SETTING(bShowHUDClock,       "Features", true);
+         XXN_MAKE_INI_SETTING(bShowHUDInputViewer, "Features", false);
          XXN_MAKE_INI_SETTING(bSuppressDLCStartup, "Features", false);
       };
       namespace Menus {
@@ -42,6 +43,7 @@ namespace NorthernUI {
       };
       namespace XInput {
          XXN_MAKE_INI_SETTING(bEnabled,                 "XInput", true);
+         XXN_MAKE_INI_SETTING(bDontUseEvenWhenPatched,  "XInput", false);
          XXN_MAKE_INI_SETTING(bToggleAlwaysRunWorks,    "XInput", false); // controls whether Toggle Always Run affects joystick-initiated movement
          XXN_MAKE_INI_SETTING(uMenuJoystickRateInitial, "XInput", 300);
          XXN_MAKE_INI_SETTING(uMenuJoystickRateMod,     "XInput", 75);

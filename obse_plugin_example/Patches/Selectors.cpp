@@ -48,6 +48,7 @@ namespace CobbPatches {
       //       up, or would we eventually see memory corruption? Moreover, even if the pointer is 
       //       cleaned up, it wouldn't be reinstated if that other menu were reopened.
       //
+
       void OnINIChange(NorthernUI::INI::INISetting* s, NorthernUI::INI::ChangeCallbackArg oldVal, NorthernUI::INI::ChangeCallbackArg newVal) {
          if (!g_northernUIDatastore)
             return;
@@ -55,6 +56,13 @@ namespace CobbPatches {
             auto& desired = NorthernUI::INI::Features::bShowHUDClock;
             if (!s || s == &desired) {
                UInt32 traitID = RE::GetOrCreateTempTagID("_xxnshowhudclock", -1);
+               CALL_MEMBER_FN(g_northernUIDatastore, UpdateFloat)(traitID, desired.bCurrent ? RE::kEntityID_true : RE::kEntityID_false);
+            }
+         }
+         {  // bShowHUDInputViewer
+            auto& desired = NorthernUI::INI::Features::bShowHUDInputViewer;
+            if (!s || s == &desired) {
+               UInt32 traitID = RE::GetOrCreateTempTagID("_xxnshowhudinputviewer", -1);
                CALL_MEMBER_FN(g_northernUIDatastore, UpdateFloat)(traitID, desired.bCurrent ? RE::kEntityID_true : RE::kEntityID_false);
             }
          }
@@ -70,7 +78,7 @@ namespace CobbPatches {
             constexpr char* pathStrings   = "Data\\Menus\\NorthernUI\\strings.xml";
             void Inner(RE::Tile* menuRoot) {
                if ((*g_FileFinder)->FindFile(pathDatastore, 0, 0, -1) == FileFinder::kFileStatus_NotFound) {
-                  _MESSAGE("Datastore tile is missing. The datastore will be nullptr.");
+                  _MESSAGE("Datastore file is missing. The datastore will be nullptr.");
                } else {
                   g_northernUIDatastore = CALL_MEMBER_FN(menuRoot, ReadXML)(pathDatastore);
                   if (g_northernUIDatastore)
@@ -78,7 +86,7 @@ namespace CobbPatches {
                }
                //
                if ((*g_FileFinder)->FindFile(pathStrings, 0, 0, -1) == FileFinder::kFileStatus_NotFound) {
-                  _MESSAGE("XXNStrings tile is missing. The xxnStrings will be nullptr.");
+                  _MESSAGE("XXNStrings file is missing. The xxnStrings will be nullptr.");
                } else {
                   g_northernUIStringstore = CALL_MEMBER_FN(menuRoot, ReadXML)(pathStrings);
                   if (g_northernUIStringstore)

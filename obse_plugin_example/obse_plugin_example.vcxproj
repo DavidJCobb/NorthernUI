@@ -137,6 +137,7 @@
     <ClCompile Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.cpp" />
     <ClCompile Include="Patches\NewMenus\Helpers\Slider.cpp" />
     <ClCompile Include="Patches\NewMenus\XXNControlsMenu.cpp" />
+    <ClCompile Include="Patches\NewMenus\XXNHUDInputViewerMenu.cpp" />
     <ClCompile Include="Patches\NewMenus\XXNOptionsMenu.cpp" />
     <ClCompile Include="Patches\OptionsMenu.cpp" />
     <ClCompile Include="Patches\PersuasionMenu.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.h" />
     <ClInclude Include="Patches\NewMenus\Helpers\Slider.h" />
     <ClInclude Include="Patches\NewMenus\XXNControlsMenu.h" />
+    <ClInclude Include="Patches\NewMenus\XXNHUDInputViewerMenu.h" />
     <ClInclude Include="Patches\NewMenus\XXNOptionsMenu.h" />
     <ClInclude Include="Patches\OptionsMenu.h" />
     <ClInclude Include="Patches\PersuasionMenu.h" />

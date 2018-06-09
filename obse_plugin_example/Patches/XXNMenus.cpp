@@ -8,6 +8,7 @@
 
 #include "NewMenus/XXNHUDClockMenu.h"
 #include "NewMenus/XXNHUDDebugMenu.h"
+#include "NewMenus/XXNHUDInputViewerMenu.h"
 #include "NewMenus/XXNOptionsMenu.h"
 #include "NewMenus/XXNControlsMenu.h"
 //
@@ -32,6 +33,7 @@ namespace CobbPatches {
          // 41D == XXNHUDClockMenu
          // 41E == XXNOptionsMenu
          // 41F == XXNControlsMenu
+         // 420 == XXNHUDInputViewerMenu
          //
          // For every menu that uses an expanded ID, you will need to add a handler to the 
          // CreateMenu_MenuIDSwitchCasePatch nested namespace. This is because the native 
@@ -94,6 +96,18 @@ namespace CobbPatches {
                   };
                };
             };
+            namespace XXNHUDInputViewerMenu {
+               ::XXNHUDInputViewerMenu* Create() {
+                  return ::XXNHUDInputViewerMenu::Create();
+               };
+               __declspec(naked) void Outer() {
+                  _asm {
+                     call Create;
+                     mov  ecx, 0x005887A3;
+                     jmp  ecx;
+                  };
+               };
+            };
 
             void Setup() {
                _MESSAGE("%s Patching CreateMenu's switch-case table...", "[Patch][XXNMenus][ExpandMenuIndices]");
@@ -116,6 +130,7 @@ namespace CobbPatches {
                kRepointedCreateMenuSwitchCaseTable[::XXNHUDDebugMenu::kID - kMenuType_Message] = (UInt32)&XXNHUDDebugMenu::Outer;
                kRepointedCreateMenuSwitchCaseTable[::XXNOptionsMenu::kID  - kMenuType_Message] = (UInt32)&XXNOptionsMenu::Outer;
                kRepointedCreateMenuSwitchCaseTable[::XXNControlsMenu::kID - kMenuType_Message] = (UInt32)&XXNControlsMenu::Outer;
+               kRepointedCreateMenuSwitchCaseTable[::XXNHUDInputViewerMenu::kID - kMenuType_Message] = (UInt32)&XXNHUDInputViewerMenu::Outer;
                //
                _MESSAGE(" - Menus with expanded IDs have been written into the repointed table.");
             };
@@ -137,13 +152,21 @@ namespace CobbPatches {
          // calling ParseXML. ParseXML crashes on missing files! If the file is 
          // absent, returning nullptr instead of a tile should be fine.
          //
+         typedef RE::Tile* (*_MenuOpener)();
          const UInt16 menuIDs[] = { // specify IDs of our extra HUD menus
             XXNHUDClockMenu::kID,
+            XXNHUDInputViewerMenu::kID,
          };
          const UInt16 traitIDs[] = { // specify traits in each menu to set; indices here should match with menuIDs[].
             XXNHUDClockMenu::kMenuModeBoolTrait,
+            XXNHUDInputViewerMenu::kMenuModeBoolTrait,
          };
-         static_assert(std::extent<decltype(menuIDs)>::value == std::extent<decltype(traitIDs)>::value, "You need to specify the IDs of all menus, and the IDs of the trait to set for each menu. A menu's index in one list should be consistent with its trait's index in the other.");
+         const _MenuOpener menuOpeners[] = {
+            &ShowXXNHUDClockMenu,
+            &ShowXXNHUDInputViewerMenu,
+         };
+         static_assert(std::extent<decltype(menuIDs)>::value == std::extent<decltype(traitIDs)>::value,    "You need to specify the IDs of all menus, the IDs of the trait to set for each menu, and functions to open each menu. A menu's index in one list should be consistent with its trait's index in the others.");
+         static_assert(std::extent<decltype(menuIDs)>::value == std::extent<decltype(menuOpeners)>::value, "You need to specify the IDs of all menus, the IDs of the trait to set for each menu, and functions to open each menu. A menu's index in one list should be consistent with its trait's index in the others.");
          //
          namespace Open {
             void Inner() {
@@ -153,11 +176,25 @@ namespace CobbPatches {
                // out (because these will open at the main menu, and potentially render 
                // on top of it).
                //
-               if (tile = (RE::TileMenu*) ShowXXNHUDClockMenu()) {
+               for (UInt32 i = 0; i < std::extent<decltype(menuIDs)>::value; i++) {
+                  auto tile = (RE::TileMenu*) menuOpeners[i]();
+                  if (!tile)
+                     continue;
+                  auto menu = tile->menu;
+                  if (!menu)
+                     continue;
+                  CALL_MEMBER_FN((RE::Menu*)menu, FadeOut)();
+               }
+               /*if (tile = (RE::TileMenu*) ShowXXNHUDClockMenu()) {
                   auto menu = tile->menu;
                   if (menu)
                      CALL_MEMBER_FN((RE::Menu*)menu, FadeOut)();
                }
+               if (tile = (RE::TileMenu*) ShowXXNHUDInputViewerMenu()) {
+                  auto menu = tile->menu;
+                  if (menu)
+                     CALL_MEMBER_FN((RE::Menu*)menu, FadeOut)();
+               }*/
             };
             __declspec(naked) void Outer() {
                _asm {

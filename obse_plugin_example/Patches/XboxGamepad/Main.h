@@ -61,6 +61,7 @@ class XXNGamepad {
       void Update();
 
       SInt32 AnyKeyMatches(KeyQuery state) const; // returns -1 if no matches
+      void   Clear();
       __declspec(noinline) bool GetButtonState(UInt8 button, KeyQuery state) const;
       SInt32 GetJoystickAxis(UInt8 axis) const;
       void   IgnoreButtons(); // flags all currently-pressed buttons as "ignore;" see (uiIgnore)
@@ -73,15 +74,24 @@ class XXNGamepad {
 };
 
 struct XXNGamepadSupportCore {
-   XXNGamepadSupportCore();
+   public:
+      XXNGamepadSupportCore();
 
-   XXNGamepad gamepads[4];
-   bool       anyConnected = false;
+      XXNGamepad gamepads[4];
+      bool       anyConnected = false;
 
-   XXNGamepad* GetAnyGamepad(); // gets the first available one
-   UInt8       GetBoundKey(UInt8) const;
-   XXNGamepad* GetGamepad(UInt8); // bounds-checked
-   void        Update();
+   private:
+      bool disabled = false;
 
-   __declspec(noinline) static XXNGamepadSupportCore* GetInstance();
+   public:
+      inline void Enable() {
+         this->disabled = false;
+      };
+      void        Disable();
+      XXNGamepad* GetAnyGamepad(); // gets the first available one
+      UInt8       GetBoundKey(UInt8) const;
+      XXNGamepad* GetGamepad(UInt8); // bounds-checked
+      void        Update();
+
+      __declspec(noinline) static XXNGamepadSupportCore* GetInstance();
 };

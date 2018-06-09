@@ -31,6 +31,8 @@ class XXNOptionsMenu : public RE::Menu {
          kTileID_OptionSuppressDLCSpam   = 13,
          kTileID_OptionUseXXNAlchemyMenu = 14,
          kTileID_OptionShowHUDClock      = 15,
+         kTileID_OptionShowHUDInputViewer = 16,
+         kTileID_OptionUseXInputIfPatched = 17,
       };
       enum {
          kTraitID_CheckboxState = kTileValue_user20,
@@ -45,9 +47,11 @@ class XXNOptionsMenu : public RE::Menu {
       RE::Tile* tileListScrollbar   = nullptr;
       RE::Tile* tileListScrollThumb = nullptr;
       EnumpickerUInt optionLocalMapRes = EnumpickerUInt(true, { (UInt32)256, (UInt32)512, (UInt32)1024 });
-      Checkbox optionSuppressDLCPopups; // doesn't require restart because this menu manually tells the patch to reapply
+      Checkbox optionSuppressDLCPopups;
       Checkbox optionUseXXNAlchemyMenu = Checkbox(true);
-      Checkbox optionShowHUDClock; // this menu manually tells the patch to update
+      Checkbox optionShowHUDClock;
+      Checkbox optionShowHUDInputViewer;
+      Checkbox optionUseXInputIfPatched;
       Confirmation confirmation;
 
       virtual void	Dispose(bool); // 00 // destructor

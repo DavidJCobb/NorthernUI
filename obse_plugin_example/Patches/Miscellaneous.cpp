@@ -440,6 +440,116 @@ namespace CobbPatches {
             WriteRelJump(0x00585226, (UInt32)&Outer);
          };
       };
+      namespace ImplementPrioritizedTraitRefs {
+         //
+         // Make it possible to do things like
+         //
+         //    <xdown>
+         //       <ref name="list_number_one" trait="mouseover" />
+         //       <ref name="list_number_two" trait="mouseover" />
+         //    </xdown>
+         //
+         // such that focus is sent to list_number_one if the list has any items in it, 
+         // or to list_number_two otherwise. Specifically, we prefer the REF that points 
+         // to a tile for which IsValidRefTarget returns true.
+         //
+         bool IsValidRefTarget(RE::Tile* tile) {
+            if (!tile)
+               return false;
+            if (CALL_MEMBER_FN(tile, GetFloatTraitValue)(kTileValue_target) == 2.0F)
+               return true;
+            if (CALL_MEMBER_FN(tile, GetFloatTraitValue)(kTileValue_xlist) == 108.0F) { // see code starting at 0x00581203
+               for (auto node = tile->childList.end; node; node = node->prev) {
+                  auto child = node->data;
+                  if (!child)
+                     continue;
+                  if (!CALL_MEMBER_FN(child, NiNodeIsNotCulled)())
+                     continue;
+                  if (!CALL_MEMBER_FN(child, GetTrait)(kTileValue_xdefault))
+                     continue;
+                  return true;
+               }
+            }
+            return false;
+         };
+         RE::Tile* Inner(RE::Tile::Value* value, UInt32* outTraitID) {
+            auto o = value->operators;
+            if (!o)
+               return nullptr;
+            do {
+               if (o->opcode == RE::kTagID_ref)
+                  break;
+            } while (o = o->next);
+            if (!o)
+               return nullptr;
+            auto r = o;
+            while (r->refPrev)
+               r = r->refPrev;
+            RE::Tile::Value* target = r->operand.ref;
+            RE::Tile* tile = target->owner;
+            //
+            // At this point, we pretty much have the result of the vanilla process. Now for 
+            // our changes.
+            //
+            {  // Modded behavior
+               RE::Tile*        altTile   = tile;
+               RE::Tile::Value* altTarget = nullptr;
+               while (!IsValidRefTarget(altTile)) {
+                  //
+                  // Allow an XML author to specify a prioritized list of REF operators.
+                  //
+                  o = o->next;
+                  if (!o)
+                     break;
+                  do {
+                     if (o->opcode == RE::kTagID_ref)
+                        break;
+                  } while (o = o->next);
+                  if (!o)
+                     break;
+                  auto r = o;
+                  while (r->refPrev)
+                     r = r->refPrev;
+                  altTarget = r->operand.ref; // we can never actually guarantee this IS a pointer and not an immediate and that makes me nervous, hence the weird check below
+                  altTile   = altTarget ? altTarget->owner : nullptr;
+               }
+               if (o && altTile && (UInt32)altTarget > 0x400000) { // it's not a real pointer if it's below Oblivion.exe's module base, and yes, this IS a filthy hack
+                  tile   = altTile;
+                  target = altTarget;
+               }
+               //
+               // NOTE: It's perfectly normal not to find a "valid ref target." The function we're 
+               // patching is called multiple times while processing keyboard navigation, and will 
+               // sometimes return non-targetable tiles such as list containers. We don't want to 
+               // simply fail out with nullptr if a non-targetable tile is the normal result; we 
+               // only want to let an author specify multiple REF operators and prefer the one that 
+               // returns a suitable tile.
+            }
+            *outTraitID = target->id;
+            return tile;
+         };
+         __declspec(naked) void Outer() {
+            _asm {
+               mov  eax, dword ptr [esp + 0x28];
+               push eax;
+               push ecx;
+               call Inner;
+               add  esp, 8;
+               //
+               // mimic vanilla return:
+               //
+               pop  edi;
+               pop  esi;
+               pop  ebp;
+               pop  ebx;
+               add  esp, 0x10;
+               retn 8;
+            };
+         };
+         void Apply() {
+            WriteRelJump(0x0058E772, (UInt32)&Outer); // patch Tile::ResolveTraitReference
+         };
+      };
 
       void Apply() {
          //
@@ -453,6 +563,7 @@ namespace CobbPatches {
          KeynavSafeDefaultFix::Apply();
          MipMapSkipFix::Apply();
          PrefabPathSlashFix::Apply();
+         ImplementPrioritizedTraitRefs::Apply();
       };
    };
 };

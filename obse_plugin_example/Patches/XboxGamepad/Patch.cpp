@@ -459,7 +459,7 @@ namespace CobbPatches {
          // thing that toggles it on and off.
          //
          constexpr float joystickCursorXSpeed = 1; // floats for speed, but in practice only integers will work
-         constexpr float joystickCursorYSpeed = 4; // LockPickMenu's tumbler-raise threshold is -3, so this must be greater than std::abs(-3)
+         constexpr float joystickCursorYSpeed = 1;
          constexpr float joystickCursorZSpeed = 1;
          //
          SInt32 Inner(RE::OSInputGlobals* input, UInt32 mouseAxis) {
@@ -514,8 +514,10 @@ namespace CobbPatches {
             //
             // Patch LockPickMenu::Subroutine005AFA80:
             //
-            WriteRelCall(0x005AFA92, (UInt32)&Outer); // X-axis
-            WriteRelCall(0x005AFA9B, (UInt32)&Outer); // Y-axis
+            // NEVER MIND: LockPickMenu PATCHES THESE ITSELF
+            //
+            //WriteRelCall(0x005AFA92, (UInt32)&Outer); // X-axis
+            //WriteRelCall(0x005AFA9B, (UInt32)&Outer); // Y-axis
          };
 	   };
       namespace UISupport {
@@ -849,6 +851,18 @@ namespace CobbPatches {
          core->Update();
       };
 
+      void OnINIChange(NorthernUI::INI::INISetting* s, NorthernUI::INI::ChangeCallbackArg oldVal, NorthernUI::INI::ChangeCallbackArg newVal) {
+         auto core = XXNGamepadSupportCore::GetInstance();
+         {  // bDontUseEvenWhenPatched
+            auto& desired = NorthernUI::INI::XInput::bDontUseEvenWhenPatched;
+            if (!s || s == &desired) {
+               if (desired.bCurrent)
+                  core->Disable();
+               else
+                  core->Enable();
+            }
+         }
+      };
       void Apply() {
          if (!NorthernUI::INI::XInput::bEnabled.bCurrent) {
             PatchManager::GetInstance().FireEvent(PatchManager::Req::P_XInput);
@@ -903,8 +917,8 @@ namespace CobbPatches {
             //
             _MESSAGE("[Patch] XboxGamepad: Subroutines patched.");
             //
-            //XXNGamepadConfigManager::GetInstance().Init();
-            _MESSAGE("[Patch] XboxGamepad: Initialized XXNGamepadConfigManager.");
+            OnINIChange(nullptr, 0, NorthernUI::INI::XInput::bDontUseEvenWhenPatched.bCurrent);
+            NorthernUI::INI::RegisterForChanges(&OnINIChange);
          } else {
             _MESSAGE("[Patch] XboxGamepad: Failed to load XInput.");
          }

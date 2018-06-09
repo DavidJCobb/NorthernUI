@@ -135,6 +135,10 @@ SInt32 XXNGamepad::AnyKeyMatches(KeyQuery state) const {
    } while (++i < kGamepadButton_COUNT);
    return -1;
 };
+void XXNGamepad::Clear() {
+   ZeroMemory(&this->lastFrame, sizeof(this->lastFrame));
+   ZeroMemory(&this->thisFrame, sizeof(this->thisFrame));
+};
 bool XXNGamepad::GetButtonState(UInt8 button, KeyQuery state) const {
    if (button > kGamepadButton_LastStandardButton) { // special cases
       bool now;
@@ -247,6 +251,15 @@ XXNGamepadSupportCore::XXNGamepadSupportCore() {
       this->gamepads[i].index = i;
    } while (++i < std::extent<decltype(this->gamepads)>::value);
 };
+void XXNGamepadSupportCore::Disable() {
+   this->disabled = true;
+   this->anyConnected = false;
+   UInt32 i = 0;
+   do {
+      this->gamepads[i].Clear();
+      this->gamepads[i].isConnected = false;
+   } while (++i < std::extent<decltype(this->gamepads)>::value);
+};
 XXNGamepad* XXNGamepadSupportCore::GetAnyGamepad() {
    UInt8 i = 0;
    do {
@@ -265,6 +278,8 @@ XXNGamepad* XXNGamepadSupportCore::GetGamepad(UInt8 index) {
    return &this->gamepads[index];
 };
 void XXNGamepadSupportCore::Update() {
+   if (this->disabled)
+      return;
    this->anyConnected = false;
    UInt8 i = 0;
    do {

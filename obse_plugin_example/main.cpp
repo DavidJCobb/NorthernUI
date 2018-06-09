@@ -116,7 +116,7 @@ extern "C" {
 	   // fill out the info structure
 	   info->infoVersion = PluginInfo::kInfoVersion;
 	   info->name        = "NorthernUI";
-	   info->version     = 0x01000400; // major, minor, patch, build
+	   info->version     = 0x01000500; // major, minor, patch, build
 
 	   // version checks
 	   if(!obse->isEditor) {
