@@ -8,6 +8,10 @@ namespace RE {
    const auto JoystickDeviceObjFmt = (DIOBJECTDATAFORMAT*) 0x006B9FA0; // defines DIJOYSTATE as the device state structure for joysticks
    const auto JoystickDeviceFormat = (DIDATAFORMAT*) 0x00A78C54; // { 0x18, 0x10, DIDF_ABSAXIS, 0x50, 0x2C, JoystickDeviceObjFmt };
 
+   extern const char** const g_KeyNames;
+
+   extern UInt8 g_defaultJoystickMappings[0x1D];
+
    enum KeyQuery : UInt8 {
       kKeyQuery_Hold = 0, // key is down
       kKeyQuery_Down = 1, // key just went down
@@ -175,6 +179,7 @@ namespace RE {
          DEFINE_MEMBER_FN(GetJoystickButtonCount,     UInt32, 0x004030B0, UInt8 whichJoystick);
          DEFINE_MEMBER_FN(GetJoystickPOVControlCount, UInt32, 0x004030D0, UInt8 whichJoystick);
          DEFINE_MEMBER_FN(GetMouseAxisMovement,       SInt32, 0x00403190, UInt8 whichAxis); // 1, 2, 3: x, y, z; return values are pixels moved since last tick
+         DEFINE_MEMBER_FN(LoadControlSettingsFromINI, UInt32, 0x00404540);
          DEFINE_MEMBER_FN(QueryControlState,          UInt32, 0x00403520, MappableControl controlIndex, KeyQuery query); // returns the number of keys that are mapped to that control and match the KeyQuery
             //  - loops over each scheme and calls QueryInputState for the key the control is mapped to
             //  - for special keycodes (1D, 1E, 1F), skips that and uses special fields
@@ -188,8 +193,10 @@ namespace RE {
          DEFINE_MEMBER_FN(RebindControl,              bool,   0x00403F50, UInt8 whichCtrl, UInt8 whichScheme, UInt8 newButton); // forbids use of Esc, Tilde, Print Screen, F1 - F4, and 1 - 8
          DEFINE_MEMBER_FN(RebindControlMinimalChecks, bool,   0x00403B80, UInt8 whichCtrl, UInt8 whichScheme, UInt8 newButton); // forbids use of Esc, Tilde, and Print Screen
          DEFINE_MEMBER_FN(ResetControlMap,            void,   0x00403960, UInt8 whichScheme); // 0, 1, 2, 3 == keyboard, mouse, unk1BB8, all
+         DEFINE_MEMBER_FN(SaveControlSettingsToINI,   void,   0x00404400);
          DEFINE_MEMBER_FN(SendControlPress,           UInt8*, 0x00403380, MappableControl whichControl); // forces the control to be "pressed" for the first scheme in which it is defined: keyboard, mouse, joystick // only works for controls < 0xE, i.e. controls related to movement and gameplay
          DEFINE_MEMBER_FN(SetJoystickDeadzone,        void,   0x004030F0, UInt8 whichJoystick, float deadzonePercent);
+         DEFINE_MEMBER_FN(UnbindAllMappedTo,          void,   0x00403B50, UInt8 whichScheme, UInt8 whichKey);
          //
          DEFINE_MEMBER_FN(PollAndUpdateInputState,    void,   0x004046A0);
             //  - called (indirectly) by the game's main loop

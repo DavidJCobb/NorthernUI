@@ -36,7 +36,8 @@ class PatchManager {
             static constexpr size_t P_XInput     = 1; // Have we applied the XInput patch (or chosen not to) yet?
             static constexpr size_t X_PostLoad   = 2; // OBSE PostLoad event; use to slip in after most other plug-ins e.g. MenuQue.
             static constexpr size_t G_MainMenu   = 3; // When the main menu opens for the first time
-            static constexpr size_t COUNT        = 4;
+            static constexpr size_t P_MenuQue    = 4; // Have we dealt with MenuQue yet?
+            static constexpr size_t COUNT        = 5;
       };
    private:
       PatchManager();

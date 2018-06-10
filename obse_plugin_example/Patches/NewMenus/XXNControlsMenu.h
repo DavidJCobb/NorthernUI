@@ -68,6 +68,8 @@ class XXNControlsMenu : public RE::Menu {
          kTileID_ButtonSaveChanges = 21, // save changes to current scheme
          kTileID_ButtonDelete      = 22, // delete current scheme
          kTileID_ButtonCreateNew   = 23, // create new scheme
+         kTileID_OptionRunSensSlider = 24,
+         kTileID_OptionRunSensThumb  = 25,
       };
       enum {
          kTraitID_Root_IsMapping     = kTileValue_user0, // user0 - bool
@@ -119,6 +121,7 @@ class XXNControlsMenu : public RE::Menu {
       EnumpickerStr optionControlScheme = EnumpickerStr(true);
       Slider        optionSensitivityX;
       Slider        optionSensitivityY;
+      Slider        optionSensitivityRun;
       ControlList   optionMappableControls;
 
       ControlList::iterator assigning; // key we're currently assigning

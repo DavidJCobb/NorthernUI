@@ -3,7 +3,6 @@
 namespace CobbPatches {
    namespace TagIDs {
       void Apply();
-      void ApplyAfterMenuQue(); // to be called after MenuQue (would be|is) loaded
       //
       bool IsOperator(UInt32 id);
       bool IsCustomOperator(UInt32 id);

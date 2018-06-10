@@ -231,7 +231,7 @@ namespace CobbPatches {
                      tItemNew->result = ParseCode::kCode_AttributeName;
                      this->items.Append(tItemNew);
                      return;
-                  } else if (g_detectedMenuQue) {
+                  } else if (g_menuQue.detected) {
                      //
                      // MenuQue compatibility.
                      //
@@ -528,8 +528,7 @@ namespace CobbPatches {
          //
          Traits::Apply();
          Operators::Apply();
-      };
-      void ApplyAfterMenuQue() { // to be called after MenuQue (would be|is) loaded
+         //
          TileTemplate_AddTemplateItem::Apply(); // needs to overwrite MenuQue's replacer for that subroutine
       };
    };

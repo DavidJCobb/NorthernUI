@@ -116,7 +116,16 @@ extern "C" {
 	   // fill out the info structure
 	   info->infoVersion = PluginInfo::kInfoVersion;
 	   info->name        = "NorthernUI";
-	   info->version     = 0x01000500; // major, minor, patch, build
+	   info->version     = 0x01000600; // major, minor, patch, build
+
+      {  // log our version number -- be helpful!
+         auto v = info->version;
+         UInt8 major = v >> 0x18;
+         UInt8 minor = (v >> 0x10) & 0xFF;
+         UInt8 patch = (v >> 0x08) & 0xFF;
+         UInt8 build = v & 0xFF;
+         _MESSAGE("Version %d.%d.%d, build %d.", major, minor, patch, build);
+      }
 
 	   // version checks
 	   if(!obse->isEditor) {
@@ -212,13 +221,12 @@ extern "C" {
                { PatchManager::Req::G_MainMenu }
             );
             man.RegisterPatch("Selectors",     &CobbPatches::Selectors::Apply, {});
-            man.RegisterPatch("TagIDs",        &CobbPatches::TagIDs::Apply,    {});
+            man.RegisterPatch("TagIDs",        &CobbPatches::TagIDs::Apply,    { PatchManager::Req::P_MenuQue });
             man.RegisterPatch("Fonts",         &CobbPatches::Fonts::Apply,     {});
             man.RegisterPatch("XXNMenus",      &CobbPatches::XXNMenus::Apply,  { PatchManager::Req::G_FileFinder });
             man.RegisterPatch("XboxGamepad",   &CobbPatches::XboxGamepad::Apply, {});
             //
             man.RegisterPatch("CleanUpAfterMenuQue", &CobbPatches::CleanUpAfterMenuQue::Apply, { PatchManager::Req::X_PostLoad });
-            man.RegisterPatch("TagIDs",              &CobbPatches::TagIDs::ApplyAfterMenuQue,  { PatchManager::Req::X_PostLoad });
             //
             // vanilla menu patches:
             //

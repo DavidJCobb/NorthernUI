@@ -123,6 +123,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Fun\x86Reader.cpp" />
     <ClCompile Include="Miscellaneous\InGameDate.cpp" />
     <ClCompile Include="Miscellaneous\math.cpp" />
     <ClCompile Include="Patches\AudioMenu.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="Patches\XboxGamepad\CustomControls.cpp" />
     <ClCompile Include="ReverseEngineered\NetImmerse\NiTypes.cpp" />
     <ClCompile Include="ReverseEngineered\Systems\Core.cpp" />
+    <ClCompile Include="ReverseEngineered\Systems\Input.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\AudioMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\GameplayMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\LockPickMenu.cpp" />
@@ -224,6 +226,7 @@
     <!-- <ClInclude Include="..\obse\obse\*.h" Exclude="..\obse\obse\Commands_*.h" />
     <ClInclude Include="..\obse\StdAfx.h" /> -->
     <ClInclude Include="dds.h" />
+    <ClInclude Include="Fun\x86Reader.h" />
     <ClInclude Include="Fun\x86Writer.h" />
     <ClInclude Include="Miscellaneous\CRC24.h" />
     <ClInclude Include="Miscellaneous\CRC32.h" />

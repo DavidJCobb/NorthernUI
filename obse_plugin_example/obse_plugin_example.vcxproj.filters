@@ -98,6 +98,8 @@
     <ClCompile Include="Patches\NewMenus\Helpers\Slider.cpp" />
     <ClCompile Include="Miscellaneous\InGameDate.cpp" />
     <ClCompile Include="Patches\NewMenus\XXNHUDInputViewerMenu.cpp" />
+    <ClCompile Include="Fun\x86Reader.cpp" />
+    <ClCompile Include="ReverseEngineered\Systems\Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -2152,6 +2154,7 @@
     <ClInclude Include="Patches\NewMenus\Helpers\Slider.h" />
     <ClInclude Include="Miscellaneous\InGameDate.h" />
     <ClInclude Include="Patches\NewMenus\XXNHUDInputViewerMenu.h" />
+    <ClInclude Include="Fun\x86Reader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\obse\obse\GameRTTI_1_1.inl">

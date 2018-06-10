@@ -30,6 +30,7 @@ namespace RE {
          extern SettingInfo* const fJoystickMoveFBMult;
          extern SettingInfo* const fJoystickMoveLRMult;
          extern SettingInfo* const fMouseSensitivity;
+         extern SettingInfo* const fVersion;
          //
          extern SettingInfo* const iJoystickLookLeftRight;
          extern SettingInfo* const iJoystickLookUpDown;

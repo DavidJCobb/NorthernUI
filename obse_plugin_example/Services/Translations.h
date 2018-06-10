@@ -42,6 +42,7 @@ namespace NorthernUI {
       extern Str const sControlsCreateSaveFirst;
       extern Str const sControlsCreateDiscard;
       extern Str const sResetOptionsToDefault;
+      extern Str const sBadMenuQueVersion;
 
       class StrManager {
          private:

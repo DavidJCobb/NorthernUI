@@ -8,11 +8,14 @@
 #include "ReverseEngineered/NetImmerse/NiTypes.h"
 #include "ReverseEngineered/UI/Menu.h"
 #include "ReverseEngineered/UI/Tile.h"
+#include "Services/PatchManagement.h"
 
 #include "Patches/TagIDs/Main.h"
 
-extern bool   g_detectedMenuQue = false;
-extern UInt32 g_detectedMenuQueBaseAddress = 0;
+#include "Miscellaneous/strings.h"
+#include "Fun/x86Reader.h"
+
+MenuQueState g_menuQue;
 
 namespace CobbPatches {
    namespace CleanUpAfterMenuQue {
@@ -91,6 +94,82 @@ namespace CobbPatches {
          // The solution is to patch this TileLink method to check whether the 
          // this pointer is null.
          //
+         struct Patch {
+            const char* version;
+            UInt32 hookTarget; // where does the hook jump to?
+            //
+            UInt32 patchSubroutine;
+            UInt32 patchOffset;
+            UInt32 returnFailOffset;
+            UInt32 returnPassOffset;
+         };
+         namespace Recognition {
+            //
+            // functions for finding the target subroutine and patch offsets across different MenuQue versions
+            //
+            //  - name after the oldest version it would match
+            //
+            void v16a(UInt32 hookTargetAddr, Patch& out) {
+               try {
+                  UInt32 caller = 0;
+                  UInt32 target = 0;
+                  {  // Parse the entire hook.
+                     x86Reader reader(hookTargetAddr);
+                     reader.PUSH(x86Reader::ebx);
+                     caller = reader.CallToAnyAddress();
+                     reader.ADD(x86Reader::esp, (UInt8)4);
+                     reader.CMP<UInt8>(x86Reader::esp, x86Reader::edi, 0x48);
+                     reader.JE<SInt8>(0x06);
+                     reader.JumpThroughAnyStatic();
+                     reader.JumpThroughAnyStatic();
+                  }
+                  {  // Parse the immediate caller to KYO::TileLink::UnnamedMember, to make sure it's roughly the same and not just coincidentally similar.
+                     x86Reader reader(caller + (UInt32)0x8D);
+                     reader.PUSH(x86Reader::eax);
+                     reader.CallToAnyAddress(); // returns KYO::TileLink given class KYO::TileLink : public Tile.
+                     reader.ADD(x86Reader::esp, (UInt8)0x8);
+                     reader.PUSH(x86Reader::ebx);
+                     reader.MOV(x86Reader::ecx, x86Reader::eax);
+                     target = reader.CallToAnyAddress();
+                     reader.POP(x86Reader::edi);
+                     reader.POP(x86Reader::esi);
+                     reader.POP(x86Reader::ebx);
+                     reader.POP(x86Reader::ebp);
+                     reader.RETN();
+                  }
+                  {  // Parse KYO::TileLink::UnnamedMember.
+                     x86Reader reader(target);
+                     reader.PUSH(x86Reader::ebp);
+                     reader.MOV(x86Reader::ebp, x86Reader::esp);
+                     reader.PUSH(x86Reader::ecx);
+                     reader.MOV <UInt8>(x86Reader::eax, x86Reader::ebp, 8);
+                     reader.PUSH(x86Reader::ebx);
+                     reader.MOV(x86Reader::ebx, x86Reader::ecx);
+                     reader.CMP <UInt8>(x86Reader::ebx, x86Reader::eax, 0x40);
+                     reader.JNE <SInt8>(0x09);
+                     //
+                     out.version = "16a-like";
+                     out.hookTarget = hookTargetAddr - g_menuQue.addrBase;
+                     out.patchSubroutine  = target - g_menuQue.addrBase;
+                     out.patchOffset      = 0x0A;
+                     out.returnFailOffset = 0x0F;
+                     out.returnPassOffset = 0x18;
+                  }
+               } catch (std::runtime_error) {};
+               out.version = "";
+               out.hookTarget = 0;
+               out.patchSubroutine = 0;
+               out.patchOffset = 0;
+               out.returnFailOffset = 0;
+               out.returnPassOffset = 0;
+            };
+         };
+         const Patch knownVersions[] = {
+            { "16a", 0x00011A50, 0x000145C0, 0xA, 0xF, 0x18 },
+            { "16b", 0x00011E30, 0x00014860, 0xA, 0xF, 0x18 },
+         };
+
+         //
          static UInt32 s_mqReturnFail    = 0;
          static UInt32 s_mqReturnProceed = 0;
          __declspec(naked) void Outer() {
@@ -107,25 +186,49 @@ namespace CobbPatches {
             };
          };
          void Apply() {
-            if (!g_detectedMenuQue)
+            if (!g_menuQue.detected)
                return;
-            if (!g_detectedMenuQueBaseAddress) {
+            if (!g_menuQue.addrBase) {
                _MESSAGE(" - MenuQue's base address is missing. Unable to apply safety patches; attempting to open menus with extended IDs will crash due to missing nullptr checks in MenuQue.");
                return;
             }
             if (*(UInt8*)(0x0058251B) != 0xE9) // check for patched-in JMP
                return;
-            UInt32 existingPatch = *(UInt32*)(0x0058251C);
-            existingPatch -= g_detectedMenuQueBaseAddress;
-            existingPatch += 0x0058251B + 5;
-            if (existingPatch != 0x00011E30) { // MQ subroutine
-               _MESSAGE(" - Check for MQ_11E30 failed; something else patched there instead. Jump target read as MQ_%08X (%08X).", existingPatch, *(UInt32*)(0x0051251C));
+            _MESSAGE(" - Detected hook to InterfaceManager::Update+0x32B. Checking to see if it's a known MenuQue hook.");
+            UInt32 jumpAbs = *(UInt32*)(0x0058251C) + 0x0058251C + sizeof(void*);
+            UInt32 jumpRel = jumpAbs - g_menuQue.addrBase;
+            //
+            for (auto i = 0; i < std::extent<decltype(knownVersions)>::value; i++) {
+               auto& p = knownVersions[i];
+               if (jumpRel == p.hookTarget) {
+                  s_mqReturnFail    = g_menuQue.addrBase + p.patchSubroutine + p.returnFailOffset;
+                  s_mqReturnProceed = g_menuQue.addrBase + p.patchSubroutine + p.returnPassOffset;
+                  UInt32 target     = g_menuQue.addrBase + p.patchSubroutine + p.patchOffset;
+                  WriteRelJump(target, (UInt32)&Outer);
+                  _MESSAGE("    - Patched successfully applied to MQ:0x%08X per data for known MenuQue version %s.", target - g_menuQue.addrBase, p.version);
+                  return;
+               }
+            }
+            //
+            // Patch isn't known. See if we can recognize it by its compiled code.
+            //
+            if (g_menuQue.addrSize && jumpAbs < g_menuQue.addrBase + g_menuQue.addrSize) {
+               _MESSAGE("    - Not a known MenuQue hook. Jump target read as MQ_%08X (%08X).", jumpRel, jumpAbs);
+            } else {
+               _MESSAGE("    - Not a MenuQue hook. Jump target read as %08X.", jumpAbs);
+            }
+            Patch recognized;
+            Recognition::v16a(jumpAbs, recognized);
+            if (recognized.patchSubroutine) {
+               s_mqReturnFail    = g_menuQue.addrBase + recognized.patchSubroutine + recognized.returnFailOffset;
+               s_mqReturnProceed = g_menuQue.addrBase + recognized.patchSubroutine + recognized.returnPassOffset;
+               UInt32 target     = g_menuQue.addrBase + recognized.patchSubroutine + recognized.patchOffset;
+               WriteRelJump(target, (UInt32)&Outer);
+               _MESSAGE("    - MenuQue hook has identical content to a known version (%s). Patch successfully applied to MQ:0x%08X.", recognized.version, target - g_menuQue.addrBase);
                return;
             }
-            s_mqReturnFail    = g_detectedMenuQueBaseAddress + 0x0001486F;
-            s_mqReturnProceed = g_detectedMenuQueBaseAddress + 0x00014878;
-            WriteRelJump(g_detectedMenuQueBaseAddress + 0x0001486A, (UInt32)&Outer); // patched MenuQue.
-            _MESSAGE(" - Detected compatibility-hazardous MenuQue patch (hook MQ_11E30). Patched applied to MQ:0x0001486A.");
+            _MESSAGE("    - Unable to recognize hook site, hook callee, or patch site. Failed to apply our fix.");
+            g_menuQue.newMenuIDFixFailed = true;
          };
       };
 
@@ -172,6 +275,36 @@ namespace CobbPatches {
             {0x005A68FF,  2}, // unknown; related to the Big Four; likely handles the switch to StatsMenu
          };
 
+      bool GetMQModuleBaseFromWinAPI() {
+         constexpr int LOAD_COUNT = 140;
+         HANDLE  processHandle = GetCurrentProcess();
+         HMODULE modules[LOAD_COUNT];
+         DWORD   bytesNeeded;
+         if (!EnumProcessModules(processHandle, modules, sizeof(modules), &bytesNeeded))
+            return false;
+         bool   overflow = bytesNeeded > (LOAD_COUNT * sizeof(HMODULE));
+         UInt32 count = (std::min)(bytesNeeded / sizeof(HMODULE), (UInt32)LOAD_COUNT);
+         //
+         std::string path;
+         for (UInt32 i = 0; i < count; i++) {
+            TCHAR szModName[MAX_PATH];
+            if (!GetModuleFileNameEx(processHandle, modules[i], szModName, sizeof(szModName) / sizeof(TCHAR)))
+               continue;
+            path = szModName;
+            if (cobb::striendswith(path, "data\\obse\\plugins\\menuque\\submodule.game.dll")) {
+               MODULEINFO moduleData;
+               if (!GetModuleInformation(processHandle, modules[i], &moduleData, sizeof(moduleData))) {
+                  g_menuQue.addrBase = (UInt32) modules[i]; // we still have the module base
+                  g_menuQue.addrSize = 0;
+                  return true;
+               }
+               g_menuQue.addrBase = (UInt32) moduleData.lpBaseOfDll;
+               g_menuQue.addrSize = moduleData.SizeOfImage;
+               return true;
+            }
+         }
+         return false;
+      };
       void Apply() {
          _MESSAGE("Cleaning up after MenuQue patches... (Some leave broken bytes, which is harmless but will confuse a disassembler.)");
          for (UInt32 i = 0; i < std::extent<decltype(calls)>::value; i++) {
@@ -185,20 +318,30 @@ namespace CobbPatches {
             address += 5;
             UInt8 count = calls[i].brokenByteCount;
             SafeMemset(address, 0x90, count);
-            g_detectedMenuQue = true;
+            g_menuQue.detected = true;
          }
          _MESSAGE(" - All known patches have been looked at.");
-         {  // Get the base address.
+         //
+         // Get the module base.
+         //
+         if (GetMQModuleBaseFromWinAPI()) {
+            _MESSAGE(" - MenuQue's base address reads as %08X (size %08X) based on Windows APIs.", g_menuQue.addrBase, g_menuQue.addrSize);
+         } else {
+            _MESSAGE(" - Unable to identify MenuQue's base address using Windows APIs (too many modules loaded?). Will try the ugly method, which is only reliable for MenuQue v16b.");
             UInt32 callFrom = 0x0058BFBC;
             if (*(char*)callFrom == (char)0xE9) {
                UInt32 a = *(UInt32*)(callFrom + 1);
                UInt32 t = a + callFrom + 1 + 4;
-               g_detectedMenuQueBaseAddress = t - 0x00012040;
-               _MESSAGE(" - MenuQue's base address reads as %08X based on the patch to %08X.", g_detectedMenuQueBaseAddress, callFrom);
-            } else if (g_detectedMenuQue)
+               g_menuQue.addrBase = t - 0x00012040;
+               _MESSAGE(" - MenuQue's base address reads as %08X based on the patch to %08X.", g_menuQue.addrBase, callFrom);
+            } else if (g_menuQue.detected)
                _MESSAGE(" - Unable to identify MenuQue's base address! Some of our compatibility patches will not function!");
          }
+         //
+         // Apply any other fixes.
+         //
          MenuQueFixes::Apply();
+         PatchManager::GetInstance().FireEvent(PatchManager::Req::P_MenuQue); // fire any other patches that were waiting on us
       }
    }
 }

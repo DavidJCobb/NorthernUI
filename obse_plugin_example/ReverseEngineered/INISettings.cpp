@@ -28,6 +28,7 @@ namespace RE {
          SettingInfo* const fJoystickMoveFBMult = (SettingInfo*) 0x00B14EF0;
          SettingInfo* const fJoystickMoveLRMult = (SettingInfo*) 0x00B14EF8;
          SettingInfo* const fMouseSensitivity   = (SettingInfo*) 0x00B14EE8;
+         SettingInfo* const fVersion            = (SettingInfo*) 0x00B02C4C;
          //
          SettingInfo* const iJoystickLookLeftRight = (SettingInfo*) 0x00B14EE0;
          SettingInfo* const iJoystickLookUpDown    = (SettingInfo*) 0x00B14ED8;

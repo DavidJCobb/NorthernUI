@@ -12,8 +12,13 @@
 // compatibility without MenuQue getting in the way of either task.
 //
 
-extern bool   g_detectedMenuQue;
-extern UInt32 g_detectedMenuQueBaseAddress;
+struct MenuQueState {
+   bool   detected = false;
+   UInt32 addrBase = 0;
+   UInt32 addrSize = 0;
+   bool   newMenuIDFixFailed = false;
+};
+extern MenuQueState g_menuQue;
 
 namespace CobbPatches {
    namespace CleanUpAfterMenuQue {

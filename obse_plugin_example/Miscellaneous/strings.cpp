@@ -223,6 +223,30 @@ namespace cobb {
       }
       return 0;*/
    };
+   bool striendswith(const std::string& haystack, const std::string& needle) {
+      return std::equal(
+         haystack.end() - needle.size(), haystack.end(),
+         needle.begin(), needle.end(),
+         [](char a, char b) {
+            return tolower(a) == tolower(b);
+         }
+      );
+      /*size_t s;
+      {
+      size_t sA = a.size();
+      size_t sB = b.size();
+      if (sA != sB)
+      return false;
+      s = (std::min)(sA, sB);
+      }
+      for (size_t i = 0; i < s; i++) {
+      char c = tolower(a[i]);
+      char d = tolower(b[i]);
+      if (c != d)
+      return false;
+      }
+      return 0;*/
+   };
 
    __declspec(noinline) bool validate_format(const std::string& format, const std::string& tokens) {
       auto   sf = format.size();

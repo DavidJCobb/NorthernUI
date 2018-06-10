@@ -26,6 +26,7 @@ class XXNGamepadConfigManager {
       bool  swapSticksMenuMode = false; // if true, then use RS for menus instead of LS
       float sensitivityX = 0.0005F; // recommended upper bound: 0.001
       float sensitivityY = 0.0003F;
+      UInt8 sensitivityRun = 98; // magnitude > this = you're running
       //
       struct Profile : public RE::OSInputGlobals::Scheme {
          Profile() {

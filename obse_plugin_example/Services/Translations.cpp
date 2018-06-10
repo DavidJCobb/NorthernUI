@@ -45,6 +45,7 @@ namespace NorthernUI {
       Str const sControlsCreateSaveFirst = Str("sControlsCreateSaveFirst", "Save Changes");
       Str const sControlsCreateDiscard = Str("sControlsCreateDiscard", "Discard Changes");
       Str const sResetOptionsToDefault = Str("sResetOptionsToDefault", "Reset all options to their default values?");
+      Str const sBadMenuQueVersion = Str("sBadMenuQueVersion", "You are using an unrecognized version of MenuQue, so some NorthernUI features will not work. If you aren't using the newest version, please update. If you're using the newest version, notify NorthernUI's author so that they can update their mod.");
       //
       //
       // The machinery to make all that work is below:

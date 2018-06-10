@@ -36,6 +36,8 @@ namespace CobbPatches {
    namespace XboxGamepad {
       extern bool g_uiCursorGamepadControlEnabled = false; // see UICursorGamepadControl
 
+      static bool s_savingJoystickUsesNativeDefaults = false; // used for the retroactive fix; see LoadControls::RetroactiveINIFix
+
       namespace FixMovementZeroing {
          //
          // Once you start using the joystick, your joystick input will scale the 
@@ -134,12 +136,43 @@ namespace CobbPatches {
          };
       };
       namespace LoadControls {
+         namespace RetroactiveINIFix {
+            //
+            // Retroactively fix any settings we broke before we implemented the "DontSaveOurMappings" 
+            // patch. Note that when this hook runs, the OSInputGlobals object is still under constr-
+            // uction, so it's not in its usual pointer yet.
+            //
+            bool IsBroken(volatile RE::OSInputGlobals* instance) {
+               auto& config  = XXNGamepadConfigManager::GetInstance();
+               auto  profile = config.GetProfileOrDefault(config.currentScheme);
+               if (!profile)
+                  profile = &config.defaultProfile;
+               auto& maps = instance->joystick;
+               for (int i = 0; i < std::extent<decltype(RE::g_defaultJoystickMappings)>::value; i++) {
+                  if (RE::g_defaultJoystickMappings[i] == 0xFF)
+                     continue;
+                  if (maps.bindings[i] != profile->bindings[i])
+                     return false;
+               }
+               return true;
+            };
+            void Execute(RE::OSInputGlobals* instance) {
+               if (IsBroken(instance)) {
+                  s_savingJoystickUsesNativeDefaults = true;
+                  CALL_MEMBER_FN(instance, SaveControlSettingsToINI)();
+                  s_savingJoystickUsesNativeDefaults = false;
+               }
+            };
+         };
+         //
          void Inner(RE::OSInputGlobals* input) {
+            XXNGamepadConfigManager::GetInstance().Init();
+            RetroactiveINIFix::Execute(input);
             XXNGamepadConfigManager::GetInstance().ApplySelectedProfile(input);
          };
          __declspec(naked) void Outer() {
             _asm {
-               mov  ecx, 0x00B07BF0;
+               mov  ecx, 0x00B07BF0; // ecx = g_IniSettingCollection
                call eax; // reproduce patched-over virtual call
                push ebx;
                call Inner;
@@ -154,6 +187,9 @@ namespace CobbPatches {
          };
       };
       namespace ResetControls {
+         //
+         // Make ResetControls use values that are suitable for our input implementation.
+         //
          __declspec(naked) void Outer() {
             _asm {
                mov dword ptr [ecx + 0x1BB8], 0xFFFFFFFF; // Move (WASD)  | Not Bound
@@ -358,7 +394,7 @@ namespace CobbPatches {
          bool ShouldRun(SInt32 x, SInt32 y) {
             float distance = (x*x) + (y*y);
             distance = sqrt(distance);
-            return (distance > 98.0);
+            return (distance > XXNGamepadConfigManager::GetInstance().sensitivityRun);
          };
          __declspec(naked) void Outer() {
             _asm {
@@ -446,6 +482,42 @@ namespace CobbPatches {
          void Apply() {
             WriteRelJump(0x006721B4, (UInt32)&OuterA);
             WriteRelJump(0x006721C6, (UInt32)&OuterB);
+         };
+      };
+      namespace DontSaveOurMappings {
+         //
+         // Ensure our joystick mappings aren't written to Oblivion.ini. Just preserve the 
+         // values already in the INI file.
+         //
+         UInt8 __stdcall _GetJoystickMappingFromINI(UInt8 index, const char* key, const char* filename) {
+            if (s_savingJoystickUsesNativeDefaults) { // used for the retroactive fix; see LoadControls::RetroactiveINIFix
+               return RE::g_defaultJoystickMappings[index];
+            }
+            char buf[128];
+            GetPrivateProfileString("Controls", key, "", buf, sizeof(buf), filename); // this is slow, but Bethesda uses it anyway, so we'll use it too
+            char* end = nullptr;
+            UInt32 code = strtol(buf, &end, 16); // 0x00XXYYZZ given X = keyboard, Y = mouse, Z = joystick
+            return code & 0xFF;
+         };
+         __declspec(naked) void Outer() {
+            _asm {
+               lea eax, [esp + 0x50]; // filename
+               mov ecx, dword ptr [edi];
+               push eax;
+               push ecx;
+               mov  eax, 0x1D;
+               sub  al, bl;
+               push eax;
+               call _GetJoystickMappingFromINI; // stdcall; don't need to clean up stack
+               movzx ecx, eax;
+               xor eax, eax; // patched-over instruction
+               mov edx, 0x004044D7;
+               jmp edx;
+            };
+         };
+         void Apply() {
+            WriteRelJump(0x004044D1, (UInt32)&Outer); // OSInputGlobals::SaveControlSettingsToINI
+            SafeWrite8  (0x004044D6, 0x90); // courtesy NOP
          };
       };
 	   namespace UICursorGamepadControl {
@@ -899,13 +971,8 @@ namespace CobbPatches {
                SafeWrite16(0x004034BA, 0x9090);
             }
             WriteRelJump(0x004033E8, (UInt32) &Hook_SendControlPress);
-            {  // For now, NOP out the code that loads joystick controls from the INI settings
-               // because the keycodes that vanilla uses aren't suitable for us
-               SafeWrite16(0x0040465D, 0x9090);
-               SafeWrite8 (0x0040465F, 0x90);
-               SafeWrite32(0x00404660, 0x90909090);
-            }
             PauseKey::Apply();
+            DontSaveOurMappings::Apply();
             LoadControls::Apply();
             ResetControls::Apply();
             UICursorGamepadControl::Apply();

@@ -13,6 +13,7 @@ namespace cobb {
    extern void snprintf(std::string& out, const char* format, ...);
    extern SInt32 stricmp(const std::string& a, const std::string& b);
    extern bool strieq(const std::string& a, const std::string& b);
+   extern bool striendswith(const std::string& haystack, const std::string& needle);
 
    //
    // Given a format like "example %s %s %d", the valid tokens would be "ssd". For 

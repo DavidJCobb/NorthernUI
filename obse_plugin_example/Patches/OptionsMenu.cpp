@@ -1,8 +1,12 @@
 #include "OptionsMenu.h"
 #include "obse_common/SafeWrite.h"
 
+#include "obse/GameAPI.h"
+#include "Patches/CleanUpAfterMenuQue.h"
 #include "Patches/NewMenus/XXNOptionsMenu.h"
 #include "Patches/NewMenus/XXNControlsMenu.h"
+#include "ReverseEngineered/GameSettings.h"
+#include "Services/Translations.h"
 
 namespace CobbPatches {
    namespace OptionsMenu {
@@ -12,6 +16,15 @@ namespace CobbPatches {
          //
          struct Shim : public RE::Menu {
             void ExtendedSubmenus(SInt32 tileID, RE::Tile* tile) {
+               if (g_menuQue.newMenuIDFixFailed) {
+                  ShowMessageBox(
+                     NorthernUI::L10N::sBadMenuQueVersion.value,
+                     nullptr, 0,
+                     RE::GMST::sOk->s,
+                     nullptr
+                  );
+                  return;
+               }
                switch (tileID) {
                   case 9001:
                      CALL_MEMBER_FN(this, FadeOut)();

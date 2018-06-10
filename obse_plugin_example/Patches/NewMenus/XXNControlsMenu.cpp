@@ -165,6 +165,9 @@ void XXNControlsMenu::HandleTileIDChange(SInt32 newID, RE::Tile* tile) {
       case kTileID_OptionLookSensYSlider:
          this->optionSensitivityY.tile = tile;
          return;
+      case kTileID_OptionRunSensSlider:
+         this->optionSensitivityRun.tile = tile;
+         return;
    }
 };
 void XXNControlsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
@@ -286,6 +289,10 @@ void XXNControlsMenu::HandleFrameMouseDown(SInt32 tileID, RE::Tile* target) {
    }
    if (tileID == kTileID_OptionLookSensYThumb) {
       this->HandleScrollbarThumbDrag(this->optionSensitivityY.tile, target, RE::Menu::kScrollDragBehavior_Interval, true);
+      return;
+   }
+   if (tileID == kTileID_OptionRunSensThumb) {
+      this->HandleScrollbarThumbDrag(this->optionSensitivityRun.tile, target, RE::Menu::kScrollDragBehavior_Interval, true);
       return;
    }
 };
@@ -427,6 +434,11 @@ void XXNControlsMenu::Setup() {
          this->optionSensitivityY.valueMax = NorthernUI::INI::XInput::fMaxJoystickSensForUI.fCurrent;
          this->optionSensitivityX.Set(manager.sensitivityX);
          this->optionSensitivityY.Set(manager.sensitivityY);
+      }
+      {  // run sensitivity
+         this->optionSensitivityRun.valueMin = 0.0F;
+         this->optionSensitivityRun.valueMax = 100.0F;
+         this->optionSensitivityRun.Set(manager.sensitivityRun);
       }
    }
    this->RenderScheme();
@@ -774,6 +786,7 @@ void XXNControlsMenu::Save(bool prefs, bool scheme) {
          if (f)
             manager.sensitivityY = f;
       }
+      manager.sensitivityRun = this->optionSensitivityRun.Get();
    }
    if (prefs || scheme) {
       auto name = this->optionControlScheme.Get();
