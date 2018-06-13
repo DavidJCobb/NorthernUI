@@ -2155,6 +2155,7 @@
     <ClInclude Include="Miscellaneous\InGameDate.h" />
     <ClInclude Include="Patches\NewMenus\XXNHUDInputViewerMenu.h" />
     <ClInclude Include="Fun\x86Reader.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\ContainerMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\obse\obse\GameRTTI_1_1.inl">

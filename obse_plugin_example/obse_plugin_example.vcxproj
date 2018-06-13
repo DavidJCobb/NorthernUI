@@ -312,6 +312,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\AlchemyMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\AudioMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\ContainerMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\EnchantmentMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\GameplayMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\HUDInfoMenu.h" />

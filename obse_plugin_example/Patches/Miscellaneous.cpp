@@ -2,6 +2,7 @@
 #include "obse_common/SafeWrite.h"
 #include "Services/INISettings.h"
 #include "Patches/TagIDs/Main.h"
+#include "ReverseEngineered/ExtraData/ExtraContainerChanges.h"
 #include "ReverseEngineered/NetImmerse/NiObject.h"
 #include "ReverseEngineered/NetImmerse/NiProperty.h"
 #include "ReverseEngineered/Systems/Input.h"
@@ -550,6 +551,76 @@ namespace CobbPatches {
             WriteRelJump(0x0058E772, (UInt32)&Outer); // patch Tile::ResolveTraitReference
          };
       };
+      namespace SuppressQuantityMenu {
+         //
+         // Reproduce the functions of Toggleable Quantity Prompts, but at the native 
+         // code level.
+         //
+         SInt32 CheckPref() {
+            auto ui = RE::InterfaceManager::GetInstance();
+            if (ui->unk118 & 1)
+               return NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iCurrent;
+            if (ui->unk118 & 2)
+               return NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iCurrent;
+            return NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iCurrent;
+         };
+         //
+         UInt32 __stdcall InnerContainer(SInt32 count) { // returns address to jump back to
+            switch (CheckPref()) {
+               case NorthernUI::kQuantityHandler_TakeAll:
+                  *(SInt32*)(0x00B13E94) = count; // *g_ContainerMenu_Quantity = eax;
+               case NorthernUI::kQuantityHandler_TakeOne:
+                  return 0x0059A688; // handles taking an item; if g_ContainerMenu_Quantity isn't -1, then takes that many of the item
+            }
+            return 0x0059A785; // pops QuantityMenu if necessary
+         };
+         __declspec(naked) void OuterContainer() {
+            _asm {
+               mov  eax, dword ptr [ecx + 0x4];
+               push eax; // protect
+               push eax;
+               call InnerContainer; // stdcall
+               mov  ecx, eax;
+               pop  eax; // restore
+               jmp  ecx;
+            };
+         };
+         //
+         UInt32 InnerInventory(RE::ExtraContainerChanges::EntryData* item) { // returns address to jump back to
+            switch (CheckPref()) {
+               case NorthernUI::kQuantityHandler_TakeAll:
+                  *(SInt32*)(0x00B140E4) = item->countDelta;
+                  return 0x005ABF4B; // handles dropping an item if g_ContainerMenu_Quantity isn't -1
+               case NorthernUI::kQuantityHandler_TakeOne:
+                  *(SInt32*)(0x00B140E4) = 1;
+                  return 0x005ABF4B; // handles dropping an item if g_ContainerMenu_Quantity isn't -1
+            }
+            return 0x005ABE80; // pops QuantityMenu if necessary
+         };
+         __declspec(naked) void OuterInventory() {
+            //
+            // Hook for dropping items.
+            //
+            _asm {
+               mov  eax, 0x00B140E4;
+               cmp  dword ptr [eax], -1; // *g_InventoryMenu_Quantity == -1?
+               jne  lExistingQuantity;
+               push esi;
+               call InnerInventory;
+               add  esp, 4;
+               jmp  eax;
+            lExistingQuantity:
+               mov  eax, 0x005ABF4B;
+               jmp  eax;
+            };
+         };
+         void Apply() {
+            WriteRelJump(0x0059A780, (UInt32)&OuterContainer);
+            //
+            WriteRelJump(0x005ABE73, (UInt32)&OuterInventory);
+            SafeWrite16 (0x005ABE78, 0x9090); // courtesy NOP
+         };
+      };
 
       void Apply() {
          //
@@ -564,6 +635,7 @@ namespace CobbPatches {
          MipMapSkipFix::Apply();
          PrefabPathSlashFix::Apply();
          ImplementPrioritizedTraitRefs::Apply();
+         SuppressQuantityMenu::Apply();
       };
    };
 };

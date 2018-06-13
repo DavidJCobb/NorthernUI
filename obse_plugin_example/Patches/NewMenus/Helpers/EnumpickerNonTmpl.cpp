@@ -128,6 +128,13 @@ namespace XXNMenuHelpers {
       }
       this->Render();
    };
+   void EnumpickerStr::SetByIndex(UInt32 i) {
+      if (i >= this->values.size())
+         return;
+      this->index = i;
+      this->Render();
+      return;
+   };
    void EnumpickerStr::Sort() {
       std::sort(
          this->values.begin(),

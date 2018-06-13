@@ -1,0 +1,28 @@
+void TimeInfo::Subroutine0047D170(SInt32 tickCount) {
+   auto edx = tickCount - this->unk14;
+   *(0x00B39DB4) = *(0x00B39DB0);
+   *(0x00B39DB0) = edx;
+   float d = 0.0F;
+   if (!this->disableCount) {
+      SInt32 c = edx;
+      float  a;
+      if (this->fpsClamp != 0.0F) { // at 0x0047D19D
+         float  esp0C = this->unk08 + this->fpsClamp;
+         UInt32 b     = trunc(esp0C);
+         c = this->unk10 + b;
+         this->unk08 = esp0C - b;
+         a = this->fpsClamp;
+      } else {
+         UInt32 esi = edx - this->unk10;
+         if (esi == 0)
+            esi = 1;
+         else if (esi > 166.6667F) // const float (500 / 3)
+            esi = 166;
+         a = esi;
+      }
+      this->unk10 = c;
+      this->frameTime = a * 0.001; // from milliseconds to seconds
+      d = this->frameTime * INI:General:fGlobalTimeMultiplier;
+   }
+   this->frameTime = d;
+};

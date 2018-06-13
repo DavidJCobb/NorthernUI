@@ -10,6 +10,8 @@
 #include "ReverseEngineered/Forms/Actor.h"
 #include "ReverseEngineered/Forms/PlayerCharacter.h"
 #include "ReverseEngineered/GameSettings.h"
+#include "ReverseEngineered/NetImmerse/NiObject.h"
+#include "ReverseEngineered/NetImmerse/NiProperty.h"
 #include "ReverseEngineered/Systems/Input.h"
 #include "ReverseEngineered/Systems/Sound.h"
 #include "ReverseEngineered/Systems/Timing.h"
@@ -851,6 +853,133 @@ namespace CobbPatches {
             // TODO: Have the Inner hook call Journal::Recreate() when appropriate!
          };
       };
+      namespace UICursorAutoHide {
+         enum State {
+            kCursorState_Hidden = 0,
+            kCursorState_Hiding = 1,
+            kCursorState_Shown = 2,
+         };
+
+         volatile static SInt32 s_rightfulAlpha = 255; // alpha the cursor would have if it weren't auto-hidden
+         volatile static bool   s_showCursor = true;
+         volatile static State  s_cursorCurrentState = kCursorState_Shown;
+         volatile static UInt32 s_lastShowedAt = 0;
+
+         namespace CursorAlpha {
+            void PatchedEnd(SInt32 alpha) {
+               s_rightfulAlpha = alpha;
+               s_showCursor = true;
+               s_cursorCurrentState = kCursorState_Shown;
+               s_lastShowedAt = RE::g_timeInfo->unk10;
+            };
+            void Apply() {
+               WriteRelJump(0x00583E2B, (UInt32)&PatchedEnd);
+            };
+         };
+         namespace CursorUpdateHook {
+            static bool  s_cursorMoved = false;
+
+            namespace Start {
+               void Inner() {
+                  s_cursorMoved = !XXNGamepadSupportCore::GetInstance()->anyConnected;
+               };
+               __declspec(naked) void Outer() {
+                  _asm {
+                     mov  eax, 0x0057E390; // GetNormalizedScreenMinY;
+                     call eax;             // reproduce patched-over call
+                     call Inner;
+                     mov  ecx, 0x0057E911;
+                     jmp  ecx;
+                  };
+               };
+               void Apply() {
+                  WriteRelJump(0x0057E90C, (UInt32)&Outer);
+               };
+            };
+            namespace IfChanged {
+               __declspec(naked) void Outer() {
+                  _asm {
+                     mov  s_cursorMoved, 1;
+                     mov  eax, 0x0057D7A0; // GetNormalizedScreenWidth
+                     call eax;             // reproduce patched-over call
+                     mov  eax, 0x0057E9A9;
+                     jmp  eax;
+                  };
+               };
+               void Apply() {
+                  WriteRelJump(0x0057E9A4, (UInt32)&Outer);
+               };
+            };
+            namespace End {
+               void __stdcall Inner(RE::InterfaceManager* ui) {
+                  auto now = RE::g_timeInfo->unk10;
+                  if (s_cursorMoved) {
+                     s_showCursor   = true;
+                     s_lastShowedAt = now;
+                  } else if (s_showCursor) {
+                     if (s_lastShowedAt) {
+                        if (now - s_lastShowedAt >= NorthernUI::INI::Display::fAutoHideCursorDelay.fCurrent * /*to ms:*/1000)
+                           s_showCursor = false;
+                     } else
+                        s_lastShowedAt = now;
+                  }
+                  if (s_showCursor && s_cursorCurrentState == kCursorState_Shown)
+                     return;
+                  if (!s_showCursor && s_cursorCurrentState == kCursorState_Hidden)
+                     return;
+                  s_cursorCurrentState = s_showCursor ? kCursorState_Shown : kCursorState_Hiding;
+                  //
+                  auto node = ui->cursor->renderedNode;
+                  if (node->m_children.firstFreeEntry == 0)
+                     return;
+                  auto child = (RE::NiAVObject*) node->m_children.data[0];
+                  if (!child)
+                     return;
+                  auto prop = (RE::NiMaterialProperty*) CALL_MEMBER_FN(child, GetPropertyByType)(RE::NiMaterialProperty::kType);
+                  if (!prop)
+                     return;
+                  switch (s_cursorCurrentState) {
+                     case kCursorState_Shown:
+                        prop->alpha    = s_rightfulAlpha; // NOTE: Alpha should be [0, 1], but Bethesda just jams 255 into there to show the cursor...
+                        s_lastShowedAt = now;
+                        break;
+                     case kCursorState_Hiding:
+                        //prop->alpha = (std::min)(1.0F, prop->alpha) - 0.0666F; // hm... the game only cares whether alpha is zero or not. is this because of IM's NiAlphaProperty?
+                        prop->alpha = (std::min)(1.0F, prop->alpha) - (2.0F * RE::g_timeInfo->frameTime); // fade out over half a second (one second, twice as fast)
+                        if (prop->alpha <= 0.0F) {
+                           prop->alpha = 0.0F;
+                           s_cursorCurrentState = kCursorState_Hidden;
+                        }
+                  }
+                  prop->count++;
+               };
+               __declspec(naked) void Outer() {
+                  _asm {
+                     push esi;
+                     call Inner; // stdcall
+                     fldz;     // reproduce patched-over instruction
+                     push 1;   // reproduce patched-over instruction
+                     push ecx; // reproduce patched-over instruction
+                     mov  eax, 0x0057EA0B;
+                     jmp  eax;
+                  };
+               };
+               void Apply() {
+                  WriteRelJump(0x0057EA06, (UInt32)&Outer);
+               };
+            };
+            
+            void Apply() {
+               Start::Apply();
+               IfChanged::Apply();
+               End::Apply();
+            };
+         };
+         void Apply() {
+            //CursorAlpha::Apply();
+            CursorUpdateHook::Apply();
+         };
+      };
 
       __declspec(naked) SInt32 GetJoystickAxisMovement(UInt32 gamepad, UInt32 axis) {
          _asm {
@@ -981,6 +1110,7 @@ namespace CobbPatches {
             SensitivityFix::Apply();
             AlwaysRunFix::Apply();
             RunFix::Apply();
+            UICursorAutoHide::Apply();
             //
             _MESSAGE("[Patch] XboxGamepad: Subroutines patched.");
             //

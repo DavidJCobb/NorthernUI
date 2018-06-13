@@ -2,6 +2,7 @@
 #include "obse_common/SafeWrite.h"
 
 #include "XboxGamepad/Main.h"
+#include "XboxGamepad/CustomControls.h"
 #include "XboxGamepad/Patch.h"
 
 #include "Miscellaneous/strings.h"
@@ -407,7 +408,8 @@ namespace CobbPatches {
             //
             static RE::Tile* s_lastGamepadHover = nullptr; // goal was to avoid interfering with mouse hover (i.e. hovering with one device stops hover from the other), but it doesn't work. gamepad always takes priority
             void Inner(RE::MapMenu* mapMenu) {
-               if (CALL_MEMBER_FN((RE::Tile*)mapMenu->tile, GetFloatTraitValue)(kTileValue_user21) != 2.0F)
+               float user21 = CALL_MEMBER_FN((RE::Tile*)mapMenu->tile, GetFloatTraitValue)(kTileValue_user21);
+               if (user21 != 2.0F && user21 != 3.0F)
                   return;
                UInt8 page = CALL_MEMBER_FN(mapMenu->background, GetFloatTraitValue)(kTileValue_user0);
                if (page > 2)
@@ -417,12 +419,26 @@ namespace CobbPatches {
                   return;
                if (CALL_MEMBER_FN(RE::InterfaceManager::GetInstance(), GetTopmostMenuID)() != 1) // return if "Big Four" don't have focus, as that means MapMenu doesn't have focus
                   return;
+               SInt32 user22 = CALL_MEMBER_FN((RE::Tile*)mapMenu->tile, GetFloatTraitValue)(kTileValue_user22);
                //
                XXNGamepad* gamepad = XXNGamepadSupportCore::GetInstance()->GetAnyGamepad();
                if (!gamepad)
                   return;
-               SInt32 x = gamepad->GetJoystickAxis(XXNGamepad::kJoystickAxis_LeftX);
-               SInt32 y = gamepad->GetJoystickAxis(XXNGamepad::kJoystickAxis_LeftY);
+               SInt32 x, y;
+               {
+                  auto& manager = XXNGamepadConfigManager::GetInstance();
+                  //
+                  // No-Swap & No-Three -> Left  | 0 : 0 = 0
+                  // No-Swap & Three    -> Right | 0 : 1 = 1
+                  // Swap    & No-Three -> Right | 1 : 0 = 1
+                  // Swap    & Three    -> Left  | 1 : 1 = 0
+                  //
+                  bool useRightStick = manager.swapSticksMenuMode != (user21 == 3.0F);
+                  auto joyX = useRightStick ? XXNGamepad::kJoystickAxis_RightX : XXNGamepad::kJoystickAxis_LeftX;
+                  auto joyY = useRightStick ? XXNGamepad::kJoystickAxis_RightY : XXNGamepad::kJoystickAxis_LeftY;
+                  x = gamepad->GetJoystickAxis(joyX);
+                  y = gamepad->GetJoystickAxis(joyY);
+               }
                float xPan = NorthernUI::INI::XInput::fMapMenuPanSpeed.fCurrent * (float)x / 100.0F;
                float yPan = NorthernUI::INI::XInput::fMapMenuPanSpeed.fCurrent * (float)y / 100.0F;
                //
@@ -433,22 +449,35 @@ namespace CobbPatches {
                float maxX = CALL_MEMBER_FN(cursor, GetFloatTraitValue)(kTileValue_user4);
                float maxY = CALL_MEMBER_FN(cursor, GetFloatTraitValue)(kTileValue_user5);
                //
-               currentX += xPan;
-               currentY += yPan;
-               bool  isPanning = currentX > maxX || currentX < minX || currentY > maxY || currentY < minY;
-               float xMod = 0.0, yMod = 0.0;
-               if (isPanning) { // There are single-line ways to write these using std::min and std::max, but this is clearer:
-                  xMod = currentX - maxX;
-                  if (xMod <= 0.0) {
-                     xMod = currentX - minX;
-                     if (xMod > 0.0)
-                        xMod = 0.0;
-                  }
-                  yMod = currentY - maxY;
-                  if (yMod <= 0.0) {
-                     yMod = currentY - minY;
-                     if (yMod > 0.0)
-                        yMod = 0.0;
+               bool  isPanning;
+               float xMod = 0.0,
+                     yMod = 0.0;
+               {
+                  if ((user22 & 1 != 0) && gamepad->GetButtonState(XXNGamepad::kGamepadButton_LB, RE::kKeyQuery_Hold)) { 
+                     //
+                     // USER22: bit 1: force panning if LB is held
+                     //
+                     isPanning = true;
+                     xMod = xPan;
+                     yMod = yPan;
+                  } else {
+                     currentX += xPan;
+                     currentY += yPan;
+                     bool isPanning = currentX > maxX || currentX < minX || currentY > maxY || currentY < minY;
+                     if (isPanning) { // There are single-line ways to write these using std::min and std::max, but this is clearer:
+                        xMod = currentX - maxX;
+                        if (xMod <= 0.0) {
+                           xMod = currentX - minX;
+                           if (xMod > 0.0)
+                              xMod = 0.0;
+                        }
+                        yMod = currentY - maxY;
+                        if (yMod <= 0.0) {
+                           yMod = currentY - minY;
+                           if (yMod > 0.0)
+                              yMod = 0.0;
+                        }
+                     }
                   }
                   if (page == 1) { // I'm not even gonna pretend to understand why this is inconsistent between the two maps.
                      xMod = -xMod;

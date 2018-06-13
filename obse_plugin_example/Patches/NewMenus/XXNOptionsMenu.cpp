@@ -65,6 +65,33 @@ void XXNOptionsMenu::HandleTileIDChange(SInt32 newID, RE::Tile* tile) {
       case kTileID_OptionUseXInputIfPatched:
          this->optionUseXInputIfPatched.tile = tile;
          return;
+      case kTileID_OptionQuantityHandlerDefault_Left:
+         this->optionQuantityHandlerDefault.tileLeft = tile;
+         return;
+      case kTileID_OptionQuantityHandlerDefault_Right:
+         this->optionQuantityHandlerDefault.tileRight = tile;
+         return;
+      case kTileID_OptionQuantityHandlerDefault_Value:
+         this->optionQuantityHandlerDefault.tileValue = tile;
+         return;
+      case kTileID_OptionQuantityHandlerAlt_Left:
+         this->optionQuantityHandlerAlt.tileLeft = tile;
+         return;
+      case kTileID_OptionQuantityHandlerAlt_Right:
+         this->optionQuantityHandlerAlt.tileRight = tile;
+         return;
+      case kTileID_OptionQuantityHandlerAlt_Value:
+         this->optionQuantityHandlerAlt.tileValue = tile;
+         return;
+      case kTileID_OptionQuantityHandlerCtrl_Left:
+         this->optionQuantityHandlerCtrl.tileLeft = tile;
+         return;
+      case kTileID_OptionQuantityHandlerCtrl_Right:
+         this->optionQuantityHandlerCtrl.tileRight = tile;
+         return;
+      case kTileID_OptionQuantityHandlerCtrl_Value:
+         this->optionQuantityHandlerCtrl.tileValue = tile;
+         return;
    }
 };
 void XXNOptionsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
@@ -96,6 +123,12 @@ void XXNOptionsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
    if (this->optionShowHUDInputViewer.HandleClick(target))
       return;
    if (this->optionUseXInputIfPatched.HandleClick(target))
+      return;
+   if (this->optionQuantityHandlerDefault.HandleClick(target))
+      return;
+   if (this->optionQuantityHandlerCtrl.HandleClick(target))
+      return;
+   if (this->optionQuantityHandlerAlt.HandleClick(target))
       return;
 };
 void XXNOptionsMenu::HandleMouseover(SInt32 tileID, RE::Tile* target) {
@@ -147,6 +180,12 @@ bool XXNOptionsMenu::AnyUnchanged() const {
       return true;
    if (NorthernUI::INI::XInput::bDontUseEvenWhenPatched.bCurrent != !this->optionUseXInputIfPatched.Get()) // NOTE: UI shows opposite!
       return true;
+   if (NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iCurrent != !this->optionQuantityHandlerDefault.index)
+      return true;
+   if (NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iCurrent != !this->optionQuantityHandlerAlt.index)
+      return true;
+   if (NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iCurrent != !this->optionQuantityHandlerCtrl.index)
+      return true;
    return false;
 };
 void XXNOptionsMenu::Commit() {
@@ -156,6 +195,9 @@ void XXNOptionsMenu::Commit() {
    NorthernUI::INI::Features::bShowHUDClock.bCurrent             = this->optionShowHUDClock.Get();
    NorthernUI::INI::Features::bShowHUDInputViewer.bCurrent       = this->optionShowHUDInputViewer.Get();
    NorthernUI::INI::XInput::bDontUseEvenWhenPatched.bCurrent     = !this->optionUseXInputIfPatched.Get(); // NOTE: UI shows opposite!
+   NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iCurrent = this->optionQuantityHandlerDefault.index;
+   NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iCurrent   = this->optionQuantityHandlerAlt.index;
+   NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iCurrent  = this->optionQuantityHandlerCtrl.index;
    //
    (NorthernUI::INI::INISettingManager::GetInstance()).Save();
    NorthernUI::INI::SendChangeEvent();
@@ -167,17 +209,37 @@ void XXNOptionsMenu::ResetDefaults() {
    this->optionShowHUDClock.Set(NorthernUI::INI::Features::bShowHUDClock.bDefault);
    this->optionShowHUDInputViewer.Set(NorthernUI::INI::Features::bShowHUDInputViewer.bDefault);
    this->optionUseXInputIfPatched.Set(!NorthernUI::INI::XInput::bDontUseEvenWhenPatched.bDefault); // NOTE: UI shows opposite!
+   this->optionQuantityHandlerDefault.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iDefault);
+   this->optionQuantityHandlerAlt.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iDefault);
+   this->optionQuantityHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iDefault);
 };
 void XXNOptionsMenu::Setup() {
    //
    // any menu setup tasks to be performed after opening
    //
+   {  // handle quantity-handler labels
+      this->optionQuantityHandlerDefault.values.reserve(3);
+      this->optionQuantityHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
+      this->optionQuantityHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
+      this->optionQuantityHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
+      this->optionQuantityHandlerAlt.values.reserve(3);
+      this->optionQuantityHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
+      this->optionQuantityHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
+      this->optionQuantityHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
+      this->optionQuantityHandlerCtrl.values.reserve(3);
+      this->optionQuantityHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
+      this->optionQuantityHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
+      this->optionQuantityHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
+   }
    this->optionLocalMapRes.Set(NorthernUI::INI::Display::uLocalMapResolutionPerCell.iCurrent, true);
    this->optionSuppressDLCPopups.Set(NorthernUI::INI::Features::bSuppressDLCStartup.bCurrent);
    this->optionUseXXNAlchemyMenu.Set(NorthernUI::INI::Menus::bUseXXNAlchemyMenu.bCurrent);
    this->optionShowHUDClock.Set(NorthernUI::INI::Features::bShowHUDClock.bCurrent);
    this->optionShowHUDInputViewer.Set(NorthernUI::INI::Features::bShowHUDInputViewer.bCurrent);
    this->optionUseXInputIfPatched.Set(!NorthernUI::INI::XInput::bDontUseEvenWhenPatched.bCurrent); // NOTE: UI shows opposite!
+   this->optionQuantityHandlerDefault.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iCurrent);
+   this->optionQuantityHandlerAlt.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iCurrent);
+   this->optionQuantityHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iCurrent);
 };
 
 /*static*/ void XXNOptionsMenu::Confirm_ResetDefaults() {

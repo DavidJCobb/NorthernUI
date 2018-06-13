@@ -310,8 +310,8 @@ void XXNGamepadConfigManager::LoadCustomProfiles() {
                continue;
             }
             {
-               bool isX = _stricmp(key.c_str(), "fSensitivityX");
-               bool isY = _stricmp(key.c_str(), "fSensitivityY");
+               bool isX = cobb::strieq(key.c_str(), "fSensitivityX");
+               bool isY = cobb::strieq(key.c_str(), "fSensitivityY");
                if (isX || isY) {
                   float f;
                   if (!cobb::string_to_float(value.c_str(), f))

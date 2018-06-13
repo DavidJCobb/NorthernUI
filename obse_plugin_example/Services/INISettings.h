@@ -7,6 +7,12 @@ using namespace std;
 #include "obse/Utilities.h"
 
 namespace NorthernUI {
+   enum QuantityMenuHandler : SInt32 {
+      kQuantityHandler_Default = 0, // show prompt
+      kQuantityHandler_TakeOne = 1,
+      kQuantityHandler_TakeAll = 2,
+   };
+
    namespace INI {
       //
       // NorthernUI.ini should be in the "Plugins" folder with the DLL.
@@ -30,9 +36,13 @@ namespace NorthernUI {
       };
       namespace Display {
          XXN_MAKE_INI_SETTING(bForceNativeResolutionUI,   "Display", false);
+         XXN_MAKE_INI_SETTING(fAutoHideCursorDelay,       "Display", 5.0F);
          XXN_MAKE_INI_SETTING(uLocalMapResolutionPerCell, "Display", 1024);
       };
       namespace Features {
+         XXN_MAKE_INI_SETTING(iQuantityMenuHandlerAlt,     "Features", kQuantityHandler_Default);
+         XXN_MAKE_INI_SETTING(iQuantityMenuHandlerCtrl,    "Features", kQuantityHandler_Default);
+         XXN_MAKE_INI_SETTING(iQuantityMenuHandlerDefault, "Features", kQuantityHandler_Default);
          XXN_MAKE_INI_SETTING(bShowHUDClock,       "Features", true);
          XXN_MAKE_INI_SETTING(bShowHUDInputViewer, "Features", false);
          XXN_MAKE_INI_SETTING(bSuppressDLCStartup, "Features", false);

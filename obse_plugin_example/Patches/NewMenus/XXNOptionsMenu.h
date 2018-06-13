@@ -33,9 +33,22 @@ class XXNOptionsMenu : public RE::Menu {
          kTileID_OptionShowHUDClock      = 15,
          kTileID_OptionShowHUDInputViewer = 16,
          kTileID_OptionUseXInputIfPatched = 17,
+         kTileID_OptionQuantityHandlerDefault_Left  = 18,
+         kTileID_OptionQuantityHandlerDefault_Right = 19,
+         kTileID_OptionQuantityHandlerDefault_Value = 20,
+         kTileID_OptionQuantityHandlerAlt_Left  = 21,
+         kTileID_OptionQuantityHandlerAlt_Right = 22,
+         kTileID_OptionQuantityHandlerAlt_Value = 23,
+         kTileID_OptionQuantityHandlerCtrl_Left  = 24,
+         kTileID_OptionQuantityHandlerCtrl_Right = 25,
+         kTileID_OptionQuantityHandlerCtrl_Value = 26,
       };
       enum {
          kTraitID_CheckboxState = kTileValue_user20,
+         //
+         kRootTrait_QuantityHandlerDefault = kTileValue_user10,
+         kRootTrait_QuantityHandlerTakeOne = kTileValue_user11,
+         kRootTrait_QuantityHandlerTakeAll = kTileValue_user12,
       };
       enum Confirmation : UInt8 {
          kConfirmationBox_None = 0,
@@ -53,6 +66,9 @@ class XXNOptionsMenu : public RE::Menu {
       Checkbox optionShowHUDInputViewer;
       Checkbox optionUseXInputIfPatched;
       Confirmation confirmation;
+      EnumpickerStr optionQuantityHandlerDefault;
+      EnumpickerStr optionQuantityHandlerAlt;
+      EnumpickerStr optionQuantityHandlerCtrl;
 
       virtual void	Dispose(bool); // 00 // destructor
       virtual void	HandleTileIDChange(SInt32 newID, RE::Tile* tile);
