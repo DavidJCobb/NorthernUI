@@ -10,8 +10,8 @@ namespace RE {
    DEFINE_SUBROUTINE(Tile*,       GetDescendantTileByName, 0x00589B10, Tile* parent, const char* name); // searches recursively
    DEFINE_SUBROUTINE(UInt32,      GetOrCreateTempTagID,    0x0058B040, const char* traitName, SInt32 alwaysNegativeOne); // used for traits beginning with an underscore or ampersand
    DEFINE_SUBROUTINE(UInt32,      ProcessSrcAttributeVal,  0x0058B800, const char* src, char** outSrcArg); // returns trait ID; outSrcArg is set to the argument, e.g. "sibling(IT_IS_SET_TO_THIS)"
-   DEFINE_SUBROUTINE(const char*, TagIDToName,             0x00589080, UInt32 tagID);
-   DEFINE_SUBROUTINE(UInt32,      TagNameToID,             0x00588EF0, const char* tagName);
+   DEFINE_SUBROUTINE(const char*, TagIDToName,             0x00589080, SInt32 tagID);
+   DEFINE_SUBROUTINE(SInt32,      TagNameToID,             0x00588EF0, const char* tagName);
    DEFINE_SUBROUTINE(bool,        TileValueFormsCircularReference, 0x0058BAD0, Tile::Value*); // this also updates the values list in g_tileParseState
 
    Tile::TileTemplateItem* Tile::TileTemplateItem::Create(UInt32 code, float tagIdOrValue, const char* string, SInt32 result, UInt32 lineNumber) {

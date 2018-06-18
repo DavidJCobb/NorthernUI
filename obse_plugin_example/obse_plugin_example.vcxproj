@@ -346,6 +346,7 @@
     <None Include="..\obse\obse\GameRTTI_1_1.inl" />
     <None Include="..\obse\obse\GameRTTI_1_2.inl" />
     <None Include="..\obse\obse\GameRTTI_1_2_416.inl" />
+    <None Include="ClassDiagram.cd" />
     <None Include="exports.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

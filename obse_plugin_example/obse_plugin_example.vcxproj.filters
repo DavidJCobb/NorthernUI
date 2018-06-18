@@ -302,7 +302,6 @@
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
-    <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
@@ -2156,6 +2155,66 @@
     <ClInclude Include="Patches\NewMenus\XXNHUDInputViewerMenu.h" />
     <ClInclude Include="Fun\x86Reader.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\ContainerMenu.h" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
+    <ClInclude Include="..\obse\obse\*.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\obse\obse\GameRTTI_1_1.inl">
@@ -2168,5 +2227,6 @@
       <Filter>obse</Filter>
     </None>
     <None Include="exports.def" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

@@ -69,8 +69,8 @@ namespace RE {
    DEFINE_SUBROUTINE_EXTERN(Tile*,       GetDescendantTileByName, 0x00589B10, Tile* parent, const char* name); // searches recursively
    DEFINE_SUBROUTINE_EXTERN(UInt32,      GetOrCreateTempTagID,    0x0058B040, const char* traitName, SInt32 alwaysNegativeOne); // used for traits beginning with an underscore or ampersand
    DEFINE_SUBROUTINE_EXTERN(UInt32,      ProcessSrcAttributeVal,  0x0058B800, const char* src, char** outSrcArg); // returns trait ID; outSrcArg is set to the argument, e.g. "sibling(IT_IS_SET_TO_THIS)"
-   DEFINE_SUBROUTINE_EXTERN(const char*, TagIDToName,             0x00589080, UInt32 tagID);        // OBSE: TileStrIDToStr
-   DEFINE_SUBROUTINE_EXTERN(UInt32,      TagNameToID,             0x00588EF0, const char* tagName); // OBSE: TileStrToStrID
+   DEFINE_SUBROUTINE_EXTERN(const char*, TagIDToName,             0x00589080, SInt32 tagID);        // OBSE: TileStrIDToStr
+   DEFINE_SUBROUTINE_EXTERN(SInt32,      TagNameToID,             0x00588EF0, const char* tagName); // OBSE: TileStrToStrID // MUST return SInt32, because it's used for XML entities as well!
 
    class Tile {
       public:
