@@ -49,24 +49,6 @@ namespace CobbPatches {
          // one. (It won't affect anything if the joystick is zeroed and WASD isn't 
          // being pressed.)
          //
-         /*void Inner() {
-            if (*(float*)(0x00B14E58) == 0.0F)
-               *(float*)(0x00B14E58) = 1.0F;
-         };
-         __declspec(naked) void Outer() {
-            _asm {
-               pushad;
-               call Inner;
-               popad;
-               cmp  edi, 0x62;          // reproduce patched-over instruction
-               jge  lPatchedOverBranch; // reproduce patched-over instruction
-               mov  eax, 0x006721A9;
-               jmp  eax;
-            lPatchedOverBranch:
-               mov  eax, 0x006721AE;
-               jmp  eax;
-            };
-         };*/
          __declspec(naked) void Outer() {
             _asm {
                // vanilla: test eax, eax;
@@ -86,7 +68,6 @@ namespace CobbPatches {
             };
          };
          void Apply() {
-            /*WriteRelJump(0x006721A4, (UInt32)&Outer);*/
             WriteRelJump(0x00672160, (UInt32)&Outer);
             SafeWrite8  (0x00672165, 0x90); // courtesy NOP
          };
@@ -678,6 +659,18 @@ namespace CobbPatches {
                return false;
             };
          };
+         namespace ClearButtonStateOnMenuOpen {
+            RE::InterfaceManager* Inner() {
+               XXNGamepad* gamepad = XXNGamepadSupportCore::GetInstance()->GetAnyGamepad();
+               if (gamepad)
+                  gamepad->IgnoreButtons();
+               //
+               return RE::InterfaceManager::GetInstance(); // reproduce patched-over call
+            }
+            void Apply() {
+               WriteRelCall(0x00585198, (UInt32)&Inner);
+            };
+         };
 
          inline void _CheckUIKey(RE::InterfaceManager* ui, XXNGamepad* gamepad, XXNGamepad::Button key, UInt32 send) {
             if (gamepad->GetButtonState(key, XXNGamepad::KeyQuery::kKeyQuery_Down))
@@ -700,7 +693,7 @@ namespace CobbPatches {
                // HandleNavigationKeypress also pops the start menu (and, like, why?!). This means that if we
                // try to listen for Start KeyDown, then we'll end up toggling the start menu twice every time
                // the Start button is pressed in menu mode (so pressing Start with any other menu open would
-               // just open and instnatly close the start menu, and trying to close the start menu with Start
+               // just open and instantly close the start menu, and trying to close the start menu with Start
                // would just close and instantly reopen it).
                //
                _CheckUIKey(ui, gamepad, XXNGamepad::kGamepadButton_Start, RE::InterfaceManager::kNavigationKeypress_XboxStart);
@@ -851,6 +844,7 @@ namespace CobbPatches {
             WriteRelJump(0x00583696, (UInt32)&Outer);
             JournalHandler::Apply();
             // TODO: Have the Inner hook call Journal::Recreate() when appropriate!
+            ClearButtonStateOnMenuOpen::Apply(); // TEST
          };
       };
       namespace UICursorAutoHide {
@@ -1076,7 +1070,7 @@ namespace CobbPatches {
             //
             // Patches:
             //
-            {  // InputManager::PollAndUpdateInputState
+            {  // OSInputGlobals::PollAndUpdateInputState
                WriteRelCall(0x004046B8, (UInt32) &Hook_UpdateGamepads);
                SafeMemset  (0x004046BD, 0x90, 0x0040472F - 0x004046BD);
             }
@@ -1085,7 +1079,7 @@ namespace CobbPatches {
                WriteRelJump(0x00402FC0, (UInt32) &QueryJoystickButtonState);
                //
                // Patch OSInputGlobals::QueryInputState to compare the specified joystick number to 4 
-               // instead of to InputManager::joystickCount:
+               // instead of to OSInputGlobals::joystickCount:
                //
                SafeWrite8(0x004034AA, 0x83);
                SafeWrite8(0x004034AB, 0xF8);

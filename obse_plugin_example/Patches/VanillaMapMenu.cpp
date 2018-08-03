@@ -269,6 +269,46 @@ namespace CobbPatches {
             OverrideRenderResolution::Apply(); // Patch: increase render resolution for the local map
          };
       };
+      namespace WorldMapHooks {
+         namespace SafeHoveredMapIcon {
+            //
+            // Ensure the hoveredMapIcon isn't deleted out from the menu. Speculative.
+            //
+            __declspec(naked) void Outer() {
+               _asm {
+                  mov  eax, 0x00573880; // NiTList::DestroyAllNodes
+                  call eax;             // reproduce patched-over call
+                  //
+                  // At this point, if edi->hoveredMapIcon is not null, then it is a 
+                  // bad pointer. We can't call edi->ForceDismissTooltip to clear it, 
+                  // because that tries to change traits on the tile if the pointer 
+                  // isn't null. We need to null the pointer and *then* call that 
+                  // subroutine.
+                  //
+                  // (The reason we need to dismiss the tooltip at all is to account 
+                  // for the case where the mouse passes over an icon, and then the 
+                  // gamepad is used to set a custom marker elsewhere. If we fail to 
+                  // dismiss the tooltip, then it gets "stuck" until it's "needed 
+                  // elsewhere."
+                  //
+                  // (As for nulling the pointer? Self-explanatory. If we don't null 
+                  // it, then the next thing that tries to use it will crash. I guess 
+                  // Bethesda just missed it, and one of our other patches just made 
+                  // the crash more likely by virtue of using that pointer.)
+                  //
+                  mov  dword ptr [esi + 0xF4], 0; // edi->hoveredMapIcon = nullptr;
+                  mov  ecx, esi;
+                  call RE::MapMenu::ForceDismissTooltip; // edi->ForceDismissTooltip();
+                  mov  eax, 0x005B9648;
+                  jmp  eax;
+               };
+            };
+            void Apply() {
+               WriteRelJump(0x005B9643, (UInt32)&Outer);
+            };
+            static_assert(offsetof(RE::MapMenu, hoveredMapIcon) == 0xF4, "The offset of RE::MapMenu::hoveredMapIcon has changed from 0xF4. Update the inline assembly code bundled with this assert to use the new offset.");
+         };
+      };
       namespace QuestListHooks {
          namespace AccuratePaneHeight {
             //
@@ -820,6 +860,7 @@ namespace CobbPatches {
       void Apply() {
          _MESSAGE("[MapMenu] Patching...");
          LocalMapHooks::Apply();
+         WorldMapHooks::SafeHoveredMapIcon::Apply();
          QuestListHooks::Apply();
          XInput::Apply();
       };

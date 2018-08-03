@@ -98,7 +98,10 @@ UInt32 XInputControlBindingToDXScanCode(const UInt32 binding) {
 XXNGamepad::XXNGamepad() {
    ZeroMemory(&this->lastFrame, sizeof(this->lastFrame));
    ZeroMemory(&this->thisFrame, sizeof(this->thisFrame));
+   ZeroMemory(&this->ignoring,  sizeof(this->ignoring));
 };
+
+static bool bDebugGamepadA = false;
 
 void XXNGamepad::Update() {
    memcpy(&this->lastFrame, &this->thisFrame, sizeof(this->thisFrame));
@@ -107,6 +110,9 @@ void XXNGamepad::Update() {
    DWORD result = XInputGetState(this->index, &state);
    if (result == ERROR_SUCCESS) { // "Error: Success!" lol
       memcpy(&this->thisFrame, &state.Gamepad, sizeof(this->thisFrame));
+      auto ignoring = this->ignoring.wButtons;
+      this->ignoring.wButtons &= this->thisFrame.wButtons;
+      this->thisFrame.wButtons &= ~ignoring;
       this->isConnected = true;
    } else {
       //
@@ -213,6 +219,11 @@ SInt32 XXNGamepad::GetJoystickAxis(UInt8 axis) const {
    }
    float normalized = ((float)v) / (32767 - deadzone) * OBLIVION_JOYSTICK_MAX;
    return (SInt32) normalized;
+};
+void XXNGamepad::IgnoreButtons() {
+   this->ignoring.wButtons = this->thisFrame.wButtons;
+   this->thisFrame.wButtons = 0;
+   this->lastFrame.wButtons = 0;
 };
 void XXNGamepad::SendControlPress(UInt8 button) {
    if (button >= 0x80) { // special cases
