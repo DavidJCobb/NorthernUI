@@ -110,9 +110,9 @@ void XXNGamepad::Update() {
    DWORD result = XInputGetState(this->index, &state);
    if (result == ERROR_SUCCESS) { // "Error: Success!" lol
       memcpy(&this->thisFrame, &state.Gamepad, sizeof(this->thisFrame));
-      auto ignoring = this->ignoring.wButtons;
+      auto oldIgnoring = this->ignoring.wButtons;
       this->ignoring.wButtons &= this->thisFrame.wButtons;
-      this->thisFrame.wButtons &= ~ignoring;
+      this->thisFrame.wButtons &= ~oldIgnoring;
       this->isConnected = true;
    } else {
       //
@@ -221,7 +221,7 @@ SInt32 XXNGamepad::GetJoystickAxis(UInt8 axis) const {
    return (SInt32) normalized;
 };
 void XXNGamepad::IgnoreButtons() {
-   this->ignoring.wButtons = this->thisFrame.wButtons;
+   this->ignoring.wButtons  |= this->thisFrame.wButtons;
    this->thisFrame.wButtons = 0;
    this->lastFrame.wButtons = 0;
 };
