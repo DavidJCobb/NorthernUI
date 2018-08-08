@@ -186,8 +186,8 @@ namespace CobbPatches {
             };
             __declspec(naked) void OuterCellRender() {
                __asm {
-                  mov  al, doRenderBackground;
-                  mov  byte ptr [esp + 0x14], al;
+                  mov  bl, doRenderBackground;
+                  mov  byte ptr [esp + 0x14], bl;
                   mov  eax, 0x004D01F9;
                   jmp  eax;
                };
