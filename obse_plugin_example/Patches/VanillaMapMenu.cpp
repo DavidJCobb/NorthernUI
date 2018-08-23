@@ -13,65 +13,10 @@
 #include "obse/GameTiles.h"
 #include "Services/INISettings.h"
 
-//#include "obse/NiGeometry.h" // for DebugHook
+#include "obse/NiGeometry.h" // for DebugHook
 
 namespace CobbPatches {
    namespace MapMenu {
-      void DebugLogs(RE::MapMenu* menu) {
-         _MESSAGE("Local map is being rendered...");
-         if (!menu)
-            return;
-         RE::Tile* tile;
-         NiNode*   node;
-         {  // LocalLayout
-            if (tile = (RE::Tile*) menu->localLayout) {
-               _MESSAGE(" - Local layout");
-               node = tile->renderedNode;
-               if (node) {
-                  _MESSAGE("    - Transform L: (%f, %f, %f)", node->m_localTranslate.x, node->m_localTranslate.y, node->m_localTranslate.z);
-                  _MESSAGE("    - Transform W: (%f, %f, %f)", node->m_worldTranslate.x, node->m_worldTranslate.y, node->m_worldTranslate.z);
-               } else
-                  _MESSAGE("    - No node");
-            } else
-               _MESSAGE(" - No local layout");
-         }
-         {  // LocalMap
-            if (tile = (RE::Tile*) menu->localMap) {
-               _MESSAGE(" - Local map");
-               node = tile->renderedNode;
-               if (node) {
-                  _MESSAGE("    - Transform L: (%f, %f, %f)", node->m_localTranslate.x, node->m_localTranslate.y, node->m_localTranslate.z);
-                  _MESSAGE("    - Transform W: (%f, %f, %f)", node->m_worldTranslate.x, node->m_worldTranslate.y, node->m_worldTranslate.z);
-                  /*{ // Neither of our hooks can run this test: they fire off after the node is emptied and before it's regenerated
-                     auto& children = node->m_children;
-                     for (UInt32 i = 0; i < children.firstFreeEntry; i++) {
-                        auto child = children.data[i];
-                        if (child) {
-                           _MESSAGE("    - Child %d", i);
-                           _MESSAGE("       - Transform L: (%f, %f, %f)", child->m_localTranslate.x, child->m_localTranslate.y, child->m_localTranslate.z);
-                           _MESSAGE("       - Transform W: (%f, %f, %f)", child->m_worldTranslate.x, child->m_worldTranslate.y, child->m_worldTranslate.z);
-                        }
-                     }
-                  }*/
-               } else
-                  _MESSAGE("    - No node");
-            } else
-               _MESSAGE(" - No local map");
-         }
-         {  // LocalIcons
-            if (tile = (RE::Tile*) menu->localIcons) {
-               _MESSAGE(" - Local icons");
-               node = tile->renderedNode;
-               if (node) {
-                  _MESSAGE("    - Transform L: (%f, %f, %f)", node->m_localTranslate.x, node->m_localTranslate.y, node->m_localTranslate.z);
-                  _MESSAGE("    - Transform W: (%f, %f, %f)", node->m_worldTranslate.x, node->m_worldTranslate.y, node->m_worldTranslate.z);
-               } else
-                  _MESSAGE("    - No node");
-            } else
-               _MESSAGE(" - No local icons");
-         }
-      };
-
       /*namespace AllowChangingShowOnMapTile {
          //
          // Patch: I have some concerns about whether MapMenu will properly handle the visibility 
@@ -493,7 +438,7 @@ namespace CobbPatches {
                float xMod = 0.0,
                      yMod = 0.0;
                {
-                  if ((user22 & 1 != 0) && gamepad->GetButtonState(XXNGamepad::kGamepadButton_LB, RE::kKeyQuery_Hold)) { 
+                  if (((user22 & 1) != 0) && gamepad->GetButtonState(XXNGamepad::kGamepadButton_LB, RE::kKeyQuery_Hold)) { 
                      //
                      // USER22: bit 1: force panning if LB is held
                      //
@@ -808,21 +753,141 @@ namespace CobbPatches {
             WorldMap::Apply();
          };
       };
+      namespace LocalMapInitialRenderHack {
+         //
+         // With NorthernUI's XML, the first time the local map renders, it's blank. Testing fails 
+         // to reveal any readily identifiable discrepancy in how the NiNodes are rendered. Testing 
+         // with code injection reveals that it's not a problem with MapMenu::RenderLocalMap or its 
+         // immediate caller: patching both functions' callers to repeat the calls has no effect.
+         //
+         // It seems to be some odd nuance in how the UI is rendered... so we'll use a cheap hack: 
+         // when the local map is rendered for the first time, we'll just force it to be redrawn on 
+         // the next frame.
+         //
+         enum State : UInt8 {
+            kState_NeverRendered = 0,
+            kState_FirstRender,
+            kState_FirstRenderAcknowledged, // HandleFrame runs after HandleClick, so we actually need to delay our response an extra frame
+            kState_AfterFirstRender
+         };
+         static State s_state;
+
+         namespace DetectFirstRender {
+            void Inner() {
+               if (s_state == kState_NeverRendered)
+                  s_state = kState_FirstRender;
+            };
+            __declspec(naked) void Outer() {
+               _asm {
+                  mov  eax, 0x0058CEB0; // reproduce patched-over call
+                  call eax;             //
+                  call Inner;
+                  mov  eax, 0x005B8762;
+                  jmp  eax;
+               };
+            };
+            void Apply() {
+               WriteRelJump(0x005B875D, (UInt32)&Outer); // patches MapMenu::RenderLocalMap
+            };
+         };
+         namespace UpdateOnNextFrame {
+            void _stdcall Shim(RE::MapMenu* menu) {
+               if (s_state == kState_FirstRender) {
+                  //
+                  // This is the frame on which the first render took place.
+                  //
+                  s_state = kState_FirstRenderAcknowledged;
+               } else if (s_state == kState_FirstRenderAcknowledged) {
+                  //
+                  // This is the frame after the first render.
+                  //
+                  s_state = kState_AfterFirstRender;
+                  CALL_MEMBER_FN(menu, RenderLocalMap)();
+               }
+            };
+            __declspec(naked) bool Outer() {
+               _asm {
+                  push ecx;
+                  call Shim; // _stdcall
+                  push 0x3FF;           // reproduce patched-over call
+                  mov  eax, 0x0057C140; // 
+                  call eax;             //
+                  add  esp, 4;          //
+                  retn;
+               };
+            };
+            void Apply() {
+               WriteRelCall(0x005B70F8, (UInt32)&Outer); // patches MapMenu::HandleFrame
+            };
+         };
+         namespace ResetOnMenuDestroyed {
+            void Inner() {
+               s_state = kState_NeverRendered;
+            }
+            __declspec(naked) void Outer() {
+               _asm {
+                  mov  eax, 0x00401F20; // reproduce patched-over call
+                  call eax;             //
+                  call Inner;
+                  mov  eax, 0x005B7502;
+                  jmp  eax;
+               };
+            };
+            void Apply() {
+               WriteRelJump(0x005B74FD, (UInt32)&Outer); // patches MapMenu::~MapMenu
+            };
+         };
+         void Apply() {
+            DetectFirstRender::Apply();
+            UpdateOnNextFrame::Apply();
+            ResetOnMenuDestroyed::Apply();
+         };
+      };
 
       namespace DebugHook {
          void Inner(RE::Tile* localMap) {
             _MESSAGE("MapMenu debug hook tripped!");
+            auto menu = (RE::MapMenu*) CALL_MEMBER_FN(localMap, GetContainingMenu)();
+            if (!menu)
+               return;
+            {  // LocalLayout
+               if (auto tile = (RE::Tile*) menu->localLayout) {
+                  _MESSAGE(" - Local layout");
+                  auto node = tile->renderedNode;
+                  if (node) {
+                     _MESSAGE("    - Transform L: (%f, %f, %f)", node->m_localTranslate.x, node->m_localTranslate.y, node->m_localTranslate.z);
+                     _MESSAGE("    - Transform W: (%f, %f, %f)", node->m_worldTranslate.x, node->m_worldTranslate.y, node->m_worldTranslate.z);
+                  } else
+                     _MESSAGE("    - No node");
+               } else
+                  _MESSAGE(" - No local layout");
+            }
+            {  // LocalIcons
+               if (auto tile = (RE::Tile*) menu->localIcons) {
+                  _MESSAGE(" - Local icons");
+                  auto node = tile->renderedNode;
+                  if (node) {
+                     _MESSAGE("    - Transform L: (%f, %f, %f)", node->m_localTranslate.x, node->m_localTranslate.y, node->m_localTranslate.z);
+                     _MESSAGE("    - Transform W: (%f, %f, %f)", node->m_worldTranslate.x, node->m_worldTranslate.y, node->m_worldTranslate.z);
+                  } else
+                     _MESSAGE("    - No node");
+               } else
+                  _MESSAGE(" - No local icons");
+            }
             NiNode* node = localMap->renderedNode;
             if (node) {
-               _MESSAGE(" - Rendered node");
+               _MESSAGE(" - Local map");
+               _MESSAGE("    - Local translation: (%f, %f, %f)", node->m_localTranslate.x, node->m_localTranslate.y, node->m_localTranslate.z);
+               _MESSAGE("    - World translation: (%f, %f, %f)", node->m_worldTranslate.x, node->m_worldTranslate.y, node->m_worldTranslate.z);
                for (UInt32 i = 0; i < node->m_children.firstFreeEntry; i++) {
                   BSScissorTriShape* child = (BSScissorTriShape*) node->m_children.data[i];
                   if (!child)
                      break;
                   _MESSAGE("    - Child %d", i);
-                  _MESSAGE("       - Local translation: (%f, %f, %f)", node->m_localTranslate.x, node->m_localTranslate.y, node->m_localTranslate.z);
-                  _MESSAGE("       - World translation: (%f, %f, %f)", node->m_worldTranslate.x, node->m_worldTranslate.y, node->m_worldTranslate.z);
-                  /*auto geometry = child->geomData;
+                  _MESSAGE("       - Local translation: (%f, %f, %f)", child->m_localTranslate.x, child->m_localTranslate.y, child->m_localTranslate.z);
+                  _MESSAGE("       - World translation: (%f, %f, %f)", child->m_worldTranslate.x, child->m_worldTranslate.y, child->m_worldTranslate.z);
+                  /*
+                  auto geometry = child->geomData;
                   if (!geometry) {
                      _MESSAGE("       - No geometry data!");
                      break;
@@ -836,7 +901,22 @@ namespace CobbPatches {
                         NiColorAlpha* color = &colors[i];
                         _MESSAGE("       - Vertex %d: (%f, %f, %f) with alpha %f", i, vert->x, vert->y, vert->z, color->a);
                      }
-                  }*/
+                  }
+                  //*/
+               }
+               {  // LocalIcons
+                  auto menu = (RE::MapMenu*) CALL_MEMBER_FN(localMap, GetContainingMenu)();
+                  if (menu)
+                     if (auto tile = (RE::Tile*) menu->localIcons) {
+                        _MESSAGE(" - Local icons");
+                        node = tile->renderedNode;
+                        if (node) {
+                           _MESSAGE("    - Transform L: (%f, %f, %f)", node->m_localTranslate.x, node->m_localTranslate.y, node->m_localTranslate.z);
+                           _MESSAGE("    - Transform W: (%f, %f, %f)", node->m_worldTranslate.x, node->m_worldTranslate.y, node->m_worldTranslate.z);
+                        } else
+                           _MESSAGE("    - No node");
+                     } else
+                        _MESSAGE(" - No local icons");
                }
             } else {
                _MESSAGE(" - No rendered node.");
@@ -855,6 +935,9 @@ namespace CobbPatches {
                jmp  eax;
             };
          };
+         void Apply() {
+            WriteRelJump(0x005B8741, (UInt32)&Outer);
+         };
       };
 
       void Apply() {
@@ -863,6 +946,7 @@ namespace CobbPatches {
          WorldMapHooks::SafeHoveredMapIcon::Apply();
          QuestListHooks::Apply();
          XInput::Apply();
+         LocalMapInitialRenderHack::Apply();
       };
    }
 }

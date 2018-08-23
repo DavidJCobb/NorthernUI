@@ -170,7 +170,6 @@ namespace CobbPatches {
          //
          namespace Open {
             void Inner() {
-               RE::TileMenu* tile;
                //
                // Open each menu in sequence. If it opens successfully, fade the Menu 
                // out (because these will open at the main menu, and potentially render 
@@ -185,7 +184,9 @@ namespace CobbPatches {
                      continue;
                   CALL_MEMBER_FN((RE::Menu*)menu, FadeOut)();
                }
-               /*if (tile = (RE::TileMenu*) ShowXXNHUDClockMenu()) {
+               /*
+               RE::TileMenu* tile;
+               if (tile = (RE::TileMenu*) ShowXXNHUDClockMenu()) {
                   auto menu = tile->menu;
                   if (menu)
                      CALL_MEMBER_FN((RE::Menu*)menu, FadeOut)();

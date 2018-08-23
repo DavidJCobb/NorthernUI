@@ -29,13 +29,13 @@ namespace CobbPatches {
                         if (!name)
                            return;
                         bool match = true;
-                        if (stricmp(name, "option_resolution")) {
+                        if (_stricmp(name, "option_resolution")) {
                            match = false;
                            for (auto parent = tile->parent; parent; parent = parent->parent) {
                               auto name = parent->name.m_data;
                               if (!name)
                                  return;
-                              if (stricmp(name, "option_resolution") == 0) {
+                              if (_stricmp(name, "option_resolution") == 0) {
                                  match = true;
                                  break;
                               }

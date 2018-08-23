@@ -387,12 +387,13 @@ namespace CobbPatches {
             // be a non-mipmapped texture with a bad count.
             //
             if (mips == 1 && (header.flags & 0x80000) != 0) {
+               constexpr int headerSize = 128;
                //
                // For a compressed texture, dwPitchOrLinearSize is the (post-compression) size of the 
                // "top-level" texture (i.e. the main one, and not any mipmaps). If there's nothing 
                // else in the file, then there are no mipmaps.
                //
-               if (header.pitchOrLinearSize == fileSize - 128)
+               if (header.pitchOrLinearSize == fileSize - headerSize)
                   return 0;
             }
             return mips;
@@ -511,7 +512,7 @@ namespace CobbPatches {
                   auto r = o;
                   while (r->refPrev)
                      r = r->refPrev;
-                  altTarget = r->operand.ref; // we can never actually guarantee this IS a pointer and not an immediate and that makes me nervous, hence the weird check below
+                  altTarget = r->operand.ref; // we can never actually guarantee this IS a pointer and not an immediate, and that makes me nervous, hence the weird check below
                   altTile   = altTarget ? altTarget->owner : nullptr;
                }
                if (o && altTile && (UInt32)altTarget > 0x400000) { // it's not a real pointer if it's below Oblivion.exe's module base, and yes, this IS a filthy hack
