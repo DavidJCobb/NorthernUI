@@ -116,7 +116,7 @@ extern "C" {
 	   // fill out the info structure
 	   info->infoVersion = PluginInfo::kInfoVersion;
 	   info->name        = "NorthernUI";
-	   info->version     = 0x01000A00; // major, minor, patch, build
+	   info->version     = 0x01000C00; // major, minor, patch, build
 
       {  // log our version number -- be helpful!
          auto v = info->version;
@@ -125,6 +125,12 @@ extern "C" {
          UInt8 patch = (v >> 0x08) & 0xFF;
          UInt8 build = v & 0xFF;
          _MESSAGE("Version %d.%d.%d, build %d.", major, minor, patch, build);
+      }
+      {  // Get run-time information
+         HMODULE    baseAddr = GetModuleHandle("NorthernUI"); // DLL filename
+         MODULEINFO info;
+         if (baseAddr && GetModuleInformation(GetCurrentProcess(), baseAddr, &info, sizeof(info)))
+            _MESSAGE("We're loaded to the span of memory at %08X - %08X.", info.lpBaseOfDll, (UInt32)info.lpBaseOfDll + info.SizeOfImage);
       }
 
 	   // version checks
