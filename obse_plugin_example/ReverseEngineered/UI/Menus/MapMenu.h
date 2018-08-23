@@ -123,7 +123,9 @@ namespace RE {
          void UpdateMarkerName(TESObjectREFR* mapMarker, const char* newName);
 
          MEMBER_FN_PREFIX(MapMenu);
+         DEFINE_MEMBER_FN(Destructor,      void, 0x005B7490);
          DEFINE_MEMBER_FN(PanMap,          void, 0x005B67F0, float panX, float panY, bool isWorldMap);
+         DEFINE_MEMBER_FN(RenderLocalMap,  void, 0x005B7550);
          DEFINE_MEMBER_FN(SetMenuTabIndex, void, 0x005BB210, UInt32 tabIndex, void* maybeUnused);
    };
    static_assert(sizeof(MapMenu) <= 0x100, "RE::MapMenu is too large!");
