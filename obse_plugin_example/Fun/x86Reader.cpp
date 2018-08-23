@@ -1,6 +1,6 @@
 #include "x86Reader.h"
 
-void x86Reader::_Byte(char v) {
+void x86Reader::_Byte(unsigned char v) {
    auto c = *(char*)(this->address);
    if (c != v)
       this->_Throw();

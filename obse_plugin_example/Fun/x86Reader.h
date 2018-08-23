@@ -10,7 +10,7 @@ class x86Reader {
       void* address;
 
    public:
-      void _Byte(char);
+      void _Byte(unsigned char);
       void _ByteAnyOf(unsigned int);
       void _Word(unsigned short);
       void _Dword(unsigned int);
