@@ -35,6 +35,7 @@
 #include "Patches/ClassMenu.h"
 #include "Patches/CleanUpAfterMenuQue.h"
 #include "Patches/ContainerMenu.h"
+#include "Patches/DialogMenu.h"
 #include "Patches/EffectSettingMenu.h"
 #include "Patches/EnchantingAndSigilStoneMenus.h"
 #include "Patches/Exploratory.h" // ====== TEST PATCHES ======
@@ -46,6 +47,7 @@
 #include "Patches/LockPickMenu.h"
 #include "Patches/Logging.h"
 #include "Patches/MenuTextInputState.h"
+#include "Patches/NegotiateMenu.h"
 #include "Patches/OptionsMenu.h"
 #include "Patches/PersuasionMenu.h"
 #include "Patches/QuestAddedMenu.h"
@@ -59,6 +61,7 @@
 #include "Patches/VideoMenu.h"
 #include "Patches/XXNMenus.h"
 #include "Patches/XboxGamepad/Patch.h"
+#include "Patches/Compatibility/Dynamic Map/Main.h"
 
 IDebugLog gLog("Data\\OBSE\\Plugins\\NorthernUI.log");
 
@@ -116,7 +119,7 @@ extern "C" {
 	   // fill out the info structure
 	   info->infoVersion = PluginInfo::kInfoVersion;
 	   info->name        = "NorthernUI";
-	   info->version     = 0x01000C00; // major, minor, patch, build
+	   info->version     = 0x01000D00; // major, minor, patch, build
 
       {  // log our version number -- be helpful!
          auto v = info->version;
@@ -239,6 +242,7 @@ extern "C" {
             man.RegisterPatch("AlchemyMenu",    &CobbPatches::AlchemyMenu::Apply, {});
             man.RegisterPatch("AudioMenu",      &CobbPatches::AudioMenu::Apply, {});
             man.RegisterPatch("ClassMenu",      &CobbPatches::ClassMenu::Apply, {});
+            man.RegisterPatch("DialogMenu",     &CobbPatches::DialogMenu::Apply, {});
             man.RegisterPatch("ContainerMenu",  &CobbPatches::ContainerMenu::Apply, {});
             man.RegisterPatch("EffectSettingMenu", &CobbPatches::EffectSettingMenu::Apply, {});
             man.RegisterPatch("EnchantingAndSigilStoneMenus", &CobbPatches::EnchantingAndSigilStoneMenus::Apply, {});
@@ -249,12 +253,17 @@ extern "C" {
             man.RegisterPatch("InventoryMenu",  &CobbPatches::InventoryMenu::Apply, {});
             man.RegisterPatch("LockPickMenu",   &CobbPatches::LockPickMenu::Apply, {});
             man.RegisterPatch("MapMenu",        &CobbPatches::MapMenu::Apply, { PatchManager::Req::P_XInput });
+            man.RegisterPatch("NegotiateMenu",  &CobbPatches::NegotiateMenu::Apply, {});
             man.RegisterPatch("OptionsMenu",    &CobbPatches::OptionsMenu::Apply, {});
             man.RegisterPatch("PersuasionMenu", &CobbPatches::PersuasionMenu::Apply, {});
             man.RegisterPatch("QuestAddedMenu", &CobbPatches::QuestAddedMenu::Apply, {});
             man.RegisterPatch("RaceSexMenu",    &CobbPatches::RaceSexMenu::Apply, {});
             man.RegisterPatch("SaveMenu",       &CobbPatches::SaveMenu::Apply, {});
             man.RegisterPatch("VideoMenu",      &CobbPatches::VideoMenu::Apply, {});
+            //
+            // compat:
+            //
+            man.RegisterPatch("DynamicMapEmulation", &CobbPatches::DynamicMapEmulation::Apply, { PatchManager::Req::G_MainMenu });
          }
 	   }
 

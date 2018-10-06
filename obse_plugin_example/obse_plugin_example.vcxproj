@@ -128,12 +128,15 @@
     <ClCompile Include="Miscellaneous\math.cpp" />
     <ClCompile Include="Patches\AudioMenu.cpp" />
     <ClCompile Include="Patches\ClassMenu.cpp" />
+    <ClCompile Include="Patches\Compatibility\Dynamic Map\Types.cpp" />
     <ClCompile Include="Patches\ContainerMenu.cpp" />
+    <ClCompile Include="Patches\DialogMenu.cpp" />
     <ClCompile Include="Patches\EffectSettingMenu.cpp" />
     <ClCompile Include="Patches\EnchantingAndSigilStoneMenus.cpp" />
     <ClCompile Include="Patches\HUDMainMenu.cpp" />
     <ClCompile Include="Patches\InventoryMenu.cpp" />
     <ClCompile Include="Patches\LockPickMenu.cpp" />
+    <ClCompile Include="Patches\NegotiateMenu.cpp" />
     <ClCompile Include="Patches\NewMenus\Helpers\Checkbox.cpp" />
     <ClCompile Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.cpp" />
     <ClCompile Include="Patches\NewMenus\Helpers\Slider.cpp" />
@@ -166,7 +169,6 @@
     <ClCompile Include="ReverseEngineered\UI\Menus\MapMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\VideoMenu.cpp" />
     <ClCompile Include="Services\Translations.cpp" />
-    <ClInclude Include="..\obse\obse\*.cpp" Exclude="..\obse\obse\Commands_*.cpp" />
     <ClCompile Include="..\obse\StdAfx.cpp" />
     <ClCompile Include="dllmain.c">
       <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -238,7 +240,13 @@
     <ClInclude Include="Patches\AudioMenu.h" />
     <ClInclude Include="Patches\ClassMenu.h" />
     <ClInclude Include="Patches\CleanUpAfterMenuQue.h" />
+    <ClInclude Include="Patches\Compatibility\Dynamic Map\Types.h" />
     <ClInclude Include="Patches\ContainerMenu.h" />
+    <ClInclude Include="Patches\DialogMenu.h" />
+    <ClCompile Include="Patches\Compatibility\Dynamic Map\Main.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
+    <ClInclude Include="Patches\Compatibility\Dynamic Map\Main.h" />
     <ClInclude Include="Patches\EffectSettingMenu.h" />
     <ClInclude Include="Patches\EnchantingAndSigilStoneMenus.h" />
     <ClInclude Include="Patches\Exploratory.h" />
@@ -248,6 +256,7 @@
     <ClInclude Include="Patches\HUDMainMenu.h" />
     <ClInclude Include="Patches\InventoryMenu.h" />
     <ClInclude Include="Patches\LockPickMenu.h" />
+    <ClInclude Include="Patches\NegotiateMenu.h" />
     <ClInclude Include="Patches\NewMenus\Helpers\Checkbox.h" />
     <ClInclude Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.h" />
     <ClInclude Include="Patches\NewMenus\Helpers\Slider.h" />
@@ -313,6 +322,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\AlchemyMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\AudioMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\ContainerMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\DialogMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\EnchantmentMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\GameplayMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\HUDInfoMenu.h" />
@@ -321,6 +331,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\LoadgameMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\LockPickMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\MapMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\NegotiateMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\OptionsMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\PersuasionMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\QuickKeysMenu.h" />
@@ -343,10 +354,6 @@
     <ClInclude Include="Services\serialization.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\obse\obse\GameRTTI_1_1.inl" />
-    <None Include="..\obse\obse\GameRTTI_1_2.inl" />
-    <None Include="..\obse\obse\GameRTTI_1_2_416.inl" />
-    <None Include="ClassDiagram.cd" />
     <None Include="exports.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
