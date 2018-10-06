@@ -1,7 +1,7 @@
 #pragma once
 #include "obse/GameForms.h"
 
-namespace TESWorldSpace {
+namespace RE {
    class TESWorldSpace : public TESForm { // sizeof == 0xE0
       public:
          TESWorldSpace();
@@ -22,8 +22,8 @@ namespace TESWorldSpace {
          struct Unk84 {
             UInt32 width;  // 00
             UInt32 height; // 04
-            UInt16 unk08;  // 08
-            UInt16 unk0A;  // 0A
+            UInt16 unk08;  // 08 // divide by 4096 to get the cell count X
+            UInt16 unk0A;  // 0A // divide by 4096 to get the cell count Y
          };
 
                               // members
@@ -48,5 +48,8 @@ namespace TESWorldSpace {
          bool IsOblivionWorld() const { return (worldFlags & kFlag_OblivionWorld) ? true : false; }
          bool CanFastTravel() const { return (worldFlags & kFlag_NoFastTravel) ? false : true; }
          void SetCanFastTravel(bool bCan) { if (bCan) worldFlags &= ~kFlag_NoFastTravel; else worldFlags |= kFlag_NoFastTravel; }
+
+         MEMBER_FN_PREFIX(TESWorldSpace);
+         DEFINE_MEMBER_FN(GetRootWorldspaceUnk84, Unk84*, 0x004EF1B0);
    };
 };
