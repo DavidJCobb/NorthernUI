@@ -1,0 +1,469 @@
+//
+// Handles operators in traits.
+//
+
+#define MENUQUE_INSTALLED 0
+//
+// Recreating all of MenuQue's functionality isn't feasible, especially 
+// since it stores values in static/global variables. What we'll likely 
+// have to do is get its module base address using the Windows APIs (we 
+// already have similar code in our crash logger), and then just add the 
+// module base offsets to that value to get pointers we can write to or 
+// call as needed.
+//
+// When writing code to get the module base, just be sure we grab data 
+// for ALL loaded DLLs! I wonder if we can use a vector with reserve() 
+// calls, and pass its data() as the pointer to write to, e.g.
+//
+// DWORD   outSize;
+// HMODULE dummy;
+// if (EnumProcessModules(hProcess, &dummy, sizeof(dummy), &outSize)) {
+//    std::vector<HMODULE> modules;
+//    modules.reserve((outSize / sizeof(HMODULE)) + 10);
+//    if (EnumProcessModules(hProcess, &modules.data(), modules.size() * sizeof(HMODULE), &outSize)) {
+//       //
+//       // scan for MenuQue -- MenuQue.dll to see if it's loaded, and MenuQue\Submodule_Game.dll 
+//       // to get the base address we want.
+//       //
+//    }
+// }
+
+void Tile::Value::DoActionEnumeration(bool forceUpdateInbound) {
+   auto esi = this; // also stored in esp50
+   if (g_tileParseState->tileStillOpen)
+      if (this->id != kTileValue_class)
+         return;
+   if (!this->owner || this->owner->unk05)
+      return;
+   auto esp54 = BSStringT();
+   //UInt8 esp168 = 0; // some kind of debugging variable; unused in final executable
+   if (TileValueFormsCircularReference(this)) // this also updates the values list in g_tileParseState
+      return;
+   // float* ebx = &this->num; // at 0x0058BF77
+   float myInitialValue = this->num; // esp48
+   //
+   // The NiTListBase<float> is used to handle nested groups of operators, since 
+   // operators are stored as a flat, sequential list. Given operators structured 
+   // like so,
+   //
+   //    copy          A
+   //    add           -
+   //       copy       B
+   //       mult       -
+   //          copy    C
+   //          sub     D
+   //       add        E
+   //
+   // the list would store floats as follows:
+   //
+   // [ ]
+   // [ A ]
+   // [ B, A ]
+   // [ C, B, A ]
+   // [ (C - D), B, A ]
+   // [ (B * (C - D)), A ]
+   // [ ((B * (C - D)) + E), A ]
+   // [ A + ((B * (C - D))) + E ]
+   // [ ]
+   //
+   auto   nestedResults = NiTListBase<float>(); // esp34
+   #if MENUQUE_INSTALLED == 0
+      auto eax = this->operators->next; // MenuQue patches here
+   #else
+      *ptr_MQ_0512E4 = &esp34;
+      *ptr_MQ_0512F0 = 0;
+      *ptr_MQ_0512EC = &esp48; // == &this->num
+      *ptr_MQ_0512F4 = &esp1C;
+      MQ_013440(this);
+      auto eax = this->operators->next; // reproduce patched-over instruction
+   #endif
+   Tile::Value::Expression* current = this->operators->next; // esp28
+   float esp1C;
+   if (current) { // at 0x0058BFA6
+      do {
+         Tile::Value::Expression* edx = current;
+         #if MENUQUE_INSTALLED == 0
+            ebp = edx->opcode; // MenuQue patches here, but the patch just replicates vanilla code
+         #else // MQ_012040
+            ebp = edx->opcode;
+            edi = 0; // yes, even though it's done outside the patch too
+            // loads the float for esp1C assignment below -- same value as vanilla -- onto the FPU
+         #endif
+         edi = 0;
+         esp1C = edx->operand.immediate;
+         esp14 = edx->opcode;
+         auto esp20 = BSStringT();
+         Tile::Value*             ecx = edx->refPrev; // unk10
+         Tile::Value::Expression* eax = edx;
+         if (ecx) { // at 0x0058BFE9
+            do {
+               eax = ecx;
+               ecx = ecx->refPrev;
+            } while (ecx);
+         }
+         Tile::Value::Expression* ecx = eax->prev;
+         if (ecx) {
+            do {
+               eax = ecx;
+               ecx = eax->prev;
+            } while (ecx);
+         }
+         Tile::Value*             esi   = eax->operand.ref;
+         Tile::Value::Expression* esp18 = esi->prev;
+         Tile::Value*             esp44 = esi;
+         if (ebp == 0xF && nestedResults.numItems) { // at 0x0058C012
+            //
+            // End of a nested group.
+            //
+            #if MENUQUE_INSTALLED == 0
+               ebp = edx->operand.immediate;
+            #else // MQ_012BE0
+               auto eax = this;
+               ptr_MQ_0512F8->MQ_0012340(&this->str); // not viable to replicate this; might actually be better to find MenuQue's base addr and call it that way
+               ebp = edx->operand.immediate;
+               // along with redundant instructions that exist after the hook
+            #endif
+            esp1C = this->num;
+            esp14 = ebp;
+            this->num = nestedResults.start->data;
+            nestedResults.RemoveFirst(); // return value is discarded
+         } else if (ebp == 0xA) { // at 0x0058C04A
+            //
+            // Start of a nested group.
+            //
+            #if MENUQUE_INSTALLED == 0
+            #else
+               MQ_0132D0(this); // not viable to replicate this; might actually be better to find MenuQue's base addr and call it that way
+               // and then prep for the next call
+            #endif
+            nestedResults.Prepend(&this->num); // takes float*; appends the pointed-to float, not the pointer
+            continue; // jump to 0x0058C82B;
+         }
+         //
+         // START OF CODE TO HANDLE COPY-OPERATOR SWITCH-CASES (E.G. _EXAMPLE_3).
+         //
+         UInt16 eax = esi->id; // at 0x0058C063
+         SInt32 esp4C = 0; // a copy is maintained in ebp, as well
+         if (eax >= 0x2710) { // at 0x0058C071
+            //
+            // This branch appears to handle traits like "_example_1". First, 
+            // we record everything up to the last underscore:
+            //
+            //    "_example"   -> " example"
+            //    "_example_1" -> "         1"
+            //
+            // Then, we try to parse a decimal number out of it using strtol.
+            //
+            char esp5C[256];
+            esp20.Replace_MinBufLen(TileStrIDToStr(eax), 0);
+            memset(&esp5C, ' ', 0xFF);
+            auto   esi = esp20.m_data;
+            UInt16 edi = esp20.m_dataLen;   // part of next inlined instruction
+            // at 0x0058C0D6
+            // GetLength call is inlined and ends at 58C0D3
+            for(UInt32 eax = esp20.GetLength(); eax; --eax) {
+               char c = esi[eax];
+               if (c == '_')
+                  break;
+               esp5C[eax] = c;
+            }
+            // at 0x0058C0F1
+            if (eax) { // if trait contained an underscore other than an underscore-prefix
+               esp4C = strtol(&esp5C, 0, 10); // vanilla: TES4_00983479(&esp5C); which wraps strtol
+            }
+         } // if this branch is skipped, edi still == 0
+         // condition checks span from roughly 0x0058C129 to 0x0058C168
+         if ((esp20.GetLength() && 0.0 != this->num)
+         &&  (esp20.m_data[eax - 1] == '_' || (esp4C && esp4C != this->num))
+         ) {
+            // at 0x0058C1A0
+            esp2C = BSStringT();
+            esp2C.Replace_MinBufLen(esp20.m_data, 0);
+            UInt32 esi = 2;
+            UInt32 eax;
+            if ((eax = esp20.Length()) > 2) { // at 0x0058C1DB
+               //
+               // The above IF statement excludes trait names like "_x" or "_3".
+               //
+               do {
+                  if (esp20.m_data[esi - 1] == '_')
+                     break;
+               } while (++esi < eax);
+               //
+               // esp20 = BSStringT("_example_1");
+               // std::string explanation(esp20.m_data);
+               // explanation.substr(0, esi) == "_example_"; // conclusion
+               //
+               // Note that this would extract the length of "_test_" from "_test_test_test_", 
+               // since we search from the end to get the number but search from the start to 
+               // get the trait name. If we're replacing this subroutine, we could easily fix 
+               // that.
+               //
+            }
+            // at 0x0058C1F8
+            edi = esp2C.m_data; // copy of esp20, remember?
+            if (eax && edi[esi - 1] == '_') {
+               edi[esi] = '\0'; // truncate the copy of "_example_1" to "_example_"
+            }
+            // at 0x0058C219
+            SInt32 eax = DoubleToSInt32(this->num);
+            SprintfBSStringT(&esp2C, "%s%i", edi, eax); // "_example_" -> "_example_12345" given this->num == 12345
+            this->num = 0.0;
+            esi = GetOrCreateTempTraitID(esp2C.m_data, -1);
+            Tile* ebp = esp18;
+            //
+            // Now that we know what trait to use (e.g. "_example_123" because we're 
+            // specifying float 123), we need to get that trait's string value and have 
+            // it on hand.
+            //
+            Tile::Value* edx = ebp->GetTrait(esi);
+            if (!edx) {
+               edx = ebp->GetOrCreateTrait(esi);
+               edx->SetFloatValue(0.0);
+            }
+            Tile::Value::Expression* esi = current; // at 0x0058C2A8
+            Tile::Value* eax = current->refPrev;
+            ebp = 0;
+            current->RemoveFromRefs(); // inlined
+            auto edxLast = edx->incomingRefs; // at 0x0058C2E6
+            while (edxLast->refNext)
+               edxLast = edxLast->refNext;
+            edxLast->refNext = current; // at 0x0058C2F8
+            current->refPrev = edxLast;
+            current->operand.immediate = edx->num;
+            esp44 = edx;
+            esp1C = edx->num;
+            // at 0x0058C30F
+            // esp2C->~BSStringT(); // implicit
+         }
+         //
+         // at 0x0058C33E
+         //
+         // Now, we carry out the operator.
+         //
+         // MenuQue patches right here, interfering with the switch-case. It replaces the 
+         // switch-case with a jump to MQ_012990. It does jump back to the vanilla switch-
+         // case, but only if the operator ID is between 0x7D1 and 0x7EB -- there was no 
+         // consideration for other mods adding other IDs!
+         //
+         // Their extended operators run: MQ_012570(this, esp44, current, esp14); and then 
+         // break out of the switch-case, pretty much, such that for extended operators, 
+         // MenuQue code returns to the end of the loop (where implicit destructors, etc., 
+         // run). This is fortunate: several of MenuQue's hooks to this function aren't 
+         // practical to recreate in full anyway, so the only viable way to call them is 
+         // to find the module base and add to that address, to get subroutine pointers 
+         // that we can call. We can just check whether operator IDs belong to MenuQue 
+         // (and whether MenuQue is loaded) and call its subroutine if so.
+         //
+         // If we want to be *really* careful, we can do something like precomputing a 
+         // hash of MenuQue's hooks (e.g. SHA1). Then, we could detect MenuQue's hooks, 
+         // hash the subroutines they jump to at run-time, and see if there's a match. 
+         // That would account for MenuQue updating... but it's probably not necessary.
+         //
+         // (Actually, we already have old CRC code. We could use that.)
+         //
+         ecx = esp14;
+         // At this point, FPU == [2.0F, 0.0]
+         switch (ecx) {
+            //
+            // If you're patching the vanilla subroutine directly, any cases you 
+            // add or modify should pop the FPU stack twice before they break out.
+            //
+            case kTagID_copy: // copy
+               edx = current;
+               if (!current->prev)
+                  break; //jump to 0x0058C82B;
+               if (this->id == kTileValue_string) { // string
+                  if (this->owner->GetTypeID() == kTagID_text) { // text
+                     if (this->str.IsNotEqualTo(&esp44->str)) {
+                        this->owner->flags |= 0x2;
+                     }
+                  }
+               }
+               // at 0x0058C3C6
+               if (this->id == kTileValue_filename) { // filename
+                  if (this->owner->GetTypeID() == kTagID_image) { // image
+                     if (this->str.IsNotEqualTo(&esp44->str)) {
+                        this->owner->flags |= 0x20;
+                     }
+                  }
+               }
+               // at 0x0058C3F8
+               this->str.Replace_MinBufLen(esp44->str.m_data, 0);
+               this->num = esp1C;
+               break; // jump to 0x0058C82B;
+            case kTagID_add: // at 0x0058C427
+               this->num += esp1C;
+               break;
+            case kTagID_sub: // at 0x0058C438
+               this->num -= esp1C;
+               break;
+            case kTagID_mult: // at 0x0058C449
+               this->num *= esp1C;
+               break;
+            case kTagID_div: // at 0x0058C45A
+               if (esp1C != 0.0)
+                  this->num /= esp1C;
+               break;
+            case kTagID_rand: // rand // at 0x0058C478
+               // given RAND_MAX == 32767
+               SInt32 a = rand(0);    // stored in esp18
+               float  b = a / 32767.0 * esp1C; // stored in esp18
+               float  c = TES4_00404F70(b);
+               this->num = c + 1;
+               break;
+            case kTagID_not: // not // at 0x0058C4B5
+               SInt32 esp14 = 1;
+               if (2.0 != esp1C) // FCOMP, so pops the other float
+                  esp14 = 2;
+               this->num = esp14;
+               break;
+            case kTagID_gt: // gt // at 0x0058C4DD
+               SInt32 esp14 = 2;
+               if (esp1C >= this->num)
+                  esp14 = 1;
+               this->num = esp14;
+               break;
+            case kTagID_gte: // at 0x0058C50B
+               SInt32 esp14 = 2;
+               if (esp1C > this->num)
+                  esp14 = 1;
+               this->num = esp14;
+               break;
+            case kTagID_eq: // at 0x0058C539
+               SInt32 esp14 = 2;
+               if (esp1C != this->num)
+                  esp14 = 1;
+               this->num = esp14;
+               break;
+            case kTagID_lte: // lte // at 0x0058C567
+               SInt32 esp14 = 2;
+               if (esp1C < this->num)
+                  esp14 = 1;
+               this->num = esp14;
+               break;
+            case kTagID_lt: // lt // at 0x0058C595
+               SInt32 esp14 = 2;
+               if (esp1C <= this->num)
+                  esp14 = 1;
+               this->num = esp14;
+               break;
+            case kTagID_min: // min // at 0x0058C5C3
+               esp14 = min(esp14, this->num);
+               this->num = esp14;
+               break;
+            case kTagID_max: // max // at 0x0058C5EB
+               esp14 = max(esp14, this->num);
+               this->num = esp14;
+               break;
+            case kTagID_and: // and // at 0x0058C613
+               SInt32 esp14;
+               if (this->num == 2.0F && esp1C == 2.0F)
+                  esp14 = 2;
+               else
+                  esp14 = 1;
+               this->num = esp14;
+               break;
+            case kTagID_or: // or // at 0x0058C651
+               SInt32 esp14;
+               if (this->num == 2.0F || esp1C == 2.0F)
+                  esp14 = 2;
+               else
+                  esp14 = 1;
+               this->num = esp14;
+               break;
+            case kTagID_neq: // neq // at 0x0058C68F
+               SInt32 esp14 = 2;
+               if (this->num == esp1C)
+                  esp14 = 1;
+               this->num = esp14;
+               break;
+            case kTagID_mod: // mod // at 0x0058C6BD
+               if (0.0 > this->num) {
+                  // FPU: [esp1C]
+                  float esp18 = abs(this->num);
+                  // FPU: [esp18, esp1C, esp1C]
+                  SInt32 eax = esp18 / esp1C;
+                  // FPU: [esp1C, esp1C]
+                  eax++;
+                  this->num += esp1C * eax;
+                  // FPU: [esp1C]
+               }
+               float esp18 = this->num; // at 0x0058C700
+               // FPU: [esp1C, esp18]
+               this->num = fmod(esp18, esp1C);
+               break;
+            case kTagID_floor: // floor/trunc // at 0x0058C720
+               float esp18 = esp1C + this->num;
+               this->num = TES4_00404F70(esp18);
+               break;
+            case kTagID_ceil: // ceil // at 0x0058C745
+               float esp18 = esp1C + this->num;
+               this->num = TES4_00484370(esp18);
+               break;
+            case kTagID_abs: // abs // at 0x0058C76A
+               if (this->num > 0.0) {
+                  float esp18 = esp1C + this->num;
+                  esp18 = abs(esp18);
+                  this->num = esp18;
+               }
+               break;
+            case kTagID_onlyif: // onlyif // at 0x0058C798
+               this->num = (2.0 == esp1C) ? this->num : 0.0;
+               break;
+            case kTagID_onlyifnot: // onlyifnot // at 0x0058C7B6
+               this->num = (1.0 == esp1C) ? this->num : 0.0;
+               break;
+            case kTagID_ln: // ln // at 0x0058C7D5
+               float esp18 = this->num;
+               esp18 = log(esp18); // cmath // arg passed via FPU stack
+               this->num = esp18;
+               break;
+            case kTagID_log: // log // at 0x0058C7F4
+               float esp18 = this->num;
+               esp18 = log10(esp18); // cmath // arg passed via FPU stack
+               this->num = esp18;
+               break;
+            case kTagID_ref: // ref // at 0x0058C827
+               break;
+            case kTagID_user: // user // at 0x0058C813
+            default: // jumped to from the top of the switch-case in compiled code
+               TES4_004A7A60("ERROR: Unknown action enumeration %i ", ecx);
+               break; // jump to 0x0058C82B;
+         }
+         // at 0x0058C82B
+         // inlined: esp20->~BSStringT(); // implicit anyway, or it should be, so don't uncomment it
+      } while (current = current->next); // at 0x0058C859
+      if (nestedResults.numItems) {
+         do {
+            NiTListBase<float>::Node* eax = nestedResults.start;
+            NiTListBase<float>::Node* ecx = eax;
+            this->num = /*float*/ eax->data;
+            eax = eax->next;
+            nestedResults.start = eax;
+            if (eax)
+               eax->prev = nullptr;
+            else
+               nestedResults.end = nullptr;
+            nestedResults.FreeNode(ecx);
+         } while (--nestedResults.numItems);
+      }
+   }
+   esi = this; // at 0x0058C898
+   auto eax = this->operators;
+   if (eax->next && this->id == kTileValue_string)
+      if (this->num != myInitialValue)
+         SprintfBSStringT(&this->str, "%i", (SInt32)this->num);
+   // at 0x0058C8D5
+   if (myInitialValue != this->num || !this->HasStringValue() || forceUpdateInbound == true) {
+      this->UpdateInboundReferences(); // at 0x0058C8F8
+      Tile* ecx = this->owner;
+      if (ecx && /*byte*/ ecx->unk04)
+         if (!ecx->UpdateField(this->id, this->num, this->str.m_data))
+            this->owner->HandleTraitChanged(this->id, this->num, this->str.m_data);
+   }
+   g_tileParseState->unk19C--; // at 0x0058C93B
+   g_tileParseState->values[g_tileParseState->unk19C] = nullptr;
+   nestedResults.~NiTListBase<float>();
+   return;
+};
