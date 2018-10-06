@@ -215,6 +215,9 @@ namespace CobbPatches {
          };
       };
       namespace WorldMapHooks {
+         //
+         // See also: the DynamicMapEmulation patch
+         //
          namespace SafeHoveredMapIcon {
             //
             // Ensure the hoveredMapIcon isn't deleted out from the menu. Speculative.
@@ -843,6 +846,53 @@ namespace CobbPatches {
             ResetOnMenuDestroyed::Apply();
          };
       };
+      namespace MapZoomControls {
+         //
+         // Changing the ZOOM trait on the map image doesn't update the map size or the 
+         // position of the map markers. We need to add a button that forces a redraw.
+         //
+         void _stdcall Inner(RE::MapMenu* menu) {
+            float tab = CALL_MEMBER_FN(menu->background, GetFloatTraitValue)(RE::kTagID_user0);
+            if (tab == 2.0F) { // world map
+               float old_zoom = menu->GetLastComputedWorldMapZoom();
+               float panX = CALL_MEMBER_FN(menu->worldMap, GetFloatTraitValue)(RE::kTagID_user10);
+               float panY = CALL_MEMBER_FN(menu->worldMap, GetFloatTraitValue)(RE::kTagID_user11);
+               //
+               menu->UpdateWorldMapZoom();  // Force MapMenu to recalculate values that it cached in UpdateMapMenuWorldMap...
+               RE::UpdateMapMenuWorldMap(); // ...and then actually redraw the map.
+               //
+               // Now, we need to reposition the map, since UpdateMapMenuWorldMap will have 
+               // snapped the view back to the center.
+               //
+               float new_zoom = CALL_MEMBER_FN(menu->worldMap, GetFloatTraitValue)(RE::kTagID_zoom) / 100.0F;
+               panX = panX * new_zoom / old_zoom;
+               panY = panY * new_zoom / old_zoom;
+               CALL_MEMBER_FN(menu->worldMap, UpdateFloat)(RE::kTagID_user10, panX);
+               CALL_MEMBER_FN(menu->worldMap, UpdateFloat)(RE::kTagID_user11, panY);
+            } else if (tab == 1.0F) { // local map
+               RE::UpdateMapMenuLocalMap(true);
+            }
+         };
+         __declspec(naked) void Outer() {
+            _asm {
+               cmp  edi, 0x15; // reproduce patched-over branch
+               je   lTakeBranch;
+               cmp  edi, 9001;
+               jne  lDone;
+               push esi;
+               call Inner; // stdcall
+            lDone:
+               mov  eax, 0x005BB8C6;
+               jmp  eax;
+            lTakeBranch:
+               mov  eax, 0x005BB8B6;
+               jmp  eax;
+            };
+         };
+         void Apply() {
+            WriteRelJump(0x005BB8B1, (UInt32)&Outer);
+         };
+      };
 
       namespace DebugHook {
          void Inner(RE::Tile* localMap) {
@@ -947,6 +997,7 @@ namespace CobbPatches {
          QuestListHooks::Apply();
          XInput::Apply();
          LocalMapInitialRenderHack::Apply();
+         MapZoomControls::Apply();
       };
    }
 }

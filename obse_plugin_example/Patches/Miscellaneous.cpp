@@ -622,6 +622,33 @@ namespace CobbPatches {
             SafeWrite16 (0x005ABE78, 0x9090); // courtesy NOP
          };
       };
+      namespace ZoomTraitUpdatesChangeFlags {
+         void _stdcall Inner(RE::Tile* tile) {
+            tile->flags |= RE::Tile::kTileFlag_ChangedImage;
+         };
+         __declspec(naked) void Outer() {
+            _asm {
+               cmp  eax, 0x387; // reproduce patched-over branch
+               je   lIsText;
+               cmp  eax, 0x386; // image
+               jne  lDone;
+               cmp  esi, 0xFD2; // RE::kTagID_zoom
+               jne  lDone;
+               //or dword ptr [edi + 0x2C], 0x20; // RE::Tile::kTileFlag_ChangedImage
+               push edi;
+               call Inner; // stdcall
+            lDone:
+               mov  eax, 0x0058B36F;
+               jmp  eax;
+            lIsText:
+               mov  eax, 0x0058B333;
+               jmp  eax;
+            };
+         };
+         void Apply() {
+            WriteRelJump(0x0058B32C, (UInt32)&Outer);
+         };
+      };
 
       void Apply() {
          //
@@ -637,6 +664,7 @@ namespace CobbPatches {
          PrefabPathSlashFix::Apply();
          ImplementPrioritizedTraitRefs::Apply();
          SuppressQuantityMenu::Apply();
+         ZoomTraitUpdatesChangeFlags::Apply();
       };
    };
 };

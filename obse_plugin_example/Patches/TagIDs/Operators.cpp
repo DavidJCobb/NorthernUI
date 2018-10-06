@@ -147,6 +147,13 @@ namespace CobbPatches {
                      return true;
                }
                switch (operatorID) {
+                  //
+                  // Cases for custom operators should always return true.
+                  //
+                  // If we wanted to conditionally override a vanilla operator's behavior for some reason, 
+                  // we'd return true if we use the custom behavior, or return false to fall through to the 
+                  // vanilla behavior.
+                  //
                   case _traitOpAtan2:
                      kThis->num = cobb::radians_to_degrees(std::atan2(kThis->num, argument)); // <copy> y </copy> <xxnOpAtan2> x </xxnOpAtan2>
                      return true;
@@ -181,6 +188,10 @@ namespace CobbPatches {
                      return true;
                   case _traitOpBinaryOr:
                      kThis->num = (float)((SInt32)kThis->num | (SInt32)argument);
+                     return true;
+                  case _traitOpSetIfZero:
+                     if (kThis->num == 0.0F)
+                        kThis->num = argument;
                      return true;
                }
                return false;

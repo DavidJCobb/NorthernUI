@@ -212,7 +212,7 @@ namespace CobbPatches {
             //
             // Patch isn't known. See if we can recognize it by its compiled code.
             //
-            if (g_menuQue.addrSize && jumpAbs < g_menuQue.addrBase + g_menuQue.addrSize) {
+            if (jumpAbs >= g_menuQue.addrBase && (!g_menuQue.addrSize || jumpAbs < (g_menuQue.addrBase + g_menuQue.addrSize))) {
                _MESSAGE("    - Not a known MenuQue hook. Jump target read as MQ_%08X (%08X).", jumpRel, jumpAbs);
             } else {
                _MESSAGE("    - Not a MenuQue hook. Jump target read as %08X.", jumpAbs);
@@ -259,6 +259,7 @@ namespace CobbPatches {
             {0x00585190,  1}, // Menu::EnableMenu
             {0x005866CC,  1}, // unknown; this is the subroutine that handles "reload [MenuName]" console commands
             {0x00589C27,  1}, // Tile::Value::~Value              // related to operators?
+            {0x0058B2FC,  1}, // Tile::HandleTraitChanged
             {0x0058BF92,  1}, // Tile::Value::DoActionEnumeration
             {0x0058BFBC,  1}, // Tile::Value::DoActionEnumeration
             {0x0058C04C,  2}, // Tile::Value::DoActionEnumeration

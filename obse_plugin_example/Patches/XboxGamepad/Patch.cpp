@@ -420,18 +420,25 @@ namespace CobbPatches {
          // I'd rather "always run" behavior not ever affect joystick input, 
          // but that would require more substantial changes to the input code.
          //
-         bool Inner() {
+         bool _AllowAutoRun() {
             return NorthernUI::INI::XInput::bToggleAlwaysRunWorks.bCurrent;
          };
          __declspec(naked) void OuterA() {
             //
             // Hook for when the joystick is in the outer 2% (i.e. the player 
-            // should run).
+            // should run). We want to make the game set a flag that it forgets 
+            // to set here.
             //
             _asm {
                mov  eax, 0x00403380; // OSInputGlobals::SendControlPress
                call eax;             // reproduce patched-over call
                or   dword ptr [esp + 0x14], 0x200;
+               call _AllowAutoRun;
+               test al, al;
+               jz   lSkip;
+               mov  eax, 0x006721B9;
+               jmp  eax;
+            lSkip:
                push 1;   // reproduce skipped instruction
                push 0xA; // reproduce skipped instruction
                mov  eax, 0x006721F6;
@@ -455,7 +462,7 @@ namespace CobbPatches {
                mov  eax, 0x006721CC;
                jmp  eax;
             lJoystickHandling:
-               call Inner;
+               call _AllowAutoRun;
                test al, al;
                jnz  lStandardExit;
                mov  eax, 0x006721F6;
@@ -465,6 +472,7 @@ namespace CobbPatches {
          void Apply() {
             WriteRelJump(0x006721B4, (UInt32)&OuterA);
             WriteRelJump(0x006721C6, (UInt32)&OuterB);
+            SafeWrite8  (0x006721CB, 0x90);
          };
       };
       namespace DontSaveOurMappings {

@@ -45,6 +45,7 @@ namespace CobbPatches {
       constexpr UInt32 _traitOpBinaryAnd = 0x160B; // operator (float)
       constexpr UInt32 _traitOpBinaryOr  = 0x160C; // operator (float)
       constexpr UInt32 _traitStrings     = 0x160D; // selector
+      constexpr UInt32 _traitOpSetIfZero = 0x160E; // operator (float)
       //
       // NOTE: ID 0x1771 is not registered, but the vanilla code sets it on the menu root.
       //
@@ -67,6 +68,7 @@ namespace CobbPatches {
          { XXN_NEW_TAG_ID(_traitOpBinaryAnd, "xxnopbinaryand", kType_Operator, 0, 0) },
          { XXN_NEW_TAG_ID(_traitOpBinaryOr,  "xxnopbinaryor",  kType_Operator, 0, 0) },
          { XXN_NEW_TAG_ID(_traitStrings,     "xxnstrings",     kType_Selector, 0, 0) },
+         { XXN_NEW_TAG_ID(_traitOpSetIfZero, "xxnopsetifzero", kType_Operator, 0, 0) },
       };
       constexpr UInt32 menuQueOperatorMin = 0x7EC;
       constexpr UInt32 menuQueOperatorMax = 0x7F0;
