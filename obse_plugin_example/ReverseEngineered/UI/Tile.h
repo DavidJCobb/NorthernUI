@@ -236,7 +236,8 @@ namespace RE {
             // 
             // The Expression::refPrev field represents a relationship from right to left. It's 
             // not entirely clear how Expression:refNext is set or maintained when there are 
-            // branches.
+            // branches; it may be a temporary value used only when checking for circular 
+            // references between traits.
             // 
             // Another demonstration, using an example confirmed through memory inspection:
             // 
@@ -252,7 +253,7 @@ namespace RE {
             // 
             // A'S USER1 TRAIT stores its const float value in its (num) field. However, it 
             // also has a single operator with opcode 0x65, whose operand is a ref-pointer that 
-            // just points back to the user1 trait. Accordingly, that Exprssion is also the 
+            // just points back to the user1 trait. Accordingly, that Expression is also the 
             // trait's sole incomingRefs pointer; for some reason, it doesn't have a refNext 
             // pointer.
             // 
@@ -296,7 +297,7 @@ namespace RE {
          virtual NiNode*     CreateRenderedNode(); // 02 // sole caller is Tile::HandleChangeFlags. Tile::Unk_01 sets change flags to ensure this gets called ASAP.
          virtual UInt32      GetTypeID(); // 03
          virtual const char* GetType(); // 04
-         virtual UInt32      UpdateField(UInt32 traitID, float floatValue, const char* strValue); // Allows tiles to respond to trait changes with special behavior, e.g. an image setting the size changeflag when width or height change
+         virtual UInt32      UpdateField(UInt32 traitID, float floatValue, const char* strValue); // Allows tiles to respond to trait changes with special behavior, e.g. an image setting the size changeflag when width or height change. If it returns truthy, then HandleTraitChanged will not be called after the trait is altered.
          virtual void        Unk_06(void); // 06 // does something with tile's NiNode
 
          MEMBER_FN_PREFIX(Tile);
@@ -339,7 +340,7 @@ namespace RE {
          DEFINE_MEMBER_FN(CreateTemplatedChildren, Tile*, 0x00590330, TileTemplate*); // returns last created tile; writes each to their template items
          DEFINE_MEMBER_FN(UpdateTemplatedChildren, void,  0x0058CF40, TileTemplate*); // call after CreateTemplatedChildren
 
-         void  AppendToTile(::Tile* target); // 0058D1C0
+         void AppendToTile(::Tile* target); // 0058D1C0
          void GetAbsoluteCoordinates(float& outX, float& outY, float& outDepth);
 
          typedef NiTListBase <Tile>	RefList;
@@ -432,6 +433,8 @@ namespace RE {
             kTileFlag_ChangedFilename = kTileFlag_ChangedImage,
          };
    };
+   static_assert(sizeof(Tile) >= 0x40, "RE::Tile is too small!");
+   static_assert(sizeof(Tile) <= 0x40, "RE::Tile is too large!");
 
    DEFINE_SUBROUTINE_EXTERN(bool, TileValueFormsCircularReference, 0x0058BAD0, Tile::Value*);
    

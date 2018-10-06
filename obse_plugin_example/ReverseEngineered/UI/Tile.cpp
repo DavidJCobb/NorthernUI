@@ -39,6 +39,7 @@ namespace RE {
          "&nbsp;",
          "&newline;",
          "&quot;",
+         "&minus;",
       };
       constexpr char  results[]  = {
          '&',
@@ -48,6 +49,7 @@ namespace RE {
          ' ',
          '\n',
          '"',
+         '-',
       };
       //
       const char* s = this->string.m_data;

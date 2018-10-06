@@ -84,7 +84,7 @@ namespace RE {
          //  - HandleMouseout           (altActiveTile)
          //  - Unk_07                   (old unkA4)
          //  - Unk_06                   (new unkA4)
-         //  - HandleMouseUp            (activeTile)     // if mouse released
+         //  - HandleMouseUp            (activeTile)     // if mouse released // "clicked" and "clickcountafter" traits are handled first
          //  - HandleMouseout           (old activeTile)
          //  - HandleMouseover          (new activeTile)
          //  - HandleMouseDown          (activeTile)     // if mouse pressed

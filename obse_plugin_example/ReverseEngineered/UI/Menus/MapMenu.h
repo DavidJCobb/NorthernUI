@@ -49,6 +49,7 @@ namespace RE {
             kTileID_WorldMapXboxCursor = 61,
             kTileID_LocalMapXboxCursor = 62,
             kTileID_WorldMapWindow     = 63,
+            kTileID_NorthernUI_ForceRedrawCurrentMap = 9001,
          };
 
          //TODO: How to get currently selected mapmarker??
@@ -90,10 +91,10 @@ namespace RE {
          SInt32 unk94;						//094
          UInt32 worldMapWidth;  // 98 // unk098 thru unk0AC used in converting map coords to world coords
          UInt32 worldMapHeight; // 9C // the width and height are values pulled from the worldspace, scaled according to the zoom trait on the worldMap tile
-         SInt32 unkA0; // A0 // gets subtracted from A4
-         UInt32 unkA4; // A4
-         SInt32 unkA8; // A8
-         UInt32 unkAC; // AC // gets subtracted from A8
+         SInt32 unkA0; // A0 // possibly world map X-min
+         SInt32 unkA4; // A4 // possibly world map X-max
+         SInt32 unkA8; // A8 // possibly world map Y-min
+         SInt32 unkAC; // AC // possibly world map Y-max
          BSStringT destinationName;			// 0B0 updated only when clicking on a marker, not on mouseover
          float  targetX;					// 0B8 x, y of selected map marker icon (NOT world coords)
          float  targetY;					// 0BC these only updated on click
@@ -117,10 +118,12 @@ namespace RE {
          TileImage* unkF8; // F8 // player's you-are-here marker (for the world map, at least; not sure about local)
          TileImage* unkFC; // FC
 
-         void ForceDismissTooltip();
+         void  ForceDismissTooltip();
+         float GetLastComputedWorldMapZoom(); // inexact
          const char* GetSelectedMarkerName();
          TESObjectREFR* GetSelectedMarker();
          void UpdateMarkerName(TESObjectREFR* mapMarker, const char* newName);
+         void UpdateWorldMapZoom();
 
          MEMBER_FN_PREFIX(MapMenu);
          DEFINE_MEMBER_FN(Destructor,      void, 0x005B7490);
@@ -132,4 +135,7 @@ namespace RE {
    static_assert(sizeof(MapMenu) >= 0x100, "RE::MapMenu is too small!");
    static_assert(offsetof(MapMenu, hoveredMapIcon) <= 0xF4, "RE::MapMenu::hoveredMapIcon is too late!");
    static_assert(offsetof(MapMenu, hoveredMapIcon) >= 0xF4, "RE::MapMenu::hoveredMapIcon is too early!");
+
+   DEFINE_SUBROUTINE_EXTERN(void, UpdateMapMenuLocalMap, 0x005BA4D0, bool);
+   DEFINE_SUBROUTINE_EXTERN(void, UpdateMapMenuWorldMap, 0x005B91E0);
 };

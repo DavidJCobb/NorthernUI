@@ -26,35 +26,35 @@ namespace RE {
             kContValue_MaxEncumbrance,
          };
 
-         Tile*  scrollBar;		// 28
-         Tile*  scrollMarker;		// 2C
-         Tile*  listContents;		// 30
-         Tile*  focusBox;			// 34
-         Tile*  invP4P5Header;	// 38
-         Tile*  selectedItemTile;	// 3C // user11 = idx of item in inventory/container
-         UInt8  filterType;			// 40
+         Tile*  scrollBar        = nullptr; // 28
+         Tile*  scrollMarker     = nullptr; // 2C
+         Tile*  listContents     = nullptr;		// 30
+         Tile*  focusBox         = nullptr;			// 34
+         Tile*  invP4P5Header    = nullptr;	// 38
+         Tile*  selectedItemTile = nullptr;	// 3C // user11 = idx of item in inventory/container
+         UInt8  filterType; // 40 // SKSE definition may be wrong. This is initialized as a UInt32, and to 0xF.
          UInt8  pad41[3];
-         TESObjectREFR* refr; // 44
-         UInt32 unk48;				// 48
-         UInt32 unk4C;				// 4C
-         float  unk50;				// 50
-         UInt8  unk54;				// 54
-         UInt8  bTransactionInProgress;	// set true after first transaction confirmed by player. ###TODO: reset when?
-         UInt8  unk56;				// may be padding
+         TESObjectREFR* refr = nullptr; // 44
+         UInt32 unk48 = 0;				// 48 // possibly pointer
+         UInt32 unk4C = 0;				// 4C
+         float  unk50 = 0.0F; // 50
+         UInt8  unk54 = 0;    // 54
+         bool   transactionInProgress = false; // 55 // set true after first transaction confirmed by player. ###TODO: reset when?
+         UInt8  unk56 = 0;    // 56
          UInt8  pad57;
          UInt32 unk58;				// 58
          UInt32 unk5C;				// 5C
-         UInt8  unk60;				// 60
-         bool   isBarter;			//	 1 if bartering with merchant
-         UInt8  unk62;
+         UInt8  unk60    = 0;     // 60
+         bool   isBarter = false; // 61
+         UInt8  unk62    = 0;     // 62
          UInt8  unk63;
-         bool   isContainerContents; //init'd to 1. 0 when switched to player's inventory view
+         bool   isContainerContents = true; // false when switched to player's inventory view
          UInt8  pad65[3];
 
-         UInt32		GetItemIndex();
-         TESForm*	GetItem();
+         UInt32   GetItemIndex();
+         TESForm* GetItem();
 
          static UInt32 GetQuantity();
-         static void Update();
+         static void   Update();
    };
 };
