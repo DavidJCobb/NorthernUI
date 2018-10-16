@@ -1,15 +1,23 @@
 #pragma once
 
 //
-// MenuQue patches calls into the game very sloppily: if calls spill over 
-// other vanilla opcodes and "break them in half," MenuQue doesn't NOP the 
-// broken bytes. This causes my disassembler to get confused when viewing 
-// the patched subroutines and frankly, it's just irritating.
+// Originally, this file existed just to handle the fact that MenuQue 
+// hooks the game kinda roughly: if calls spill over other vanilla op-
+// codes and "break them in half," MenuQue doesn't NOP the broken 
+// bytes. This causes my disassembler to get confused when viewing the 
+// patched subroutines and honestly, it's just irritating.
 //
-// We're gonna check for JMP and CALL instructions at addresses that we 
-// know MenuQue patches, and if we find such instructions, we'll write NOP 
-// opcodes over the broken bytes, so I can debug my mod and ensure MenuQue 
-// compatibility without MenuQue getting in the way of either task.
+// As development continued, however, it turned out that much more in-
+// tensive measures were needed to attain compatibility with MenuQue, 
+// most notably including replacing some of its calls and calling some 
+// of its subroutines directly. As such, the code involved contains:
+// 
+//  - A list of every known MenuQue patch that leaves split opcodes
+//  - Code to get MenuQue's address space
+//  - Code to patch important nullptr checks into MenuQue itself
+//
+// Additionally, some of the other patches make use of the address space 
+// getters in order to call MQ subroutines.
 //
 
 struct MenuQueState {
