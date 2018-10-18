@@ -33,6 +33,14 @@ namespace RE {
             //
             DEFINE_MEMBER_FN(Subroutine004854F0, bool, 0x004854F0, Actor* container, bool isBartering, SInt32 gameHourOrMaybeBool, bool arg4, bool alwaysZero);
 
+            // Used for bartering, apparently to get an item's sale price.
+            //
+            // which == 1 : Indicates that we want the value of a single item in the stack.
+            // arg2       : The container or merchant being accessed by ContainerMenu.
+            // isBuying   : True if the player is purchasing an item; false if they are selling/giving one.
+            //
+            DEFINE_MEMBER_FN(Subroutine00488E50, float, 0x00488E50, UInt32 which, TESObjectREFR* arg2, bool isBuying);
+
             // Used to render columns in the inventory menu. Can return nullptr.
             //
             // which == 0 : Count. Values between 1000 and 999999 are rendered as %iK. Values above 999999 are rendered as %iM. Zero renders as a space.
