@@ -19,6 +19,13 @@ bool _ItemIsPlayable(TESForm* base) {
       case kFormType_Clothing:
          return (((TESObjectCLOT*) base)->bipedModel.flags & TESBipedModelForm::kFlags_NotPlayable) == 0;
    }
+   //
+   // The TESBipedModelForm check is new, and was added for consistency with Vacuity and the 
+   // OBSE commands that it uses.
+   //
+   TESBipedModelForm* biped = (TESBipedModelForm*) Oblivion_DynamicCast(base, 0, RTTI_TESForm, RTTI_TESBipedModelForm, 0);
+   if (biped)
+      return biped->IsPlayable();
    return true;
 };
 
