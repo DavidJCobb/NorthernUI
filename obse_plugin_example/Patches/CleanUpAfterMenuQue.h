@@ -19,6 +19,8 @@
 // Additionally, some of the other patches make use of the address space 
 // getters in order to call MQ subroutines.
 //
+// See also: RE::KYO::TileLink in ReverseEngineered/Tile.h
+//
 
 struct MenuQueState {
    bool   detected = false;

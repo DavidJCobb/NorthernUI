@@ -9,7 +9,9 @@
 #include "ReverseEngineered/UI/InterfaceManager.h"
 #include "ReverseEngineered/UI/Menu.h"
 #include "ReverseEngineered/UI/Tile.h"
+#include "ReverseEngineered/UI/Menus/ContainerMenu.h"
 #include "obse/Script.h"
+#include "obse/GameMenus.h"
 
 #include <dds.h>
 using namespace DirectX;
@@ -557,7 +559,15 @@ namespace CobbPatches {
          // Reproduce the functions of Toggleable Quantity Prompts, but at the native 
          // code level.
          //
-         SInt32 CheckPref() {
+         SInt32 CheckBarterConfirmPref() {
+            auto ui = RE::InterfaceManager::GetInstance();
+            if (ui->unk118 & 1)
+               return NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iCurrent;
+            if (ui->unk118 & 2)
+               return NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iCurrent;
+            return NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iCurrent;
+         };
+         SInt32 CheckQuantityMenuPref() {
             auto ui = RE::InterfaceManager::GetInstance();
             if (ui->unk118 & 1)
                return NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iCurrent;
@@ -566,8 +576,152 @@ namespace CobbPatches {
             return NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iCurrent;
          };
          //
+         namespace SuppressBarterConfirmation {
+            //
+            // Toggleable Quantity Prompts also lets you auto-confirm the barter prompt.
+            //
+            // ContainerMenu's code is horribly messy, at least when compiled, so our patch 
+            // is also messy.
+            //
+            //  - ContainerMenu REFUSES to transfer an item if a message box doesn't appear, 
+            //    even though there's nothing in the message box callback that would suggest 
+            //    why. As such, instead of running the callback directly, we have to actually 
+            //    pop the message box and automatically dismiss it on the next frame.
+            //
+            //  - HandleMouseUp runs before HandleFrame within a frame, so we need a counter 
+            //    so that HandleFrame can distinguish between the current and next frame.
+            //
+            //  - If the QuantityMenu pops up, we have to wait for that to go away before we 
+            //    start counting frames for MessageMenu.
+            //
+            //  - The price is only retrieved when building the confirmation prompt message 
+            //    text or when carrying out the transaction, so we need to swipe it during 
+            //    the former step. (We could just call the getter again, but the values 
+            //    supplied to it are either not readily available when we need them, or not 
+            //    available at all.)
+            //
+            static float s_lastPrice = 0.123456F; // obviously wrong value, used for logging purposes while debugging
+            //
+            namespace InterceptPrice {
+               //
+               // The price is only computed when formatting the confirmation prompt text, 
+               // and isn't retained otherwise. There's no easy way to reproduce the calls 
+               // involved, so we just patch after them and cache the price in a static 
+               // variable.
+               //
+               void _stdcall Inner(float p) {
+                  s_lastPrice = p;
+               };
+               __declspec(naked) void OuterSale() {
+                  _asm {
+                     push eax; // protect
+                     mov  eax, dword ptr [esp + 0x1C]; // == price * quantity // esp18 is the price; we pushed onto the stack first, so 18+4==1C
+                     push eax;   //
+                     call Inner; // stdcall
+                     pop  eax; // restore
+                     fstp st(1);    // reproduce patched-over instruction
+                     test ah, 0x05; // reproduce patched-over instruction
+                     mov  ecx, 0x0059A702;
+                     jmp  ecx;
+                  };
+               };
+               __declspec(naked) void OuterBuy() {
+                  _asm {
+                     mov  eax, dword ptr [esp + 0x18]; // == price * quantity
+                     push eax;   //
+                     call Inner; // stdcall
+                     cmp  edi, 1; // reproduce patched-over instruction
+                     fld  dword ptr [esp + 0x18]; // reproduce patched-over instruction
+                     mov  edx, 0x0059A85C;
+                     jmp  edx;
+                  };
+               };
+               void Apply() {
+                  WriteRelJump(0x0059A6FD, (UInt32)&OuterSale); // ContainerMenu::HandleMouseUp // TODO: BROKEN
+                  WriteRelJump(0x0059A855, (UInt32)&OuterBuy);  // ContainerMenu::HandleMouseUp
+                  SafeWrite16 (0x0059A85A, 0x9090); // courtesy NOP
+               };
+            };
+            //
+            bool ShouldShowConfirmationPrompt() {
+               switch (CheckBarterConfirmPref()) {
+                  case NorthernUI::kBarterConfirmHandler_Always:
+                     return true;
+                  case NorthernUI::kBarterConfirmHandler_IfNotFree:
+                     if (s_lastPrice > 0.001F) // float precision is terrible; Bethesda's price math can yield numbers like -3e-40 and such
+                        return true;
+                     return false;
+                  case NorthernUI::kBarterConfirmHandler_Never:
+                     return false;
+               }
+               return true;
+            };
+            void AutoAnswerMessage() {
+               auto tile = (RE::Menu*) GetMenuByType(RE::kMenuID_MessageMenu);
+               if (tile)
+                  tile->HandleMouseUp(4, nullptr); // MessageMenu buttons start at ID #4; we want to click the 0th button
+            };
+
+            enum {
+               kFrameState_NotReady  = 0,
+               kFrameState_SameFrame = 1,
+               kFrameState_NextFrame = 2,
+            };
+            static UInt32 s_frame = kFrameState_NotReady;
+            //
+            void Inner_Frame() {
+               if (s_frame == kFrameState_SameFrame)
+                  s_frame = kFrameState_NextFrame;
+               else if (s_frame == kFrameState_NextFrame) {
+                  AutoAnswerMessage();
+                  s_frame = kFrameState_NotReady;
+               }
+            };
+            __declspec(naked) void Outer_Frame() {
+               static_assert(offsetof(RE::ContainerMenu, quantityMenuInProgress) == 0x54, "ContainerMenu's flag for the QuantityMenu being open has moved! Update this x86 patch!");
+               _asm {
+                  push eax; // protect
+                  mov  al, byte ptr [esi + 0x54]; // bool al = this->unk54;
+                  test al, al;
+                  jnz  lAfter; // if the QuantityMenu is open, then defer until it isn't, so we can catch the MessageMenu (yes, I know this is ugly)
+                  call Inner_Frame;
+               lAfter:
+                  pop  eax; // restore
+                  mov  ecx, dword ptr [eax + 0x20]; // reproduce patched-over subroutine
+                  push 5; // reproduce patched-over subroutine
+                  mov  eax, 0x0059871F;
+                  jmp  eax;
+               };
+            };
+            void PrepToAutoAnswer() {
+               s_frame = kFrameState_SameFrame;
+            };
+            __declspec(naked) void Outer_MouseUp() {
+               //
+               // Patches right over a call to ShowMessageBox after its args have been pushed
+               //
+               _asm {
+                  call ShouldShowConfirmationPrompt;
+                  test al, al;
+                  jnz  lShow;
+                  call PrepToAutoAnswer;
+               lShow:
+                  mov  eax, 0x00579C10; // ShowMessageBox
+                  call eax; // reproduce patched-over call
+               lExit:
+                  mov  eax, 0x0059A90A; // jump to the ADD ESP, 0x18 instruction that cleans up ShowMessageBox's args
+                  jmp  eax;
+               };
+            };
+            void Apply() {
+               InterceptPrice::Apply();
+               WriteRelJump(0x0059A905, (UInt32)&Outer_MouseUp); // ContainerMenu::HandleMouseUp
+               WriteRelJump(0x0059871A, (UInt32)&Outer_Frame);   // ContainerMenu::HandleFrame
+            };
+         };
+         //
          UInt32 __stdcall InnerContainer(SInt32 count) { // returns address to jump back to
-            switch (CheckPref()) {
+            switch (CheckQuantityMenuPref()) {
                case NorthernUI::kQuantityHandler_TakeAll:
                   *(SInt32*)(0x00B13E94) = count; // *g_ContainerMenu_Quantity = eax;
                case NorthernUI::kQuantityHandler_TakeOne:
@@ -588,7 +742,7 @@ namespace CobbPatches {
          };
          //
          UInt32 InnerInventory(RE::ExtraContainerChanges::EntryData* item) { // returns address to jump back to
-            switch (CheckPref()) {
+            switch (CheckQuantityMenuPref()) {
                case NorthernUI::kQuantityHandler_TakeAll:
                   *(SInt32*)(0x00B140E4) = item->countDelta;
                   return 0x005ABF4B; // handles dropping an item if g_ContainerMenu_Quantity isn't -1
@@ -616,10 +770,12 @@ namespace CobbPatches {
             };
          };
          void Apply() {
-            WriteRelJump(0x0059A780, (UInt32)&OuterContainer);
+            WriteRelJump(0x0059A780, (UInt32)&OuterContainer); // ContainerMenu::HandleMouseUp
             //
             WriteRelJump(0x005ABE73, (UInt32)&OuterInventory);
             SafeWrite16 (0x005ABE78, 0x9090); // courtesy NOP
+            //
+            SuppressBarterConfirmation::Apply();
          };
       };
       namespace ZoomTraitUpdatesChangeFlags {
@@ -649,6 +805,51 @@ namespace CobbPatches {
             WriteRelJump(0x0058B32C, (UInt32)&Outer);
          };
       };
+      namespace FixReloadHUDCrash { // experimental
+         //
+         // Using the "reload" console command to reload any HUD menus causes an instant 
+         // crash. My crash logger tracks it, oddly enough, to code deep inside of the 
+         // ModelLoader -- specifically,
+         //
+         // LockFreeCaseInsensitiveStringMap<Model*>::Unk_01(const char* arg1)
+         //
+         // If arg1 is nullptr -- and apparently, it is in this case -- then we crash. 
+         // What the subroutine is supposed to do is convert it to lowercase and store 
+         // it on the stack.
+         //
+         // Testing indicates no obvious consequences to just... skipping the loop that 
+         // does the string conversion. Huh. Well, okay.
+         //
+         void _stdcall DebugLog(UInt32 caller) {
+            _MESSAGE("WARNING: LockFreeCaseInsensitiveStringMap<Model*>::Unk_01(nullptr) ! Caller appears to be %08X.", caller);
+         };
+         __declspec(naked) void Outer() {
+            _asm {
+               mov  ebx, ecx; // reproduce skipped instruction
+               push edi; // reproduce patched-over instruction, albeit out of order
+               lea  edi, [esp + 0x10]; // reproduce skipped instruction
+               test esi, esi;
+               jz   lExit;
+               mov  al, byte ptr [esi]; // reproduce patched-over instruction, albeit out of order
+               test al, al; // reproduce patched-over instruction, albeit out of order
+               mov  ecx, 0x0043E6B2;
+               jmp  ecx;
+            lExit:
+               //
+               mov  eax, esp;
+               add  eax, 0x3FC;
+               push eax;
+               call DebugLog; // stdcall
+               //
+               xor  eax, eax;
+               mov  ecx, 0x0043E6CC;
+               jmp  ecx;
+            };
+         };
+         void Apply() {
+            WriteRelJump(0x0043E6A5, (UInt32)&Outer);
+         };
+      };
 
       void Apply() {
          //
@@ -665,6 +866,7 @@ namespace CobbPatches {
          ImplementPrioritizedTraitRefs::Apply();
          SuppressQuantityMenu::Apply();
          ZoomTraitUpdatesChangeFlags::Apply();
+         FixReloadHUDCrash::Apply();
       };
    };
 };

@@ -249,7 +249,7 @@ namespace CobbPatches {
             {0x0057FEF7, 10}, // possibly MenuTextInputState::~MenuTextInputState
             {0x0057FF50,  1}, // MenuTextInputState::HandleKeypress
             {0x00580120,  1}, // MenuTextInputState::Subroutine00580120
-            {0x0058251B,  5}, // InterfaceManager::Update
+            {0x0058251B,  5}, // InterfaceManager::Update // calls MQ_14A90
             {0x00583A4B,  3}, // InterfaceManager::Update
             {0x00583AE3,  3}, // InterfaceManager::Update
             {0x00583B59,  1}, // InterfaceManager::Update
