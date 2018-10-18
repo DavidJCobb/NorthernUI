@@ -1,0 +1,293 @@
+void ContainerMenu::HandleMouseUp(SInt32 id, Tile* target) {
+   auto ebp = target;
+   auto ebx = this;
+   auto esp30 = target;
+   if (AreCursorAndMenuOfTypeVisible(0x3E9, 0))
+      return;
+   auto esi = id;
+   if (id >= 1 && id <= 5) {
+      PlayUIClicksound(5);
+      this->TES4_00599200(id, target);
+      return;
+   }
+   // at 0x0059A47F
+   if (id >= 0x10 && id <= 0x14) {
+      auto edx = this->unk60;
+      if (ecx == edi) {
+         this->unk60.TES4_00597A60();
+         ContainerMenu_Update();
+         return;
+      }
+      this->unk60.TES4_00597A40(eax);
+      this->unk60.unk00 &= 0x7F;
+      ContainerMenu_Update();
+      return;
+   }
+   if (id == 0x33) { // at 0x0059A4D1
+      if (this->unk54)
+         return;
+      TESObjectREFR* sender;    // esp2C // also accessed as edi, for now
+      TESObjectREFR* recipient; // esp30
+      if (this->isContainerContents) {
+         sender    = this->refr;
+         recipient = *g_thePlayer;
+      } else {
+         sender    = *g_thePlayer;
+         recipient = this->refr;
+      }
+      bool esp17 = true; // at 0x0059A512
+      if (this->unk63)
+         *(UInt8*)(0x00B13E90) = 0;
+      SInt32 eax = target->GetFloatTraitValue(kTagID_user11);
+      ExtraContainerChanges::EntryData* esi = sender->GetInventoryItemByIndex(eax, (sender == *g_thePlayer) ? 0 : this->isBarter);
+      if (sender == *g_thePlayer) { // disallow removing certain items from the player's inventory
+         if (esi->type->Unk_1E()) {
+            QueueUIMessage(GMST:sDropQuestItemWarning, 0, 1, -1.0F); // at 0x0059A55E
+            esi->~EntryData();
+            FormHeap_Free(esi);
+            return;
+         }
+         if ((*g_thePlayer)->Unk_E0() && (*g_thePlayer)->process->Unk_3B(0) && esi->IsEquippedItem(0)) {
+            auto eax = (*g_thePlayer)->process->Unk_3B(0)->unk08;
+            if (esi->type == eax) {
+               QueueUIMessage(GMST:sCantUnequipGeneric, 0, 1, -1.0F); // jumps up to 0x0059A55E
+               esi->~EntryData();
+               FormHeap_Free(esi);
+               return;
+            }
+         }
+      }
+      // at 0x0059A5F9
+      if (!esi) { // jumps to 0x0059B316
+         *(UInt8*)(0x00B3B27A) = 0;
+         if (sender == *g_thePlayer)
+            TES4_005C1900();
+         return;
+      }
+      if (esi->extendData) {
+         auto eax = esi->extendData->data;
+         if (eax && eax->HasExtraBoundArmor())
+            return;
+      }
+      auto ui = InterfaceManager_GetSingleton(0, 1); // at 0x0059A629
+      ui->SendKeynavEventTo(0, kTagID_mouseover, 0);
+      auto ebp = this->refr;
+      bool x = *(UInt8*)(0x00B3B27A) == 0 ;
+      bool y = this->isBarter;
+      if ((x && y) || y) // so, uh, if (y)
+         (*g_thePlayer)->TES4_005E99C0(esi->type, !(sender == *g_thePlayer), 0);
+      SInt32 edi   = 1;
+      SInt32 esp20 = 1;
+      //
+      if (*g_ContainerMenu_Quantity == -1) {
+         // at 0x0059A741
+         if (recipient == *g_thePlayer) {
+            if (!FormIsGoldAsInCurrency(esi->type))
+               if (this->isBarter || esi->type != *ptrLockpickForm)
+                  jump to 0x0059A77E;
+            *g_ContainerMenu_Quantity = esi->GetCount(); // at 0x0059A76D
+            //jump to 0x0059A688;
+         } else {
+            // at 0x0059A77E
+            eax = esi->countDelta; // at 0x0059A780 // NorthernUI patches over this line
+            if (eax >= GMST:iInventoryAskQuantityAt) {
+               this->unk54 = true;
+               ShowQuantityMenu(g_ContainerMenu_Quantity, 0x33, esp28, esi->GetCount(), 0); // at 0x0059A7AB
+               // jumped to 0x0059A574
+               esi->~EntryData();
+               FormHeap_Free(esi);
+               return;
+            }
+         }
+      } else if (*g_ContainerMenu_Quantity != -1) // at 0x0059A67C
+         edi = esp20 = *g_ContainerMenu_Quantity;
+      //
+      // at 0x0059A688
+      //
+      bool esp1F = false;
+      if (!this->isBarter) { // Pickpocketing code.
+         // jumped to 0x0059ABD7
+         if (*g_ContainerMenu_Quantity != -1)
+            *g_ContainerMenu_Quantity = -1;
+         if (this->unk63 && sender == *g_thePlayer) {
+            *(UInt8*)(0x00B3B279) = 0;
+            if (this->refr->TES4_004D7F80() && !this->refr->IsDead(0)) {
+               if (0.0F < GetFormWeight(esi->type)) {
+                  ShowMessageBox(GMST:sInvalidPickpocket, 0, 1, GMST:sOk, 0); // can only place zero-weight items
+                  // jumped to 0x0059A574
+                  esi->~EntryData();
+                  FormHeap_Free(esi);
+                  return;
+               }
+            }
+         }
+         // at 0x0059AF11
+         Actor* esp28 = OBLIVION_CAST(this->refr, TESObjectREFR, Actor);
+         if (!this->unk63)
+            jump to 0x0059B0B1;
+         if (sender == *g_thePlayer)
+            jump to 0x0059B0B7;
+         esp17 = false;
+         SInt32 esp20 = esi->TES4_004842E0 * (*g_ContainerMenu_Quantity);
+         float  esp1C = esp20;
+         eax = (*g_thePlayer)->Unk_A1(7); // at 0x0059AF78
+         SInt32 eax = /*float*/ GetLuckModifiedSkill_Capped((*g_thePlayer)->Unk_A1(0x1F), eax);
+         auto edi = esp28; // at 0x0059AF9B
+         //
+         // ...
+         //
+      }
+      if (*(UInt8*)(0x00B3B27A))
+         jump to 0x0059A932;
+      BSStringT esp20;
+      esp360 = 0;
+      if (sender != *g_thePlayer) {
+         // jumped to 0x0059A82E
+         float  esp18 = esi->TES4_00488E50(1, ebp, 1);
+         SInt32 ebx = -1;
+         if (*g_ContainerMenu_Quantity != -1)
+            esp18 *= *g_ContainerMenu_Quantity;
+         if (edi == 1)
+            SprintfBSStringT(&esp20, "%s %s %s %i %s?", GMST:sBuy, esi->GetName(), GMST:sFor, ?????, GMST:sGold);
+         else
+            SprintfBSStringT(&esp20, "%s %i %s %s %i %s?", GMST:sBuy, ?????, esi->GetName(), GMST:sFor, ?????, GMST:sGold);
+         // jumped to 0x0059A8D6
+         *(UInt8*)(0x00B3B284) = 0x33;
+         ShowMessageBox(esp20, 0x00597B10, 1, GMST:sYes, GMST:sNo, 0);
+         esi->~EntryData();
+         FormHeap_Free(esi);
+         esp20.~BSStringT();
+         return;
+      }
+      float esp18 = esi->TES4_00488E50(1, ebp, 0);
+      ebx = -1;
+      if (*g_ContainerMenu_Quantity != -1)
+         esp18 *= *g_ContainerMenu_Quantity;
+      if (esp18 >= 1.0F) {
+         // jumped to 0x0059A7DC
+         if (edi == 1) {
+            SprintfBSStringT(&esp20, "%s %s %s %i %s?", GMST:sSell, esi->GetName(), GMST:sFor, ?????, GMST:sGold);
+         else
+            SprintfBSStringT(&esp20, "%s %i %s %s %i %s?", GMST:sSell, ?????, esi->GetName(), GMST:sFor, ?????, GMST:sGold);
+         // jumped to 0x0059A8D6
+         *(UInt8*)(0x00B3B284) = 0x33;
+         ShowMessageBox(esp20, 0x00597B10, 1, GMST:sYes, GMST:sNo, 0);
+         esi->~EntryData();
+         FormHeap_Free(esi);
+         esp20.~BSStringT();
+         return;
+      }
+      *(UInt8*)(0x00B3B288) = 1;
+      if (edi <= 1)
+         SprintfBSStringT(&esp20, "%s %s?", GMST:sGiveAway, esi->GetName());
+      else
+         SprintfBSStringT(&esp20, "%s %i %s?", GMST:sGiveAway, edi, esi->GetName());
+      // jumped to 0x0059A8D6
+      *(UInt8*)(0x00B3B284) = 0x33;
+      ShowMessageBox(esp20, 0x00597B10, 1, GMST:sYes, GMST:sNo, 0);
+      esi->~EntryData();
+      FormHeap_Free(esi);
+      esp20.~BSStringT();
+      return;
+   }
+   if (id == 0x2A) { // ID#42: swap to player // at 0x0059B336
+      if (!this->isContainerContents)
+         return;
+      PlayUIClicksound(0xE);
+      this->listScrollPosRefr = (SInt32) this->scrollBar->GetFloatTraitValue(kTagID_user7); // scroll position
+      //
+      // Restore scroll position:
+      //
+      this->scrollMarker->UpdateFloat(kTagID_user9, -9999999.0F);
+      this->scrollMarker->UpdateFloat(kTagID_user9, (float)/*SInt32*/this->listScrollPosPlayer);
+      this->scrollMarker->UpdateFloat(kTagID_user9, 0.0F);
+      this->unk64 = !this->unk64;
+      this->unk04->UpdateFloat(kTagID_user7, (float)kEntityID_false); // jumped to 0x0059B430 after prepping float arg
+      ContainerMenu_Update();
+      return;
+   }
+   if (id == 0x2B) { // ID#43: swap to container // at 0x0059B336
+      if (this->isContainerContents)
+         return;
+      PlayUIClicksound(0xE);
+      this->listScrollPosPlayer = (SInt32) this->scrollBar->GetFloatTraitValue(kTagID_user7); // scroll position
+      //
+      // Restore scroll position:
+      //
+      this->scrollMarker->UpdateFloat(kTagID_user9, -9999999.0F);
+      this->scrollMarker->UpdateFloat(kTagID_user9, (float)/*SInt32*/this->listScrollPosRefr);
+      this->scrollMarker->UpdateFloat(kTagID_user9, 0.0F);
+      this->unk64 = !this->unk64;
+      this->unk04->UpdateFloat(kTagID_user7, (float)kEntityID_true); // at 0x0059B430 after prepping float arg
+      ContainerMenu_Update();
+      return;
+   }
+   if (id == 0x20) { // ID#32: take all // at 0x0059B44E
+      TESObjectREFR* edi;
+      TESObjectREFR* ebp = *g_thePlayer;
+      if (this->isContainerContents)
+         edi = this->refr;
+      else {
+         edi = ebp;
+         ebp = this->refr;
+      }
+      auto esi = edi->baseExtraList.GetExtraContainerChangesData();
+      if (this->refr->Unk_64())
+         esi->TES4_004876C0(this->refr);
+      if (esi) {
+         SInt32 eax = /*float*/ esi->TES4_00492E70(edi, ebp, *(byte*)(0x00B3B279), 0, 0);
+         *(SInt32*)(0x00B3B27C) = eax;
+      }
+      if (*(SInt32*)(0x00B3B7D0) > 0) { // at 0x0059B4BF
+         TES4_00607B90(edi, 1);
+      }
+      PlayUIClicksound(0x1D);
+      *(byte*)(0x00B3B278) = 1;
+      CloseContainerMenu();
+      return;
+   }
+   if (id == 0x22) { // ID#34: haggle // at 0x0059B4EA
+      TESObjectREFR* esi;
+      TESObjectREFR* ebx;
+      if (this->isContainerContents) {
+         esi = this->refr;
+         ebx = *g_thePlayer;
+      } else {
+         esi = *g_thePlayer;
+         ebx = this->refr;
+      }
+      PlayUIClicksound(1);
+      if (esi == *g_thePlayer) {
+         SInt32 esp20 = /*float*/ ebx->baseExtraList.TES4_00422DC0();
+         ShowNegotiateMenu(&esp20, ebx, 0);
+         return;
+      }
+      SInt32 esp30 = /*float*/ esi->baseExtraList.TES4_00422DC0();
+      ShowNegotiateMenu(&esp30, esi, 1);
+      return;
+   }
+   if (id == 0x21) { // ID#33: close menu // at 0x0059B56C
+      target->UpdateFloat(0xFA7, 255.0F); // why?!
+      if (this->isBarter)
+         (*g_dataHandler)->TES4_00446C10();
+      PlayUIClciksound(2);
+      CloseContainerMenu();
+      return;
+   }
+   if (id == 7 || id == 8) {
+      SInt32 edi = this->tile->GetFloatTraitValue(kTagID_user0);
+      if (id == 7)
+         edi--;
+      else
+         edi++;
+      auto esp28 = edi;
+      if (edi < 1)
+         edi = 5;
+      else if (edi > 5)
+         edi = 1;
+      esp28 = edi;
+      PlayUIClicksound(6);
+      this->tile->UpdateFloat(kTagID_user0, (float)esp28);
+      this->TES4_00599200(edi, 0);
+   }
+};
