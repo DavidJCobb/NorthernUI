@@ -7,6 +7,11 @@ using namespace std;
 #include "obse/Utilities.h"
 
 namespace NorthernUI {
+   enum BarterConfirmHandler : SInt32 {
+      kBarterConfirmHandler_Always    = 0, // vanilla: always confirm a transaction
+      kBarterConfirmHandler_IfNotFree = 1, // only show a confirmation prompt if the items have value
+      kBarterConfirmHandler_Never     = 2, // never show a confirmation prompt
+   };
    enum QuantityMenuHandler : SInt32 {
       kQuantityHandler_Default = 0, // show prompt
       kQuantityHandler_TakeOne = 1,
@@ -40,9 +45,12 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(uLocalMapResolutionPerCell, "Display", 1024);
       };
       namespace Features {
-         XXN_MAKE_INI_SETTING(iQuantityMenuHandlerAlt,     "Features", kQuantityHandler_Default);
-         XXN_MAKE_INI_SETTING(iQuantityMenuHandlerCtrl,    "Features", kQuantityHandler_Default);
-         XXN_MAKE_INI_SETTING(iQuantityMenuHandlerDefault, "Features", kQuantityHandler_Default);
+         XXN_MAKE_INI_SETTING(iQuantityMenuHandlerAlt,      "Features", kQuantityHandler_Default);
+         XXN_MAKE_INI_SETTING(iQuantityMenuHandlerCtrl,     "Features", kQuantityHandler_Default);
+         XXN_MAKE_INI_SETTING(iQuantityMenuHandlerDefault,  "Features", kQuantityHandler_Default);
+         XXN_MAKE_INI_SETTING(iBarterConfirmHandlerAlt,     "Features", kBarterConfirmHandler_Always);
+         XXN_MAKE_INI_SETTING(iBarterConfirmHandlerCtrl,    "Features", kBarterConfirmHandler_Always);
+         XXN_MAKE_INI_SETTING(iBarterConfirmHandlerDefault, "Features", kBarterConfirmHandler_Always);
          XXN_MAKE_INI_SETTING(bShowHUDClock,       "Features", true);
          XXN_MAKE_INI_SETTING(bShowHUDInputViewer, "Features", false);
          XXN_MAKE_INI_SETTING(bSuppressDLCStartup, "Features", false);
