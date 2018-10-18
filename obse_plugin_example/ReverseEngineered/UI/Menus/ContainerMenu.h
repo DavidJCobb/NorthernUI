@@ -25,6 +25,9 @@ namespace RE {
             kContValue_CurrentEncumbrance,
             kContValue_MaxEncumbrance,
          };
+         enum {
+            kTileID_ListItem = 0x33, // ID#51
+         };
 
          Tile*  scrollBar        = nullptr; // 28
          Tile*  scrollMarker     = nullptr; // 2C
@@ -35,11 +38,11 @@ namespace RE {
          UInt8  filterType; // 40 // SKSE definition may be wrong. This is initialized as a UInt32, and to 0xF.
          UInt8  pad41[3];
          TESObjectREFR* refr = nullptr; // 44
-         UInt32 unk48 = 0;				// 48 // possibly pointer
-         UInt32 unk4C = 0;				// 4C
-         float  unk50 = 0.0F; // 50
-         UInt8  unk54 = 0;    // 54
-         bool   transactionInProgress = false; // 55 // set true after first transaction confirmed by player. ###TODO: reset when?
+         SInt32 listScrollPosPlayer = 0; // 48 // the lists use the same scrollbar; we cache and restore scroll positions when swapping
+         SInt32 listScrollPosRefr   = 0; // 4C
+         float  unk50 = 0.0F;  // 50
+         bool   quantityMenuInProgress = false; // 54 // set to true while waiting for the quantity menu to be answered
+         bool   transactionInProgress  = false; // 55 // set true after first transaction confirmed by player. ###TODO: reset when?
          UInt8  unk56 = 0;    // 56
          UInt8  pad57;
          UInt32 unk58;				// 58
