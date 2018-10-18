@@ -62,6 +62,7 @@ namespace RE {
       kTagID_text     = 0x387,
       kTagID_3d       = 0x388,   kTagID_nif = kTagID_3d,
       kTagID_menu     = 0x389,
+      kTagID_MenuQue_link = 0x38A, // KYO::TileLink* // probably can't create these in XML, huh?
       kTagID_window   = 0x38B,
       //
       kTagID_template = 0x3E7, // decimal 999
@@ -151,6 +152,7 @@ namespace RE {
       kTagID_MenuQue_cmp      = 0x7EE, // MenuQue string operator
       kTagID_MenuQue_incl     = 0x7EF, // MenuQue string operator
       kTagID_MenuQue_tostring = 0x7F0, // MenuQue string operator
+      kTagID_MenuQue_length   = 0x7F1, // MenuQue string operator
       //
       // Attributes (decimal > 3000):
       //
@@ -257,8 +259,21 @@ namespace RE {
       kTagID_xbuttonlb = 0xFFD,
       kTagID_xbuttonrb = 0xFFE,
       kTagID_xbuttonstart = 0x1001,
+      kTagID_MenuQue_focus     = 0x1002, // MenuQue trait (boolean)
+      kTagID_MenuQue_focussize = 0x1003, // MenuQue trait (float)
+      kTagID_MenuQue_rotation  = 0x1005, // MenuQue trait (float)
+      kTagID_MenuQue_rotationx = 0x1006, kTagID_MenuQue_rotx = 0x1006, // MenuQue trait (float)
+      kTagID_MenuQue_rotationy = 0x1007, kTagID_MenuQue_roty = 0x1007, // MenuQue trait (float)
+      kTagID_MenuQue_rotationp = 0x1008, kTagID_MenuQue_rotp = 0x1008, // MenuQue trait (float)
+      kTagID_MenuQue_locusx        = 0x1009, // MenuQue trait
+      kTagID_MenuQue_locusy        = 0x100A, // MenuQue trait
+      kTagID_MenuQue_locusdepth    = 0x100B, // MenuQue trait
+      kTagID_MenuQue_locusrotation = 0x100C, // MenuQue trait
+      kTagID_MenuQue_ratio    = 0x100D, // MenuQue trait
+      kTagID_MenuQue_animtime = 0x100E, // MenuQue trait
       kTagID_parent  = 0x1389,
       kTagID_me      = 0x138A,
+      kTagID_MenuQue_active = 0x138B, // MenuQue selector
       kTagID_sibling = 0x138C,
       kTagID_child   = 0x138D,
       kTagID_screen  = 0x138E,

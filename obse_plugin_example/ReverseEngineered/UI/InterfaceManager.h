@@ -153,7 +153,7 @@ namespace RE {
          Menu*   unk0A4;							// 0A4 // containing Menu for unk0A0
          UInt32  unk0A8;							// 0A8
          UInt32  unk0AC;							// 0AC
-         UInt8   msgBoxButtonPressed;			// 0B0
+         UInt8   msgBoxButtonPressed; // B0 // zero-indexed; -1 means none pressed
          UInt8   unk0B1;						// 0B1
          UInt8   unk0B2;
          UInt8   unk0B3;
@@ -264,6 +264,8 @@ namespace RE {
    static_assert(offsetof(InterfaceManager, menuRoot) >= 0x68, "RE::InterfaceManager::menuRoot is too early!");
    static_assert(offsetof(InterfaceManager, activeMenu) <= 0x9C, "RE::InterfaceManager::activeMenu is too late!");
    static_assert(offsetof(InterfaceManager, activeMenu) >= 0x9C, "RE::InterfaceManager::activeMenu is too early!");
+   static_assert(offsetof(InterfaceManager, msgBoxButtonPressed) <= 0xB0, "RE::InterfaceManager::msgBoxButtonPressed is too late!");
+   static_assert(offsetof(InterfaceManager, msgBoxButtonPressed) >= 0xB0, "RE::InterfaceManager::msgBoxButtonPressed is too early!");
    static_assert(offsetof(InterfaceManager, debugSelection) <= 0xBC, "RE::InterfaceManager::debugSelection is too late!");
    static_assert(offsetof(InterfaceManager, debugSelection) >= 0xBC, "RE::InterfaceManager::debugSelection is too early!");
    static_assert(offsetof(InterfaceManager, activeMenuIDs) <= 0xE0, "RE::InterfaceManager::activeMenuIDs is too late!");

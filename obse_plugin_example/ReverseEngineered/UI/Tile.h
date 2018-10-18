@@ -199,7 +199,7 @@ namespace RE {
             Expression* incomingRefs; // 14 // linked list refPrev/refNext; first list item belongs to this value, and is referenced by operators in other traits using refPrev
             UInt16    id;     // 18
             UInt8     bIsNum; // 1A 0 = string, 1 = number
-            UInt8     pad1B;  // 1B
+            UInt8     pad1B;  // 1B // gets used by MenuQue; see MQ+1DA87 in v16b
 
             //
             // Re: operators:
@@ -580,6 +580,97 @@ namespace RE {
          enum { kID = 0x0389 };
 
          Menu* menu;	// 44
+   };
+
+   namespace KYO { // MenuQue
+      class TileLink : public Tile { // sizeof == 0x44
+         public:
+            TileLink();
+            ~TileLink();
+
+            enum { kID = 0x038A };
+
+            // virtual 0x01 just calls vanilla Unk_01
+            // virtual 0x02 is a no-op returning nullptr
+            // virtual 0x03 returns 0x38A
+            // virtual 0x04 returns "LINK"
+            // virtual 0x05 is a no-op returning 0
+            // virtual 0x06 is a no-op
+
+            Tile* source; // 40
+
+            //
+            // Method MQ_14860(Tile* Arg1) from v16b does:
+            //
+            //  - Abort if this->source == Arg1.
+            //
+            //  - Set this->source = Arg1.
+            //
+            //  - Replace every trait in this tile with a COPY operator pointed at the 
+            //    same trait in (source). Reprocess trait values (DoActionEnumeration).
+            //
+            //  - Loop over all of this tile's children:
+            //
+            //     - Let ebx = the nearest targetable ancestor of Arg1 that has the same 
+            //       name as the current child.
+            //
+            //     - Replace every trait in the child with a COPY operator pointed at the 
+            //       same trait in ebx, if and only if ebx has that trait. Traits that do 
+            //       not exist in ebx will be reset to the string " ". Reprocess trait 
+            //       values (DoActionEnumeration).
+            //
+            // The method is called twice from MQ_14A90, which is called via the hook at 
+            // InterfaceManager::Update+0x32B. MQ_14A90 is passed the (mouseTarget) -- 
+            // the currently-hovered tile -- as its argument.
+            //
+            //  - Call one: if mouseTarget is not yet the active tile (i.e. we've just 
+            //    started hovering over it), and if there is an activeMenu, then get the 
+            //    KYO::TileLink* for the activeMenu and call its MQ_14860 method.
+            //
+            //     - If the activeMenu is the mouseTarget's containing menu, then pass 
+            //       the mouseTarget as the argument; otherwise, pass nullptr.
+            //
+            //  - Call two: if mouseTarget has a containing menu, and if that containing 
+            //    menu is not the activeMenu, then get the KYO::TileLink* for mouseTarget's 
+            //    containing menu, and call its MQ_14860 method with mouseTarget as the 
+            //    argument.
+            //
+
+            //
+            // MenuQue's active(arg) selector does this:
+            //
+            //  - Get the ID of the menu that contains the tile using the selector.
+            //
+            //  - Get or create a KYO::TileLink* for the containing menu ID. These are 
+            //    stored in a flat array; there is no support for non-vanilla menu IDs.
+            //
+            //  - Find a descendant of that tile whose name matches the selector argument.
+            //
+            //     - If no such descendant exists, create a KYO::TileLink* child and set 
+            //       its name to the selector argument.
+            //
+            //  - Return the found descendant (or nullptr if operating on a non-vanilla 
+            //    menu ID).
+            //
+            // As such, active(...) returns a KYO::TileLink* that copies from some other 
+            // tile.
+            //
+
+            //
+            // In light of the above information, we can draw a few conclusions:
+            //
+            //  - All of a KYO::TileLink's traits will be updated when mouseover state 
+            //    changes in the menu to which the KYO::TileLink is associated.
+            //
+            //  - KYO::TileLinks are used to allow an operator to refer to different 
+            //    tiles at run-time. The operator always refers to the same tile, but 
+            //    hooks can live-update that tile to copy its traits from elsewhere.
+            //
+            // It also looks like MenuQue *does* clean up KYO::TileLinks when their 
+            // associated menus are deleted, but I can't make heads or tails of the 
+            // relevant code.
+            //
+      };
    };
 
    /*
