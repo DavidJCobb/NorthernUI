@@ -92,6 +92,33 @@ void XXNOptionsMenu::HandleTileIDChange(SInt32 newID, RE::Tile* tile) {
       case kTileID_OptionQuantityHandlerCtrl_Value:
          this->optionQuantityHandlerCtrl.tileValue = tile;
          return;
+      case kTileID_OptionBarterConfirmHandlerDefault_Left:
+         this->optionBarterConfirmHandlerDefault.tileLeft = tile;
+         return;
+      case kTileID_OptionBarterConfirmHandlerDefault_Right:
+         this->optionBarterConfirmHandlerDefault.tileRight = tile;
+         return;
+      case kTileID_OptionBarterConfirmHandlerDefault_Value:
+         this->optionBarterConfirmHandlerDefault.tileValue = tile;
+         return;
+      case kTileID_OptionBarterConfirmHandlerAlt_Left:
+         this->optionBarterConfirmHandlerAlt.tileLeft = tile;
+         return;
+      case kTileID_OptionBarterConfirmHandlerAlt_Right:
+         this->optionBarterConfirmHandlerAlt.tileRight = tile;
+         return;
+      case kTileID_OptionBarterConfirmHandlerAlt_Value:
+         this->optionBarterConfirmHandlerAlt.tileValue = tile;
+         return;
+      case kTileID_OptionBarterConfirmHandlerCtrl_Left:
+         this->optionBarterConfirmHandlerCtrl.tileLeft = tile;
+         return;
+      case kTileID_OptionBarterConfirmHandlerCtrl_Right:
+         this->optionBarterConfirmHandlerCtrl.tileRight = tile;
+         return;
+      case kTileID_OptionBarterConfirmHandlerCtrl_Value:
+         this->optionBarterConfirmHandlerCtrl.tileValue = tile;
+         return;
    }
 };
 void XXNOptionsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
@@ -129,6 +156,12 @@ void XXNOptionsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
    if (this->optionQuantityHandlerCtrl.HandleClick(target))
       return;
    if (this->optionQuantityHandlerAlt.HandleClick(target))
+      return;
+   if (this->optionBarterConfirmHandlerDefault.HandleClick(target))
+      return;
+   if (this->optionBarterConfirmHandlerCtrl.HandleClick(target))
+      return;
+   if (this->optionBarterConfirmHandlerAlt.HandleClick(target))
       return;
 };
 void XXNOptionsMenu::HandleMouseover(SInt32 tileID, RE::Tile* target) {
@@ -186,6 +219,12 @@ bool XXNOptionsMenu::AnyUnchanged() const {
       return true;
    if (NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iCurrent != !this->optionQuantityHandlerCtrl.index)
       return true;
+   if (NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iCurrent != !this->optionBarterConfirmHandlerDefault.index)
+      return true;
+   if (NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iCurrent != !this->optionBarterConfirmHandlerAlt.index)
+      return true;
+   if (NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iCurrent != !this->optionBarterConfirmHandlerCtrl.index)
+      return true;
    return false;
 };
 void XXNOptionsMenu::Commit() {
@@ -198,6 +237,9 @@ void XXNOptionsMenu::Commit() {
    NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iCurrent = this->optionQuantityHandlerDefault.index;
    NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iCurrent   = this->optionQuantityHandlerAlt.index;
    NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iCurrent  = this->optionQuantityHandlerCtrl.index;
+   NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iCurrent = this->optionBarterConfirmHandlerDefault.index;
+   NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iCurrent = this->optionBarterConfirmHandlerAlt.index;
+   NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iCurrent = this->optionBarterConfirmHandlerCtrl.index;
    //
    (NorthernUI::INI::INISettingManager::GetInstance()).Save();
    NorthernUI::INI::SendChangeEvent();
@@ -212,11 +254,28 @@ void XXNOptionsMenu::ResetDefaults() {
    this->optionQuantityHandlerDefault.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iDefault);
    this->optionQuantityHandlerAlt.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iDefault);
    this->optionQuantityHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iDefault);
+   this->optionBarterConfirmHandlerDefault.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iDefault);
+   this->optionBarterConfirmHandlerAlt.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iDefault);
+   this->optionBarterConfirmHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iDefault);
 };
 void XXNOptionsMenu::Setup() {
    //
    // any menu setup tasks to be performed after opening
    //
+   {  // handle barter-confirm-handler labels
+      this->optionBarterConfirmHandlerDefault.values.reserve(3);
+      this->optionBarterConfirmHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerAlways));
+      this->optionBarterConfirmHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerIfNotFree));
+      this->optionBarterConfirmHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerNever));
+      this->optionBarterConfirmHandlerAlt.values.reserve(3);
+      this->optionBarterConfirmHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerAlways));
+      this->optionBarterConfirmHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerIfNotFree));
+      this->optionBarterConfirmHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerNever));
+      this->optionBarterConfirmHandlerCtrl.values.reserve(3);
+      this->optionBarterConfirmHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerAlways));
+      this->optionBarterConfirmHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerIfNotFree));
+      this->optionBarterConfirmHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerNever));
+   }
    {  // handle quantity-handler labels
       this->optionQuantityHandlerDefault.values.reserve(3);
       this->optionQuantityHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
@@ -240,6 +299,9 @@ void XXNOptionsMenu::Setup() {
    this->optionQuantityHandlerDefault.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iCurrent);
    this->optionQuantityHandlerAlt.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iCurrent);
    this->optionQuantityHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iCurrent);
+   this->optionBarterConfirmHandlerDefault.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iCurrent);
+   this->optionBarterConfirmHandlerAlt.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iCurrent);
+   this->optionBarterConfirmHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iCurrent);
 };
 
 /*static*/ void XXNOptionsMenu::Confirm_ResetDefaults() {

@@ -42,6 +42,15 @@ class XXNOptionsMenu : public RE::Menu {
          kTileID_OptionQuantityHandlerCtrl_Left  = 24,
          kTileID_OptionQuantityHandlerCtrl_Right = 25,
          kTileID_OptionQuantityHandlerCtrl_Value = 26,
+         kTileID_OptionBarterConfirmHandlerDefault_Left  = 27,
+         kTileID_OptionBarterConfirmHandlerDefault_Right = 28,
+         kTileID_OptionBarterConfirmHandlerDefault_Value = 29,
+         kTileID_OptionBarterConfirmHandlerAlt_Left  = 30,
+         kTileID_OptionBarterConfirmHandlerAlt_Right = 31,
+         kTileID_OptionBarterConfirmHandlerAlt_Value = 32,
+         kTileID_OptionBarterConfirmHandlerCtrl_Left  = 33,
+         kTileID_OptionBarterConfirmHandlerCtrl_Right = 34,
+         kTileID_OptionBarterConfirmHandlerCtrl_Value = 35,
       };
       enum {
          kTraitID_CheckboxState = kTileValue_user20,
@@ -49,6 +58,9 @@ class XXNOptionsMenu : public RE::Menu {
          kRootTrait_QuantityHandlerDefault = kTileValue_user10,
          kRootTrait_QuantityHandlerTakeOne = kTileValue_user11,
          kRootTrait_QuantityHandlerTakeAll = kTileValue_user12,
+         kRootTrait_BarterConfirmHandlerAlways    = kTileValue_user13,
+         kRootTrait_BarterConfirmHandlerIfNotFree = kTileValue_user14,
+         kRootTrait_BarterConfirmHandlerNever     = kTileValue_user15,
       };
       enum Confirmation : UInt8 {
          kConfirmationBox_None = 0,
@@ -69,6 +81,9 @@ class XXNOptionsMenu : public RE::Menu {
       EnumpickerStr optionQuantityHandlerDefault;
       EnumpickerStr optionQuantityHandlerAlt;
       EnumpickerStr optionQuantityHandlerCtrl;
+      EnumpickerStr optionBarterConfirmHandlerDefault;
+      EnumpickerStr optionBarterConfirmHandlerAlt;
+      EnumpickerStr optionBarterConfirmHandlerCtrl;
 
       virtual void	Dispose(bool); // 00 // destructor
       virtual void	HandleTileIDChange(SInt32 newID, RE::Tile* tile);

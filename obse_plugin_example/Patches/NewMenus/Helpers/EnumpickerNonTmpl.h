@@ -63,7 +63,7 @@ namespace XXNMenuHelpers {
       bool HandleClick(RE::Tile* tile); // returns true if event handled; false if event not relevant
       void Render() const;
       void Set(const std::string& value, bool addIfMissing = true);
-      void SetByIndex(UInt32);
+      void SetByIndex(UInt32); // if the index is out-of-bounds, no changes are made; default index for a new enumpicker is 0
       void Sort(); // WARNING: Doesn't update this->index !
       void Stringify(std::string& out, UInt32 index) const;
    };
