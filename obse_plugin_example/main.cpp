@@ -119,7 +119,7 @@ extern "C" {
 	   // fill out the info structure
 	   info->infoVersion = PluginInfo::kInfoVersion;
 	   info->name        = "NorthernUI";
-	   info->version     = 0x01000E00; // major, minor, patch, build
+	   info->version     = 0x01000F00; // major, minor, patch, build
 
       {  // log our version number -- be helpful!
          auto v = info->version;
