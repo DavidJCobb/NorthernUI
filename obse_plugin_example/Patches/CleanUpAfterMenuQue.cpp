@@ -176,10 +176,10 @@ namespace CobbPatches {
             _asm {
                test ebx, ebx;
                jz   lFail;
-               cmp  dword ptr [ebx + 0x40], eax;
+               cmp  dword ptr [ebx + 0x40], eax; // reproduce patched-over instruction
                je   lFail;
-               mov  eax, s_mqReturnProceed;
-               jmp  eax;
+               mov  ecx, s_mqReturnProceed;
+               jmp  ecx;
             lFail:
                mov  eax, s_mqReturnFail;
                jmp  eax;
