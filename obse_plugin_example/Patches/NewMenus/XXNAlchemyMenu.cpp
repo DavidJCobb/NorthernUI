@@ -799,24 +799,22 @@ void XXNAlchemyMenu::CreatePotion() {
    UInt32 dataHandlerResult;
    {  // Fire OBSE hook and run data-handler code
       auto dummy = (UInt32*) malloc(0x98);
-      *(RE::AlchemyItem**)(dummy + 0x94) = this->potion;
+      *(RE::AlchemyItem**)(((UInt32)dummy) + 0x94) = this->potion;
       dataHandlerResult = ThisStdCall(0x00594CA0, dummy); // WARNING: If we haven't patched AlchemyMenu::CookPotion to NOP out everything unrelated to OBSE's handler, then this will almost certainly crash!
       delete dummy;
    }
-//_MESSAGE("%s: OBSE hook and data handler call therein returned result %08X", __FUNCTION__, dataHandlerResult);
    if (dataHandlerResult) {
       //
       // A base form matching our potion already exists, and has been returned. We'll reuse it.
       //
       ThisStdCall(0x004D8720, *g_thePlayer, dataHandlerResult, 0, 1); // add item?
-//_MESSAGE("%s: Potion successfully added to player's inventory (if that's what that call does?).", __FUNCTION__);
    } else {
       //
       // No potion like ours exists yet. We need to create and use a new base form.
       //
-//_MESSAGE("%s: About to commit new base potion to DH", __FUNCTION__);
+      //_MESSAGE("%s: About to commit new base potion to DH", __FUNCTION__);
       ThisStdCall(0x0044D950, *g_dataHandler, this->potion);
-//_MESSAGE("%s: About to commit new base potion to CBOL", __FUNCTION__);
+      //_MESSAGE("%s: About to commit new base potion to CBOL", __FUNCTION__);
       ThisStdCall(0x00459800, *g_createdBaseObjList, this->potion);
       //this->potion->weight.weight = 0.0F; // vanilla does it in AlchemyMenu::CookPotion; we do it in our UpdatePotion instead
       if (CALL_MEMBER_FN((RE::EffectItemList*) &(this->potion->magicItem.list), HasNonPoisonousEffects)()) { // TODO: Obviously we got the name on that method backwards; this also has implications for other stuff we decoded, in UpdatePotion, as well
@@ -827,9 +825,9 @@ void XXNAlchemyMenu::CreatePotion() {
          this->potion->icon.SetPath("Clutter\\Potions\\IconPotion01.dds");
       }
       ThisStdCall(0x004D8720, *g_thePlayer, this->potion, 0, 1); // add item?
-//_MESSAGE("%s: Potion successfully added to player's inventory (if that's what that call does?).", __FUNCTION__);
+      //_MESSAGE("%s: Potion successfully added to player's inventory (if that's what that call does?).", __FUNCTION__);
       this->potion = RE::AlchemyItem::Create();
-//_MESSAGE("%s: Gave ourselves a fresh current working potion", __FUNCTION__);
+      //_MESSAGE("%s: Gave ourselves a fresh current working potion", __FUNCTION__);
    }
    QueueUIMessage(RE::GMST::sPotionSuccess->s, 0, 1, -1.0F);
    RE::PlayUIClicksound(0x12);

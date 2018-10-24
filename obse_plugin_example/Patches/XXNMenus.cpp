@@ -344,6 +344,9 @@ namespace CobbPatches {
             void Patch() {
                SafeMemset(0x00594CA0, 0x90, 0x004D);
                SafeMemset(0x00594CFF, 0x90, 0x01F8);
+               SafeWrite8 (0x00594CA0, 0x57);   // PUSH EDI
+               SafeWrite16(0x00594CA2, 0xF98B); // MOV  EDI, ECX
+               SafeWrite8 (0x00594CFF, 0x5F);   // POP  EDI
                _MESSAGE("XXNMenus - nuked vanilla AlchemyMenu::CookPotion; we can now call it on a dummy struct to \"feed\" the OBSE hook.");
             };
          };
