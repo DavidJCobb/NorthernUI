@@ -54,6 +54,7 @@
 #include "Patches/RaceSexMenu.h"
 #include "Patches/SavegameSafeDelete.h"
 #include "Patches/SaveMenu.h"
+#include "Patches/StatsMenu.h"
 #include "Patches/Selectors.h"
 #include "Patches/TagIDs/Main.h" //#include "Patches/Traits.h"
 #include "Patches/VanillaHUDReticle.h"
@@ -119,7 +120,7 @@ extern "C" {
 	   // fill out the info structure
 	   info->infoVersion = PluginInfo::kInfoVersion;
 	   info->name        = "NorthernUI";
-	   info->version     = 0x01000F00; // major, minor, patch, build
+	   info->version     = 0x01001100; // major, minor, patch, build
 
       {  // log our version number -- be helpful!
          auto v = info->version;
@@ -259,6 +260,7 @@ extern "C" {
             man.RegisterPatch("QuestAddedMenu", &CobbPatches::QuestAddedMenu::Apply, {});
             man.RegisterPatch("RaceSexMenu",    &CobbPatches::RaceSexMenu::Apply, {});
             man.RegisterPatch("SaveMenu",       &CobbPatches::SaveMenu::Apply, {});
+            man.RegisterPatch("StatsMenu",      &CobbPatches::StatsMenu::Apply, {});
             man.RegisterPatch("VideoMenu",      &CobbPatches::VideoMenu::Apply, {});
             //
             // compat:

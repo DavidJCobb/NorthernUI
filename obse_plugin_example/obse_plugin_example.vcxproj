@@ -149,6 +149,7 @@
     <ClCompile Include="Patches\SavegameSafeDelete.cpp" />
     <ClCompile Include="Patches\RaceSexMenu.cpp" />
     <ClCompile Include="Patches\SaveMenu.cpp" />
+    <ClCompile Include="Patches\StatsMenu.cpp" />
     <ClCompile Include="Patches\TagIDs\Main.cpp" />
     <ClCompile Include="Patches\TagIDs\Operators.cpp" />
     <ClCompile Include="Patches\TagIDs\Traits.cpp" />
@@ -278,6 +279,7 @@
     <ClInclude Include="Patches\RaceSexMenu.h" />
     <ClInclude Include="Patches\SaveMenu.h" />
     <ClInclude Include="Patches\Selectors.h" />
+    <ClInclude Include="Patches\StatsMenu.h" />
     <ClInclude Include="Patches\TagIDs\Main.h" />
     <ClInclude Include="Patches\TagIDs\Operators.h" />
     <ClInclude Include="Patches\TagIDs\Traits.h" />
