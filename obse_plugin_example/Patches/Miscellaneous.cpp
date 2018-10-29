@@ -780,7 +780,8 @@ namespace CobbPatches {
       };
       namespace ZoomTraitUpdatesChangeFlags {
          void _stdcall Inner(RE::Tile* tile) {
-            tile->flags |= RE::Tile::kTileFlag_ChangedImage;
+            tile->flags |= RE::Tile::kTileFlag_ChangedText;  // forcibly rebuild rendered node
+            tile->flags |= RE::Tile::kTileFlag_ChangedImage; // forcibly redraw image
          };
          __declspec(naked) void Outer() {
             _asm {
@@ -802,7 +803,7 @@ namespace CobbPatches {
             };
          };
          void Apply() {
-            WriteRelJump(0x0058B32C, (UInt32)&Outer);
+            WriteRelJump(0x0058B32C, (UInt32)&Outer); // patch Tile::HandleTraitChanged
          };
       };
       namespace FixReloadHUDCrash { // experimental
