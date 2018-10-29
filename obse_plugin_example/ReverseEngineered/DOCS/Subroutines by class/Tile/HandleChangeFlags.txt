@@ -119,7 +119,7 @@ bool Tile::HandleChangeFlags() {
    }
    NiNode* ecx;
    if (esp17 && (this->flags & kTileFlag_ChangedImage) && (ecx = this->renderedNode)) { // at 0x0058EAB4
-      if (!ebx || *(UInt8)(0x00B3B0A2)) { // rendered node isn't culled || unknown byte is truthy
+      if (!ebx || g_tileParseState->force3DForImages) { // rendered node isn't culled || unknown byte is truthy
          auto eax = this->renderedNode->GetChildByIndex(0);
          if (eax) {
             NiTexturingProperty* ebx = eax->GetPropertyByType(NiTexturingProperty::kType);
@@ -147,9 +147,9 @@ bool Tile::HandleChangeFlags() {
                      //
                      // Begin: code to update the filewidth and fileheight traits.
                      //
-                     if (this->GetFloatTraitValue(kTileValue_tile) >= -1.0) { // at 0x0058EBF4
+                     if (this->GetFloatTraitValue(kTileValue_tile) == -1.0) { // at 0x0058EBF4
                         BSStringT* x = &esp2C;
-                        if (x->m_data && x->Length() && !x->TES4_005755D0(" ")) {
+                        if (x->m_data && x->Length() && !x->TES4_005755D0(" ")) { // TES4_005755D0 is string equality check?
                            float esp38 = (float)edi->GetWidth() / *ebp;
                            this->UpdateFloat(kTileValue_filewidth, esp38);
                            float esp38 = (float)edi->GetHeight() / *ebp;
@@ -168,7 +168,7 @@ bool Tile::HandleChangeFlags() {
                            }
                            if (esp2C.m_data) {
                               BSStringT* x = &esp2C;
-                              if (x->m_data && !x->TES4_005755D0(" ")) {
+                              if (x->m_data && !x->TES4_005755D0(" ")) { // TES4_005755D0 is string equality check?
                                  float a = zoom; // esp24
                                  a /= 100.0;
                                  this->UpdateFloat(kTileValue_filewidth,  edi->GetWidth()  * a / *ebp);
