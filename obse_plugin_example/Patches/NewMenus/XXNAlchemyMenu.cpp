@@ -363,7 +363,6 @@ void XXNAlchemyMenu::UpdateInventory() {
    //
    auto   player = (RE::PlayerCharacter*) *g_thePlayer; // cast so we can use stuff we've found
    UInt32 count  = CALL_MEMBER_FN((RE::TESObjectREFR*) player, GetInventoryItemCount)(0);
-//_MESSAGE("%s: Got inventory item count; it's %d", __FUNCTION__, count);
    UInt32 i = 0;
    auto& list    = this->ingredients;
    list.reserve(count);
@@ -386,7 +385,6 @@ void XXNAlchemyMenu::UpdateInventory() {
          }
       } else
          continue;
-//_MESSAGE("%s: Got valid inventory item and didn't disqualify it", __FUNCTION__);
       //
       // If an item of the same type already exists in our list, then merge this in.
       //
@@ -396,7 +394,9 @@ void XXNAlchemyMenu::UpdateInventory() {
          if (!existing)
             continue;
          if (existing->type == data->type) {
-//_MESSAGE("%s: Already have an item of this type; merging", __FUNCTION__);
+            //
+            // Merge it in.
+            //
             existing->countDelta += data->countDelta;
             alreadyExisted = true;
             break;
@@ -407,13 +407,11 @@ void XXNAlchemyMenu::UpdateInventory() {
          FormHeap_Free(data);
          continue;
       }
-//_MESSAGE("%s: Adding new item stack to our list", __FUNCTION__);
       //
       // ...Otherwise, add this new item to our list.
       //
-      list.emplace(list.end(), data, i);
+      list.emplace_back(data, i);
    } while (++i < count);
-//_MESSAGE("%s: Items gathered", __FUNCTION__);
    //
    // Sort the ingredients.
    //
@@ -447,11 +445,11 @@ void XXNAlchemyMenu::UpdateInventory() {
                if (!found) {
                   char name[100];
                   CALL_MEMBER_FN(effect, GetName)(name);
-                  stored.emplace(stored.end(), code, name);
+                  stored.emplace_back(code, name);
                }
             }
             auto& category = this->ingredientsByEffect[code];
-            category.emplace(category.end(), it->data, it->index);
+            category.emplace_back(it->data, it->index);
          } while (++i < knownEffectCount);
       }
 //_MESSAGE("%s: Category map constructed", __FUNCTION__);
@@ -890,6 +888,7 @@ bool XXNAlchemyMenu::IngredientIsCompatible(IngredientItem* ingredient) {
       auto current = &(ingredient->magicItem.list.effectList);
       for (UInt8 i = 0; i < count; i++) {
          auto effectItem = (RE::EffectItem*) current->effectItem;
+         current = current->next;
          EffectCodeAndAV code = XXNAlchemyMenu::GetCombinedIdentifier(effectItem);
          if (!code)
             continue;
