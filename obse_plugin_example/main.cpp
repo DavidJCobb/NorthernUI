@@ -6,9 +6,9 @@
    #include "obse/GameAPI.h"
 
    /*	As of 0020, ExtractArgsEx() and ExtractFormatStringArgs() are no longer directly included in plugin builds.
-	   They are available instead through the OBSEScriptInterface.
-	   To make it easier to update plugins to account for this, the following can be used.
-	   It requires that g_scriptInterface is assigned correctly when the plugin is first loaded.
+      They are available instead through the OBSEScriptInterface.
+      To make it easier to update plugins to account for this, the following can be used.
+      It requires that g_scriptInterface is assigned correctly when the plugin is first loaded.
    */
    #define ENABLE_EXTRACT_ARGS_MACROS 0	// #define this as 0 if you prefer not to use this
 
@@ -74,53 +74,53 @@ OBSEScriptInterface*        g_scriptInterface = nullptr;
 #define COBB_USING_SERIALIZATION 0
 
 /*************************
-	Messaging API example
+   Messaging API example
 *************************/
 
 OBSEMessagingInterface* g_msg;
 
 void MessageHandler(OBSEMessagingInterface::Message* msg) {
-	switch (msg->type) {
-	   case OBSEMessagingInterface::kMessage_ExitGame:
-		   _MESSAGE("MessageHandler received ExitGame message");
-		   break;
-	   case OBSEMessagingInterface::kMessage_ExitToMainMenu:
-		   _MESSAGE("MessageHandler received ExitToMainMenu message");
-		   break;
-	   case OBSEMessagingInterface::kMessage_PostLoad:
-		   _MESSAGE("MessageHandler received PostLoad mesage");
+   switch (msg->type) {
+      case OBSEMessagingInterface::kMessage_ExitGame:
+         _MESSAGE("MessageHandler received ExitGame message");
+         break;
+      case OBSEMessagingInterface::kMessage_ExitToMainMenu:
+         _MESSAGE("MessageHandler received ExitToMainMenu message");
+         break;
+      case OBSEMessagingInterface::kMessage_PostLoad:
+         _MESSAGE("MessageHandler received PostLoad mesage");
          PatchManager::GetInstance().FireEvent(PatchManager::Req::X_PostLoad);
-		   break;
-	   case OBSEMessagingInterface::kMessage_LoadGame:
-	   case OBSEMessagingInterface::kMessage_SaveGame:
-		   _MESSAGE("MessageHandler received save/load message with file path %s", msg->data);
-		   break;
-	   /*case OBSEMessagingInterface::kMessage_Precompile: // log spam from editor
-		   {
-			   ScriptBuffer* buffer = (ScriptBuffer*)msg->data;		
-			   _MESSAGE("Plugin Example received precompile message. Script Text:\n%s", buffer->scriptText);
-			   break;
-		   }*/
-	   case OBSEMessagingInterface::kMessage_PreLoadGame:
-		   _MESSAGE("MessageHandler received pre-loadgame message with file path %s", msg->data);
-		   break;
-	   case OBSEMessagingInterface::kMessage_ExitGame_Console:
-		   _MESSAGE("MessageHandler received quit game from console message");
-		   break;
-	   default:
-		   _MESSAGE("MessageHandler received unknown message with type %d", msg->type);
-		   break;
-	}
+         break;
+      case OBSEMessagingInterface::kMessage_LoadGame:
+      case OBSEMessagingInterface::kMessage_SaveGame:
+         _MESSAGE("MessageHandler received save/load message with file path %s", msg->data);
+         break;
+      /*case OBSEMessagingInterface::kMessage_Precompile: // log spam from editor
+         {
+            ScriptBuffer* buffer = (ScriptBuffer*)msg->data;		
+            _MESSAGE("Plugin Example received precompile message. Script Text:\n%s", buffer->scriptText);
+            break;
+         }*/
+      case OBSEMessagingInterface::kMessage_PreLoadGame:
+         _MESSAGE("MessageHandler received pre-loadgame message with file path %s", msg->data);
+         break;
+      case OBSEMessagingInterface::kMessage_ExitGame_Console:
+         _MESSAGE("MessageHandler received quit game from console message");
+         break;
+      default:
+         _MESSAGE("MessageHandler received unknown message with type %d", msg->type);
+         break;
+   }
 }
 
 extern "C" {
    bool OBSEPlugin_Query(const OBSEInterface* obse, PluginInfo* info) {
-	   _MESSAGE("query");
+      _MESSAGE("query");
 
-	   // fill out the info structure
-	   info->infoVersion = PluginInfo::kInfoVersion;
-	   info->name        = "NorthernUI";
-	   info->version     = 0x01001100; // major, minor, patch, build
+      // fill out the info structure
+      info->infoVersion = PluginInfo::kInfoVersion;
+      info->name        = "NorthernUI";
+      info->version     = 0x01001200; // major, minor, patch, build
 
       {  // log our version number -- be helpful!
          auto v = info->version;
@@ -137,42 +137,42 @@ extern "C" {
             _MESSAGE("We're loaded to the span of memory at %08X - %08X.", info.lpBaseOfDll, (UInt32)info.lpBaseOfDll + info.SizeOfImage);
       }
 
-	   // version checks
-	   if(!obse->isEditor) {
-		   if(obse->obseVersion < OBSE_VERSION_INTEGER && obse->obseVersion < 21) {
-			   _ERROR("OBSE version too old (got %08X expected at least %08X)", obse->obseVersion, OBSE_VERSION_INTEGER);
-			   return false;
-		   }
+      // version checks
+      if(!obse->isEditor) {
+         if(obse->obseVersion < OBSE_VERSION_INTEGER && obse->obseVersion < 21) {
+            _ERROR("OBSE version too old (got %08X expected at least %08X)", obse->obseVersion, OBSE_VERSION_INTEGER);
+            return false;
+         }
          #if OBLIVION
-		      if(obse->oblivionVersion != OBLIVION_VERSION) {
-			      _ERROR("incorrect Oblivion version (got %08X need %08X)", obse->oblivionVersion, OBLIVION_VERSION);
-			      return false;
-		      }
+            if(obse->oblivionVersion != OBLIVION_VERSION) {
+               _ERROR("incorrect Oblivion version (got %08X need %08X)", obse->oblivionVersion, OBLIVION_VERSION);
+               return false;
+            }
          #endif
          //
-		   g_serialization = (OBSESerializationInterface *)obse->QueryInterface(kInterface_Serialization);
-		   if(!g_serialization) {
-			   _ERROR("serialization interface not found");
-			   return false;
-		   }
+         g_serialization = (OBSESerializationInterface *)obse->QueryInterface(kInterface_Serialization);
+         if(!g_serialization) {
+            _ERROR("serialization interface not found");
+            return false;
+         }
 
-		   if(g_serialization->version < OBSESerializationInterface::kVersion) {
-			   _ERROR("incorrect serialization version found (got %08X need %08X)", g_serialization->version, OBSESerializationInterface::kVersion);
-			   return false;
-		   }
+         if(g_serialization->version < OBSESerializationInterface::kVersion) {
+            _ERROR("incorrect serialization version found (got %08X need %08X)", g_serialization->version, OBSESerializationInterface::kVersion);
+            return false;
+         }
 
-		   g_arrayIntfc = (OBSEArrayVarInterface*)obse->QueryInterface(kInterface_ArrayVar);
-		   if (!g_arrayIntfc) {
-			   _ERROR("Array interface not found");
-			   return false;
-		   }
+         g_arrayIntfc = (OBSEArrayVarInterface*)obse->QueryInterface(kInterface_ArrayVar);
+         if (!g_arrayIntfc) {
+            _ERROR("Array interface not found");
+            return false;
+         }
 
          g_scriptInterface = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
-	   } else {
-		   // no version checks needed for editor
-	   }
-	   // version checks pass
-	   return true;
+      } else {
+         // no version checks needed for editor
+      }
+      // version checks pass
+      return true;
    }
 
    bool OBSEPlugin_Load(const OBSEInterface* obse) {
@@ -180,37 +180,37 @@ extern "C" {
       // Plugins load before the game does anything substantial, so most game objects 
       // and singletons will be under construction or non-existent when this runs.
       //
-	   _MESSAGE("load");
+      _MESSAGE("load");
 
-	   g_pluginHandle = obse->GetPluginHandle();
+      g_pluginHandle = obse->GetPluginHandle();
 
-	   /***************************************************************************
-	    *	
-	    *	READ THIS!
-	    *	
-	    *	Before releasing your plugin, you need to request an opcode range from
-	    *	the OBSE team and set it in your first SetOpcodeBase call. If you do not
-	    *	do this, your plugin will create major compatibility issues with other
-	    *	plugins, and may not load in future versions of OBSE. See
-	    *	obse_readme.txt for more information.
-	    *	
-	    **************************************************************************/
-	   // register commands
-	   //obse->SetOpcodeBase(0x2000);
+      /***************************************************************************
+       *	
+       *	READ THIS!
+       *	
+       *	Before releasing your plugin, you need to request an opcode range from
+       *	the OBSE team and set it in your first SetOpcodeBase call. If you do not
+       *	do this, your plugin will create major compatibility issues with other
+       *	plugins, and may not load in future versions of OBSE. See
+       *	obse_readme.txt for more information.
+       *	
+       **************************************************************************/
+      // register commands
+      //obse->SetOpcodeBase(0x2000);
       //ScriptCommands::HUDReticle::RegisterCommands(obse);
       //ScriptCommands::OBSESamples::RegisterCommands(obse);
 
 
-	   // set up serialization callbacks when running in the runtime
-	   if (!obse->isEditor) {
+      // set up serialization callbacks when running in the runtime
+      if (!obse->isEditor) {
          #if COBB_USING_SERIALIZATION == 1
             //
-		      // NOTE: SERIALIZATION DOES NOT WORK USING THE DEFAULT OPCODE BASE IN RELEASE BUILDS OF OBSE.
+            // NOTE: SERIALIZATION DOES NOT WORK USING THE DEFAULT OPCODE BASE IN RELEASE BUILDS OF OBSE.
             //
             SerializationManager::GetInstance().Init(g_pluginHandle, g_serialization); // Cobb singleton
          #endif
          {  // Register for string var interface.
-		      // This allows plugin commands to support '%z' format specifier in format string arguments.
+            // This allows plugin commands to support '%z' format specifier in format string arguments.
             OBSEStringVarInterface* g_Str = (OBSEStringVarInterface*) obse->QueryInterface(kInterface_StringVar);
             g_Str->Register(g_Str);
          }
@@ -267,27 +267,27 @@ extern "C" {
             //
             man.RegisterPatch("DynamicMapEmulation", &CobbPatches::DynamicMapEmulation::Apply, { PatchManager::Req::G_MainMenu });
          }
-	   }
+      }
 
-	   // register to receive messages from OBSE
-	   OBSEMessagingInterface* msgIntfc = (OBSEMessagingInterface*)obse->QueryInterface(kInterface_Messaging);
-	   msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
-	   g_msg = msgIntfc;
+      // register to receive messages from OBSE
+      OBSEMessagingInterface* msgIntfc = (OBSEMessagingInterface*)obse->QueryInterface(kInterface_Messaging);
+      msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
+      g_msg = msgIntfc;
 
-	   // get command table, if needed
-	   OBSECommandTableInterface* cmdIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
-	   if (cmdIntfc) {
+      // get command table, if needed
+      OBSECommandTableInterface* cmdIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
+      if (cmdIntfc) {
          #if 0	// enable the following for loads of log output
-		   for (const CommandInfo* cur = cmdIntfc->Start(); cur != cmdIntfc->End(); ++cur) {
-			   _MESSAGE("%s",cur->longName);
-		   }
+         for (const CommandInfo* cur = cmdIntfc->Start(); cur != cmdIntfc->End(); ++cur) {
+            _MESSAGE("%s",cur->longName);
+         }
          #endif
-	   } else {
-		   _MESSAGE("Couldn't read command table");
-	   }
+      } else {
+         _MESSAGE("Couldn't read command table");
+      }
 
       (NorthernUI::L10N::StrManager::GetInstance()).Update(); // load translatable strings from a file
 
-	   return true;
+      return true;
    }
 };
