@@ -71,7 +71,7 @@ namespace NorthernUI {
       void Update();
 
       // blurb written to the start of L10n file if it's missing and we're regenerating it:
-      const std::string const c_defaultFileBlurb = \
+      const std::string c_defaultFileBlurb = \
          "; \n"\
          "; This file contains strings that need to be translatable, but also available \n"\
          "; to the DLL directly. Only strings hardcoded into the DLL will be recognized \n"\
