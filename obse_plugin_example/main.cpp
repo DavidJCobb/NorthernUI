@@ -19,6 +19,7 @@
 #else
    #include "obse_editor/EditorAPI.h"
 #endif
+#define COBB_SUPPRESS_CRT_CRASH_HANDLER 0 // force CRT error handling to crash ASAP, in the hopes that CobbCrashLogger.dll can grab that
 
 #include "obse/Script.h" // needed for messaging interface
 #include <string>
@@ -113,6 +114,27 @@ void MessageHandler(OBSEMessagingInterface::Message* msg) {
    }
 }
 
+#if COBB_SUPPRESS_CRT_CRASH_HANDLER == 1
+   __declspec(naked) void SuppressCRTCrashHandling(
+      const wchar_t* expression,
+      const wchar_t* function,
+      const wchar_t* file,
+      unsigned int line,
+      uintptr_t pReserved
+   ) {
+      //
+      // All of those parameters are nullptr when we aren't compiled in debug mode,
+      // so just force a crash as quickly as possible so our separate crash logger 
+      // DLL can catch it and hopefully give us something useful.
+      //
+      _asm {
+         mov eax, 0;
+         mov dword ptr[eax], 0;
+         retn;
+      };
+   };
+#endif
+
 extern "C" {
    bool OBSEPlugin_Query(const OBSEInterface* obse, PluginInfo* info) {
       _MESSAGE("query");
@@ -120,7 +142,7 @@ extern "C" {
       // fill out the info structure
       info->infoVersion = PluginInfo::kInfoVersion;
       info->name        = "NorthernUI";
-      info->version     = 0x01001200; // major, minor, patch, build
+      info->version     = 0x01001300; // major, minor, patch, build
 
       {  // log our version number -- be helpful!
          auto v = info->version;
@@ -181,6 +203,10 @@ extern "C" {
       // and singletons will be under construction or non-existent when this runs.
       //
       _MESSAGE("load");
+
+      #if COBB_SUPPRESS_CRT_CRASH_HANDLER == 1
+         _set_invalid_parameter_handler(SuppressCRTCrashHandling);
+      #endif
 
       g_pluginHandle = obse->GetPluginHandle();
 
