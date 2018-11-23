@@ -9,7 +9,7 @@ namespace RE {
 
    class AlchemyMenu : public Menu { // sizeof == 0xC0
       public:
-		   enum { kID = 0x410 };
+         enum { kID = 0x410 };
          AlchemyMenu();
          ~AlchemyMenu();
 
@@ -102,6 +102,7 @@ namespace RE {
 
          MEMBER_FN_PREFIX(AlchemyMenu);
          DEFINE_MEMBER_FN(CookPotion,               void, 0x00594CA0); // doesn't verify that the potion has any effects before cooking
+         DEFINE_MEMBER_FN(FocusTextField,           void, 0x00592FB0);
          DEFINE_MEMBER_FN(HandleSelectedIngredient, void, 0x00594F00, bool update); // updates UI and potion state based on the value of AlchemyMenuClickedIngredient; the caller should already have directly set AlchemyMenu::ingreds[*AlchemyMenuClickedIngredient]
          DEFINE_MEMBER_FN(RenderPotionEffect,       void, 0x00593B20, EffectItem*, UInt32 listindex); // Called by UpdatePotion; listed here for documentation purposes; do not call it yourself
          DEFINE_MEMBER_FN(UpdatePotion,             void, 0x00593CD0); // update the current working potion based on all selected ingredients

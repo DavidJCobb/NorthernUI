@@ -26,10 +26,13 @@ namespace RE {
          UInt8  unk61[3];
          float  unk64 = 0.0;
          float  unk68 = 0.0;
-         UInt8  unk6C = 0;
+         UInt8  unk6C = 0; // analogous to AlchemyMenu::unkA4
          UInt8  unk6D[3];
          MenuTextInputState* unk70;
          void*  unk74 = nullptr;
+
+         MEMBER_FN_PREFIX(SpellMakingMenu);
+         DEFINE_MEMBER_FN(FocusTextField, void, 0x005D7590);
    };
    static_assert(sizeof(SpellMakingMenu) <= 0x78, "RE::SpellMakingMenu is too large!");
    static_assert(sizeof(SpellMakingMenu) >= 0x78, "RE::SpellMakingMenu is too small!");
