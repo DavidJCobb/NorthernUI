@@ -123,7 +123,7 @@ namespace RE {
                      //
                      madeChanges = true;
                      copy += (char)code;
-                     i += count - 1;
+                     i += count - 1; // subtract 1 because we already incremented 1 at the start of the loop
                      continue;
                   }
                }
