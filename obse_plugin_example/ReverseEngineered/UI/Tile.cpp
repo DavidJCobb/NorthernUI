@@ -59,8 +59,9 @@ namespace RE {
       if (this->string.m_dataLen != 0xFFFF)
          copy.reserve(this->string.m_dataLen);
       //
-      bool isNumber    = true;
-      bool madeChanges = false;
+      bool isNumber    = true;  // True if the string doesn't contain symbols invalid for a number (e.g. multiple periods, any letters).
+      bool madeChanges = false; // True if we found an XML entity and altered the string in response.
+      bool foundDigits = false; // True if the string contains at least one numeric glyph.
       {
          UInt32 i = 0;
          char   c = s[i];
@@ -80,6 +81,8 @@ namespace RE {
                   foundDecimal = true;
                } else if (c < '0' || c > '9')
                   isNumber = false;
+               else
+                  foundDigits = true;
             }
             if (c == '&') {
                UInt32 whichEntity = 0;
@@ -107,12 +110,28 @@ namespace RE {
                   copy += results[whichEntity];
                   i    += k - 1; // omit null-terminator
                   continue;
+               } else if (s[i] == '#') { // we already incremented i, so it's now the next char
+                  //
+                  // This *may* be a numeric XML entity, e.g. &#123;.
+                  //
+                  UInt32 count;
+                  SInt32 code = cobb::xml_numeric_entity_to_char_code(s + i - 1, count);
+                  if (code > 0 && code <= 255) {
+                     //
+                     // It's a valid entity and it's within the range of single-byte non-null 
+                     // character codes. (Invalid is -1.)
+                     //
+                     madeChanges = true;
+                     copy += (char)code;
+                     i += count - 1;
+                     continue;
+                  }
                }
             }
             copy += c;
          } while (c);
       }
-      if (isNumber) {
+      if (isNumber && foundDigits) {
          float temp = 0.0;
          sscanf(s, "%f", &temp);
          CALL_MEMBER_FN(&this->string, Replace_MinBufLen)("", 0);
@@ -121,7 +140,7 @@ namespace RE {
       } else if (madeChanges) {
          CALL_MEMBER_FN(&this->string, Replace_MinBufLen)(copy.c_str(), 0);
       }
-      return isNumber;
+      return isNumber && foundDigits;
    };
 
    //
