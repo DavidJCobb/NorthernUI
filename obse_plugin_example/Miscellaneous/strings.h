@@ -22,4 +22,9 @@ namespace cobb {
    // flag is zero (in which case it's taken as part of the width field e.g. "%-0d").
    //
    extern __declspec(noinline) bool validate_format(const std::string& format, const std::string& tokens);
+
+   extern void trim_and_explode(std::string& line, std::vector<std::string>& out);
+   extern void find_quoted(std::string& line, std::string& out);
+
+   extern SInt32 xml_numeric_entity_to_char_code(const char* xmlEntity, UInt32& outCount); // You must supply a string starting with "&#". Function returns -1 if it's not a valid entity (e.g. "&#bullcrap;" or "&#12" with no terminator or so on).
 };

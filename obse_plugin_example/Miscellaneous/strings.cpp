@@ -402,4 +402,68 @@ namespace cobb {
          return false;
       return true;
    };
+
+   void trim_and_explode(std::string& line, std::vector<std::string>& out) {
+      out.clear();
+      std::stringstream ss(line);
+      std::string current;
+      while (std::getline(ss, current, ' '))
+         if (!current.empty())
+            out.push_back(current);
+   };
+   void find_quoted(std::string& line, std::string& out) {
+      out.clear();
+      size_t i = line.find_first_of('"');
+      if (i == std::string::npos)
+         return;
+      size_t j = line.find_first_of('"', i + 1);
+      if (j == std::string::npos)
+         return;
+      out = line.substr(i, j - i + 1);
+   };
+
+   SInt32 xml_numeric_entity_to_char_code(const char* xmlEntity, UInt32& outCount) {
+      //
+      // Works xmlEntity == a string of the form "&#123;". Returns -1 if 
+      // parsing fails.
+      //
+      assert((xmlEntity[0] == '&') && (xmlEntity[1] == '#'), __FUNC__ " must receive a string that is a valid numeric XML entity, e.g. &#123;.");
+      UInt32 i = 2;
+      UInt32 r = 0;
+      if (xmlEntity[2] == 'x') {
+         //
+         // Hexadecimal entities.
+         //
+         i = 3;
+         while (char c = xmlEntity[i++]) {
+            outCount = i;
+            if (!c)
+               return -1;
+            if (c == ';')
+               return r;
+            if (c >= '0' && c <= '9') {
+               r = (r * 0x10) + (c - '0');
+               continue;
+            }
+            c = tolower(c);
+            if (c >= 'a' && c <= 'f')
+               r = (r * 0x10) + (c - 'a' + 10);
+            else
+               break;
+         }
+         return -1;
+      }
+      while (char c = xmlEntity[i++]) {
+         outCount = i;
+         if (!c)
+            return -1;
+         if (c == ';')
+            return r;
+         if (c >= '0' && c <= '9')
+            r = (r * 10) + (c - '0');
+         else
+            break;
+      }
+      return -1;
+   }
 }
