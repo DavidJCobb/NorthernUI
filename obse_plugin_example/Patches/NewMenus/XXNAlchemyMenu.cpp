@@ -4,6 +4,7 @@
 #include "ReverseEngineered/Forms/PlayerCharacter.h"
 #include "ReverseEngineered/UI/InterfaceManager.h"
 #include "ReverseEngineered/UI/Menus/AlchemyMenu.h"
+#include "Miscellaneous/strings.h"
 
 XXNAlchemyMenu::ItemAndIndex::ItemAndIndex(RE::ExtraContainerChanges::EntryData* data, UInt32 index) {
    this->data  = data;
@@ -105,6 +106,8 @@ void XXNAlchemyMenu::HandleTileIDChange(SInt32 newID, RE::Tile* tile) {
       this->tileNameBackground = tile;
    } else if (newID == kTileID_NameTextboxText) {
       this->tileNameText = tile;
+   } else if (newID == kTileID_IngredientWasteWarning) {
+      this->tileWasteWarning = tile;
    }
 };
 void XXNAlchemyMenu::HandleMouseUp(SInt32 id, RE::Tile* target) {
@@ -172,17 +175,9 @@ void XXNAlchemyMenu::HandleMouseUp(SInt32 id, RE::Tile* target) {
    } else if (id == kTileID_InventoryItem) { // Select or deselect an ingredient.
       if (!target)
          return;
-      if (CALL_MEMBER_FN(target, GetFloatTraitValue)(kInventoryTrait_ItemIsUsable) == 1.0F)
-         //
-         // In Oblivion, you cannot make a potion out of two matching pairs of ingredients if those pairs 
-         // do not have effects in common; i.e. even if you can make an AB potion and a CD potion, it does 
-         // not necessarily follow that you can make an ABCD potion. This is because you can only select 
-         // ingredients that have effects in common with already-selected ingredients.
-         //
-         // In Skyrim, you can only make potions out of three ingredients, not four, which means that the 
-         // only way to get two pairs is if they overlap anyway.
-         //
-         return;
+      if (!allowNonOverlappingEffectPairs)
+         if (CALL_MEMBER_FN(target, GetFloatTraitValue)(kInventoryTrait_ItemIsUsable) == 1.0F)
+            return;
       //
       auto data = this->GetIngredientFromListItem(target);
       if (!data) {
@@ -368,7 +363,6 @@ void XXNAlchemyMenu::UpdateInventory() {
    list.reserve(count);
    this->availableEffects.reserve(count);
    do {
-//_MESSAGE("%s: Looping over player's inventory; iteration %d", __FUNCTION__, i);
       auto data = CALL_MEMBER_FN((RE::TESObjectREFR*) player, GetInventoryItemByIndex)(i, 0);
       if (data) {
          bool destroy = true;
@@ -475,7 +469,6 @@ void XXNAlchemyMenu::UpdateSkill() {
 //_MESSAGE("%s: Done", __FUNCTION__);
 };
 void XXNAlchemyMenu::UpdatePotion() {
-//_MESSAGE("%s: Start", __FUNCTION__);
    this->UpdateSkill(); // update known effect count
    {  // Update "Deselect All" button state. We'll update "Cook Potion" later, after validating that all selected ingredients are actually compatible.
       bool any = false;
@@ -506,9 +499,10 @@ void XXNAlchemyMenu::UpdatePotion() {
    UInt32 ingredientCount = 0;
    MagicItem* magicItems[ce_selectionCount] = { nullptr, nullptr, nullptr, nullptr };
    float  weight = 0.0F; // potion weight should be the average of all ingredients' weights
-//_MESSAGE("%s: Begin Loop 1: Get ingredient effect lists, and update list of effects compatible with the potion", __FUNCTION__);
    for (UInt8 i = 0; i < ce_selectionCount; i++) {
-//_MESSAGE("%s: Loop 1 iteration %d", __FUNCTION__, i);
+      //
+      // Loop: Get the ingredient effect lists, and update the list of effects compatible with the potion.
+      //
       MagicItem* ingredient;
       {
          auto data = this->selectedIngredients[i];
@@ -525,7 +519,6 @@ void XXNAlchemyMenu::UpdatePotion() {
          ingredient = &item->magicItem;
          magicItems[i] = ingredient;
       }
-//_MESSAGE("%s: Got magic item; pointer is %08X.", __FUNCTION__, ingredient);
       auto ingrList = (RE::EffectItemList*) &ingredient->list;
       //
       // Update active effects
@@ -533,7 +526,6 @@ void XXNAlchemyMenu::UpdatePotion() {
       UInt8 j = 0;
       auto effect = &ingrList->effectList;
       do {
-//_MESSAGE("%s: Looping over ingredient %d: effect #%d (effect is at %08X)", __FUNCTION__, i, j, effect);
          if (j++ >= knownEffectCount) // j incremented after compare
             continue;
          auto effectItem = effect->effectItem;
@@ -541,14 +533,12 @@ void XXNAlchemyMenu::UpdatePotion() {
             continue;
          {
             auto& list = this->activeEffects;
-            if (std::find(list.begin(), list.end(), effectItem) == list.end()) { // why isn't there a "contains" shortcut for this?
+            if (std::find(list.begin(), list.end(), effectItem) == list.end()) {
                list.push_front(effectItem);
-//_MESSAGE("%s: Added effect to this->activeEffects.", __FUNCTION__);
             }
          }
       } while (effect = effect->next);
    }
-//_MESSAGE("%s: End Loop 1", __FUNCTION__);
    {
       if (ingredientCount)
          weight /= ingredientCount;
@@ -558,7 +548,10 @@ void XXNAlchemyMenu::UpdatePotion() {
    //
    UInt32 addedCount = 0;
    if (CALL_MEMBER_FN(player, GetSkillMasteryLevelBySkill)(kActorVal_Alchemy) >= RE::kSkillMastery_Master && ingredientCount == 1) {
-//_MESSAGE("%s: Player is a master alchemist and has only one ingredient selected; skip Loop 2 in favor of single-ingredient potion behavior.", __FUNCTION__);
+      //
+      // The player is a master alchemist and has only one ingredient selected. Skip 
+      // the second loop in favor of single-ingredient potion behavior.
+      //
       MagicItem* which = nullptr;
       UInt8 i = 0;
       do {
@@ -572,8 +565,11 @@ void XXNAlchemyMenu::UpdatePotion() {
          CALL_MEMBER_FN(potionEffects, AddItem)(RE::EffectItem::Clone(esi));
          addedCount = 1;
       }
-//_MESSAGE("%s: Single-ingredient potion behavior done.", __FUNCTION__);
+      bool wasted[4] = { false, false, false, false };
+      this->UpdateWasteWarning(wasted);
    } else {
+      //
+      // Loop: Add paired effects from selected ingredients to the potion.
       //
       // Outer two for-loops are unrolled in Bethesda's compiled code.
       //
@@ -590,36 +586,40 @@ void XXNAlchemyMenu::UpdatePotion() {
       //
       // ...Although it seems like Bethesda ended up comparing more pairs than that? Somehow??
       //
-//_MESSAGE("%s: Begin Loop 2: Add paired effects from selected ingredients to the potion.", __FUNCTION__);
       constexpr auto ce_itemCount     = std::extent<decltype(magicItems)>::value;
       constexpr auto ce_itemCountLess = std::extent<decltype(magicItems)>::value - 1;
+      bool ingredientIsWasted[4] = { true, true, true, true };
       for (UInt8 aIndex = 0; aIndex < ce_itemCountLess; aIndex++) {
-//_MESSAGE("%s: Loop 2 Outer, iteration %d", __FUNCTION__, aIndex);
          if (auto aMagic = magicItems[aIndex]) {
             auto aList = (RE::EffectItemList*) &(aMagic->list);
             for (UInt8 bIndex = aIndex + 1; bIndex < ce_itemCount; bIndex++) {
-//_MESSAGE("%s: Loop 2 Inner, iteration %d:%d", __FUNCTION__, aIndex, bIndex);
                if (auto bMagic = magicItems[bIndex]) {
                   auto bList  = (RE::EffectItemList*) &(bMagic->list);
                   UInt8 i = 0;
-//_MESSAGE("%s: About to compare effects between ingredients %d and %d...", __FUNCTION__, aIndex, bIndex);
+                  //
+                  // Compare effects between a pair of ingredients...
+                  //
                   do {
                      auto iEffect = CALL_MEMBER_FN(aList, GetEffectItemByIndex)(i);
                      if (!iEffect)
                         continue;
                      UInt8 j = 0;
                      do {
-//_MESSAGE("%s: Comparing effect %d[%d] with effect %d[%d]...", __FUNCTION__, aIndex, i, bIndex, j);
                         auto jEffect = CALL_MEMBER_FN(bList, GetEffectItemByIndex)(j);
                         if (!jEffect)
                            continue;
-//_MESSAGE("%s: Effect %d[%d] exists.", __FUNCTION__, bIndex, j);
                         if (!CALL_MEMBER_FN(iEffect, SameAlchemyEffectAs)(jEffect))
                            continue;
-//_MESSAGE("%s: Effects have the same alchemy effect.", __FUNCTION__);
+                        //
+                        // The two effects are considered equivalent for alchemy.
+                        //
+                        ingredientIsWasted[aIndex] = false;
+                        ingredientIsWasted[bIndex] = false;
                         if (CALL_MEMBER_FN(potionEffects, HasEffectMatchingAlch)(iEffect->effectCode, iEffect->actorValueOrOther))
                            continue;
-//_MESSAGE("%s: Alchemy effect does not yet exist on the potion. It will be added.", __FUNCTION__);
+                        //
+                        // The potion doesn't yet have this effect. Add it.
+                        //
                         auto copied = RE::EffectItem::Clone(iEffect);
                         CALL_MEMBER_FN(potionEffects, AddItem)(copied);
                         addedCount++;
@@ -629,7 +629,7 @@ void XXNAlchemyMenu::UpdatePotion() {
             }
          }
       }
-//_MESSAGE("%s: End Loop 2. %d effects added.", __FUNCTION__, addedCount);
+      this->UpdateWasteWarning(ingredientIsWasted);
    }
    //
    // Following code is modeled on 0x0059485E.
@@ -644,7 +644,6 @@ void XXNAlchemyMenu::UpdatePotion() {
    }
    if (CALL_MEMBER_FN(potionEffects, HasNonPoisonousEffects)())
       hasPosEffects = true;
-//_MESSAGE("%s: Ran HasNonPoisonousEffects check; result is %d.", __FUNCTION__, hasPosEffects);
    if (auto eax = this->apparati[1])
       qualities[1] = RE::GetFormQuality(eax->type);
    if (auto eax = this->apparati[3])
@@ -654,7 +653,6 @@ void XXNAlchemyMenu::UpdatePotion() {
    UInt8 esi = 0;
    float luckModifiedSkill   = CALL_MEMBER_FN(player, GetLuckModifiedSkill)(kActorVal_Alchemy);
    float mortarAndPestleMult = RE::ApplyMortarAndPestleMult(qualities[0], luckModifiedSkill);
-//_MESSAGE("%s: Got mortalAndPestleMult; it's %f.", __FUNCTION__, mortarAndPestleMult);
    this->potion->goldValue = (SInt32) (mortarAndPestleMult * RE::GMST::fPotionGoldValueMult->f);
    this->potion->moreFlags |= RE::AlchemyItem::kAlchemy_NoAutocalc;
    this->potion->weight.weight = weight;
@@ -693,10 +691,11 @@ void XXNAlchemyMenu::UpdatePotion() {
       }
       CALL_MEMBER_FN(tile, UpdateString)(kItemStatsTrait_PotionValue, buf);
    }
+   //
+   // Loop: Compute the final strength of each effect, and render it to the list.
+   //
    UInt32 i = 0;
-//_MESSAGE("%s: Begin Loop 3: Compute final strength of each effect, and render it to the list (latter commented out).", __FUNCTION__);
    do { // at 0x0059494F
-//_MESSAGE("%s: Loop 3 effect %d...", __FUNCTION__, i);
       float duration = 1.0F; // duration
       float magnitude = 1.0F; // magnitude
       auto edi = CALL_MEMBER_FN(potionEffects, GetEffectItemByIndex)(i);
@@ -734,7 +733,6 @@ void XXNAlchemyMenu::UpdatePotion() {
          }
          SInt32 finalDuration  = (SInt32) round(duration);
          SInt32 finalMagnitude = (SInt32) round(magnitude);
-//_MESSAGE("%s: Final duration and magnitude are %d and %d.", __FUNCTION__, finalDuration, finalMagnitude);
          CALL_MEMBER_FN(edi, SetDurationIfPossible )(max((SInt32) finalDuration,  1)); // at 0x00594B47
          CALL_MEMBER_FN(edi, SetMagnitudeIfPossible)(max((SInt32) finalMagnitude, 1)); // at 0x00594B62
          CALL_MEMBER_FN(edi, SetAreaIfPossible)(0);
@@ -754,16 +752,14 @@ void XXNAlchemyMenu::UpdatePotion() {
                char iconPath[255];
                snprintf(iconPath, sizeof(iconPath), "%s\\%s", "Icons", icon);
                CALL_MEMBER_FN(listItem, UpdateString)(kPotionEffectTrait_IconPath, iconPath);
-//_MESSAGE("%s: Rendered effect.", __FUNCTION__);
+               //
+               // The effect is now rendered.
             }
          }
-         //
-         // TODO: This handling for the text field is WRONG WRONG WRONG WRONG WRONG but I don't want to bother with it yet
-         //
          if (this->potionNameState != kTextboxState_Custom && this->potionNameState != kTextboxState_NewPotion) { // at 0x00594B97
             if (!i) { // name the potion based on its first effect, right? ebx == 0?
                char displayName[0x60]; // TODO: Can we verify the proper size for this?
-               CALL_MEMBER_FN(edi, GetName)(displayName); // TODO: Actually, I'm not super sure this writes to the arg; arg may be const char** outPtr instead; check other callers?
+               CALL_MEMBER_FN(edi, GetName)(displayName);
                CALL_MEMBER_FN(this->textInputState, SetStringsTo)(displayName);
                this->potionNameState = kTextboxState_Auto;
                this->UpdateTextField();
@@ -771,7 +767,9 @@ void XXNAlchemyMenu::UpdatePotion() {
          }
          CALL_MEMBER_FN(this->tileButtonCreatePotion, UpdateFloat)(kTileValue_user1, 2.0F);
       } else { // at 0x00594BFE
-//_MESSAGE("%s: Effect %d is missing!!", __FUNCTION__, i);
+         //
+         // The effect in this index is missing!
+         //
          if (i == 0) { // If the first magic effect in the potion's list is invalid, assume they all are and abort?
             CALL_MEMBER_FN(this->textInputState, SetStringsTo)(RE::GMST::sNamePotion->s);
             this->potionNameState = kTextboxState_Empty;
@@ -783,12 +781,10 @@ void XXNAlchemyMenu::UpdatePotion() {
          }
       }
    } while (++i < addedCount); // at 0x00594C2F
-//_MESSAGE("%s: Loop 3 done", __FUNCTION__);
    //
    auto customName = CALL_MEMBER_FN(this->tileNameText, GetStringTraitValue)(kTileValue_string);
    CALL_MEMBER_FN((RE::BSStringT*) &(this->potion->magicItem.name), Replace_MinBufLen)(customName, 0);
    this->UpdateRenderedInventory();
-//_MESSAGE("%s: Done", __FUNCTION__);
 };
 void XXNAlchemyMenu::CreatePotion() {
 //_MESSAGE("%s: Start", __FUNCTION__);
@@ -1221,6 +1217,65 @@ void XXNAlchemyMenu::UpdateTextField() {
    CALL_MEMBER_FN(this->tileNameText,   UpdateString)(kTileValue_string, str);
    this->potionNameState = kTextboxState_Empty;
 };
+void XXNAlchemyMenu::UpdateWasteWarning(bool wasted[4]) {
+   auto tile = this->tileWasteWarning;
+   if (!tile)
+      return;
+   //
+   UInt8 itemCount  = 0;
+   UInt8 wasteCount = 0;
+   for (UInt8 i = 0; i < 4; i++) {
+      auto ingredient = selectedIngredients[i];
+      if (ingredient) {
+         ++itemCount;
+         if (wasted[i])
+            ++wasteCount;
+      }
+   }
+   //
+   if (!wasteCount || itemCount == 1) {
+      CALL_MEMBER_FN(tile, UpdateFloat)(kWasteWarningTrait_ShouldShow, RE::kEntityID_false);
+      CALL_MEMBER_FN(tile, UpdateString)(RE::kTagID_string, "");
+      return;
+   }
+   CALL_MEMBER_FN(tile, UpdateFloat)(kWasteWarningTrait_ShouldShow, RE::kEntityID_true);
+   if (wasteCount == 3 || wasteCount == 4 || wasteCount == itemCount) {
+      const char* s = CALL_MEMBER_FN(tile, GetStringTraitValue)(kWasteWarningTrait_All);
+      CALL_MEMBER_FN(tile, UpdateString)(RE::kTagID_string, s);
+      return;
+   }
+   std::string format;
+   const char* name1 = nullptr;
+   const char* name2 = nullptr;
+   for (UInt8 i = 0; i < 4; i++) {
+      if (!wasted[i])
+         continue;
+      auto ingredient = selectedIngredients[i];
+      if (!ingredient)
+         continue;
+      if (name1) {
+         name2 = CALL_MEMBER_FN(ingredient, GetName)();
+         break;
+      } else
+         name1 = CALL_MEMBER_FN(ingredient, GetName)();
+   }
+   if (wasteCount == 1) {
+      format = CALL_MEMBER_FN(tile, GetStringTraitValue)(kWasteWarningTrait_1);
+      if (!cobb::validate_format(format, "s")) {
+         CALL_MEMBER_FN(tile, UpdateString)(RE::kTagID_string, "The format string in user1 uses invalid tokens.");
+         return;
+      }
+   } else if (wasteCount == 2) {
+      format = CALL_MEMBER_FN(tile, GetStringTraitValue)(kWasteWarningTrait_2);
+      if (!cobb::validate_format(format, "ss")) {
+         CALL_MEMBER_FN(tile, UpdateString)(RE::kTagID_string, "The format string in user2 uses invalid tokens.");
+         return;
+      }
+   }
+   std::string display;
+   cobb::snprintf(display, format.c_str(), name1, name2);
+   CALL_MEMBER_FN(tile, UpdateString)(RE::kTagID_string, display.c_str());
+}
 
 RE::Tile* ShowXXNAlchemyMenu(RE::ExtraContainerChanges::EntryData* appa1, RE::ExtraContainerChanges::EntryData* appa2, RE::ExtraContainerChanges::EntryData* appa3, RE::ExtraContainerChanges::EntryData* appa4) {
    if (auto existing = GetMenuByType(0x410)) {

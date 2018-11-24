@@ -24,6 +24,7 @@ class XXNAlchemyMenu : public RE::Menu {
       ~XXNAlchemyMenu();
 
       static constexpr char* const menuPath = "Data\\Menus\\northernui\\xxnalchemymenu.xml";
+      static constexpr bool allowNonOverlappingEffectPairs = true;
 
       enum {
          kTileID_Background = 0,
@@ -50,6 +51,7 @@ class XXNAlchemyMenu : public RE::Menu {
          kTileID_PotionEffectListContainer   = 41,
          kTileID_PotionEffectListScrollbar   = 42,
          kTileID_PotionEffectListScrollThumb = 43,
+         kTileID_IngredientWasteWarning      = 44,
          kTileID_InventoryCategory          = 100, // generated tiles only
          kTileID_InventoryShowAllCategories = 101, // generated tiles only
          kTileID_InventoryItem              = 102, // generated tiles only
@@ -77,6 +79,12 @@ class XXNAlchemyMenu : public RE::Menu {
       enum {
          kItemStatsTrait_PotionWeight = kTileValue_user0,
          kItemStatsTrait_PotionValue  = kTileValue_user1,
+      };
+      enum {
+         kWasteWarningTrait_All = kTileValue_user0,
+         kWasteWarningTrait_1   = kTileValue_user1,
+         kWasteWarningTrait_2   = kTileValue_user2,
+         kWasteWarningTrait_ShouldShow = kTileValue_user5,
       };
 
    protected:
@@ -213,6 +221,7 @@ class XXNAlchemyMenu : public RE::Menu {
       RE::Tile* tileButtonDeselectAll  = nullptr;
       RE::Tile* tileButtonExit         = nullptr;
       RE::Tile* tileFocusBox           = nullptr;
+      RE::Tile* tileWasteWarning       = nullptr;
       //
       enum TextFormState : UInt8 {
          kTextFormState_UpToDate       = 0,
@@ -266,6 +275,7 @@ class XXNAlchemyMenu : public RE::Menu {
       void UpdateRenderedEffectList();
       void UpdateRenderedInventory(); // updates list without rebuilding it, so that ingredients incompatible with our selections are shown in grey instead of white
       void UpdateTextField();
+      void UpdateWasteWarning(bool wasted[4]);
 };
 
 //
