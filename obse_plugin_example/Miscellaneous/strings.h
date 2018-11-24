@@ -21,6 +21,12 @@ namespace cobb {
    // tokens with multiple flags (e.g. "%- d") are not supported, unless the last 
    // flag is zero (in which case it's taken as part of the width field e.g. "%-0d").
    //
+   // Note that this returns false if the format string has too many tokens or the 
+   // wrong tokens (including in the wrong order). It does not return false if the 
+   // format string has too few tokens, because a format string that doesn't use 
+   // every parameter given shouldn't cause a crash (and in some cases, being able 
+   // to do that is desirable).
+   //
    extern __declspec(noinline) bool validate_format(const std::string& format, const std::string& tokens);
 
    extern void trim_and_explode(std::string& line, std::vector<std::string>& out);
