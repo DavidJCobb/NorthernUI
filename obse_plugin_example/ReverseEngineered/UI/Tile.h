@@ -312,6 +312,7 @@ namespace RE {
          DEFINE_MEMBER_FN(GetAnimatingTraitEndValue,   float,  0x005894A0, UInt16 traitID); // If the trait is not animating, its current value is returned
          DEFINE_MEMBER_FN(GetContainingMenu,           Menu*,  0x005898F0);
          DEFINE_MEMBER_FN(GetFloatTraitValue,          float,  0x00588BD0, UInt16 traitID);
+         DEFINE_MEMBER_FN(GetNearestNiNode,            NiNode*,     0x005894D0);
          DEFINE_MEMBER_FN(GetStringTraitValue,         const char*, 0x00588C10, UInt16 traitID);
          DEFINE_MEMBER_FN(GetTrait,                    Value*, 0x00588B50, UInt16 traitID);
          DEFINE_MEMBER_FN(GetOrCreateTrait,            Value*, 0x0058B220, UInt16 traitID);
