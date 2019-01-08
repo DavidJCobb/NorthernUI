@@ -780,11 +780,16 @@ namespace CobbPatches {
       };
       namespace ZoomTraitUpdatesChangeFlags {
          void _stdcall Inner(RE::Tile* tile) {
-            tile->flags |= RE::Tile::kTileFlag_ChangedText;  // forcibly rebuild rendered node
+            //tile->flags |= RE::Tile::kTileFlag_ChangedText;  // forcibly rebuild rendered node
             tile->flags |= RE::Tile::kTileFlag_ChangedImage; // forcibly redraw image
+            tile->flags |= RE::Tile::kTileFlag_ChangedSize;
          };
          __declspec(naked) void Outer() {
             _asm {
+               //
+               // Minor note: the float value that the trait has changed to is available 
+               // here as [esp + 0x14].
+               //
                cmp  eax, 0x387; // reproduce patched-over branch
                je   lIsText;
                cmp  eax, 0x386; // image
