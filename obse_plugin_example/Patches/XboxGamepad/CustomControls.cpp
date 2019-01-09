@@ -284,6 +284,7 @@ void XXNGamepadConfigManager::LoadCustomProfiles() {
    }
    std::string currentSchemeName;
    Profile     working;
+   UInt32      version = 0;
    while (!file.bad() && !file.eof()) {
       std::string line;
       getline(file, line);
@@ -326,7 +327,7 @@ void XXNGamepadConfigManager::LoadCustomProfiles() {
                }
             }
             SInt32 i;
-            if (!cobb::string_to_int(value.c_str(), i))
+            if (!cobb::string_to_int(value.c_str(), i, true))
                continue;
             const char* c = key.c_str();
             if (_stricmp(c, "bSwapSticksGameplay") == 0) {
@@ -335,6 +336,8 @@ void XXNGamepadConfigManager::LoadCustomProfiles() {
                this->swapSticksMenuMode = i;
             } else if (_stricmp(c, "iSensitivityRun") == 0) {
                this->sensitivityRun = i;
+            } else if (_stricmp(c, "iVersion") == 0) {
+               version = i;
             }
          }
       }
@@ -373,6 +376,18 @@ void XXNGamepadConfigManager::LoadCustomProfiles() {
          this->availableProfiles.erase(NorthernUI::L10N::sControlsDefaultProfileName.value);
       } catch (std::out_of_range) {};
    }
+   //
+   // Handle version differences:
+   //
+   if (version < 0x01010000) { // versioning of the config file was introduced in v1.1.0
+      //
+      // Look sensitivity options were redesigned in 1.1.0 and are not backward-
+      // compatible. The redesign prevented them from being frame-rate-sensitive, 
+      // and had them specified as degrees per second in the INI file.
+      //
+      this->sensitivityX = 1.8F;
+      this->sensitivityY = 1.0F;
+   }
 };
 void XXNGamepadConfigManager::SaveCustomProfiles() {
    _MESSAGE("Writing to the user's gamepad config file...");
@@ -387,6 +402,8 @@ void XXNGamepadConfigManager::SaveCustomProfiles() {
    }
    {  // Write base settings.
       char line[64];
+      snprintf(line, sizeof(line), "iVersion=%d\n", g_pluginVersion);
+      oFile.write(line, strlen(line));
       snprintf(line, sizeof(line), "%s=%d\n", "bSwapSticksGameplay", this->swapSticksGameplay);
       oFile.write(line, strlen(line));
       snprintf(line, sizeof(line), "%s=%d\n", "bSwapSticksMenuMode", this->swapSticksMenuMode);

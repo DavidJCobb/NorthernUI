@@ -24,8 +24,10 @@ class XXNGamepadConfigManager {
       std::string currentScheme; // outside callers should prefer SetProfile(...) over writing to this directly
       bool  swapSticksGameplay = false; // if true, then LS = look and RS = move
       bool  swapSticksMenuMode = false; // if true, then use RS for menus instead of LS
-      float sensitivityX = 0.0005F; // recommended upper bound: 0.001
-      float sensitivityY = 0.0003F;
+      float sensitivityX = 1.0F; // degrees per 1% joystick tilt per second
+      float sensitivityY = 1.0F; // degrees per 1% joystick tilt per second
+      float sensitivityAccelOffset = 0.8F; // your look speed starts at (sensitivity - accelOffset) * gamepad
+      float sensitivityAccelTime   = 1.0F; // once you keep the joystick out of the deadzone for this many seconds, we stop applying accelOffset
       UInt8 sensitivityRun = 98; // magnitude > this = you're running
       //
       struct Profile : public RE::OSInputGlobals::Scheme {

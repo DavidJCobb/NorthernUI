@@ -23,6 +23,7 @@
 
 #include <algorithm>
 using namespace std;
+#include "Miscellaneous/math.h"
 
 #include "obse/GameMenus.h" // debug
 
@@ -222,7 +223,52 @@ namespace CobbPatches {
          // to let everything else just work with the broken input, and then 
          // re-retrieve the inputs and scale them properly at look-time.
          //
-         namespace Registrations {
+         inline float _normalizeToFrameRate(float v) {
+            float ft = RE::g_timeInfo->frameTime;
+            if (ft > 1.0F)
+               return v;
+            return v * ft;
+         }
+         static struct {
+            float x = 0.0F;
+            float y = 0.0F;
+            float time = 0.0F;
+         } s_look;
+         void _updateSensitivity() {
+            auto& config = XXNGamepadConfigManager::GetInstance();
+            auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(0);
+            if (gamepad) {
+               float ft = std::min<float>(1.0F, RE::g_timeInfo->frameTime);
+               s_look.time += ft;
+               //
+               float sensX = cobb::degrees_to_radians(config.sensitivityX);
+               float sensY = cobb::degrees_to_radians(config.sensitivityY);
+               {  // look acceleration
+                  float accelTime = NorthernUI::INI::XInput::fJoystickSensAccelTime.fCurrent;
+                  if (s_look.time < accelTime) {
+                     float accelOffset = cobb::degrees_to_radians(NorthernUI::INI::XInput::fJoystickSensAccelOffset.fCurrent); // how far below the look sensitivity we start at
+                     accelOffset *= 1 - (s_look.time / accelTime);
+                     sensX -= accelOffset;
+                     sensY -= accelOffset;
+                  }
+               }
+               sensX *= ft;
+               sensY *= ft;
+               //
+               float gamepadX = gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookLeftRight->i);
+               float gamepadY = gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookUpDown->i);
+               s_look.x = gamepadX * sensX;
+               s_look.y = gamepadY * sensY;
+               if (cobb::distance(gamepadX, gamepadY) <= 0.0)
+                  s_look.time = 0.0F;
+            } else {
+               s_look.x = 0.0F;
+               s_look.y = 0.0F;
+               s_look.time = 0.0F;
+            }
+         }
+         //
+         namespace Registrations { // fix initial checks on look stick input; also call _updateSensitivity
             //
             // The first part of the movement code grabs the joystick input, 
             // scales it by a float, and stuffs it into a signed int. However, 
@@ -245,6 +291,7 @@ namespace CobbPatches {
             };
             __declspec(naked) void OuterX() {
                _asm {
+                  call _updateSensitivity;
                   push ecx;
                   fstp [esp];
                   call Inner; // stdcall
@@ -281,12 +328,15 @@ namespace CobbPatches {
                auto input = RE::OSInputGlobals::GetInstance();
                float x = (float)CALL_MEMBER_FN(input, GetMouseAxisMovement)(RE::kMouseAxis_X) * RE::INI::Controls::fMouseSensitivity->f;
                //
+               /*//
                auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(0);
                if (gamepad) {
                   auto& config = XXNGamepadConfigManager::GetInstance();
-                  float g = (float)gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookLeftRight->i) * config.sensitivityX;
+                  float g = (float)gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookLeftRight->i) * _normalizeToFrameRate(cobb::degrees_to_radians(config.sensitivityX));
                   x += g;
                }
+               //*/
+               x += s_look.x;
                return x;
             }
             __declspec(naked) void Outer() {
@@ -335,12 +385,15 @@ namespace CobbPatches {
                auto input = RE::OSInputGlobals::GetInstance();
                float y = (float)CALL_MEMBER_FN(input, GetMouseAxisMovement)(RE::kMouseAxis_Y) * RE::INI::Controls::fMouseSensitivity->f;
                //
+               /*//
                auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(0);
                if (gamepad) {
                   auto& config = XXNGamepadConfigManager::GetInstance();
-                  float g = (float)gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookUpDown->i) * config.sensitivityY;
+                  float g = (float)gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookUpDown->i) * _normalizeToFrameRate(cobb::degrees_to_radians(config.sensitivityY));
                   y += g;
                }
+               //*/
+               y += s_look.y;
                if (RE::INI::Controls::bInvertYValues->b)
                   y = -y;
                return y;
@@ -511,7 +564,7 @@ namespace CobbPatches {
             SafeWrite8  (0x004044D6, 0x90); // courtesy NOP
          };
       };
-	   namespace UICursorGamepadControl {
+      namespace UICursorGamepadControl {
          //
          // Allow the gamepad to control the cursor: LS to move; RS vertical for scroll wheel. 
          // Per checks in UISupport, when this is enabled, LS doesn't fire keyboard navigation.
@@ -582,7 +635,7 @@ namespace CobbPatches {
             //WriteRelCall(0x005AFA92, (UInt32)&Outer); // X-axis
             //WriteRelCall(0x005AFA9B, (UInt32)&Outer); // Y-axis
          };
-	   };
+      };
       namespace UISupport {
          namespace JournalHandler {
             __declspec(naked) void LimitCheckToKeyboard(UInt32 control, UInt32 state) {
@@ -593,7 +646,7 @@ namespace CobbPatches {
                   movzx eax, al;
                   mov   edx, dword ptr[esp + 0x8];
                   push  edx;
-                  push  al;
+                  push  eax;
                   push  0; // force to keyboard scheme
                   mov   eax, 0x00403490; // OSInputGlobals::QueryControlState
                   call  eax;

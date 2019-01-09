@@ -1,17 +1,16 @@
 #include "Slider.h"
+#include "Miscellaneous/math.h"
 
 namespace XXNMenuHelpers {
    float Slider::ToMyRange(float value) const {
       float  sliderMin = CALL_MEMBER_FN(this->tile, GetFloatTraitValue)(kTileValue_user1);
       float  sliderMax = CALL_MEMBER_FN(this->tile, GetFloatTraitValue)(kTileValue_user2);
-      float  v = (value - sliderMin) / (sliderMax - sliderMin);
-      return v * (this->valueMax - this->valueMin) + this->valueMin;
+      return cobb::range_to_range(value, sliderMin, sliderMax, this->valueMin, this->valueMax);
    };
    float Slider::ToTileRange(float value) const {
       float  sliderMin = CALL_MEMBER_FN(this->tile, GetFloatTraitValue)(kTileValue_user1);
       float  sliderMax = CALL_MEMBER_FN(this->tile, GetFloatTraitValue)(kTileValue_user2);
-      float  v = (value - this->valueMin) / (this->valueMax - this->valueMin);
-      return v * (sliderMax - sliderMin) + this->valueMin;
+      return cobb::range_to_range(value, this->valueMin, this->valueMax, sliderMin, sliderMax);
    };
    float Slider::Get() const {
       if (!this->tile)

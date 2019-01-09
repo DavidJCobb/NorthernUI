@@ -780,7 +780,6 @@ namespace CobbPatches {
       };
       namespace ZoomTraitUpdatesChangeFlags {
          void _stdcall Inner(RE::Tile* tile) {
-            //tile->flags |= RE::Tile::kTileFlag_ChangedText;  // forcibly rebuild rendered node
             tile->flags |= RE::Tile::kTileFlag_ChangedImage; // forcibly redraw image
             tile->flags |= RE::Tile::kTileFlag_ChangedSize;
          };
