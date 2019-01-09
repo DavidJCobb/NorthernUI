@@ -64,10 +64,27 @@ namespace cobb {
       out = o;
       return true;
    };
-   bool string_to_int(const char* str, SInt32& out) {
+   bool string_to_int(const char* str, SInt32& out, bool allowHexOrDecimal) {
       errno = 0;
       char* end = nullptr;
-      SInt32 o = strtol(str, &end, 10);
+      UInt32 base = 10;
+      if (allowHexOrDecimal) {
+         const char* p = str;
+         while (char c = *p) {
+            if (isspace(c))
+               continue;
+            if (c == '0') {
+               ++p;
+               c = *p;
+               if (c == 'x' || c == 'X') {
+                  base = 16;
+                  break;
+               }
+            }
+            ++p;
+         }
+      }
+      SInt32 o = strtol(str, &end, base);
       if (end == str) // not a number
          return false;
       {  // if any non-whitespace chars after the found value, then the string isn't really a number
