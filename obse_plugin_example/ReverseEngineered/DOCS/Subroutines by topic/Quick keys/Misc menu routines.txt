@@ -1,0 +1,113 @@
+void QuickKeysMenu::Subroutine005C25C0(TESForm* Arg1) {
+   auto index = TES4_005C1100();
+   if (index < 0 || index > 7)
+      return;
+   auto esp14 = Arg1;
+   if (Arg1) {
+      if (g_quickKeyLists[index].numItems != 0) {
+         TESForm* ebp = g_quickKeyLists[index].start->data;
+         if (ebp && ebp->typeID != kFormType_Spell) {
+            auto esi = GetContainerChangeData(*g_thePlayer, (*g_thePlayer)->GetBaseTESContainer());
+            if (esi)
+               esi->TES4_004895B0(ebp, index); // removes ExtraQuickKey from the item
+         }
+      }
+      if (g_quickKeyLists[index].numItems < 1) {
+         this->Subroutine005C1DD0(Arg1); // selectively removes items from the quick key list
+      } else {
+         g_quickKeyLists[index].DestroyAllNodes();
+      }
+      g_quickKeyLists[index].AppendValue(&esp14);
+      *(byte*)(0x00B3B43C) = true;
+   }
+   (*g_thePlayer)->TES4_005E99C0(Arg1, 1, 0); // plays a sound
+   g_quickKeysStaticData->unk00[index] = true;
+}
+
+void QuickKeysMenu::Subroutine005C1DD0(TESForm* Arg1) {
+   switch (Arg1->typeID) {
+      case kFormType_Book:
+         auto book = OBLIVION_CAST(Arg1, TESForm, TESObjectBOOK);
+         if (!book)
+            return;
+         if ((book->bookFlags & kBook_IsScroll) && book->enchantable.enchant) {
+            // jumped to the kFormType_Spell case
+            this->Subroutine005C1A70(kFormType_Book, false);
+            this->Subroutine005C1A70(kFormType_Spell, false);
+            return;
+         }
+      case kFormType_Apparatus:
+      case kFormType_SoulGem:
+         this->Subroutine005C1A70(kFormType_Apparatus, false);
+         this->Subroutine005C1A70(kFormType_SoulGem, false);
+         this->Subroutine005C1A70(kFormType_Book, false);
+         return;
+      case kFormType_Spell:
+         this->Subroutine005C1A70(kFormType_Book, false);
+         this->Subroutine005C1A70(kFormType_Spell, false);
+         return;
+      case kFormType_Armor:
+      case kFormType_Clothing:
+         auto ebp = OBLIVION_CAST(Arg1, TESForm, TESBipedModelForm);
+         if (!ebp)
+            return;
+         auto& list = g_quickKeyLists[TES4_005C1100()];
+         auto  esi  = list.numItems;
+         auto  ebx  = list.start;
+         if (esi <= 0)
+            return;
+         esp14 = esi;
+         do {
+            TESForm* eax = ebx->data;
+            ebx = ebx->next;
+            auto edi = OBLIVION_CAST(eax, TESForm, TESBipedModelForm);
+            if (!edi)
+               continue;
+            esi = 0;
+            do {
+               bool al = ebp->TES4_00468FF0(esi, 0);
+               if (!al)
+                  continue;
+               al = edi->TES4_00468FF0(esi, 0);
+               if (!al)
+                  continue;
+               list.RemoveItem(&esp0C);
+            } while (++esi < 0x10);
+         } while (--esp14);
+         return;
+      default:
+         this->Subroutine005C1A70(Arg1->typeID, false);
+   }
+}
+
+void QuickKeysMenu::Subroutine005C1A70(UInt32 formType, bool Arg2) {
+   if (!formType)
+      return;
+   auto& list = g_quickKeyLists[TES4_005C1100()];
+   if (list.numItems == 0)
+      return;
+   UInt32 count = list.numItems;
+   auto   edi   = list.start;
+   ExtraContainerChanges::Data* ebp = GetContainerChangeData(*g_thePlayer, (*g_thePlayer)->GetBaseTESContainer());
+   if (count <= 0)
+      return;
+   bool bl = Arg2;
+   do {
+      TESForm* current = edi->data;
+      edi = edi->next;
+      if (current->typeID != kFormType_Spell && ebp) {
+         ebp->TES4_004895B0(current, TES4_005C1100()); // removes ExtraQuickKey from the item
+      }
+      if (current->typeID != Arg1)
+         continue;
+      auto book = OBLIVION_CAST(current, TESForm, TESObjectBOOK);
+      if (book) {
+         if ((book->bookFlags & kBook_IsScroll) && book->enchantable.enchant) {
+            if (!Arg2)
+               continue;
+         } else if (Arg2)
+            continue;
+      }
+      list.RemoveItem(&current);
+   } while (--count);
+}

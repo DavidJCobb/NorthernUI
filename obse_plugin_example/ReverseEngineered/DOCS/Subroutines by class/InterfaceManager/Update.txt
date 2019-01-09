@@ -82,6 +82,8 @@ void InterfaceManager::Update() {
             }
          }
          //
+         // MenuQue patch site: update the KYO::TileLink instance for mouseTarget->GetContainingMenu() by calling MQ_14A90(mouseTarget)
+         //
          // Handle activeMenu/activeTile:
          //
          if (bLMBUp && this->activeMenu) { // at 0x0058252B

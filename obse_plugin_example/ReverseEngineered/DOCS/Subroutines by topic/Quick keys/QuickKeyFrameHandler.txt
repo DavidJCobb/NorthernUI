@@ -1,0 +1,267 @@
+inline bool _checkKey(UInt32 key) {
+   auto input = OSInputGlobals::GetInstance();
+   return input->QueryControlState(key, 1) || input->QueryControlState(key, 0);
+}
+
+UInt32 TES4_005C1100() { // returns a quick key index, or -1
+   if (g_quickKeysStaticData->currentKey != -1)
+      return g_quickKeysStaticData->currentKey;
+   if (g_quickKeysStaticData->unk1C >= 0 && g_quickKeysStaticData->unk10 > GMST:iQuickKeyIgnoreMillis)
+      return g_quickKeysStaticData->unk1C;
+   if (g_quickKeysStaticData->unk20 >= 0 && g_quickKeysStaticData->unk14 > GMST:iQuickKeyIgnoreMillis)
+      return g_quickKeysStaticData->unk20;
+   if (g_quickKeysStaticData->unk1C >= 0)
+      return -1;
+   if (g_quickKeysStaticData->unk20 >= 0 && g_quickKeysStaticData->unk14 > g_quickKeysStaticData->unk10)
+      return g_quickKeysStaticData->unk20;
+   return g_quickKeysStaticData->unk1C;
+}
+
+void OnQuickKeyPressed(UInt32 which) { // -1 means keyup
+   if (which < -1 || which > 7)
+      return;
+   if (which == g_quickKeysStaticData->currentKey)
+      return;
+   g_quickKeysStaticData->unk08 = 0;
+   if (which >= 0 && g_quickKeysStaticData->currentKey < 0) { // a valid key was pressed, and we don't have it noted as "pressed" yet
+      g_quickKeysStaticData->unk10 = 0;
+      g_quickKeysStaticData->unk14 = 0;
+      g_quickKeysStaticData->unk1C = -1;
+      g_quickKeysStaticData->unk20 = -1;
+      g_quickKeysStaticData->unk0C = g_timeInfo->unk10;
+      g_quickKeysStaticData->currentKey = which;
+      return;
+   }
+   //
+   // we didn't press a valid key, or we pressed a key when a different key was noted as "pressed"
+   //
+   g_quickKeysStaticData->unk20 = g_quickKeysStaticData->unk1C;
+   g_quickKeysStaticData->unk1C = g_quickKeysStaticData->currentKey;
+   g_quickKeysStaticData->unk14 = g_quickKeysStaticData->unk10;
+   g_quickKeysStaticData->unk10 = g_timeInfo->unk10 - g_quickKeysStaticData->unk0C;
+   g_quickKeysStaticData->unk0C = g_timeInfo->unk10;
+   g_quickKeysStaticData->currentKey = which;
+}
+
+bool TES4_005C1160() {
+   //
+   // Returns true if:
+   //
+   //  - A sum of times is older than GMST:fQuickKeyDownTimer
+   //
+   //  OR
+   //
+   //  - The user has switched between three quick keys without releasing a 
+   //    key (e.g. moving from D-Pad Up, to D-Pad Up/Left, to D-Pad Left, 
+   //    while always having their finger on one of those).
+   //
+   if (g_quickKeysStaticData->unk18 < 0)
+      return false;
+   if (g_quickKeysStaticData->unk1C >= 0 && g_quickKeysStaticData->unk20 >= 0)
+      return true;
+   UInt32 now = g_timeInfo->unk10; // "now" in milliseconds?
+   UInt32 edx = g_quickKeysStaticData->unk0C; // milliseconds
+   UInt32 esi = 0; // milliseconds
+   UInt32 eax = 0;
+   do { // at 0x005C1190
+      if (g_quickKeysStaticData->unk18[eax] >= 0) {
+         if (!eax)
+            esi += now - edx;
+         else
+            esi += g_quickKeysStaticData->unk0C[eax];
+      }
+   } while (++eax < 3);
+   return esi >= (SInt32) (GMST:fQuickKeyDownTimer * 1000.0 /*seconds to milliseconds*/);
+}
+
+void QuickKeyFrameHandler() {
+   auto esi = OSInputGlobals::GetInstance();
+   edi = 0;
+   bool bl = IsMenuMode();
+   bool bInventoryOpen = AreCursorAndMenuOfTypeVisible(InventoryMenu::kID, 0);
+   bool bMagicMenuOpen = AreCursorAndMenuOfTypeVisible(MagicMenu::kID, 0);
+   if (_checkKey(0x12)) { // kControl_Quick1
+      // at 0x005C213E
+      auto eax = g_quickKeysStaticData->currentKey;
+      if (eax != 0) {
+         g_quickKeysStaticData->unk08 = 0;
+         if (eax < 0) {
+            g_quickKeysStaticData->unk0C = 0;
+            g_quickKeysStaticData->unk10 = 0;
+            g_quickKeysStaticData->unk14 = 0;
+            g_quickKeysStaticData->currentKey = -1;
+            g_quickKeysStaticData->unk1C = -1;
+            g_quickKeysStaticData->unk20 = -1;
+            g_quickKeysStaticData->unk0C = g_timeInfo->unk10; // milliseconds. current executable time?
+         } else {
+            g_quickKeysStaticData->unk20 = g_quickKeysStaticData->unk1C;
+            g_quickKeysStaticData->unk1C = eax;
+            g_quickKeysStaticData->unk14 = g_quickKeysStaticData->unk10;
+            g_quickKeysStaticData->unk10 = g_timeInfo->unk10 - g_quickKeysStaticData->unk0C;
+            g_quickKeysStaticData->unk0C = g_timeInfo->unk10; // milliseconds. current executable time?
+         }
+         g_quickKeysStaticData->currentKey = 0;
+      }
+   } else if (_checkKey(0x13)) { // kControl_Quick2
+      OnQuickKeyPressed(1);
+   } else if (_checkKey(0x14)) { // kControl_Quick3
+      OnQuickKeyPressed(2);
+   } else if (_checkKey(0x15)) {
+      OnQuickKeyPressed(3);
+   } else if (_checkKey(0x16)) {
+      OnQuickKeyPressed(4);
+   } else if (_checkKey(0x17)) {
+      OnQuickKeyPressed(5);
+   } else if (_checkKey(0x18)) {
+      OnQuickKeyPressed(6);
+   } else if (_checkKey(0x19)) { // kControl_Quick8
+      OnQuickKeyPressed(7);
+   } else if (g_quickKeysStaticData->currentKey != -1) { // a key was previously pressed, and has now been released
+      OnQuickKeyPressed(-1);
+   }
+   // at 0x005C21BC
+   if (TES4_005C1100() >= 0) {
+      if (g_quickKeysStaticData->currentKey != -1)
+         jump to 0x005C2564;
+      if (g_quickKeysStaticData->unk08 || bl)
+         jump to 0x005C254D;
+      //
+      // None of the code in this block runs if we're in MenuMode, per the (bl) 
+      // check above.
+      //
+      g_quickKeysStaticData->unk08 = 1;
+      TES4_005C1900();
+      eax = TES4_005C1100();
+      if (g_quickKeyList[eax].numItems != 0) { // at 0x005C2205
+         esi = g_quickKeyList[eax].numItems;
+         ebp = g_quickKeyList[eax].start;
+         //
+         // There's eight of these lists -- one per key. They're lists of TESForm pointers. 
+         // But... you can't have multiple forms bound to the same key, right?
+         //
+         if (esi > 0) { // at 0x005C222A
+            auto ecx = *g_thePlayer;
+            auto esp14 = esi;
+            do {
+               TESForm* edi = ebp->data;
+               ebp = ebp->next;
+               switch (eax) {
+                  case kFormType_Weapon:
+                     auto book = DYNAMIC_CAST(edi, TESForm, TESObjectBOOK); // inlined? and how would a weapon be a book?
+                     if (book && (book->bookFlags & TESObjectBOOK::kBook_IsScroll) && book->enchantable.enchantItem) {
+                        (*g_thePlayer)->TES4_00664850(book);
+                        break;
+                     }
+                     ExtraContainerChanges::Data* esi = GetContainerChangeData(*g_thePlayer, (*g_thePlayer)->GetBaseTESContainer());
+                     if (!esi)
+                        break;
+                     ExtraContainerChanges::EntryData* esi = esi->TES4_004896B0(0, TES4_005C1100());
+                     if (!esi)
+                        break;
+                     if (esi->IsEquippedItem(0)) { // at 0x005C22E3
+                        bl = true;
+                        auto eax = (*g_thePlayer)->process->Unk_3C(0);
+                        if (eax && esi->type == eax->unk08)
+                           bl = false;
+                        // at 0x005C2336
+                        auto eax = (*g_thePlayer)->process->Unk_3E(0);
+                        if (!eax || esi->type != eax->unk08 || (*g_thePlayer)->process->Unk_3E(0)) {
+                           if (bl) {
+                              if ((*g_thePlayer)->CallProcessVirtualB4() == -1) { // near 0x005C2396
+                                 TES4_005C16E0(g_quickKeyLists[TES4_005C1100()].start, 1, 0);
+                                 (*g_thePlayer)->TES4_005F2E70(esi->type, esi->countDelta, esi->extendData->data, 0, 0, 0);
+                                 (*g_thePlaeyr)_>TES4_005E7230(0, 0);
+                              }
+                           }
+                        }
+                     } else { // at 0x005C23ED
+                        bool x = true;
+                        if ((*g_thePlayer)->CallProcessVirtualB4() != -1) {
+                           if (edi->formType == 0x14) {
+                              QueueUIMessage(GMST:sAnimationCanNotEquipArmor, 0, 1, -1.0F);
+                              x = false;
+                           } else if (edi->formType == 0x21) {
+                              QueueUIMessage(GMST:sAnimationCanNotEquipWeapon, 0, 1, -1.0F);
+                              x = false;
+                           }
+                        }
+                        if (x) {
+                           // at 0x005C244A
+                           HideQuickKeyMenuSelection();
+                           g_quickKeysStaticData->unk08 = 1;
+                           TES4_005C16E0(g_quickKeyLists[TES4_005C1100()].start, 1, 1); // at 0x005C246C
+                           (*g_thePlayer)->TES4_005FAEA0(esi->type, esi->countDelta, esi->extendData->data, 1, 0);
+                           (*g_thePlaeyr)_>TES4_005E7230(esi->type, 0);
+                        }
+                     }
+                     // at 0x005C24A5
+                     delete esi;
+                     break;
+                  case kFormType_Spell:
+                     if ((*g_thePlayer)->TES4_0065D4C0())
+                        (*g_thePlayer)->TES4_00664850(nullptr);
+                     auto spell = DYNAMIC_CAST(edi, TESForm, SpellItem);
+                     (*g_thePlayer)->SetEquippedSpell(spell ? &spell->magicItem : nullptr);
+               }
+               // at 0x005C24FB
+               auto eax = (*g_thePlayer)->process;
+               if (!eax)
+                  continue;
+               eax->Unk_10B(*g_thePlayer, 1, 1, 0);
+            } while (--esp14);
+         }
+      }
+      if (*(byte*)(0x00B3B4C0)) // at 0x005C252D
+         *(byte*)(0x00B3B4C0) = 0; // this byte is only used here
+      return;
+   }
+   // at 0x005C2544
+   if (g_quickKeysStaticData->unk08 == -1) {
+      // at 0x005C254D
+      if (*g_quickKeySelectionShowing)
+         HideQuickKeyMenuSelection();
+      g_quickKeysStaticData->unk08 = 1;
+   } else {
+      // at 0x005C2564
+      if (TES4_005C1100() >= 0) {
+         bool isValidMenu = bInventoryOpen || bMagicMenuOpen;
+         if (TES4_005C1160() ? (!bl || isValidMenu) : isValidMenu) {
+            /*// Truth table:
+            //
+            // 5C1160 | bInventoryOpen | bMagicMenuOpen | bl    | Result
+            // FALSE  | TRUE           | N/A            | N/A   | CALL IS MADE
+            // FALSE  | TRUE           | N/A            | N/A   | CALL IS MADE
+            // FALSE  | FALSE          | TRUE           | N/A   | CALL IS MADE
+            // FALSE  | FALSE          | FALSE          | N/A   | NO CALL
+            // TRUE   | N/A            | N/A            | FALSE | CALL IS MADE
+            // TRUE   | TRUE           | N/A            | TRUE  | CALL IS MADE
+            // TRUE   | FALSE          | TRUE           | TRUE  | CALL IS MADE
+            // TRUE   | FALSE          | FALSE          | TRUE  | NO CALL
+            */
+            /*
+            if (!TES4_005C1160()) {
+               if (bInventoryOpen || bMagicMenuOpen)
+                  ShowQuickKeyMenuSelection(TES4_005C1100()); // argument is a number from 0 to 7 determining which key to show as "selected"
+            } else {
+               if (!bl || bInventoryOpen || bMagicMenuOpen)
+               ShowQuickKeyMenuSelection(TES4_005C1100()); // argument is a number from 0 to 7 determining which key to show as "selected"
+            }
+            */
+            /*
+            if ((!TES4_005C1160() || !bl) && (bInventoryOpen || bMagicMenuOpen))
+            */
+            // at 0x005C2588
+            ShowQuickKeyMenuSelection(TES4_005C1100()); // shows the QuickKeysMenu; argument is a number from 0 to 7 determining which key to show as "selected"
+         }
+      }
+   }
+   // at 0x005C2596
+   if (!bl || bInventoryOpen || bMagicMenuOpen) {
+      // jumped to 0x005C252D
+      if (*(byte*)(0x00B3B4C0)) // at 0x005C252D
+         *(byte*)(0x00B3B4C0) = 0; // this byte is only used here
+      return;
+   }
+   HideQuickKeyMenuSelection(); // at 0x005C25AE // hides the QuickKeysMenu?
+   return;
+}

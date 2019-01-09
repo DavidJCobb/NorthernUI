@@ -80,7 +80,7 @@ namespace RE {
          virtual void	Unk_39(UInt32 arg0) = 0;
          virtual UInt32	Unk_3A(UInt32 arg0) = 0;
          virtual UInt32	Unk_3B(UInt32 arg0) = 0;
-         virtual UInt32	Unk_3C(UInt32 arg0) = 0;
+         virtual void*  Unk_3C(UInt32 arg0) = 0;
          virtual ExtraContainerChanges::EntryData* GetEquippedWeaponData(bool arg0) = 0;
          virtual UInt32	Unk_3E(UInt32 arg0) = 0;
          virtual ExtraContainerChanges::EntryData* GetEquippedAmmoData(bool arg0) = 0;

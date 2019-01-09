@@ -1,0 +1,159 @@
+void MagicMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
+   QuickKeysMenu* quickKeysMenu = GetMenuByType(kMenuID_QuickKeysMenu); // ebx
+   SInt32 edi;
+   SInt32 eax = -1;
+   if (quickKeysMenu && tileID >= 0x3E9 && *g_quickKeySelectionShowing) {
+      edi = target->GetFloatTraitValue(kTagID_user13);
+      eax = target->GetFloatTraitValue(kTagID_user7);
+      if (tileID == 8) {
+         // at 0x005B39FF
+         auto eax = *(0x00B14360);
+         if (eax) {
+            do {
+               auto esi = eax->data;
+               eax = eax->next;
+               if (esi->unk04 == edi) {
+                  // jumped to 0x005B3A59
+                  auto ecx  = esi->next;
+                  auto book = OBLIVION_CAST(ecx->data, TESBoundObject, TESObjectBOOK);
+                  if (book && (book->bookFlags & kBook_IsScroll) && book->enchantable.enchant) {
+                     quickKeysMenu->TES4_005C25C0(book); // assign book to a quick key?
+                  }
+                  esi = *esi;
+                  if (esi) {
+                     auto ebx = GetContainerChangeData(*g_thePlayer, (*g_thePlayer)->GetBaseTESContainer());
+                     if (ebx) {
+                        eax = *esi;
+                        edi = 0;
+                        if (eax)
+                           edi = *eax;
+                        esi = esi->data;
+                        ebx->TES4_00489820(esi, edi, TES4_005C1100());
+                     }
+                  }
+                  break;
+               }
+            } while (eax);
+         }
+      } else if (tileID == 1 || tileID == 2 || tileID == 4) {
+         // at 0x005B3ADC
+         eax = &esp10->unk38;
+         if (eax) {
+            do {
+               if (--edi == 0) {
+                  quickKeysMenu->TES4_005C25C0(*eax); // assign *eax to a quick key?
+                  break;
+               }
+               eax = eax->unk04;
+            } while (eax);
+         }
+      }
+   }
+   // at 0x005B3A25
+   if (GetMenuByType(kMenuID_QuantityMenu))
+      return;
+   if (tileID >= 1 && tileID <= 5) { // one of the menu tabs
+      this->SetCurrentTab(tileID, target);
+      return;
+   }
+   // jumped to 0x005B3B10
+   if (tileID == 7 || tileID == 8) { // "previous tab" or "next tab" buttons
+      // jumped to 0x005B3CA6
+      SInt32 switchToTab = this->tile->GetFloatTraitValue(kTagID_user0);
+      if (tileID == 7)
+         switchToTab -= 1;
+      else
+         switchToTab += 1;
+      if (switchToTab < 1)
+         switchToTab = 5;
+      else if (switchToTab > 5)
+         switchToTab = 1;
+      this->tile->UpdateFloat(kTagID_user0, switchToTab);
+      this->SetCurrentTab(switchToTab, nullptr);
+      return;
+   }
+   if (tileID == 0xD || tileID == 0xE) { // 0xD == magic_cost_icon
+      //
+      // Change spell sort order?
+      //
+      ecx = *(byte*)(0x00B3B404);
+      ecx &= 0x7F;
+      eax = tileID - 0xD;
+      if (eax == ecx) { // already sorting by this stat; swap ascending/descending?
+         *(0x00B3B404).TES4_00597A60();
+         TES4_005B2B70(); // re-render list?
+         return;
+      }
+      // at 0x005B3B52
+      *(0x00B3B404).TES4_00597A40(eax);
+      *(byte*)(0x00B3B404) &= 0x7F;
+      TES4_005B2B70(); // re-render list?
+      return;
+   }
+   if (tileID >= 0x3E9) { // at 0x005B3B6C
+      //
+      // Generated list items
+      //
+      SInt32 eax = target->GetFloatTraitValue(kTagID_user7); // category // at 0x005B3B86
+      bool bl = false;
+      if (eax != 0x10) {
+         if (eax == 0x8) {
+            SInt32 edi = target->GetFloatTraitValue(kTagID_user13);
+            esi = *(0x00B14360);
+            if (esi) {
+               do {
+                  eax = esi->data;
+                  esi = esi->next;
+                  if (eax->unk04 != edi)
+                     continue;
+                  (*g_thePlayer)->TES4_00664850(eax->unk08);
+                  PlayUIClicksound(0x17);
+                  bl = true;
+               } while (esi);
+               if (bl) { // at 0x005B3BEF
+                  auto ui = InterfaceManager_GetSingleton(); // at 0x005B3BF5
+                  ui->Mouseout();
+                  TES4_005B2B70();
+                  return;
+               }
+            }
+         } else {
+            // at 0x005B3C17
+            SInt32 eax = target->GetFloatTraitValue(kTagID_user13);
+            edx = 0;
+            ecx = &esp10->unk38;
+            if (!ecx) {
+               Log004A7A60("Spell item index did was not in saved list.");
+               return;
+            }
+            do {
+               esi = ecx->unk00;
+               ecx = ecx->unk04;
+               edx++;
+               if (edx == eax)
+                  break;
+            } while (ecx);
+            if (!esi) {
+               Log004A7A60("Spell item index did was not in saved list.");
+               return;
+            }
+            // at 0x005B3C59
+            esi += 0x18;
+            if (esi != (*g_thePlayer)->TES4_0065D4A0()) {
+               auto eax = (*g_thePlayer)->TES4_0065D4C0();
+               if (eax)
+                  (*g_thePlayer)->TES4_00664850(0);
+               // at 0x005B3C8B
+               (*g_thePlayer)->SetEquippedSpell(esi);
+               PlayUIClickSound(0x17);
+               // jumped to 0x005B3BF5
+               auto ui = InterfaceManager_GetSingleton(); // at 0x005B3BF5
+               ui->Mouseout();
+               TES4_005B2B70();
+               return;
+            }
+         }
+      }
+   }
+   return; // at 0x005B3D0E
+}

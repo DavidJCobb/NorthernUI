@@ -10,10 +10,10 @@ bool Tile::HandleChangeFlags() {
    if (!this->renderedNode && (this->flags & kTileFlag_ChangedClips)) { // at 0x0058E8BF
       bool ebx = this->GetFloatTraitValue(kTileValue_clipwindow) >= 2.0F;
       if (this->GetTypeID() == 0x386) { // image
-		 //
-		 // Here, TileImage co-opts the text changeflag to force its rendered node to 
-		 // be rebuilt in the next branch.
-		 //
+         //
+         // Here, TileImage co-opts the text changeflag to force its rendered node to 
+         // be rebuilt in the next branch.
+         //
          if (ebx) {
             if (!this->unk48)
                this->flags |= kTileFlag_ChangedText;
@@ -24,12 +24,12 @@ bool Tile::HandleChangeFlags() {
       }
    }
    if (this->flags & kTileFlag_ChangedText) { // at 0x0058E90A
-	  //
-	  // This branch runs if:
-	  //  - The tile is a TileText and any of its text properties have changed.
-	  //  - The tile is a TileImage, it has no rendered node, and its clip status has changed
-	  //  - The tile is newly-created (Tile::Unk_01 sets the "text" changeflag to ensure a rendered node is generated)
-	  //
+      //
+      // This branch runs if:
+      //  - The tile is a TileText and any of its text properties have changed.
+      //  - The tile is a TileImage, it has no rendered node, and its clip status has changed
+      //  - The tile is newly-created (Tile::Unk_01 sets the "text" changeflag to ensure a rendered node is generated)
+      //
       if (this->GetContainingMenu()) {
          if (this->GetContainingMenu()->GetID() == 0x3EF) // LoadingMenu
             TES4_00578E00();
