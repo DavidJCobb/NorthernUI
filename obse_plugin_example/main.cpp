@@ -64,6 +64,7 @@
 #include "Patches/XXNMenus.h"
 #include "Patches/XboxGamepad/Patch.h"
 #include "Patches/Compatibility/Dynamic Map/Main.h"
+#include "shared.h"
 
 IDebugLog gLog("Data\\OBSE\\Plugins\\NorthernUI.log");
 
@@ -142,7 +143,7 @@ extern "C" {
       // fill out the info structure
       info->infoVersion = PluginInfo::kInfoVersion;
       info->name        = "NorthernUI";
-      info->version     = 0x01001300; // major, minor, patch, build
+      info->version     = g_pluginVersion; // see shared.cpp
 
       {  // log our version number -- be helpful!
          auto v = info->version;
