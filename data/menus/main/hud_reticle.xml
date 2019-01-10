@@ -1,0 +1,284 @@
+<!-- hud_reticle.xml -->
+<rect name="HUDReticle">
+	<class> &HUDReticle; </class>
+	<visible> &false; </visible>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<depth> -10 </depth>
+	<x>
+		<copy src="screen()" trait="width"/>
+		<div>2</div>
+	</x>
+	<y>
+		<copy src="screen()" trait="height"/>
+		<div>2</div>
+	</y>
+	<menufade> 0.25 </menufade>
+   
+   <_changeIcon>&false;</_changeIcon>
+
+   <!-- NorthernUI by DavidJCobb: a Skyrim look-alike UI redesign for Oblivion. -->
+   <!--
+      TODO:
+      
+       - Oblivion attaches the enemy health display to the reticle, and uses a 
+         NIF to animate it (since it's a circular meter). Adjust this.
+         
+          - We want a normal meter anchored to the bottom of the compass, ideally 
+            with a display for the enemy's name as well if we can manage that.
+   -->
+	
+	<rect name="hudreticle_reticle">
+		<id> 1 </id>
+		<visible>&true;</visible> <!-- Set by the executable based on INI:Gameplay:bCrosshair. -->
+		<locus> &true; </locus>
+		<user0></user0> <!-- Unknown string. Some code sets it to nullptr. -->
+		<user1> &false; </user1>	<!-- true if crime to take action -->
+      
+      <!-- USER2: Recommended alpha, supplied by the executable. The executable 
+           will fade the reticle out if the player is in menu mode, is in third 
+           person, or if an unknown mobile-object state check on the player 
+           returns true. -->
+		<user2> 128 </user2>
+      <!-- USER3: Alpha fade speed. It may not be possible to vary this at run-
+           time: the executable caches its value in a static float when the menu 
+           is created. -->
+		<user3> 0.5 </user3>
+		<user4> &false; </user4>	<!-- true = larger icon -->
+		<user5> 0 </user5>			<!-- icon type -->
+
+      <!-- USER20: NorthernUI patch - hide reticle in third-person? -->
+      <user20>&false;</user20>
+      
+		<!-- These are the colors that the reticle should appear based
+			 on whether the player is stealing mousedover item	-->
+		<_red_stealing>   208 </_red_stealing>
+		<_green_stealing>   0 </_green_stealing>
+		<_blue_stealing>    0 </_blue_stealing>
+		
+		<!-- default crosshair image -->
+		<image name="hudreticle_reticle_crosshair">
+			<_filename_1>Menus\NorthernUI\HUD\crosshair.dds</_filename_1>
+			<_filename_2>Menus\NorthernUI\HUD\crosshair_essential.dds</_filename_2>
+			<_filename_3>Menus\NorthernUI\HUD\crosshair_sneak.dds</_filename_3>
+			<_filename_4>Menus\NorthernUI\HUD\crosshair_sneak_essential.dds</_filename_4>
+         
+			<visible>
+            <copy src="parent()" trait="user5" /><eq>0</eq>
+            <or>
+               <copy src="parent()" trait="user5" /><eq>10</eq>
+            </or>
+            <or>
+               <not src="HUDReticle" trait="_changeIcon" />
+            </or>
+         </visible>
+			<filename>
+            <copy src="parent()" trait="user5" /><eq>10</eq>
+            <add>
+               <copy>2</copy>
+               <onlyif src="hudreticle_sneak" trait="user20" />
+            </add>
+            <copy src="me()" trait="_filename_" />
+         </filename>
+			<alpha>
+				<copy src="hudreticle_reticle_activate" trait="alpha" />
+			</alpha>
+			<width> <copy src="me()" trait="filewidth" /></width>
+			<height><copy src="me()" trait="fileheight" /></height>
+			<x>
+            <copy src="me()" trait="width" />
+            <div>-2</div>
+         </x>
+			<y>
+            <copy src="me()" trait="height" />
+            <div>-2</div>
+         </y>
+         <zoom>50</zoom>
+		</image>
+
+		<!-- image to show when crosshairs is indicating a particular type of object -->
+		<image name="hudreticle_reticle_activate">
+			<visible>
+				<copy src="parent()"   trait="user5" /><gt>0</gt>
+            <and  src="HUDReticle" trait="_changeIcon" />
+			</visible>
+			<filename>
+				<copy> 1 </copy>
+				<onlyif> &xbox; </onlyif>
+				<add> 1 </add>
+				<copy src="me()" trait="_filename_" />
+			</filename>
+			<_filename_1> Menus\Shared\all_small_activate_icons.dds </_filename_1>
+			<_filename_2> Menus\Shared\all_activate_icons.dds </_filename_2>
+			<cropx>
+				<copy> 30 </copy>
+				<onlyif> &xbox; </onlyif>
+				<add> 34 </add>
+				<mul>
+					<copy src="parent()" trait="user5"/>
+					<sub> 1 </sub>
+				</mul>
+			</cropx>
+			<red>
+				<copy src="parent()" trait="_red_stealing" />
+				<onlyif src="parent()" trait="user1"/>
+				<add>
+					<copy>255</copy>
+					<onlyifnot src="parent()" trait="user1"/>
+				</add>
+			</red>
+			<green>
+				<copy src="parent()" trait="_green_stealing" />
+				<onlyif src="parent()" trait="user1"/>
+				<add>
+					<copy>255</copy>
+					<onlyifnot src="parent()" trait="user1"/>
+				</add>
+			</green>
+			<blue>
+				<copy src="parent()" trait="_blue_stealing" />
+				<onlyif src="parent()" trait="user1"/>
+				<add>
+					<copy>255</copy>
+					<onlyifnot src="parent()" trait="user1"/>
+				</add>
+			</blue>
+			<alpha><copy src="parent()" trait="user2" /></alpha>
+			<width>
+				<copy> 30 </copy>
+				<onlyif> &xbox; </onlyif>
+				<add> 34 </add>
+			</width>
+			<height>
+				<copy> 32 </copy>
+				<onlyif> &xbox; </onlyif>
+				<add> 32 </add>
+			</height>
+			<x>
+				<copy> -16 </copy>
+				<onlyif> &xbox; </onlyif>
+				<add> -16 </add>
+			</x>
+			<y>
+				<copy> -16 </copy>
+				<onlyif> &xbox; </onlyif>
+				<add> -16 </add>
+			</y>
+		</image>
+	</rect>
+
+	<nif name="hudreticle_enemy_health"> <!-- Avoid renaming this. The name is used in the executable; I expect CTDs if this tile can't be found by name. -->
+		<id>2</id>
+		<filename>Enemy Health Bar\Health_Bar01.NIF </filename>
+		<visible>
+         <copy src="hudreticle_reticle" trait="user2" />
+      </visible>
+		<locus> &true; </locus>
+		<alpha> <copy src="me()" trait="user8" /> </alpha>
+		<x> -1 </x>
+		<y> -20 </y>
+		<user1> 1 </user1>
+		<user2> 0.0 </user2>
+		<user8> 0 </user8>	<!-- code set - alpha -->
+		<user9> 0.5 </user9>	<!-- fade speed -->
+		<animation> Health_Bar </animation>
+	</nif>
+	
+	<image name="hudreticle_sneak">
+		<id>3</id>
+      
+      <_shouldBeVisible>
+         <copy src="me()" trait="user20" />
+         <and>
+            <copy src="hudreticle_reticle" trait="user2" /><gt>0</gt>
+         </and>
+      </_shouldBeVisible>
+   
+		<visible>&false;</visible> <!-- set by the executable -->
+		<locus>&true;</locus>
+		<filename>Menus\NorthernUI\meters\arc\sneak_back.dds</filename>
+      <zoom>50</zoom>
+      
+      <depth>-8</depth>
+		<alpha>
+         <copy>100</copy>
+         <onlyif>
+            <copy src="me()" trait="user8" /><gt>0</gt>
+            <and  src="me()" trait="_shouldBeVisible" />
+         </onlyif>
+         <mult> <!-- fade-out animation -->
+            <copy src="me()" trait="user19" />
+            <max>
+               <copy>1</copy>
+               <onlyif src="me()" trait="user20" />
+            </max>
+         </mult>
+      </alpha>
+		<width> <copy src="me()" trait="filewidth" /></width>
+		<height><copy src="me()" trait="fileheight" /></height>
+		<x>
+         <copy src="me()" trait="width" />
+         <div>-2</div>
+      </x>
+		<y>
+         <copy>73</copy>
+         <mult src="me()" trait="zoom" />
+         <div>100</div>
+      </y>
+		<user8>0</user8>
+         <!--
+            User8 is supplied by the executable; it is an integer value in the 
+            range [0, 255]. Higher values mean that the player is more visible 
+            to nearby actors.
+            
+            The value is meant to be used for alpha. It also animates to zero 
+            when the player exits sneak and the sneak reticle needs to be 
+            hidden.
+         -->
+		<user9>0.375</user9>	<!-- user8 animation speed -->
+      
+      <!-- USER19: NorthernUI patch - alpha animation progress in the range [0.0, 1.0] -->
+      <user19>1.0</user19>
+      <!-- USER20: NorthernUI patch - player is sneaking -->
+      <user20>&false;</user20>
+      <!-- USER21: NorthernUI patch - raw detection value, out of 255 -->
+      <user21>255.0</user21>
+      <!-- USER22: NorthernUI patch - override opacity for "lost" detection state -->
+      <user22>128.0</user22>
+      <!-- USER23: NorthernUI patch - override opacity for "unseen" detection state -->
+      <user23> 64.0</user23>
+      <!-- USER24: NorthernUI patch - override opacity for "noticed" detection state -->
+      <user24>192.0</user24>
+      <!-- USER25: NorthernUI patch - override opacity for "seen" detection state -->
+      <user25>255.0</user25>
+      
+      <image name="fill">
+         <filename>Menus\NorthernUI\meters\arc\sneak_fill.dds</filename>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <visible><copy src="parent()" trait="visible" /></visible>
+         <width> <!-- crop starting from center -->
+            <copy src="me()" trait="filewidth" />
+            <div>255</div>
+            <mult src="parent()" trait="user8" />
+         </width>
+         <cropx> <!-- crop starting from center -->
+            <copy src="me()" trait="filewidth" />
+            <sub  src="me()" trait="width" />
+            <div>2</div>
+         </cropx>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <x> <!-- center on sneak reticle -->
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>0</y>
+         <depth>1</depth>
+         <alpha> <!-- show if parent is showing -->
+            <copy>100</copy>
+            <onlyif src="parent()" trait="user20" />
+         </alpha>
+      </image>
+	</image>
+</rect>

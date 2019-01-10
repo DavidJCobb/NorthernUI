@@ -1,0 +1,804 @@
+<!-- hud_info_menu.xml -->
+<menu name="HUDInfoMenu">
+	<class> &HUDInfoMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<visible> &false; </visible>
+	<locus> &true; </locus>
+	<depth> 20 </depth>
+	<x>
+      <copy src="screen()" trait="width"/>
+      <div>2</div>
+   </x>
+	<y>
+		<copy src="screen()" trait="height"/>
+		<div> 2 </div>
+      <add>
+         <copy>37</copy> <!-- vanilla reticle height -->
+         <mult>4</mult>
+      </add>
+   </y>
+	<menufade> 0.15 </menufade>
+	<user0></user0>	<!-- Action text (set in code) --> <!-- (only set for xbox?) -->
+	<user1> 128 </user1>
+	<user2> &false; </user2> <!-- Visibility of A-button action text (xbox only) -->
+	<user3> 20 </user3>
+   <!-- USER4: Set to true if telekinesis is active. The HUDInfoMenu uses 
+        the UI-side value as a cached value in some places, but this doesn't 
+        really matter because anything in XML gets blown away when the value 
+        is first set by the executable anyway. -->
+	<user4> &false; </user4>
+	<user5></user5>	<!-- Action button icon index (set in code, xbox only) -->
+   
+   <!-- USER15: NorthernUI patch: object is hostile to player; player is holding block -->
+   <user15>&false;</user15>
+   <!-- USER16: NorthernUI patch: object cannot be interacted with. -->
+   <user16>&false;</user16>
+   <!-- USER17: NorthernUI patch: keyboard/mouse keycode to activate (DXScanCode). -->
+   <user17>0</user17>
+   <!-- USER18: NorthernUI patch: joystick keycode to activate (DXScanCode). -->
+   <user18>0</user18>
+   <!-- USER19: NorthernUI patch: Target object's form type. -->
+   <user19>0</user19>
+   <!-- USER20: NorthernUI patch: Activating the target object would be a crime. -->
+   <user20>&false;</user20>
+   <!-- USER21: NorthernUI patch: Icon enum, consistent with HUDReticle. -->
+   <user21>
+      <!--
+         This calculation serves two purposes.
+
+         We need the HUDInfoMenu to remain functional if the DLL isn't present. As 
+         such, the value specified here in the XML (which will be overwritten by 
+         the DLL) cannot be 0.
+         
+         The second purpose is to work around a vanilla issue: HUDInfoMenu is always 
+         displayed even when nothing has been looked at yet... and when nothing has 
+         been looked at yet, the values here in the XML will be used. If we defaulted 
+         this to a constant e.g. -1, then an activate prompt would be incorrectly 
+         shown immediately after loading into the game for the first time.
+      -->
+      <copy src="hudinfo_lock"    trait="visible" />
+      <or   src="hudinfo_value"   trait="visible" />
+      <or   src="hudinfo_weight"  trait="visible" />
+      <or   src="hudinfo_damage"  trait="visible" />
+      <or   src="hudinfo_armor"   trait="visible" />
+      <or   src="hudinfo_health"  trait="visible" />
+      <or   src="hudinfo_uses"    trait="visible" />
+      <or   src="hudinfo_quality" trait="visible" />
+      <sub>1</sub> <!-- convert {0,1,2 : undefined,false,true} to {0,1 : false,true}. -->
+   </user21>
+   <!-- USER22: NorthernUI patch: GetOpenState query for the target object. -->
+   <user22>0</user22>
+   
+   <!-- USER23: NorthernUI patch: bitmask
+        0 = None
+        1 = Empty container
+        2 = Dead body
+   -->
+   <user23>0</user23>
+   
+   <!-- Verb color, standard: -->
+   <_verbColorR_1>255</_verbColorR_1>
+   <_verbColorG_1>255</_verbColorG_1>
+   <_verbColorB_1>255</_verbColorB_1>
+   <!-- Verb color, telekinesis: -->
+   <_verbColorR_2>254</_verbColorR_2>
+   <_verbColorG_2>160</_verbColorG_2>
+   <_verbColorB_2>254</_verbColorB_2>
+   <!-- Verb color, theft: -->
+   <_verbColorR_3>192</_verbColorR_3>
+   <_verbColorG_3> 16</_verbColorG_3>
+   <_verbColorB_3> 16</_verbColorB_3>
+   
+   <_whichColor>
+      <copy>1</copy>
+      <max><copy>2</copy><onlyif src="me()" trait="user4" /></max>
+      <max><copy>3</copy><onlyif src="me()" trait="user20" /></max>
+      <onlyifnot src="HUDInfoMenu" trait="user16" /> <!-- If you can't interact with the object, force the normal color -->
+      <max>1</max>
+   </_whichColor>
+   
+	<red>
+      <copy src="me()" trait="_whichColor" />
+      <copy src="me()" trait="_verbColorR_" />
+	</red>
+	<green>
+      <copy src="me()" trait="_whichColor" />
+      <copy src="me()" trait="_verbColorG_" />
+	</green>
+	<blue>
+      <copy src="me()" trait="_whichColor" />
+      <copy src="me()" trait="_verbColorB_" />
+	</blue>
+   
+   <!-- Verb text. Add 20 to the verb index for crime verbs. -->
+   <_verb_0> <copy src="xxnStrings()" trait="_activateVerbGeneric" /></_verb_0> <!--- no text -->
+   <_verb_1> <copy src="xxnStrings()" trait="_activateVerbTakeItem" /></_verb_1> <!--- item -->
+   <_verb_2> <copy src="xxnStrings()" trait="_activateVerbOpenContainer" /></_verb_2> <!--- container -->
+   <_verb_3> <copy src="xxnStrings()" trait="_activateVerbSit" /></_verb_3> <!--- furniture -->
+   <_verb_4> <copy src="xxnStrings()" trait="_activateVerbGeneric" /></_verb_4> <!--- generic -->
+   <_verb_5> <copy src="xxnStrings()" trait="_activateVerbUseBed" /></_verb_5> <!--- furniture -->
+   <_verb_6> <copy src="xxnStrings()" trait="_activateVerbReadBook" /></_verb_6> <!--- book -->
+   <_verb_7> <copy src="xxnStrings()" trait="_activateVerbSpeakToNPC" /></_verb_7> <!--- NPC, non-essential -->
+   <_verb_8> <copy src="xxnStrings()" trait="_activateVerbUseDoor" /></_verb_8> <!--- door -->
+   <_verb_9> <copy src="xxnStrings()" trait="_activateVerbRideMount" /></_verb_9> <!--- horse -->
+   <_verb_10><copy src="xxnStrings()" trait="_activateVerbSpeakToNPC" /></_verb_10> <!-- NPC, essential -->
+   <_verb_11><copy src="xxnStrings()" trait="_activateVerbVampireFeed" /></_verb_11> <!-- NPC; player is vampire -->
+   <_verb_12><copy src="xxnStrings()" trait="_activateVerbGeneric" /></_verb_12> <!-- unknown; icon is not in the game manual -->
+   <!-- Icon 12 has something to do with the word "charge." -->
+   
+   <_verb_20><copy src="xxnStrings()" trait="_activateCrimeGeneric" /></_verb_20> <!-- no text -->
+   <_verb_21><copy src="xxnStrings()" trait="_activateCrimeTakeItem" /></_verb_21> <!-- item -->
+   <_verb_22><copy src="xxnStrings()" trait="_activateCrimeOpenContainer" /></_verb_22> <!-- container -->
+   <_verb_23><copy src="xxnStrings()" trait="_activateCrimeSit" /></_verb_23> <!-- furniture -->
+   <_verb_24><copy src="xxnStrings()" trait="_activateCrimeGeneric" /></_verb_24> <!-- generic -->
+   <_verb_25><copy src="xxnStrings()" trait="_activateCrimeUseBed" /></_verb_25> <!-- furniture -->
+   <_verb_26><copy src="xxnStrings()" trait="_activateCrimeReadBook" /></_verb_26> <!-- book -->
+   <_verb_27><copy src="xxnStrings()" trait="_activateCrimePickpocketNPC" /></_verb_27> <!-- NPC, non-essential --> <!-- doesn't get used? -->
+   <_verb_28><copy src="xxnStrings()" trait="_activateCrimeUseDoor" /></_verb_28> <!-- door -->
+   <_verb_29><copy src="xxnStrings()" trait="_activateCrimeRideMount" /></_verb_29> <!-- horse -->
+   <_verb_30><copy src="xxnStrings()" trait="_activateCrimePickpocketNPC" /></_verb_30> <!-- NPC, essential --> <!-- doesn't get used? -->
+   <_verb_31><copy src="xxnStrings()" trait="_activateCrimeVampireFeed" /></_verb_31> <!-- NPC; player is vampire -->
+   <_verb_32><copy src="xxnStrings()" trait="_activateCrimeGeneric" /></_verb_32> <!-- unknown; icon is not in the game manual -->
+   
+   <_verb_40><copy src="xxnStrings()" trait="_activateCrimeUseDoor" /></_verb_40> <!-- doors -->
+   <_verb_41><copy src="xxnStrings()" trait="_activateVerbOpenDoor" /></_verb_41> <!-- doors -->
+   <_verb_42><copy src="xxnStrings()" trait="_activateVerbCloseDoor" /></_verb_42> <!-- doors -->
+   
+   <_verb_50><copy src="xxnStrings()" trait="_activateVerbOpenCorpse" /></_verb_50> <!-- corpses -->
+   <_verb_51><copy src="xxnStrings()" trait="_activateVerbHarvestFlora" /></_verb_51> <!-- flora -->
+   <_verb_52><copy src="xxnStrings()" trait="_activateVerbYieldToEnemy" /></_verb_52> <!-- enemy in combat, targeting player, while player holds block -->
+   
+   <_verb>
+      <copy src="HUDInfoMenu" trait="user21" />
+      <add> <!-- overrides for crimes -->
+         <copy>20</copy>
+         <onlyif src="HUDInfoMenu" trait="user20" />
+      </add>
+      <max> <!-- ensure pickpocketing verb is used -->
+         <!--
+            Vanilla game uses the same value for "steal an item lying around" and 
+            "pickpocket an NPC."
+         -->
+         <copy>27</copy>
+         <onlyif src="HUDInfoMenu" trait="user20" /> <!-- would be a crime -->
+         <onlyif> <!-- vanilla game says we're taking an item -->
+            <copy src="HUDInfoMenu" trait="user21" /><eq>1</eq>
+         </onlyif>
+         <onlyif> <!-- form type: NPC -->
+            <copy src="HUDInfoMenu" trait="user19" /><eq>35</eq>
+         </onlyif>
+      </max>
+      <max> <!-- overrides for doors -->
+         <copy>40</copy>
+         <add>
+            <copy src="HUDInfoMenu" trait="user22" /><lt>2</lt>
+            <onlyifnot src="HUDInfoMenu" trait="user20" />
+         </add>
+         <onlyif><copy src="HUDInfoMenu" trait="user21" /><eq> 8</eq></onlyif>  <!-- verb: door -->
+         <onlyif><copy src="HUDInfoMenu" trait="user22" /><neq>0</neq></onlyif> <!-- GetOpenState is valid -->
+      </max>
+      <max> <!-- override for corpses -->
+         <copy>50</copy>
+         <onlyif>
+            <copy src="HUDInfoMenu" trait="user23" />
+            <xxnOpBinaryAnd>2</xxnOpBinaryAnd>
+            <neq>0</neq>
+         </onlyif>
+      </max>
+      <max> <!-- override for flora -->
+         <copy>51</copy>
+         <onlyif><copy src="HUDInfoMenu" trait="user19" /><eq>31</eq></onlyif>
+         <onlyifnot src="HUDInfoMenu" trait="user20" />
+      </max>
+      <max> <!-- override for yielding -->
+         <copy>52</copy>
+         <onlyif src="HUDInfoMenu" trait="user15" />
+      </max>
+      <copy src="HUDInfoMenu" trait="_verb_"/>
+   </_verb>
+
+   <!-- NorthernUI by DavidJCobb: a Skyrim look-alike UI redesign for Oblivion. -->
+   <!--
+      The below has been customized by DavidJCobb. Changes:
+   
+       - Information about the crosshair-target ref moved below the crosshair and 
+         centered
+         
+       - Icon element definitions restructured for both easier editing (text and 
+         icon can now be collapsed independently) and easier relative positioning
+         
+      TODO:
+      
+       - A fadey-black background for the info display
+   -->
+
+   <rect name="hudinfo_base">
+      <width>600</width>
+      <height>64</height>
+      <x>0</x>
+      <y>0</y>
+      <locus>&true;</locus>
+      <visible><copy src="HUDInfoMenu" trait="user21" /><neq>0</neq></visible>
+      
+      <rect name="action">
+         <locus>&true;</locus>
+         <visible>
+            <copy src="northernui()" trait="_xxnDLLLoaded" /><eq>&true;</eq>
+            <and> <!-- only show activation prompt if object allows activation -->
+               <not src="HUDInfoMenu" trait="user16" />
+            </and>
+         </visible>
+         <width> <!--- collapse if not visible -->
+            <copy   src="child(label)" trait="width" />
+            <onlyif src="me()" trait="visible" />
+         </width>
+         <height> <!-- collapse if not visible -->
+            <copy   src="child(key)"   trait="height" />
+            <onlyif src="child(key)"   trait="visible" />
+            <max    src="child(label)" trait="height" />
+            <onlyif src="me()"         trait="visible" />
+         </height>
+         <x> <!-- center -->
+            <copy src="me()" trait="width" />
+            <div>-2</div>
+         </x>
+         <y>0</y>
+         
+         <rect name="key">
+            <visible><copy src="me()" trait="_keyCode" /><gt>0</gt></visible>
+            <x> <!-- before next-sibling, with spacing -->
+               <copy   src="me()" trait="width" />
+               <mul>-1</mul>
+               <sub>8</sub>
+            </x>
+            <y> <!-- center within parent -->
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>
+               <copy src="HUDInfoMenu" trait="user17" />
+               <onlyifnot src="northernui()" trait="_xxnGamepadAvailable" />
+               <add>
+                  <copy   src="HUDInfoMenu"  trait="user18" />
+                  <onlyif src="northernui()" trait="_xxnGamepadAvailable" />
+               </add>
+            </_keyCode>
+         </rect>
+         <text name="label">
+            <string><copy src="HUDInfoMenu" trait="_verb" /></string>
+            <include src="NorthernUI\fonts\normal-shadowed.xml" />
+            <justify>&left;</justify>
+            <red>  <copy src="HUDInfoMenu" trait="red" /></red>
+            <green><copy src="HUDInfoMenu" trait="green" /></green>
+            <blue> <copy src="HUDInfoMenu" trait="blue" /></blue>
+            <x>0</x>
+            <y> <!-- center within parent -->
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+         </text>
+      </rect>
+      <text name="hudinfo_name"> <!-- Name of object to activate. -->
+         <id>1</id>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <justify>&center;</justify>
+         <red>  <copy src="HUDInfoMenu" trait="red" /></red>
+         <green><copy src="HUDInfoMenu" trait="green" /></green>
+         <blue> <copy src="HUDInfoMenu" trait="blue" /></blue>
+         <wrapwidth><copy src="hudinfo_base" trait="width" /></wrapwidth>
+         <x>0</x>
+         <y> <!-- 4px after sibling if sibling is visible; else 0 -->
+            <copy>4</copy>
+            <add    src="sibling()" trait="height" />
+            <onlyif src="sibling()" trait="visible" />
+         </y>
+         <user15>-46</user15> <!-- what is this? -->
+      </text>
+      <text name="hudinfo_dest"> <!-- Destination of load door. -->
+         <id>9</id>
+         <visible>&false;</visible> <!-- Engine will set this. -->
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <justify>&center;</justify>
+         <red>  <copy src="HUDInfoMenu" trait="red" /></red>
+         <green><copy src="HUDInfoMenu" trait="green" /></green>
+         <blue> <copy src="HUDInfoMenu" trait="blue" /></blue>
+         <wrapwidth><copy src="hudinfo_base" trait="width" /></wrapwidth>
+         <x>0</x>
+         <y> <!-- 4px after sibling -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+            <add>4</add>
+         </y>
+      </text>
+      <rect name="hudinfo_stats_wrap"> <!-- wrapper for stats -->
+         <locus>&true;</locus>
+         <width>
+            <copy>0</copy>
+            <add src="hudinfo_lock"    trait="width" />
+            <add src="hudinfo_value"   trait="width" />
+            <add src="hudinfo_weight"  trait="width" />
+            <add src="hudinfo_damage"  trait="width" />
+            <add src="hudinfo_armor"   trait="width" />
+            <add src="hudinfo_health"  trait="width" />
+            <add src="hudinfo_uses"    trait="width" />
+            <add src="hudinfo_quality" trait="width" />
+         </width>
+         <height>
+            <copy src="hudinfo_lock"    trait="height" />
+            <max  src="hudinfo_value"   trait="height" />
+            <max  src="hudinfo_weight"  trait="height" />
+            <max  src="hudinfo_damage"  trait="height" />
+            <max  src="hudinfo_armor"   trait="height" />
+            <max  src="hudinfo_health"  trait="height" />
+            <max  src="hudinfo_uses"    trait="height" />
+            <max  src="hudinfo_quality" trait="height" />
+         </height>
+         <x> <!-- center -->
+            <copy src="me()" trait="width" />
+            <div>-2</div>
+         </x>
+         <y> <!-- 8px after last applicable sibling -->
+            <copy   src="hudinfo_dest" trait="y"/>
+            <add    src="hudinfo_dest" trait="height"/>
+            <onlyif src="hudinfo_dest" trait="visible"/>
+            <!-- else: -->
+            <add>
+               <copy      src="hudinfo_name" trait="y"/>
+               <add       src="hudinfo_name" trait="height"/>
+               <onlyifnot src="hudinfo_dest" trait="visible"/>
+            </add>
+            <!-- spacing in either case: -->
+            <add>8</add>
+         </y>
+         
+         <rect name="hudinfo_lock">
+            <visible><copy src="child(text)" trait="visible" /></visible>
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width>
+               <copy   src="child(text)" trait="x" />
+               <add    src="child(text)" trait="width" />
+               <add>15</add> <!-- spacing from next object -->
+               <onlyif src="me()"        trait="visible" />
+            </width>
+            <height>
+               <copy src="child(icon)" trait="height" />
+               <max  src="child(text)" trait="height" />
+               <onlyif src="me()" trait="visible" />
+            </height>
+            <!-- -->
+            <image name="icon">
+               <visible><copy src="parent()" trait="visible" /></visible>
+               <filename> Menus\Shared\all_small_icons.dds </filename>
+               <width>32</width>
+               <height>32</height>
+               <x>0</x>
+               <y>0</y>
+               <locus>&true;</locus>
+               <cropx>192</cropx>
+            </image>
+            <text name="text">
+               <id>10</id>
+               <visible><copy src="me()" trait="user1" /><gte>0</gte></visible>
+               <string></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <red>  <copy src="HUDInfoMenu" trait="red" /></red> <!-- red w/ telekenisis alteration -->
+               <green><copy src="HUDInfoMenu" trait="green" /></green> <!-- green w/ telekenisis alteration -->
+               <blue> <copy src="HUDInfoMenu" trait="blue" /></blue> <!-- blue w/ telekenisis alteration -->
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add>4</add>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <sub  src="me()"      trait="height"/>
+                  <div>2</div>
+               </y>
+               <user1>-1</user1>
+            </text>
+         </rect>
+         <rect name="hudinfo_value">
+            <visible><copy src="child(text)" trait="visible" /></visible>
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+            </x>
+            <y>0</y>
+            <width>
+               <copy   src="child(text)" trait="x" />
+               <add    src="child(text)" trait="width" />
+               <add>15</add> <!-- spacing from next object -->
+               <onlyif src="me()"        trait="visible" />
+            </width>
+            <height>
+               <copy src="child(icon)" trait="height" />
+               <max  src="child(text)" trait="height" />
+               <onlyif src="me()" trait="visible" />
+            </height>
+            <!-- -->
+            <image name="icon">
+               <visible><copy src="parent()" trait="visible" /></visible>
+               <filename> Menus\Shared\all_small_icons.dds </filename>
+               <width>32</width>
+               <height>32</height>
+               <x>0</x>
+               <y>0</y>
+               <locus>&true;</locus>
+               <cropx>224</cropx>
+            </image>
+            <text name="text">
+               <id>2</id>
+               <visible><copy src="me()" trait="user1" /><gte>0</gte></visible>
+               <string></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <red><copy src="HUDInfoMenu" trait="red" /></red> <!-- red w/ telekenisis alteration -->
+               <green><copy src="HUDInfoMenu" trait="green" /></green> <!-- green w/ telekenisis alteration -->
+               <blue><copy src="HUDInfoMenu" trait="blue" /></blue> <!-- blue w/ telekenisis alteration -->
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add>4</add>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <sub  src="me()"      trait="height"/>
+                  <div>2</div>
+               </y>
+               <user1>-1</user1>
+            </text>
+         </rect>
+         <rect name="hudinfo_weight">
+            <visible><copy src="child(text)" trait="visible" /></visible>
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+            </x>
+            <y>0</y>
+            <width>
+               <copy   src="child(text)" trait="x" />
+               <add    src="child(text)" trait="width" />
+               <add>15</add> <!-- spacing from next object -->
+               <onlyif src="me()"        trait="visible" />
+            </width>
+            <height>
+               <copy src="child(icon)" trait="height" />
+               <max  src="child(text)" trait="height" />
+               <onlyif src="me()" trait="visible" />
+            </height>
+            <!-- -->
+            <image name="icon">
+               <visible><copy src="parent()" trait="visible" /></visible>
+               <filename> Menus\Shared\all_small_icons.dds </filename>
+               <width>32</width>
+               <height>32</height>
+               <x>0</x>
+               <y>0</y>
+               <locus>&true;</locus>
+               <cropx>32</cropx>
+            </image>
+            <text name="text">
+               <id>3</id>
+               <visible><copy src="me()" trait="user1" /><gte>0</gte></visible>
+               <string></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <red><copy src="HUDInfoMenu" trait="red" /></red> <!-- red w/ telekenisis alteration -->
+               <green><copy src="HUDInfoMenu" trait="green" /></green> <!-- green w/ telekenisis alteration -->
+               <blue><copy src="HUDInfoMenu" trait="blue" /></blue> <!-- blue w/ telekenisis alteration -->
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add>4</add>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <sub  src="me()"      trait="height"/>
+                  <div>2</div>
+               </y>
+               <user1>-1</user1>
+            </text>
+         </rect>
+         <rect name="hudinfo_damage">
+            <visible><copy src="child(text)" trait="visible" /></visible>
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+            </x>
+            <y>0</y>
+            <width>
+               <copy   src="child(text)" trait="x" />
+               <add    src="child(text)" trait="width" />
+               <add>15</add> <!-- spacing from next object -->
+               <onlyif src="me()"        trait="visible" />
+            </width>
+            <height>
+               <copy src="child(icon)" trait="height" />
+               <max  src="child(text)" trait="height" />
+               <onlyif src="me()" trait="visible" />
+            </height>
+            <!-- -->
+            <image name="icon">
+               <visible><copy src="parent()" trait="visible" /></visible>
+               <filename> Menus\Shared\all_small_icons.dds </filename>
+               <width>32</width>
+               <height>32</height>
+               <x>0</x>
+               <y>0</y>
+               <locus>&true;</locus>
+               <cropx>160</cropx>
+            </image>
+            <text name="text">
+               <id>4</id>
+               <visible><copy src="me()" trait="user1" /><gte>0</gte></visible>
+               <string></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <red><copy src="HUDInfoMenu" trait="red" /></red> <!-- red w/ telekenisis alteration -->
+               <green><copy src="HUDInfoMenu" trait="green" /></green> <!-- green w/ telekenisis alteration -->
+               <blue><copy src="HUDInfoMenu" trait="blue" /></blue> <!-- blue w/ telekenisis alteration -->
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add>4</add>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <sub  src="me()"      trait="height"/>
+                  <div>2</div>
+               </y>
+               <user1>-1</user1>
+            </text>
+         </rect>
+         <rect name="hudinfo_armor">
+            <visible><copy src="child(text)" trait="visible" /></visible>
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+            </x>
+            <y>0</y>
+            <width>
+               <copy   src="child(text)" trait="x" />
+               <add    src="child(text)" trait="width" />
+               <add>15</add> <!-- spacing from next object -->
+               <onlyif src="me()"        trait="visible" />
+            </width>
+            <height>
+               <copy src="child(icon)" trait="height" />
+               <max  src="child(text)" trait="height" />
+               <onlyif src="me()" trait="visible" />
+            </height>
+            <!-- -->
+            <image name="icon">
+               <visible><copy src="parent()" trait="visible" /></visible>
+               <filename> Menus\Shared\all_small_icons.dds </filename>
+               <width>32</width>
+               <height>32</height>
+               <x>0</x>
+               <y>0</y>
+               <locus>&true;</locus>
+               <cropx>128</cropx>
+            </image>
+            <text name="text">
+               <id>5</id>
+               <visible><copy src="me()" trait="user1" /><gte>0</gte></visible>
+               <string></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <red><copy src="HUDInfoMenu" trait="red" /></red> <!-- red w/ telekenisis alteration -->
+               <green><copy src="HUDInfoMenu" trait="green" /></green> <!-- green w/ telekenisis alteration -->
+               <blue><copy src="HUDInfoMenu" trait="blue" /></blue> <!-- blue w/ telekenisis alteration -->
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add>4</add>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <sub  src="me()"      trait="height"/>
+                  <div>2</div>
+               </y>
+               <user1>-1</user1>
+            </text>
+         </rect>
+         <rect name="hudinfo_health">
+            <visible><copy src="child(text)" trait="visible" /></visible>
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+            </x>
+            <y>0</y>
+            <width>
+               <copy   src="child(text)" trait="x" />
+               <add    src="child(text)" trait="width" />
+               <add>15</add> <!-- spacing from next object -->
+               <onlyif src="me()"        trait="visible" />
+            </width>
+            <height>
+               <copy src="child(icon)" trait="height" />
+               <max  src="child(text)" trait="height" />
+               <onlyif src="me()" trait="visible" />
+            </height>
+            <!-- -->
+            <image name="icon">
+               <visible><copy src="parent()" trait="visible" /></visible>
+               <filename> Menus\Shared\all_small_icons.dds </filename>
+               <width>32</width>
+               <height>32</height>
+               <x>0</x>
+               <y>0</y>
+               <locus>&true;</locus>
+               <cropx>256</cropx>
+            </image>
+            <text name="text">
+               <id>7</id>
+               <visible><copy src="me()" trait="user1" /><gte>0</gte></visible>
+               <string></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <red><copy src="HUDInfoMenu" trait="red" /></red> <!-- red w/ telekenisis alteration -->
+               <green><copy src="HUDInfoMenu" trait="green" /></green> <!-- green w/ telekenisis alteration -->
+               <blue><copy src="HUDInfoMenu" trait="blue" /></blue> <!-- blue w/ telekenisis alteration -->
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add>4</add>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <sub  src="me()"      trait="height"/>
+                  <div>2</div>
+               </y>
+               <user1>-1</user1>
+            </text>
+         </rect>
+         <rect name="hudinfo_uses">
+            <visible><copy src="child(text)" trait="visible" /></visible>
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+            </x>
+            <y>0</y>
+            <width>
+               <copy   src="child(text)" trait="x" />
+               <add    src="child(text)" trait="width" />
+               <add>15</add> <!-- spacing from next object -->
+               <onlyif src="me()"        trait="visible" />
+            </width>
+            <height>
+               <copy src="child(icon)" trait="height" />
+               <max  src="child(text)" trait="height" />
+               <onlyif src="me()" trait="visible" />
+            </height>
+            <!-- -->
+            <image name="icon">
+               <visible><copy src="parent()" trait="visible" /></visible>
+               <filename> Menus\Shared\all_small_icons.dds </filename>
+               <width>32</width>
+               <height>32</height>
+               <x>0</x>
+               <y>0</y>
+               <locus>&true;</locus>
+               <cropx>0</cropx>
+            </image>
+            <text name="text">
+               <id>8</id>
+               <visible><copy src="me()" trait="user1" /><gte>0</gte></visible>
+               <string></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <red><copy src="HUDInfoMenu" trait="red" /></red> <!-- red w/ telekenisis alteration -->
+               <green><copy src="HUDInfoMenu" trait="green" /></green> <!-- green w/ telekenisis alteration -->
+               <blue><copy src="HUDInfoMenu" trait="blue" /></blue> <!-- blue w/ telekenisis alteration -->
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add>4</add>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <sub  src="me()"      trait="height"/>
+                  <div>2</div>
+               </y>
+               <user1>-1</user1>
+            </text>
+         </rect>
+         <rect name="hudinfo_quality">
+            <visible><copy src="child(text)" trait="visible" /></visible>
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+            </x>
+            <y>0</y>
+            <width>
+               <copy   src="child(text)" trait="x" />
+               <add    src="child(text)" trait="width" />
+               <!--<add>15</add>--> <!-- spacing from next object -->
+               <onlyif src="me()"        trait="visible" />
+            </width>
+            <height>
+               <copy src="child(icon)" trait="height" />
+               <max  src="child(text)" trait="height" />
+               <onlyif src="me()" trait="visible" />
+            </height>
+            <!-- -->
+            <image name="icon">
+               <visible><copy src="parent()" trait="visible" /></visible>
+               <filename> Menus\Shared\all_small_icons.dds </filename>
+               <width>32</width>
+               <height>32</height>
+               <x>0</x>
+               <y>0</y>
+               <locus>&true;</locus>
+               <cropx>96</cropx>
+            </image>
+            <text name="text">
+               <id>6</id>
+               <visible><copy src="me()" trait="user1" /><gte>0</gte></visible>
+               <string></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <red><copy src="HUDInfoMenu" trait="red" /></red> <!-- red w/ telekenisis alteration -->
+               <green><copy src="HUDInfoMenu" trait="green" /></green> <!-- green w/ telekenisis alteration -->
+               <blue><copy src="HUDInfoMenu" trait="blue" /></blue> <!-- blue w/ telekenisis alteration -->
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add>4</add>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <sub  src="me()"      trait="height"/>
+                  <div>2</div>
+               </y>
+               <user1>-1</user1>
+            </text>
+         </rect>
+      </rect>
+      <rect name="hudinfo_annotation">
+         <visible>
+            <copy src="HUDInfoMenu" trait="user23" />
+            <xxnOpBinaryAnd>1</xxnOpBinaryAnd>
+            <neq>0</neq>
+         </visible>
+         <locus>&true;</locus>
+         <x> <!-- center -->
+            <copy src="me()" trait="width" />
+            <div>-2</div>
+         </x>
+         <y>
+            <copy src="sibling()" trait="height"/>
+            <add  src="sibling()" trait="y"/>
+            <add>8</add>
+            <add>
+               <copy>8</copy>
+               <onlyif src="sibling()" trait="height"/>
+            </add>
+         </y>
+         <width>
+            <copy src="child(text)" trait="x" />
+            <add  src="child(text)" trait="width" />
+         </width>
+         <height>
+            <copy src="child(symbol)" trait="height" />
+            <max  src="child(text)"   trait="height" />
+         </width>
+         
+         <text name="symbol">
+            <string>*</string>
+            <x>0</x>
+            <y>0</y>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <red>255</red><green>255</green><blue>255</blue>
+         </text>
+         <text name="text">
+            <string><copy src="xxnStrings()" trait="_hudInfoContainerIsEmpty" /></string>
+            <x>
+               <copy src="sibling()" trait="width"/>
+               <add  src="sibling()" trait="x"/>
+               <add>4</add>
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <red>255</red><green>255</green><blue>255</blue>
+         </text>
+      </rect>
+   </rect>
+</menu>

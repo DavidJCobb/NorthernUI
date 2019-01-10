@@ -1,0 +1,58 @@
+<!--<rect name="icon">-->
+   <!-- Prefab assumes that containing menu's user1 is current raw gamehour. -->
+
+   <user0>0</user0> <!-- this icon's gamehour (e.g. 6am sunrise for a sun icon -->
+   <user1>112</user1> <!-- arc center radius -->
+   <user2>103</user2> <!-- distance from arc to container boundary: (boundary width - (arc radius * 2)) -->
+   <user3>200</user2> <!-- arc sweep angle -->
+   <user10> <!-- degrees, computed from gamehour -->
+      <copy src="me()" trait="user0" />
+      <add>
+         <copy>12</copy>
+         <sub src="menu()" trait="user1" />
+      </add>
+      <mod>24</mod>
+      <div>24</div>
+      <mult src="me()" trait="user3" />
+      <!-- range converted from [0, 24] to [0, 200] -->
+      <sub>
+         <copy src="me()" trait="user3" />
+         <div>2</div>
+      </sub>
+      <!-- range converted from [0, 200] to [-100, 100] -->
+      <mult>-1</mult>
+      <!-- range inverted; increasing gamehour now decreases angle -->
+      <add>
+         <copy src="me()" trait="user3" />
+         <div>2</div>
+      </add>
+      <!-- range converted back from [-100, 100] to [0, 200] -->
+      <add>
+         <copy>180</copy>
+         <sub src="me()" trait="user3" />
+         <div>2</div>
+      </add>
+      <!-- range from [0, 200] to [-10, 190] -->
+   </user10>
+   <x>
+      <xxnOpCosine><copy src="me()" trait="user10" /></xxnOpCosine>
+      <mult src="me()" trait="user1" />
+      <add  src="me()" trait="user1" />
+      <add  src="me()" trait="user2" />
+      <sub> <!-- center icon on radius -->
+         <copy src="me()" trait="width" />
+         <div>2</div>
+      </sub>
+   </x>
+   <y>
+      <xxnOpSine><copy src="me()" trait="user10" /></xxnOpSine>
+      <mult>-1</mult>
+      <mult src="me()" trait="user1" />
+      <add  src="me()" trait="user1" />
+      <add  src="me()" trait="user2" />
+      <sub> <!-- center icon on radius -->
+         <copy src="me()" trait="height" />
+         <div>2</div>
+      </sub>
+   </y>
+<!--</rect>-->

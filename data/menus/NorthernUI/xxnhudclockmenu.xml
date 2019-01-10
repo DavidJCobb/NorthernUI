@@ -1,0 +1,246 @@
+<!-- Data\menus\NorthernUI\xxnhudclockmenu.xml -->
+<menu name="HUDClockMenu">
+   <class>1053</class>
+	<stackingtype>&does_not_stack;</stackingtype>
+	<alpha>0</alpha>
+	<locus>&true;</locus>
+	<depth>-50</depth>
+	<x>0</x>
+	<y>0</y>
+	<menufade>0.25</menufade>
+   
+   <user0>&false;</user0> <!-- if true, we should not display (similar to HUDMainMenu user3) -->
+   
+   <user1>-1</user1> <!-- raw gamehour in the range of [0, 24]; includes minutes and seconds, e.g. 6.5 is 6:30am and 6.0003 is roughly 6:00:01am -->
+   
+   <!-- USER10 and USER11: Formatted date strings
+      These traits are set by the executable and can be used to show part or all 
+      of the in-game date. You can use the USER20 and USER21 traits to decide 
+      how they should be formatted.
+   -->
+   <user10>foo</user10>
+   <user11>foo</user11>
+   
+   <!-- USER20 and USER21: Date formats
+      The date format can be any string of text, with special codes mixed in 
+      to denote where and how various date values should be displayed. The 
+      basic format of a code is:
+      
+      %[width][type][value]
+      
+      (And to have a literal percent sign, you'd double it: %%.)
+      
+      The width is optional; numeric values with fewer than the specified digit 
+      count will be left-padded with zeroes. The type can be "i" or "s"; it ind-
+      icates whether the value will be rendered as text (if possible) or a numb-
+      er. Each value has a single letter which forms the last part of the format 
+      code.
+      
+      CODE | VALUE   | NOTES
+      -----+---------+----------------------------------------------------------
+         w | Weekday | Number is the weekday number from 0 to 6.
+      -----+---------+----------------------------------------------------------
+         D | Date    | Text is the suffix, e.g. "st", "nd", "rd", "th", and the 
+           |         | type case determines suffix case as with the hour, below.
+      -----+---------+----------------------------------------------------------
+         M | Month   | Number is the month number from 1 to 12.
+      -----+---------+----------------------------------------------------------
+         Y | Year    | Does not include the 3E prefix.
+      -----+---------+----------------------------------------------------------
+         h | Hour    | 12-hour time. Text is the suffix, i.e. "am" or "pm". Type 
+           |         | case determines suffix case: 's' -> "am"; 'S' -> "AM"
+      -----+---------+----------------------------------------------------------
+         H | Hour    | 24-hour time.
+      -----+---------+----------------------------------------------------------
+         m | Minute  | 
+      -----+---------+----------------------------------------------------------
+         s | Second  | 
+      -----+---------+----------------------------------------------------------
+         S | Season  | (Spring, Summer, Fall, Winter) map to (0, 1, 2, 3).
+      -----+---------+----------------------------------------------------------
+      
+      Some examples:
+      
+      OUTPUT EXAMPLE              | FORMAT STRING USED
+      ----------------------------+------------------------
+        Sundas, 17th of Last Seed | %sw, %2id%sd of %sm
+        Sundas 03 Last Seed       | %sw %id %sm
+        03/08 3E427               | %2id/%2im 3E%iy
+        2:13 pm                   | %ih:%2im %sh
+        2:13 PM                   | %ih:%2im %Sh
+        asdf % asdf %             | asdf %% asdf %%
+      
+      Content authors wishing to translate content to other languages should be 
+      aware that the ordinal suffixes on dates and the at-/past-morning suffixes 
+      on hours can be translated, but not here. Modify <NorthernUI.l10n.txt>, a 
+      file located in the same directory as NorthernUI.dll.
+   -->
+   <!-- <user20>%ih:%2im %sh on %sw, %iD%sD of %sM, 3E %iY</user20> -->
+   <user20>%sw, %ih:%2im %sh</user20>
+   <user21>%iD%sD of %sM</user21>
+   
+   <rect name="content_root">
+      <locus>&true;</locus>
+      <visible>
+         <not src="menu()" trait="user0" />
+         <and src="NorthernUI()" trait="_xxnShowHUDClock" />
+      </visible>
+      
+      <rect name="graphic_hemi">
+         <locus>&true;</locus>
+         <DISABLED> <!-- Code for positioning the clock above the health bar. -->
+            <x> <!-- align left edge with left edge of HUDMainMenu health meter, given meter width of 320: -->
+               <copy src="screen()" trait="width" />
+               <sub>320</sub> <!-- meter width -->
+               <div>2</div>
+            </x>
+            <y> <!-- show above health meter -->
+               <copy src="screen()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <sub>96</sub>
+            </y>
+         </DISABLED>
+         <x>
+            <copy src="screen()" trait="width" />
+            <sub  src="screen()" trait="cropx" />
+            <sub  src="me()"     trait="width" />
+            <sub>32</sub>
+         </x>
+         <y>32</y> <!-- align with HUDMainMenu compass -->
+         <width> <copy src="child(background)" trait="width" /></width>
+         <height><copy src="child(background)" trait="height" /></height>
+         
+         <user0> <!-- radius of icon track (center) -->
+            <copy>112.5</copy>
+            <mult> <!-- scale to zoom -->
+               <copy src="child(background)" trait="zoom" />
+               <div>100</div>
+            </mult>
+         </user0>
+         <user1>153</user1> <!-- pixel height of clipwindow -->
+         <user2> <!-- gap from outer radius to image edge -->
+            <copy src="child(background)" trait="filewidth" />
+            <div>2</div>
+            <sub  src="me()" trait="user0" />
+         </user2>
+         <user3>200</user3> <!-- angle range; for a 360-deg clock you'd use 360 -->
+         
+         <image name="background">
+            <zoom><copy src="northernui()" trait="_xxnClockImageScale" /></zoom>
+            <filename><copy src="northernui()" trait="_xxnClockImageFile" /></filename>
+            <x>0</x>
+            <y>0</y>
+            <width> <copy src="me()" trait="filewidth" /></width>
+            <height><copy src="me()" trait="fileheight" /></height>
+            <depth>0</depth>
+         </image>
+         <rect name="track">
+            <clipwindow>&true;</clipwindow>
+            <locus>&true;</locus>
+            <depth>1</depth>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="graphic_hemi" trait="user1" />
+               <mult> <!-- scale to zoom -->
+                  <copy src="sibling(background)" trait="zoom" />
+                  <div>100</div>
+               </mult>
+            </height>
+            
+            <image name="sun">
+               <clips>&true;</clips>
+               <include src="NorthernUI/fragments/clock/hemi_icon.xml" />
+               <user0>6.0</user0> <!-- sunrise time -->
+               <user1><copy src="graphic_hemi" trait="user0" /></user1>
+               <user2><copy src="graphic_hemi" trait="user2" /></user2>
+               <user3><copy src="graphic_hemi" trait="user3" /></user3>
+               
+               <zoom>50</zoom>
+               <filename>Menus\NorthernUI\clocks\hemi\hd_icon_sun.dds</filename>
+               <width> <copy src="me()" trait="filewidth" /></width>
+               <height><copy src="me()" trait="fileheight" /></height>
+            </image>
+            <image name="moon">
+               <clips>&true;</clips>
+               <include src="NorthernUI/fragments/clock/hemi_icon.xml" />
+               <user0>20.0</user0> <!-- sunset time -->
+               <user1><copy src="graphic_hemi" trait="user0" /></user1>
+               <user2><copy src="graphic_hemi" trait="user2" /></user2>
+               <user3><copy src="graphic_hemi" trait="user3" /></user3>
+               
+               <zoom>50</zoom>
+               <filename>Menus\NorthernUI\clocks\hemi\hd_icon_moon.dds</filename>
+               <width> <copy src="me()" trait="filewidth" /></width>
+               <height><copy src="me()" trait="fileheight" /></height>
+            </image>
+         </rect>
+      </rect>
+      <rect name="text_block">
+         <locus>&true;</locus>
+         <DISABLED> <!-- Code for positioning the clock above the health bar. -->
+            <x> <!-- place to the right of the clock -->
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add>16</add>
+            </x>
+            <y> <!-- align with the bottom of the clock -->
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <sub  src="me()"      trait="height" />
+            </y>
+         </DISABLED>
+         <x>
+            <copy src="sibling()" trait="width" />
+            <sub  src="me()"      trait="width" />
+            <div>2</div>
+            <add  src="sibling()" trait="x" />
+         </x>
+         <y>
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width>
+            <copy src="child(time)" trait="width" />
+            <max  src="child(date)" trait="width" />
+         </width>
+         <height>
+            <copy src="child(date)" trait="y" />
+            <add  src="child(date)" trait="height" />
+         </height>
+         
+         <text name="time">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <string><copy src="menu()" trait="user10" /></string>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+         </text>
+         <text name="date">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <string><copy src="menu()" trait="user11" /></string>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>4</add>
+            </y>
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+         </text>
+      </rect>
+      
+   </rect>
+</menu>

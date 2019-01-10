@@ -1,0 +1,179 @@
+<!--<rect name="concat">-->
+   <!-- DOCUMENTATION ---------------------------------------------- >
+      A utility prefab for easily concatenating multiple strings.
+      
+      Word-wrap is not supported.
+   <!------------------------------------------------------------- -->
+   
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+   <!------------------------------------------------------------- -->
+   <_concatCount>2</_concatCount>
+   <_concatString1></_concatString1>
+   <_concatString2></_concatString2>
+   <_concatString3></_concatString3>
+   <_concatString4></_concatString4>
+   <_concatString5></_concatString5>
+   <_concatString6></_concatString6>
+   <_concatString7></_concatString7>
+   <include src="NorthernUI\fonts\normal.xml" />
+   <red>  255</red>
+   <green>255</green>
+   <blue> 255</blue>
+   <_concatWithSpace1>&false;</_concatWithSpace1>
+   <_concatWithSpace2>&false;</_concatWithSpace2>
+   <_concatWithSpace3>&false;</_concatWithSpace3>
+   <_concatWithSpace4>&false;</_concatWithSpace4>
+   <_concatWithSpace5>&false;</_concatWithSpace5>
+   <_concatWithSpace6>&false;</_concatWithSpace6>
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <_spaceWidth>12</_spaceWidth>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <width>
+      <copy   src="child(c7)" trait="width" />
+      <onlyif src="child(c7)" trait="visible" />
+      <add    src="child(c1)" trait="x" />
+   </width>
+   <height>
+      <copy src="child(c1)" trait="height" />
+      <max  src="child(c2)" trait="height" />
+      <max  src="child(c3)" trait="height" />
+      <max  src="child(c4)" trait="height" />
+      <max  src="child(c5)" trait="height" />
+      <max  src="child(c6)" trait="height" />
+      <max  src="child(c7)" trait="height" />
+   </height>
+   
+   <text name="c1">
+      <visible><copy src="parent()" trait="_concatCount" /><gte>1</gte></visible>
+      <string> <copy src="parent()" trait="_concatString1" /></string>
+      <include src="NorthernUI\fonts\inherit.xml" />
+      <red>    <copy src="parent()" trait="red" />   </red>
+      <green>  <copy src="parent()" trait="green" /> </green>
+      <blue>   <copy src="parent()" trait="blue" />  </blue>
+      <x>0</x>
+      <y>0</y>
+   </text>
+   <text name="c2">
+      <visible><copy src="parent()" trait="_concatCount" /><gte>2</gte></visible>
+      <string> <copy src="parent()" trait="_concatString2" /></string>
+      <include src="NorthernUI\fonts\inherit.xml" />
+      <red>    <copy src="parent()" trait="red" />   </red>
+      <green>  <copy src="parent()" trait="green" /> </green>
+      <blue>   <copy src="parent()" trait="blue" />  </blue>
+      <x>
+         <copy   src="parent()"  trait="_spaceWidth" />
+         <onlyif src="parent()"  trait="_concatWithSpace1" />
+         <add    src="sibling()" trait="x" />
+         <add>
+            <copy   src="sibling()" trait="width" />
+            <onlyif src="sibling()" trait="visible" />
+         </add>
+         <add>1</add>
+      </x>
+      <y>0</y>
+   </text>
+   <text name="c3">
+      <visible><copy src="parent()" trait="_concatCount" /><gte>3</gte></visible>
+      <string> <copy src="parent()" trait="_concatString3" /></string>
+      <include src="NorthernUI\fonts\inherit.xml" />
+      <red>    <copy src="parent()" trait="red" />   </red>
+      <green>  <copy src="parent()" trait="green" /> </green>
+      <blue>   <copy src="parent()" trait="blue" />  </blue>
+      <x>
+         <copy   src="parent()"  trait="_spaceWidth" />
+         <onlyif src="parent()"  trait="_concatWithSpace2" />
+         <add    src="sibling()" trait="x" />
+         <add>
+            <copy   src="sibling()" trait="width" />
+            <onlyif src="sibling()" trait="visible" />
+         </add>
+         <add>1</add>
+      </x>
+      <y>0</y>
+   </text>
+   <text name="c4">
+      <visible><copy src="parent()" trait="_concatCount" /><gte>4</gte></visible>
+      <string> <copy src="parent()" trait="_concatString4" /></string>
+      <include src="NorthernUI\fonts\inherit.xml" />
+      <red>    <copy src="parent()" trait="red" />   </red>
+      <green>  <copy src="parent()" trait="green" /> </green>
+      <blue>   <copy src="parent()" trait="blue" />  </blue>
+      <x>
+         <copy   src="parent()"  trait="_spaceWidth" />
+         <onlyif src="parent()"  trait="_concatWithSpace3" />
+         <add    src="sibling()" trait="x" />
+         <add>
+            <copy   src="sibling()" trait="width" />
+            <onlyif src="sibling()" trait="visible" />
+         </add>
+         <add>1</add>
+      </x>
+      <y>0</y>
+   </text>
+   <text name="c5">
+      <visible><copy src="parent()" trait="_concatCount" /><gte>5</gte></visible>
+      <string> <copy src="parent()" trait="_concatString5" /></string>
+      <include src="NorthernUI\fonts\inherit.xml" />
+      <red>    <copy src="parent()" trait="red" />   </red>
+      <green>  <copy src="parent()" trait="green" /> </green>
+      <blue>   <copy src="parent()" trait="blue" />  </blue>
+      <x>
+         <copy   src="parent()"  trait="_spaceWidth" />
+         <onlyif src="parent()"  trait="_concatWithSpace4" />
+         <add    src="sibling()" trait="x" />
+         <add>
+            <copy   src="sibling()" trait="width" />
+            <onlyif src="sibling()" trait="visible" />
+         </add>
+         <add>1</add>
+      </x>
+      <y>0</y>
+   </text>
+   <text name="c6">
+      <visible><copy src="parent()" trait="_concatCount" /><gte>6</gte></visible>
+      <string> <copy src="parent()" trait="_concatString6" /></string>
+      <include src="NorthernUI\fonts\inherit.xml" />
+      <red>    <copy src="parent()" trait="red" />   </red>
+      <green>  <copy src="parent()" trait="green" /> </green>
+      <blue>   <copy src="parent()" trait="blue" />  </blue>
+      <x>
+         <copy   src="parent()"  trait="_spaceWidth" />
+         <onlyif src="parent()"  trait="_concatWithSpace5" />
+         <add    src="sibling()" trait="x" />
+         <add>
+            <copy   src="sibling()" trait="width" />
+            <onlyif src="sibling()" trait="visible" />
+         </add>
+         <add>1</add>
+      </x>
+      <y>0</y>
+   </text>
+   <text name="c7">
+      <visible><copy src="parent()" trait="_concatCount" /><gte>7</gte></visible>
+      <string> <copy src="parent()" trait="_concatString7" /></string>
+      <include src="NorthernUI\fonts\inherit.xml" />
+      <red>    <copy src="parent()" trait="red" />   </red>
+      <green>  <copy src="parent()" trait="green" /> </green>
+      <blue>   <copy src="parent()" trait="blue" />  </blue>
+      <x>
+         <copy   src="parent()"  trait="_spaceWidth" />
+         <onlyif src="parent()"  trait="_concatWithSpace6" />
+         <add    src="sibling()" trait="x" />
+         <add>
+            <copy   src="sibling()" trait="width" />
+            <onlyif src="sibling()" trait="visible" />
+         </add>
+         <add>1</add>
+      </x>
+      <y>0</y>
+   </text>
+<!--</rect>-->

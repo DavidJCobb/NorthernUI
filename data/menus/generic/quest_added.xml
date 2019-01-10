@@ -1,0 +1,265 @@
+<!-- quest_added.xml -->
+<menu name="QuestAddedMenu">
+	<class> &GenericMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	<user0> </user0>			<!-- Title -->
+	<user1> </user1>			<!-- Name -->
+	<user2> </user2>			<!-- Date -->
+	<user3> </user3>			<!-- Text -->
+	<user4> </user4>			<!-- Icon -->
+	<user5> </user5>			<!-- First Button -->
+	<user6> &false; </user6>	<!-- is there a second button? -->
+	<user7> . </user7>			<!-- Second Button -->
+	<clicksound> 9 </clicksound>
+   
+	<user24>&false;</user24> <!-- NorthernUI: is tutorial? -->
+	
+	<xbuttona><ref src="qadd_button_1" trait="clicked" /></xbuttona>
+	<xbuttonx><ref src="qadd_button_2" trait="clicked" /></xbuttonx>
+   
+   <!--
+      This menu is used for the following dialogs:
+      
+       - Quest added
+       - Quest updated
+       - Quest completed
+      
+      Note that the tutorial quest can show tutorial notes even after it 
+      has been completed, in which case it uses the "completed" title 
+      rather than the "updated" title. It might be worthwhile to patch 
+      the game to force a "Tutorial" message on that quest editor ID; we 
+      already have a patch capable of suppressing quest updates based 
+      on the quest editor ID and stage (we can optionally suppress DLC 
+      spam in the intro).
+   -->
+   
+   <rect name="base">
+		<id>&generic;</id>
+		<target>&true;</target>
+		<depth>1</depth>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+         <div> 2 </div>
+		</y>
+      
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>700</user20>
+		<user21>
+         <copy src="buttons" trait="y" />
+         <add  src="buttons" trait="height" />
+      </user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <text name="dialog_title">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <depth>3</depth>
+            <justify>&center;</justify>
+            <red>140</red>
+            <green>140</green>
+            <blue>140</blue>
+            <wrapwidth>
+               <copy src="parent()" trait="width" />
+               <sub>64</sub>
+            </wrapwidth>
+            <string><copy src="QuestAddedMenu" trait="user0" /></string>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>-8</y>
+            
+            <_strings_1><copy src="QuestAddedMenu" trait="user0" /></_strings_1> <!-- normal header -->
+            <_strings_2><copy src="QuestAddedMenu" trait="user1" /></_strings_2> <!-- for the tutorial quest, use the quest name (presumably "Tutorial" in all languages) -->
+            <string>
+               <copy src="menu()" trait="user24" />
+               <copy src="me()"   trait="_strings_" />
+            </string>
+         </text>
+         <image name="separator">
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+               <sub  src="me()"     trait="x" />
+            </width>
+            <height><copy src="me()"     trait="fileheight" /></width>
+            <x>
+               <copy>-50</copy>
+               <mult src="base" trait="zoom" />
+               <div>100</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>24</add>
+            </y>
+            <alpha>140</alpha>
+         </image>
+         <rect name="quest_header">
+            <visible><not src="menu()" trait="user24" /></visible>
+            <locus>&true;</locus>
+            <depth>3</depth>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>16</add>
+            </y>
+            <height>
+               <copy src="child(icon)" trait="height" />
+               <max  src="child(text)" trait="height" />
+            </height>
+            
+            <image name="icon">
+               <filename><copy src="QuestAddedMenu" trait="user4" /></filename>
+               <width> 64</width>
+               <height>64</height>
+               <x>0</x>
+               <y>0</y>
+            </image>
+            <rect name="text">
+               <locus>&true;</locus>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>8</add>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <height>
+                  <copy src="child()" trait="y" />
+                  <add  src="child()" trait="height" />
+               </height>
+               
+               <text name="quest_name">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <string><copy src="QuestAddedMenu" trait="user1" /></string>
+                  <x>0</x>
+                  <y>0</y>
+               </text>
+               <text name="quest_date">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>140</red>
+                  <green>140</green>
+                  <blue>140</blue>
+                  <string><copy src="QuestAddedMenu" trait="user2" /></string>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="y" />
+                     <add  src="sibling()" trait="height" />
+                  </y>
+               </text>
+            </rect>
+         </rect>
+         <text name="body_text">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <red>140</red>
+            <green>140</green>
+            <blue>140</blue>
+            <wrapwidth>
+               <copy src="parent()" trait="width" />
+            </wrapwidth>
+            <string><copy src="QuestAddedMenu" trait="user3" /></string>
+            <x>0</x>
+            <y>
+               <copy   src="sibling()" trait="height" />
+               <add>8</add>
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="y" />
+            </y>
+         </text>
+         <image name="separator">
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+               <sub  src="me()"     trait="x" />
+            </width>
+            <height><copy src="me()"     trait="fileheight" /></width>
+            <x>
+               <copy>-50</copy>
+               <mult src="base" trait="zoom" />
+               <div>100</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>24</add>
+            </y>
+            <alpha>140</alpha>
+         </image>
+         <rect name="buttons">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>24</add>
+            </y>
+            <width>
+               <copy   src="child()" trait="width" />
+               <onlyif src="child()" trait="visible" />
+               <add    src="child()" trait="x" />
+            </width>
+            <height><copy src="child()" trait="height" /></height>
+            
+            <rect name="qadd_button_1">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+               <_dxScanCode>276</_dxScanCode>
+               <id>1</id>
+               <x>0</x>
+               <y>0</y>
+               <string><copy src="QuestAddedMenu" trait="user5" /></string>
+               <_useHoverBehavior>&true;</_useHoverBehavior>
+               
+               <listindex>1</listindex>
+               <xleft>&prev;</xleft>
+               <xright>&next;</xright>
+               <xdefault>10</xdefault>
+            </rect>
+            <rect name="qadd_button_2">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+               <_dxScanCode>278</_dxScanCode>
+               <id>2</id>
+               <visible><copy src="QuestAddedMenu" trait="user6" /></visible>
+               <x>
+                  <copy>24</copy>
+                  <onlyif src="me()"      trait="visible" />
+                  <add    src="sibling()" trait="width" />
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="x" />
+               </x>
+               <y>0</y>
+               <string><copy src="QuestAddedMenu" trait="user7" /></string>
+               <_useHoverBehavior>&true;</_useHoverBehavior>
+               
+               <listindex>2</listindex>
+               <xleft>&prev;</xleft>
+               <xright>&next;</xright>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+</menu>

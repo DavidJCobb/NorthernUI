@@ -1,0 +1,72 @@
+<!--<rect name="magicpop_effect_1">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+   <!------------------------------------------------------------- -->
+   <_showDivider>&false;</_showDivider>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <visible>&true;</visible>
+   <depth>2</depth>
+   <width>
+      <copy src="parent()" trait="width"/>
+      <sub>30</sub>
+   </width>
+   <height><copy src="MagicPopupMenu" trait="_item_height"/></height>
+   <alpha>0</alpha>
+   
+   <!-- Filled in by the executable if the element has the right ID. -->
+   <user0></user0> <!---- effect description string -->
+   <user1></user1> <!---- icon pathname -->
+   <user2>&scale;</user2> <!-- icon zoom -->
+   
+   <image name="divider">
+      <visible><copy src="parent()" trait="_showDivider"/></visible>
+      <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+      <tile>&true;</tile>
+      <width> <copy src="parent()" trait="width" /> </width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <alpha>128</alpha>
+      <x>0</x>
+      <y>
+         <copy src="me()" trait="height" />
+         <div>-2</div>
+      </y>
+   </image>
+   <image name="icon">
+      <zoom><copy src="parent()" trait="user2" /></zoom>
+      <filename><copy src="parent()" trait="user1" /></filename>
+      <width> 32</width>
+      <height>32</height>
+      <x>0</x>
+      <y> <!-- center within parent -->
+         <copy src="parent()" trait="height" />
+         <copy src="me()"     trait="height" />
+         <div>2</div>
+         <sub>4</sub> <!-- HACK until I figure out whether the icons are tall or the font alignment is broken -->
+      </y>
+   </image>
+   <text name="text">
+      <include src="NorthernUI\fonts\normal-shadowed.xml" />
+      <string><copy src="parent()" trait="user0" /></string>
+      <wrapwidth>
+         <copy src="parent()"  trait="width" />
+         <!--  left margin = icon width + 13 -->
+         <sub  src="me()"      trait="x" />
+         <!-- right margin = left margin - icon width -->
+         <sub  src="me()"      trait="x" />
+         <add  src="sibling()" trait="width" />
+      </wrapwidth>
+      <x>45</x>
+      <y> <!-- center within parent -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div> 2 </div>
+      </y>
+      <red>255</red><green>255</green><blue>255</blue>
+      <alpha>255</alpha>
+   </text>
+<!--</rect>-->

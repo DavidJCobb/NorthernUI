@@ -1,0 +1,13 @@
+<!--<image name="magicpop_ds0_icon">-->
+   <filename>Menus\DisplayStats\icon01.dds</filename> <!-- default -->
+   <zoom>-1</zoom>
+   <width> 32</width>
+   <height>32</height>
+   <x>0</x>
+   <y>
+      <copy src="parent()" trait="height" />
+      <copy src="me()"     trait="height" />
+      <div>2</div>
+      <sub>4</sub> <!-- HACK until I figure out whether the icons are tall or the font alignment is broken -->
+   </y>
+<!--</image>-->

@@ -1,0 +1,395 @@
+<!--<rect name="inventory_tabs">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <_iconCount>5</_iconCount>
+   <_iconSize>64</_iconSize>
+   <_iconCropY>0</_iconCropY>
+   <_selectedTab>0</_selectedTab>
+   <_idTab1>1</_idTab1>
+   <_idTab2>2</_idTab2>
+   <_idTab3>3</_idTab3>
+   <_idTab4>4</_idTab4>
+   <_idTab5>5</_idTab5>
+   <_idTabPrev>7</_idTabPrev>
+   <_idTabNext>8</_idTabNext>
+   
+   <!-- TAB OVERVIEW ----------------------------------------------- >
+      The tabs used by the different main menus are as follows:
+      
+      Character
+       - Overview
+       - Attributes
+       - Skills
+       - Factions
+       - Misc Stats
+      
+      Inventory
+       - All Items
+       - Weapons
+       - Apparel
+       - Alchemy
+       - Misc
+       
+      Magic
+       - All Magic (except active effects)
+       - Ranged Magic
+       - Melee Magic
+       - Self and Summoning
+       - Active Effects
+       
+      Journal
+       - Local Map
+       - World Map
+       - Active Quest
+       - Current Quests
+       - Completed Quests
+   <!------------------------------------------------------------- -->
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <_computedIconSpacing>
+      <copy src="me()" trait="width" />
+      <div  src="me()" trait="_iconCount" />
+      <sub  src="me()" trait="_iconSize" />
+   </_computedIconSpacing>
+
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <depth>2</depth>
+   <width><copy src="parent()" trait="width" /></width>
+   <height> <!-- icon height plus padding-bottom -->
+      <copy src="me()" trait="_iconSize" />
+      <add>26</add> <!-- height of tab selection indicator + 8px -->
+      <add>18</add> <!-- height of tab selection indicator's non-border portion + 8px -->
+   </height>
+   
+   <_tabOffsetY>18</_tabOffsetY>
+   
+   <rect name="border_bottom">
+      <locus>&true;</locus>
+      <x>0</x>
+      <y> <!-- align with bottom of parent -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+      </y>
+      <width> <copy src="parent()"    trait="width" /></width>
+      <height><copy src="child(left)" trait="height" /></height>
+      
+      <!-- Copy values down for use by children. -->
+      <_computedIconSpacing><copy src="parent()" trait="_computedIconSpacing" /></_computedIconSpacing>
+      <_selectedTab><copy src="parent()" trait="_selectedTab" /></_selectedTab>
+      <_iconCount><copy src="parent()" trait="_iconCount" /></_iconCount>
+      <_iconSize> <copy src="parent()" trait="_iconSize" /> </_iconSize>
+      
+      <image name="selected">
+         <filename>Menus\NorthernUI\Inventory\tabbar_border_selected.dds</filename>
+         <width> <copy src="me()" trait="filewidth" /></width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <x>
+            <!-- initial left padding: -->
+            <copy src="parent()" trait="_computedIconSpacing" />
+            <div>2</div>
+            <!-- position at icon: -->
+            <add>
+               <copy src="parent()" trait="_selectedTab" />
+               <sub>1</sub>
+               <mult>
+                  <copy src="parent()" trait="_iconSize" />
+                  <add  src="parent()" trait="_computedIconSpacing" />
+               </mult>
+            </add>
+            <!-- center under icon: -->
+            <add>
+               <copy src="parent()" trait="_iconSize" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </add>
+         </x>
+         <y> <!-- align with bottom of parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+         </y>
+      </image>
+      <image name="left">
+         <filename>Menus\NorthernUI\Inventory\tabbar_border.dds</filename>
+         <tile>&true;</tile>
+         <x>0</x>
+         <y>0</y>
+         <width>
+            <copy src="sibling(selected)" trait="x" />
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+      </image>
+      <image name="right">
+         <filename><copy src="sibling()" trait="filename" /></filename>
+         <tile>&true;</tile>
+         <x>
+            <copy src="sibling(selected)" trait="x" />
+            <add  src="sibling(selected)" trait="width" />
+         </x>
+         <y><copy src="sibling()" trait="y" /></y>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="x" />
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+      </image>
+   </rect>
+   
+   <rect name="inventory_tab_1"> <!-- all items -->
+      <id><copy src="parent()" trait="_idTab1" /></id>
+      <target> <!-- if I'm not already selected -->
+         <copy src="parent()" trait="_selectedTab" />
+         <neq  src="me()"     trait="id" />
+      </target>
+      <locus>&true;</locus>
+      <x>
+         <copy src="parent()" trait="_computedIconSpacing" />
+         <div>2</div>
+      </x>
+      <y><copy src="parent()" trait="_tabOffsetY" /></y>
+      <width> <copy src="parent()" trait="_iconSize" /></width>
+      <height><copy src="parent()" trait="_iconSize" /></height>
+
+      <!-- Copy values down for use by children. -->
+      <_iconCropY>  <copy src="parent()" trait="_iconCropY" />  </_iconCropY>
+      <_selectedTab><copy src="parent()" trait="_selectedTab" /></_selectedTab>
+      
+      <image name="icon">
+         <filename>Menus\NorthernUI\Shared\all_tabs_icons_reordered.dds</filename>
+         <cropx>0</cropx>
+         <cropy> <copy src="parent()" trait="_iconCropY" /></cropy>
+         <width> <copy src="parent()" trait="width" /></width>
+         <height><copy src="parent()" trait="height" /></height>
+         <x>0</x>
+         <y>0</y>
+         <alpha>
+            <copy>140</copy>
+            <max>
+               <copy>255</copy>
+               <onlyif>
+                  <copy src="parent()" trait="_selectedTab" />
+                  <eq   src="parent()" trait="id" />
+               </onlyif>
+            </max>
+         </alpha>
+      </image>
+   </rect>
+   <rect name="inventory_tab_2"> <!-- weapons -->
+      <id><copy src="parent()" trait="_idTab2" /></id>
+      <target> <!-- if I'm not already selected -->
+         <copy src="parent()" trait="_selectedTab" />
+         <neq  src="me()"     trait="id" />
+      </target>
+      <locus>&true;</locus>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add  src="parent()"  trait="_computedIconSpacing" />
+      </x>
+      <y><copy src="parent()" trait="_tabOffsetY" /></y>
+      <width> <copy src="parent" trait="_iconSize" /></width>
+      <height><copy src="parent" trait="_iconSize" /></height>
+
+      <!-- Copy values down for use by children. -->
+      <_iconCropY>  <copy src="parent()" trait="_iconCropY" />  </_iconCropY>
+      <_selectedTab><copy src="parent()" trait="_selectedTab" /></_selectedTab>
+      
+      <image name="icon">
+         <filename>Menus\NorthernUI\Shared\all_tabs_icons_reordered.dds</filename>
+         <cropx>64</cropx>
+         <cropy> <copy src="parent()" trait="_iconCropY" /></cropy>
+         <width> <copy src="parent()" trait="width" /></width>
+         <height><copy src="parent()" trait="height" /></height>
+         <x>0</x>
+         <y>0</y>
+         <alpha>
+            <copy>140</copy>
+            <max>
+               <copy>255</copy>
+               <onlyif>
+                  <copy src="parent()" trait="_selectedTab" />
+                  <eq   src="parent()" trait="id" />
+               </onlyif>
+            </max>
+         </alpha>
+      </image>
+   </rect>
+   <rect name="inventory_tab_3"> <!-- apparel -->
+      <id><copy src="parent()" trait="_idTab3" /></id>
+      <target> <!-- if I'm not already selected -->
+         <copy src="parent()" trait="_selectedTab" />
+         <neq  src="me()"     trait="id" />
+      </target>
+      <locus>&true;</locus>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add  src="parent()"  trait="_computedIconSpacing" />
+      </x>
+      <y><copy src="parent()" trait="_tabOffsetY" /></y>
+      <width> <copy src="parent" trait="_iconSize" /></width>
+      <height><copy src="parent" trait="_iconSize" /></height>
+
+      <!-- Copy values down for use by children. -->
+      <_iconCropY>  <copy src="parent()" trait="_iconCropY" />  </_iconCropY>
+      <_selectedTab><copy src="parent()" trait="_selectedTab" /></_selectedTab>
+      
+      <image name="icon">
+         <filename>Menus\NorthernUI\Shared\all_tabs_icons_reordered.dds</filename>
+         <cropx>128</cropx>
+         <cropy> <copy src="parent()" trait="_iconCropY" /></cropy>
+         <width> <copy src="parent()" trait="width" /></width>
+         <height><copy src="parent()" trait="height" /></height>
+         <x>0</x>
+         <y>0</y>
+         <alpha>
+            <copy>140</copy>
+            <max>
+               <copy>255</copy>
+               <onlyif>
+                  <copy src="parent()" trait="_selectedTab" />
+                  <eq   src="parent()" trait="id" />
+               </onlyif>
+            </max>
+         </alpha>
+      </image>
+   </rect>
+   <rect name="inventory_tab_4"> <!-- potions and alchemy -->
+      <id><copy src="parent()" trait="_idTab4" /></id>
+      <target> <!-- if I'm not already selected -->
+         <copy src="parent()" trait="_selectedTab" />
+         <neq  src="me()"     trait="id" />
+      </target>
+      <locus>&true;</locus>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add  src="parent()" trait="_computedIconSpacing" />
+      </x>
+      <y><copy src="parent()" trait="_tabOffsetY" /></y>
+      <width> <copy src="parent" trait="_iconSize" /></width>
+      <height><copy src="parent" trait="_iconSize" /></height>
+
+      <!-- Copy values down for use by children. -->
+      <_iconCropY>  <copy src="parent()" trait="_iconCropY" />  </_iconCropY>
+      <_selectedTab><copy src="parent()" trait="_selectedTab" /></_selectedTab>
+      
+      <image name="icon">
+         <filename>Menus\NorthernUI\Shared\all_tabs_icons_reordered.dds</filename>
+         <cropx>192</cropx>
+         <cropy> <copy src="parent()" trait="_iconCropY" /></cropy>
+         <width> <copy src="parent()" trait="width" /></width>
+         <height><copy src="parent()" trait="height" /></height>
+         <x>0</x>
+         <y>0</y>
+         <alpha>
+            <copy>140</copy>
+            <max>
+               <copy>255</copy>
+               <onlyif>
+                  <copy src="parent()" trait="_selectedTab" />
+                  <eq   src="parent()" trait="id" />
+               </onlyif>
+            </max>
+         </alpha>
+      </image>
+   </rect>
+   <rect name="inventory_tab_5"> <!-- misc -->
+      <id><copy src="parent()" trait="_idTab5" /></id>
+      <target>
+         <copy src="parent()" trait="_selectedTab" />
+         <neq  src="me()"     trait="id" />
+      </target>
+      <locus>&true;</locus>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add  src="parent()" trait="_computedIconSpacing" />
+      </x>
+      <y><copy src="parent()" trait="_tabOffsetY" /></y>
+      <width> <copy src="parent" trait="_iconSize" /></width>
+      <height><copy src="parent" trait="_iconSize" /></height>
+
+      <!-- Copy values down for use by children. -->
+      <_iconCropY>  <copy src="parent()" trait="_iconCropY" />  </_iconCropY>
+      <_selectedTab><copy src="parent()" trait="_selectedTab" /></_selectedTab>
+      
+      <image name="icon">
+         <filename>Menus\NorthernUI\Shared\all_tabs_icons_reordered.dds</filename>
+         <cropx>256</cropx>
+         <cropy> <copy src="parent()" trait="_iconCropY" /></cropy>
+         <width> <copy src="parent()" trait="width" /></width>
+         <height><copy src="parent()" trait="height" /></height>
+         <x>0</x>
+         <y>0</y>
+         <alpha>
+            <copy>140</copy>
+            <max>
+               <copy>255</copy>
+               <onlyif>
+                  <copy src="parent()" trait="_selectedTab" />
+                  <eq   src="parent()" trait="id" />
+               </onlyif>
+            </max>
+         </alpha>
+      </image>
+   </rect>
+
+   <rect name="prev_next"> <!-- Invisible prev/next buttons. -->
+      <!--
+         The "previous" and "next" buttons are zero-size in vanilla. They are 
+         invisible UI elements that receive button presses by way of the xleft, 
+         xright, and similar elements.
+         
+         To the best of my understanding, these elements power the "previous 
+         tab" and "next tab" hotkeys available to Xbox users.
+         
+         Accordingly, the buttons themselves should not have their names 
+         changed.
+      -->
+      <locus>&true;</locus>
+      <depth>-1</depth>
+      <width>0</width>
+      <height>0</height>
+      <x>0</x>
+      <y>0</y>
+
+      <!-- Copy values down for use by children. -->
+      <_idTabPrev><copy src="parent()" trait="_idTabPrev" /></_idTabPrev>
+      <_idTabNext><copy src="parent()" trait="_idTabNext" /></_idTabNext>
+      
+      <rect name="inventory_tabs_prev">
+         <id><copy src="parent()" trait="_idTabPrev" /></id>
+         <target>&true;</target>
+         <width>1</width>
+         <height>1</height>
+         <x>-1</x>
+         <y>-1</y>
+         <clicksound>5</clicksound>
+      </rect>
+      <rect name="inventory_tabs_next">
+         <id><copy src="parent()" trait="_idTabNext" /></id>
+         <target>&true;</target>
+         <width>1</width>
+         <height>1</height>
+         <x>-1</x>
+         <y>-1</y>
+         <clicksound>5</clicksound>
+      </rect>
+   </rect>
+
+   <!-- CONTENT INSERTION POINT ------------------------------------ >
+      Your child nodes will go here -- but you shouldn't need any.
+   <!------------------------------------------------------------- -->
+<!--</rect>-->

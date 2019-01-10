@@ -1,0 +1,150 @@
+<!-- audio_menu.xml -->
+<menu name="AudioMenu">
+	<class> &AudioMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<menufade>0</menufade>
+	<explorefade>0</explorefade>
+	
+	<xbuttonb> <ref src="audio_return_button" trait="clicked"/> </xbuttonb>
+	<xbuttony> <ref src="audio_defaults_button" trait="clicked"/> </xbuttony>
+	
+   <rect name="content_space">
+      <include src="NorthernUI/fragments/pause/base.xml" />
+      <rect name="content_box_2">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <rect name="column_right">
+            <locus>&true;</locus>
+            <width>
+               <copy src="parent()"  trait="width" />
+               <sub  src="pause_column_left" trait="x" />
+               <sub  src="pause_column_left" trait="width" />
+               <sub>16</sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <x>
+               <copy src="pause_column_left" trait="x" />
+               <add  src="pause_column_left" trait="width" />
+               <add>16</add>
+            </x>
+            <y>0</y><depth>10</depth>
+            
+            <!-- Submenu contents go here. -->
+            <rect name="options_pane">
+               <locus>&true;</locus>
+               <width>
+                  <copy src="parent()"  trait="width" />
+                  <min>450</min>
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+               <x>0</x>
+               <y>
+                  <copy src="pause_submenu_scrollbar" trait="user7" />
+                  <mult src="menu()" trait="_itemHeight" />
+                  <mult>-1</mult>
+               </y>
+               
+               <target>&false;</target>
+               <xdefault>&true;</xdefault>
+               <xlist>&xlist;</xlist>
+               
+               <rect name="option_volume_master">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <listindex><copy>0</copy></listindex> <!-- for some reason, this breaks if we don't use COPY -->
+                  <y><copy>0</copy></y> <!-- for some reason, this breaks if we don't use COPY -->
+                  <user11><copy src="strings()" trait="_mastervolume" /></user11> <!-- label -->
+                  <user0>1</user0> <!-- slider ID -->
+                  <user1>2</user1> <!-- slider thumb ID -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_volume_voice">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_voicevolume" /></user11> <!-- label -->
+                  <user0>3</user0> <!-- slider ID -->
+                  <user1>4</user1> <!-- slider thumb ID -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_volume_effect">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_effectvolume" /></user11> <!-- label -->
+                  <user0>5</user0> <!-- slider ID -->
+                  <user1>6</user1> <!-- slider thumb ID -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_volume_footstep">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_footstepvolume" /></user11> <!-- label -->
+                  <user0>7</user0> <!-- slider ID -->
+                  <user1>8</user1> <!-- slider thumb ID -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_volume_music">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_musicvolume" /></user11> <!-- label -->
+                  <user0>9</user0> <!-- slider ID -->
+                  <user1>10</user1> <!-- slider thumb ID -->
+                  
+                  <xdown><ref src="gameplay_return_button" trait="mouseover" /></xdown>
+               </rect> <!-- /menuitem -->
+            </rect> <!-- /pane -->
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>16</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()" trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="audio_return_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>12</id>
+            <target>&true;</target>
+            <xdefault>&true;</xdefault>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_return" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            <xleft> <ref src="audio_defaults_button" trait="mouseover"/></xleft>
+            <xright><ref src="audio_defaults_button" trait="mouseover"/></xright>
+            <xup>   <ref src="option_autosave_travel" trait="mouseover"/></xup>
+         </rect>
+         <rect name="audio_defaults_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>11</id>
+            <target>&true;</target>
+            <xdefault>&true;</xdefault>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_defaults" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            <xleft> <ref src="audio_return_button" trait="mouseover"/></xleft>
+            <xright><ref src="audio_return_button" trait="mouseover"/></xright>
+            <xup>   <ref src="option_autosave_travel" trait="mouseover"/></xup>
+         </rect>
+      </rect>
+   </rect>
+</menu>

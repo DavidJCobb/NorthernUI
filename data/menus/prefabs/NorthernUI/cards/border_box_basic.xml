@@ -1,0 +1,152 @@
+<!--<rect name="GenericBackground">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <user20>400</user20> <!-- width -->
+   <user21>200</user21> <!-- height -->
+   <user22>&false;</user22> <!-- use content-box sizing -->
+   <user23><copy src="northernui()" trait="_xxnAlpha" /></user23> <!-- alpha -->
+   <zoom>50</zoom>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <width>
+      <copy src="me()" trait="user20" />
+      <add>
+         <copy   src="child(edge_left)"  trait="width" />
+         <add    src="child(edge_left)"  trait="width" />
+         <onlyif src="me()" trait="user22" />
+      </add>
+   </width>
+   <height>
+      <copy src="me()" trait="user21" />
+      <add>
+         <copy   src="child(edge_top)"  trait="height" />
+         <add    src="child(edge_top)"  trait="height" />
+         <onlyif src="me()" trait="user22" />
+      </add>
+   </height>
+   
+   <_border>
+      <copy>4</copy>
+      <mult src="me()" trait="zoom" />
+      <div>100</div>
+   </_border>
+   <_margin>
+      <copy>4</copy>
+      <mult src="me()" trait="zoom" />
+      <div>100</div>
+   </_margin>
+   
+   <image name="edge_left">
+      <depth>10</depth>
+      <filename>Menus\NorthernUI\shared\white.dds</filename>
+      <red>  0.55</red>
+      <green><copy src="me()" trait="red" /></green>
+      <blue> <copy src="me()" trait="red" /></blue>
+		<alpha><copy src="parent()"  trait="user23" /></alpha>
+      <x>0</x>
+      <y>0</y>
+      <width> <copy src="parent()" trait="_border" /></width>
+      <height><copy src="parent()" trait="height" /></height>
+   </image>
+   <image name="edge_right">
+      <depth><copy src="sibling()" trait="depth" /></depth>
+      <filename><copy src="sibling()" trait="filename" /></filename>
+      <red>  <copy src="sibling()" trait="red" /></red>
+      <green><copy src="sibling()" trait="red" /></green>
+      <blue> <copy src="sibling()" trait="red" /></blue>
+		<alpha><copy src="parent()"  trait="user23" /></alpha>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y>0</y>
+      <width> <copy src="parent()" trait="_border" /></width>
+      <height><copy src="parent()" trait="height" /></height>
+   </image>
+   <image name="edge_top">
+      <depth><copy src="sibling()" trait="depth" /></depth>
+      <filename><copy src="sibling()" trait="filename" /></filename>
+      <red>  <copy src="sibling()" trait="red" /></red>
+      <green><copy src="sibling()" trait="red" /></green>
+      <blue> <copy src="sibling()" trait="red" /></blue>
+		<alpha><copy src="parent()"  trait="user23" /></alpha>
+      <x><copy src="sibling()" trait="width" /></x>
+      <y>0</y>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="x" />
+         <sub  src="me()"     trait="x" />
+      </width>
+      <height><copy src="parent()" trait="_border" /></height>
+   </image>
+   <image name="edge_bottom">
+      <depth><copy src="sibling()" trait="depth" /></depth>
+      <filename><copy src="sibling()" trait="filename" /></filename>
+      <red>  <copy src="sibling()" trait="red" /></red>
+      <green><copy src="sibling()" trait="red" /></green>
+      <blue> <copy src="sibling()" trait="red" /></blue>
+		<alpha><copy src="parent()"  trait="user23" /></alpha>
+      <x><copy src="sibling()" trait="x" /></x>
+      <y>
+         <copy src="parent()" trait="height" />
+			<sub  src="me()"     trait="height" />
+      </y>
+      <width> <copy src="sibling()" trait="width" /></width>
+      <height><copy src="parent()"  trait="_border" /></height>
+   </image>
+   <image name="fill_real">
+      <depth>-1</depth>
+      <filename>Menus\NorthernUI\cards\fill_black.dds</filename>
+		<width>
+         <copy src="parent()" trait="width" />
+         <sub  src="parent()" trait="_border" />
+         <sub  src="parent()" trait="_border" />
+      </width>
+		<height>
+         <copy src="parent()" trait="height" />
+         <sub  src="parent()" trait="_border" />
+         <sub  src="parent()" trait="_border" />
+      </height>
+		<alpha><copy src="parent()" trait="user23" /></alpha>
+      
+		<x><copy src="parent()" trait="_border" /></x>
+		<y><copy src="parent()" trait="_border" /></y>
+      
+      <tile>&true;</tile>
+	</image>
+   <rect name="fill"> <!-- for feature parity with "ornate" prefab: positioning element -->
+      <depth>-1</depth>
+		<width>
+         <copy src="parent()" trait="width" />
+         <sub>
+            <copy src="me()" trait="x" />
+            <mult>2</mult>
+         </sub>
+      </width>
+		<height>
+         <copy src="parent()" trait="height" />
+         <sub>
+            <copy src="me()" trait="y" />
+            <mult>2</mult>
+         </sub>
+      </height>
+		<x>
+         <copy src="parent()" trait="_border" />
+         <add  src="parent()" trait="_margin" />
+      </x>
+		<y>
+         <copy src="parent()" trait="_border" />
+         <add  src="parent()" trait="_margin" />
+      </y>
+	</rect>
+<!--</rect>-->

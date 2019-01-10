@@ -1,0 +1,130 @@
+<!--<rect name="attr_row">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <_label>Attribute</_label>
+   <_valueBase>0</_valueBase>
+   <_valueCurrent>0</_valueCurrent>
+   
+   <_cellPaddingX>     8</_cellPaddingX>
+   <_valueColumnWidth>60</_valueColumnWidth>
+   <_isFirst>&false;</_isFirst>
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <!-- normal text color for value -->
+   <_valueColorR_1>255</_valueColorR_1>
+   <_valueColorG_1>255</_valueColorG_1>
+   <_valueColorB_1>255</_valueColorB_1>
+   <!-- buffed text color for value -->
+   <_valueColorR_2> 64</_valueColorR_2>
+   <_valueColorG_2>192</_valueColorG_2>
+   <_valueColorB_2> 64</_valueColorB_2>
+   <!-- nerf'd text color for value -->
+   <_valueColorR_3>192</_valueColorR_3>
+   <_valueColorG_3> 64</_valueColorG_3>
+   <_valueColorB_3> 64</_valueColorB_3>
+   
+   <_whichColor>
+      <copy>1</copy>
+      <max>
+         <copy>2</copy>
+         <onlyif>
+            <copy src="me()" trait="_valueBase" />
+            <lt   src="me()" trait="_valueCurrent" />
+         </onlyif>
+      </max>
+      <max>
+         <copy>3</copy>
+         <onlyif>
+            <copy src="me()" trait="_valueBase" />
+            <gt   src="me()" trait="_valueCurrent" />
+         </onlyif>
+      </max>
+   </_whichColor>
+
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <depth>5</depth>
+   
+   <text name="label">
+      <depth>3</depth>
+      <string><copy src="parent()" trait="_label"/></string>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <justify>&left;</justify>
+      <red> <!-- grey 140; white on mouseover -->
+         <copy>140</copy>
+         <max><copy>255</copy><mult src="parent()" trait="mouseover" /></max>
+      </red>
+      <green><copy src="me()" trait="red"/></green>
+      <blue> <copy src="me()" trait="red"/></blue>
+      <alpha>255</alpha>
+      <wrapwidth>
+         <copy src="parent()" trait="width" />
+         <sub  src="parent()" trait="_valueColumnWidth" />
+         <sub  src="parent()" trait="_cellPaddingX" />
+         <sub  src="parent()" trait="_cellPaddingX" />
+      </wrapwidth>
+      <x><copy src="parent()" trait="_cellPaddingX" /></x>
+      <y> <!-- vertically center -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <text name="value">
+      <depth>3</depth>
+      <string><copy src="parent()" trait="_valueCurrent" /></string>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <justify>&right;</justify>
+      <red>
+         <copy src="parent()" trait="_whichColor" />
+         <copy src="parent()" trait="_valueColorR_" />
+      </red>
+      <green>
+         <copy src="parent()" trait="_whichColor" />
+         <copy src="parent()" trait="_valueColorG_" />
+      </green>
+      <blue>
+         <copy src="parent()" trait="_whichColor" />
+         <copy src="parent()" trait="_valueColorB_" />
+      </blue>
+      <alpha>255</alpha>
+      <wrapwidth> <!-- column width -->
+         <copy src="parent()" trait="_valueColumnWidth" />
+         <sub  src="parent()" trait="_cellPaddingX" />
+         <sub  src="parent()" trait="_cellPaddingX" />
+      </wrapwidth>
+      <x> <!-- right-align in second column -->
+         <copy src="parent()" trait="width" />
+         <sub  src="parent()" trait="_cellPaddingX" />
+      </x>
+      <y> <!-- vertically center -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <image name="bottom_divider">
+      <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+      <tile>&true;</tile>
+      <width> <copy src="parent()" trait="width"/></width>
+      <height><copy src="me()"     trait="fileheight"/></height>
+      <x>0</x>
+      <y>
+         <copy src="me()" trait="height"/>
+         <div>-2</div>
+         <add  src="parent()" trait="height"/>
+      </y>
+      <alpha>140</alpha>
+   </image>
+<!--</rect>-->

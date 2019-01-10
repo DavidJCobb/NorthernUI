@@ -1,0 +1,363 @@
+<!--  -->
+<menu name="XXNOptionsMenu">
+	<class>1054</class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>0</alpha>
+	<locus>&true;</locus>
+	<menufade>0</menufade>
+	<explorefade>0</explorefade>
+
+	<xbuttonb><ref src="button_exit" trait="clicked" /></xbuttonb>
+	<xbuttony><ref src="video_defaults_button" trait="clicked" /></xbuttony>
+   
+   <user10><copy src="xxnStrings()" trait="_optEnumQuantityHandlerDefault" /></user10>
+   <user11><copy src="xxnStrings()" trait="_optEnumQuantityHandlerTakeOne" /></user11>
+   <user12><copy src="xxnStrings()" trait="_optEnumQuantityHandlerTakeAll" /></user12>
+   <user13><copy src="xxnStrings()" trait="_optEnumBarterConfirmHandlerDefault" /></user13>
+   <user14><copy src="xxnStrings()" trait="_optEnumBarterConfirmHandlerTakeOne" /></user14>
+   <user15><copy src="xxnStrings()" trait="_optEnumBarterConfirmHandlerTakeAll" /></user15>
+
+   <rect name="content_space">
+      <include src="NorthernUI/fragments/pause/base.xml" />
+      <rect name="content_box_2">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <rect name="column_right">
+            <locus>&true;</locus>
+            <clipwindow>&true;</clipwindow>
+            <width>
+               <copy src="parent()"  trait="width" />
+               <sub  src="pause_column_left" trait="x" />
+               <sub  src="pause_column_left" trait="width" />
+               <sub>16</sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <x>
+               <copy src="pause_column_left" trait="x" />
+               <add  src="pause_column_left" trait="width" />
+               <add>16</add>
+            </x>
+            <y>0</y>
+            <depth>10</depth>
+            
+            <!-- Submenu contents go here. -->
+            <id>2</id>
+            <target>&true;</target> <!-- handle scroll wheel -->
+            
+            <rect name="scrollbar_wrapper">
+               <include src="NorthernUI\scrollbars\wrapper.xml" />
+               <user0>&false;</user0> <!-- is horizontal? -->
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <sub>8</sub>
+               </x>
+               <y>0</y>
+               <height><copy src="parent()" trait="height" /></height>
+               
+               <rect name="pause_submenu_scrollbar">
+                  <include src="vertical_scroll.xml" />
+                  <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+                  <id>3</id>
+                  <user1>0</user1>					<!-- min -->
+                  <user2>
+                     <copy src="scrollable_pane" trait="childcount" />
+                     <sub>
+                        <copy src="column_right" trait="height" />
+                        <div  src="menu()" trait="_itemHeight" />
+                        <floor>0</floor>
+                     </sub>
+                     <add>
+                        <copy>1</copy>
+                        <onlyif>
+                           <copy src="column_right" trait="height" />
+                           <mod  src="menu()" trait="_itemHeight" />
+                           <neq>0</neq>
+                        </onlyif>
+                     </add>
+                  </user2>							<!-- max -->
+                  <user4>
+                     <copy src="me()" trait="user8"/>
+                     <sub>1</sub>
+                  </user4>							<!-- jump distance -->
+                  <user5> 0 </user5>					<!-- starting pos -->
+                  <user6>4</user6>					<!-- marker id -->
+                  <user8>								<!-- num visible -->
+                     <copy src="column_right" trait="height" />
+                     <div  src="menu()" trait="_itemHeight" />
+                     <ceil>0</ceil>
+                  </user8>
+               </rect>
+            </rect>
+            <!-- Menu items: -->
+            <rect name="scrollable_pane">
+               <locus>&true;</locus>
+               <width>
+                  <copy src="parent()"  trait="width" />
+                  <sub>
+                     <copy src="pause_submenu_scrollbar" trait="width" />
+                     <add>16</add>
+                     <onlyif src="pause_submenu_scrollbar" trait="visible" />
+                  </sub>
+                  <min>500</min>
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+               <x>0</x>
+               <y>
+                  <copy src="pause_submenu_scrollbar" trait="user7" />
+                  <mult src="menu()" trait="_itemHeight" />
+                  <mult>-1</mult>
+               </y>
+               
+               <user8>
+                  <copy src="pause_submenu_scrollbar" trait="user8" />
+               </user8>
+               <target>&false;</target>
+               <xdefault>&true;</xdefault>
+               <xlist>&xlist;</xlist>
+               <xscroll><ref src="pause_submenu_scrollbar" trait="user5" /></xscroll>
+               
+               <user10>300</user10>
+               
+               <rect name="option_local_map_resolution">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <listindex><copy>0</copy></listindex> <!-- for some reason, this breaks if we don't use COPY -->
+                  <y><copy>0</copy></y> <!-- for some reason, this breaks if we don't use COPY -->
+                  <user0>12</user0> <!-- enumpicker text ID -->
+                  <user1>10</user1> <!-- enumpicker left ID -->
+                  <user2>11</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionLocalMapRes" /></user11> <!-- label -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect>
+               <rect name="option_use_xinput_if_patched">
+                  <include src="NorthernUI/fragments/pause/option_checkbox.xml" />
+                  <user0>17</user0> <!-- checkbox ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionUseXInputifPatched" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_show_hud_clock">
+                  <include src="NorthernUI/fragments/pause/option_checkbox.xml" />
+                  <user0>15</user0> <!-- checkbox ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionShowHUDClock" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_show_hud_input_viewer">
+                  <include src="NorthernUI/fragments/pause/option_checkbox.xml" />
+                  <user0>16</user0> <!-- checkbox ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionShowHUDInputViewer" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_suppress_dlc_spam">
+                  <include src="NorthernUI/fragments/pause/option_checkbox.xml" />
+                  <user0>13</user0> <!-- checkbox ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionStopDLCSpam" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_xxnalchemymenu">
+                  <include src="NorthernUI/fragments/pause/option_checkbox.xml" />
+                  <user0>14</user0> <!-- checkbox ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionUseXXNAlchemyMenu" /></user11> <!-- label -->
+                  
+                  <text name="requires_restart">
+                     <include src="NorthernUI\fonts\small.xml" />
+                     <x>
+                        <copy src="parent()" trait="width" />
+                        <add>32</add>
+                     </x>
+                     <y>
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                        <div>2</div>
+                     </y>
+                     <depth>0</depth>
+                     <red>
+                        <copy>224</copy>
+                        <max>
+                           <copy>255</copy>
+                           <onlyif>
+                              <copy src="parent()" trait="mouseover" />
+                              <add  src="sibling(enumpicker)" trait="_mouseover_any" />
+                              <gt>0</gt>
+                           </onlyif>
+                        </max>
+                     </red>
+                     <green>64</green>
+                     <blue>64</blue>
+                     <string><copy src="xxnStrings()" trait="_optionHintRequiresRestart" /></string> <!-- label -->
+                  </text>
+               </rect>
+               <rect name="option_quantity_default">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>20</user0> <!-- enumpicker text ID -->
+                  <user1>18</user1> <!-- enumpicker left ID -->
+                  <user2>19</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionQuantityHandlerDefault" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_quantity_alt">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>23</user0> <!-- enumpicker text ID -->
+                  <user1>21</user1> <!-- enumpicker left ID -->
+                  <user2>22</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionQuantityHandlerAlt" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_quantity_ctrl">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>26</user0> <!-- enumpicker text ID -->
+                  <user1>24</user1> <!-- enumpicker left ID -->
+                  <user2>25</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionQuantityHandlerCtrl" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_barter_confirm_default">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>29</user0> <!-- enumpicker text ID -->
+                  <user1>27</user1> <!-- enumpicker left ID -->
+                  <user2>28</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionBarterConfirmHandlerDefault" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_barter_confirm_alt">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>32</user0> <!-- enumpicker text ID -->
+                  <user1>30</user1> <!-- enumpicker left ID -->
+                  <user2>31</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionBarterConfirmHandlerAlt" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_barter_confirm_ctrl">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>35</user0> <!-- enumpicker text ID -->
+                  <user1>33</user1> <!-- enumpicker left ID -->
+                  <user2>34</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionBarterConfirmHandlerCtrl" /></user11> <!-- label -->
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+      <rect name="bolt_on">
+         <include src="NorthernUI/fragments/pause/bolt_on_border_box.xml" />
+         <height>
+            <copy src="child(bolt_on_content)" trait="height" />
+            <add  src="child(edge_b)"          trait="height" />
+            <max>96</max> <!-- size doesn't change properly when the text changes... -->
+         </height>
+         <visible>
+            <copy src="child(opt_description)" trait="user24" /><neq>0</neq>
+         </visible>
+         
+         <rect name="bolt_on_content">
+            <include src="NorthernUI/fragments/pause/bolt_on_content_box.xml" />
+            <height>
+               <copy src="child()" trait="y" />
+               <add  src="child()" trait="height" />
+            </height>
+            <y>
+               <copy src="parent()" trait="user24" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            
+            <text name="opt_description">
+               <_strings_10><copy src="xxnStrings()" trait="_optDescLocalMapRes" /></_strings_10>
+               <_strings_17><copy src="xxnStrings()" trait="_optDescUseXInputIfPatched" /></_strings_17>
+               <_strings_15><copy src="xxnStrings()" trait="_optDescShowHUDClock" /></_strings_15>
+               <_strings_16><copy src="xxnStrings()" trait="_optDescShowHUDInputViewer" /></_strings_16>
+               <_strings_13><copy src="xxnStrings()" trait="_optDescStopDLCSpam" /></_strings_13>
+               <_strings_14><copy src="xxnStrings()" trait="_optDescUseXXNAlchemyMenu" /></_strings_14>
+               <_strings_18><copy src="xxnStrings()" trait="_optDescQuantityHandlerDefault" /></_strings_18>
+               <_strings_21><copy src="xxnStrings()" trait="_optDescQuantityHandlerAlt" /></_strings_21>
+               <_strings_24><copy src="xxnStrings()" trait="_optDescQuantityHandlerCtrl" /></_strings_24>
+               <_strings_27><copy src="xxnStrings()" trait="_optDescBarterConfirmHandlerDefault" /></_strings_27>
+               <_strings_30><copy src="xxnStrings()" trait="_optDescBarterConfirmHandlerAlt" /></_strings_30>
+               <_strings_33><copy src="xxnStrings()" trait="_optDescBarterConfirmHandlerCtrl" /></_strings_33>
+               <user24>
+                  <copy src="option_local_map_resolution"        trait="_mouseover_any" /><mult>10</mult>
+                  <add><copy src="option_use_xinput_if_patched"  trait="_mouseover_any" /><mult>17</mult></add>
+                  <add><copy src="option_show_hud_clock"         trait="_mouseover_any" /><mult>15</mult></add>
+                  <add><copy src="option_show_hud_input_viewer"  trait="_mouseover_any" /><mult>16</mult></add>
+                  <add><copy src="option_suppress_dlc_spam"      trait="_mouseover_any" /><mult>13</mult></add>
+                  <add><copy src="option_xxnalchemymenu"         trait="_mouseover_any" /><mult>14</mult></add>
+                  <add><copy src="option_quantity_default"       trait="_mouseover_any" /><mult>18</mult></add>
+                  <add><copy src="option_quantity_alt"           trait="_mouseover_any" /><mult>21</mult></add>
+                  <add><copy src="option_quantity_ctrl"          trait="_mouseover_any" /><mult>24</mult></add>
+                  <add><copy src="option_barter_confirm_default" trait="_mouseover_any" /><mult>27</mult></add>
+                  <add><copy src="option_barter_confirm_alt"     trait="_mouseover_any" /><mult>30</mult></add>
+                  <add><copy src="option_barter_confirm_ctrl"    trait="_mouseover_any" /><mult>33</mult></add>
+               </user24>
+               
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string>
+                  <copy src="me()" trait="user24" />
+                  <copy src="me()" trait="_strings_" />
+               </string>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <div>2</div>
+               </x>
+               <y>0</y>
+               <red>140</red><green>140</green><blue>140</blue>
+               <wrapwidth>
+                  <copy src="parent()" trait="width"/>
+                  <sub>32</sub>
+               </wrapwidth>
+            </text>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()" trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="video_defaults_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>6</id>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_defaults" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <target>&true;</target>
+            <clicksound>3</clicksound>
+         </rect>
+         <rect name="button_exit">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>1</id>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_exit" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <target>&true;</target>
+            <clicksound>2</clicksound>
+         </rect>
+      </rect>
+   </rect>
+</menu>

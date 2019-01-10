@@ -1,0 +1,388 @@
+<!-- options_menu.xml -->
+<menu name="OptionsMenu">
+	<class> &OptionsMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<menufade>0.001</menufade>
+	<explorefade>0</explorefade>
+	
+	<user0>&false;</user0>	<!-- True if from pause menu, false otherwise -->
+	
+	<xbuttonb><ref src="button_return" trait="clicked" /></xbuttonb>
+   
+   <rect name="content_space">
+      <include src="NorthernUI/fragments/pause/base.xml" />
+      <rect name="content_box_2">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <rect name="column_right">
+            <locus>&true;</locus>
+            <width>
+               <copy src="parent()"  trait="width" />
+               <sub  src="pause_column_left" trait="x" />
+               <sub  src="pause_column_left" trait="width" />
+               <sub>16</sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <x>
+               <copy src="pause_column_left" trait="x" />
+               <add  src="pause_column_left" trait="width" />
+               <add>16</add>
+            </x>
+            <y>0</y>
+            
+            <!-- Submenu contents go here. -->
+            <rect name="menu">
+               <locus>&true;</locus>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="child(button_return)" trait="y" />
+                  <add  src="child(button_return)" trait="height" />
+               </height>
+               <x>0</x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               
+               <rect name="button_gameplay">
+                  <id>5</id>
+                  <locus>&true;</locus>
+                  <target><copy src="me()" trait="user1" /></target>
+                  <clicksound>1</clicksound>
+                  <x>0</x>
+                  <y>0</y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="child(label)" trait="height" /></height>
+                  
+                  <xdefault>&true;</xdefault>
+                  <xup>  <ref src="button_return" trait="mouseover" /></xup>
+                  <xdown><ref src="button_video"  trait="mouseover" /></xdown>
+                  
+                  <user1>&true;</user1> <!-- button is enabled -->
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <x>0</x>
+                     <y>0</y>
+                     <justify>&left;</justify>
+                     <string><copy src="strings()" trait="_gameplay"/></string>
+                     <red>
+                        <copy>140</copy>
+                        <max>
+                           <copy>255</copy>
+                           <mult src="parent()" trait="mouseover" />
+                        </max>
+                     </red>
+                     <green><copy src="me()" trait="red" /></green>
+                     <blue> <copy src="me()" trait="red" /></blue>
+                  </text>
+               </rect>
+               <rect name="button_video">
+                  <id>6</id>
+                  <locus>&true;</locus>
+                  <target><copy src="me()" trait="user1" /></target>
+                  <clicksound>1</clicksound>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="y" />
+                     <add  src="sibling()" trait="height" />
+                     <add>8</add>
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="child(label)" trait="height" /></height>
+                  
+                  <xdefault>&false;</xdefault>
+                  <xup>  <ref src="button_gameplay" trait="mouseover" /></xup>
+                  <xdown><ref src="button_audio"    trait="mouseover" /></xdown>
+                  
+                  <user1>&true;</user1> <!-- button is enabled -->
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <x>0</x>
+                     <y>0</y>
+                     <justify>&left;</justify>
+                     <string><copy src="strings()" trait="_video" /></string>
+                     <red>
+                        <copy>140</copy>
+                        <max>
+                           <copy>255</copy>
+                           <mult src="parent()" trait="mouseover" />
+                        </max>
+                     </red>
+                     <green><copy src="me()" trait="red" /></green>
+                     <blue> <copy src="me()" trait="red" /></blue>
+                  </text>
+               </rect>
+               <rect name="button_audio">
+                  <id>7</id>
+                  <locus>&true;</locus>
+                  <target><copy src="me()" trait="user1" /></target>
+                  <clicksound>1</clicksound>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="y" />
+                     <add  src="sibling()" trait="height" />
+                     <add>8</add>
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="child(label)" trait="height" /></height>
+                  
+                  <xdefault>&false;</xdefault>
+                  <xup>  <ref src="button_video"    trait="mouseover" /></xup>
+                  <xdown><ref src="button_controls" trait="mouseover" /></xdown>
+                  
+                  <user1>&true;</user1> <!-- button is enabled -->
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <x>0</x>
+                     <y>0</y>
+                     <justify>&left;</justify>
+                     <string><copy src="strings()" trait="_audio"/></string>
+                     <red>
+                        <copy>140</copy>
+                        <max>
+                           <copy>255</copy>
+                           <mult src="parent()" trait="mouseover" />
+                        </max>
+                     </red>
+                     <green><copy src="me()" trait="red" /></green>
+                     <blue> <copy src="me()" trait="red" /></blue>
+                  </text>
+               </rect>
+               <rect name="button_controls">
+                  <id>8</id>
+                  <locus>&true;</locus>
+                  <target><copy src="me()" trait="user1" /></target>
+                  <clicksound>1</clicksound>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="y" />
+                     <add  src="sibling()" trait="height" />
+                     <add>8</add>
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="child(label)" trait="height" /></height>
+                  
+                  <!--
+                     hack to work around issues with conditionally-visible menu items and 
+                     keyboard navigation:
+                  -->
+                  <listindex>4</listindex>
+                  
+                  <xdefault>&false;</xdefault>
+                  <xup>  <ref src="button_audio" trait="mouseover" /></xup>
+                  <xdown>&next;</xdown> <!-- takes advantage of listindex -->
+                  
+                  <user1>&true;</user1> <!-- button is enabled -->
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <x>0</x>
+                     <y>0</y>
+                     <justify>&left;</justify>
+                     <string><copy src="strings()" trait="_controls"/></string>
+                     <red>
+                        <copy>140</copy>
+                        <max>
+                           <copy>255</copy>
+                           <mult src="parent()" trait="mouseover" />
+                        </max>
+                     </red>
+                     <green><copy src="me()" trait="red" /></green>
+                     <blue> <copy src="me()" trait="red" /></blue>
+                  </text>
+               </rect>
+               <rect name="button_xinput">
+                  <id>9002</id>
+                  <visible>
+                     <copy>&false;</copy>
+                     <copy src="NorthernUI()" trait="_xxnDLLLoaded" />
+                  </visible>
+                  <locus>&true;</locus>
+                  <target><copy src="me()" trait="user1" /></target>
+                  <clicksound>1</clicksound>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="y" />
+                     <add  src="sibling()" trait="height" />
+                     <add>8</add>
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="child(label)" trait="height" /></height>
+                  
+                  <listindex>5</listindex>
+                  <xdefault>&false;</xdefault>
+                  <xup>&prev;</xup>
+                  <xdown>&next;</xdown>
+                  
+                  <user1>&true;</user1> <!-- button is enabled -->
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <x>0</x>
+                     <y>0</y>
+                     <justify>&left;</justify>
+                     <string><copy src="xxnStrings()" trait="_optionsMenuXInputSubmenuLabel"/></string>
+                     <red>
+                        <copy>140</copy>
+                        <max>
+                           <copy>255</copy>
+                           <mult src="parent()" trait="mouseover" />
+                        </max>
+                     </red>
+                     <green><copy src="me()" trait="red" /></green>
+                     <blue> <copy src="me()" trait="red" /></blue>
+                  </text>
+               </rect>
+               <rect name="button_dlc">
+                  <id>9</id>
+                  <locus>&true;</locus>
+                  <target><copy src="me()" trait="user1" /></target>
+                  <visible>&xbox;</visible>
+                  <clicksound>1</clicksound>
+                  <x>0</x>
+                  <y>
+                     <copy   src="sibling()" trait="height" />
+                     <add>8</add>
+                     <onlyif src="sibling()" trait="visible" />
+                     <add    src="sibling()" trait="y" />
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="child(label)" trait="height" /></height>
+                  
+                  <!--
+                     hack to work around issues with conditionally-visible menu items and 
+                     keyboard navigation:
+                  -->
+                  <listindex>6</listindex>
+                  
+                  <xdefault>&false;</xdefault>
+                  <xup>  &prev;</xup>
+                  <xdown>&next;</xdown>
+                  
+                  <user1>&true;</user1> <!-- button is enabled -->
+                  <string></string> <!-- executable-supplied -->
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <x>0</x>
+                     <y>0</y>
+                     <justify>&left;</justify>
+                     <string><copy src="parent()" trait="string"/></string>
+                     <red>
+                        <copy>140</copy>
+                        <max>
+                           <copy>255</copy>
+                           <mult src="parent()" trait="mouseover" />
+                        </max>
+                     </red>
+                     <green><copy src="me()" trait="red" /></green>
+                     <blue> <copy src="me()" trait="red" /></blue>
+                  </text>
+               </rect>
+               <rect name="button_northernui">
+                  <id>9001</id>
+                  <locus>&true;</locus>
+                  <target><copy src="me()" trait="user1" /></target>
+                  <visible>
+                     <copy>&false;</copy>
+                     <copy src="NorthernUI()" trait="_xxnDLLLoaded" />
+                  </visible>
+                  <clicksound>1</clicksound>
+                  <x>0</x>
+                  <y>
+                     <copy   src="sibling()" trait="height" />
+                     <add>8</add>
+                     <onlyif src="sibling()" trait="visible" />
+                     <add    src="sibling()" trait="y" />
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="child(label)" trait="height" /></height>
+                  
+                  <listindex>7</listindex>
+                  <xdefault>&false;</xdefault>
+                  <xup>  &prev;</xup>
+                  <xdown>&next;</xdown>
+                  
+                  <user1>&true;</user1> <!-- button is enabled -->
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <x>0</x>
+                     <y>0</y>
+                     <justify>&left;</justify>
+                     <string><copy src="xxnStrings()" trait="_optionsMenuNorthernUISubmenuLabel"/></string>
+                     <red>
+                        <copy>140</copy>
+                        <max>
+                           <copy>255</copy>
+                           <mult src="parent()" trait="mouseover" />
+                        </max>
+                     </red>
+                     <green><copy src="me()" trait="red" /></green>
+                     <blue> <copy src="me()" trait="red" /></blue>
+                  </text>
+               </rect>
+               <rect name="button_return">
+                  <id>2</id>
+                  <locus>&true;</locus>
+                  <target><copy src="me()" trait="user1" /></target>
+                  <clicksound>1</clicksound>
+                  <x>0</x>
+                  <y>
+                     <copy   src="sibling()" trait="height" />
+                     <add>8</add>
+                     <onlyif src="sibling()" trait="visible" />
+                     <add    src="sibling()" trait="y" />
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="child(label)" trait="height" /></height>
+                  
+                  <!--
+                     hack to work around issues with conditionally-visible menu items and 
+                     keyboard navigation:
+                  -->
+                  <listindex>15</listindex>
+                  
+                  <xdefault>&false;</xdefault>
+                  <xup>  &prev;</xup>
+                  <xdown><ref src="button_gameplay" trait="mouseover" /></xdown>
+                  
+                  <user1>&true;</user1> <!-- button is enabled -->
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <x>0</x>
+                     <y>0</y>
+                     <justify>&left;</justify>
+                     
+                     <_string_1><copy src="strings()" trait="_return" /></_string_1>
+                     <_string_2><copy src="strings()" trait="_back" /></_string_2>
+                     
+                     <string>
+                        <copy src="OptionsMenu" trait="user0" />
+                        <copy src="me()"        trait="_string_" />
+                     </string>
+                     <red>
+                        <copy>140</copy>
+                        <max>
+                           <copy>255</copy>
+                           <mult src="parent()" trait="mouseover" />
+                        </max>
+                     </red>
+                     <green><copy src="me()" trait="red" /></green>
+                     <blue> <copy src="me()" trait="red" /></blue>
+                  </text>
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+   </rect>
+</menu>

@@ -1,0 +1,1083 @@
+<!-- hud_main_menu.xml -->
+<menu name="HUDMainMenu">
+	<class> &HUDMainMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<depth> -50 </depth>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<user1> 2 </user1>
+	<user2> 1 </user2>
+	<user3> 1 </user3>	<!-- 1 = explore mode / 0 = menu mode -->
+	<user4> 1 </user4>	<!-- current mode... 1=stats, 2=inventory, 3=magic, 4=map -->
+	<user5> 1 </user5>	<!-- last mode... 1=stats, 2=inventory, 3=magic, 4=map -->
+	<user6> 65 </user6>	<!-- player model first zoom percentage... 100=face, 0=full body -->
+	
+	<!-- Region text -->
+	<user7> 0 </user7>	<!-- alpha -->
+	<user8> Region name text </user8>
+   
+   <!-- NorthernUI by DavidJCobb: a Skyrim look-alike UI redesign for Oblivion. -->
+	
+	<rect name="player_grab_zone">
+		<id> 91 </id>
+		<target> &true; </target>
+		<alpha> 128 </alpha>
+		<x> 0 </x>
+		<y> 0 </y>
+		<width> <copy src="screen()" trait="width"/> </width>
+		<height> <copy src="screen()" trait="height"/> </height>
+	</rect>
+   
+   <rect name="hudmain_gameplay_corestats"> <!-- health/magicka/stamina/equipment -->
+      <visible><!-- Show only in "explore mode." --><copy src="HUDMainMenu" trait="user3" /><eq>1</eq></visible>
+      <locus>&true;</locus>
+      <x><copy src="screen()" trait="cropX" /></x>
+      <y>
+         <copy src="screen()" trait="height" />
+         <sub  src="screen()" trait="cropY" />
+         <sub  src="me()"     trait="height" />
+         <sub>32</sub>
+      </y>
+      <width>
+         <copy src="screen()" trait="width" />
+         <sub>
+            <copy src="screen()" trait="cropX" />
+            <mult>2</mult>
+         </sub>
+      </width>
+      <height>
+         <copy src="hudmain_health"  trait="height" />
+         <max  src="hudmain_magic"   trait="height" />
+         <max  src="hudmain_fatigue" trait="height" />
+      </height>
+      <_marginX>32</_marginX>
+      <!-- -->
+      <rect name="hudmain_health">
+         <id>2</id>
+         <include src="NorthernUI\meters\statbar.xml" />
+         <depth>1</depth>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>0</y>
+         <visible><copy src="me()" trait="user0"/><gt>0</gt></visible>
+         <_fillImage>Menus\NorthernUI\meters\statbar\hd_fill_health.dds</_fillImage>
+         <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
+         
+         <user0>1.0</user0> <!-- executable: meter percent -->
+      </rect>
+      <rect name="hudmain_magic">
+         <id>3</id>
+         <include src="NorthernUI\meters\statbar.xml" />
+         <depth>1</depth>
+         <x><copy src="parent()" trait="_marginX" /></x>
+         <y>0</y>
+         <visible><copy src="hudmain_health" trait="user0"/><gt>0</gt></visible>
+         <_fillImage>Menus\NorthernUI\meters\statbar\hd_fill_magicka.dds</_fillImage>
+         <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
+         
+         <user0>1.0</user0> <!-- executable: meter percent -->
+      </rect>
+      <rect name="hudmain_fatigue">
+         <id>4</id>
+         <include src="NorthernUI\meters\statbar.xml" />
+         <depth>1</depth>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <sub  src="parent()" trait="_marginX" />
+         </x>
+         <y>0</y>
+         <visible><copy src="hudmain_health" trait="user0"/><gt>0</gt></visible>
+         <_fillImage>Menus\NorthernUI\meters\statbar\hd_fill_stamina.dds</_fillImage>
+         <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
+         
+         <user0>1.0</user0> <!-- executable: meter percent -->
+      </rect>
+      <!-- -->
+      <image name="hudmain_Magic_Icon"> <!-- equipped spell -->
+			<id>6</id>
+			<filename>Menus\Icons\icon_hud_default_magic.dds</filename>
+			<depth>1</depth>
+			<locus>&true;</locus>
+			<width>63</width>
+			<height>63</height>
+			<x> <!-- align with left edge of magicka bar -->
+				<copy src="sibling(hudmain_magic)" trait="x"/>
+			</x>
+			<y> <!-- 16 units above baseline -->
+            <copy>-16</copy>
+            <sub  src="me()" trait="height"/>
+         </y>
+			<alpha> <!-- dim when the player can't cast -->
+				<copy>100</copy>
+            <max>
+               <copy>255</copy>
+               <onlyif src="me()" trait="user2" />
+            </max>
+			</alpha>
+			<user2>&true;</user2>		<!-- can cast -->
+      </image>
+      <image name="hudmain_weapon"> <!-- equipped weapon; tile is referenced by name elsewhere -->
+			<id> 5 </id>
+			<filename> Menus\Icons\icon_hud_default_weapon.dds </filename>
+			<locus> &true; </locus>
+			<depth> 1 </depth>
+			<width> 63 </width>
+			<height> 63 </height>
+			<x> <!-- align with right edge of fatigue bar -->
+				<copy src="sibling(hudmain_fatigue)" trait="x" />
+				<add  src="sibling(hudmain_fatigue)" trait="width" />
+				<sub  src="me()" trait="width" />
+			</x>
+			<y> <!-- 16 units above baseline -->
+            <copy>-16</copy>
+            <sub  src="me()" trait="height" />
+         </y>
+			<alpha>
+				<copy>100</copy>
+            <max>
+               <copy>255</copy>
+               <onlyif>
+                  <copy src="me()" trait="user2" />
+                  <gte>50</gte>	<!-- weapon health minimum before weapon icon partially alphas out -->
+               </onlyif>
+            </max>
+			</alpha>
+			<!-- Possible item statuses are broken, stolen, enchanted, and poisoned -->
+			<user0> 0 </user0>		<!-- status combination -->
+			<user1></user1>			<!-- status icon filename -->
+			<user2> 1.0 </user2>	<!-- weapon health - 0-100 -->
+			<user3> 0 </user3>		<!-- ammo remaining -->
+         <user20>-1</user20> <!-- NorthernUI: charge (negative if no enchantment) -->
+         <user21>-1</user21> <!-- NorthernUI: remaining uses -->
+			<!-- -->
+			<image name="hudmain_weapon_status">     <!-- overlaid on weapon icon -->
+				<filename><copy src="parent()" trait="user1"/></filename>
+				<depth>1</depth>
+				<visible>
+					<copy src="parent()" trait="user0"/>
+					<gt> 0 </gt>
+				</visible>
+				<x>0</x>
+				<y> <!-- vertically center -->
+					<copy src="parent()" trait="height"/>
+					<sub  src="me()" trait="height"/>
+               <div>2</div>
+				</y>
+				<height>
+					<copy>32</copy>		<onlyif src="me()" trait="_handonly"/>
+					<add>
+						<copy>24</copy>	<onlyifnot src="me()" trait="_handonly"/>
+					</add>
+				</height>
+				<width>
+					<copy>64</copy>
+					<sub>
+						<copy>32</copy>
+						<onlyif>
+							<!-- If any of these conditions is true, we are using an original icon,
+							     rather than a "combo" dds. -->
+							<!-- "Combo" dds's are 32x64, original icons are 32x32 -->
+							<copy src="me()" trait="_handonly"/>
+							<or> <copy src="parent()" trait="user0"/> <eq>2</eq> </or>
+							<or> <copy src="parent()" trait="user0"/> <eq>4</eq> </or>
+							<or> <copy src="parent()" trait="user0"/> <eq>8</eq> </or>
+						</onlyif>
+					</sub>
+				</width>
+				<red>
+					<copy> 47 </copy>
+					<onlyifnot src="me()" trait="_handonly"/>
+					<add> 208 </add>
+				</red>
+				<green>
+					<copy> 255 </copy>
+					<onlyifnot src="me()" trait="_handonly"/>
+				</green>
+				<blue>
+					<copy> 255 </copy>
+					<onlyifnot src="me()" trait="_handonly"/>
+				</blue>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<_handonly>
+					<copy src="parent()" trait="user0"/>
+					<eq> 1 </eq>
+				</_handonly>
+			</image>
+			<text name="hudmain_weapon_ammo">        <!-- overlaid on weapon icon -->
+            <include src="NorthernUI\fonts\normal.xml" />
+				<visible>
+					<copy src="parent()" trait="user3" /><gt>0</gt>
+					<and>
+						<copy src="HUDMainMenu" trait="user3" /><eq>1</eq>
+					</and>
+				</visible>
+				<x><copy src="parent()" trait="width" /></x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+            </y>
+				<depth> 3 </depth>
+				<justify> &right; </justify>
+				<font> 3 </font>
+				<red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+				<wrapwidth>55</wrapwidth>
+				<wraplines> 1</wraplines>
+				<string><copy src="parent()" trait="user3" /></string>
+			</text>
+			<text name="hudmain_weapon_ammo_shadow"> <!-- overlaid on weapon icon -->
+            <include src="NorthernUI\fonts\normal.xml" />
+				<visible> <copy src="sibling(hudmain_weapon_ammo)" trait="visible"/> </visible>
+				<x>
+               <copy src="sibling()" trait="x" />
+               <add>2</add>
+            </x>
+				<y>
+               <copy src="sibling()" trait="y" />
+               <add>2</add>
+            </y>
+				<depth> 2 </depth>
+				<justify> &right; </justify>
+				<font> 3 </font>
+				<red> 0 </red>
+				<green> 0 </green>
+				<blue> 0  </blue>
+				<alpha> 192 </alpha>
+				<wrapwidth> 55 </wrapwidth>
+				<wraplines> 1 </wraplines>
+				<string><copy src="parent()" trait="user3" /></string>
+			</text>
+		</image>
+      <rect name="hudmain_weapon_condition">
+         <include src="NorthernUI\meters\generic_upward.xml" />
+         <depth>2</depth>
+         <x>
+            <copy src="hudmain_fatigue" trait="x" />
+            <add> <!-- size of a statbar endcap -->
+               <copy>55</copy>
+               <mult src="hudmain_fatigue" trait="zoom" />
+               <div>100</div>
+            </add>
+         </x>
+			<y> <!-- 16 units above baseline -->
+            <copy>-16</copy>
+            <sub  src="me()" trait="height" />
+         </y>
+         <visible><copy src="hudmain_health" trait="user0"/><gt>0</gt></visible>
+         <_fillImage>Menus\NorthernUI\meters\generic_upward\hd_fill_health.dds</_fillImage>
+         <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
+         <width>
+            <copy src="hudmain_fatigue" trait="width" />
+            <sub  src="hudmain_weapon"  trait="width" />
+            <sub  src="parent()" trait="_marginX" />
+         </width>
+         
+         <user0>
+            <copy src="hudmain_weapon" trait="user2" />
+            <div>100</div>
+         </user0>
+      </rect>
+      <rect name="hudmain_weapon_charge">
+         <include src="NorthernUI\meters\generic_upward.xml" />
+         <depth>1</depth>
+         
+         <_align> <!-- line the meters up so that their "slopes" match -->
+            14
+         </_align>
+         
+         <x>
+            <copy src="sibling()" trait="x" />
+            <add  src="me()" trait="_align" />
+         </x>
+			<y> <!-- above condition meter -->
+            <copy src="sibling()" trait="y" />
+            <sub  src="me()" trait="height" />
+            <add> <!-- overlap the meters' outlines -->
+               <copy>2</copy>
+            </add>
+         </y>
+         <visible>
+            <copy src="hudmain_health" trait="user0"/><gt>0</gt>
+            <and>
+               <copy src="hudmain_weapon" trait="user20" /><gte>0</gte>
+            </and>
+         </visible>
+         <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
+         <width>
+            <copy src="sibling()" trait="width" />
+            <sub src="me()" trait="_align" />
+            <sub src="me()" trait="_align" />
+         </width>
+         
+         <user0>
+            <copy src="hudmain_weapon" trait="user20" />
+            <onlyif> <!-- remaining charge is sufficient to actually use the enchantment -->
+               <copy src="hudmain_weapon" trait="user21" /> <!-- uses -->
+               <gt>0</gt>
+            </onlyif>
+         </user0>
+      </rect>
+   </rect>
+   <rect name="hudmain_compass">
+      <locus>&true;</locus>
+      <visible> <!-- Show only in "explore mode." -->
+         <copy src="HUDMainMenu" trait="user3" /><eq>1</eq>
+      </visible>
+      <width>600</width>
+      <height><copy src="child(compass_mid)" trait="height" /></height>
+      <x>
+         <copy src="screen()" trait="width"/>
+         <sub  src="me()"     trait="width"/>
+         <div>2</div>
+      </x>
+      <y>32</y>
+      <zoom>58</zoom> <!-- graphics scale -->
+      
+      <user0> <!-- width of the "mid" portion of the flex-image -->
+         <copy src="child(compass_mid)" trait="width" />
+      </user0>
+      
+      <image name="compass_endcap_l">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>Menus\NorthernUI\HUD\compass\hd_endcaps.dds</filename>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <x>0</x>
+         <y>0</y>
+      </image>
+      <image name="compass_endcap_r">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>Menus\NorthernUI\HUD\compass\hd_endcaps.dds</filename>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <cropX><copy src="me()" trait="width" /></cropX>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+         </x>
+         <y>0</y>
+      </image>
+      <image name="compass_mid">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>Menus\NorthernUI\HUD\compass\hd_mid.dds</filename>
+         <width>
+            <copy src="compass_endcap_r" trait="x" />
+            <sub  src="compass_endcap_l" trait="width" />
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <x><copy src="compass_endcap_l" trait="width" /></x>
+         <y>0</y>
+         <tile>&true;</tile>
+      </image>
+      
+      <rect name="hudmain_compass_window">
+         <locus>&true;</locus>
+         <id>7</id>
+         <alpha>0</alpha>
+         <depth>1</depth>
+         <width> <copy src="parent()" trait="user0" /></width>
+         <height><copy src="parent()" trait="height" /></height>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <clipwindow>&true;</clipwindow>
+         <user0>0</user0>		<!-- set by code - heading in degrees, N is 0/360 -->
+         <user20>					<!-- pixel-width of a 360-degree span -->
+            <copy>768</copy>
+            <div>   2</div>
+         </user20>
+         <user3>					<!-- degree-to-pixel conversion factor -->
+            <copy src="me()" trait="user20" />
+            <div>360</div>
+         </user3>
+         <user4>					<!-- heading in pixels -->
+            <copy src="me()" trait="user0" />	<!-- heading in degrees -->
+            <mult src="me()" trait="user3" />	<!-- convert to pixels -->
+         </user4>
+         <user5>					<!-- offset heading in pixels -->
+            <copy src="me()" trait="user4" />	<!-- heading in pixels -->
+            <add  src="me()" trait="user20" />
+         </user5>
+         
+         <rect name="hudmain_compass_heading">
+            <id>14</id>
+            <depth>3</depth>
+            <width>768</width>
+            <height><copy src="parent()" trait="height" /></height>
+            <clips>&true;</clips> <!-- To debug the compass, set this to false so that the compass contents "overflow." -->
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+            </y>
+            <user1>0</user1>	<!-- max icon depth -->
+            <user2>0</user2>	<!-- set by code - min reveal distance -->
+            <user3>0</user3>	<!-- set by code - max visible distance -->
+            
+            <_filename_1>Menus\NorthernUI\icons\map.dds</_filename_1>		<!-- all map markers -->
+            <_filename_2>Menus\NorthernUI\icons\objective_marker.dds</_filename_2>			<!-- quest marker icon -->
+            <_filename_3>Menus\NorthernUI\icons\custom_marker.dds</_filename_3>			<!-- marker icon -->
+            <_filename_4>Menus\Map\world_map_arrow_icon.dds</_filename_4>		<!-- you are here icon -->
+            <_filename_5>Menus\NorthernUI\icons\objective_door_marker.dds</_filename_5> <!-- quest door -->
+
+            <template name="hudmain_compass_icon">
+               <image name="hudmain_compass_icon">
+                  <filename>
+                     <copy src="me()" trait="user6"/>
+                     <onlyif>
+                        <copy src="me()" trait="user5"/>
+                        <eq> 99 </eq>
+                     </onlyif>
+                     <add>
+                        <copy> 3 </copy>
+                        <onlyif>
+                           <copy src="me()" trait="user5"/>
+                           <eq> 98 </eq>
+                        </onlyif>
+                     </add>
+                     <add> 1 </add>
+                     <max>
+                        <copy>5</copy>
+                        <onlyif src="me()" trait="user11" />
+                        <onlyif src="me()" trait="user10" />
+                     </max>
+                     <copy src="parent()" trait="_filename_"/>
+                  </filename>
+                  <cropx>
+                     <copy src="me()" trait="user5" /> <!-- X: location type -->
+                     <sub> 1</sub>
+                     <mul>32</mul>
+                     <onlyif> <!-- exclude special-case locations -->
+                        <copy src="me()" trait="user5"/><lt>90</lt>
+                     </onlyif>
+                  </cropx>
+                  <cropy>
+                     <copy src="me()" trait="user6" /> <!-- Y: fast-travel -->
+                     <sub> 1</sub>
+                     <mul>32</mul>
+                     <onlyif> <!-- exclude special-case locations -->
+                        <copy src="me()" trait="user5"/><lt>90</lt>
+                     </onlyif>
+                  </cropy>
+                  <depth>2</depth>
+                  <alpha>
+                     <copy> 255 </copy>
+                     <mul    src="me()" trait="_distance"/>
+                     <onlyif src="me()" trait="user9"/>
+                     <add>
+                        <copy> 255 </copy>
+                        <onlyifnot src="me()" trait="user9"/>
+                     </add>
+                     <max> <!-- force full opacity for quest and custom waypoints -->
+                        <copy>255</copy>
+                        <onlyif>
+                           <copy src="me()" trait="user11" />
+                           <or   src="me()" trait="user12" />
+                        </onlyif>
+                     </max>
+                  </alpha>
+                  <width>
+                     <copy>28</copy>
+                     <add>
+                        <copy>4</copy>
+                        <onlyif src="me()" trait="user9"/>
+                     </add>
+                  </width>
+                  <height>
+                     <copy>32</copy>
+                     <add>
+                        <copy>10</copy>
+                        <onlyifnot src="me()" trait="user9"/>
+                     </add>
+                  </height>
+
+                  <_distance>
+                     <copy> 1 </copy>
+                     <sub>
+                        <copy src="me()" trait="user1"/>
+                        <sub src="parent()" trait="user2"/>		<!-- min reveal distance -->
+                        <div src="parent()" trait="user3"/>		<!-- max visible distance -->
+                        <min> 1.0 </min>
+                     </sub>
+                  </_distance>
+                  <user0>       0 </user0> <!-- heading to icon (0-360) -->
+                  <user1>      30 </user1> <!-- distance to icon in feet -->
+                  <user2>  &true; </user2> <!-- unused if true -->
+                  <user5>       0 </user5> <!-- location type; types >= 90 are sentinel values -->
+                  <user6> &false; </user6> <!-- fast travel enabled -->
+                  <user9>  &true; </user9>
+                  <user10>&false;</user10> <!-- is through load door -->
+                  <user11>&false;</user11> <!-- is a quest target -->
+                  <user12>&false;</user12> <!-- is the player marker -->
+                  
+                  <!--
+                     If User5 == 98, then the icon is the you-are-here marker. (Redundant 
+                     with User12?)
+                  
+                     If User5 == 99, then the icon is a quest waypoint or placed waypoint, 
+                     and the User6 bool indicates the latter.
+                  -->
+                  
+                  <!-- This prefab handles the position of the icon. -->
+                  <include src="NorthernUI\hud_compass_entity.xml" />
+                  <user3> <copy src="hudmain_compass_window" trait="user3" /> </user3>
+                  <user16><copy src="hudmain_compass_window" trait="user0" /> </user16>
+                  <user18><copy src="hudmain_compass_window" trait="width" /> </user18>
+               </image>
+            </template>
+         </rect>
+         <!-- 
+            For some reason, if we put compass lettering in the same clipwindow as the 
+            generated icons, we experience issues with letters and icons vanishing 
+            randomly as the player's position (yes, position, not rotation) changes. 
+            Easiest fix is to just use a separate clipwindow.
+            
+            Weird goddamn game...
+         -->
+         <rect name="compass_markings_clip">
+            <clips>&true;</clips>
+            <locus>&true;</locus>
+            <depth>1</depth>
+            <x><copy src="sibling()" trait="x" /></x>
+            <y><copy src="sibling()" trait="y" /></y>
+            <width> <copy src="sibling()" trait="width" /></width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <user3> <copy src="hudmain_compass_window" trait="user3" /> </user3>
+            <user16><copy src="hudmain_compass_window" trait="user0" /> </user16>
+            <user18><copy src="hudmain_compass_window" trait="width" /> </user18>
+            
+            <text name="north">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <include src="NorthernUI\hud_compass_entity.xml" />
+               <user3> <copy src="parent()" trait="user3" /> </user3>
+               <user16><copy src="parent()" trait="user16" /></user16>
+               <user18><copy src="parent()" trait="user18" /></user18>
+               <string>N</string>
+               <user0>  0</user0>
+            </text>
+            <text name="northeast">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <include src="NorthernUI\hud_compass_entity.xml" />
+               <user3> <copy src="parent()" trait="user3" /> </user3>
+               <user16><copy src="parent()" trait="user16" /></user16>
+               <user18><copy src="parent()" trait="user18" /></user18>
+               <string>NE</string>
+               <user0> 45</user0>
+            </text>
+            <text name="east">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <include src="NorthernUI\hud_compass_entity.xml" />
+               <user3> <copy src="parent()" trait="user3" /> </user3>
+               <user16><copy src="parent()" trait="user16" /></user16>
+               <user18><copy src="parent()" trait="user18" /></user18>
+               <string>E</string>
+               <user0> 90</user0>
+            </text>
+            <text name="southeast">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <include src="NorthernUI\hud_compass_entity.xml" />
+               <user3> <copy src="parent()" trait="user3" /> </user3>
+               <user16><copy src="parent()" trait="user16" /></user16>
+               <user18><copy src="parent()" trait="user18" /></user18>
+               <string>SE</string>
+               <user0>135</user0>
+            </text>
+            <text name="south">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <include src="NorthernUI\hud_compass_entity.xml" />
+               <user3> <copy src="parent()" trait="user3" /> </user3>
+               <user16><copy src="parent()" trait="user16" /></user16>
+               <user18><copy src="parent()" trait="user18" /></user18>
+               <string>S</string>
+               <user0>180</user0>
+            </text>
+            <text name="southwest">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <include src="NorthernUI\hud_compass_entity.xml" />
+               <user3> <copy src="parent()" trait="user3" /> </user3>
+               <user16><copy src="parent()" trait="user16" /></user16>
+               <user18><copy src="parent()" trait="user18" /></user18>
+               <string>SW</string>
+               <user0>225</user0>
+            </text>
+            <text name="west">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <include src="NorthernUI\hud_compass_entity.xml" />
+               <user3> <copy src="parent()" trait="user3" /> </user3>
+               <user16><copy src="parent()" trait="user16" /></user16>
+               <user18><copy src="parent()" trait="user18" /></user18>
+               <string>W</string>
+               <user0>270</user0>
+            </text>
+            <text name="northwest">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <include src="NorthernUI\hud_compass_entity.xml" />
+               <user3> <copy src="parent()" trait="user3" /> </user3>
+               <user16><copy src="parent()" trait="user16" /></user16>
+               <user18><copy src="parent()" trait="user18" /></user18>
+               <string>NW</string>
+               <user0>315</user0>
+            </text>
+         </rect>
+      </rect>
+   </rect>
+   <text name="hudmain_region">
+		<x>
+			<!-- <copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+			<div>2</div> -->
+         <copy src="screen()" trait="width" />
+			<add  src="me()"     trait="width" /> <!-- compensate for right-alignment -->
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="hudmain_compass" trait="y" />
+			<add  src="hudmain_compass" trait="height" />
+         <add>8</add>
+		</y>
+      <include src="NorthernUI\fonts\normal-shadowed.xml" />
+      <justify>&right;</justify> <!-- the damn executable forces this to &right;! -->
+		<string><copy src="HUDMainMenu" trait="user8" /></string>
+		<red>140</red>
+		<green>140</green>
+		<blue>140</blue>
+		<alpha><copy src="HUDMainMenu" trait="user7" /></alpha>
+	</text>
+   <rect name="hudmain_menu_selector">
+      <visible> <!-- only in menu mode -->
+         <copy src="HUDMainMenu" trait="user3" />
+         <eq>0</eq>
+      </visible>
+      <locus>&true;</locus>
+      <x><copy src="NorthernUI()" trait="_xxnMainMenuXOffset" /></x>
+      <y>0</y>
+      <width>745</width>
+      <height><copy src="child()" trait="height" /></height>
+      <depth> <!-- Reset this element and its descendants to the global 0 depth. -->
+         <copy src="HUDMainMenu" trait="depth" />
+         <mult>-1</mult>
+         <max>0</max>
+      </depth>
+      
+      <_tabSpacing>
+         <copy src="me()" trait="width" />
+         <sub>
+            <copy src="child(tab_stats)" trait="width" />
+            <add  src="child(tab_items)" trait="width" />
+            <add  src="child(tab_magic)" trait="width" />
+            <add  src="child(tab_map)"   trait="width" />
+            <add>
+               <copy>8</copy> <!-- padding -->
+               <mult>2</mult>
+            </add>
+         </sub>
+         <div>
+            <copy>3</copy> <!-- tab count - 1 -->
+            <add> 2 </add> <!-- to center the tabs, 2; else 0 -->
+         </div>
+      </_tabSpacing>
+      
+      <rect name="tab_stats">
+         <locus>&true;</locus>
+         <target>&true;</target>
+         <id>9</id>
+         <x>
+            <copy>8</copy> <!-- padding -->
+            <add  src="parent()"  trait="_tabSpacing" />
+         </x>
+         <y>0</y>
+         <depth>5</depth>
+         <width><copy src="child(text)" trait="width" /></width>
+         <height>
+            <copy src="child(text)" trait="height" />
+            <add>8</add>
+         </height>
+         <_selected>
+            <copy src="HUDMainMenu" trait="user4" />
+            <add>8</add>
+            <eq   src="me()" trait="id"/>
+         </_selected>
+         <!-- -->
+         <text name="text">
+            <string><copy src="xxnStrings()" trait="_statsMenuTitle" /></string>
+            <x>0</x>
+            <y>5</y>
+            <include src="NorthernUI\fonts\large.xml" />
+            <red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif src="parent()" trait="_selected" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+         </text>
+      </rect>
+      <rect name="tab_items">
+         <locus>&true;</locus>
+         <target>&true;</target>
+         <id>10</id>
+         <x>
+            <copy src="sibling()" trait="x" />
+            <add  src="sibling()" trait="width" />
+            <add  src="parent()"  trait="_tabSpacing" />
+         </x>
+         <y>0</y>
+         <depth>5</depth>
+         <width><copy src="child(text)" trait="width" /></width>
+         <height>
+            <copy src="child(text)" trait="height" />
+            <add>8</add>
+         </height>
+         <_selected>
+            <copy src="HUDMainMenu" trait="user4" />
+            <add>8</add>
+            <eq   src="me()" trait="id"/>
+         </_selected>
+         <!-- -->
+         <text name="text">
+            <string><copy src="xxnStrings()" trait="_inventoryMenuTitle" /></string>
+            <x>0</x>
+            <y>5</y>
+            <include src="NorthernUI\fonts\large.xml" />
+            <red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif src="parent()" trait="_selected" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+         </text>
+      </rect>
+      <rect name="tab_magic">
+         <locus>&true;</locus>
+         <target>&true;</target>
+         <id>11</id>
+         <x>
+            <copy src="sibling()" trait="x" />
+            <add  src="sibling()" trait="width" />
+            <add  src="parent()"  trait="_tabSpacing" />
+         </x>
+         <y>0</y>
+         <depth>5</depth>
+         <width><copy src="child(text)" trait="width" /></width>
+         <height>
+            <copy src="child(text)" trait="height" />
+            <add>8</add>
+         </height>
+         <_selected>
+            <copy src="HUDMainMenu" trait="user4" />
+            <add>8</add>
+            <eq   src="me()" trait="id"/>
+         </_selected>
+         <!-- -->
+         <text name="text">
+            <string><copy src="xxnStrings()" trait="_magicMenuTitle" /></string>
+            <x>0</x>
+            <y>5</y>
+            <include src="NorthernUI\fonts\large.xml" />
+            <red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif src="parent()" trait="_selected" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+         </text>
+      </rect>
+      <rect name="tab_map">
+         <locus>&true;</locus>
+         <target>&true;</target>
+         <id>12</id>
+         <x>
+            <copy src="sibling()" trait="x" />
+            <add  src="sibling()" trait="width" />
+            <add  src="parent()"  trait="_tabSpacing" />
+         </x>
+         <y>0</y>
+         <depth>5</depth>
+         <width><copy src="child(text)" trait="width" /></width>
+         <height>
+            <copy src="child(text)" trait="height" />
+            <add>8</add>
+         </height>
+         <_selected>
+            <copy src="HUDMainMenu" trait="user4" />
+            <add>8</add>
+            <eq   src="me()" trait="id"/>
+         </_selected>
+         <!-- -->
+         <text name="text">
+            <string><copy src="xxnStrings()" trait="_mapMenuTitle" /></string>
+            <x>0</x>
+            <y>5</y>
+            <include src="NorthernUI\fonts\large.xml" />
+            <red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif src="parent()" trait="_selected" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+         </text>
+      </rect>
+   </rect>
+   <image name="hudmain_Levelup_Icon">
+      <id>18</id>
+      <filename> Menus\Icons\icon_level_up.dds </filename>
+      <depth> 1 </depth>
+      <locus> &true; </locus>
+      <width> 63 </width>
+      <height> 63 </height>
+      <visible> &false; </visible>
+      <x>
+         <copy src="screen()" trait="width" />
+         <sub  src="screen()" trait="cropx" />
+         <sub>32</sub>
+         <sub> <!-- center below XXNHUDClockMenu graphic -->
+            <copy src="NorthernUI()" trait="_xxnClockImageFilewidth" />
+            <sub  src="me()" trait="width" />
+            <div>2</div>
+         </sub>
+         <sub  src="me()" trait="width" />
+      </x>
+      <y>
+         <copy>32</copy>
+         <add> <!-- XXNHUDClockMenu - image height -->
+            <copy>221</copy>
+            <mult src="northernui()" trait="_xxnClockImageScale" />
+            <div>100</div>
+         </add>
+         <add> <!-- XXNHUDClockMenu - text height (assuming same font as our region text) -->
+            <copy src="hudmain_region" trait="height" />
+            <mult>2</mult>
+            <add>4</add>
+         </add>
+         <onlyif>
+            <copy src="HUDMainMenu" trait="user3" /><eq>1</eq>
+            <and src="NorthernUI()" trait="_xxnShowHUDClock" />
+         </onlyif>
+         <add>16</add> <!-- spacing -->
+      </y>
+   </image>
+	<rect name="active_effects">
+		<id>16</id>
+      <locus>&true;</locus>
+		<x>
+         <copy src="screen()" trait="width" />
+         <sub  src="screen()" trait="cropx" />
+         <sub>32</sub>
+         <sub> <!-- center below XXNHUDClockMenu graphic -->
+            <copy src="NorthernUI()" trait="_xxnClockImageFilewidth" />
+            <sub  src="me()" trait="width" />
+            <div>2</div>
+         </sub>
+         <sub  src="me()" trait="width" />
+		</x>
+		<y>
+         <copy   src="sibling()" trait="height" />
+			<add>32</add>
+         <onlyif src="sibling()" trait="visible" />
+         <add    src="sibling()" trait="y" />
+		</y>
+		
+		<_icon_width> 63</_icon_width>
+		<_icon_height>63</_icon_height>
+		<_buffer>16</_buffer>
+		<_icons_per_row>2</_icons_per_row>
+      
+      <width>
+         <copy src="me()" trait="_icon_width" />
+         <mult src="me()" trait="_icons_per_row" />
+         <add>
+            <copy src="me()" trait="_icons_per_row" />
+            <sub>1</sub>
+            <mult src="me()" trait="_buffer" />
+         </add>
+      </width>
+      <_realWidth>
+         <copy src="me()" trait="childcount" />
+         <min  src="me()" trait="_icons_per_row" />
+         <mult src="me()" trait="_icon_width" />
+         <add>
+            <copy src="me()" trait="childcount" />
+            <min  src="me()" trait="_icons_per_row" />
+            <sub>1</sub>
+            <mult src="me()" trait="_buffer" />
+         </add>
+      </_realWidth>
+	</rect>
+	
+	<template name="icon_template">
+		<image name="effect_icon">
+			<locus> &true; </locus>
+			<user0></user0>		<!-- index; starts at zero -->
+			<user1></user1>		<!-- time left; negative for constant effects -->
+			<width> <copy src="active_effects" trait="_icon_width" /></width>
+			<height><copy src="active_effects" trait="_icon_height" /></height>
+			<x>
+				<copy>0</copy> <!-- starting x pos -->
+				<add>
+					<copy src="active_effects" trait="_icon_width"/>
+					<add  src="active_effects" trait="_buffer"/>				<!-- move left by icon width + buffer -->
+					<mult>													<!-- how many times = index % max-per-row -->
+						<copy src="me()" trait="user0"/>
+						<mod src="active_effects" trait="_icons_per_row"/>
+					</mult>
+				</add>
+            <add> <!-- if not enough icons to fill the row, center them -->
+               <copy src="active_effects" trait="width" />
+               <sub  src="active_effects" trait="_realWidth" />
+               <div>2</div>
+            </add>
+			</x>
+			<y>
+				<copy>0</copy> <!-- starting y pos -->
+				<add>
+					<copy src="me()" trait="user0"/>						<!-- index/icons_per_row gives you -->
+					<div src="active_effects" trait="_icons_per_row"/>			<!-- row num plus a fraction -->
+					<sub>
+						<copy src="me()" trait="user0"/>					<!-- subtract the fraction -->
+						<mod src="active_effects" trait="_icons_per_row"/>
+						<div src="active_effects" trait="_icons_per_row"/>
+					</sub>
+					<mult>													<!-- multiply row num by num pixels -->
+						<copy src="active_effects" trait="_icon_height"/>
+						<add src="active_effects" trait="_buffer"/>
+					</mult>
+				</add>
+			</y>
+			<nif name="icon_timer">
+				<id> 17 </id>
+				<depth> 1 </depth>
+				<filename> Enemy Health Bar\Health_Bar01.NIF </filename>
+				<visible>
+					<copy src="parent()" trait="alpha"/>
+					<eq> 255 </eq>
+					<and>
+						<copy src="parent()" trait="user1"/>	<!-- time left < 0 for constant effects -->
+						<gte>0</gte>
+					</and>
+				</visible>
+				<x> 30 </x>
+				<y> 0 </y>
+				<animation> Health_Bar </animation>
+			</nif>
+		</image>
+	</template>
+	
+   
+   <!-- ===== GAME CRASHES ON LOAD IF SOME OF THESE ARE MISSING: ====== -->
+   
+   <rect name="warning_the_game_will_crash_if_these_are_removed">
+      <visible>&false;</visible>
+      <image name="hudmain_background">
+         <id> 1 </id>
+         <filename> Menus\HUD\hud_back.dds </filename>
+         <depth> 55 </depth>
+         <alpha>
+            <copy src="HUDMainMenu" trait="user3"/>
+            <eq> 0 </eq>
+            <sub> 1 </sub>
+            <mul> 255 </mul>
+         </alpha>
+         <width> 620 </width>
+         <height> 70 </height>
+         <locus> &true; </locus>
+         <x>
+            <copy src="screen()" trait="cropx"/>
+            <add src="screen()" trait="cropx"/>
+            <sub> 60 </sub>
+            <max src="screen()" trait="cropx"/>
+            <add> 67 </add>
+         </x>
+         <y>
+            <copy src="screen()" trait="height"/>
+            <sub src="screen()" trait="cropy"/>
+            <sub src="screen()" trait="cropy"/>
+            <sub src="me()" trait="height"/>
+         </y>
+         <image name="hudmain_frame">
+            <id>8</id>
+            <filename> Menus\HUD\hud_frame.dds </filename>
+            <depth> 18 </depth>
+            <visible> <copy src="HUDMainMenu" trait="user3"/> </visible>
+            <width> 761 </width>
+            <height> 90 </height>
+            <x> -70 </x>
+            <y> -5 </y>
+            <user0>135</user0>
+            <locus>&true;</locus>
+         </image>
+         <nif name="hudmain_brackets"> 
+            <id> 20 </id>
+            <filename> hud_brackets\A_B_C_D_seq.NIF </filename>
+            <depth> 37 </depth>
+            <locus> &true; </locus>
+            <alpha> 255 </alpha>
+            <x> -20 </x>
+            <y> -12 </y>
+            <user1> 1 </user1>
+            <user2>-1.0</user2>
+            <visible>
+               <copy src="HUDMainMenu" trait="user3"/>
+               <eq> 0 </eq>
+            </visible>
+            <animation>
+               <copy src="HUDMainMenu" trait="user5"/>		<!-- get the last mode -->
+               <mult> 10 </mult>						<!-- make it the tens digit -->
+               <add src="HUDMainMenu" trait="user4"/>			<!-- make the current mode the ones digit -->
+               <copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+            </animation>
+            <_animation_12> A_B </_animation_12>
+            <_animation_13> A_C </_animation_13>
+            <_animation_14> A_D </_animation_14>
+            <_animation_21> B_A </_animation_21>
+            <_animation_23> B_C </_animation_23>
+            <_animation_24> B_D </_animation_24>
+            <_animation_31> C_A </_animation_31>
+            <_animation_32> C_B </_animation_32>
+            <_animation_34> C_D </_animation_34>
+            <_animation_41> D_A </_animation_41>
+            <_animation_42> D_B </_animation_42>
+            <_animation_43> D_C </_animation_43>
+         </nif>
+      </image>
+   </rect>
+</menu>

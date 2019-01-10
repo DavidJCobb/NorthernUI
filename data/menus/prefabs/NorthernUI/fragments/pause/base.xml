@@ -1,0 +1,440 @@
+<!--<rect name="content_space">-->
+
+   <!-- GUARANTEED TILE NAMES -->
+   <!-- Tiles with these names WILL be provided by this prefab. -->
+   <!--    pause_button_load -->
+   <!--    pause_button_options -->
+   <!--    pause_button_quit -->
+   <!--    pause_button_return -->
+   <!--    pause_button_save -->
+   
+   <!--
+      THIS MENU FILE WILL NOT FUNCTION WITHOUT EXTENDED BEHAVIORS PROVIDED 
+      BY NORTHERNUI: the "menu()" selector is used to get the root tile of 
+      whatever menu is including us, and behavior is switched depending on 
+      whether we are being included by PauseMenu or a submenu (and which 
+      submenu that is).
+   -->
+
+   <locus>&true;</locus>
+   <x> <!-- center on screen -->
+      <copy src="screen()" trait="width" />
+      <sub  src="me()"     trait="width" />
+      <div>2</div>
+   </x>
+   <y> <!-- center on screen -->
+      <copy src="screen()" trait="height" />
+      <sub  src="northernui()" trait="_xxnBottomBarHeight" />
+      <sub  src="me()"     trait="height" />
+      <div>2</div>
+   </y>
+   <include src="NorthernUI\cards\border_box_ornate.xml" />
+   <_imgCorners>Menus\NorthernUI\cards\hd_ornatepause_corners.dds</_imgCorners>
+   <user20>
+      <copy src="screen()" trait="width" />
+      <mult>0.833333333</mult>
+      <min>1060</min>
+      <max> 600</max>
+   </user20>
+   <user21>640</user21>
+   <user22>&false;</user22> <!-- box-sizing:border-box -->
+   <user23>255</user23> <!-- alpha -->
+   
+   <rect name="content_box_1">
+      <include src="NorthernUI\cards\content_box.xml" />
+      <rect name="pause_column_left">
+         <locus>&true;</locus>
+         <width>
+            <copy src="parent()" trait="width" />
+            <mult>0.25</mult>
+         </width>
+         <height><copy src="parent()" trait="height" /></height>
+         <x>0</x>
+         <y>0</y>
+         
+         <rect name="menu">
+            <locus>&true;</locus>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub>16</sub>
+            </width>
+            <height>
+               <copy src="child(pause_button_return)" trait="y" />
+               <add  src="child(pause_button_return)" trait="height" />
+            </height>
+            <x>0</x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            
+            <_isPauseRoot><copy src="menu()" trait="class" /><eq>&PauseMenu;</eq></_isPauseRoot>
+            
+            <rect name="pause_button_save">
+               <id>
+                  <copy>4</copy>
+                  <onlyif src="parent()" trait="_isPauseRoot" />
+                  <add>
+                     <copy>&generic;</copy>
+                     <onlyifnot src="parent()" trait="_isPauseRoot" />
+                  </add>
+               </id>
+               <locus>&true;</locus>
+               <target>
+                  <copy src="me()" trait="user1" />
+                  <and  src="parent()" trait="_isPauseRoot" />
+               </target>
+               <listindex>
+                  <copy>&generic;</copy>
+                  <max>
+                     <copy>0</copy>
+                     <onlyif src="me()" trait="target" />
+                  </max>
+               </listindex>
+               <clicksound>1</clicksound>
+               <x>0</x>
+               <y>0</y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child(label)" trait="height" /></height>
+               
+               <xdefault>3</xdefault>
+               <xup>  <ref src="pause_button_return" trait="mouseover" /></xup>
+               <xdown><ref src="pause_button_load"   trait="mouseover" /></xdown>
+               
+               <user1>&true;</user1> <!-- button is enabled -->
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <x><copy src="parent()" trait="width" /></x>
+                  <y>0</y>
+                  <justify>&right;</justify>
+                  <string><copy src="strings()" trait="_save"/></string>
+                  <red>
+                     <copy>140</copy>
+                     <max>
+                        <copy>255</copy>
+                        <onlyif>
+                           <copy src="parent()" trait="mouseover" /><eq>1</eq>
+                           <or>
+                              <copy src="menu()" trait="class" /><eq>&SaveMenu;</eq>
+                           </or>
+                        </onlyif>
+                     </max>
+                  </red>
+                  <green><copy src="me()" trait="red" /></green>
+                  <blue> <copy src="me()" trait="red" /></blue>
+                  <alpha>
+                     <copy>160</copy>
+                     <max>
+                        <copy>255</copy>
+                        <onlyif>
+                           <copy src="menu()" trait="class" /><eq>&PauseMenu;</eq>
+                           <and src="parent()" trait="target" />
+                        </onlyif>
+                     </max>
+                  </alpha>
+               </text>
+            </rect>
+            <rect name="pause_button_load">
+               <id>
+                  <copy>5</copy>
+                  <onlyif src="parent()" trait="_isPauseRoot" />
+                  <add>
+                     <copy>&generic;</copy>
+                     <onlyifnot src="parent()" trait="_isPauseRoot" />
+                  </add>
+               </id>
+               <locus>&true;</locus>
+               <target>
+                  <copy src="me()" trait="user1" />
+                  <and  src="parent()" trait="_isPauseRoot" />
+               </target>
+               <listindex>
+                  <copy>&generic;</copy>
+                  <max>
+                     <copy>1</copy>
+                     <onlyif src="me()" trait="target" />
+                  </max>
+               </listindex>
+               <clicksound>1</clicksound>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child(label)" trait="height" /></height>
+               
+               <xdefault>2</xdefault>
+               <xup>  <ref src="pause_button_save"    trait="mouseover" /></xup>
+               <xdown><ref src="pause_button_options" trait="mouseover" /></xdown>
+               
+               <user1>&true;</user1> <!-- button is enabled -->
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <x><copy src="parent()" trait="width" /></x>
+                  <y>0</y>
+                  <justify>&right;</justify>
+                  <string><copy src="strings()" trait="_load"/></string>
+                  <red>
+                     <copy>140</copy>
+                     <max>
+                        <copy>255</copy>
+                        <onlyif>
+                           <copy src="parent()" trait="mouseover" /><eq>1</eq>
+                           <or>
+                              <copy src="menu()" trait="class" /><eq>&LoadMenu;</eq>
+                           </or>
+                        </onlyif>
+                     </max>
+                  </red>
+                  <green><copy src="me()" trait="red" /></green>
+                  <blue> <copy src="me()" trait="red" /></blue>
+                  <alpha>
+                     <copy>160</copy>
+                     <max>
+                        <copy>255</copy>
+                        <onlyif>
+                           <copy src="menu()" trait="class" /><eq>&PauseMenu;</eq>
+                           <and src="parent()" trait="target" />
+                        </onlyif>
+                     </max>
+                  </alpha>
+               </text>
+            </rect>
+            <rect name="pause_button_options">
+               <id>
+                  <copy>7</copy>
+                  <onlyif src="parent()" trait="_isPauseRoot" />
+                  <add>
+                     <copy>&generic;</copy>
+                     <onlyifnot src="parent()" trait="_isPauseRoot" />
+                  </add>
+               </id>
+               <locus>&true;</locus>
+               <target>
+                  <copy src="me()" trait="user1" />
+                  <and  src="parent()" trait="_isPauseRoot" />
+               </target>
+               <listindex>
+                  <copy>&generic;</copy>
+                  <max>
+                     <copy>2</copy>
+                     <onlyif src="me()" trait="target" />
+                  </max>
+               </listindex>
+               <clicksound>1</clicksound>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child(label)" trait="height" /></height>
+               
+               <xdefault>2</xdefault>
+               <xup>  <ref src="pause_button_load" trait="mouseover" /></xup>
+               <xdown><ref src="pause_button_quit" trait="mouseover" /></xdown>
+               
+               <user1>&true;</user1> <!-- button is enabled -->
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <x><copy src="parent()" trait="width" /></x>
+                  <y>0</y>
+                  <justify>&right;</justify>
+                  <string><copy src="strings()" trait="_options"/></string>
+                  <red>
+                     <copy>140</copy>
+                     <max>
+                        <copy>255</copy>
+                        <onlyif>
+                           <copy src="parent()" trait="mouseover" /><eq>1</eq>
+                           <or><copy src="menu()" trait="class" /><eq>&OptionsMenu;</eq></or>
+                           <or><copy src="menu()" trait="class" /><eq>&GameplayMenu;</eq></or>
+                           <or><copy src="menu()" trait="class" /><eq>&AudioMenu;</eq></or>
+                           <or><copy src="menu()" trait="class" /><eq>&VideoMenu;</eq></or>
+                        </onlyif>
+                     </max>
+                  </red>
+                  <green><copy src="me()" trait="red" /></green>
+                  <blue> <copy src="me()" trait="red" /></blue>
+                  <alpha>
+                     <copy>160</copy>
+                     <max>
+                        <copy>255</copy>
+                        <onlyif>
+                           <copy src="menu()" trait="class" /><eq>&PauseMenu;</eq>
+                           <and src="parent()" trait="target" />
+                        </onlyif>
+                     </max>
+                  </alpha>
+               </text>
+            </rect>
+            <rect name="pause_button_quit">
+               <id>
+                  <copy>8</copy>
+                  <onlyif src="parent()" trait="_isPauseRoot" />
+                  <add>
+                     <copy>&generic;</copy>
+                     <onlyifnot src="parent()" trait="_isPauseRoot" />
+                  </add>
+               </id>
+               <locus>&true;</locus>
+               <target>
+                  <copy src="me()" trait="user1" />
+                  <and  src="parent()" trait="_isPauseRoot" />
+               </target>
+               <listindex>
+                  <copy>&generic;</copy>
+                  <max>
+                     <copy>3</copy>
+                     <onlyif src="me()" trait="target" />
+                  </max>
+               </listindex>
+               <clicksound>1</clicksound>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child(label)" trait="height" /></height>
+               
+               <xdefault>2</xdefault>
+               <xup>  <ref src="pause_button_options" trait="mouseover" /></xup>
+               <xdown><ref src="pause_button_return"  trait="mouseover" /></xdown>
+               
+               <user1>&true;</user1> <!-- button is enabled -->
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <x><copy src="parent()" trait="width" /></x>
+                  <y>0</y>
+                  <justify>&right;</justify>
+                  <string><copy src="strings()" trait="_quit"/></string>
+                  <red>
+                     <copy>140</copy>
+                     <max>
+                        <copy>255</copy>
+                        <mult src="parent()" trait="mouseover" />
+                     </max>
+                  </red>
+                  <green><copy src="me()" trait="red" /></green>
+                  <blue> <copy src="me()" trait="red" /></blue>
+                  <alpha>
+                     <copy>160</copy>
+                     <max>
+                        <copy>255</copy>
+                        <onlyif>
+                           <copy src="menu()" trait="class" /><eq>&PauseMenu;</eq>
+                           <and src="parent()" trait="target" />
+                        </onlyif>
+                     </max>
+                  </alpha>
+               </text>
+            </rect>
+            <rect name="pause_button_return">
+               <id>
+                  <copy>3</copy>
+                  <onlyif src="parent()" trait="_isPauseRoot" />
+                  <add>
+                     <copy>&generic;</copy>
+                     <onlyifnot src="parent()" trait="_isPauseRoot" />
+                  </add>
+               </id>
+               <locus>&true;</locus>
+               <target>
+                  <copy src="me()" trait="user1" />
+                  <and  src="parent()" trait="_isPauseRoot" />
+               </target>
+               <listindex>
+                  <copy>&generic;</copy>
+                  <max>
+                     <copy>4</copy>
+                     <onlyif src="me()" trait="target" />
+                  </max>
+               </listindex>
+               <clicksound>1</clicksound>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child(label)" trait="height" /></height>
+               
+               <xdefault>2</xdefault>
+               <xup>  <ref src="pause_button_quit" trait="mouseover" /></xup>
+               <xdown><ref src="pause_button_save" trait="mouseover" /></xdown>
+               
+               <user1>&true;</user1> <!-- button is enabled -->
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <x><copy src="parent()" trait="width" /></x>
+                  <y>0</y>
+                  <justify>&right;</justify>
+                  <string><copy src="strings()" trait="_return"/></string>
+                  <red>
+                     <copy>140</copy>
+                     <max>
+                        <copy>255</copy>
+                        <mult src="parent()" trait="mouseover" />
+                     </max>
+                  </red>
+                  <green><copy src="me()" trait="red" /></green>
+                  <blue> <copy src="me()" trait="red" /></blue>
+                  <alpha>
+                     <copy>160</copy>
+                     <max>
+                        <copy>255</copy>
+                        <onlyif>
+                           <copy src="menu()" trait="class" /><eq>&PauseMenu;</eq>
+                           <and src="parent()" trait="target" />
+                        </onlyif>
+                     </max>
+                  </alpha>
+               </text>
+            </rect>
+         </rect>
+      </rect>
+      <image name="border">
+         <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+         <x>
+            <copy src="sibling()" trait="x" />
+            <add  src="sibling()" trait="width" />
+         </x>
+         <y>0</y>
+         <width><copy src="me()" trait="filewidth" /></width>
+         <height><copy src="parent()" trait="height" /></height>
+         <tile>&true;</tile>
+      </image>
+   </rect>
+   <!-- Submenu contents: -->
+   <!-- <rect name="content_box_2">
+      <include src="NorthernUI\cards\content_box.xml" />
+      <rect name="pause_column_right">
+         <locus>&true;</locus>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub  src="pause_column_left" trait="x" />
+            <sub  src="pause_column_left" trait="width" />
+         </width>
+         <height><copy src="parent()" trait="height" /></height>
+         <x>
+            <copy src="pause_column_left" trait="x" />
+            <add  src="pause_column_left" trait="width" />
+         </x>
+         <y>0</y>
+         
+         ...
+      </rect>
+   </rect> -->
+<!--</rect>-->

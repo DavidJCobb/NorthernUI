@@ -1,0 +1,115 @@
+<!-- hud_subtitle_menu.xml -->
+<menu name="HUDSubtitleMenu">
+	<class> &HUDSubtitleMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<visible> &false; </visible>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<depth> 0 </depth>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.15 </menufade>
+	
+	<rect name="hudsubtitle_text_layout">
+		<locus>&true;</locus>
+		<depth>2</depth>
+		<x>0</x>
+		<y>0</y>
+		<alpha>0</alpha>
+      
+      <!-- TODO: Can we find a way to show the name of the speaker? -->
+		<text name="hudsubtitle_text">
+			<id>1</id>
+			<string></string>
+			<visible>&false;</visible>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+			<red>140</red><green>140</green><blue>140</blue>
+			<alpha>255</alpha>
+			<justify>&center;</justify>
+			<wrapwidth>1000</wrapwidth>
+			<x>
+				<copy src="screen()" trait="width" />
+				<div>2</div>
+			</x>
+			<y> <!-- should be consistent with subtitle position in the dialogue menu -->
+				<copy src="screen()" trait="height" />
+				<sub>
+					 <copy src="screen()" trait="cropY" />
+					 <mul>2</mul>
+				</sub>
+				<sub>60</sub>
+				<sub src="me()" trait="height"/>
+			</y>
+			<user1>0</user1> <!-- set by code - y value of top of topmost HUDInfoMenu item -->
+		</text>
+	</rect>
+   <rect name="notifications">
+		<locus>&true;</locus>
+		<depth>2</depth>
+		<x>0</x>
+		<y>0</y>
+      
+		<image name="hudsubtitle_icon">
+			<visible> <copy src="sibling(text)" trait="user2" /></visible>
+			<filename><copy src="sibling(text)" trait="user1" /></filename>
+			<width> 63</width>
+			<height>63</height>
+			<x>
+				<copy src="screen()" trait="cropX" />
+				<mul>2</mul>
+			</x>
+			<y>
+				<copy src="screen()" trait="cropY" />
+				<mul>2</mul>
+			</y>
+		</image>
+		<text name="text">
+         <id>2</id>
+			<visible>&false;</visible>
+         <string><copy src="strings()" trait="_dummynotice"/></string>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+			<red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+			<x>
+				<copy src="sibling()" trait="x" />
+				<add> 
+					<copy   src="sibling()" trait="width" />
+					<onlyif src="sibling()" trait="visible" />
+				</add>
+				<add>8</add>
+			</x>
+			<y> <!-- Align with icon if text is large; else center with icon -->
+            <copy src="sibling()" trait="y" />
+            <onlyif>
+               <copy src="me()" trait="height" />
+               <gte  src="sibling()" trait="height" />
+            </onlyif>
+            <add>
+               <copy src="sibling()" trait="height" />
+               <sub  src="me()"      trait="height" />
+               <div>2</div>
+               <add  src="sibling()" trait="y" />
+               <onlyif>
+                  <copy src="me()" trait="height" />
+                  <lt   src="sibling()" trait="height" />
+               </onlyif>
+            </add>
+         </y>
+			<wrapwidth>
+            <copy>400</copy>
+            <min>
+               <copy src="screen()"  trait="width" />
+               <sub  src="sibling()" trait="x" />
+               <sub  src="sibling()" trait="width" />
+               <sub>
+                  <copy src="screen()" trait="cropX" />
+                  <mul>2</mul>
+               </sub>
+               <sub>8</sub>
+            </min>
+			</wrapwidth>
+         
+         <user1></user1>				<!-- icon pathname -->
+         <user2>&false;</user2>		<!-- is there an icon, true/false -->
+		</text>
+   </rect>
+</menu>

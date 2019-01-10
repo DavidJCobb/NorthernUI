@@ -1,0 +1,172 @@
+<!-- Data\menus\NorthernUI\xxnhuddebugmenu.xml -->
+<menu name="HUDDebugMenu">
+	<class>1052</class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<depth> -50 </depth>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+   
+   <rect name="wasd_status">
+      <id>1000</id>
+      <locus>&true;</locus>
+      <x>80</x>
+      <y>80</y>
+      <height>
+         <copy src="child(pressing_ancillary)" trait="height" />
+         <add  src="child(pressing_ancillary)" trait="y" />
+      </height>
+      
+      <user0>&false;</user0> <!-- is pressing ancillary direction? -->
+      <user1>-1</user1> <!-- dominant direction -->
+      <user2>-1</user2> <!-- ancillary direction -->
+      
+      <text name="dir_dom">
+         <string><copy src="parent()" trait="user1" /></string>
+         <font>3</font>
+         <x>0</x>
+         <y>0</y>
+         <red>0</red><green>255</green><blue>255</blue>
+      </text>
+      <text name="dir_anc">
+         <string><copy src="parent()" trait="user2" /></string>
+         <font>3</font>
+         <x>50</x>
+         <y>0</y>
+         <red>64</red><green>192</green><blue>224</blue>
+      </text>
+      <text name="pressing_ancillary">
+         <string>Is pressing ancillary?</string>
+         <x>0</x>
+         <y>50</y>
+         <font>3</font>
+         <red>
+            <copy>128</copy>
+            <add>
+               <copy>127</copy>
+               <onlyif src="parent()" trait="user0" />
+            </add>
+         </red>
+         <green><copy src="me()" trait="red"/></green>
+         <blue><copy src="me()" trait="red"/></blue>
+      </text>
+   </rect>
+   <rect name="wasd_joystick">
+      <id>1001</id>
+      <locus>&true;</locus>
+      <x>80</x>
+      <y>
+         <copy src="sibling()" trait="y" />
+         <add  src="sibling()" trait="height" />
+         <add>12</add>
+      </y>
+      
+      <user0>0</user0> <!-- joystick x -->
+      <user1>0</user1> <!-- joystick y -->
+      <user2>0</user2> <!-- joystick angle -->
+      <user3>0</user3> <!-- joystick angle / 45 -->
+      <user4>&false;</user4> <!-- is perfect cardinal/diagonal direction? -->
+      
+      <image name="coords">
+         <locus>&true;</locus>
+         <depth>0</depth>
+         <x>0</x>
+         <y>0</y>
+         <width> 50</width>
+         <height>50</height>
+         
+         <filename>Menus\NorthernUI\Shared\black.dds</filename>
+         <tile>&true;</tile>
+         
+         <user0>
+            <copy src="parent()" trait="user0" />
+            <add>100</add>
+            <mult>
+               <copy src="me()" trait="width" />
+               <div>200</div>
+            </mult>
+         </user0>
+         <user1>
+            <copy src="parent()" trait="user1" />
+            <add>100</add>
+            <mult>
+               <copy src="me()" trait="height" />
+               <div>200</div>
+            </mult>
+         </user1>
+         
+         <image name="marker">
+            <locus>&true;</locus>
+            <depth>10</depth>
+            <width><copy src="me()" trait="filewidth" /></width>
+            <height><copy src="me()" trait="fileheight" /></width>
+            <x>
+               <copy src="parent()" trait="user0" />
+               <sub>
+                  <copy src="me()" trait="width" />
+                  <div>2</div>
+               </sub>
+            </x>
+            <y>
+               <copy src="parent()" trait="user1" />
+               <sub>
+                  <copy src="me()" trait="height" />
+                  <div>2</div>
+               </sub>
+            </y>
+            
+            <filename>Menus\NorthernUI\HUD\crosshair.dds</filename>
+         </image>
+      </image>
+      <text name="angle">
+         <string><copy src="parent()" trait="user2" /></string>
+         <font>3</font>
+         <x>
+            <copy src="sibling(coords)" trait="x" />
+            <add  src="sibling(coords)" trait="width" />
+            <add>8</add>
+         </x>
+         <y>0</y>
+         <red>255</red><green>255</green><blue>255</blue>
+      </text>
+      <text name="angleslice">
+         <string>
+            <copy src="parent()" trait="user3" />
+            <mult>10</mult>
+         </string>
+         <font>3</font>
+         <x>
+            <copy src="sibling()" trait="x" />
+            <add  src="sibling()" trait="width" />
+            <add>12</add>
+         </x>
+         <y>0</y>
+         <red>255</red><green>255</green><blue>0</blue>
+      </text>
+      <text name="perfect">
+         <string>Is perfect cardinal/diagonal direction?</string>
+         <font>3</font>
+         <x>
+            <copy src="sibling(coords)" trait="x" />
+            <add  src="sibling(coords)" trait="width" />
+            <add>12</add>
+         </x>
+         <y>
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+            <add>12</add>
+         </y>
+         <red>
+            <copy>128</copy>
+            <add>
+               <copy>127</copy>
+               <onlyif src="parent()" trait="user4" />
+            </add>
+         </red>
+         <green><copy src="me()" trait="red"/></green>
+         <blue><copy src="me()" trait="red"/></blue>
+      </text>
+   </rect>
+</menu>

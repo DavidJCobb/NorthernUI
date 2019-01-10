@@ -1,0 +1,851 @@
+<!-- SigilStone.xml -->
+<menu name="SigilStoneMenu">
+	<class> &SigilStoneMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade>0</menufade>
+   
+   <!--
+      This menu is almost completely identical to EnchantmentMenu. The 
+      primary differences are that you can't select a soul gem, and 
+      there is no gold cost to enchanting. Tile IDs are identical to 
+      those of EnchantmentMenu with a few exceptions: some IDs from 
+      EnchantmentMenu are not used here; and tile ID 3 is used in this 
+      menu (for an unknown purpose, or maybe not used at all) but not 
+      in EnchantmentMenu.
+   -->
+	
+	<user0>-1</user0>		<!-- soul cost per use -->
+	<user1>-1</user1>		<!-- num uses -->
+   
+   <_boxSpacing>24</_boxSpacing>
+   <_effectHeight>48</_effectHeight>
+	
+	<xbuttonb><ref src="ench_button_exit"   trait="clicked" /></xbuttonb>
+	<xbuttonx><ref src="ench_button_create" trait="clicked" /></xbuttonx>
+   
+   <!-- NORTHERNUI: USER24: Is RepairMenu open? -->
+   <user24>&false;</user24>
+   
+   <listclip>
+      <copy src="me()" trait="user24" />
+   </listclip>
+	
+   <rect name="sigil_focus_box">
+      <id>8</id>
+      <clips>&true;</clips>
+      <visible>&false;</visible>
+      <user15> <!-- depth backward offset; read by executable -->
+         <copy src="parent()" trait="depth" />
+         <add>0.5</add>
+      </user15>
+      <include src="NorthernUI\focus_boxes\highlight.xml"/>
+   </rect>
+	
+   <rect name="ench_details">
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>700</user20>
+		<user21>
+         <copy src="ench_stats" trait="y" />
+         <add  src="ench_stats" trait="height" />
+      </user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div>2</div>
+		</x>
+      <y>
+         <copy src="screen()" trait="height" />
+         <sub>
+            <copy src="me()"            trait="height" />
+            <add  src="parent()"        trait="_boxSpacing" />
+            <add  src="ench_items_box"  trait="height" />
+            <add  src="parent()"        trait="_boxSpacing" />
+            <add  src="effect_list_box" trait="height" />
+         </sub>
+         <sub  src="northernui()" trait="_xxnBottomBarHeight" />
+         <div>2</div>
+      </y>
+		
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         
+         <rect name="ench_name">
+            <id>24</id>
+            <locus>&true;</locus>
+            <target>&true;</target> <!-- This control acts as a textbox. -->
+            <xdefault>&false;</xdefault>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height><copy src="child()" trait="height" /></height>
+            
+            <xdown><ref src="target_item" trait="mouseover" /></xdown>
+            
+            <text name="label">
+               <string><copy src="xxnStrings()" trait="_enchantmentMenuItemNamePrefix" /></string>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>140</red><green>140</green><blue>140</blue>
+               <alpha>255</alpha>
+               <x>0</x>
+               <y>0</y>
+            </text>
+            <text name="ench_name_text">
+               <id>2</id>
+               <depth>1</depth>
+               <string><copy src="strings()" trait="_nameenchantment" /></string> <!-- (recv) current potion name -->
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <alpha>255</alpha>
+               <wrapwidth>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="x" />
+               </wrapwidth>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>6</add> <!-- width of a space -->
+               </x>
+               <y>0</y>
+            </text>
+         </rect>
+         <rect name="ench_stats">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <width><copy src="sibling()" trait="width" /></width>
+            <height>
+               <copy   src="child(weapon)" trait="height" />
+               <onlyif src="child(weapon)" trait="visible" />
+               <max>
+                  <copy   src="child(apparel)" trait="height" />
+                  <onlyif src="child(apparel)" trait="visible" />
+               </max>
+            </height>
+            
+            <rect name="weapon">
+               <locus>&true;</locus>
+               <visible>
+                  <copy src="menu()" trait="user1" />
+                  <gt>0</gt>
+               </visible>
+               <height><copy src="child()" trait="height" /></height>
+               
+               <text name="label_mag">
+                  <string><copy src="xxnStrings()" trait="_enchantmentMenuLabelMagnitude" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <alpha>255</alpha>
+                  <x>0</x>
+                  <y>0</y>
+               </text>
+               <text name="magnitude">
+                  <string><copy src="menu()" trait="user0" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>6</add> <!-- width of a space -->
+                  </x>
+                  <y>0</y>
+               </text>
+               <text name="uses_prefix">
+                  <string><copy src="xxnStrings()" trait="_enchantmentMenuUsesPrefix" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>6</add> <!-- width of a space -->
+                  </x>
+                  <y>0</y>
+               </text>
+               <text name="uses">
+                  <string><copy src="menu()" trait="user1" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red><green>255</green><blue>255</blue>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                  </x>
+                  <y>0</y>
+               </text>
+               <text name="uses_suffix">
+                  <string><copy src="xxnStrings()" trait="_enchantmentMenuUsesSuffix" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>6</add> <!-- width of a space -->
+                  </x>
+                  <y>0</y>
+               </text>
+            </rect>
+            <rect name="apparel">
+               <locus>&true;</locus>
+               <visible>
+                  <copy src="menu()" trait="user0" />
+                  <eq>0</eq>
+               </visible>
+               <height><copy src="child()" trait="height" /></height>
+               
+               <text name="label_type">
+                  <string><copy src="xxnStrings()" trait="_enchantmentMenuLabelEffType" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <alpha>255</alpha>
+                  <x>0</x>
+                  <y>0</y>
+               </text>
+               <text name="type">
+                  <string><copy src="strings()" trait="_constant_effect" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>6</add> <!-- width of a space -->
+                  </x>
+                  <y>0</y>
+               </text>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="ench_items_box">
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20><copy src="sibling()" trait="user20" /></user20>
+		<user21>96</user21> <!-- PLACEHOLDER HEIGHT -->
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div>2</div>
+		</x>
+      <y>
+         <copy src="sibling()" trait="y" />
+         <add  src="sibling()" trait="height" />
+         <add>24</add>
+      </y>
+		
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         
+         <image name="separator">
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width> <copy src="me()"     trait="filewidth" /></width>
+            <height><copy src="parent()" trait="height" /></width>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+         </image>
+         <rect name="target_item">
+            <id>20</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <xdefault>&true;</xdefault>
+            <user0><copy src="strings()" trait="_additem" /></user0> <!-- item name -->
+            <user1></user1> <!-- icon pathname -->
+            <x>0</x>
+            <y>0</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <!-- <xright><ref src="soul_gem"  trait="mouseover" /></xright> -->
+            <xup>   <ref src="ench_name" trait="mouseover" /></xup>
+            <xdown> <ref src="ench_known_effect_pane" trait="mouseover" /></xdown>
+            
+            <image name="ench_item_icon">
+               <id>25</id>
+               <visible>&false;</visible>
+               <filename></filename>
+               <width> 64</width>
+               <height>64</height>
+               <x>8</x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </image>
+            <text name="ench_item_text">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="parent()" trait="user0" /></string>
+               <wrapwidth>220</wrapwidth>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>8</add>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <red>255</red><green>255</green><blue>255</blue>
+            </text>
+         </rect>
+         <rect name="soul_gem">
+            <id>22</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <xdefault>&false;</xdefault>
+            <x><copy src="sibling()" trait="width" /></x>
+            <y>0</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <user0><copy src="strings()" trait="_addsoulgem" /></user0> <!-- item name -->
+            <user1>0</user1> <!-- charge -->
+            
+            <xleft><ref src="target_item" trait="mouseover" /></xleft>
+            <xup>  <ref src="ench_name"   trait="mouseover" /></xup>
+            <xdown><ref src="ench_added_effect_pane" trait="mouseover" /></xdown>
+            
+            <image name="ench_soulgem_icon">
+               <id>26</id>
+               <visible>&false;</visible>
+               <filename></filename>
+               <width> 64</width>
+               <height>64</height>
+               <x>8</x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </image>
+            <rect name="ench_soulgem_text">
+               <locus>&true;</locus>
+               <user0><copy src="parent()" trait="user0" /></user0>
+               <user1><copy src="parent()" trait="user1" /></user1>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>8</add>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="x" />
+               </width>
+               <height>
+                  <copy   src="child()" trait="height" />
+                  <add    src="child()" trait="y" />
+               </height>
+               
+               <text name="item_name">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="parent()" trait="user0" /></string>
+                  <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+                  <x>0</x>
+                  <y>0</y>
+                  <red>255</red><green>255</green><blue>255</blue>
+               </text>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="effect_list_box">
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20><copy src="sibling()" trait="user20" /></user20>
+		<user21>224</user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div>2</div>
+		</x>
+      <y>
+         <copy src="sibling()" trait="y" />
+         <add  src="sibling()" trait="height" />
+         <add>24</add>
+      </y>
+		
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         
+         <_spacing>8</_spacing>
+         
+         <image name="separator">
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width> <copy src="me()"     trait="filewidth" /></width>
+            <height><copy src="parent()" trait="height" /></width>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+         </image>
+         <rect name="available_effects">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width>
+               <copy src="sibling(separator)" trait="x" />
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <text name="header">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <id>16</id>
+               <string><copy src="strings()" trait="_sigilstoneeffects" /></string>
+               <red>140</red>
+               <green>140</green>
+               <blue>140</blue>
+               <x>0</x>
+               <y>0</y>
+            </text>
+            <rect name="scrollbar_wrapper">
+               <include src="NorthernUI\scrollbars\wrapper.xml" />
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <sub>8</sub>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+               </y>
+               <height>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="y" />
+               </height>
+               
+               <rect name="ench_known_effects_scroll_bar">
+                  <include src="vertical_scroll.xml" />
+                  <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+                  <id>9</id>
+                  <user1>0</user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+                  <user2>
+                     <copy src="ench_known_effect_pane" trait="child_count" />	<!-- set by code - number of visible elements in list -->
+                     <sub>4</sub>
+                  </user2>				<!-- Maximum value that can be scrolled to (should be the number of
+                                        items minus the number of items visible.  i.e. if your list has
+                                        8 items and you can see 2 at any one time, this should be 6 -->
+                  <user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+                  <user4> 3 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+                  <user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+                  <user6> 10 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+                  <!-- user7 = current value -->
+                  <user8> 4 </user8>		<!-- How many items are visible at once -->
+                  <user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+                  <user10> 0 </user10>	<!-- reserved -->
+               </rect>
+            </rect>
+            <rect name="ench_known_effect_window">
+               <locus>&true;</locus>
+               <clipwindow>&true;</clipwindow>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <sub>
+                     <copy src="ench_known_effects_scroll_bar" trait="width" />
+                     <add>16</add>
+                     <onlyif src="ench_known_effects_scroll_bar" trait="visible" />
+                  </sub>
+               </width>
+               <height><copy src="sibling()" trait="height" /></height>
+               <x>0</x>
+               <y><copy src="sibling()" trait="y" /></y>
+               
+               <rect name="ench_known_effect_pane">
+                  <id>6</id>
+                  <clips>&true;</clips>
+                  <locus>&true;</locus>
+                  <x>0</x>
+                  <y>
+                     <copy>0</copy>
+                     <sub>
+                        <copy src="ench_known_effects_scroll_bar" trait="user7" />
+                        <mult src="menu()" trait="_effectHeight" />
+                     </sub>	
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                        
+                  <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                     an input command, they defer to their parent. The following directions are for those times. -->
+                  <target> &false; </target>
+                  <xdefault> &false; </xdefault>
+                  <xlist> &xlist; </xlist>
+                  <xright><ref src="ench_added_effect_pane" trait="mouseover" /></xright>
+                  <xup>   <ref src="target_item" trait="mouseover" /></xup>
+                  <xscroll><ref src="ench_known_effects_scroll_bar" trait="user5" /></xscroll>
+                  
+                  <!-- template items are added here -->
+               </rect>
+            </rect>
+         </rect>
+         <rect name="applied_effects">
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling(separator)" trait="x" />
+               <add  src="parent()" trait="_spacing" />
+            </x>
+            <y>0</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <text name="header">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <id>17</id>
+               <string><copy src="strings()" trait="_effectsapplied" /></string>
+               <red>140</red>
+               <green>140</green>
+               <blue>140</blue>
+               <x>3</x>
+               <y>0</y>
+            </text>
+            <rect name="scrollbar_wrapper">
+               <include src="NorthernUI\scrollbars\wrapper.xml" />
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <sub>8</sub>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+               </y>
+               <height>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="y" />
+               </height>
+               
+               <rect name="ench_added_effects_scroll_bar">
+                  <include src="vertical_scroll.xml" />
+                  <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+                  <id>12</id>
+                  <user1>0</user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+                  <user2>
+                     <copy src="ench_added_effect_pane" trait="child_count" />	<!-- set by code - number of visible elements in list -->
+                     <sub>4</sub>
+                  </user2>				<!-- Maximum value that can be scrolled to (should be the number of
+                                        items minus the number of items visible.  i.e. if your list has
+                                        8 items and you can see 2 at any one time, this should be 6 -->
+                  <user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+                  <user4> 3 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+                  <user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+                  <user6>11</user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+                  <!-- user7 = current value -->
+                  <user8> 4 </user8>		<!-- How many items are visible at once -->
+                  <user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+                  <user10> 0 </user10>	<!-- reserved -->
+               </rect>
+            </rect>
+            <rect name="ench_added_effect_window">
+               <locus>&true;</locus>
+               <clipwindow>&true;</clipwindow>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <sub>
+                     <copy src="ench_added_effects_scroll_bar" trait="width" />
+                     <add>16</add>
+                     <onlyif src="ench_added_effects_scroll_bar" trait="visible" />
+                  </sub>
+               </width>
+               <height><copy src="sibling()" trait="height" /></height>
+               <x>0</x>
+               <y><copy src="sibling()" trait="y" /></y>
+               
+               <rect name="ench_added_effect_pane">
+                  <id>7</id>
+                  <clips>&true;</clips>
+                  <locus>&true;</locus>
+                  <x>0</x>
+                  <y>
+                     <copy>0</copy>
+                     <sub>
+                        <copy src="ench_added_effects_scroll_bar" trait="user7" />
+                        <mult src="menu()" trait="_effectHeight" />
+                     </sub>	
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                        
+                  <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                     an input command, they defer to their parent. The following directions are for those times. -->
+                  <target>&false;</target>
+                  <xdefault>&false;</xdefault>
+                  <xlist>&xlist;</xlist>
+                  <xleft><ref src="ench_known_effect_pane" trait="mouseover" /></xleft>
+                  <!-- <xup>  <ref src="soul_gem" trait="mouseover" /></xup> -->
+                  <xup>  <ref src="target_item" trait="mouseover" /></xup>
+                  <xscroll><ref src="ench_added_effects_scroll_bar" trait="user5" /></xscroll>
+                  
+                  <!-- template items are added here -->
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <width>
+            <copy src="child()" trait="x" />
+            <add  src="child()" trait="width" />
+         </width>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <image name="ench_button_create">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>278</_dxScanCode>
+            <clicksound>2</clicksound>
+            <id>14</id>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_create" /></string>
+            
+            <listindex>0</listindex>
+            <xup>  <ref src="ench_known_effect_pane" trait="mouseover"/></xup>
+            <xright>&next;</xright>
+         </image>
+         <image name="ench_button_exit">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>15</id>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <add    src="bottom_bar" trait="_entrySpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_exit" /></string>
+            
+            <listindex>1</listindex>
+            <xup>  <ref src="ench_known_effect_pane" trait="mouseover"/></xup>
+            <xleft> &prev;</xleft>
+            <xright>&next;</xright>
+         </image>
+      </rect>
+   </rect>
+	
+	<!-- BACKGROUND ============================================================-->
+	<image name="sigil_background">
+		<id> 1 </id>
+		<depth>-2 </depth>
+		<width> 1064 </width>
+		<height> 812 </height>
+		<zoom> -1 </zoom>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		<target> &true; </target>
+		
+		<image name="sigil_effect_icon">
+			<id> 3 </id>
+			<visible> &false; </visible>
+			<depth> 1 </depth>
+			<filename>   </filename>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x> 550 </x>
+			<y> 90 </y>
+		</image>
+	</image>
+	
+	
+	
+	<!-- TEMPLATE - KNOWN =====================================================================-->
+	<template name="known_effect_template">
+		<rect name="sigil_known_effect">
+			<id> 82 </id>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<depth> 1 </depth>
+         <width><copy src="parent()" trait="width" /></width>
+			<height><copy src="menu()" trait="_effectHeight" /></height>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<listindex> 0 </listindex>	<!-- position in list - set by code -->
+			<user0> 0 </user0>			<!-- position in list - set by code -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="ench_known_effects_scroll_bar" trait="user8"/>
+					<div> 2</div>
+					<ceil>0</ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+         
+         <listclip> <!-- prevent list items that are 90% off-screen from showing a focusbox -->
+            <!-- don't use "visible" -- in theory that would block keynav -->
+            <copy src="me()"     trait="y" />
+            <add  src="parent()" trait="y" />
+            <add  src="child(known_effect_icon)" trait="y" />
+            <gt   src="ench_known_effect_window" trait="height" />
+         </listclip>
+			
+			<image name="sigil_known_effect_icon">
+				<clips>&true;</clips>
+				<filename><copy src="parent()" trait="user1" /></filename>
+				<depth>1</depth>
+				<zoom>-1</zoom>
+				<width> 32</width>
+				<height>32</height>
+				<x>5</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+			</image>
+			<text name="sigil_known_effect_text">
+				<clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="user2" /></string>
+				<red>255</red><green>255</green><blue>255</blue>
+				<wrapwidth>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+            </wrapwidth>
+				<x>50</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+			</text>
+		</rect>
+	</template>
+	
+	
+	<!-- TEMPLATE - ADDED =====================================================================-->
+	<template name="added_effect_template">
+		<rect name="sigil_added_effect">
+			<id> 83 </id>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<depth> 1 </depth>
+         <width><copy src="parent()" trait="width" /></width>
+			<height><copy src="menu()" trait="_effectHeight" /></height>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<listindex> 0 </listindex>	<!-- position in list - set by code -->
+			<user0> 0 </user0>			<!-- position in list - set by code -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="ench_known_effects_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+         
+         <listclip> <!-- prevent list items that are 90% off-screen from showing a focusbox -->
+            <!-- don't use "visible" -- in theory that would block keynav -->
+            <copy src="me()"     trait="y" />
+            <add  src="parent()" trait="y" />
+            <add  src="child(ench_added_effect_icon)" trait="y" />
+            <gt   src="ench_added_effect_window" trait="height" />
+         </listclip>
+			
+			<image name="sigil_added_effect_icon">
+				<clips>&true;</clips>
+				<filename><copy src="parent()" trait="user1" /></filename>
+				<zoom>-1</zoom>
+				<width> 32</width>
+				<height>32</height>
+				<x>5</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+			</image>
+			
+			<text name="sigil_known_effect_text">
+				<clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="user2" /></string>
+				<red>255</red><green>255</green><blue>255</blue>
+				<wrapwidth>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+            </wrapwidth>
+				<x>50</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+			</text>
+		</rect>
+	</template>
+</menu>

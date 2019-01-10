@@ -1,0 +1,1724 @@
+<!-- container_menu.xml -->
+<menu name="ContainerMenu">
+   <!-- DOCUMENTATION ---------------------------------------------- >
+      This menu is used for interacting with containers and for 
+      bartering with merchants. It displays a list of items in a 
+      similar fashion to the inventory and magic menus.
+   <!------------------------------------------------------------- -->
+	<class> &ContainerMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha> 
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<user0> 1 </user0>				<!-- current tab -->
+	<user1> -1 </user1>				<!-- position of weapons header in list -->
+	<user2> -1 </user2>				<!-- position of apparel header in list -->
+	<user3> -1 </user3>				<!-- position of alchemy header in list -->
+	<user4> -1 </user4>				<!-- position of misc header in list -->
+	<user5> 0 </user5>				<!-- number of items in list -->
+	<user6> 0 </user6>				<!-- gold -->
+	<user7> &true; </user7>			<!-- true if is container is visible, false if inventory is -->
+	<user8> &true; </user8>			<!-- is take all allowed -->
+	<user9> &true; </user9>			<!-- is bartering -->
+	<user10>						<!-- X-position of fully-exposed magic popup menu -->
+		<copy src="me()"             trait="x"/>
+		<add  src="child(cont_background)" trait="x"/>
+		<add  src="child(cont_background)" trait="width"/>
+      <add>4</add> <!-- width of cont_background's borders -->
+	</user10>
+	<user11></user11>				<!-- NPC name -->
+	<user12> 0 </user12>			<!-- barter gold base -->
+	<user13> 0 </user13>			<!-- encumberance current -->
+	<user14> 0 </user14>			<!-- encumberance max -->
+	<!-- user15 through user19 used for additional header positioning -->
+	<user22>
+		<copy src="screen()" trait="height"/>
+		<sub  src="screen()" trait="cropy"/>
+		<sub  src="screen()" trait="cropy"/>
+		<sub> 240 </sub>
+	</user22>
+	<user23>
+		<copy src="cont_background" trait="depth"/>
+	</user23>
+	<user25>&false;</user25><!-- gold transfer icon visible flag -->
+	
+	<xleft> <ref src="inventory_tabs_prev" trait="clicked" /></xleft>
+	<xright><ref src="inventory_tabs_next" trait="clicked" /></xright>
+	<xbuttonlb><ref src="inventory_tabs_prev" trait="clicked" /></xbuttonlb>
+	<xbuttonrb><ref src="inventory_tabs_next" trait="clicked" /></xbuttonrb>
+   
+	<xbuttonlt><ref src="cont_icon_inv_off"    trait="clicked" /></xbuttonlt>
+	<xbuttonrt><ref src="cont_icon_cont_off" trait="clicked" /></xbuttonrt>
+	
+	<xbuttonb><ref src="close_menu"      trait="clicked"/> </xbuttonb>
+	<xbuttonx><ref src="button_take_all" trait="clicked"/> </xbuttonx>
+	<xbuttony><ref src="button_haggle"   trait="clicked"/> </xbuttony>
+   
+   <xup>  <ref src="cont_list_contents" trait="mouseover" /></xup>   <!-- a default for if there somehow isn't anything focused -->
+   <xdown><ref src="cont_list_contents" trait="mouseover" /></xdown> <!-- a default for if there somehow isn't anything focused -->
+   
+   <!-- Config for this menu. Some of this may get moved to prefabs. -->
+   <_itemInfoColumnWidth> 60 </_itemInfoColumnWidth>
+   <_itemIconZoom>66</_itemIconZoom>
+   <_itemIconSize>
+      <copy>64</copy>
+      <mult src="me()" trait="_itemIconZoom" />
+      <div>100</div>
+   </_itemIconSize>
+   <_listRowHeight>
+      <copy src="me()" trait="_itemIconSize" />
+      <add>16</add>
+   </_listRowHeight>
+   
+	<rect name="cont_FocusBox">
+		<id>14</id>
+		<depth>1</depth>
+		<visible>&false;</visible>
+      <include src="NorthernUI\focus_boxes\highlight.xml"/>
+	</rect>
+   
+   <rect name="cont_background">
+      <_paddingX>0</_paddingX> <!-- Left-side padding on the list. -->
+      <_paddingY>0</_paddingY> <!-- Vertical  padding on the list. -->
+      <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+      
+      <_title_0><copy src="xxnStrings()" trait="_containerMenuTitlePlayer" /></_title_0>
+      <_title_1><copy src="xxnStrings()" trait="_containerMenuTitleContainer" /></_title_1>
+      <_title_2><copy src="xxnStrings()" trait="_containerMenuTitleBarter" /></_title_2>
+      
+      <include src="NorthernUI\fragments\main\base.xml" />
+      <_headerEnabled>&true;</_headerEnabled>
+      <_headerText>
+         <copy>0</copy>
+         <max><copy>1</copy><onlyif src="ContainerMenu" trait="user7" /></max>
+         <max><copy>2</copy><onlyif src="ContainerMenu" trait="user9" /></max>
+         <copy src="me()" trait="_title_" />
+      </_headerText>
+      <_isMainMenu>&false;</_isMainMenu>
+      
+      <rect name="category_tabs"> <!-- All/Weapons/Apparel/Alchemy/Misc -->
+         <x>0</x>
+         <y> <!-- Position after the prefab's top-spacer. -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         
+         <include src="NorthernUI\fragments\main\big_four_tabs.xml"/>
+         <_iconCount>5</_iconCount>
+         <_iconCropY>0</_iconCropY>
+         <_selectedTab><copy src="ContainerMenu" trait="user0" /></_selectedTab>
+         <_idTab1>1</_idTab1>
+         <_idTab2>2</_idTab2>
+         <_idTab3>3</_idTab3>
+         <_idTab4>4</_idTab4>
+         <_idTab5>5</_idTab5>
+         <_idTabPrev>7</_idTabPrev>
+         <_idTabNext>8</_idTabNext>
+      </rect>
+      <rect name="page_layout"> <!-- compatibility: Enhanced Economy -->
+         <!--
+            This is just a useless wrapper element needed to fake the vanilla 
+            tile structure.
+         -->
+         <locus>&true;</locus>
+         <x>0</x>
+         <y>
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <depth>0</depth>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub>
+               <copy src="cont_scroll_bar" trait="width" />
+               <add> <!-- scrollbar margin; also acts as list padding-right -->
+                  <copy src="parent()" trait="_scrollbarMargin" />
+                  <mult>2</mult>
+               </add>
+               <onlyif src="cont_scroll_bar" trait="visible" />
+            </sub>
+         </width>
+         <height> <!-- don't overlap with bottom bar, and reserve space for swapper -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+            <sub  src="sibling(cont_select_frame)" trait="height" />
+         </height>
+         
+         <user0><copy src="parent()" trait="width" /></user0>
+         
+         <rect name="cont_contents"> <!-- anchored column header, and scrollable list -->
+            <!--
+               Though the anchored column header doesn't scroll, we've grouped it with the 
+               scrollable list so that it's easier to line its columns up with the inline 
+               column headers.
+               
+               The width of this grouping element is the inner width of the list pane, with 
+               all paddings and margins applied. Elements meant to span the full width of 
+               the inventory UI will simply overflow.
+            -->
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <!--
+               Making this element targetable is necessary in order for the mouse wheel 
+               to scroll the list when the mouse is over an inline header.
+            -->
+            <target>&true;</target>
+            
+            <_outerwidth><copy src="parent()" trait="user0" /></_outerwidth> <!-- used by anchored header borders -->
+            <_innerwidth><copy src="parent()" trait="width" /></_innerwidth>
+            
+            <rect name="cont_button_haggle"> <!-- compatibility: Enhanced Economy -->
+               <id>34</id>
+               <target>&true;</target>
+               <xdefault>&false;</xdefault>
+               <depth>-100</depth>
+               <width>0</width>
+               <height>0</height>
+            </rect>
+            
+            <rect name="anchored_category_header">
+               <!--
+                  In Oblivion, you don't get a tab for every individual item category. 
+                  Instead, you get five very general tabs: All Items, Weapons, Apparel, 
+                  Alchemy, and Misc Items. Within these, subheadings for each item 
+                  category are embedded directly into the list.
+                  
+                  When you scroll to or below a given subheading, it gets anchored to 
+                  the top of the overall list. This element is used for the anchored 
+                  header.
+               -->
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>0</y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height> <!-- height of children -->
+                  <copy src="child(anchored_category_header_content)" trait="height" />
+                  <add  src="child(border_bottom)" trait="height" />
+               </height>
+               
+               <_innerX>    <copy src="parent()" trait="x" />          </_innerX>
+               <_outerwidth><copy src="parent()" trait="_outerwidth" /></_outerwidth> <!-- used by anchored header borders -->
+               <_innerwidth><copy src="parent()" trait="_innerwidth" /></_innerwidth>
+               
+               <image name="border_bottom">
+                  <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+                  <tile>&true;</tile>
+                  <width> <copy src="parent()" trait="_outerwidth"/></width>
+                  <height><copy src="me()"     trait="fileheight"/></width>
+                  <x>
+                     <copy src="parent()" trait="_innerX" />
+                     <mult>-1</mult>
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height"/>
+                     <sub  src="me()"     trait="height"/>
+                  </y>
+               </image>
+               <rect name="anchored_category_header_content">
+                  <!--
+                     Unfortunately, we can't prefab this element. XLEFT and similar 
+                     keyboard navigation traits appear to be completely broken within 
+                     prefabs and between prefabbed and "real" content.
+                  -->
+                  <id>15</id>
+                  <depth>3</depth>
+                  <locus>&true;</locus>
+                  <visible>&true;</visible>
+                  <x>0</x>
+                  <y>0</y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="child(anchored_category_header_name)" trait="height" /></height>
+                  
+                  <user1> -1 </user1>	<!-- position of header 1 in list -->
+                  <user2> -1 </user2>	<!-- position of header 2 in list -->
+                  <user3> -1 </user3>	<!-- position of header 3 in list -->
+                  <user4> -1 </user4>	<!-- position of header 4 in list -->
+                  
+                  <!-- Values for the All, Weapons, and Armor tabs: -->
+                  <_header_1>	<copy src="strings()" trait="_weapons"/>	   </_header_1>
+                  <_header_2> <copy src="strings()" trait="_apparel"/>	   </_header_2>
+                  <_header_3> <copy src="strings()" trait="_apparatuses"/> </_header_3>
+                  <_header_4> <copy src="strings()" trait="_potions"/>	   </_header_4>
+                  <_header_5>	<copy src="strings()" trait="_ingredients"/> </_header_5>
+                  <_header_6>	<copy src="strings()" trait="_books"/>		   </_header_6>
+                  <_header_7>	<copy src="strings()" trait="_keys"/>		   </_header_7>
+                  <_header_8>	<copy src="strings()" trait="_stones"/>		</_header_8>
+                  <_header_9>	<copy src="strings()" trait="_misc"/>		   </_header_9>
+                  <!-- Values for the Alchemy tab: -->
+                  <_header_10><copy src="strings()" trait="_alchemy"/>    </_header_10>
+                  <_header_11><copy src="strings()" trait="_apparatuses"/></_header_11>
+                  <_header_12><copy src="strings()" trait="_potions"/>    </_header_12>
+                  <_header_13><copy src="strings()" trait="_ingredients"/></_header_13>
+                  <!-- Values for the Misc tab: -->
+                  <_header_15><copy src="strings()" trait="_misc"/>  </_header_15>
+                  <_header_16><copy src="strings()" trait="_books"/> </_header_16>
+                  <_header_17><copy src="strings()" trait="_keys"/>  </_header_17>
+                  <_header_18><copy src="strings()" trait="_stones"/></_header_18>
+                  <_header_19><copy src="strings()" trait="_misc"/>  </_header_19>
+                  
+                  <_headernum>
+                     <copy>0</copy>
+                     <add> <!-- BRANCH: current tab == 1 (All Items) -->
+                        <!-- += (1) if (scrollTop > weaponHeaderIndex) -->
+                        <copy>1</copy>
+                        <onlyif>
+                           <copy src="cont_scroll_bar" trait="user7"/>
+                           <gt   src="ContainerMenu" trait="user1"/>
+                        </onlyif>
+                        <add> <!-- += (1) if (scrollTop > apparelHeaderIndex) -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="ContainerMenu" trait="user2"/>
+                           </onlyif>
+                        </add>
+                        <add> <!-- += (1) if (scrollTop > alchemyHeaderIndex) -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="ContainerMenu" trait="user3"/>
+                           </onlyif>
+                        </add>
+                        <add> <!-- += (1) if (scrollTop > miscHeaderIndex) -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="ContainerMenu" trait="user4"/>
+                           </onlyif>
+                        </add>
+                        <add> <!-- += (1) if (scrollTop > unkHeaderOffset) -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="ContainerMenu" trait="user15"/>
+                           </onlyif>
+                        </add>
+                        <add> <!-- += (1) if (scrollTop > unkHeaderOffset) -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="ContainerMenu" trait="user16"/>
+                           </onlyif>
+                        </add>
+                        <add> <!-- += (1) if (scrollTop > unkHeaderOffset) -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="ContainerMenu" trait="user17"/>
+                           </onlyif>
+                        </add>
+                        <add> <!-- += (1) if (scrollTop > unkHeaderOffset) -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="ContainerMenu" trait="user18"/>
+                           </onlyif>
+                        </add>
+                        <add> <!-- += (1) if (scrollTop > unkHeaderOffset) -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="ContainerMenu" trait="user19"/>
+                           </onlyif>
+                        </add>
+                        <onlyif><copy src="ContainerMenu" trait="user0"/><eq>1</eq></onlyif>
+                     </add>
+                     <add> <!-- BRANCH: current tab == 2 or 3 (Weapons/Armor) -->
+                        <copy src="ContainerMenu" trait="user0"/>
+                        <sub>1</sub>
+                        <onlyif>
+                               <copy src="ContainerMenu" trait="user0"/><eq>2</eq>
+                           <or><copy src="ContainerMenu" trait="user0"/><eq>3</eq></or>
+                        </onlyif>
+                     </add>
+                     <add> <!-- BRANCH: current tab == 4 (Alchemy) -->
+                        <copy>10</copy>
+                        <add>  <!-- Apparatuses -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="me()" trait="user1" />
+                           </onlyif>
+                        </add>
+                        <add>  <!-- Potions -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="me()" trait="user2"/>
+                           </onlyif>
+                        </add>
+                        <add>  <!-- Ingredients -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="me()" trait="user3"/>
+                           </onlyif>
+                        </add>
+                        <onlyif><copy src="ContainerMenu" trait="user0"/><eq>4</eq></onlyif>
+                     </add>
+                     <add> <!-- BRANCH: current tab == 5 (Misc) -->
+                        <copy>15</copy>
+                        <add>  <!-- Books -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="me()" trait="user1"/>
+                           </onlyif>
+                        </add>
+                        <add>  <!-- Keys -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="me()" trait="user2"/>
+                           </onlyif>
+                        </add>
+                        <add>  <!-- Stones -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="me()" trait="user3"/>
+                           </onlyif>
+                        </add>
+                        <add>  <!-- Misc -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="cont_scroll_bar" trait="user7"/>
+                              <gt   src="me()" trait="user4"/>
+                           </onlyif>
+                        </add>
+                        <onlyif><copy src="ContainerMenu" trait="user0"/><eq>5</eq></onlyif>
+                     </add>
+                  </_headernum>
+                  
+                  <_columncount>
+                     <copy>2</copy>
+                     <max>
+                        <copy>3</copy>
+                        <onlyif>
+                               <copy src="me()" trait="_headernum"/><eq>3</eq>
+                           <or><copy src="me()" trait="_headernum"/><eq>10</eq></or>
+                           <or><copy src="me()" trait="_headernum"/><eq>11</eq></or>
+                        </onlyif>
+                     </max>
+                     <max>
+                        <copy>4</copy>
+                        <onlyif><copy src="me()" trait="_headernum"/><lte>2</lte></onlyif>
+                     </max>
+                  </_columncount>
+                  
+                  <rect name="anchored_category_header_name">
+                     <!-- Re: name: element is referred to by other elements. -->
+                     <locus>&true;</locus>
+                     <id>16</id>
+                     <target>&true;</target>
+                     <clicksound>3</clicksound>
+                     <string>
+                        <copy src="parent()" trait="_headernum"/>
+                        <copy src="parent()" trait="_header_"/> 
+                     </string>
+                     <x>0</x>
+                     <y>0</y>
+                     <width>
+                        <copy src="parent()" trait="width"/>
+                        <sub>
+                           <copy src="ContainerMenu" trait="_itemInfoColumnWidth" />
+                           <mult src="parent()"      trait="_columncount" />
+                        </sub>
+                     </width>
+                     <height><copy src="child(label)" trait="height" /></height>
+                     
+                     <!-- Keyboard/Xbox behavior: -->
+                     <xright><ref src="col_header_1"      trait="mouseover"/></xright>
+                     <xdown> <ref src="cont_list_contents" trait="mouseover"/></xdown>
+                     
+                     <text name="label">
+                        <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                        <string><copy src="parent()" trait="string" /></string>
+                        <justify>&left;</justify>
+                        <x>
+                           <copy src="ContainerMenu" trait="_itemIconSize" />
+                           <add>8</add> <!-- icon X-offset -->
+                           <add>11</add> <!-- item name X-spacing -->
+                        </x>
+                        <y>0</y>
+                        <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                     </text>
+                  </rect>
+                  <rect name="col_header_1"> <!-- typically value -->
+                     <locus>&true;</locus>
+                     <id>17</id>
+                     <target>&true;</target>
+                     <clicksound>3</clicksound>
+                     <x> <!-- after previous -->
+                        <copy src="sibling()" trait="x" />
+                        <add  src="sibling()" trait="width" />
+                     </x>
+                     <y><copy src="sibling()" trait="y" /></y>
+                     <width> <copy src="ContainerMenu" trait="_itemInfoColumnWidth" /></width>
+                     <height><copy src="sibling()" trait="height" /></height>
+                     
+                     <!-- Keyboard/Xbox behavior: -->
+                     <xleft> <ref src="anchored_category_header_name" trait="mouseover"/></xleft>
+                     <xright><ref src="col_header_2"                  trait="mouseover"/></xright>
+                     <xdown> <ref src="cont_list_contents"             trait="mouseover"/></xdown>
+                     
+                     <text name="label">
+                        <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                        <string><copy src="xxnStrings()" trait="_labelValueAbbr" /></string>
+                        <justify>&center;</justify>
+                        <x> <!-- center within parent -->
+                           <copy src="parent()" trait="width" />
+                           <div>2</div>
+                        </x>
+                        <y>0</y>
+                        <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                     </text>
+                  </rect>
+                  <rect name="col_header_2"> <!-- typically weight -->
+                     <locus>&true;</locus>
+                     <id>18</id>
+                     <target>&true;</target>
+                     <clicksound>3</clicksound>
+                     <x> <!-- after previous -->
+                        <copy src="sibling()" trait="x" />
+                        <add  src="sibling()" trait="width" />
+                     </x>
+                     <y><copy src="sibling()" trait="y" /></y>
+                     <width> <copy src="ContainerMenu" trait="_itemInfoColumnWidth" /></width>
+                     <height><copy src="sibling()" trait="height" /></height>
+                     
+                     <!-- Keyboard/Xbox behavior: -->
+                     <xleft> <ref src="col_header_1"      trait="mouseover"/></xleft>
+                     <xright><ref src="col_header_3"      trait="mouseover"/></xright>
+                     <xdown> <ref src="cont_list_contents" trait="mouseover"/></xdown>
+                     
+                     <text name="label">
+                        <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                        <string><copy src="xxnStrings()" trait="_labelWeightAbbr" /></string>
+                        <justify>&center;</justify>
+                        <x> <!-- center within parent -->
+                           <copy src="parent()" trait="width" />
+                           <div>2</div>
+                        </x>
+                        <y>0</y>
+                        <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                     </text>
+                  </rect>
+                  <rect name="col_header_3"> <!-- variable -->
+                     <locus>&true;</locus>
+                     <visible><copy src="parent()" trait="_columncount"/><gte>3</gte></visible>
+                     <id>19</id>
+                     <target>&true;</target>
+                     <clicksound>3</clicksound>
+                     <x> <!-- after previous -->
+                        <copy src="sibling()" trait="x" />
+                        <add  src="sibling()" trait="width" />
+                     </x>
+                     <y><copy src="sibling()" trait="y" /></y>
+                     <width> <copy src="ContainerMenu" trait="_itemInfoColumnWidth" /></width>
+                     <height><copy src="sibling()" trait="height" /></height>
+                     
+                     <!-- Keyboard/Xbox behavior: -->
+                     <xleft> <ref src="col_header_2"       trait="mouseover"/></xleft>
+                     <xright><ref src="col_header_4"       trait="mouseover"/></xright>
+                     <xdown> <ref src="cont_list_contents" trait="mouseover"/></xdown>
+                     
+                     <_which>
+                        <copy>0</copy>
+                        <max> <!-- Weapons: DMG -->
+                           <copy>1</copy>
+                           <onlyif><copy src="parent()" trait="_headernum"/><eq>1</eq></onlyif>
+                        </max>
+                        <max> <!-- Armor: ARMOR -->
+                           <copy>2</copy>
+                           <onlyif><copy src="parent()" trait="_headernum"/><eq>2</eq></onlyif>
+                        </max>
+                        <max> <!-- Apparati: QUALITY -->
+                           <copy>3</copy>
+                           <onlyif>
+                                  <copy src="parent()" trait="_headernum"/><eq> 3</eq>
+                              <or><copy src="parent()" trait="_headernum"/><eq>10</eq></or>
+                              <or><copy src="parent()" trait="_headernum"/><eq>11</eq></or>
+                           </onlyif>
+                        </max>
+                     </_which>
+                     <_show>
+                        <not>
+                               <copy src="parent()" trait="_headernum"/><eq> 4</eq>
+                           <or><copy src="parent()" trait="_headernum"/><eq> 5</eq></or>
+                           <or><copy src="parent()" trait="_headernum"/><eq>12</eq></or>
+                           <or><copy src="parent()" trait="_headernum"/><eq>13</eq></or>
+                        </not>
+                     </_show>
+                     
+                     <text name="label">
+                        <_strings_0> </_strings_0>
+                        <_strings_1><copy src="xxnStrings()" trait="_labelDamageAbbr" /></_strings_1>
+                        <_strings_2><copy src="xxnStrings()" trait="_labelArmor" /></_strings_2>
+                        <_strings_3><copy src="xxnStrings()" trait="_labelQualityAbbr" /></_strings_3>
+                     
+                        <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                        <string>
+                           <copy src="parent()" trait="_which"/>
+                           <copy src="me()"     trait="_strings_"/>
+                        </string>
+                        <visible><copy src="parent()" trait="_show"/></visible>
+                        <justify>&center;</justify>
+                        <x> <!-- center within parent -->
+                           <copy src="parent()" trait="width" />
+                           <div>2</div>
+                        </x>
+                        <y>0</y>
+                        <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                     </text>
+                  </rect>
+                  <rect name="col_header_4"> <!-- condition -->
+                     <locus>&true;</locus>
+                     <visible><copy src="parent()" trait="_columncount"/><gte>4</gte></visible>
+                     <id>20</id>
+                     <target>&true;</target>
+                     <clicksound>3</clicksound>
+                     <x> <!-- after previous -->
+                        <copy src="sibling()" trait="x" />
+                        <add  src="sibling()" trait="width" />
+                     </x>
+                     <y><copy src="sibling()" trait="y" /></y>
+                     <width> <copy src="ContainerMenu" trait="_itemInfoColumnWidth" /></width>
+                     <height><copy src="sibling()" trait="height" /></height>
+                     
+                     <!-- Keyboard/Xbox behavior: -->
+                     <xleft><ref src="col_header_3"      trait="mouseover"/></xleft>
+                     <xdown><ref src="cont_list_contents" trait="mouseover"/></xdown>
+                     
+                     <text name="label">
+                        <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                        <string><copy src="xxnStrings()" trait="_labelConditionAbbr" /></string>
+                        <justify>&center;</justify>
+                        <x> <!-- center within parent -->
+                           <copy src="parent()" trait="width" />
+                           <div>2</div>
+                        </x>
+                        <y>0</y>
+                        <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                     </text>
+                  </rect>
+               </rect>
+            </rect>
+            <rect name="cont_window">
+               <depth>10</depth>
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="y" />
+               </height>
+               <clipwindow>&true;</clipwindow>
+               
+               <rect name="cont_pane">
+                  <locus>&true;</locus>
+                  <x>0</x>
+                  <y> <!-- handle panel scrolling -->
+                     <copy src="cont_scroll_bar" trait="user7"/>
+                     <mult src="ContainerMenu"   trait="_listRowHeight" />
+                     <mult>-1</mult>
+                  </y>
+                  <width>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="x" />
+                  </width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  
+                  <!--
+                     In Oblivion, you don't get a tab for every individual item category. 
+                     Instead, you get five very general tabs: All Items, Weapons, Apparel, 
+                     Alchemy, and Misc Items. Within these, subheadings for each item 
+                     category are embedded directly into the list.
+                     
+                     The headers are "hardcoded" into the UI rather than generated, and 
+                     the menu is supplied with their list indices. It's up to us to compute 
+                     their Y-offsets and position them.
+                  -->
+                  <rect name="cont_weapon_header">
+                     <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                     <_menuCurrentTab> <copy src="ContainerMenu" trait="user0"/></_menuCurrentTab>
+                     <_mainIndexOfMe>  <copy src="ContainerMenu" trait="user1"/></_mainIndexOfMe>
+                     <_mainIndexOfNext><copy src="ContainerMenu" trait="user2"/></_mainIndexOfNext>
+                     
+                     <height><copy src="ContainerMenu" trait="_listRowHeight" /></height>
+                     <_headerXOffset>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </_headerXOffset>
+                     
+                     <_headerText><copy src="strings()" trait="_weapons"/></_headerText>
+                     <_columnText1><copy src="xxnStrings()" trait="_labelValueAbbr" /></_columnText1>
+                     <_columnText2><copy src="xxnStrings()" trait="_labelWeightAbbr" /></_columnText2>
+                     <_columnText3><copy src="xxnStrings()" trait="_labelDamageAbbr" /></_columnText3>
+                     <_columnText4><copy src="xxnStrings()" trait="_labelConditionAbbr" /></_columnText4>
+                     <_columnCount>4</_columnCount>
+                  </rect>
+                  <rect name="cont_apparel_header">
+                     <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                     <_menuCurrentTab> <copy src="ContainerMenu" trait="user0"/></_menuCurrentTab>
+                     <_mainIndexOfMe>  <copy src="ContainerMenu" trait="user2"/></_mainIndexOfMe>
+                     <_mainIndexOfNext><copy src="ContainerMenu" trait="user3"/></_mainIndexOfNext>
+                     
+                     <height><copy src="ContainerMenu" trait="_listRowHeight" /></height>
+                     <_headerXOffset>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </_headerXOffset>
+                     
+                     <_headerText><copy src="strings()" trait="_apparel"/></_headerText>
+                     <_columnText1><copy src="xxnStrings()" trait="_labelValueAbbr" /></_columnText1>
+                     <_columnText2><copy src="xxnStrings()" trait="_labelWeightAbbr" /></_columnText2>
+                     <_columnText3><copy src="xxnStrings()" trait="_labelArmor" /></_columnText3>
+                     <_columnText4><copy src="xxnStrings()" trait="_labelConditionAbbr" /></_columnText4>
+                     <_columnCount>4</_columnCount>
+                  </rect>
+                  <rect name="cont_apparatus_header"> <!---- All Items or Alchemy tabs -->
+                     <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                     <_menuCurrentTab> <copy src="ContainerMenu" trait="user0"/></_menuCurrentTab>
+                     <_mainIndexOfMe>  <copy src="ContainerMenu" trait="user3"/></_mainIndexOfMe>
+                     <_mainIndexOfNext><copy src="ContainerMenu" trait="user4"/></_mainIndexOfNext>
+                     
+                     <height><copy src="ContainerMenu" trait="_listRowHeight" /></height>
+                     <_headerXOffset>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </_headerXOffset>
+                     
+                     <_headerText><copy src="strings()" trait="_apparatuses"/></_headerText>
+                     <_columnText1><copy src="xxnStrings()" trait="_labelValueAbbr" /></_columnText1>
+                     <_columnText2><copy src="xxnStrings()" trait="_labelWeightAbbr" /></_columnText2>
+                     <_columnText3><copy src="xxnStrings()" trait="_labelQualityAbbr" /></_columnText3>
+                     <_columnCount>3</_columnCount>
+                  </rect>
+                  <rect name="cont_potions_header"> <!------ All Items or Alchemy tabs -->
+                     <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                     <_menuCurrentTab> <copy src="ContainerMenu" trait="user0"/></_menuCurrentTab>
+                     <_mainIndexOfMe>  <copy src="ContainerMenu" trait="user4"/></_mainIndexOfMe>
+                     <_mainIndexOfNext><copy src="ContainerMenu" trait="user15"/></_mainIndexOfNext>
+                     <_altIndexOfMe>   <copy src="anchored_category_header_content" trait="user2"/></_altIndexOfMe>
+                     <_altIndexOfNext> <copy src="anchored_category_header_content" trait="user3"/></_altIndexOfNext>
+                     <_altTab>4</_altTab>
+                     
+                     <height><copy src="ContainerMenu" trait="_listRowHeight" /></height>
+                     <_headerXOffset>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </_headerXOffset>
+                     
+                     <_headerText><copy src="strings()" trait="_potions"/></_headerText>
+                     <_columnText1><copy src="xxnStrings()" trait="_labelValueAbbr" /></_columnText1>
+                     <_columnText2><copy src="xxnStrings()" trait="_labelWeightAbbr" /></_columnText2>
+                     <_columnCount>2</_columnCount>
+                  </rect>
+                  <rect name="cont_ingredients_header"> <!-- All Items or Alchemy tabs -->
+                     <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                     <_menuCurrentTab> <copy src="ContainerMenu" trait="user0"/></_menuCurrentTab>
+                     <_mainIndexOfMe>  <copy src="ContainerMenu" trait="user15"/></_mainIndexOfMe>
+                     <_mainIndexOfNext><copy src="ContainerMenu" trait="user16"/></_mainIndexOfNext>
+                     <_altIndexOfMe>   <copy src="anchored_category_header_content" trait="user3"/></_altIndexOfMe>
+                     <_altIndexOfNext> <copy src="anchored_category_header_content" trait="user4"/></_altIndexOfNext>
+                     <_altTab>4</_altTab>
+                     
+                     <height><copy src="ContainerMenu" trait="_listRowHeight" /></height>
+                     <_headerXOffset>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </_headerXOffset>
+                     
+                     <_headerText><copy src="strings()" trait="_ingredients"/></_headerText>
+                     <_columnText1><copy src="xxnStrings()" trait="_labelValueAbbr" /></_columnText1>
+                     <_columnText2><copy src="xxnStrings()" trait="_labelWeightAbbr" /></_columnText2>
+                     <_columnCount>2</_columnCount>
+                  </rect>
+                  <rect name="cont_book_header"> <!--------- Misc tab only -->
+                     <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                     <_menuCurrentTab> <copy src="ContainerMenu" trait="user0"/></_menuCurrentTab>
+                     <_mainIndexOfMe>  <copy src="ContainerMenu" trait="user16"/></_mainIndexOfMe>
+                     <_mainIndexOfNext><copy src="ContainerMenu" trait="user17"/></_mainIndexOfNext>
+                     
+                     <height><copy src="ContainerMenu" trait="_listRowHeight" /></height>
+                     <_headerXOffset>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </_headerXOffset>
+                     
+                     <_headerText><copy src="strings()" trait="_books"/></_headerText>
+                     <_columnText1><copy src="xxnStrings()" trait="_labelValueAbbr" /></_columnText1>
+                     <_columnText2><copy src="xxnStrings()" trait="_labelWeightAbbr" /></_columnText2>
+                     <_columnCount>2</_columnCount>
+                  </rect>
+                  <rect name="cont_keys_header"> <!--------- All Items or Misc tabs -->
+                     <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                     <_menuCurrentTab> <copy src="ContainerMenu" trait="user0"/></_menuCurrentTab>
+                     <_mainIndexOfMe>  <copy src="ContainerMenu" trait="user17"/></_mainIndexOfMe>
+                     <_mainIndexOfNext><copy src="ContainerMenu" trait="user18"/></_mainIndexOfNext>
+                     <_altIndexOfMe>   <copy src="anchored_category_header_content" trait="user2"/></_altIndexOfMe>
+                     <_altIndexOfNext> <copy src="anchored_category_header_content" trait="user3"/></_altIndexOfNext>
+                     <_altTab>5</_altTab>
+                     
+                     <height><copy src="ContainerMenu" trait="_listRowHeight" /></height>
+                     <_headerXOffset>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </_headerXOffset>
+                     
+                     <_headerText><copy src="strings()" trait="_keys"/></_headerText>
+                     <_columnText1><copy src="xxnStrings()" trait="_labelValueAbbr" /></_columnText1>
+                     <_columnText2><copy src="xxnStrings()" trait="_labelWeightAbbr" /></_columnText2>
+                     <_columnCount>2</_columnCount>
+                  </rect>
+                  <rect name="cont_stones_header"> <!------- All Items or Misc tabs -->
+                     <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                     <_menuCurrentTab> <copy src="ContainerMenu" trait="user0"/></_menuCurrentTab>
+                     <_mainIndexOfMe>  <copy src="ContainerMenu" trait="user18"/></_mainIndexOfMe>
+                     <_mainIndexOfNext><copy src="ContainerMenu" trait="user19"/></_mainIndexOfNext>
+                     <_altIndexOfMe>   <copy src="anchored_category_header_content" trait="user3"/></_altIndexOfMe>
+                     <_altIndexOfNext> <copy src="anchored_category_header_content" trait="user4"/></_altIndexOfNext>
+                     <_altTab>5</_altTab>
+                     
+                     <height><copy src="ContainerMenu" trait="_listRowHeight" /></height>
+                     <_headerXOffset>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </_headerXOffset>
+                     
+                     <_headerText><copy src="strings()" trait="_stones"/></_headerText>
+                     <_columnText1><copy src="xxnStrings()" trait="_labelValueAbbr" /></_columnText1>
+                     <_columnText2><copy src="xxnStrings()" trait="_labelWeightAbbr" /></_columnText2>
+                     <_columnCount>2</_columnCount>
+                  </rect>
+                  <rect name="cont_misc_header"> <!--------- All Items or Misc tabs -->
+                     <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                     <_menuCurrentTab> <copy src="ContainerMenu" trait="user0"/></_menuCurrentTab>
+                     <_mainIndexOfMe>  <copy src="ContainerMenu" trait="user19"/></_mainIndexOfMe>
+                     <_mainIndexOfNext><copy src="ContainerMenu" trait="user5"/></_mainIndexOfNext>
+                     <_altIndexOfMe>   <copy src="anchored_category_header_content" trait="user4"/></_altIndexOfMe>
+                     <_altIndexOfNext> <copy src="anchored_category_header_content" trait="user5"/></_altIndexOfNext>
+                     <_altTab>5</_altTab>
+                     
+                     <height><copy src="ContainerMenu" trait="_listRowHeight" /></height>
+                     <_headerXOffset>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </_headerXOffset>
+                     
+                     <_headerText><copy src="strings()" trait="_misc"/></_headerText>
+                     <_columnText1><copy src="xxnStrings()" trait="_labelValueAbbr" /></_columnText1>
+                     <_columnText2><copy src="xxnStrings()" trait="_labelWeightAbbr" /></_columnText2>
+                     <_columnCount>2</_columnCount>
+                  </rect>
+                  
+                  <rect name="cont_list_contents">
+                     <id>13</id>
+                     <user0>0</user0> <!-- set by code: number of visible elements in list -->
+                     <width><copy src="parent()" trait="width"/></width>
+                     
+                     <!-- code created template items are inserted here -->
+                        
+                     <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                        an input command, they defer to their parent. The following directions are for those times. -->
+                     <target>&false;</target>
+                     <xdefault>15</xdefault>
+                     <xlist>&xlist;</xlist>
+                     <xup>    <ref src="anchored_category_header_name" trait="mouseover"/></xup>
+                     <!--xdown> &first; </xdown-->
+                     <xscroll><ref src="cont_scroll_bar" trait="user5" /></xscroll> <!-- Attempts to scroll this element into view should reset the pane's scroll position to the default (i.e. 0). -->
+                  </rect>
+               </rect>
+            </rect>
+         </rect>
+    
+      </rect>
+      <rect name="cont_select_frame">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y> <!-- after sibling -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width><copy src="parent()" trait="width" /></width>
+         <height>64</height>
+         
+         <image name="border_top">
+            <clips>&true;</clips>
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width>
+               <copy src="parent()"   trait="width"/>
+               <sub>1</sub>
+            </width>
+            <height><copy src="me()" trait="fileheight"/></width>
+            <x>1</x>
+            <y><copy src="me()" trait="fileheight"/><mult>-1</mult></y>
+         </image>
+         
+         <rect name="divider">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width"/>
+               <sub  src="me()"     trait="width"/>
+               <div>2</div>
+            </x>
+            <y>0</y>
+            <width> <copy src="child()"  trait="width"/></width>
+            <height><copy src="parent()" trait="height"/></height>
+            
+            <image name="center">
+               <clips>&true;</clips>
+               <filename>Menus\NorthernUI\Inventory\barter_swapper.dds</filename>
+               <width> <copy src="me()" trait="filewidth"/> <div>3</div></width>
+               <height><copy src="me()" trait="fileheight"/></height>
+               <cropX>
+                  <not src="ContainerMenu" trait="user7"/>
+                  <mult><copy src="me()" trait="width"/></mult>
+               </cropX>
+               <x>0</x>
+               <y>
+               <copy src="parent()" trait="height"/>
+               <sub  src="me()"     trait="height"/>
+               <div>2</div>
+               </y>
+            </image>
+            <image name="top">
+               <clips>&true;</clips>
+               <filename>Menus\NorthernUI\Inventory\barter_swapper.dds</filename>
+               <tile>&true;</tile>
+               <width><copy src="me()" trait="filewidth"/> <div>3</div></width>
+               <height>
+                  <copy src="sibling(center)" trait="y"/>
+               </height>
+               <cropX>0</cropX>
+               <x>0</x>
+               <y>0</y>
+            </image>
+            <image name="bottom">
+               <clips>&true;</clips>
+               <filename>Menus\NorthernUI\Inventory\barter_swapper.dds</filename>
+               <tile>&true;</tile>
+               <width><copy src="me()" trait="filewidth"/> <div>3</div></width>
+               <height>
+                  <copy src="parent()" trait="height"/>
+                  <sub  src="sibling(center)" trait="y"/>
+                  <sub  src="sibling(center)" trait="height"/>
+               </height>
+               <cropX>0</cropX>
+               <x>0</x>
+               <y>
+                  <copy src="sibling(center)" trait="y"/>
+                  <add  src="sibling(center)" trait="height"/>
+               </y>
+            </image>
+         </rect>
+         <rect name="cont_icon_inv_off"> <!-- button: swap to player -->
+            <locus>&true;</locus>
+            <target>&true;</target>
+				<id>42</id>
+            <x>0</x>
+            <y>0</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <text name="label">
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <justify>&left;</justify>
+               <string><copy src="xxnStrings()" trait="_containerMenuSwapperPlayer" /></string>
+               <x>32</x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <red>
+                  <copy>140</copy>
+                  <max>
+                     <copy>255</copy>
+                     <onlyifnot src="ContainerMenu" trait="user7"/>
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+            </text>
+         </rect>
+         <rect name="cont_icon_cont_off"> <!-- button: swap to container -->
+            <locus>&true;</locus>
+            <target>&true;</target>
+				<id>43</id>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <_labels_1><copy src="xxnStrings()" trait="_containerMenuSwapperContainer" /></_labels_1>
+            <_labels_2><copy src="ContainerMenu" trait="user11" /></_labels_2>
+            
+            <text name="label">
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <justify>&right;</justify>
+               <string>
+                  <copy src="ContainerMenu" trait="user9" />
+                  <copy src="parent()"      trait="_labels_" />
+               </string>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub>32</sub>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <red>
+                  <copy>140</copy>
+                  <max>
+                     <copy>255</copy>
+                     <onlyif src="ContainerMenu" trait="user7"/>
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+            </text>
+         </rect>
+      </rect>
+      <rect name="scrollbar_wrapper">
+         <include src="NorthernUI\scrollbars\wrapper.xml" />
+         <user0>&false;</user0> <!-- is horizontal? -->
+         <x> <!-- 8px from right edge -->
+            <copy src="parent()" trait="width"/>
+            <sub  src="me()"     trait="width"/>
+            <sub  src="parent()" trait="_scrollbarMargin" />
+         </x>
+         <y> <!-- align with cont_window -->
+            <copy src="sibling(page_layout)" trait="y" />
+            <add  src="cont_window" trait="y" />
+            <add>4</add>
+         </y>
+         <height>
+            <copy src="cont_window" trait="height" />
+            <sub>8</sub>
+         </height>
+         
+         <image name="cont_scroll_bar">
+            <include src="vertical_scroll.xml" />
+            <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+            <id>11</id>
+            <depth>20</depth>
+            
+            <user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+            
+            <!--
+               User2 should be the maximum value that can be scrolled to -- generally, the 
+               number of items in the list minus the number of items visible at any one 
+               time. If your list has 8 items and you can see 2 at any one time, then user2 
+               should be 6.
+               
+               If you're allowing items to be partially scrolled into view, then you also 
+               need to add 1 to this value if-and-only-if the list is tall enough to fit a 
+               non-integer number of items. Ergo, for a dynamically-sized list pane, you 
+               want:
+               
+               (item count) - floor(list height / row height) + ((list height % row height) ? 1 : 0)
+            -->
+            <user2>
+               <copy src="cont_list_contents" trait="user0" />	<!-- list's visible element count -->
+               <sub>
+                  <copy src="cont_window" trait="height" />
+                  <div  src="ContainerMenu" trait="_listRowHeight" />
+                  <floor>0</floor>
+               </sub>
+               <add>
+                  <copy>1</copy>
+                  <onlyif>
+                     <copy src="cont_window" trait="height" />
+                     <mod  src="ContainerMenu" trait="_listRowHeight" />
+                     <neq>0</neq>
+                  </onlyif>
+               </add>
+            </user2>
+            
+            <user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+            <user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+            <user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+            <user6> 12 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+            <!-- user7 = current value -->
+            
+            <!--
+               User8 should be the number of items visible at any one time. Though your clip-
+               window will hide any items scrolled out of view, the executable also prefers 
+               to manually set visibility on individual items based on this value. As such, 
+               if you want items that are partially scrolled out of view to be visible, you 
+               need to set this to ceil(pane height / row height).
+            -->
+            <user8> <!-- How many items are visible at once -->
+               <copy src="cont_window" trait="height" />
+               <div  src="ContainerMenu" trait="_listRowHeight" />
+               <ceil>0</ceil>
+            </user8>
+            <user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+            <user10> 0 </user10>	<!-- reserved -->
+         </image>
+      </rect>
+   </rect>
+   <rect name="cont_bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="button_haggle">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>34</id>
+            <x>0</x>
+            <y>0</y>
+            <visible>
+               <copy src="ContainerMenu" trait="user9" /> <!-- is bartering -->
+            </visible>
+            <string><copy src="strings()" trait="_haggle" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>0</listindex>
+            <xright>&next;</xright>
+            <xup><ref src="cont_list_contents" trait="mouseover"/></xup>
+         </rect>
+         <rect name="button_take_all">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>278</_dxScanCode>
+            <id>32</id>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy   src="sibling()" trait="width" />
+               <add    src="cont_bottom_bar" trait="_entrySpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+            </x>
+            <y>0</y>
+            <visible>
+               <copy src="ContainerMenu" trait="user8" /> <!-- action allowed -->
+               <and  src="ContainerMenu" trait="user7" /> <!-- viewing container contents -->
+            </visible>
+            <string><copy src="xxnStrings()" trait="_takeAll" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>1</listindex>
+            <xleft>&prev;</xleft>
+            <xright>&next;</xright>
+            <xup><ref src="cont_list_contents" trait="mouseover"/></xup>
+         </rect>
+         <rect name="close_menu">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>33</id>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy   src="sibling()" trait="width" />
+               <add    src="cont_bottom_bar" trait="_entrySpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+            </x>
+            <y>0</y>
+            <string><copy src="xxnStrings()" trait="_closeMenu" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>2</listindex>
+            <xleft>&prev;</xleft>
+            <xright>&next;</xright>
+            <xup><ref src="cont_list_contents" trait="mouseover"/></xup>
+         </rect>
+      </rect>
+      
+      <rect name="right_side_info">
+         <locus>&true;</locus>
+         <width> <!-- combined width of all children -->
+            <copy src="child(merchant_gold)" trait="x" />
+            <add  src="child(merchant_gold)" trait="width" />
+         </width>
+         <height> <!-- expected child height -->
+            <copy src="child(merchant_gold)" trait="y" />
+            <add  src="child(merchant_gold)" trait="height" />
+         </height>
+         <x> <!-- align on right -->
+            <copy src="parent()"     trait="width" />
+            <sub  src="me()"         trait="width" />
+            <sub  src="screen()"     trait="cropx" />
+            <sub  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         
+         <rect name="carry_weight">
+            <x>0</x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <_label><copy src="xxnStrings()" trait="_carryWeight" /></_label>
+            <_value>  <copy src="ContainerMenu" trait="user13"/></_value>
+            <_maximum><copy src="ContainerMenu" trait="user14"/></_maximum>
+         </rect>
+         <rect name="gold">
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy   src="sibling()" trait="x" />
+               <add    src="sibling()" trait="width" />
+               <add>
+                  <copy   src="cont_bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <_label><copy src="xxnStrings()" trait="_gold" /></_label>
+            <_value><copy src="ContainerMenu" trait="user6"/></_value>
+            <_maximum>-1</_maximum>
+         </rect>
+         <rect name="merchant_gold">
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy   src="sibling()" trait="x" />
+               <add    src="sibling()" trait="width" />
+               <add>
+                  <copy   src="cont_bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <visible><copy src="ContainerMenu" trait="user9"/></visible>
+            <!-- <_label><copy src="ContainerMenu" trait="user11"/></_label>
+            <_labelConcat>Gold</_labelConcat>
+            <_labelConcatMode>2</_labelConcatMode> -->
+            <_label><copy src="xxnStrings()" trait="_containerMenuMaxSellPrice" /></_label>
+            <_value><copy src="ContainerMenu" trait="user12"/></_value>
+            <_maximum>-1</_maximum>
+         </rect>
+      </rect>
+   </rect>
+   
+   <template name="cont_item_template">
+      <rect name="cont_item">
+         <visible><copy src="me()" trait="user8"/></visible>
+         <target> &true; </target>
+         <clips> &true; </clips>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<width> <copy src="parent()" trait="width"/></width>
+			<height><copy src="menu()"   trait="_listRowHeight" /></height>
+         <depth> 1 </depth>
+         <locus> &true; </locus>
+         <alpha> 0 </alpha>
+         <listindex> 0 </listindex>			<!-- list position index -->
+         <user1> Item Name </user1>			<!-- item name -->
+         <user2> First Value </user2>		<!-- 1st column value -->
+         <user3> Second Value </user3>		<!-- 2nd column value -->
+         <user4> Third Value </user4>		<!-- 3rd column value -->
+         <user5> Fourth Value </user5>		<!-- 4th column value -->
+         <user6> icon/pathname.dds </user6>	<!-- icon pathname -->
+         <user7> 1M </user7>					<!-- count -->
+         <user8> &true; </user8>				<!-- visible -->
+         <user9>-1</user9>				<!-- type (weapon,armor,alchemy,misc) -->
+         <user10> &false; </user10>			<!-- is equipped -->
+         <user11> 0 </user11>				<!-- inventory system index -->
+         <!-- USER12: Status bitmask. Bits:
+            1 = stolen
+            2 = enchanted
+            4 = poisoned
+            8 = broken
+         -->
+			<user12>0</user12>
+         <!-- USER13: Status icon filename. Values can be any of:
+          - Menus/Icons/icon_enchanted_item.dds
+          - Menus/Icons/icon_poisoned_item.dds
+          - Menus/Icons/icon_broken_item.dds
+          - Menus/Icons/icon_image_set_%d.dds
+             - where %d is the user12 bitmask
+          - Menus/Icons/icon_small_item_pickup.dds
+             - used for items that are stolen and have no other status bits
+             
+         The above has been verified through disassembly of the executable. -->
+			<user13></user13>
+         <user14> &true; </user14>				<!-- true if is container item, false if inventory item -->
+         
+			<user24>0</user24> <!-- NorthernUI: form type of the inventory item -->
+         
+         <!-- This element is a list item. If it gets an input command it doesn't know how to handle
+            it will defer the command to its parent. The xlist trait set to true triggers this. -->
+         <xdefault>3</xdefault>
+         <xlist> &xitem; </xlist>
+         <xup> &prev; </xup>
+         <xdown> &next; </xdown>
+         <xscroll>
+            <copy src="me()" trait="listindex" />
+            <sub>
+               <copy src="cont_scroll_bar" trait="user8"/>
+               <div> 2 </div>
+               <ceil> 0 </ceil>
+            </sub>
+            <add> 1 </add>
+         </xscroll>
+         
+         <listclip> <!-- prevent list items that are 90% off-screen from showing a focusbox -->
+            <!-- "visible" can block keynav; "listclip" will not -->
+            <copy src="me()"      trait="y" />
+            <add  src="cont_pane" trait="y" />
+            <add  src="child(cont_item_icon)" trait="y" />
+            <add>4</add> <!-- more than 4px of the icon must be visible -->
+            <gt   src="cont_window" trait="height" />
+         </listclip>
+         
+         <_columncount>
+            <copy>2</copy>
+            <max> <!-- apparati have three columns; potions and ingredients don't -->
+               <copy>3</copy>
+               <onlyif>
+                  <copy src="me()" trait="user9" /><eq>4</eq>
+                  <and><copy src="me()" trait="user24" /><neq>25</neq></and> <!-- form type: ingredient -->
+                  <and><copy src="me()" trait="user24" /><neq>40</neq></and> <!-- form type: potion -->
+               </onlyif>
+            </max>
+            <max> <!-- weapons and apparel have four columns -->
+               <copy>4</copy>
+               <onlyif>
+                      <copy src="me()" trait="user9" /><eq>1</eq>
+                  <or><copy src="me()" trait="user9" /><eq>2</eq></or>
+               </onlyif>
+            </max>
+            <!--
+               The game doesn't set the user9 value for MiscItems; it stays 
+               as whatever default we supplied above. Vanilla used the default 
+               value "type", but that apparently breaks math calculations, so 
+               we've changed the default to -1.
+            -->
+         </_columncount>
+			
+         <_text_r>255</_text_r>
+         <_text_g>
+            <copy src="me()" trait="_text_r" />
+            <onlyif>
+               <copy src="me()" trait="user12" />
+               <xxnOpBitwiseAnd>1</xxnOpBitwiseAnd>
+               <neq>1</neq>
+            </onlyif>
+         </_text_g>
+         <_text_b>
+            <copy src="me()" trait="_text_r" />
+            <onlyif>
+               <copy src="me()" trait="user12" />
+               <xxnOpBitwiseAnd>1</xxnOpBitwiseAnd>
+               <neq>1</neq>
+            </onlyif>
+         </_text_b>
+         
+			<!-- Preserve value for use by children: -->
+         <_computedEquipOffset><copy src="parent()" trait="_computedEquipOffset" /></_computedEquipOffset>
+         
+         <image name="inv_equipped_marker">
+				<visible>
+               <!-- Is Not Y-Axis-Clipped: -->
+               <copy src="parent()"    trait="y" />
+               <add  src="cont_pane"   trait="y" /> <!-- negative offset from scrolling -->
+               <add  src="parent()"    trait="height" />
+               <lt   src="cont_window" trait="height" />
+               <and> <!-- isn't above the window top edge -->
+                  <copy src="parent()"  trait="y" />
+                  <add  src="cont_pane" trait="y" />
+                  <gte>0</gte>
+               </and>
+               <!-- /Is Not Y-Axis-Clipped -->
+               <and  src="parent()" trait="user10" /> <!-- is equipped -->
+            </visible>
+				<depth>2</depth>
+            <zoom>33</zoom>
+				<filename>Menus\NorthernUI\Shared\hd_selection_indicator.dds</filename>
+				<alpha>192</alpha>
+				<width> <copy src="me()" trait="filewidth" /></width>
+				<height><copy src="me()" trait="fileheight" /></height>
+				<x>-40</x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+			</image>
+			<image name="cont_item_icon">
+            <zoom><copy src="menu()" trait="_itemIconZoom" /></zoom>
+				<clips>&true;</clips>
+            <locus>&true;</locus>
+				<depth>3</depth>
+				<filename><copy src="parent()" trait="user6" /></filename>
+				<width> <copy src="menu()" trait="_itemIconSize" /></width>
+				<height><copy src="menu()" trait="_itemIconSize" /></height>
+				<x>8</x>
+            <y> <!-- center within parent -->
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            <user7> <copy src="parent()" trait="user7" /></user7>
+            <user12><copy src="parent()" trait="user12" /></user12>
+            <user13><copy src="parent()" trait="user13" /></user13>
+            
+            <text name="count">
+               <clips>&true;</clips>
+               <depth>2</depth>
+               <justify>&right;</justify>
+               <include src="NorthernUI\fonts\small.xml" />
+               <red>  <copy src="parent()" trait="_text_r" /></red>
+               <green><copy src="parent()" trait="_text_g" /></green>
+               <blue> <copy src="parent()" trait="_text_b" /></blue>
+               <alpha>255</alpha>
+               <wrapwidth>55</wrapwidth>
+               <wraplines>1</wraplines>
+               <string><copy src="parent()" trait="user7" /></string>
+               <x>
+                  <copy src="parent()" trait="width" />
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+               </y>
+            </text>
+            <image name="status">
+               <zoom><copy src="menu()" trait="_itemIconZoom" /></zoom>
+               <clips>&true;</clips>
+               <visible> <copy src="parent()" trait="user12"/><gt>0</gt></visible>
+               <filename><copy src="parent()" trait="user13"/></filename>
+               <depth>1</depth>
+               <x>0</x>
+               <y> <!-- align with bottom of parent -->
+                  <copy src="parent()" trait="height"/>
+                  <sub  src="me()"     trait="height"/>
+               </y>
+               <height>
+                  <copy>32</copy>		<onlyif src="me()" trait="_handonly"/>
+                  <add>
+                     <copy>25</copy>	<onlyifnot src="me()" trait="_handonly"/>
+                  </add>
+                  <mult> <!-- icon scaling -->
+                     <copy src="menu()" trait="_itemIconZoom" />
+                     <div>100</div>
+                  </mult>
+               </height>
+               <width>
+                  <copy>64</copy>
+                  <sub>
+                     <copy>32</copy>
+                     <onlyif>
+                        <!-- If any of these conditions is true, we are using an original icon,
+                             rather than a "combo" dds. -->
+                        <!-- "Combo" dds's are 32x64, original icons are 32x32 -->
+                        <copy src="me()" trait="_handonly"/>
+                        <or> <copy src="parent()" trait="user12"/> <eq>2</eq> </or>
+                        <or> <copy src="parent()" trait="user12"/> <eq>4</eq> </or>
+                        <or> <copy src="parent()" trait="user12"/> <eq>8</eq> </or>
+                     </onlyif>
+                  </sub>
+                  <mult> <!-- icon scaling -->
+                     <copy src="menu()" trait="_itemIconZoom" />
+                     <div>100</div>
+                  </mult>
+               </width>
+               <red>
+                  <copy>208</copy>	<onlyif src="me()" trait="_handonly"/>
+                  <add>
+                     <copy>255</copy><onlyifnot src="me()" trait="_handonly"/>
+                  </add>
+               </red>
+               <green>
+                  <copy>0</copy>		<onlyif src="me()" trait="_handonly"/>
+                  <add>
+                     <copy>255</copy><onlyifnot src="me()" trait="_handonly"/>
+                  </add>
+               </green>
+               <blue>
+                  <copy>0</copy>		<onlyif src="me()" trait="_handonly"/>
+                  <add>
+                     <copy>255</copy><onlyifnot src="me()" trait="_handonly"/>
+                  </add>
+               </blue>
+               
+               <_handonly><copy src="parent()" trait="user12"/><eq>1</eq></_handonly>
+            </image>
+			</image>
+         <rect name="item_name">
+				<depth>3</depth>
+            <locus>&true;</locus>
+            <clips>&true;</clips>
+				<string><copy src="parent()" trait="user1" /></string>
+            <x> <!-- 11px after sibling -->
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add>11</add>
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+					<div>2</div>
+				</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+               <sub>
+                  <copy src="ContainerMenu" trait="_itemInfoColumnWidth" />
+                  <mult src="parent()"      trait="_columncount" />
+               </sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <clips>&true;</clips>
+               <depth>3</depth>
+               <justify>&left;</justify>
+               <red>  <copy src="parent()" trait="_text_r" /></red>
+               <green><copy src="parent()" trait="_text_g" /></green>
+               <blue> <copy src="parent()" trait="_text_b" /></blue>
+               <alpha>255</alpha>
+               <wrapwidth>
+                  <copy src="parent()" trait="width" />
+                  <sub>16</sub>
+                  <max>280</max>
+               </wrapwidth>
+               <wraplines>2</wraplines>
+               <string><copy src="parent()" trait="string" /></string>
+               <x>0</x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()" trait="height" />
+                  <div>2</div>
+               </y>
+            </text>
+         </rect>
+         <rect name="column_1"> <!-- value/cost -->
+				<depth>3</depth>
+				<locus>&true;</locus>
+				<clips>&true;</clips>
+				<string><copy src="parent()" trait="user2" /></string>
+            <visible><copy src="parent()" trait="_columncount" /><gte>1</gte></visible>
+            <width> <!-- Collapse if not visible. -->
+               <copy   src="ContainerMenu" trait="_itemInfoColumnWidth" />
+               <onlyif src="me()" trait="visible" />
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+            </x>
+				<y>0</y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <clips>&true;</clips>
+               <justify>&center;</justify>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="parent()" trait="string" /></string>
+               <red>   <copy src="parent()" trait="_text_r" /></red>
+               <green> <copy src="parent()" trait="_text_g" /></green>
+               <blue>  <copy src="parent()" trait="_text_b" /></blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            </text>
+         </rect>
+         <rect name="column_2"> <!-- weight -->
+				<depth>3</depth>
+				<locus>&true;</locus>
+				<clips>&true;</clips>
+				<string><copy src="parent()" trait="user3" /></string>
+            <visible><copy src="parent()" trait="_columncount" /><gte>2</gte></visible>
+            <width> <!-- Collapse if not visible. -->
+               <copy   src="ContainerMenu" trait="_itemInfoColumnWidth" />
+               <onlyif src="me()" trait="visible" />
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+            </x>
+				<y>0</y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <clips>&true;</clips>
+               <justify>&center;</justify>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="parent()" trait="string" /></string>
+               <red>   <copy src="parent()" trait="_text_r" /></red>
+               <green> <copy src="parent()" trait="_text_g" /></green>
+               <blue>  <copy src="parent()" trait="_text_b" /></blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            </text>
+         </rect>
+         <rect name="column_3"> <!-- damage/armor/quality -->
+				<depth>3</depth>
+				<locus>&true;</locus>
+				<clips>&true;</clips>
+				<string><copy src="parent()" trait="user4" /></string>
+            <visible><copy src="parent()" trait="_columncount" /><gte>3</gte></visible>
+            <width> <!-- Collapse if not visible. -->
+               <copy   src="ContainerMenu" trait="_itemInfoColumnWidth" />
+               <onlyif src="me()" trait="visible" />
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+            </x>
+				<y>0</y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <clips>&true;</clips>
+               <justify>&center;</justify>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="parent()" trait="string" /></string>
+               <red>   <copy src="parent()" trait="_text_r" /></red>
+               <green> <copy src="parent()" trait="_text_g" /></green>
+               <blue>  <copy src="parent()" trait="_text_b" /></blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            </text>
+         </rect>
+         <rect name="column_4"> <!-- condition -->
+				<depth>3</depth>
+				<locus>&true;</locus>
+				<clips>&true;</clips>
+				<string><copy src="parent()" trait="user5" /></string>
+            <visible><copy src="parent()" trait="_columncount" /><gte>4</gte></visible>
+            <width> <!-- Collapse if not visible. -->
+               <copy   src="ContainerMenu" trait="_itemInfoColumnWidth" />
+               <onlyif src="me()" trait="visible" />
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+            </x>
+				<y>0</y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <clips>&true;</clips>
+               <justify>&center;</justify>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="parent()" trait="string" /></string>
+               <red>   <copy src="parent()" trait="_text_r" /></red>
+               <green> <copy src="parent()" trait="_text_g" /></green>
+               <blue>  <copy src="parent()" trait="_text_b" /></blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            </text>
+         </rect>
+      </rect>
+   </template>
+
+</menu>

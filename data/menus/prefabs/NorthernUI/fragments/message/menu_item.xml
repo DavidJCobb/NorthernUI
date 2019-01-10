@@ -1,0 +1,53 @@
+<!--<rect name="button_1">-->
+   <id>&generic;</id> <!-- specify -->
+   
+   <listindex>
+      <copy src="sibling()" trait="listindex" />
+      <add>1</add>
+   </listindex>
+   
+   <locus>&true;</locus>
+   <visible>
+      <!-- The executable assumes that all buttons but the first are hidden by default. -->
+      <copy src="me()" trait="listindex" /><eq>1</eq>
+   </visible>
+   <depth>6</depth>
+   <alpha>0</alpha>
+   <x>
+      <copy src="parent()" trait="width" />
+      <sub  src="me()"     trait="width" />
+      <div>2</div>
+   </x>
+   <y>
+      <copy   src="sibling()" trait="height" />
+      <add>10</add> <!-- spacing between items -->
+      <onlyif src="sibling()" trait="visible" />
+      <add    src="sibling()" trait="y" />
+   </y>
+   <width> <copy src="child(label)" trait="width"/> </width>
+   <height><copy src="child(label)" trait="height"/></height>
+   <string></string> <!-- set by executable -->
+   
+   <target>&true;</target>
+   <xdefault>&true;</xdefault>
+   <xlist>&item;</xlist>
+   <xup>  &prev;</xup>
+   <xdown>&next;</xdown>
+   
+   <text name="label">
+      <include src="NorthernUI\fonts\normal.xml" />
+      <string><copy src="parent()" trait="string"/></string>
+      <wrapwidth><copy src="message_text" trait="wrapwidth"/></wrapwidth>
+      <x>0</x>
+      <y>0</y>
+      <red>
+         <copy>140</copy>
+         <max>
+            <copy>192</copy>
+            <mult src="parent()" trait="mouseover" />
+         </max>
+      </red>
+      <green><copy src="me()" trait="red"/></green>
+      <blue> <copy src="me()" trait="red"/></blue>
+   </text>
+<!--</rect>-->

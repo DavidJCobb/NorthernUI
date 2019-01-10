@@ -1,0 +1,301 @@
+<!-- xxnlockpickmenu.xml -->
+<menu name="XXNLockPickMenu">
+   <class>&LockPickMenu;</class>
+   <stackingtype>&no_click_past;</stackingtype>
+   <alpha>0</alpha>
+   <locus>&true;</locus>
+   <x>0</x>
+   <y>0</y>
+   <depth>0</depth>
+   <explorefade>0.25</explorefade>
+   
+   <rect name="minigame">
+      <id>0</id>
+      <locus>&true;</locus>
+      <width><copy src="screen()" trait="width" /></width>
+      <height>
+         <copy src="screen()"   trait="height" />
+         <sub  src="bottom_bar" trait="height" />
+      </height>
+      
+      <user0>0</user0> <!-------- tumbler being targeted (one-indexed) -->
+      <user1>15</user1> <!------- seconds remaining -->
+      <user2>15</user2> <!------- seconds max -->
+      <user3>0</user3> <!-------- lockpick count -->
+      <user4>&false;</user4> <!-- player has skellygirl key -->
+      <user5>Novice</user5> <!--- lock level string -->
+      
+      <nif name="lockpick">
+         <id>10</id>
+      </nif>
+      
+      <rect name="tumbler_container">
+         <locus>&true;</locus>
+         
+         <_spacing>24</_spacing>
+         <_track>76</_track>
+         
+         <rect name="tumbler_1">
+            <id>1</id>
+            <x>200</x>
+            <y>
+               <copy>0</copy>
+               <add>
+                  <copy src="parent()" trait="_track" />
+                  <mult src="me()"     trait="user1" />
+               </add>
+            </y>
+            <width>32</width>
+            <height>96</height>
+            <user0>&false;</user0> <!-- tumbler is solved -->
+            <user1>0</user1> <!-------- how far it's been pressed down (percentage) -->
+            <user2>&false;</user2> <!-- player is flubbing the tumbler -->
+            
+            <image name="DEBUG">
+               <include src="NorthernUI\colorbox.xml"/>
+               <red>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user0" />
+               </red>
+               <green>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user2" />
+               </green>
+               <blue>0</blue>
+            </image>
+         </rect>
+         <rect name="tumbler_2">
+            <id>2</id>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>
+               <copy>0</copy>
+               <add>
+                  <copy src="parent()" trait="_track" />
+                  <mult src="me()"     trait="user1" />
+               </add>
+            </y>
+            <width>32</width>
+            <height>96</height>
+            <user0>&false;</user0> <!-- tumbler is solved -->
+            <user1>0</user1> <!-------- how far it's been pressed down (percentage) -->
+            <user2>&false;</user2> <!-- player is flubbing the tumbler -->
+            
+            <image name="DEBUG">
+               <include src="NorthernUI\colorbox.xml"/>
+               <red>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user0" />
+               </red>
+               <green>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user2" />
+               </green>
+               <blue>0</blue>
+            </image>
+         </rect>
+         <rect name="tumbler_3">
+            <id>3</id>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>
+               <copy>0</copy>
+               <add>
+                  <copy src="parent()" trait="_track" />
+                  <mult src="me()"     trait="user1" />
+               </add>
+            </y>
+            <width>32</width>
+            <height>96</height>
+            <user0>&false;</user0> <!-- tumbler is solved -->
+            <user1>0</user1> <!-------- how far it's been pressed down (percentage) -->
+            <user2>&false;</user2> <!-- player is flubbing the tumbler -->
+            
+            <image name="DEBUG">
+               <include src="NorthernUI\colorbox.xml"/>
+               <red>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user0" />
+               </red>
+               <green>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user2" />
+               </green>
+               <blue>0</blue>
+            </image>
+         </rect>
+         <rect name="tumbler_4">
+            <id>4</id>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>
+               <copy>0</copy>
+               <add>
+                  <copy src="parent()" trait="_track" />
+                  <mult src="me()"     trait="user1" />
+               </add>
+            </y>
+            <width>32</width>
+            <height>96</height>
+            <user0>&false;</user0> <!-- tumbler is solved -->
+            <user1>0</user1> <!-------- how far it's been pressed down (percentage) -->
+            <user2>&false;</user2> <!-- player is flubbing the tumbler -->
+            
+            <image name="DEBUG">
+               <include src="NorthernUI\colorbox.xml"/>
+               <red>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user0" />
+               </red>
+               <green>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user2" />
+               </green>
+               <blue>0</blue>
+            </image>
+         </rect>
+         <rect name="tumbler_5">
+            <id>5</id>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>
+               <copy>0</copy>
+               <add>
+                  <copy src="parent()" trait="_track" />
+                  <mult src="me()"     trait="user1" />
+               </add>
+            </y>
+            <width>32</width>
+            <height>96</height>
+            <user0>&false;</user0> <!-- tumbler is solved -->
+            <user1>0</user1> <!-------- how far it's been pressed down (percentage) -->
+            <user2>&false;</user2> <!-- player is flubbing the tumbler -->
+            
+            <image name="DEBUG">
+               <include src="NorthernUI\colorbox.xml"/>
+               <red>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user0" />
+               </red>
+               <green>
+                  <copy>255</copy>
+                  <onlyifnot src="parent()" trait="user2" />
+               </green>
+               <blue>0</blue>
+            </image>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>8</_entrySpacing>
+      
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"      trait="cropx" />
+            <add  src="InventoryMenu" trait="_bottomBarPaddingX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="auto_attempt">
+            <id>7</id>
+            <x>0</x>
+            <y>0</y>
+            <include src="NorthernUI\key_binding.xml"/>
+            <visible>&xbox;</visible>
+            <_keyCodeXbox>  0</_keyCodeXbox>
+            <_keyCodePC>   19</_keyCodePC>
+            <_keyCodePCModifier>0</_keyCodePCModifier>
+            <_label>Auto-Attempt</_label>
+            
+            <user24>19</user24>
+         </rect>
+         <rect name="close_menu">
+            <id>6</id>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy   src="sibling()" trait="x" />
+               <add    src="sibling()" trait="width" />
+               <add>
+                  <copy   src="inventory_bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key_binding.xml"/>
+            <visible>&xbox;</visible>
+            <_keyCodeXbox>  0</_keyCodeXbox>
+            <_keyCodePC>   15</_keyCodePC>
+            <_keyCodePCModifier>0</_keyCodePCModifier>
+            <_label>Exit</_label>
+            
+            <user24>15</user24>
+         </rect>
+      </rect>
+      <rect name="right_side_info">
+         <locus>&true;</locus>
+         <width> <!-- combined width of all children -->
+            <copy src="child(gold)" trait="x" />
+            <add  src="child(gold)" trait="width" />
+         </width>
+         <height> <!-- expected child height -->
+            <copy src="child(gold)" trait="y" />
+            <add  src="child(gold)" trait="height" />
+         </height>
+         <x> <!-- align on right -->
+            <copy src="parent()"      trait="width" />
+            <sub  src="me()"          trait="width" />
+            <sub  src="screen()"      trait="cropx" />
+            <sub  src="XXNLockPickMenu" trait="_bottomBarPaddingX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         
+         <rect name="lock_level">
+            <x>0</x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <_label>Lock Level</_label>
+            <_value><copy src="XXNLockPickMenu" trait="user5"/></_value>
+            <_maximum>-1</_maximum>
+         </rect>
+         <rect name="lockpick_count">
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy   src="sibling()" trait="x" />
+               <add    src="sibling()" trait="width" />
+               <add>
+                  <copy   src="inventory_bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <_label>Lockpicks</_label>
+            <_value><copy src="XXNLockPickMenu" trait="user3"/></_value>
+            <_maximum>-1</_maximum>
+         </rect>
+      </rect>
+   </rect>
+</menu>

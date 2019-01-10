@@ -1,0 +1,7 @@
+<!-- <rect name="bolt_on_content"> -->
+   <locus>&true;</locus>
+   <x><copy src="sibling(fill)" trait="x" /></x>
+   <y><copy src="sibling(fill)" trait="y" /></y>
+   <width> <copy src="sibling(fill)" trait="width" /></width>
+   <height><copy src="sibling(fill)" trait="height" /></height> <!-- override me! -->
+<!-- </rect> -->

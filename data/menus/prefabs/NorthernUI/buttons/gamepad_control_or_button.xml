@@ -1,0 +1,284 @@
+<!--<rect name="gamepad_control_or_button">-->
+   <locus>&true;</locus>
+   <target>&true;</target>
+   <visible>&true;</visible>
+   <xdefault>&false;</xdefault>
+   <string>Button Text</string>
+   <_dxScanCode>0</_dxScanCode>
+   <_dontGreyOut>&false;</_dontGreyOut>
+   <_forceHover>&false;</_forceHover>
+   
+   <!--
+      Special keycodes:
+      9001 = any D-Pad
+   -->
+   
+   <_spacing>  8</_spacing>
+   <_paddingX>16</_paddingX>
+   <_paddingY> 8</_paddingY>
+   <depth>1</depth>
+   
+   <x>0</x>
+   <y>0</y>
+   
+   <width>
+      <copy src="child(label)" trait="width" />
+      <add>
+         <copy src="me()" trait="_paddingX" />
+         <mult>2</mult>
+         <onlyif src="child(button_graphic)" trait="visible" />
+      </add>
+      <add>
+         <copy src="me()" trait="_spacing" />
+         <add  src="child(mapping_graphic)" trait="width" />
+         <onlyif src="child(mapping_graphic)" trait="visible" />
+      </add>
+   </width>
+   <height>
+      <copy src="child(label)" trait="height" />
+      <add>
+         <copy src="me()" trait="_paddingY" />
+         <mult>2</mult>
+         <onlyif src="child(button_graphic)" trait="visible" />
+      </add>
+      <max>
+         <copy src="child(mapping_graphic)" trait="height" />
+         <onlyif src="child(mapping_graphic)" trait="visible" />
+      </max>
+   </height>
+   
+   <rect name="button_graphic">
+      <locus>&true;</locus>
+      <visible>
+         <not src="northernui()" trait="_xxnGamepadAvailable" />
+      </visible>
+      <depth>-0.75</depth>
+      <x>0</x>
+      <y>0</y>
+      <width><copy src="parent()" trait="width" /></width>
+      <height><copy src="parent()" trait="height" /></height>
+      <user0>
+         <copy src="parent()" trait="mouseover" />
+         <add>
+            <copy>1</copy>
+            <onlyif src="parent()" trait="_forceHover" />
+         </add>
+         <gt>0</gt>
+      </user0>
+      <zoom>50</zoom>
+      
+      <_corners_1>Menus\NorthernUI\buttons\hd_rounded_corners.dds      </_corners_1>
+      <_corners_2>Menus\NorthernUI\buttons\hd_rounded_hover_corners.dds</_corners_2>
+      <_edgetb_1>Menus\NorthernUI\buttons\hd_rounded_edge_tb.dds      </_edgetb_1>
+      <_edgetb_2>Menus\NorthernUI\buttons\hd_rounded_hover_edge_tb.dds</_edgetb_2>
+      <_edgelr_1>Menus\NorthernUI\buttons\hd_rounded_edge_lr.dds      </_edgelr_1>
+      <_edgelr_2>Menus\NorthernUI\buttons\hd_rounded_hover_edge_lr.dds</_edgelr_2>
+      <_fill_1>Menus\NorthernUI\buttons\hd_rounded_fill.dds      </_fill_1>
+      <_fill_2>Menus\NorthernUI\buttons\hd_rounded_hover_fill.dds</_fill_2>
+      
+      <image name="c_ul">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <depth>0</depth>
+         <filename>
+            <copy src="parent()" trait="user0" />
+            <copy src="parent()" trait="_corners_" />
+         </filename>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height>
+            <copy src="me()" trait="fileheight" />
+            <div>2</div>
+         </height>
+         <x>0</x>
+         <y>0</y>
+      </image>
+      <image name="c_ur">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <depth>0</depth>
+         <filename><copy src="sibling()" trait="filename" /></filename>
+         <width> <copy src="sibling()" trait="width" /></width>
+         <height><copy src="sibling()" trait="height" /></height>
+         <cropX><copy src="me()" trait="width" /></cropX>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+         </x>
+         <y>0</y>
+      </image>
+      <image name="c_ll">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <depth>0</depth>
+         <filename><copy src="sibling()" trait="filename" /></filename>
+         <width> <copy src="sibling()" trait="width" /></width>
+         <height><copy src="sibling()" trait="height" /></height>
+         <cropY><copy src="me()" trait="height" /></cropY>
+         <x>0</x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+         </y>
+      </image>
+      <image name="c_lr">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <depth>0</depth>
+         <filename><copy src="sibling()" trait="filename" /></filename>
+         <width> <copy src="sibling()" trait="width" /></width>
+         <height><copy src="sibling()" trait="height" /></height>
+         <cropX><copy src="me()" trait="width" /></cropX>
+         <cropY><copy src="me()" trait="height" /></cropY>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+         </y>
+      </image>
+      <image name="e_t">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <tile>&true;</tile>
+         <depth>0</depth>
+         <filename>
+            <copy src="parent()" trait="user0" />
+            <copy src="parent()" trait="_edgetb_" />
+         </filename>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub  src="sibling(c_ul)" trait="width" />
+            <sub  src="sibling(c_ur)" trait="width" />
+         </width>
+         <height>
+            <copy src="me()" trait="fileheight" />
+            <div>2</div>
+         </height>
+         <x><copy src="sibling(c_ul)" trait="width" /></x>
+         <y>0</y>
+      </image>
+      <image name="e_b">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <tile>&true;</tile>
+         <depth>0</depth>
+         <filename><copy src="sibling()" trait="filename" /></filename>
+         <width> <copy src="sibling()" trait="width" /></width>
+         <height><copy src="sibling()" trait="height" /></height>
+         <cropY> <copy src="me()"      trait="height" /></cropY>
+         <x><copy src="sibling(c_ll)" trait="width" /></x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+         </y>
+      </image>
+      <image name="e_l">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <tile>&true;</tile>
+         <depth>0</depth>
+         <filename>
+            <copy src="parent()" trait="user0" />
+            <copy src="parent()" trait="_edgelr_" />
+         </filename>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="sibling(c_ul)" trait="height" />
+            <sub  src="sibling(c_ll)" trait="height" />
+         </height>
+         <x>0</x>
+         <y><copy src="sibling(c_ul)" trait="height" /></y>
+      </image>
+      <image name="e_r">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <tile>&true;</tile>
+         <depth>0</depth>
+         <filename><copy src="sibling()" trait="filename" /></filename>
+         <width> <copy src="sibling()" trait="width" /></width>
+         <height><copy src="sibling()" trait="height" /></height>
+         <cropX> <copy src="me()"      trait="width" /></cropX>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+         </x>
+         <y><copy src="sibling(c_ur)" trait="height" /></y>
+      </image>
+      <image name="fill">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <tile>&true;</tile>
+         <depth>0</depth>
+         <filename>
+            <copy src="parent()" trait="user0" />
+            <copy src="parent()" trait="_fill_" />
+         </filename>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub  src="sibling(c_ul)" trait="width" />
+            <sub  src="sibling(c_ur)" trait="width" />
+         </width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="sibling(c_ur)" trait="height" />
+            <sub  src="sibling(c_lr)" trait="height" />
+         </height>
+         <x><copy src="sibling(c_ul)" trait="width" /></x>
+         <y><copy src="sibling(c_ur)" trait="height" /></y>
+      </image>
+   </rect>
+   
+   <rect name="mapping_graphic">
+      <depth>-0.5</depth>
+      <visible>
+         <copy src="northernui()" trait="_xxnGamepadAvailable" />
+         <eq>&true;</eq>
+      </visible>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <include src="NorthernUI\key.xml"/>
+      <_keyCode><copy src="parent()" trait="_dxScanCode" /></_keyCode>
+   </rect>
+   
+   <text name="label">
+      <depth>-0.5</depth>
+      <string><copy src="parent()" trait="string" /></string>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <justify>
+         <copy>&center;</copy>
+         <!-- BUG: Oblivion doesn't re-render the text when JUSTIFY is changed post-load by operators. -->
+      </justify>
+      <x>
+         <copy src="parent()"  trait="width" />
+         <div>2</div>
+         <onlyif src="sibling(button_graphic)" trait="visible" />
+         <add>
+            <copy src="me()" trait="width" />
+            <div>2</div>
+            <add  src="sibling(mapping_graphic)" trait="width" />
+            <add  src="parent()" trait="_spacing" />
+            <onlyif src="sibling(mapping_graphic)" trait="visible" />
+         </add>
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <red>
+         <copy>255</copy>
+         <onlyif src="parent()" trait="target" />
+         <max>140</max>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="_dontGreyOut" />
+         </max>
+      </red>
+      <green><copy src="me()" trait="red" /></green>
+      <blue> <copy src="me()" trait="red" /></blue>
+   </text>
+<!--</rect>-->

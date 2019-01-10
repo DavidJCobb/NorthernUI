@@ -1,0 +1,18 @@
+<!--<image name="magicpop_ds0_icon">-->
+   <wrapwidth>
+      <copy src="parent()"  trait="width" />
+      <!--  left margin = icon width + 13 -->
+      <sub  src="me()"      trait="x" />
+      <!-- right margin = left margin - icon width -->
+      <sub  src="me()"      trait="x" />
+      <add  src="sibling()" trait="width" />
+   </wrapwidth>
+   <x>45</x>
+   <y>
+      <copy src="parent()" trait="height" />
+      <sub  src="me()"     trait="height" />
+      <div> 2 </div>
+   </y>
+   <red>255</red><green>255</green><blue>255</blue>
+   <alpha>255</alpha>
+<!--</image>-->

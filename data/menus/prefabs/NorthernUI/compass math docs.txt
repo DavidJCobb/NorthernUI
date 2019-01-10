@@ -1,0 +1,57 @@
+-----------------------------------------------------------------------------
+BASE HEADING: 0
+-----------------------------------------------------------------------------
+180    225    270    315      0     45     90    135    180
+SSS -- S/W -- WWW -- N/W -- NNN -- N/E -- EEE -- S/E -- SSS
+-.5           0.0           0.5           1.0           -.5
+
+// ANGLE > Angle % 360, to normalize to 0...359
+// A/180 > prior divided by 180 (compass FOV?)
+// ADDED > Add 180 / 360
+// OFFST > Add base angle's ANGLE value
+// NORM. > If it exceeds 1, subtract 2 // and hypothetically, if it is below -1, add 2
+angle | a/180 | added | norm. | 
+    0 |  0.00 |  0.50 |  0.50 | 
+   45 |  0.25 |  0.75 |  0.75 | 
+   90 |  0.50 |  1.00 |  1.00 | 
+  180 |  1.00 |  1.50 | -0.50 | 
+  270 |  1.50 |  2.00 |  0.00 |
+
+-----------------------------------------------------------------------------
+BASE HEADING: 90
+-----------------------------------------------------------------------------
+270    315      0     45     90    135    180    225    270
+WWW -- N/W -- NNN -- N/E -- EEE -- S/E -- SSS -- S/W -- WWW
+-.5           0.0           0.5           1.0           -.5
+
+// ANGLE > Angle % 360, to normalize to 0...359
+// A/180 > prior divided by 180 (compass FOV?)
+// ADDED > Add 180 / 360
+// OFFST > Sub base angle's ANGLE value
+// NORM. > If it exceeds 1, subtract 2 // and hypothetically, if it is below -1, add 2
+angle | a/180 | added | offst | norm. | 
+    0 |  0.00 |  0.50 |  0.00 |  0.50 | 
+   45 |  0.25 |  0.75 |  0.25 |  0.75 | 
+   90 |  0.50 |  1.00 |  0.50 |  1.00 | 
+  180 |  1.00 |  1.50 |  1.00 | -0.50 | 
+  270 |  1.50 |  2.00 |  1.50 |  0.00 | 
+
+-----------------------------------------------------------------------------
+BASE HEADING: 180
+-----------------------------------------------------------------------------
+  0     45     90    135    180    225    270    315    360
+NNN -- N/E -- EEE -- S/E -- SSS -- S/W -- WWW -- N/W -- NNN
+-.5           0.0           0.5           1.0           -.5
+
+// ANGLE > Angle % 360, to normalize to 0...359
+// A/180 > prior divided by 180 (compass FOV?)
+// ADDED > Add 180 / 360
+// OFFST > Sub base angle's ANGLE value
+// NORM. > If it exceeds 1, subtract 2 // and hypothetically, if it is below -1, add 2
+angle | a/180 | added | offst | norm. | 
+    0 |  0.00 |  0.50 | -0.50 |  0.50 | 
+   45 |  0.25 |  0.75 | -0.75 |  0.75 | 
+   90 |  0.50 |  1.00 |  0.00 |  1.00 | 
+  180 |  1.00 |  1.50 |  0.50 | -0.50 | 
+  270 |  1.50 |  2.00 |  1.00 |  0.00 | 
+

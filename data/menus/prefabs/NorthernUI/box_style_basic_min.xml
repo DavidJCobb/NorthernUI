@@ -1,0 +1,13 @@
+<!--<rect name="GenericBackground">-->
+   <!-- DOCUMENTATION ---------------------------------------------- >
+      Include the <NorthernUI\box.xml> prefab, and then include this 
+      prefab to change the former's style.
+   <!------------------------------------------------------------- -->
+   <width> 400</width>
+   <height>200</height>
+   <_NorthernUIAlpha>255</_NorthernUIAlpha> <!-- 160 for translucent -->
+   <_imgCorners>Menus\NorthernUI\boxes\box_basic_min_corners.dds </_imgCorners>
+   <_imgBorderH>Menus\NorthernUI\boxes\box_basic_min_border_h.dds</_imgBorderH>
+   <_imgBorderV>Menus\NorthernUI\boxes\box_basic_min_border_v.dds</_imgBorderV>
+   <_imgFill>   Menus\NorthernUI\black.dds</_imgFill>
+<!--</rect>-->

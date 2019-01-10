@@ -1,0 +1,357 @@
+<!-- levelup_menu.xml -->
+<menu name="LevelUpMenu">
+	<class> &LevelUpMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	<menufade> 0.25 </menufade>
+	
+	<user1>&false;</user1>	<!-- Exit button enabled? --> 
+	
+	<user2></user2>		<!-- Descriptive text -->
+	<user3></user3>		<!-- "You have ascended to level x" -->
+	<user4></user4>		<!-- Filename for picture -->
+	<user5></user5>		<!-- Attribute description -->
+	
+	<xbuttonx><ref src="levelup_exit_button" trait="clicked" /></xbuttonx>
+   
+   <rect name="base">
+		<id>&generic;</id>
+		<target>&true;</target>
+		<depth>1</depth>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()"   trait="height" />
+			<sub  src="bottom_bar" trait="height" />
+			<sub  src="me()"       trait="height" />
+         <div> 2 </div>
+		</y>
+      
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>700</user20>
+		<user21>575</user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <text name="title">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <string><copy src="LevelUpMenu" trait="user3" /></string>
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+            <justify>&center;</justify>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+         </text>
+         <text name="description">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <string><copy src="LevelUpMenu" trait="user2" /></string>
+            <red>140</red>
+            <green>140</green>
+            <blue>140</blue>
+            <wrapwidth>
+               <copy src="parent()" trait="width" />
+            </wrapwidth>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>8</add>
+            </y>
+         </text>
+         <rect name="stats">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>16</add>
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="child(col_l)" trait="height" />
+               <max  src="child(col_r)" trait="height" />
+            </height>
+            
+            <text name="header">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_threeattributes" /></string>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+               <justify>&center;</justify>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>0</y>
+            </text>
+            <rect name="col_l">
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>16</add>
+               </y>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="sibling(col_r)" trait="width" />
+                  <sub>16</sub>
+               </width>
+               
+               <rect name="levelup_pane"> <!-- list of attributes -->
+                  <id>2</id>
+                  <locus>&true;</locus>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <x>0</x>
+                  <y>0</y>
+                           
+                  <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                     an input command, they defer to their parent. The following directions are for those times. -->
+                  <target> &false; </target>
+                  <xdefault> &false; </xdefault>
+                  <xlist> &xlist; </xlist>
+                  <!--xleft> <ref src="levelup_exit_button" trait="mouseover" /> </xleft-->
+                  <xright> <ref src="levelup_exit_button" trait="mouseover" /> </xright>
+                  <!--xup> &last; </xup>
+                  <xdown> &first; </xdown-->
+                  
+                  <!-- template items go here, set by code -->
+                  
+               </rect>
+            </rect>
+            <rect name="col_r">
+               <locus>&true;</locus>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>16</add>
+               </x>
+               <y><copy src="sibling()" trait="y" /></y>
+               <width>320</width>
+               
+               <image name="level_up_picture">
+                  <filename><copy src="LevelUpMenu" trait="user4" /></filename>
+                  <width> 256</width>
+                  <height>256</height>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <div>2</div>
+                  </x>
+                  <y>0</y>
+               </image>
+               <text name="levelup_attribute_description">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="LevelUpMenu" trait="user5" /></string>
+                  <red>140</red>
+                  <green>140</green>
+                  <blue>140</blue>
+                  <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="y" />
+                     <add  src="sibling()" trait="height" />
+                     <add>24</add>
+                  </y>
+               </text>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <width>
+            <copy src="child()" trait="x" />
+            <add  src="child()" trait="width" />
+         </width>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="levelup_exit_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>278</_dxScanCode>
+            <clicksound>2</clicksound>
+            <id>1</id>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_done" /></string>
+            <xdefault>5</xdefault>
+            <target><copy src="LevelUpMenu" trait="user1" /></target>
+         </rect>
+      </rect>
+   </rect>
+   
+	<!-- TEMPLATE ======================================================================-->
+	<template name="levelup_template">
+		<rect name="levelup_item">
+			<id>3</id>
+			<locus>&true;</locus>
+			<visible>&true;</visible>
+			<target>
+				<copy src="me()" trait="user6" />
+				<or   src="me()" trait="user0" />
+			</target>
+			<height>36</height>
+			<width><copy src="parent()" trait="width" /></width>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<depth> 1 </depth>
+			<listindex> 0 </listindex>
+
+			<user0> &false; </user0>	<!-- is attribute selected by player for level-up? -->
+			<user1> &false; </user1>	<!-- is multiplier text visible? -->
+			<user2> x </user2>			<!-- multiplier text -->
+			<user3> 0 </user3>			<!-- attribute value -->
+			<user4> x </user4>			<!-- item name text -->
+			<user5> x </user5>			<!-- item icon pathname -->
+			<user6> &true; </user6>		<!-- is enabled -->
+			
+			<_enabled_alpha>
+				<copy src="me()" trait="user6"/>
+				<or src="me()" trait="user0"/>
+				<sub> 1 </sub>
+				<mul> 127 </mul>
+				<add> 128 </add>
+			</_enabled_alpha>
+         
+         <_colWidth2>32</_colWidth2>
+         <_colWidth3>32</_colWidth3>
+         <_colInsetEnd>8</_colInsetEnd>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to xitem triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+
+			<image name="selected">
+				<zoom>29</zoom>
+				<visible><copy src="parent()" trait="user0" /></visible>
+				<filename>Menus\NorthernUI\Shared\hd_selection_indicator.dds</filename>
+				<alpha>192</alpha>
+				<width> <copy src="me()" trait="filewidth" /></width>
+				<height><copy src="me()" trait="fileheight" /></height>
+				<x>-80</x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+			</image>
+			
+			<image name="icon">
+            <zoom>50</zoom>
+				<filename><copy src="parent()" trait="user5" /></filename>
+				<width><copy src="me()" trait="filewidth" /></width>
+				<height><copy src="me()" trait="fileheight" /></height>
+				<x>0</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+				<depth> 4 </depth>
+				<alpha><copy src="parent()" trait="_enabled_alpha" /></alpha>
+			</image>
+			<text name="name">
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="user4" /></string>
+				<red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <mult src="parent()" trait="mouseover" />
+               </max>
+            </red>
+				<green><copy src="me()" trait="red" /></green>
+				<blue><copy src="me()" trait="red" /></blue>
+				<wrapwidth> 300 </wrapwidth>
+				<x>
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+					<add>8</add>
+            </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+				<depth> 4 </depth>
+				<alpha><copy src="parent()" trait="_enabled_alpha" /></alpha>
+			</text>
+			<text name="value">
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="user3" /></string>
+				<justify> &left; </justify>
+				<red>  <copy src="sibling()" trait="red" /></red>
+				<green><copy src="sibling()" trait="green" /></green>
+				<blue> <copy src="sibling()" trait="blue" /></blue>
+				<justify>&right;</justify>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub  src="parent()" trait="_colWidth3" />
+               <sub  src="parent()" trait="_colInsetEnd" />
+            </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<depth> 4 </depth>
+				<alpha> <copy src="parent()" trait="_enabled_alpha"/> </alpha>
+			</text>
+			<text name="change_by">
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string> <copy src="parent()" trait="user2" /> </string>
+				<visible><copy src="parent()" trait="user1" /> </visible>
+				<red>  <copy src="sibling()" trait="red" /></red>
+				<green><copy src="sibling()" trait="green" /></green>
+				<blue> <copy src="sibling()" trait="blue" /></blue>
+				<justify>&right;</justify>
+				<x>
+					<copy src="parent()" trait="width" />
+               <sub  src="parent()" trait="_colInsetEnd" />
+            </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<depth> 4 </depth>
+				<alpha> <copy src="parent()" trait="_enabled_alpha"/> </alpha>
+			</text>
+		</rect>
+	</template>
+</menu>

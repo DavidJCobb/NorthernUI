@@ -1,0 +1,46 @@
+<!-- Data\Menus\NorthernUI\datastore.xml -->
+<!-- This file defines the tile that will be accessible through src="northernui()" -->
+<rect name="NorthernUIDatastore">
+   <!-- ensure it never shows up on-screen: -->
+   <locus>&true;</locus>
+   <listclip>&true;</listclip>
+   
+   <!-- Hardcoded traits: -->
+   <!-- _xxnGamepadAvailable   == Boolean: XInput patch running and any gamepads plugged in? -->
+   <!-- _xxnShowHUDClock       == Boolean: Show the HUD clock? -->
+   <!-- _xxnShowHUDInputViewer == Boolean: Show the HUD input viewer? -->
+   <!-- _xxnXInputPatchApplied == Boolean: Has NorthernUI taken over all gamepad handling? -->
+   
+   <_xxnDLLLoaded>&true;</_xxnDLLLoaded>
+   <!-- Set hardcoded traits to defaults in case the DLL forgets to set them: -->
+   <_xxnGamepadAvailable>&false;</_xxnGamepadAvailable>
+   <_xxnShowHUDClock>&false;</_xxnShowHUDClock>
+   <_xxnShowHUDInputViewer>&false;</_xxnShowHUDInputViewer>
+   <_xxnXInputPatchApplied>&false;</_xxnXInputPatchApplied>
+   
+   <!-- Vars we just want to be able to access from anywhere: -->
+   <_xxnAlpha>           200</_xxnAlpha> <!------------ alpha for menu background graphics -->
+   <_xxnBottomBarHeight>  96</_xxnBottomBarHeight> <!-- note: top border lies inside the menu bounds -->
+   <_xxnBottomBarPadX>    32</_xxnBottomBarPadX> <!---- bottombar's inner horizontal padding -->
+   <_xxnClockImageFile>Menus\NorthernUI\clocks\hemi\hd_background.dds</_xxnClockImageFile>
+   <_xxnClockImageScale>  50</_xxnClockImageScale> <!-- out of 100 -->
+   <_xxnColorTextLess>   140</_xxnColorTextLess> <!---- accent/de-emphasized text -->
+   <_xxnColorTextMain>   255</_xxnColorTextMain> <!---- most text -->
+   <_xxnItemCardYOffset>  32</_xxnItemCardYOffset> <!-- offset from the bottom bar's top edge -->
+   <_xxnMainMenuXOffset>  64</_xxnMainMenuXOffset>
+   <_xxnStdMenuWidth>    745</_xxnStdMenuWidth> <!----- note: 4px borders lie outside the menu bounds -->
+   
+   <_xxnClockImageFilewidth>
+      <copy src="child(_GETTER_xxnClockImageWidth)" trait="filewidth" />
+   </_xxnClockImageFilewidth>
+   
+   <image name="_GETTER_xxnClockImageWidth">
+      <zoom><copy src="parent()" trait="_xxnClockImageScale" /></zoom>
+      <filename><copy src="parent()" trait="_xxnClockImageFile" /></filename>
+      <x>0</x>
+      <y>0</y>
+      <width> <copy src="me()" trait="filewidth" /></width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <depth>0</depth>
+   </image>
+</rect>

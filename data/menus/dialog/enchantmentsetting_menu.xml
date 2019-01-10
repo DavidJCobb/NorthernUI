@@ -1,0 +1,1183 @@
+<!-- enchantmentsetting_menu.xml -->
+<menu name="EffectSettingMenu"> 
+	<class> &EffectSettingMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<_buffer> 28 </_buffer>
+	
+   <!--
+      USER1:
+      Enchanting Apparel: "Constant Effect"
+      Enchanting Weapons: Charge cost per use
+      Spellmaking:        Magicka cost per use (entire spell)
+   -->
+	<user1>0</user1> <!-- spell cost -->
+   
+   <!--
+      USER2:
+      Enchanting:  Gold cost to apply effect? Or for entire enchantment?
+      Spellmaking: Gold cost to create entire spell.
+   -->
+	<user2>0</user2>			<!-- gold cost -->
+   
+	<user3> -1 </user3>			<!-- uses (weapon enchantment only) -->
+	<user4> &false; </user4>	<!-- exceeded maximum? (enchantment only, non-constant effect) -->
+	<user5> &false; </user5>	<!-- exceeded gold amount? (enchantment only -->
+	<user9> 0 </user9>			<!-- player gold -->
+   
+   <!-- NorthernUI: -->
+	<user23>-1</user23> <!-- charge/magicka cost per use -->
+	<user24>-1</user24> <!-- max possible cost-per-use you can craft -->
+   
+   <_statSpacing> 16</_statSpacing>
+   <_statPaddingX> 4</_statPaddingX>
+   <_widgetWidth>350</_widgetWidth>
+   
+   <_isApparel>
+      <not>
+         <copy src="effset_range_layout"     trait="visible" />
+         <or   src="effset_magnitude_layout" trait="visible" />
+         <or   src="effset_area_layout"      trait="visible" />
+         <or   src="effset_duration_layout"  trait="visible" />
+      </not>
+   </_isApparel>
+   <_chargeHasNoMax>
+      <copy src="me()" trait="user24" /><lt>0</lt>
+   </_chargeHasNoMax>
+   <_usesUndefined>
+      <copy src="me()" trait="user3" /><lt>0</lt>
+   </_usesUndefined>
+	
+	<xbuttonb><ref src="effset_button_cancel" trait="clicked" /></xbuttonb>
+	<xbuttonx><ref src="effset_button_ok"     trait="clicked" /></xbuttonx>
+	<xbuttony><ref src="effset_button_delete" trait="clicked" /></xbuttony>
+   
+   <!-- NORTHERNUI: USER22: Is SkillsMenu open? -->
+   <user22>&false;</user22>
+   <listclip>
+      <copy src="me()" trait="user22" />
+   </listclip>
+	
+	<rect name="effset_focus_box"> <!-- okay, but when is this even used? -->
+		<id>1</id>
+		<visible>&false;</visible>
+      <include src="NorthernUI\focus_boxes\highlight.xml"/>
+		<user15>
+			<copy src="parent()" trait="depth" />
+			<add>0.5</add>
+		</user15>
+	</rect>
+   
+   <rect name="background">
+		<target>&false;</target>
+		<depth>1</depth>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+			<sub  src="northernui()" trait="_xxnBottomBarHeight" />
+         <div>2</div>
+		</y>
+      
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>600</user20>
+		<user21>
+         <copy src="charge_stats" trait="y" />
+         <add  src="charge_stats" trait="height" />
+      </user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      <user23>255</user23> <!-- fully opaque -->
+      
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <rect name="header">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+            <width>
+               <copy src="child(effect_name)" trait="x" />
+               <add  src="child(effect_name)" trait="width" />
+            </width>
+            <height>
+               <copy src="child(effect_icon)" trait="height" />
+               <max  src="child(effect_name)" trait="height" />
+            </height>
+         
+            <image name="effect_icon">
+               <id>2</id>
+               <filename></filename>
+               <width> 64</width>
+               <height>64</height>
+               <x>0</x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </image>
+            <text name="effect_name">
+               <include src="NorthernUI\fonts\large.xml" />
+               <id>3</id>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
+               <string><copy src="strings()" trait="_effectname" /></string>
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add>16</add>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </text>
+         </rect>
+         <rect name="content">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>
+                  <copy>24</copy>
+                  <onlyif>
+                     <copy src="effset_attribute_layout" trait="visible" />
+                     <or   src="effset_skill_layout"     trait="visible" />
+                     <or   src="effset_range_layout"     trait="visible" />
+                     <or   src="effset_magnitude_layout" trait="visible" />
+                     <or   src="effset_area_layout"      trait="visible" />
+                     <or   src="effset_duration_layout"  trait="visible" />
+                  </onlyif>
+               </add>
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy   src="child()" trait="height" />
+               <onlyif src="child()" trait="visible" />
+               <add    src="child()" trait="y" />
+            </height>
+            
+            <rect name="effset_attribute_layout"> <!-- button -->
+               <id>31</id>
+               <locus>&true;</locus>
+               <target>&true;</target>
+               <visible>&true;</visible>
+               <x>0</x>
+               <y>0</y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="child(slider_wrapper)" trait="height" />
+                  <add  src="menu()" trait="_statSpacing" />
+               </height>
+               <user0>xxx</user0> <!-- selected attribute -->
+               
+               <xdefault>10</xdefault>
+               <listindex>0</listindex>
+               <xdown>&next;</xdown>
+               
+               <rect name="mouseover">
+                  <include src="NorthernUI\focus_boxes\highlight.xml"/>
+                  <depth>-0.5</depth>
+                  <x>0</x>
+                  <y>0</y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <visible>
+                     <copy src="parent()" trait="mouseover" />
+                     <add>1</add>
+                  </visible>
+               </rect>
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="strings()" trait="_attribute" /></string>
+                  <red>140</red>
+                  <green>140</green>
+                  <blue>140</blue>
+                  <x><copy src="menu()"   trait="_statPaddingX" /></x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <text name="value_suffix">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="xxnStrings()" trait="_effectSettingStatSuffix" /></string>
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <sub  src="menu()"   trait="_statPaddingX" />
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <text name="value">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="parent()" trait="user0" /></string>
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <sub  src="me()"      trait="width" />
+                  </x>
+                  <y><copy src="sibling()" trait="y" /></y>
+               </text>
+            </rect>
+            <rect name="effset_skill_layout"> <!-- button -->
+               <id>32</id>
+               <locus>&true;</locus>
+               <target>&true;</target>
+               <visible>&true;</visible>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible"/>
+                  <add  src="sibling()" trait="y" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="child(slider_wrapper)" trait="height" />
+                  <add  src="menu()" trait="_statSpacing" />
+               </height>
+               <user0>xxx</user0> <!-- selected skill -->
+               
+               <xdefault>&false;</xdefault>
+               <listindex>1</listindex>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               
+               <rect name="mouseover">
+                  <include src="NorthernUI\focus_boxes\highlight.xml"/>
+                  <depth>-0.5</depth>
+                  <x>0</x>
+                  <y>0</y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <visible>
+                     <copy src="parent()" trait="mouseover" />
+                     <add>1</add>
+                  </visible>
+               </rect>
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="strings()" trait="_skill" /></string>
+                  <red>140</red>
+                  <green>140</green>
+                  <blue>140</blue>
+                  <x><copy src="menu()"   trait="_statPaddingX" /></x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <text name="value_suffix">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="xxnStrings()" trait="_effectSettingStatSuffix" /></string>
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <sub  src="menu()"   trait="_statPaddingX" />
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <text name="value">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="parent()" trait="user0" /></string>
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <sub  src="me()"      trait="width" />
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+            </rect>
+            <rect name="effset_range_layout"> <!-- enumpicker -->
+               <!--
+                  This control is an enumpicker. However, Bethesda's setup for the 
+                  tile IDs was to make the entire row function as a "step right" 
+                  button, and to have a separate, Xbox-only "step left" button. As 
+                  such, since we're making it actually function as an enumpicker 
+                  on all platforms, we'll have to have the row-container pull sev-
+                  eral tile traits from the "button_right" descendant.
+               -->
+               <!--
+                  This control allows you to set the casting type for a spell being 
+                  created during Spellmaking -- Touch, Target, or Self. However, the 
+                  casting type is not available for some effects, e.g. Absorb. This 
+                  is not a bug; it is by design. Screenshots that show anything to 
+                  the contrary are relying on a mod -- "Magic Effects OBSE Tweaks."
+                  
+                  A side-effect of this is that we cannot use the visibility of this 
+                  control to reliably detect that the menu has been opened during 
+                  spellmaking.
+               -->
+               <id>&generic;</id>
+               <locus>&true;</locus>
+               <target>&true;</target>
+               <visible><copy src="child(button_right)" trait="visible" /></visible>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible"/>
+                  <add  src="sibling()" trait="y" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="child(slider_wrapper)" trait="height" />
+                  <add  src="menu()" trait="_statSpacing" />
+               </height>
+               
+               <xdefault>&false;</xdefault>
+               <listindex>2</listindex>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               <xleft> <ref src="child(button_left)"  trait="clicked"/> </xleft>
+               <xright><ref src="child(button_right)" trait="clicked" /></xright>
+               
+               <rect name="mouseover">
+                  <include src="NorthernUI\focus_boxes\highlight.xml"/>
+                  <depth>-0.5</depth>
+                  <x>0</x>
+                  <y>0</y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <visible>
+                     <copy src="parent()" trait="mouseover" />
+                     <add  src="sibling(enumpicker)" trait="_mouseover_any" />
+                     <gt>0</gt>
+                  </visible>
+               </rect>
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="strings()" trait="_range" /></string>
+                  <red>140</red>
+                  <green>140</green>
+                  <blue>140</blue>
+                  <x><copy src="menu()"   trait="_statPaddingX" /></x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <rect name="enumpicker">
+                  <clips>&true;</clips>
+                  <include src="NorthernUI/enumpicker.xml" />
+                  <user0>&generic;</user0> <!-- tile ID: value -->
+                  <user1>39</user1> <!-- tile ID: button, left -->
+                  <user2>33</user2> <!-- tile ID: button, right -->
+                  <user3>
+                     <copy>128</copy>
+                     <max>
+                        <copy>255</copy>
+                        <onlyif src="parent()" trait="target" />
+                     </max>
+                  </user3>
+                  <string><copy src="child(button_right)" trait="user0" /></string>
+                  
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <sub  src="menu()"   trait="_statPaddingX" />
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+                  <width><copy src="menu()" trait="_widgetWidth" /></width>
+               </rect>
+            </rect>
+            <rect name="effset_magnitude_layout"> <!-- slider in most cases; button for lock level -->
+               <id>34</id>
+               <locus>&true;</locus>
+               <target>&true;</target>
+               <visible>&true;</visible>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible"/>
+                  <add  src="sibling()" trait="y" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="child(slider_wrapper)" trait="height" />
+                  <add  src="menu()" trait="_statSpacing" />
+               </height>
+               
+               <xdefault>&false;</xdefault>
+               <listindex>3</listindex>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               <xleft> <ref src="child(horizontal_scroll_left)"  trait="clicked" /></xleft>
+               <xright><ref src="child(horizontal_scroll_right)" trait="clicked" /></xright>
+               <xbuttonlb><ref src="child(horizontal_scroll_leftside)"  trait="clicked" /></xbuttonlb>
+               <xbuttonrb><ref src="child(horizontal_scroll_rightside)" trait="clicked" /></xbuttonrb>
+               
+               <user0>&false;</user0>	<!-- false = normal (scroll bar), true = special for lock/open spell -->
+               <user1></user1>				<!-- lock level text -->
+               <user2></user2>				<!-- label text -->
+               <user3>-1</user3>			<!-- command/turn undead level text -->
+               
+               <rect name="mouseover">
+                  <include src="NorthernUI\focus_boxes\highlight.xml"/>
+                  <depth>-0.5</depth>
+                  <x>0</x>
+                  <y>0</y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <visible>
+                     <copy src="parent()" trait="mouseover" />
+                     <add  src="effset_magnitude_scroll" trait="_mouseover_any" />
+                     <gt>0</gt>
+                  </visible>
+               </rect>
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="parent()" trait="user2" /></string>
+                  <red>140</red>
+                  <green>140</green>
+                  <blue>140</blue>
+                  <x><copy src="menu()"   trait="_statPaddingX" /></x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <rect name="slider_wrapper">
+                  <include src="NorthernUI\scrollbars\wrapper_h.xml" />
+                  <width><copy src="menu()" trait="_widgetWidth" /></width>
+                  <x>
+                     <copy src="parent()" trait="width"/>
+                     <sub  src="me()"     trait="width"/>
+                     <sub  src="menu()"   trait="_statPaddingX" />
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+                  <visible>
+                     <not  src="effset_lock_level" trait="visible" />
+                     <and  src="parent()" trait="visible" />
+                  </visible>
+                  
+                  <image name="effset_magnitude_scroll">
+                     <include src="horiz_floating_scroll.xml"/>
+                     <include src="NorthernUI\scrollbars\wrapped_h.xml" />
+                     <zoom>33</zoom>
+                     <id>14</id>
+                     <user3> 1 </user3>
+                     <user6> 15 </user6>			<!-- ID for marker/slider -->
+                     <user8> &false; </user8>	<!-- show number -->
+                     
+                     <visible>&true;</visible> <!-- needs to be specifically set to zero, or EffectSettingMenu::HandleFrame won't read and apply the slider value -->
+                  </image>
+               </rect>
+               <!-- slider values: -->
+               <text name="effset_magnitude_number">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <visible>
+                     <not src="effset_lock_level" trait="visible" />
+                     <and><not src="effset_level_number" trait="visible" /></and>
+                  </visible>
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <string><copy src="effset_magnitude_scroll" trait="user7" /></string>
+                  <x>
+                     <copy src="sibling(slider_wrapper)" trait="x" />
+                     <sub  src="me()" trait="width" />
+                     <sub>50</sub>
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <text name="effset_level_number">	<!-- Magnitude represented by "up-to" level for turn undead and command creature/hummanoid spells -->
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <visible>
+                     <not src="effset_lock_level" trait="visible" />
+                     <and>
+                        <copy src="parent()" trait="user3"/>
+                        <gt> -1 </gt>
+                     </and>
+                  </visible>
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <string> <copy src="parent()" trait="user3"/> </string>
+                  <x>
+                     <copy src="sibling(slider_wrapper)" trait="x" />
+                     <sub  src="me()" trait="width" />
+                     <sub>50</sub>
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <!-- button value: -->
+               <text name="effset_lock_level">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <visible><copy src="parent()" trait="user0" /></visible>
+                  <string><copy src="parent()" trait="user1" /></string>
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <justify>&center;</justify>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <sub  src="menu()"   trait="_statPaddingX" />
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+                  <depth>3</depth>
+               </text>
+            </rect>
+            <rect name="effset_area_layout"> <!-- slider -->
+               <id>36</id>
+               <locus>&true;</locus>
+               <visible><copy src="effset_area_scroll" trait="visible" /></visible>
+               <listclip><not src="effset_area_scroll" trait="user19" /></listclip>
+               <target>&true;</target>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible"/>
+                  <add  src="sibling()" trait="y" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="child(slider_wrapper)" trait="height" />
+                  <add  src="menu()" trait="_statSpacing" />
+               </height>
+               
+               <user0></user0> <!-- Slider text.  Set in code -->
+               
+               <xdefault>&false;</xdefault>
+               <listindex>4</listindex>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               <xleft> <ref src="child(horizontal_scroll_left)"  trait="clicked" /></xleft>
+               <xright><ref src="child(horizontal_scroll_right)" trait="clicked" /></xright>
+               <xbuttonlb><ref src="child(horizontal_scroll_leftside)"  trait="clicked" /></xbuttonlb>
+               <xbuttonrb><ref src="child(horizontal_scroll_rightside)" trait="clicked" /></xbuttonrb>
+               
+               <rect name="mouseover">
+                  <include src="NorthernUI\focus_boxes\highlight.xml"/>
+                  <depth>-0.5</depth>
+                  <x>0</x>
+                  <y>0</y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <visible>
+                     <copy src="parent()" trait="mouseover" />
+                     <add  src="effset_area_scroll" trait="_mouseover_any" />
+                     <gt>0</gt>
+                  </visible>
+               </rect>
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="strings()" trait="_area" /></string>
+                  <red>140</red>
+                  <green>140</green>
+                  <blue>140</blue>
+                  <x><copy src="menu()"   trait="_statPaddingX" /></x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <rect name="slider_wrapper">
+                  <include src="NorthernUI\scrollbars\wrapper_h.xml" />
+                  <width><copy src="menu()" trait="_widgetWidth" /></width>
+                  <x>
+                     <copy src="parent()" trait="width"/>
+                     <sub  src="me()"     trait="width"/>
+                     <sub  src="menu()"   trait="_statPaddingX" />
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+                  
+                  <image name="effset_area_scroll">
+                     <include src="horiz_floating_scroll.xml"/>
+                     <include src="NorthernUI\scrollbars\wrapped_h.xml" />
+                     <zoom>33</zoom>
+                     <id>16</id>
+                     <user3> 1 </user3>
+                     <user6> 17 </user6>			<!-- ID for marker/slider -->
+                     <user8> &false; </user8>	<!-- show number -->
+                     <user19> &true; </user19>	<!-- visibility override - set by code -->
+                  </image>
+               </rect>
+               <text name="value">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <string><copy src="parent()" trait="user0" /></string>
+                  <x>
+                     <copy src="sibling(slider_wrapper)" trait="x" />
+                     <sub  src="me()" trait="width" />
+                     <sub>50</sub>
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+            </rect>
+            <rect name="effset_duration_layout"> <!-- slider -->
+               <id>38</id>
+               <locus>&true;</locus>
+               <target>&true;</target>
+               <visible><copy src="effset_duration_scroll" trait="visible" /></visible>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible"/>
+                  <add  src="sibling()" trait="y" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="child(slider_wrapper)" trait="height" />
+                  <add  src="menu()" trait="_statSpacing" />
+               </height>
+               
+               <xdefault>&false;</xdefault>
+               <listindex>5</listindex>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               <xleft> <ref src="child(horizontal_scroll_left)"  trait="clicked" /></xleft>
+               <xright><ref src="child(horizontal_scroll_right)" trait="clicked" /></xright>
+               <xbuttonlb><ref src="child(horizontal_scroll_leftside)"  trait="clicked" /></xbuttonlb>
+               <xbuttonrb><ref src="child(horizontal_scroll_rightside)" trait="clicked" /></xbuttonrb>
+               
+               <rect name="mouseover">
+                  <include src="NorthernUI\focus_boxes\highlight.xml"/>
+                  <depth>-0.5</depth>
+                  <x>0</x>
+                  <y>0</y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <visible>
+                     <copy src="parent()" trait="mouseover" />
+                     <add  src="effset_duration_scroll" trait="_mouseover_any" />
+                     <gt>0</gt>
+                  </visible>
+               </rect>
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="strings()" trait="_duration" /></string>
+                  <red>140</red>
+                  <green>140</green>
+                  <blue>140</blue>
+                  <x><copy src="menu()"   trait="_statPaddingX" /></x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               <rect name="slider_wrapper">
+                  <include src="NorthernUI\scrollbars\wrapper_h.xml" />
+                  <width><copy src="menu()" trait="_widgetWidth" /></width>
+                  <x>
+                     <copy src="parent()" trait="width"/>
+                     <sub  src="me()"     trait="width"/>
+                     <sub  src="menu()"   trait="_statPaddingX" />
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+                  
+                  <image name="effset_duration_scroll">
+                     <include src="horiz_floating_scroll.xml"/>
+                     <include src="NorthernUI\scrollbars\wrapped_h.xml" />
+                     <zoom>33</zoom>
+                     <id>18</id>
+                     <user3> 1 </user3>
+                     <user6> 19 </user6>			<!-- ID for marker/slider -->
+                     <user8> &false; </user8>	<!-- show number -->
+                  </image>
+               </rect>
+               <text name="value">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <string><copy src="effset_duration_scroll" trait="user7" /></string>
+                  <x>
+                     <copy src="sibling(slider_wrapper)" trait="x" />
+                     <sub  src="me()" trait="width" />
+                     <sub>50</sub>
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+            </rect>
+         </rect>
+         <image name="separator">
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width> <copy src="parent()" trait="width" /></width>
+            <height><copy src="me()"     trait="fileheight" /></width>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>16</add>
+            </y>
+         </image>
+         <rect name="gold_stats">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>12</add>
+            </y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub>128</sub>
+            </width>
+            <height>
+               <copy src="child()" trait="y" />
+               <add  src="child()" trait="height" />
+            </height>
+            
+            <text name="label">
+               <string><copy src="xxnStrings()" trait="_effectSettingCost" /></string>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>140</red><green>140</green><blue>140</blue>
+               <alpha>255</alpha>
+               <x>0</x>
+               <y>0</y>
+            </text>
+            <rect name="value">
+               <locus>&true;</locus>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+               </x>
+               <y>0</y>
+               <width>
+                  <copy src="child()" trait="x" />
+                  <add  src="child()" trait="width" />
+               </width>
+               <height>
+                  <copy src="child()" trait="y" />
+                  <add  src="child()" trait="height" />
+               </height>
+               <text name="gold_cost">
+                  <id>5</id>
+                  <string><copy src="menu()" trait="user2" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red>
+                  <green>
+                     <copy>210</copy>
+                     <onlyifnot src="menu()" trait="user5" />
+                     <add>45</add>
+                  </green>
+                  <blue>
+                     <copy src="me()" trait="green" />
+                  </blue>
+                  <alpha>255</alpha>
+                  <x>0</x>
+                  <y>0</y>
+                  
+                  <user0>&false;</user0> <!-- exceeded max cost? -->
+               </text>
+               <text name="cost_ratio_symbol">
+                  <string><copy src="xxnStrings()" trait="_enchantmentMenuCostRatioSym" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <alpha>255</alpha>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>6</add> <!-- width of a space -->
+                  </x>
+                  <y>0</y>
+               </text>
+               <text name="gold_max">
+                  <string><copy src="menu()" trait="user9" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red><green>255</green><blue>255</blue>
+                  <alpha>255</alpha>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>6</add> <!-- width of a space -->
+                  </x>
+                  <y>0</y>
+               </text>
+               <text name="gold_max_suffix">
+                  <string><copy src="xxnStrings()" trait="_enchantmentMenuGoldAvailable" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <alpha>255</alpha>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>6</add> <!-- width of a space -->
+                  </x>
+                  <y>0</y>
+               </text>
+            </rect>
+         </rect>
+         <rect name="charge_stats">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub>128</sub>
+            </width>
+            <height>
+               <copy src="child()" trait="y" />
+               <add  src="child()" trait="height" />
+            </height>
+            
+            <rect name="weapon">
+               <locus>&true;</locus>
+               <visible><not src="menu()" trait="_isApparel" /></visible>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child()" trait="height" /></height>
+               
+               <text name="label_mag">
+                  <_strings_1><copy src="xxnStrings()" trait="_enchantmentMenuLabelMagnitude" /></_strings_1>
+                  <_strings_2><copy src="xxnStrings()" trait="_effectSettingLabelMagnitude" /></_strings_2>
+                  
+                  <string>
+                     <copy src="menu()" trait="_usesUndefined" />
+                     <copy src="me()" trait="_strings_" />
+                  </string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <alpha>255</alpha>
+                  <x>0</x>
+                  <y>0</y>
+               </text>
+               <rect name="value">
+                  <locus>&true;</locus>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                  </x>
+                  <y>0</y>
+                  <width>
+                     <copy   src="child()" trait="width" />
+                     <onlyif src="child()" trait="visible" />
+                     <add    src="child()" trait="x" />
+                  </width>
+                  <height>
+                     <copy src="child()" trait="y" />
+                     <add  src="child()" trait="height" />
+                  </height>
+                  
+                  <text name="magnitude">
+                     <string><copy src="menu()" trait="user23" /></string>
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <red>255</red>
+                     <green>
+                        <copy>210</copy>
+                        <onlyifnot src="menu()" trait="user4" />
+                        <add>45</add>
+                     </green>
+                     <blue>
+                        <copy src="me()" trait="green" />
+                     </blue>
+                     <x>0</x>
+                     <y>0</y>
+                  </text>
+                  <rect name="mag_max_readout">
+                     <locus>&true;</locus>
+                     <visible><not src="menu()" trait="_chargeHasNoMax" /></visible>
+                     <x>
+                        <copy>6</copy> <!-- width of a space -->
+                        <onlyif src="me()"      trait="visible" />
+                        <add    src="sibling()" trait="x" />
+                        <add    src="sibling()" trait="width" />
+                     </x>
+                     <y>0</y>
+                     <width>
+                        <copy src="child()" trait="x" />
+                        <add  src="child()" trait="width" />
+                     </width>
+                     
+                     <text name="magnitude_max_prefix">
+                        <string><copy src="xxnStrings()" trait="_effectSettingCostPerUseRatioSym" /></string>
+                        <include src="NorthernUI\fonts\normal.xml" />
+                        <red>140</red><green>140</green><blue>140</blue>
+                        <x>
+                           <copy src="sibling()" trait="x" />
+                           <add  src="sibling()" trait="width" />
+                           <add>6</add> <!-- width of a space -->
+                        </x>
+                        <y>0</y>
+                     </text>
+                     <text name="magnitude_max">
+                        <string><copy src="menu()" trait="user24" /></string>
+                        <include src="NorthernUI\fonts\normal.xml" />
+                        <red>255</red><green>255</green><blue>255</blue>
+                        <x>
+                           <copy src="sibling()" trait="x" />
+                           <add  src="sibling()" trait="width" />
+                           <add>6</add> <!-- width of a space -->
+                        </x>
+                        <y>0</y>
+                     </text>
+                     <text name="magnitude_max_suffix">
+                        <string><copy src="xxnStrings()" trait="_effectSettingCostPerUseMaxSuffix" /></string>
+                        <include src="NorthernUI\fonts\normal.xml" />
+                        <red>140</red><green>140</green><blue>140</blue>
+                        <x>
+                           <copy src="sibling()" trait="x" />
+                           <add  src="sibling()" trait="width" />
+                           <add>6</add> <!-- width of a space -->
+                        </x>
+                        <y>0</y>
+                     </text>
+                  </rect>
+                  <rect name="mag_use_readout">
+                     <locus>&true;</locus>
+                     <visible><not src="menu()" trait="_usesUndefined" /></visible>
+                     <x>
+                        <copy   src="sibling()" trait="width" />
+                        <add>6</add> <!-- width of a space -->
+                        <onlyif src="sibling()" trait="visible" />
+                        <add    src="sibling()" trait="x" />
+                     </x>
+                     <y>0</y>
+                     <width>
+                        <copy src="child()" trait="x" />
+                        <add  src="child()" trait="width" />
+                     </width>
+                     
+                     <text name="uses_prefix">
+                        <string><copy src="xxnStrings()" trait="_enchantmentMenuUsesPrefix" /></string>
+                        <include src="NorthernUI\fonts\normal.xml" />
+                        <red>140</red><green>140</green><blue>140</blue>
+                        <x>
+                           <copy src="sibling()" trait="x" />
+                           <add  src="sibling()" trait="width" />
+                           <add>6</add> <!-- width of a space -->
+                        </x>
+                        <y>0</y>
+                     </text>
+                     <text name="uses">
+                        <string><copy src="menu()" trait="user3" /></string>
+                        <include src="NorthernUI\fonts\normal.xml" />
+                        <red>255</red><green>255</green><blue>255</blue>
+                        <x>
+                           <copy src="sibling()" trait="x" />
+                           <add  src="sibling()" trait="width" />
+                        </x>
+                        <y>0</y>
+                     </text>
+                     <text name="uses_suffix">
+                        <string><copy src="xxnStrings()" trait="_enchantmentMenuUsesSuffix" /></string>
+                        <include src="NorthernUI\fonts\normal.xml" />
+                        <red>140</red><green>140</green><blue>140</blue>
+                        <x>
+                           <copy src="sibling()" trait="x" />
+                           <add  src="sibling()" trait="width" />
+                           <add>6</add> <!-- width of a space -->
+                        </x>
+                        <y>0</y>
+                     </text>
+                  </rect>
+               </rect>
+            </rect>
+            <rect name="apparel">
+               <locus>&true;</locus>
+               <visible><copy src="menu()" trait="_isApparel" /></visible>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child()" trait="height" /></height>
+               
+               <text name="label_type">
+                  <string><copy src="xxnStrings()" trait="_enchantmentMenuLabelEffType" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <alpha>255</alpha>
+                  <x>0</x>
+                  <y>0</y>
+               </text>
+               <text name="type">
+                  <string><copy src="menu()" trait="user1" /></string>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                  </x>
+                  <y>0</y>
+               </text>
+            </rect>
+         </rect>
+      </rect>
+      <rect name="shadow_box">
+         <include src="NorthernUI\cards\shadow_box.xml" />
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      <user23>255</user23> <!-- full opacity to hide parent menu's bottom bar -->
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <width>
+            <copy src="child()" trait="x" />
+            <add  src="child()" trait="width" />
+         </width>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <image name="effset_button_select">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>276</_dxScanCode>
+            <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+            <x>0</x>
+            <y>0</y>
+            <visible>
+               <copy src="effset_attribute_layout" trait="visible" />
+               <and>
+                  <copy src="effset_attribute_layout" trait="mouseover" />
+                  <add>1</add>
+               </and>
+            </visible>
+            <string><copy src="xxnStrings()" trait="_effectSettingChangeAttribute" /></string>
+         </image>
+         <image name="effset_button_ok">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>278</_dxScanCode>
+            <clicksound>2</clicksound>
+            <id>21</id>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <add    src="bottom_bar" trait="_entrySpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+            </x>
+            <y>0</y>
+            <_strings_1><copy src="xxnStrings()" trait="_effectSettingAdd" /></_strings_1>
+            <_strings_2><copy src="xxnStrings()" trait="_effectSettingSave" /></_strings_2>
+            <string>
+               <copy src="effset_button_delete" trait="visible" />
+               <copy src="me()" trait="_strings_" />
+            </string>
+         </image>
+         <image name="effset_button_delete">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>22</id>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <add    src="bottom_bar" trait="_entrySpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_delete" /></string>
+         </image>
+         <image name="effset_button_cancel">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>23</id>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <add    src="bottom_bar" trait="_entrySpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_cancel" /></string>
+         </image>
+      </rect>
+   </rect>
+</menu>

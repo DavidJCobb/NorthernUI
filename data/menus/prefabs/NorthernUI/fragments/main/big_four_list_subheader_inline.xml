@@ -1,0 +1,391 @@
+<!--<rect name="inv_apparatus_header">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <_columnCount>4</_columnCount>
+   <_columnWidth>60</_columnWidth>
+   <_menuCurrentTab>0</_menuCurrentTab>
+   
+   <_headerText>Header Text</_headerText>
+   <_columnText1> </_columnText1>
+   <_columnText2> </_columnText2>
+   <_columnText3> </_columnText3>
+   <_columnText4> </_columnText4>
+   <_columnIsBlank1>&false;</_columnIsBlank1>
+   <_columnIsBlank2>&false;</_columnIsBlank2>
+   <_columnIsBlank3>&false;</_columnIsBlank3>
+   <_columnIsBlank4>&false;</_columnIsBlank4>
+   <_headerXOffset>0</_headerXOffset>
+   <height>81</height> <!-- height of a row in your scrollable pane -->
+   
+   <!--
+      Within a spell or item list, each inline header's index is the 
+      index of the previous header plus the number of items under that 
+      header. This means that if a header is empty, its index will be 
+      equal to the index of the next header. Frankly, that's bad code: 
+      Bethesda should've used a negative number as a sentinel value, 
+      because that would be easier to check for AND you wouldn't even 
+      NEED to check for it in most cases. (Headers' Y-coordinates are 
+      their indices times the row height, so negative indices would 
+      position them outside of the list pane's clip area.)
+      
+      But Bethesda's gonna Bethesda, so every header has to pass the 
+      index of its next header as well in order for us to determine 
+      visibility -- particularly because there's no way to pull 
+      traits from "next_sibling()".
+   -->
+   
+   <!-- Index within the menu's "all" tab: -->
+   <_mainIndexOfMe>   -1 </_mainIndexOfMe>
+   <_mainIndexOfNext> -1 </_mainIndexOfNext>
+   <!--
+      Some tabs sort their subcategories in a different order from the 
+      "all" tab. In those cases, use these arguments: specify which 
+      tab has a different sort order, and specify the indices to use 
+      when in that tab.
+      
+      The only case of this in vanilla are the Alchemy and Misc sub-
+      categories of the Inventory, which are ordered differently 
+      depending on whether you're currently in the All Items or 
+      Alchemy/Misc tabs.
+   -->
+   <_altTab>           0 </_altTab>
+   <_altIndexOfMe>    -1 </_altIndexOfMe>
+   <_altIndexOfNext>  -1 </_altIndexOfNext>
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <_usesAlternateIndex>
+      <copy src="me()" trait="_altTab"/><gt>0</gt>
+   </_usesAlternateIndex>
+   <_activeIndexOfMe>
+      <copy src="me()" trait="_mainIndexOfMe"/>
+      <onlyif>
+             <copy src="me()" trait="_menuCurrentTab"/><eq>1</eq>
+         <or><not  src="me()" trait="_usesAlternateIndex" /></or>
+      </onlyif>
+      <add> <!-- if menu is on the alternate tab and we use an alternate index -->
+         <copy src="me()" trait="_altIndexOfMe"/>
+         <onlyif>
+            <copy src="me()" trait="_menuCurrentTab"/>
+            <eq   src="me()" trait="_altTab"/>
+            <and  src="me()" trait="_usesAlternateIndex"/>
+         </onlyif>
+      </add>
+   </_activeIndexOfMe>
+   <_activeIndexOfNext>
+      <copy src="me()" trait="_mainIndexOfNext"/>
+      <onlyif>
+             <copy src="me()" trait="_menuCurrentTab"/><eq>1</eq>
+         <or><not  src="me()" trait="_usesAlternateIndex" /></or>
+      </onlyif>
+      <add> <!-- if menu is on the alternate tab and we use an alternate index -->
+         <copy src="me()" trait="_altIndexOfNext"/>
+         <onlyif>
+            <copy src="me()" trait="_menuCurrentTab"/>
+            <eq   src="me()" trait="_altTab"/>
+            <and  src="me()" trait="_usesAlternateIndex"/>
+         </onlyif>
+      </add>
+   </_activeIndexOfNext>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <depth>3</depth>
+   <locus>&true;</locus>
+   <clips>&true;</clips>
+   <width><copy src="parent()" trait="width"/></width>
+   <visible>
+      <copy src="me()" trait="_activeIndexOfMe" />
+      <neq  src="me()" trait="_activeIndexOfNext"/>
+   </visible>
+   <x>0</x>
+   <y> <!-- row offset * row height -->
+      <copy src="me()" trait="_activeIndexOfMe" />
+      <mult src="me()" trait="height" />
+   </y>
+   
+   <_contentHeight>
+      <copy src="child(header)" trait="height" />
+   </_contentHeight>
+   
+   <rect name="borders">
+      <locus>&true;</locus>
+      <width> <copy src="parent()" trait="width"/></width>
+      <height><copy src="parent()" trait="_contentHeight"/></height>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height"/>
+         <sub  src="parent()" trait="_contentHeight"/>
+         <div>2</div>
+      </y>
+      
+      <rect name="top">
+         <locus>&true;</locus>
+         <width> <copy src="parent()" trait="width"/></width>
+         <height><copy src="parent()" trait="height"/></height>
+         <x>0</x>
+         <y><copy src="child(l)" trait="height"/><mult>-1</mult></y>
+         
+         <image name="l">
+            <clips>&true;</clips>
+            <filename>Menus\NorthernUI\Shared\border_min_fade_h.dds</filename>
+            <width> <copy src="me()" trait="filewidth"/></width>
+            <height>
+               <copy src="me()" trait="fileheight"/>
+               <div>2</div>
+            </height>
+            <cropY>0</cropY>
+            <x>0</x>
+            <y>0</y>
+         </image>
+         <image name="r">
+            <clips>&true;</clips>
+            <filename>Menus\NorthernUI\Shared\border_min_fade_h.dds</filename>
+            <width> <copy src="me()" trait="filewidth"/></width>
+            <height>
+               <copy src="me()" trait="fileheight"/>
+               <div>2</div>
+            </height>
+            <cropY><copy src="me()" trait="height" /></cropY>
+            <x> <!-- align with right of parent -->
+               <copy src="parent()" trait="width"/>
+               <sub  src="me()"     trait="width"/>
+            </x>
+            <y>0</y>
+         </image>
+         <image name="border_top">
+            <clips>&true;</clips>
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width>
+               <copy src="parent()"   trait="width"/>
+               <sub  src="sibling(l)" trait="width"/>
+               <sub  src="sibling(r)" trait="width"/>
+            </width>
+            <height><copy src="me()" trait="fileheight"/></height>
+            <x><copy src="sibling(l)" trait="width"/></x>
+            <y>0</y>
+         </image>
+      </rect>
+      <rect name="bottom">
+         <locus>&true;</locus>
+         <width> <copy src="parent()" trait="width"/></width>
+         <height><copy src="parent()" trait="height"/></height>
+         <x>0</x>
+         <y><copy src="parent()" trait="height"/></y>
+         
+         <image name="l">
+            <clips>&true;</clips>
+            <filename>Menus\NorthernUI\Shared\border_min_fade_h.dds</filename>
+            <width> <copy src="me()" trait="filewidth"/></width>
+            <height>
+               <copy src="me()" trait="fileheight"/>
+               <div>2</div>
+            </height>
+            <cropY>0</cropY>
+            <x>0</x>
+            <y>0</y>
+         </image>
+         <image name="r">
+            <clips>&true;</clips>
+            <filename>Menus\NorthernUI\Shared\border_min_fade_h.dds</filename>
+            <width> <copy src="me()" trait="filewidth"/></width>
+            <height>
+               <copy src="me()" trait="fileheight"/>
+               <div>2</div>
+            </height>
+            <cropY><copy src="me()" trait="height" /></cropY>
+            <x> <!-- align with right of parent -->
+               <copy src="parent()" trait="width"/>
+               <sub  src="me()"     trait="width"/>
+            </x>
+            <y>0</y>
+         </image>
+         <image name="border_top">
+            <clips>&true;</clips>
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width>
+               <copy src="parent()"   trait="width"/>
+               <sub  src="sibling(l)" trait="width"/>
+               <sub  src="sibling(r)" trait="width"/>
+            </width>
+            <height><copy src="me()" trait="fileheight"/></height>
+            <x><copy src="sibling(l)" trait="width"/></x>
+            <y>0</y>
+         </image>
+      </rect>
+   </rect>
+   
+   <rect name="header">
+      <locus>&true;</locus>
+      <clips>&true;</clips>
+      <string><copy src="parent()" trait="_headerText"/></string>
+      <x><copy src="parent()" trait="_headerXOffset"/></x>
+      <y> <!-- center within parent -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()" trait="height" />
+         <div>2</div>
+      </y>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="x" />
+         <sub>
+            <copy src="parent()" trait="_columnWidth" />
+            <mult src="parent()" trait="_columnCount" />
+         </sub>
+      </width>
+      <height>
+         <copy src="child(text)" trait="height" />
+      </height>
+      
+      <text name="text">
+         <clips>&true;</clips>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <justify>&left;</justify>
+         <red>255</red><green>255</green><blue>255</blue>
+         <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+         <wraplines>2</wraplines>
+         <string><copy src="parent()" trait="string" /></string>
+         <x>0</x> <!-- do not change; we want this left-aligned -->
+         <y>0</y>
+      </text>
+   </rect>
+   <rect name="column_1">
+      <locus>&true;</locus>
+      <clips>&true;</clips>
+      <string> <copy src="parent()" trait="_columnText1" /></string>
+      <visible><copy src="parent()" trait="_columnCount" /><gte>1</gte></visible>
+      <width> <!-- Use _columnWidth. Collapse if not visible. -->
+         <copy   src="parent()" trait="_columnWidth" />
+         <onlyif src="me()"     trait="visible" />
+      </width>
+      <height><copy src="sibling()" trait="height" /></height>
+      <x> <!-- after sibling -->
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+      </x>
+      <y><copy src="sibling()" trait="y" /></y>
+      
+      <_isBlank><not src="parent()" trait="_columnIsBlank1" /></_isBlank>
+      
+      <text name="value">
+         <visible><copy src="parent()" trait="_isBlank" /></visible>
+         <clips>&true;</clips>
+         <justify>&center;</justify>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <x> <!-- center within parent -->
+            <copy src="parent()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>0</y>
+         <string><copy src="parent()" trait="string" /></string>
+         <red>255</red><green>255</green><blue>255</blue>
+      </text>
+   </rect>
+   <rect name="column_2">
+      <locus>&true;</locus>
+      <clips>&true;</clips>
+      <string> <copy src="parent()" trait="_columnText2" /></string>
+      <visible><copy src="parent()" trait="_columnCount" /><gte>2</gte></visible>
+      <width> <!-- Use _columnWidth. Collapse if not visible. -->
+         <copy   src="parent()" trait="_columnWidth" />
+         <onlyif src="me()"     trait="visible" />
+      </width>
+      <height><copy src="sibling()" trait="height" /></height>
+      <x> <!-- after sibling -->
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+      </x>
+      <y><copy src="sibling()" trait="y" /></y>
+      
+      <_isBlank><not src="parent()" trait="_columnIsBlank2" /></_isBlank>
+      
+      <text name="value">
+         <visible><copy src="parent()" trait="_isBlank" /></visible>
+         <clips>&true;</clips>
+         <justify>&center;</justify>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <x> <!-- center within parent -->
+            <copy src="parent()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>0</y>
+         <string><copy src="parent()" trait="string" /></string>
+         <red>255</red><green>255</green><blue>255</blue>
+      </text>
+   </rect>
+   <rect name="column_3">
+      <locus>&true;</locus>
+      <clips>&true;</clips>
+      <string> <copy src="parent()" trait="_columnText3" /></string>
+      <visible><copy src="parent()" trait="_columnCount" /><gte>3</gte></visible>
+      <width> <!-- Use _columnWidth. Collapse if not visible. -->
+         <copy   src="parent()" trait="_columnWidth" />
+         <onlyif src="me()"     trait="visible" />
+      </width>
+      <height><copy src="sibling()" trait="height" /></height>
+      <x> <!-- after sibling -->
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+      </x>
+      <y><copy src="sibling()" trait="y" /></y>
+      
+      <_isBlank><not src="parent()" trait="_columnIsBlank3" /></_isBlank>
+      
+      <text name="value">
+         <visible><copy src="parent()" trait="_isBlank" /></visible>
+         <clips>&true;</clips>
+         <justify>&center;</justify>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <x> <!-- center within parent -->
+            <copy src="parent()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>0</y>
+         <string><copy src="parent()" trait="string" /></string>
+         <red>255</red><green>255</green><blue>255</blue>
+      </text>
+   </rect>
+   <rect name="column_4">
+      <locus>&true;</locus>
+      <clips>&true;</clips>
+      <string> <copy src="parent()" trait="_columnText4" /></string>
+      <visible><copy src="parent()" trait="_columnCount" /><gte>4</gte></visible>
+      <width> <!-- Use _columnWidth. Collapse if not visible. -->
+         <copy   src="parent()" trait="_columnWidth" />
+         <onlyif src="me()"     trait="visible" />
+      </width>
+      <height><copy src="sibling()" trait="height" /></height>
+      <x> <!-- after sibling -->
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+      </x>
+      <y><copy src="sibling()" trait="y" /></y>
+      
+      <_isBlank><not src="parent()" trait="_columnIsBlank4" /></_isBlank>
+      
+      <text name="value">
+         <visible><copy src="parent()" trait="_isBlank" /></visible>
+         <clips>&true;</clips>
+         <justify>&center;</justify>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <x> <!-- center within parent -->
+            <copy src="parent()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>0</y>
+         <string><copy src="parent()" trait="string" /></string>
+         <red>255</red><green>255</green><blue>255</blue>
+      </text>
+   </rect>
+<!--</rect>-->

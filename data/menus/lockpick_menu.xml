@@ -1,0 +1,505 @@
+<!-- lockpick_menu.xml -->
+<menu name="LockPickMenu">
+	<class> &LockPickMenu; </class>  
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<depth> 0 </depth> 
+	<x> 0 </x>
+	<y> 0 </y>
+	<explorefade> 0.25 </explorefade>
+	<user6> 1 </user6> 
+	<user9> 20 </user9> 
+	<user10> 200 </user10> 
+	<user7>90</user7> 
+	<user16>100</user16> 
+	<user8> 5 </user8> 
+	<user11> 300  </user11> 
+	<user12> 290 </user12> 
+	<user13> 340 </user13> 
+	<user14> 14 </user14> 
+	<user15> &false; </user15>
+	<red> 254 </red>
+	<green> 244 </green>
+	<blue> 183 </blue>
+	<font>2</font>
+   
+   <!--
+      Without NorthernUI.DLL, keyboard navigation on this menu doesn't work. 
+      The menu hardcodes X to the auto-attempt button; it hardcodes A to the 
+      mini-game, but does so incorrectly, so it doesn't work. B isn't hard-
+      coded, but the menu doesn't handle clicks received from keyboard nav-
+      igation, so it doesn't work either.
+      
+      NorthernUI.DLL fixes all of those problems and allows you to map the 
+      buttons as you please. Minigame clicks are given a new Tile ID, 9001, 
+      for your use. One caveat: the directional keys are co-opted for the 
+      minigame.
+   -->
+   
+	<xbuttona><ref src="northernui_minigame_click_shim" trait="clicked" /></xbuttona>
+	<xbuttonb><ref src="lockpick_exit"         trait="clicked" /></xbuttonb>
+	<xbuttonx><ref src="lockpick_auto_attempt" trait="clicked" /></xbuttonx>
+	
+   <rect name="northernui_minigame_click_shim">
+      <id>9001</id>
+		<target>&true;</target>
+		<visible>&true;</visible>
+		<xdefault>&true;</xdefault>
+   </rect>
+   
+	<rect name="glass_window">
+		<id>4</id>
+		<target> &true; </target>
+		<visible> &true; </visible>
+		<alpha>0</alpha>
+		<width>
+			<copy src="screen()" trait="width"/>
+			<add>1000</add>
+		</width>
+		<height>
+			<copy src="screen()" trait="height"/>
+			<add>1000</add>
+		</height>
+		<x>-500</x>
+		<y>-500</y>
+	</rect>
+	<image name="lockpick_background">
+      <!--
+         The width of this tile determines the mouseover area for each 
+         tumbler. The width is divided into fifths, and each tumbler's 
+         mouseover area is a fifth, from left to right.
+      -->
+		<id> 1 </id>
+		<target> &true; </target>
+		<filename> Lockpicking\base.dds </filename>
+		<depth> 1 </depth>
+		<width> 853 </width>
+		<height> 821 </height>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		<user2> Hard </user2>		<!-- lock level -->
+		<user3> 1 </user3>		<!-- number of lockpicks remaining -->
+		<user4> 1 </user4>		<!--player security level-->
+		<xdefault>3</xdefault> <!-- something needs default focus, or keynav breaks -->
+		
+		<nif name="lockpick_bolt">
+			<id>20</id>
+			<user0>0</user0>
+			<visible> &true; </visible>
+			<filename> Lockpicking\BoltGearsLoop01.NIF </filename>
+			<depth> 1 </depth>
+			<x> 400 </x>
+			<y> 740 </y>
+			<animation>
+				<copy src="me()" trait="user0"/>
+				<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+			</animation>
+			<_animation_1>Open</_animation_1>
+		</nif>
+		
+		<rect name="lockpick_voodoo">
+			<depth> 40 </depth>
+		</rect>
+		<rect name="lockpick_tumbler_1_cover">
+			<depth> 6 </depth>
+			<red> 255 </red>
+			<green> 0 </green>
+			<blue> 0 </blue>
+			<alpha> 0 </alpha>
+			<width> 51 </width>
+			<height> 250 </height>
+			<x> 292 </x>
+			<y> 240 </y>
+			<locus> &true; </locus>
+			<nif name="lockpick_tumbler_1">
+				<id> 11 </id>
+				<visible> &true; </visible>
+				<filename> Lockpicking\Tumbler02.NIF </filename>
+				<depth3d> 20 </depth3d>
+				<depth> -1 </depth>
+				<user0> 1 </user0>		<!-- animation to play -->
+				<user3> 0 </user3>		<!--number of pixels to modify height by -->
+				<x> 200 </x>
+				<y> 
+					<copy>250</copy> 
+					<sub>
+						<copy src="me()" trait="user3"/>
+						<!--onlyif> 
+							<copy src="LockPickMenu" trait="user8"/>
+							<eq>0</eq>
+						</onlyif-->
+					</sub>
+				</y>
+				<animation>
+					<copy src="me()" trait="user0"/>
+					<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+				</animation>
+				<_animation_1> UP </_animation_1>
+				<_animation_2> Down </_animation_2>
+				<_animation_3> bump_up_and_bump_down </_animation_3>
+				<_animation_4> drop </_animation_4>
+				<_animation_5> set </_animation_5>
+				<_animation_6> reset </_animation_6>
+				<_animation_7> wiggle </_animation_7>
+				<_animation_8>  </_animation_8>
+			</nif>
+		</rect>
+		
+		<rect name="lockpick_tumbler_2_cover">
+			<depth> 6 </depth>
+			<red> 0 </red>
+			<green> 255 </green>
+			<blue> 0 </blue>
+			<alpha> 0 </alpha>
+			<width> 51 </width>
+			<height> 250 </height>
+			<x> 343 </x>
+			<y> 240 </y>
+			<locus> &true; </locus>
+			<nif name="lockpick_tumbler_2">
+				<id> 12 </id>
+				<visible> &true; </visible>
+				<filename> Lockpicking\Tumbler02.NIF </filename>
+				<depth3d> 20 </depth3d>
+				<depth> -1 </depth>
+				<user0> 1 </user0>		<!-- animation to play -->
+				<user3> 0 </user3>		<!--number of pixels to modify height by -->
+				<x> 200 </x>
+				<y> 
+					<copy>250</copy> 
+					<sub>
+						<copy src="me()" trait="user3"/>
+						<!--onlyif> 
+							<copy src="LockPickMenu" trait="user8"/>
+							<eq>0</eq>
+						</onlyif-->
+					</sub>
+				</y>
+				<animation>
+					<copy src="me()" trait="user0"/>
+					<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+				</animation>
+				<_animation_1> UP </_animation_1>
+				<_animation_2> Down </_animation_2>
+				<_animation_3> bump_up_and_bump_down </_animation_3>
+				<_animation_4> drop </_animation_4>
+				<_animation_5> set </_animation_5>
+				<_animation_6> reset </_animation_6>
+				<_animation_7> wiggle </_animation_7>
+				<_animation_8>  </_animation_8>
+			</nif>
+		</rect>
+		
+		<rect name="lockpick_tumbler_3_cover">
+			<depth> 6 </depth>
+			<red> 0 </red>
+			<green> 0 </green>
+			<blue> 255 </blue>
+			<alpha> 0 </alpha>
+			<width> 51 </width>
+			<height> 250 </height>
+			<x> 394 </x>
+			<y> 240 </y>
+			<locus> &true; </locus>
+			<nif name="lockpick_tumbler_3">
+				<id> 13 </id>
+				<visible> &true; </visible>
+				<filename> Lockpicking\Tumbler02.NIF </filename>
+				<depth3d> 20 </depth3d>
+				<depth> -1 </depth>
+				<user0> 1 </user0>		<!-- animation to play -->
+				<user3> 0 </user3>		<!--number of pixels to modify height by -->
+				<x> 200 </x>
+				<y> 
+					<copy>250</copy> 
+					<sub>
+						<copy src="me()" trait="user3"/>
+						<!--onlyif> 
+							<copy src="LockPickMenu" trait="user8"/>
+							<eq>0</eq>
+						</onlyif-->
+					</sub>
+				</y>
+				<animation>
+					<copy src="me()" trait="user0"/>
+					<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+				</animation>
+				<_animation_1> UP </_animation_1>
+				<_animation_2> Down </_animation_2>
+				<_animation_3> bump_up_and_bump_down </_animation_3>
+				<_animation_4> drop </_animation_4>
+				<_animation_5> set </_animation_5>
+				<_animation_6> reset </_animation_6>
+				<_animation_7> wiggle </_animation_7>
+				<_animation_8>  </_animation_8>
+			</nif>
+		</rect>
+		
+		<rect name="lockpick_tumbler_4_cover">
+			<depth> 6 </depth>
+			<red> 255 </red>
+			<green> 0 </green>
+			<blue> 0 </blue>
+			<alpha> 0 </alpha>
+			<width> 51 </width>
+			<height> 250 </height>
+			<x> 444 </x>
+			<y> 240 </y>
+			<locus> &true; </locus>
+			<nif name="lockpick_tumbler_4">
+				<id> 14 </id>
+				<visible> &true; </visible>
+				<filename> Lockpicking\Tumbler02.NIF </filename>
+				<depth3d> 20 </depth3d>
+				<depth> -1 </depth>
+				<user0> 1 </user0>		<!-- animation to play -->
+				<user3> 0 </user3>		<!--number of pixels to modify height by -->
+				<x> 200 </x>
+				<y> 
+					<copy>250</copy> 
+					<sub>
+						<copy src="me()" trait="user3"/>
+						<!--onlyif> 
+							<copy src="LockPickMenu" trait="user8"/>
+							<eq>0</eq>
+						</onlyif-->
+					</sub>
+				</y>
+				<animation>
+					<copy src="me()" trait="user0"/>
+					<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+				</animation>
+				<_animation_1> UP </_animation_1>
+				<_animation_2> Down </_animation_2>
+				<_animation_3> bump_up_and_bump_down </_animation_3>
+				<_animation_4> drop </_animation_4>
+				<_animation_5> set </_animation_5>
+				<_animation_6> reset </_animation_6>
+				<_animation_7> wiggle </_animation_7>
+				<_animation_8>  </_animation_8>
+			</nif>
+		</rect>
+		
+		<rect name="lockpick_tumbler_5_cover">
+			<depth> 6 </depth>
+			<red> 0 </red>
+			<green> 255 </green>
+			<blue> 0 </blue>
+			<alpha> 0 </alpha>
+			<width> 51 </width>
+			<height> 250 </height>
+			<x> 495 </x>
+			<y> 240 </y>
+			<locus> &true; </locus>
+			<nif name="lockpick_tumbler_5">
+				<id> 15 </id>
+				<visible> &true; </visible>
+				<filename> Lockpicking\Tumbler02.NIF </filename>
+				<depth3d> 20 </depth3d>
+				<depth> -1 </depth>
+				<user0> 1 </user0>		<!-- animation to play -->
+				<user3> 0 </user3>		<!--number of pixels to modify height by -->
+				<x> 200 </x>
+				<y> 
+					<copy>250</copy> 
+					<sub>
+						<copy src="me()" trait="user3"/>
+						<!--onlyif> 
+							<copy src="LockPickMenu" trait="user8"/>
+							<eq>0</eq>
+						</onlyif-->
+					</sub>
+				</y>
+				<animation>
+					<copy src="me()" trait="user0"/>
+					<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+				</animation>
+				<_animation_1> UP </_animation_1>
+				<_animation_2> Down </_animation_2>
+				<_animation_3> bump_up_and_bump_down </_animation_3>
+				<_animation_4> drop </_animation_4>
+				<_animation_5> set </_animation_5>
+				<_animation_6> reset </_animation_6>
+				<_animation_7> wiggle </_animation_7>
+				<_animation_8>  </_animation_8>
+			</nif>
+		</rect>
+		
+		<nif name="lockpick_pick">
+			<id> 3 </id>
+			<visible> &true; </visible>
+			<filename> Lockpicking\Pick.NIF </filename> <!-- Controlled by the executable; varies for normal pick or skeleton key; see opcodes at/near 005AF90A -->
+			<depth> 4 </depth>
+			<x>
+				<copy src="me()" trait="user2"/>
+				<add> 153 </add>
+			</x>
+			<y>
+				<copy> 0 </copy>
+				<!--add src="me()" trait="user3"/-->
+				<add src="me()" trait="user3"/>
+			</y>
+			<animation>
+				<copy src="me()" trait="user0"/>
+				<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+			</animation>
+			<_animation_1> idol </_animation_1>
+			<_animation_2> break_off </_animation_2>
+			<_animation_3>  </_animation_3>
+			<user0> 1 </user0>		<!-- current animation -->
+			<user1> 1 </user1>		<!-- tumbler position -->
+			<user2> 502 </user2>	<!-- set by code - position -->
+			<user3> 325 </user3>		<!-- Y offset -->
+			<user11> 313 </user11>	<!-- center of tumbler 1 -->
+			<user12> 365 </user12>	<!-- center of tumbler 2 -->
+			<user13> 416 </user13>	<!-- center of tumbler 3 -->
+			<user14> 467 </user14>	<!-- center of tumbler 4 -->
+			<user15> 518 </user15>	<!-- center of tumbler 5 -->
+		</nif>
+		
+		<image name="lockpick_mech">
+			<visible> &true; </visible>
+			<filename> Menus\Lockpicking\mech.dds </filename>
+			<depth> 7 </depth>
+			<width> 315 </width>
+			<height> 212 </height>
+			<x> 262 </x>
+			<y> 188 </y>
+		</image>
+	</image>
+	<rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      <depth>13</depth>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="minigame_click">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml" />
+            <_dxScanCode>276</_dxScanCode>
+            <visible><copy src="northernui()" trait="_xxnGamepadAvailable" /></visible>
+            <x>0</x>
+            <y>0</y>
+            <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+            <string><copy src="xxnStrings()" trait="_lockpickFixTumbler" /></string>
+         </rect>
+         <rect name="lockpick_auto_attempt">
+            <id>5</id>
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml" />
+            <_dxScanCode>278</_dxScanCode>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+               <add>
+                  <copy   src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="me()" trait="user0" /></string>
+         </rect>
+         <rect name="lockpick_exit">
+            <id>2</id>
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml" />
+            <_dxScanCode>277</_dxScanCode>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+               <add>
+                  <copy   src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="xxnStrings()" trait="_closeMenu" /></string>
+         </rect>
+      </rect>
+      
+      <rect name="right_side_info">
+         <locus>&true;</locus>
+         <width>
+            <copy src="child()" trait="x" />
+            <add  src="child()" trait="width" />
+         </width>
+         <height>
+            <copy src="child()" trait="y" />
+            <add  src="child()" trait="height" />
+         </height>
+         <x> <!-- align on right -->
+            <copy src="parent()"     trait="width" />
+            <sub  src="me()"         trait="width" />
+            <sub  src="screen()"     trait="cropx" />
+            <sub  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         
+         <rect name="skill">
+            <x>0</x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml" />
+            <_label><copy src="strings()" trait="_playerskill" /></_label>
+            <_value><copy src="lockpick_background" trait="user4" /></_value>
+            <_maximum>-1</_maximum>
+         </rect>
+         <rect name="lock_level">
+            <x>
+               <copy   src="sibling()" trait="x" />
+               <add    src="sibling()" trait="width" />
+               <add>
+                  <copy   src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml" />
+            <_label><copy src="strings()" trait="_locklevel" /></_label>
+            <_value><copy src="lockpick_background" trait="user2" /></_value>
+            <_maximum>-1</_maximum>
+         </rect>
+         <rect name="lockpicks">
+            <x>
+               <copy   src="sibling()" trait="x" />
+               <add    src="sibling()" trait="width" />
+               <add>
+                  <copy   src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml" />
+            <_label><copy src="strings()" trait="_picksleft" /></_label>
+            <_value><copy src="lockpick_background" trait="user3" /></_value>
+            <_maximum>-1</_maximum>
+         </rect>
+      </rect>
+   </rect>
+</menu>

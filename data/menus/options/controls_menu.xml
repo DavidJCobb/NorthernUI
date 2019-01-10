@@ -1,0 +1,664 @@
+<!-- controls_menu.xml -->
+<menu name="ControlsMenu">
+	<class> &ControlsMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<menufade>0</menufade>
+	<explorefade>0</explorefade>
+
+	<user0>1</user0> <!-- current page number -->
+
+	<user1>32</user1> <!-- height of single menu item; forcibly overwrites templated heights -->
+	
+	<user2><copy src="strings()" trait="_move" /></user2> <!-- current left stick setting -->
+	<user3><copy src="strings()" trait="_look" /></user3> <!-- current right stick setting -->
+	
+	<user4>&true;</user4> <!-- boolean: false if we're currently remapping a control -->
+	<user5></user5> <!-- name of the device we're currently listing controls for -->
+
+	<!-- Text colors (what uses these?) -->
+	<red>255</red>
+	<green>255</green>
+	<blue>255</blue>
+   
+	<xbuttonb><ref src="controls_exit_button" trait="clicked" /></xbuttonb>
+	<xbuttonx><ref src="controls_bindings_button" trait="clicked" /></xbuttonx>
+	<xbuttony><ref src="controls_defaults_button" trait="clicked" /></xbuttony>
+   
+   <rect name="content_space">
+      <include src="NorthernUI/fragments/pause/base.xml" />
+      <rect name="content_box_2">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <rect name="column_right">
+            <locus>&true;</locus>
+            <clipwindow>&true;</clipwindow>
+            <width>
+               <copy src="parent()"  trait="width" />
+               <sub  src="pause_column_left" trait="x" />
+               <sub  src="pause_column_left" trait="width" />
+               <sub>16</sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <x>
+               <copy src="pause_column_left" trait="x" />
+               <add  src="pause_column_left" trait="width" />
+               <add>16</add>
+            </x>
+            <y>0</y><depth>10</depth>
+            
+            <!-- Submenu contents go here. -->
+            <rect name="page_1">
+               <visible>
+                  <copy src="ControlsMenu" trait="user0" /><eq>1</eq>
+               </visible>
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>0</y>
+               <width>
+                  <copy src="parent()"  trait="width" />
+                  <min>450</min>
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+               
+               <rect name="option_mouse_sensitivity">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_mousesensitivity" /></user11>
+                  <user0>5</user0> <!-- slider ID -->
+                  <user1>6</user1> <!-- slider thumb ID -->
+               </rect>
+               <rect name="option_invert_y">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_inverty" /></user11>
+                  <user0>7</user0> <!-- button ID -->
+               </rect>
+               <rect name="option_swap_sticks">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_swapstickcontrols" /></user11>
+                  <user0>8</user0> <!-- button ID -->
+                  <string>Click Here</string>
+                  <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
+               </rect>
+               <rect name="separator">
+                  <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
+                  <locus>&true;</locus>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="height" />
+                     <onlyifnot>
+                        <copy src="sibling()" trait="visible" /><eq>&false;</eq>
+                     </onlyifnot>
+                     <add  src="sibling()" trait="y" />
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height>
+                     <copy src="child(line)" trait="height" />
+                     <add>8</add>
+                  </height>
+                  
+                  <image name="line">
+                     <clips>&true;</clips>
+                     <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+                     <tile>&true;</tile>
+                     <width> <copy src="parent()" trait="width" /></width>
+                     <height><copy src="me()"     trait="fileheight" /></width>
+                     <x>0</x>
+                     <y>
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                        <div>2</div>
+                     </y>
+                  </image>
+               </rect>
+               <rect name="option_readout_leftstick">
+                  <!-- not a real button -->
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_leftstick" /></user11>
+                  <string><copy src="menu()"    trait="user2" /></string>
+                  <user0>&generic;</user0> <!-- button ID -->
+                  <target>&false;</target>
+                  <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
+               </rect>
+               <rect name="option_readout_rightstick">
+                  <!-- not a real button -->
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_rightstick" /></user11>
+                  <string><copy src="menu()"    trait="user3" /></string>
+                  <user0>&generic;</user0> <!-- button ID -->
+                  <target>&false;</target>
+                  <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
+               </rect>
+               <rect name="separator">
+                  <locus>&true;</locus>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="height" />
+                     <onlyifnot>
+                        <copy src="sibling()" trait="visible" /><eq>&false;</eq>
+                     </onlyifnot>
+                     <add  src="sibling()" trait="y" />
+                  </y>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height>
+                     <copy src="child(line)" trait="height" />
+                     <add>8</add>
+                  </height>
+                  
+                  <image name="line">
+                     <clips>&true;</clips>
+                     <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+                     <tile>&true;</tile>
+                     <width> <copy src="parent()" trait="width" /></width>
+                     <height><copy src="me()"     trait="fileheight" /></width>
+                     <x>0</x>
+                     <y>
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                        <div>2</div>
+                     </y>
+                  </image>
+               </rect>
+               <rect name="option_go_to_controls">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_controls" /></user11>
+                  <user12>...</user12>
+                  <string>»</string>
+                  <user0>9</user0> <!-- button ID -->
+               </rect>
+            </rect>
+            <rect name="page_bindings">
+               <visible>
+                  <copy src="ControlsMenu" trait="user0" /><eq>2</eq>
+               </visible>
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>0</y>
+               <width><copy src="parent()"  trait="width" /></width>
+               <height><copy src="parent()" trait="height" /></height>
+               
+               <rect name="device_enumpicker">
+                  <include src="NorthernUI/enumpicker.xml" />
+                  <user0>&generic;</user0> <!-- tile ID: value -->
+                  <user1>12</user1> <!-- tile ID: button, left -->
+                  <user2>13</user2> <!-- tile ID: button, right -->
+                  <string><copy src="menu()" trait="user5" /></string> <!-- displayed value -->
+                  
+                  <x>0</x>
+                  <y>0</y>
+                  <width>350</width>
+                  
+                  <xleft> <ref src="child(button_left)"  trait="clicked" /></xleft>
+                  <xright><ref src="child(button_right)" trait="clicked" /></xright>
+               </rect>
+               <rect name="bindings_list">
+                  <locus>&true;</locus>
+                  <target>&true;</target> <!-- for mouse wheel -->
+                  <clipwindow>&true;</clipwindow>
+                  <depth>3</depth>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="height" />
+                     <add  src="sibling()" trait="y" />
+                     <add>8</add>
+                  </y>
+                  <width>
+                     <copy src="parent()"  trait="width" />
+                     <sub>
+                        <copy src="controls_vertical_scroll" trait="width" />
+                        <add>16</add>
+                        <onlyif src="controls_vertical_scroll" trait="visible" />
+                     </sub>
+                     <min>350</min>
+                  </width>
+                  <height>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="y" />
+                  </height>
+                  
+                  <rect name="controls_list_pane">
+                     <id>4</id>
+                     <locus>&true;</locus>
+                     <clips>&true;</clips>
+                     <width><copy src="parent()" trait="width" /></width>
+                     <height>
+                        <copy src="me()"   trait="childcount"/>
+                        <mult src="menu()" trait="user1"/>
+                     </height>
+                     <x>0</x>
+                     <y>
+                        <copy>0</copy>
+                        <sub  src="controls_vertical_scroll" trait="user7"/> <!-- user7 = current value -->
+                        <mult src="menu()" trait="user1"/>
+                     </y>
+                     <alpha>0</alpha>
+                     
+                     <_left_edge_buffer> 10 </_left_edge_buffer>
+                           
+                     <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                        an input command, they defer to their parent. The following directions are for those times. -->
+                     <target>&false;</target>
+                     <xdefault>&true;</xdefault>
+                     <xlist>&xlist;</xlist>
+                     <xscroll><ref src="controls_vertical_scroll" trait="user5" /></xscroll>
+                     
+                     <!-- list items are added here in code from the template -->
+                  </rect>
+               </rect>
+               <rect name="scrollbar_wrapper">
+                  <include src="NorthernUI\scrollbars\wrapper.xml" />
+                  <user0>&false;</user0> <!-- is horizontal? -->
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <sub>8</sub>
+                  </x>
+                  <y>0</y>
+                  <height><copy src="parent()" trait="height" /></height>
+                  
+                  <rect name="controls_vertical_scroll">
+                     <include src="vertical_scroll.xml" />
+                     <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+                     <id>2</id>
+                     <user1>0</user1>					<!-- min -->
+                     <user2>
+                        <copy src="controls_list_pane" trait="childcount" />
+                        <sub>
+                           <copy src="bindings_list" trait="height" />
+                           <div  src="menu()" trait="user1" />
+                           <floor>0.5</floor>
+                        </sub>
+                        <!-- <add>
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="bindings_list" trait="height" />
+                              <mod  src="menu()" trait="user1" />
+                              <neq>0</neq>
+                           </onlyif>
+                        </add> -->
+                     </user2>							<!-- max -->
+                     <user4>
+                        <copy src="me()" trait="user8"/>
+                        <sub>1</sub>
+                     </user4>							<!-- jump distance -->
+                     <user5> 0 </user5>					<!-- starting pos -->
+                     <user6>3</user6>					<!-- marker id -->
+                     <user8>								<!-- num visible -->
+                        <copy src="bindings_list" trait="height" />
+                        <div  src="menu()" trait="user1" />
+                        <ceil>0</ceil>
+                     </user8>
+                  </rect>
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+      <rect name="bolt_on">
+         <locus>&true;</locus>
+         <zoom>75</zoom>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub>
+               <copy>12</copy> <!-- px -->
+               <mult src="content_space" trait="zoom" />
+               <div>100</div>
+               <floor>0</floor>
+            </sub>
+         </y>
+         <depth>1</depth>
+         <width>
+            <copy src="sibling()" trait="width" />
+            <mult>0.75</mult>
+         </width>
+         <height>64</height>
+         
+         <visible>
+            <copy src="ControlsMenu" trait="user0" /><eq>2</eq>
+            <and><not src="ControlsMenu" trait="user4" /></and>
+         </visible>
+         
+         <image name="endcap_l">
+            <depth>-1</depth>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename>Menus\NorthernUI\journal_bolt_on\corners.dds</filename>
+            <width>
+               <copy src="me()" trait="filewidth" />
+               <div>2</div>
+            </width>
+            <height><copy src="me()" trait="fileheight" /></height>
+            <x>0</x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+            </y>
+            <cropx>0</cropx>
+         </image>
+         <image name="endcap_r">
+            <depth>-1</depth>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename>Menus\NorthernUI\journal_bolt_on\corners.dds</filename>
+            <width>
+               <copy src="me()" trait="filewidth" />
+               <div>2</div>
+            </width>
+            <height><copy src="me()" trait="fileheight" /></height>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+            </x>
+            <y><copy src="sibling()" trait="y" /></y>
+            <cropx><copy src="me()" trait="width" /></cropx>
+         </image>
+         <image name="edge_b">
+            <depth>-1</depth>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename>Menus\NorthernUI\journal_bolt_on\bottom_edge.dds</filename>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub>
+                  <copy src="sibling()" trait="width" />
+                  <mult>2</mult>
+               </sub>
+            </width>
+            <height><copy src="me()" trait="fileheight" /></height>
+            <x><copy src="sibling()" trait="width" /></x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+            </y>
+            <tile>&true;</tile>
+         </image>
+         <image name="fill">
+            <depth>-1</depth>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename>Menus\NorthernUI\cards\fill_black.dds</filename>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+               <sub  src="me()"     trait="x" />
+            </width>
+            <height>
+               <copy src="parent()"  trait="height" />
+               <sub  src="sibling()" trait="height" />
+            </height>
+            <x><copy src="sibling()" trait="x" /></x>
+            <y>0</y>
+            <tile>&true;</tile>
+         </image>
+         <image name="edge_l">
+            <depth>-1</depth>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename>Menus\NorthernUI\journal_bolt_on\vertical_edges.dds</filename>
+            <width>
+               <copy src="me()" trait="filewidth" />
+               <div>2</div>
+            </width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <sub  src="sibling(endcap_l)" trait="height" />
+            </height>
+            <x>0</x>
+            <y>0</y>
+            <tile>&true;</tile>
+         </image>
+         <image name="edge_r">
+            <depth>-1</depth>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename>Menus\NorthernUI\journal_bolt_on\vertical_edges.dds</filename>
+            <width>
+               <copy src="me()" trait="filewidth" />
+               <div>2</div>
+            </width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <sub  src="sibling(endcap_r)" trait="height" />
+            </height>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+            </x>
+            <y>0</y>
+            <cropx><copy src="me()" trait="width" /></cropx>
+            <tile>&true;</tile>
+         </image>
+         
+         <rect name="bolt_on_content">
+            <locus>&true;</locus>
+            <x><copy src="sibling(fill)" trait="x" /></x>
+            <y><copy src="sibling(fill)" trait="y" /></y>
+            <width> <copy src="sibling(fill)" trait="width" /></width>
+            <height><copy src="sibling(fill)" trait="height" /></height>
+            
+            <text name="controls_instructions">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <id>11</id>
+               <justify>&center;</justify>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>0</y>
+               <red>140</red>
+               <green>140</green>
+               <blue>140</blue>
+               <wrapwidth>
+                  <copy src="parent()" trait="width"/>
+                  <sub>32</sub>
+               </wrapwidth>
+            </text>
+            <text name="instructions_2">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="xxnStrings()" trait="_controlsMenuEscToCancel" /></string>
+               <justify>&center;</justify>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+               <red>140</red>
+               <green>140</green>
+               <blue>140</blue>
+            </text>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()" trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="controls_defaults_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>10</id>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_defaults" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            
+				<visible>
+					<copy src="ControlsMenu" trait="user0" /><eq>2</eq>
+               <and  src="ControlsMenu" trait="user4" />
+				</visible>
+            
+            <listindex>0</listindex>
+            <xleft> &next;</xleft>
+            <xright>&prev;</xright>
+         </rect>
+         <!-- <rect name="controls_bindings_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>278</_dxScanCode>
+            <id>9</id>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_controls" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            
+				<visible>
+					<copy src="ControlsMenu" trait="user0" /><eq>1</eq>
+				</visible>
+            
+            <listindex>1</listindex>
+            <xleft> &next;</xleft>
+            <xright>&prev;</xright>
+         </rect> -->
+         <rect name="controls_exit_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>1</id>
+            <target>&true;</target>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            
+				<visible>
+					<copy src="ControlsMenu" trait="user0" /><eq>1</eq>
+               <or>
+                  <copy src="ControlsMenu" trait="user0" /><eq>2</eq>
+                  <and  src="ControlsMenu" trait="user4" />
+               </or>
+				</visible>
+            
+            <_strings_1><copy src="strings()" trait="_exit" /></_strings_1>
+            <_strings_2><copy src="strings()" trait="_return" /></_strings_2>
+            <string>
+               <copy src="menu()"    trait="user0" />
+               <copy src="strings()" trait="_return" />
+            </string>
+            
+				<clicksound>2</clicksound>
+            <listindex>3</listindex>
+            <xleft> &next;</xleft>
+            <xright>&prev;</xright>
+         </rect>
+      </rect>
+   </rect>
+	
+   <template name="controls_template">
+		<rect name="controls_template_item">
+			<clips>&true;</clips>
+			<locus>&true;</locus>
+			<target>&true;</target>
+			<width><copy src="parent()" trait="width" /></width>
+			<height><copy src="menu()" trait="user1" /></height> <!-- executable sets it to this anyway -->
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex"/>
+				<mult src="me()" trait="height"/>
+			</y>
+			<depth>1</depth>
+			
+         <!-- executable copies these from the root tile. just bizarre -->
+			<red></red>
+			<green></green>
+			<blue></blue>
+
+			<listindex><copy src="me()" trait="user0" /></listindex>
+			<user0></user0>		<!-- index -->
+			<user1></user1>		<!-- label string -->
+			<user2>				<!-- x-position around which to center button -->
+				<copy src="parent()" trait="width"/>
+				<sub>64</sub>
+			</user2>
+			<user3>key</user3>	<!-- button string (PC only) -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>&true;</xdefault>
+			<xlist>&xitem;</xlist>
+			<xup>  &prev;</xup>
+			<xdown>&next;</xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="controls_vertical_scroll" trait="user8"/>
+					<div> 2</div>
+					<ceil>0</ceil>
+				</sub>
+				<add>1</add>
+			</xscroll>
+         
+         <_color>
+            <copy>140</copy>
+            <max>
+               <copy>255</copy>
+               <onlyif>
+                  <copy src="me()" trait="mouseover" /><eq>1</eq>
+               </onlyif>
+            </max>
+         </_color>
+
+			<text name="controls_template_label">
+				<clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<depth>3</depth>
+				<alpha>255</alpha>
+				<string><copy src="parent()" trait="user1" /></string>
+				<red>  <copy src="parent()" trait="_color" /></red>
+				<green><copy src="parent()" trait="_color" /></green>
+				<blue> <copy src="parent()" trait="_color" /></blue>
+				<x>0</x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+			</text>
+			
+			<text name="controls_template_button">
+				<clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<depth>3</depth>
+				<red>  <copy src="parent()" trait="_color" /></red>
+				<green><copy src="parent()" trait="_color" /></green>
+				<blue> <copy src="parent()" trait="_color" /></blue>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub  src="me()"     trait="width" />
+               <sub>2</sub>
+				</x>
+				<y><copy src="sibling()" trait="y" /></y>
+				<string><copy src="parent()" trait="user3" /></string>
+			</text>
+		</rect>
+	</template>
+	
+</menu>
+
+<!--====================================================================================================-->
+<!--====================================================================================================-->

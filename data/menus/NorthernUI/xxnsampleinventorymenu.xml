@@ -1,0 +1,219 @@
+<!-- Data\menus\NorthernUI\xxnsampleinventorymenu.xml -->
+<menu name="XXNSampleInventoryMenu">
+   <class> &AlchemyMenu; </class>
+   <stackingtype>&no_click_past;</stackingtype>
+   <alpha>0</alpha>
+   <locus>&true;</locus>
+   <x>0</x>
+   <y>0</y>
+   <menufade>0.25</menufade>
+   
+   <_listItemHeight>32</_listItemHeight>
+   
+   <rect name="background">
+      <id>0</id>
+      <locus>&true;</locus>
+      <x>128</x>
+      <y>0</y>
+      <width>512</width>
+      <height>
+         <copy src="screen()" trait="height" />
+         <sub  src="bottom"   trait="height" />
+         <sub  src="me()"     trait="y" />
+      </height>
+      
+      <_scrollbarMargin>8</_scrollbarMargin>
+      
+      <rect name="list_window">
+         <locus>&true;</locus>
+         <clipwindow>&true;</clipwindow>
+         <x>32</x>
+         <y>32</y>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub>
+               <copy src="parent()" trait="_scrollbarMargin" />
+               <mult>2</mult>
+               <add    src="list_scrollbar" trait="width" />
+               <onlyif src="list_scrollbar" trait="visible" />
+            </sub>
+         </width>
+         <height> <!-- fill parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+         <rect name="list_container">
+            <id>1</id>
+            <locus>&true;</locus>
+            <x>0</x>
+            <y> <!-- handle panel scrolling -->
+               <copy src="list_scrollbar" trait="user7"/>
+               <mult src="XXNSampleInventoryMenu" trait="_listItemHeight" />
+               <mult>-1</mult>
+               <add>-8</add>
+            </y>
+            <width> <!-- fill available space -->
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+            </width>
+            
+            <!-- TEMPLATE INSERTION POINT: inventory_list_item_template -->
+         </rect>
+      </rect>
+      <rect name="list_scrollbar">
+         <include src="vertical_scroll.xml"/>
+         <id>2</id>
+         <x>
+            <copy src="sibling()" trait="width"/>
+            <add  src="parent()"  trait="_scrollbarMargin" />
+         </x>
+         <y><copy src="sibling()" trait="y" /></y>
+         <height><copy src="sibling()" trait="height" /></height>
+         <depth>20</depth>
+         <target>&true;</target>
+         <user1>0</user1> <!-- minimum range value -->
+         <user2>
+            <copy src="list_container" trait="child_count" />
+            <sub>
+               <copy src="me()" trait="height" />
+               <div  src="XXNSampleInventoryMenu" trait="_listItemHeight" />
+               <floor>0</floor>
+            </sub>
+            <add>
+               <copy>1</copy>
+               <onlyif>
+                  <copy src="me()" trait="height" />
+                  <mod  src="XXNSampleInventoryMenu" trait="_listItemHeight" />
+                  <neq>0</neq>
+               </onlyif>
+            </add>
+         </user2>
+         <user3> 1</user3> <!-- step distance -->
+         <user4> 6</user4> <!-- jump distance -->
+         <user5> 0</user5> <!-- starting value -->
+         <user6> 3</user6> <!-- marker's id - must change to enable dragging -->
+         <!-- user7 = current value -->
+         <user8> <!-- How many items are visible at once -->
+            <copy src="me()" trait="height" />
+            <div  src="XXNSampleInventoryMenu" trait="_listItemHeight" />
+            <ceil>0</ceil>
+         </user8>
+      </rect>
+   </rect>
+   <rect name="bottom">
+      <locus>&true;</locus>
+      <x>0</x>
+      <y>
+         <copy src="screen()" trait="height" />
+         <sub  src="me()"     trait="height" />
+      </y>
+      <width><copy src="screen()" trait="width" /></width>
+      <height>80</height>
+      
+      <rect name="button_close">
+         <id>5</id>
+         <clicksound>2</clicksound>
+         <x>0</x>
+         <y>0</y>
+         
+         <user1>&true;</user1> <!-- enable state -->
+         
+         <include src="NorthernUI\buttons\basic_rounded.xml"/>
+         
+         <target><copy src="me()"      trait="user1" /></target>
+         <string><copy src="strings()" trait="_exit"/></string>
+         <_useHoverBehavior>&true;</_useHoverBehavior>
+         <_paddingX>16</_paddingX>
+         <_paddingY> 8</_paddingY>
+      </rect>
+      <rect name="item_count">
+         <id>4</id>
+         <locus>&true;</locus>
+         <x> <!-- to right of previous; spacing 64px -->
+            <copy src="sibling()" trait="x" />
+            <add>
+               <copy   src="sibling()" trait="width" />
+               <add>64</add>
+               <onlyif src="sibling()" trait="visible" />
+            </add>
+         </x>
+         <y>0</y>
+         
+         <text name="text">
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="parent()" trait="user0" /></string>
+            <font>1</font>
+            <red>255</red><green>255</green><blue>255</blue>
+         </text>
+      </rect>
+   </rect>
+   
+   <template name="inventory_list_item_template">
+		<rect name="list_item">
+			<locus>&true;</locus>
+         <clips>&true;</clips>
+			<target>&true;</target>
+			<depth> 1 </depth>
+			<visible>
+				<copy src="me()" trait="y" /><gte>0</gte>
+				<and>
+					<copy src="me()" trait="y" />
+					<add>20</add>
+					<lt   src="parent()" trait="height" />
+				</and>
+            <copy>&true;</copy>
+			</visible>
+			<x>0</x>
+			<y> <!-- listindex * height -->
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<width><copy src="parent()" trait="width"/></width>
+			<height><copy src="XXNSampleInventoryMenu" trait="_listItemHeight" /></height>
+         
+         <listindex>0</listindex> <!-- list position index; set by code -->
+			<user0></user0> <!-- effect description string -->
+			<user1></user1> <!-- icon pathname -->
+         
+			<image name="icon">
+            <clips>&true;</clips>
+				<filename><copy src="parent()" trait="user6" /></filename>
+				<zoom>-1</zoom>
+				<width> 32</width>
+				<height>32</height>
+				<x>5</x>
+				<y> <!-- center within parent; offset down by 2px -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+					<add>2</add>
+				</y>
+			</image>
+			<text name="name">
+            <clips>&true;</clips>
+            <font>3</font>
+				<string><copy src="parent()" trait="user1" /></string>
+				<wrapwidth>
+					<copy src="parent()" trait="width" />
+					<sub  src="me()"     trait="x" />
+				</wrapwidth>
+				<x> <!-- 13px after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="height" />
+               <add>13</add>
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+				<red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+				<alpha>255</alpha>
+			</text>
+		</rect>
+	</template>
+</menu>

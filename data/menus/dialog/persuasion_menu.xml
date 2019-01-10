@@ -1,0 +1,838 @@
+<!-- persuasion_menu.xml -->
+<menu name="PersuasionMenu">
+	<class> &PersuasionMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<visible> &true; </visible>
+	<alpha>	0 </alpha>
+	<depth>0</depth>
+	<x> 0 </x>
+	<y> 100 </y>
+	<locus> &true; </locus>
+	<user0> 1 </user0>
+	<user1> 2 </user1>
+	<user2> 0.75 </user2>
+	<user3> 0.50 </user3>
+	<user4> 100 </user4>
+	<menufade> 0.75 </menufade>
+	<_line_height> 48 </_line_height>
+	<_number_of_lines> 5 </_number_of_lines>
+	
+	<xbuttona> <ref src="persuasion_start_button" trait="clicked"/> </xbuttona>
+	<xbuttonb> <ref src="persuasion_exit_button" trait="clicked"/> </xbuttonb>
+	<xbuttonx> <ref src="persuasion_rotate_button" trait="clicked"/> </xbuttonx>
+	<xbuttony> <ref src="persuasion_bribe_button" trait="clicked"/> </xbuttony>
+   
+   <!--
+      USER24: If true, NorthernUI overrides for keyboard navigation will be 
+      enabled when the minigame is active. The A button will route to a click 
+      on the minigame, and the directional navigation keys will be forcibly 
+      routed to highlight a minigame quadrant (by snapping the in-game cursor 
+      to that quadrant's centerpoint).
+   -->
+   <user24>&true;</user24>
+	
+   <rect name="header">
+      <locus>&true;</locus>
+      <x><copy src="minigame_readout" trait="x" /></x>
+      <y>
+         <copy src="screen()" trait="y" />
+         <add>
+            <copy src="screen()" trait="cropy" />
+            <mult>2</mult>
+         </add>	
+         <sub>50</sub>
+      </y>
+      <width><copy src="minigame_readout" trait="width" /></width>
+      <height>
+         <copy   src="child()" trait="height" />
+         <onlyif src="child()" trait="visible" />
+         <onlyif>
+            <copy src="child()" trait="alpha" /><gt>0</gt>
+         </onlyif>
+         <add    src="child()" trait="y" />
+      </height>
+      
+      <image name="fade">
+         <alpha>96</alpha>
+         <filename>Menus\NorthernUI\box_shadows\circle64.dds</filename>
+         <zoom>-1</zoom>
+         <depth>-0.5</depth>
+         <user0>
+            <copy src="persuasion_NPC_name" trait="width" />
+            <max  src="persuasion_no_play_text" trait="width" />
+         </user0>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub src="me()"      trait="width" />
+            <div>2</div>
+            <sub>16</sub>
+         </x>
+         <y>-4</y>
+         <width>
+            <copy src="me()" trait="user0" />
+            <add>80</add>
+         </width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <add>8</add>
+         </height>
+      </image>
+      <text name="persuasion_NPC_name">
+         <include src="NorthernUI\fonts\normal.xml" />
+         <string></string>
+         <id>28</id>
+         <justify>&center;</justify>
+         <red>255</red> 
+         <green>255</green> 
+         <blue>255</blue> 
+         <x>
+            <copy src="parent()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>0</y>
+      </text>
+      <text name="persuasion_no_play_text"> <!-- "Disposition Maxed" -->
+         <include src="NorthernUI\fonts\normal.xml" />
+         <id>27</id>
+         <visible>&true;</visible>
+         <string><copy src="strings()" trait="_cannotpersuade" /></string>
+         <justify>&center;</justify>
+         <red>96</red> 
+         <green>224</green> 
+         <blue>80</blue> 
+         <alpha>0</alpha> <!-- executable uses this, not "visible" -->
+         <x><copy src="sibling()" trait="x" /></x>
+         <y>
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+      </text>
+   </rect>
+	<rect name="minigame_readout">
+      <locus>&true;</locus>
+      <x>
+			<copy src="screen()" trait="x" />
+			<add>
+				<copy src="screen()" trait="cropx" />
+				<mult>2</mult>
+			</add>
+         <add>40</add> <!-- built into vanilla NIF; not into ours -->
+      </x>
+      <y>
+         <copy src="screen()" trait="y" />
+         <add>
+            <copy src="screen()" trait="cropy" />
+            <mult>2</mult>
+         </add>	
+         <sub>50</sub>
+         
+         <copy src="sibling()" trait="y" />
+         <add  src="sibling()" trait="height" />
+         <add>24</add>
+      </y>
+      <width> 350</width>
+      <height>350</height>
+      <depth>3</depth>
+      
+      <image name="blackback">
+         <depth>-500</depth> <!-- each depth unit is 0.008 depth3d units; the model has nodes as far as -2 depth3d units (250 depth units) back  -->
+         <filename>Menus\NorthernUI\persuade\blackback.dds</filename>
+         <alpha>96</alpha>
+         <x>0</x>
+         <y>0</y>
+         <width><copy src="me()" trait="filewidth" /></width>
+         <height><copy src="me()" trait="fileheight" /></height>
+      </image>
+      <text name="admire">
+         <locus>&true;</locus>
+         <include src="NorthernUI\fonts\normal.xml" />
+         <justify>&center;</justify>
+         <x>
+            <copy src="parent()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>80</y>
+         <red>255</red><blue>255</blue><green>255</green>
+         <string><copy src="xxnStrings()" trait="_persuadeTypeAdmire" /></string>
+         
+         <image name="fade">
+            <alpha>80</alpha>
+            <filename>Menus\NorthernUI\box_shadows\circle64.dds</filename>
+            <zoom>-1</zoom>
+            <depth>-0.5</depth>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>-2</div>
+               <sub>16</sub>
+            </x>
+            <y>-2</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <add>32</add>
+            </width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <add>4</add>
+            </height>
+         </image>
+      </text>
+      <text name="joke">
+         <locus>&true;</locus>
+         <include src="NorthernUI\fonts\normal.xml" />
+         <justify>&center;</justify>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub>88</sub>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <red>255</red><blue>255</blue><green>255</green>
+         <string><copy src="xxnStrings()" trait="_persuadeTypeJoke" /></string>
+         
+         <image name="fade">
+            <alpha>80</alpha>
+            <filename>Menus\NorthernUI\box_shadows\circle64.dds</filename>
+            <zoom>-1</zoom>
+            <depth>-0.5</depth>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>-2</div>
+               <sub>16</sub>
+            </x>
+            <y>-2</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <add>32</add>
+            </width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <add>4</add>
+            </height>
+         </image>
+      </text>
+      <text name="coerce">
+         <locus>&true;</locus>
+         <include src="NorthernUI\fonts\normal.xml" />
+         <justify>&center;</justify>
+         <x>
+            <copy src="parent()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub>80</sub>
+            <sub  src="me()" trait="height" />
+         </y>
+         <red>255</red><blue>255</blue><green>255</green>
+         <string><copy src="xxnStrings()" trait="_persuadeTypeCoerce" /></string>
+         
+         <image name="fade">
+            <alpha>80</alpha>
+            <filename>Menus\NorthernUI\box_shadows\circle64.dds</filename>
+            <zoom>-1</zoom>
+            <depth>-0.5</depth>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>-2</div>
+               <sub>16</sub>
+            </x>
+            <y>-2</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <add>32</add>
+            </width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <add>4</add>
+            </height>
+         </image>
+      </text>
+      <text name="boast">
+         <locus>&true;</locus>
+         <include src="NorthernUI\fonts\normal.xml" />
+         <justify>&center;</justify>
+         <x>88</x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <red>255</red><blue>255</blue><green>255</green>
+         <string><copy src="xxnStrings()" trait="_persuadeTypeBoast" /></string>
+         
+         <image name="fade">
+            <alpha>80</alpha>
+            <filename>Menus\NorthernUI\box_shadows\circle64.dds</filename>
+            <zoom>-1</zoom>
+            <depth>-0.5</depth>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>-2</div>
+               <sub>16</sub>
+            </x>
+            <y>-2</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <add>32</add>
+            </width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <add>4</add>
+            </height>
+         </image>
+      </text>
+      
+      <nif name="Gradient_25">
+         <id>16</id>
+         <target> &true; </target>
+         <filename>NorthernUI\persuade\25.nif</filename>
+         <visible> &true; </visible>
+         <alpha> 255 </alpha>
+         <x>0</x>
+         <y>0</y>
+         <user0>1</user0>
+         <animation>
+            <copy src="me()" trait="user0"/>
+            <copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+         </animation>
+         <_animation_1> boast_to_admire </_animation_1>
+         <_animation_2> admire_to_joke </_animation_2>
+         <_animation_3> joke_to_bully </_animation_3>
+         <_animation_4> bully_to_boast </_animation_4>
+      </nif>
+      <nif name="Gradient_50">
+         <id>17</id>
+         <target> &true; </target>
+         <filename>NorthernUI\persuade\50.nif</filename>
+         <visible> &true; </visible>
+         <alpha> 255 </alpha>
+         <x>0</x>
+         <y>0</y>
+         <user0>1</user0>
+         <animation>
+            <copy src="me()" trait="user0"/>
+            <copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+         </animation>
+         <_animation_1> boast_to_admire </_animation_1>
+         <_animation_2> admire_to_joke </_animation_2>
+         <_animation_3> joke_to_bully </_animation_3>
+         <_animation_4> bully_to_boast </_animation_4>
+      </nif>
+      <nif name="Gradient_75">
+         <id>18</id>
+         <target> &true; </target>
+         <filename>NorthernUI\persuade\75.nif</filename>
+         <visible> &true; </visible>
+         <alpha> 255 </alpha>
+         <x>0</x>
+         <y>0</y>
+         <user0>1</user0>
+         <animation>
+            <copy src="me()" trait="user0"/>
+            <copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+         </animation>
+         <_animation_1> boast_to_admire </_animation_1>
+         <_animation_2> admire_to_joke </_animation_2>
+         <_animation_3> joke_to_bully </_animation_3>
+         <_animation_4> bully_to_boast </_animation_4>
+      </nif>
+      <nif name="Gradient_100">
+         <id>19</id>
+         <target> &true; </target>
+         <filename>NorthernUI\persuade\100.nif</filename>
+         <visible> &true; </visible>
+         <alpha> 255 </alpha>
+         <x>0</x>
+         <y>0</y>
+         <user0>1</user0>
+         <animation>
+            <copy src="me()" trait="user0"/>
+            <copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+         </animation>
+         <_animation_1> boast_to_admire </_animation_1>
+         <_animation_2> admire_to_joke </_animation_2>
+         <_animation_3> joke_to_bully </_animation_3>
+         <_animation_4> bully_to_boast </_animation_4>
+      </nif>
+      <nif name="Dimmer_1">
+         <id>20</id>
+         <target> &true; </target>
+         <filename>NorthernUI\persuade\dimmer.nif</filename>
+         <visible> &true; </visible>
+         <alpha> 0 </alpha>
+         <x>0</x>
+         <y>0</y>
+         <user0>1</user0>
+         <animation>
+            <copy src="me()" trait="user0"/>
+            <copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+         </animation>
+         <_animation_1> dimer_admire </_animation_1>
+         <_animation_2> dimer_joke </_animation_2>
+         <_animation_3> dimer_coerce </_animation_3>
+         <_animation_4> dimer_boast </_animation_4>
+      </nif>
+      <nif name="Dimmer_2">
+         <id>21</id>
+         <target> &true; </target>
+         <filename>NorthernUI\persuade\dimmer.nif</filename>
+         <visible> &true; </visible>
+         <alpha> 0 </alpha>
+         <x>0</x>
+         <y>0</y>
+         <user0>2</user0>
+         <animation>
+            <copy src="me()" trait="user0"/>
+            <copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+         </animation>
+         <_animation_1> dimer_admire </_animation_1>
+         <_animation_2> dimer_joke </_animation_2>
+         <_animation_3> dimer_coerce </_animation_3>
+         <_animation_4> dimer_boast </_animation_4>
+      </nif>
+      <nif name="Dimmer_3">
+         <id>22</id>
+         <target> &true; </target>
+         <filename>NorthernUI\persuade\dimmer.nif</filename>
+         <visible> &true; </visible>
+         <alpha> 0 </alpha>
+         <x>0</x>
+         <y>0</y>
+         <user0>3</user0>
+         <animation>
+            <copy src="me()" trait="user0"/>
+            <copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+         </animation>
+         <_animation_1> dimer_admire </_animation_1>
+         <_animation_2> dimer_joke </_animation_2>
+         <_animation_3> dimer_coerce </_animation_3>
+         <_animation_4> dimer_boast </_animation_4>
+      </nif>
+      <nif name="Dimmer_4">
+         <id>23</id>
+         <target> &true; </target>
+         <filename>NorthernUI\persuade\dimmer.nif</filename>
+         <visible> &true; </visible>
+         <alpha> 0 </alpha>
+         <x>0</x>
+         <y>0</y>
+         <user0>4</user0>
+         <animation>
+            <copy src="me()" trait="user0"/>
+            <copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+         </animation>
+         <_animation_1> dimer_admire </_animation_1>
+         <_animation_2> dimer_joke </_animation_2>
+         <_animation_3> dimer_coerce </_animation_3>
+         <_animation_4> dimer_boast </_animation_4>
+      </nif>
+      <nif name="Gradient_image">
+         <id>1</id>
+         <target> &true; </target>
+         <filename>NorthernUI\persuade\frame_and_selector.nif</filename>
+         <visible> &true; </visible>
+         <locus> &true; </locus>
+         <alpha> 255 </alpha>
+         <x>0</x>
+         <y>0</y>
+         <user0>9</user0>
+         <user1> 1 </user1>
+         <user2>0.0</user2>
+         <animation>
+            <copy src="me()" trait="user0" />
+            <copy src="me()" trait="_animation_" />
+         </animation>
+         <_animation_1> admire </_animation_1>
+         <_animation_2> joke </_animation_2>
+         <_animation_3> coerce </_animation_3>
+         <_animation_4> boast </_animation_4>
+         
+         <!-- These traits are used for bounds/mouse checking on the minigame. 
+              Changes to their values will not be detected; use constants or 
+              constexprs.
+              
+              The mouse counts as being on the minigame if it's within the 
+              outer radius and outside of the inner radius. Both radii are 
+              fixed on the same centerpoint.
+         -->
+         <user6> 38</user6> <!-- minigame inner radius -->
+         <user7>175</user7> <!-- minigame outer radius -->
+         <user8> <!-- minigame centerpoint x (screen-relative) -->
+            <copy src="me()"     trait="x" />
+            <add  src="parent()" trait="x" />
+            <add  src="menu()"   trait="x" />
+            <add>175</add>
+         </user8>
+         <user9> <!-- minigame centerpoint y (screen-relative) -->
+            <copy src="me()"     trait="y" />
+            <add  src="parent()" trait="y" />
+            <add  src="menu()"   trait="y" />
+            <add>175</add>
+         </user9>
+         
+         <!-- apparently unused; no easily found references in the executable: -->
+         <user10>66</user10> <!-- unknown -->
+         <user11>32</user11> <!-- unknown -->
+      </nif>
+   </rect>
+   <text name="persuasion_disposition_text"> <!-- current disposition, from 0 to 100 -->
+      <include src="NorthernUI\fonts\normal.xml" />
+		<id>10</id>
+		<string>100</string>
+		<justify>&center;</justify>
+		<red>255</red>
+		<green>255</green>
+		<blue>255</blue>
+		<x>
+			<copy src="minigame_readout" trait="width" />
+			<div>2</div>
+			<add  src="minigame_readout" trait="x" />
+		</x>
+		<y>
+			<copy src="minigame_readout" trait="height" />
+			<sub  src="me()" trait="height" />
+			<div>2</div>
+			<add  src="minigame_readout" trait="y" />
+		</y>
+		<depth>10</depth>
+	</text>
+   
+   
+   <rect name="buttons">
+      <locus>&true;</locus>
+      <x>
+         <copy src="minigame_readout" trait="width" />
+         <sub  src="me()" trait="width" />
+         <div>2</div>
+         <add  src="minigame_readout" trait="x" />
+      </x>
+      <y>
+			<copy   src="minigame_readout" trait="height" />
+			<add    src="minigame_readout" trait="y" />
+         <add>24</add>
+      </y>
+      <width><copy src="minigame_readout" trait="width" /></width>
+      <height>
+         <copy   src="child()" trait="height" />
+         <onlyif src="child()" trait="visible" />
+         <add    src="child()" trait="y" />
+      </height>
+      
+      <_entrySpacing>16</_entrySpacing>
+      
+      <image name="top_border">
+         <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+         <tile>&true;</tile>
+         <width> <copy src="parent()" trait="width" /></width>
+         <height><copy src="me()"     trait="fileheight" /></width>
+         <x>0</x>
+         <y>0</y>
+      </image>
+      <image name="blur">
+         <alpha>192</alpha>
+         <filename>Menus\NorthernUI\box_shadows\semicircle_down_128.dds</filename>
+         <zoom>-1</zoom>
+         <depth>-0.5</depth>
+         <x>0</x>
+         <y><copy src="sibling()" trait="height" /></y>
+         <width>
+            <copy src="parent()" trait="width" />
+         </width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <add  src="me()"     trait="y" />
+            <!-- <add>160</add> -->
+            <mult>1.5</mult>
+         </height>
+      </image>
+      
+      <rect name="persuasion_start_button">
+         <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+         <_dxScanCode>276</_dxScanCode>
+         <id>26</id>
+         <!-- "visible" managed by executable: set to false if disposition is maxed or we're already playing the minigame -->
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>16</y>
+         <clicksound>1</clicksound>
+         <string><copy src="strings()" trait="_start" /></string>
+         
+         <xdefault>5</xdefault>
+      </rect>
+      <rect name="persuasion_rotate_button">
+         <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+         <_dxScanCode>278</_dxScanCode>
+         <id>24</id>
+         <visible><copy src="me()" trait="user1" /></visible>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy   src="sibling()" trait="height" />
+            <add    src="parent()" trait="_entrySpacing" />
+            <onlyif src="sibling()" trait="visible" />
+            <add    src="sibling()" trait="y" />
+         </y>
+         <clicksound>1</clicksound>
+         <string><copy src="strings()" trait="_rotate" /></string>
+         
+         <xdefault>4</xdefault>
+         
+         <user1>&false;</user1> <!-- executable: set to true if we're playing the minigame and haven't rotated yet -->
+      </rect>
+      <rect name="direction_gamepad_mapping">
+         <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+         <_dxScanCode>9001</_dxScanCode>
+         <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+         <visible>
+            <not src="persuasion_start_button" trait="visible" />
+            <and src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            <and>
+               <copy src="persuasion_no_play_text" trait="alpha" />
+               <eq>0</eq>
+            </and>
+         </visible>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy   src="sibling()" trait="height" />
+            <add    src="parent()" trait="_entrySpacing" />
+            <onlyif src="sibling()" trait="visible" />
+            <add    src="sibling()" trait="y" />
+         </y>
+         <string><copy src="xxnStrings()" trait="_persuadeXboxMappingPickDirection" /></string>
+      </rect>
+      <rect name="select_gamepad_mapping">
+         <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+         <_dxScanCode>276</_dxScanCode>
+         <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+         <visible>
+            <not src="persuasion_start_button" trait="visible" />
+            <and src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            <and>
+               <copy src="persuasion_no_play_text" trait="alpha" />
+               <eq>0</eq>
+            </and>
+         </visible>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy   src="sibling()" trait="height" />
+            <add    src="parent()" trait="_entrySpacing" />
+            <onlyif src="sibling()" trait="visible" />
+            <add    src="sibling()" trait="y" />
+         </y>
+         <string><copy src="xxnStrings()" trait="_select" /></string>
+      </rect>
+      <rect name="persuasion_bribe_button">
+         <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+         <_dxScanCode>279</_dxScanCode>
+         <id>8</id>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy   src="sibling()" trait="height" />
+            <add    src="parent()" trait="_entrySpacing" />
+            <onlyif src="sibling()" trait="visible" />
+            <add    src="sibling()" trait="y" />
+         </y>
+         <string><copy src="strings()" trait="_bribe" /></string>
+         
+         <visible><copy src="me()" trait="user1" /></visible>
+         <user1>&true;</user1> <!-- executable: set to true if we can bribe the NPC -->
+      </rect>
+      <rect name="persuasion_exit_button">
+         <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+         <_dxScanCode>277</_dxScanCode>
+         <id>9</id>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy   src="sibling()" trait="height" />
+            <add    src="parent()" trait="_entrySpacing" />
+            <onlyif src="sibling()" trait="visible" />
+            <add    src="sibling()" trait="y" />
+         </y>
+         <string><copy src="strings()" trait="_done" /></string>
+         <target><copy src="me()" trait="user1" /></target>
+      </rect>
+   
+      <rect name="bribery">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y>
+            <copy   src="sibling()" trait="height" />
+            <add    src="parent()" trait="_entrySpacing" />
+            <onlyif src="sibling()" trait="visible" />
+            <add    src="sibling()" trait="y" />
+            <add    src="parent()" trait="_entrySpacing" />
+         </y>
+         <width><copy src="parent()" trait="width" /></width>
+         <height>
+            <copy src="child()" trait="height" />
+            <add  src="child()" trait="y" />
+         </height>
+         <visible><copy src="persuasion_bribe_button" trait="visible" /></visible>
+         
+         <text name="bribe_cost_label">
+            <id>5</id>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <justify>&center;</justify>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+            <red>140</red><blue>140</blue><green>140</green>
+            <string><copy src="xxnStrings()" trait="_persuadeBribeCostLabel" /></string>
+         </text>
+         <rect name="bribery_value">
+            <id>5</id>
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="height" />
+               <add  src="sibling()" trait="y" />
+            </y>
+            <width>
+               <copy src="child()" trait="width" />
+               <add  src="child()" trait="x" />
+            </width>
+            <height>
+               <copy src="child()" trait="height" />
+               <add  src="child()" trait="y" />
+            </height>
+            
+            <text name="cost">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <x>0</x>
+               <y>0</y>
+               <red>255</red><blue>255</blue><green>255</green>
+               <string><copy src="parent()" trait="user0" /></string>
+            </text>
+            <text name="gold_unit">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>6</add>
+               </x>
+               <y>0</y>
+               <red>255</red><blue>255</blue><green>255</green>
+               <string><copy src="strings()" trait="_septimsfor" /></string>
+            </text>
+            <text name="dispo_gain">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>6</add>
+               </x>
+               <y>0</y>
+               <red>255</red><blue>255</blue><green>255</green>
+               <string><copy src="parent()" trait="user1" /></string>
+            </text>
+            <text name="dispo_unit">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>6</add>
+               </x>
+               <y>0</y>
+               <red>255</red><blue>255</blue><green>255</green>
+               <string><copy src="strings()" trait="_dispositionbonus" /></string>
+            </text>
+         </rect>
+      </rect>
+   </rect>
+   
+   
+   
+	
+	<text name="persuasion_maxaward_words"> <!-- "Potential Increase:" -->
+		<string> <copy src="strings()" trait="_maxpersuasion"/> </string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> <copy src="persuasion_maxaward_text" trait="alpha"/> </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+			<add>120</add>
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+			<add>470</add>
+		</y>
+	</text>
+	<text name="persuasion_maxaward_text">
+		<depth>20 </depth>
+		<id> 15 </id>
+		<string>100</string>
+		<font> 2 </font>
+		<justify> &center; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="persuasion_maxaward_words" trait="x" />
+			<add>
+				<copy src="persuasion_maxaward_text" trait="width" />
+				<div>2</div>
+			</add>
+			<add><copy src="persuasion_maxaward_words" trait="width" /></add>
+			<add>10</add>
+		</x>
+		<y>
+			<copy src="persuasion_maxaward_words" trait="y" />
+		</y>
+		<locus> &true; </locus>
+	</text>
+	
+	<text name="persuasion_reaction_text">
+		<id>11</id>
+		<depth> 1 </depth>
+		<string></string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> 0 </alpha>
+		<x>
+			<copy src="screen()" trait="cropx" />
+			<add src="screen()" trait="cropx" />
+		</x>
+		<y>
+			<copy src="screen()" trait="cropy" />
+			<add src="screen()" trait="cropy" />
+		</y>
+	</text>
+</menu>

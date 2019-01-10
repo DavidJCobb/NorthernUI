@@ -1,0 +1,69 @@
+<!--<rect name="button">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <_label>Control Name</_label>
+   <_showText>&true;</_showText>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <target>&true;</target>
+   
+   <text name="text">
+      <depth>1</depth>
+      <visible><copy src="parent()" trait="_showText" /></visible>
+      <string><copy src="parent()" trait="_label" /></string>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <justify>&center;</justify>
+      <x>
+         <copy src="parent()" trait="width" />
+         <div>2</div>
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+         <add>2</add> <!-- HACK to compensate for font height -->
+      </y>
+      <red>255</red><green>255</green><blue>255</blue>
+   </text>
+   
+   <image name="flex_l">
+      <depth>0</depth>
+      <filename>Menus\NorthernUI\Buttons\basic.dds</filename>
+      <width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+      <height><copy src="me()" trait="fileheight" /><div>2</div></height>
+      <x>0</x>
+      <y>0</y>
+   </image>
+   <image name="flex_r">
+      <depth>0</depth>
+      <filename>Menus\NorthernUI\Buttons\basic.dds</filename>
+      <width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+      <height><copy src="me()" trait="fileheight" /><div>2</div></height>
+      <cropX> <copy src="me()" trait="width" /></cropX>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y>0</y>
+   </image>
+   <image name="flex_mid">
+      <depth>0</depth>
+      <filename>Menus\NorthernUI\Buttons\basic.dds</filename>
+      <width> <copy src="sibling(text)" trait="width" /></width>
+      <height><copy src="me()" trait="fileheight" /><div>2</div></height>
+      <cropY> <copy src="me()" trait="height" /></cropY>
+      <tile>&true;</tile>
+      <x><copy src="sibling(flex_l)" trait="width" /></x>
+      <y>0</y>
+   </image>
+<!--</rect>-->

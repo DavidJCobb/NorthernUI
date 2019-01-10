@@ -1,0 +1,174 @@
+<!-- gameplay_menu.xml -->
+<menu name="GameplayMenu">
+	<class> &GameplayMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade>0</explorefade>
+	
+	<xbuttonb><ref src="gameplay_return_button" trait="clicked" /></xbuttonb>
+	<xbuttony><ref src="gameplay_defaults_button" trait="clicked" /></xbuttony>
+	
+   <rect name="content_space">
+      <include src="NorthernUI/fragments/pause/base.xml" />
+      <rect name="content_box_2">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <rect name="column_right">
+            <locus>&true;</locus>
+            <width>
+               <copy src="parent()"  trait="width" />
+               <sub  src="pause_column_left" trait="x" />
+               <sub  src="pause_column_left" trait="width" />
+               <sub>16</sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <x>
+               <copy src="pause_column_left" trait="x" />
+               <add  src="pause_column_left" trait="width" />
+               <add>16</add>
+            </x>
+            <y>0</y><depth>10</depth>
+            
+            <!-- Submenu contents go here. -->
+            <rect name="options_pane">
+               <locus>&true;</locus>
+               <width>
+                  <copy src="parent()"  trait="width" />
+                  <min>450</min>
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+               <x>0</x>
+               <y>
+                  <copy src="pause_submenu_scrollbar" trait="user7" />
+                  <mult src="menu()" trait="_itemHeight" />
+                  <mult>-1</mult>
+               </y>
+               
+               <target>&false;</target>
+               <xdefault>&true;</xdefault>
+               <xlist>&xlist;</xlist>
+               
+               <rect name="option_difficulty">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <listindex><copy>0</copy></listindex> <!-- for some reason, this breaks if we don't use COPY -->
+                  <y><copy>0</copy></y> <!-- for some reason, this breaks if we don't use COPY -->
+                  <user11><copy src="strings()" trait="_difficulty" /></user11> <!-- label -->
+                  <user0>1</user0> <!-- slider ID -->
+                  <user1>2</user1> <!-- slider thumb ID -->
+                  <user2>10</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_subtitles_general">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_generalsubtitles" /></user11>
+                  <user0>3</user0> <!-- button ID -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_subtitles_dialogue">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_dialoguesubtitles" /></user11>
+                  <user0>4</user0> <!-- button ID -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_crosshair">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_crosshair" /></user11>
+                  <user0>5</user0> <!-- button ID -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_autosave_rest">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_saveonrest" /></user11>
+                  <user0>6</user0> <!-- button ID -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_autosave_wait">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_saveonwait" /></user11>
+                  <user0>7</user0> <!-- button ID -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_autosave_travel">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_saveontravel" /></user11>
+                  <user0>8</user0> <!-- button ID -->
+                  
+                  <xdown><ref src="gameplay_return_button" trait="mouseover" /></xdown>
+               </rect> <!-- /menuitem -->
+            </rect> <!-- /pane -->
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>16</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()" trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="gameplay_return_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>10</id>
+            <target>&true;</target>
+            <xdefault>&true;</xdefault>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_return" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            <xleft> <ref src="gameplay_defaults_button" trait="mouseover"/></xleft>
+            <xright><ref src="gameplay_defaults_button" trait="mouseover"/></xright>
+            <xup>   <ref src="option_autosave_travel"   trait="mouseover"/></xup>
+            
+            <!--
+               GameplayMenu has Menu-level mouseover and mouseout event handlers that 
+               do nothing but modify the "return" button's ALPHA trait when it gains 
+               and loses mouseover status. The ALPHA trait is set to either 0 or 255. 
+               As Bethesda's vanilla code used a "button" prefab that would be unaff-
+               ected by this change, the change is effectively pointless; however, it 
+               has the effect that non-rectangular, non-fully-opaque "return" buttons 
+               will display incorrectly.
+               
+               Setting the color traits to all-black will make this issue less appar-
+               ent for our design. However, our DLL also patches out the mouseover and 
+               mouseout handlers.
+            -->
+            <red>0</red>
+            <blue>0</blue>
+            <green>0</green>
+         </rect>
+         <rect name="gameplay_defaults_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>9</id>
+            <target>&true;</target>
+            <xdefault>&true;</xdefault>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_defaults" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            <xleft> <ref src="gameplay_return_button" trait="mouseover"/></xleft>
+            <xright><ref src="gameplay_return_button" trait="mouseover"/></xright>
+            <xup>   <ref src="option_autosave_travel" trait="mouseover"/></xup>
+         </rect>
+      </rect>
+   </rect>
+</menu>

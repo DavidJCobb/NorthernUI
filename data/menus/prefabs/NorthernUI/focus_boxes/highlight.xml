@@ -1,0 +1,45 @@
+<!--<rect name="focusbox">-->
+   <!-- DOCUMENTATION ---------------------------------------------- >
+      An underlay positioned on targetable elements that the mouse 
+      is currently over. Its size and position are set by the 
+      executable.
+      
+      The executable doesn't use the exact position or size of the 
+      target element. There appear to be hardcoded offsets, which 
+      may be intended to match the vanilla "focus box" graphics.
+   <!------------------------------------------------------------- -->
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <_paddingR>0</_paddingR>
+   <_paddingL>0</_paddingL>
+   <_paddingT>0</_paddingT>
+   <_paddingB>0</_paddingB>
+   <!-- Position, size, and depth are all set by the executable.  -->
+   
+   <image name="back">
+      <filename>Menus\NorthernUI\Shared\white.dds</filename>
+      <zoom>-1</zoom>
+      <depth>0</depth>
+      <width>
+         <copy src="parent()" trait="width" />
+         <add  src="parent()" trait="_paddingR" />
+      </width>
+      <height>
+         <copy src="parent()" trait="height" />
+         <add  src="parent()" trait="_paddingB" />
+      </width>
+      <x>
+         <copy src="parent()" trait="_paddingL" />
+         <mult>-1</mult>
+      </x>
+      <y>
+         <copy src="parent()" trait="_paddingT" />
+         <mult>-1</mult>
+      </y>
+      <alpha>64</alpha>
+      <tile>&true;</tile>
+   </image>
+<!--</rect>-->

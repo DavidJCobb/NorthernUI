@@ -1,0 +1,263 @@
+<!--<rect name="button">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <visible>&true;</visible>
+   <target>&true;</target>
+   <locus>&true;</locus>
+   <xdefault>&false;</xdefault>
+   <string>Button Text</string>
+   <include src="NorthernUI\fonts\normal.xml" />
+   
+   <_paddingX>16</_paddingX>
+   <_paddingY> 8</_paddingY>
+   
+   <_disabled>
+      <not src="me()" trait="target" />
+   </_disabled>
+   <_useHoverBehavior>&false;</_useHoverBehavior> <!-- off by default because focusboxes are a thing -->
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <zoom>50</zoom>
+   <_corners_1>Menus\NorthernUI\buttons\hd_rounded_corners.dds      </_corners_1>
+   <_corners_2>Menus\NorthernUI\buttons\hd_rounded_hover_corners.dds</_corners_2>
+   <_edgetb_1>Menus\NorthernUI\buttons\hd_rounded_edge_tb.dds      </_edgetb_1>
+   <_edgetb_2>Menus\NorthernUI\buttons\hd_rounded_hover_edge_tb.dds</_edgetb_2>
+   <_edgelr_1>Menus\NorthernUI\buttons\hd_rounded_edge_lr.dds      </_edgelr_1>
+   <_edgelr_2>Menus\NorthernUI\buttons\hd_rounded_hover_edge_lr.dds</_edgelr_2>
+   <_fill_1>Menus\NorthernUI\buttons\hd_rounded_fill.dds      </_fill_1>
+   <_fill_2>Menus\NorthernUI\buttons\hd_rounded_hover_fill.dds</_fill_2>
+   
+   <_imageIndex>
+      <copy>1</copy>
+      <max>
+         <copy>2</copy>
+         <onlyif>
+            <copy src="me()" trait="_useHoverBehavior" />
+            <and>
+               <copy src="me()" trait="mouseover" /><eq>1</eq>
+            </and>
+         </onlyif>
+      </max>
+   </_imageIndex>
+   
+   <_labelColor>
+      <copy>255</copy>
+      <onlyifnot src="me()" trait="_disabled" />
+      <add>
+         <copy>140</copy>
+         <onlyif src="me()" trait="_disabled" />
+      </add>
+   </_labelColor>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <width>
+      <copy src="child(text)" trait="width" />
+      <add  src="me()" trait="_paddingX" />
+      <add  src="me()" trait="_paddingX" />
+   </width>
+   <height>
+      <copy src="child(text)" trait="height" />
+      <add  src="me()" trait="_paddingY" />
+      <add  src="me()" trait="_paddingY" />
+   </height>
+   
+   <_textOffsetY>2</_textOffsetY> <!-- HACK to compensate for font height problem -->
+   
+   <image name="c_ul">
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <depth>-0.01</depth>
+      <filename>
+         <copy src="parent()" trait="_imageIndex" />
+         <copy src="parent()" trait="_corners_" />
+      </filename>
+      <width>
+         <copy src="me()" trait="filewidth" />
+         <div>2</div>
+      </width>
+      <height>
+         <copy src="me()" trait="fileheight" />
+         <div>2</div>
+      </height>
+      <x>0</x>
+      <y>0</y>
+   </image>
+   <image name="c_ur">
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <depth>-0.01</depth>
+      <filename><copy src="sibling()" trait="filename" /></filename>
+      <width> <copy src="sibling()" trait="width" /></width>
+      <height><copy src="sibling()" trait="height" /></height>
+      <cropX><copy src="me()" trait="width" /></cropX>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y>0</y>
+   </image>
+   <image name="c_ll">
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <depth>-0.01</depth>
+      <filename><copy src="sibling()" trait="filename" /></filename>
+      <width> <copy src="sibling()" trait="width" /></width>
+      <height><copy src="sibling()" trait="height" /></height>
+      <cropY><copy src="me()" trait="height" /></cropY>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+      </y>
+   </image>
+   <image name="c_lr">
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <depth>-0.01</depth>
+      <filename><copy src="sibling()" trait="filename" /></filename>
+      <width> <copy src="sibling()" trait="width" /></width>
+      <height><copy src="sibling()" trait="height" /></height>
+      <cropX><copy src="me()" trait="width" /></cropX>
+      <cropY><copy src="me()" trait="height" /></cropY>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+      </y>
+   </image>
+   <image name="e_t">
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <tile>&true;</tile>
+      <depth>-0.01</depth>
+      <filename>
+         <copy src="parent()" trait="_imageIndex" />
+         <copy src="parent()" trait="_edgetb_" />
+      </filename>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub  src="sibling(c_ul)" trait="width" />
+         <sub  src="sibling(c_ur)" trait="width" />
+      </width>
+      <height>
+         <copy src="me()" trait="fileheight" />
+         <div>2</div>
+      </height>
+      <x><copy src="sibling(c_ul)" trait="width" /></x>
+      <y>0</y>
+   </image>
+   <image name="e_b">
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <tile>&true;</tile>
+      <depth>-0.01</depth>
+      <filename><copy src="sibling()" trait="filename" /></filename>
+      <width> <copy src="sibling()" trait="width" /></width>
+      <height><copy src="sibling()" trait="height" /></height>
+      <cropY> <copy src="me()"      trait="height" /></cropY>
+      <x><copy src="sibling(c_ll)" trait="width" /></x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+      </y>
+   </image>
+   <image name="e_l">
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <tile>&true;</tile>
+      <depth>-0.01</depth>
+      <filename>
+         <copy src="parent()" trait="_imageIndex" />
+         <copy src="parent()" trait="_edgelr_" />
+      </filename>
+      <width>
+         <copy src="me()" trait="filewidth" />
+         <div>2</div>
+      </width>
+      <height>
+         <copy src="parent()" trait="height" />
+         <sub  src="sibling(c_ul)" trait="height" />
+         <sub  src="sibling(c_ll)" trait="height" />
+      </height>
+      <x>0</x>
+      <y><copy src="sibling(c_ul)" trait="height" /></y>
+   </image>
+   <image name="e_r">
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <tile>&true;</tile>
+      <depth>-0.01</depth>
+      <filename><copy src="sibling()" trait="filename" /></filename>
+      <width> <copy src="sibling()" trait="width" /></width>
+      <height><copy src="sibling()" trait="height" /></height>
+      <cropX> <copy src="me()"      trait="width" /></cropX>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y><copy src="sibling(c_ur)" trait="height" /></y>
+   </image>
+   <image name="fill">
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <tile>&true;</tile>
+      <depth>-0.01</depth>
+      <filename>
+         <copy src="parent()" trait="_imageIndex" />
+         <copy src="parent()" trait="_fill_" />
+      </filename>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub  src="sibling(c_ul)" trait="width" />
+         <sub  src="sibling(c_ur)" trait="width" />
+      </width>
+      <height>
+         <copy src="parent()" trait="height" />
+         <sub  src="sibling(c_ur)" trait="height" />
+         <sub  src="sibling(c_lr)" trait="height" />
+      </height>
+      <x><copy src="sibling(c_ul)" trait="width" /></x>
+      <y><copy src="sibling(c_ur)" trait="height" /></y>
+   </image>
+   
+   <_filename_1>Menus\NorthernUI\buttons\basic_rounded.dds</_filename_1>
+   <_filename_2>Menus\NorthernUI\buttons\basic_rounded_hover.dds</_filename_2>
+   <filename>
+      <copy>1</copy>
+      <add>
+         <copy>1</copy>
+         <onlyif>
+            <copy src="me()" trait="_useHoverBehavior" />
+            <and>
+               <copy src="me()" trait="mouseover" /><eq>1</eq>
+            </and>
+         </onlyif>
+      </add>
+      <copy   src="me()" trait="_filename_" />
+   </filename>
+   
+   <text name="text">
+      <depth>-0.005</depth>
+      <string><copy src="parent()" trait="string" /></string>
+      <include src="NorthernUI\fonts\small.xml" />
+      <justify>&center;</justify>
+      <x>
+         <copy src="parent()" trait="width" />
+         <div>2</div>
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+         <add  src="parent()" trait="_textOffsetY" />
+      </y>
+      <red>  <copy src="parent()" trait="_labelColor" /></red>
+      <green><copy src="parent()" trait="_labelColor" /></green>
+      <blue> <copy src="parent()" trait="_labelColor" /></blue>
+   </text>
+<!--</rect>-->

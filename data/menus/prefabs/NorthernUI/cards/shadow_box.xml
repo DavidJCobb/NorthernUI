@@ -1,0 +1,155 @@
+<!--<rect name="ornate_box"-->
+   <!--<rect name="shadow_box">-->
+      <locus>&true;</locus>
+      <depth>-2</depth>
+      <width>
+         <copy src="parent()" trait="width" />
+         <add>44</add>
+      </width>
+      <height>
+         <copy src="parent()" trait="height" />
+         <add>44</add>
+      </height>
+      <x>-22</x>
+      <y>-22</y>
+      
+      <_imgCorners>Menus\NorthernUI\box_shadows\boxbased_corners.dds</_imgCorners>
+      <_imgBorderH>Menus\NorthernUI\box_shadows\boxbased_edges_tb.dds</_imgBorderH>
+      <_imgBorderV>Menus\NorthernUI\box_shadows\boxbased_edges_lr.dds</_imgBorderV>
+      <user23>192</user23>
+      <zoom>300</zoom>
+      
+      <image name="c_tl">
+         <depth>0</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename><copy src="parent()" trait="_imgCorners" /></filename>
+         <cropx>0</cropx>
+         <cropy>0</cropy>
+         <width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+         <height><copy src="me()" trait="fileheight" /><div>2</div></height>
+         <alpha> <copy src="parent()" trait="user23" /></alpha>
+         <x>0</x>
+         <y>0</y>
+      </image>
+      <image name="c_tr">
+         <depth>0</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename><copy src="parent()" trait="_imgCorners" /></filename>
+         <cropx><copy src="me()" trait="width" /></cropx>
+         <cropy>0</cropy>
+         <width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+         <height><copy src="me()" trait="fileheight" /><div>2</div></height>
+         <alpha> <copy src="parent()" trait="user23" /></alpha>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+         </x>
+         <y>0</y>
+      </image>
+      <image name="c_bl">
+         <depth>0</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename><copy src="parent()" trait="_imgCorners" /></filename>
+         <cropx>0</cropx>
+         <cropy> <copy src="me()" trait="height" /></cropy>
+         <width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+         <height><copy src="me()" trait="fileheight" /><div>2</div></height>
+         <alpha> <copy src="parent()" trait="user23" /></alpha>
+         <x>0</x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+         </y>
+      </image>
+      <image name="c_br">
+         <depth>0</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename><copy src="parent()" trait="_imgCorners" /></filename>
+         <cropx> <copy src="me()" trait="width" /></cropx>
+         <cropy> <copy src="me()" trait="height" /></cropy>
+         <width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+         <height><copy src="me()" trait="fileheight" /><div>2</div></height>
+         <alpha> <copy src="parent()" trait="user23" /></alpha>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+         </y>
+      </image>
+      <image name="e_t">
+         <depth>0</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename><copy src="parent()" trait="_imgBorderH" /></filename>
+         <cropx>0</cropx>
+         <cropy>0</cropy>
+         <width>
+            <copy src="parent()"      trait="width" />
+            <sub  src="sibling(c_tl)" trait="width" />
+            <sub  src="sibling(c_tr)" trait="width" />
+         </width>
+         <height><copy src="me()" trait="fileheight" /><div>2</div></height>
+         <alpha> <copy src="parent()" trait="user23" /></alpha>
+         <x><copy src="sibling(c_tl)" trait="width" /></x>
+         <y>0</y>
+         <tile>&true;</tile>
+      </image>
+      <image name="e_b">
+         <depth>0</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename><copy src="parent()" trait="_imgBorderH" /></filename>
+         <cropx>0</cropx>
+         <cropy> <copy src="me()" trait="height" /></cropy>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub  src="sibling(c_bl)" trait="width" />
+            <sub  src="sibling(c_br)" trait="width" />
+         </width>
+         <height><copy src="me()" trait="fileheight" /><div>2</div></height>
+         <alpha> <copy src="parent()" trait="user23" /></alpha>
+         <x><copy src="sibling(c_tl)" trait="width" /></x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+         </y>
+         <tile>&true;</tile>
+      </image>
+      <image name="e_l">
+         <depth>0</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename><copy src="parent()" trait="_imgBorderV" /></filename>
+         <cropx>0</cropx>
+         <width> <copy src="me()" trait="filewidth" /><div>2</div></width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="sibling(c_tl)" trait="height" />
+            <sub  src="sibling(c_bl)" trait="height" />
+         </height>
+         <alpha> <copy src="parent()" trait="user23" /></alpha>
+         <x>0</x>
+         <y><copy src="sibling(c_tl)" trait="height" /></y>
+         <tile>&true;</tile>
+      </image>
+      <image name="e_r">
+         <depth>0</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename><copy src="parent()" trait="_imgBorderV" /></filename>
+         <cropx> <copy src="me()" trait="width" /></cropx>
+         <width> <copy src="me()" trait="filewidth" /><div>2</div></width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="sibling(c_tr)" trait="height" />
+            <sub  src="sibling(c_br)" trait="height" />
+         </height>
+         <alpha> <copy src="parent()" trait="user23" /></alpha>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()" trait="width" />
+         </x>
+         <y><copy src="sibling(c_tr)" trait="height" /></y>
+         <tile>&true;</tile>
+      </image>
+   <!--</rect>-->
+<!--</rect>-->

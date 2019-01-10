@@ -1,0 +1,946 @@
+<!-- dialog_menu.xml -->
+<menu name="DialogMenu">
+	<class> &DialogMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<visible> &true; </visible>
+	<alpha>	0 </alpha>
+	<depth> 1 </depth>
+	<x>0</x>
+	<y>0</y>
+	<locus> &true; </locus>
+	<user0> 1 </user0>
+	<user1> 2 </user1>
+	<user2> 0.75 </user2>
+	<user3> 0.50 </user3>
+	<menufade> 0.75 </menufade>
+	<_line_height>27</_line_height>
+   <_line_spacing>5</_line_spacing>
+	<_number_of_lines> 5 </_number_of_lines>
+	<user4>  </user4> <!-- speaker's name -->
+	
+	<xbuttonb><ref src="embedded_action_goodbye" trait="clicked" /></xbuttonb>
+	
+   <!-- NorthernUI by DavidJCobb: a Skyrim look-alike UI redesign for Oblivion. -->
+	<rect name="dialog_background">
+		<id>-1</id>
+		<target> &true; </target>
+		<alpha> 0 </alpha>
+		<width>
+			<copy src="screen()" trait="width" />
+		</width>
+		<height>
+			<copy src="screen()" trait="height" />
+		</height>
+	</rect>
+   
+   <rect name="dialog_topics"> <!-- speaker name and menu -->
+		<id>6</id>
+		<depth>1</depth>
+		<locus>&true;</locus>
+		<visible>&true;</visible>
+      <width> <copy src="child(background)" trait="width"/> </width>
+      <height><copy src="child(background)" trait="height"/></height>
+      <x> <!-- align right edge 32 units away from the screen -->
+         <copy src="screen()" trait="width"/>
+         <sub  src="screen()" trait="cropx"/>
+         <sub  src="me()"     trait="width"/>
+         <sub>32</sub>
+      </x>
+      <y> <!-- center on screen + 192 (to avoid covering speaker's face with their name) -->
+         <copy src="screen()" trait="height"/>
+         <sub  src="me()"     trait="height"/>
+         <div>2</div>
+         <add>192</add>
+      </x>
+		<user8>0</user8> <!-- mousewheel will "click" this value like the generic "clicked" -->
+      
+      <image name="background">
+         <filename>Menus/NorthernUI/Dialogue/dialogue_topics.dds</filename>
+         <x>0</x>
+         <y>0</y>
+         <width> <copy src="me()" trait="filewidth"/> </width>
+         <height><copy src="me()" trait="fileheight"/></height>
+         <alpha>178</alpha>
+         <depth>0</depth>
+      </image>
+      <text name="dialog_name"> <!-- speaker name -->
+         <string><copy src="DialogMenu" trait="user4"/></string>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+         <wrapwidth>200</wrapwidth>
+         <justify>&right;</justify>
+         <x>-64</x>
+         <y> <!-- vertically center -->
+            <copy src="parent()" trait="height"/>
+            <sub  src="me()"     trait="height"/>
+            <div>2</div>
+         </y>
+      </text>
+      
+      <rect name="dialog_topics_layout"> <!-- list of topics; name is referred to from afar -->
+			<x>44</x>
+			<y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+			<width>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="x" />
+         </width>
+			<height> <!-- line-height * 5 -->
+            <copy src="DialogMenu" trait="_line_height" />
+            <add  src="DialogMenu" trait="_line_spacing"/>
+            <mul>5</mul>
+         </height>
+			<clipwindow>&true;</clipwindow>
+			<locus>&true;</locus>
+         
+         <_item_count> <!-- Total number of items. -->
+            <copy src="child(prepend)"   trait="_item_count" />
+            <add  src="child(dialog_topics_scroll_pane)" trait="childcount" />
+            <add  src="child(append)"    trait="childcount" />
+         </_item_count>
+			
+         <!--
+            This element contains three list panes, which are displayed consecutively 
+            and which share a scrollbar; this gives the illusion of displaying a single 
+            list, with executable-generated list items in the middle. Keyboard navigat-
+            ion is set up so that moving off the edge of one list brings one to the 
+            adjacent list.
+            
+            Note that keyboard navigation can't move across lists intelligently. If the 
+            generated list items get initial focus (and I can't figure out how to change 
+            that yet) and you move up to the prepended list items, you will not always 
+            move from the first generated list item to the last prepended list item. 
+            Rather, you will move to the *default-focused list item* in the prepended 
+            list. This is determined by the relative values of the xdefault trait. That 
+            trait is some kind of prioritization system, but possibly only within indiv-
+            idual lists. Higher values have higher priority. (I wonder if this is how 
+            the game remembers which list item had focus, when moving back and forth 
+            across lists?)
+            
+            As such, the prepend and append lists need to have the XDEFAULT traits of 
+            their list items carefully managed: values should be in ascending order in 
+            prepend, and descending order in append. Again, this is assuming that the 
+            generated list has initial focus (which, again, I can't seem to adjust).
+         -->
+         <rect name="prepend">
+            <locus>&true;</locus>
+				<x>5</x>
+				<y> <!-- 0 - (scroll_top measured in items * line height) + (vertical center if extra room) -->
+					<copy>0</copy>
+					<sub  src="dialog_scroll_bar" trait="user7"/>
+               <mult>
+                  <copy src="DialogMenu" trait="_line_height" />
+                  <add  src="DialogMenu" trait="_line_spacing"/>
+               </mult>
+               <add> <!-- vertically center items if there's extra room -->
+                  <copy src="parent()"           trait="height" />
+                  <sub  src="me()"               trait="height" />
+                  <sub  src="menu()"             trait="_line_spacing" />
+                  <sub  src="sibling(dialog_topics_scroll_pane)" trait="height" />
+                  <sub  src="menu()"             trait="_line_spacing" />
+                  <sub  src="sibling(append)"    trait="height" />
+                  <div>2</div>
+                  <max>0</max>
+               </add>
+				</y>
+            <height>
+               <copy   src="child()" trait="height" />
+               <onlyif src="child()" trait="visible" />
+               <add    src="child()" trait="y" />
+            </height>
+            <_item_count> <!-- Total number of visible items. -->
+               <copy src="child(embedded_action_barter_items)"      trait="visible" />
+               <add  src="child(embedded_action_barter_magic)"      trait="visible" />
+               <add  src="child(embedded_action_repair)"            trait="visible" />
+               <add  src="child(embedded_action_recharge)"          trait="visible" />
+               <add  src="child(embedded_action_training)"          trait="visible" />
+               <add  src="child(embedded_action_persuade_minigame)" trait="visible" />
+               <sub  src="me()" trait="childcount" /> <!-- convert XML bools to standard bools after summing them -->
+            </_item_count>
+            
+            <target>&false;</target>
+            <xdefault>&true;</xdefault>
+            <xlist>&xlist;</xlist>
+				<xdown><ref src="sibling(dialog_topics_scroll_pane)" trait="mouseover" /></xdown>
+				<xscroll><ref src="dialog_scroll_bar" trait="user5" /></xscroll>
+            
+            <!-- items: -->
+            <rect name="embedded_action_barter_items">
+               <id>8</id>
+               <visible>&false;</visible> <!-- Executable overrides this and sets it to true, but doesn't ever set it to false. -->
+               <locus>&true;</locus>
+               <clips>&true;</clips>
+               <target>&true;</target>
+               <width><copy src="child(label)" trait="width" /></width>
+               <height>
+                  <copy   src="DialogMenu" trait="_line_height" />
+                  <onlyif src="me()"       trait="visible" />
+               </height>
+               <x>0</x>
+               <y> <!-- position after previous -->
+                  <copy>0</copy>
+                  <!--
+                  <add  src="sibling()"  trait="y" />
+                  <add  src="sibling()"  trait="height" />
+                  <add>
+                     <copy   src="DialogMenu" trait="_line_spacing"/>
+                     <onlyif src="sibling()"  trait="visible" />
+                  </add>
+                  --> <!-- breaks if used on first element -->
+               </y>
+               <red>
+                  <copy>144</copy>
+                  <max>
+                     <copy>192</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </red>
+               <green>
+                  <copy>64</copy>
+                  <max>
+                     <copy>96</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </green>
+               <blue>
+                  <copy>34</copy>
+                  <max>
+                     <copy>64</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </blue>
+               
+               <listindex>0</listindex>
+               <xdefault>&true;</xdefault>
+               <xdown>&next;</xdown>
+               <xscroll>
+                  <copy>0</copy>
+                  <sub> <!-- match up with scrollbar center -->
+                     <copy src="dialog_scroll_bar" trait="user8"/>
+                     <div>2</div>
+                     <ceil>0</ceil>
+                  </sub>
+                  <add>1</add>
+               </xscroll>
+               
+               <text name="label">
+                  <_string_1><copy src="xxnStrings()" trait="_dialogueMenuBarterItems01" /></_string_1>
+                  <_string_2><copy src="xxnStrings()" trait="_dialogueMenuBarterItems02" /></_string_2>
+               
+                  <string>
+                     <rand>2</rand>
+                     <copy src="me()" trait="_string_" />
+                  </string>
+                  
+                  <depth>4</depth>
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <clips>&true;</clips>
+                  <wrapwidth><copy src="dialog_topics_layout" trait="width" /></wrapwidth>
+                  <wraplines>1</wraplines>
+                  <x>0</x>
+                  <y>2</y>
+                  <red>  <copy src="parent()" trait="red" />  </red>
+                  <green><copy src="parent()" trait="green" /></green>
+                  <blue> <copy src="parent()" trait="blue" /> </blue>
+               </text>
+            </rect>
+            <rect name="embedded_action_barter_magic">
+               <id>16</id>
+               <visible>&false;</visible> <!-- Executable overrides this and sets it to true, but doesn't ever set it to false. -->
+               <locus>&true;</locus>
+               <clips>&true;</clips>
+               <target>&true;</target>
+               <width><copy src="child(label)" trait="width" /></width>
+               <height>
+                  <copy   src="DialogMenu" trait="_line_height" />
+                  <onlyif src="me()"       trait="visible" />
+               </height>
+               <x>0</x>
+               <y> <!-- position after previous -->
+                  <copy src="sibling()"  trait="y" />
+                  <add  src="sibling()"  trait="height" />
+                  <add>
+                     <copy   src="DialogMenu" trait="_line_spacing"/>
+                     <onlyif src="sibling()"  trait="visible" />
+                  </add>
+               </y>
+               <red>
+                  <copy>144</copy>
+                  <max>
+                     <copy>192</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </red>
+               <green>
+                  <copy>64</copy>
+                  <max>
+                     <copy>96</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </green>
+               <blue>
+                  <copy>34</copy>
+                  <max>
+                     <copy>64</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </blue>
+               
+               <listindex>1</listindex>
+               <xdefault>6</xdefault>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               <xscroll>
+                  <copy src="sibling()" trait="xscroll" />
+                  <add>
+                     <copy>1</copy>
+                     <onlyif src="sibling()" trait="visible" />
+                  </add>
+               </xscroll>
+               
+               <text name="label">
+                  <_string_1><copy src="xxnStrings()" trait="_dialogueMenuBarterMagic01" /></_string_1>
+                  <_string_2><copy src="xxnStrings()" trait="_dialogueMenuBarterMagic02" /></_string_2>
+               
+                  <string>
+                     <rand>2</rand>
+                     <copy src="me()" trait="_string_" />
+                  </string>
+                  
+                  <depth>4</depth>
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <clips>&true;</clips>
+                  <wrapwidth><copy src="dialog_topics_layout" trait="width" /></wrapwidth>
+                  <wraplines>1</wraplines>
+                  <x>0</x>
+                  <y>2</y>
+                  <red>  <copy src="parent()" trait="red" />  </red>
+                  <green><copy src="parent()" trait="green" /></green>
+                  <blue> <copy src="parent()" trait="blue" /> </blue>
+               </text>
+            </rect>
+            <rect name="embedded_action_repair">
+               <id>12</id>
+               <visible>&false;</visible> <!-- Executable overrides this and sets it to true, but doesn't ever set it to false. -->
+               <locus>&true;</locus>
+               <clips>&true;</clips>
+               <target>&true;</target>
+               <width><copy src="child(label)" trait="width" /></width>
+               <height>
+                  <copy   src="DialogMenu" trait="_line_height" />
+                  <onlyif src="me()"       trait="visible" />
+               </height>
+               <x>0</x>
+               <y> <!-- position after previous -->
+                  <copy>0</copy>
+                  <add  src="sibling()"  trait="y" />
+                  <add  src="sibling()"  trait="height" />
+                  <add>
+                     <copy   src="DialogMenu" trait="_line_spacing"/>
+                     <onlyif src="sibling()"  trait="visible" />
+                  </add>
+               </y>
+               <red>
+                  <copy>144</copy>
+                  <max>
+                     <copy>192</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </red>
+               <green>
+                  <copy>64</copy>
+                  <max>
+                     <copy>96</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </green>
+               <blue>
+                  <copy>34</copy>
+                  <max>
+                     <copy>64</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </blue>
+               
+               <listindex>2</listindex>
+               <xdefault>7</xdefault>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               <xscroll>
+                  <copy src="sibling()" trait="xscroll" />
+                  <add>
+                     <copy>1</copy>
+                     <onlyif src="sibling()" trait="visible" />
+                  </add>
+               </xscroll>
+               
+               <text name="label">
+                  <_string_1><copy src="xxnStrings()" trait="_dialogueMenuRepair01" /></_string_1>
+                  <_string_2><copy src="xxnStrings()" trait="_dialogueMenuRepair02" /></_string_2>
+               
+                  <string>
+                     <rand>1</rand>
+                     <copy src="me()" trait="_string_" />
+                  </string>
+                  
+                  <depth>4</depth>
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <clips>&true;</clips>
+                  <wrapwidth><copy src="dialog_topics_layout" trait="width" /></wrapwidth>
+                  <wraplines>1</wraplines>
+                  <x>0</x>
+                  <y>2</y>
+                  <red>  <copy src="parent()" trait="red" />  </red>
+                  <green><copy src="parent()" trait="green" /></green>
+                  <blue> <copy src="parent()" trait="blue" /> </blue>
+               </text>
+            </rect>
+            <rect name="embedded_action_recharge">
+               <id>13</id>
+               <visible>&false;</visible> <!-- Executable overrides this and sets it to true, but doesn't ever set it to false. -->
+               <locus>&true;</locus>
+               <clips>&true;</clips>
+               <target>&true;</target>
+               <width><copy src="child(label)" trait="width" /></width>
+               <height>
+                  <copy   src="DialogMenu" trait="_line_height" />
+                  <onlyif src="me()"       trait="visible" />
+               </height>
+               <x>0</x>
+               <y> <!-- position after previous -->
+                  <copy>0</copy>
+                  <add  src="sibling()"  trait="y" />
+                  <add  src="sibling()"  trait="height" />
+                  <add>
+                     <copy   src="DialogMenu" trait="_line_spacing"/>
+                     <onlyif src="sibling()"  trait="visible" />
+                  </add>
+               </y>
+               <red>
+                  <copy>144</copy>
+                  <max>
+                     <copy>192</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </red>
+               <green>
+                  <copy>64</copy>
+                  <max>
+                     <copy>96</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </green>
+               <blue>
+                  <copy>34</copy>
+                  <max>
+                     <copy>64</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </blue>
+               
+               <listindex>3</listindex>
+               <xdefault>8</xdefault>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               <xscroll>
+                  <copy src="sibling()" trait="xscroll" />
+                  <add>
+                     <copy>1</copy>
+                     <onlyif src="sibling()" trait="visible" />
+                  </add>
+               </xscroll>
+               
+               <text name="label">
+                  <_string_1><copy src="xxnStrings()" trait="_dialogueMenuRecharge01" /></_string_1>
+                  <_string_2><copy src="xxnStrings()" trait="_dialogueMenuRecharge02" /></_string_2>
+               
+                  <string>
+                     <rand>2</rand>
+                     <copy src="me()" trait="_string_" />
+                  </string>
+                  
+                  <depth>4</depth>
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <clips>&true;</clips>
+                  <wrapwidth><copy src="dialog_topics_layout" trait="width" /></wrapwidth>
+                  <wraplines>1</wraplines>
+                  <x>0</x>
+                  <y>2</y>
+                  <red>  <copy src="parent()" trait="red" />  </red>
+                  <green><copy src="parent()" trait="green" /></green>
+                  <blue> <copy src="parent()" trait="blue" /> </blue>
+               </text>
+            </rect>
+            <rect name="embedded_action_training">
+               <id>9</id>
+               <visible>&false;</visible> <!-- Executable overrides this and sets it to true, but doesn't ever set it to false. -->
+               <locus>&true;</locus>
+               <clips>&true;</clips>
+               <target>&true;</target>
+               <width><copy src="child(label)" trait="width" /></width>
+               <height>
+                  <copy   src="DialogMenu" trait="_line_height" />
+                  <onlyif src="me()"       trait="visible" />
+               </height>
+               <x>0</x>
+               <y> <!-- position after previous -->
+                  <copy>0</copy>
+                  <add  src="sibling()"  trait="y" />
+                  <add  src="sibling()"  trait="height" />
+                  <add>
+                     <copy   src="DialogMenu" trait="_line_spacing"/>
+                     <onlyif src="sibling()"  trait="visible" />
+                  </add>
+               </y>
+               <red>
+                  <copy>144</copy>
+                  <max>
+                     <copy>192</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </red>
+               <green>
+                  <copy>64</copy>
+                  <max>
+                     <copy>96</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </green>
+               <blue>
+                  <copy>34</copy>
+                  <max>
+                     <copy>64</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </blue>
+               
+               <listindex>4</listindex>
+               <xdefault>9</xdefault>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               <xscroll>
+                  <copy src="sibling()" trait="xscroll" />
+                  <add>
+                     <copy>1</copy>
+                     <onlyif src="sibling()" trait="visible" />
+                  </add>
+               </xscroll>
+               
+               <text name="label">
+                  <_string_1><copy src="xxnStrings()" trait="_dialogueMenuTraining01" /></_string_1>
+                  <_string_2><copy src="xxnStrings()" trait="_dialogueMenuTraining02" /></_string_2>
+                  <_string_3><copy src="xxnStrings()" trait="_dialogueMenuTraining03" /></_string_3>
+               
+                  <string>
+                     <rand>3</rand>
+                     <copy src="me()" trait="_string_" />
+                  </string>
+                  
+                  <depth>4</depth>
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <clips>&true;</clips>
+                  <wrapwidth><copy src="dialog_topics_layout" trait="width" /></wrapwidth>
+                  <wraplines>1</wraplines>
+                  <x>0</x>
+                  <y>2</y>
+                  <red>  <copy src="parent()" trait="red" />  </red>
+                  <green><copy src="parent()" trait="green" /></green>
+                  <blue> <copy src="parent()" trait="blue" /> </blue>
+               </text>
+            </rect>
+            <rect name="embedded_action_persuade_minigame">
+               <id>7</id>
+               <visible>&false;</visible> <!-- executable overrides this -->
+               <locus>&true;</locus>
+               <clips>&true;</clips>
+               <target>&true;</target>
+               <width><copy src="child(label)" trait="width" /></width>
+               <height>
+                  <copy   src="DialogMenu" trait="_line_height" />
+                  <onlyif src="me()"       trait="visible" />
+               </height>
+               <x>0</x>
+               <y> <!-- position after previous -->
+                  <copy src="sibling()"  trait="y" />
+                  <add  src="sibling()"  trait="height" />
+                  <add>
+                     <copy   src="DialogMenu" trait="_line_spacing"/>
+                     <onlyif src="sibling()"  trait="visible" />
+                  </add>
+               </y>
+               <red>
+                  <copy>144</copy>
+                  <max>
+                     <copy>192</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </red>
+               <green>
+                  <copy>64</copy>
+                  <max>
+                     <copy>96</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </green>
+               <blue>
+                  <copy>34</copy>
+                  <max>
+                     <copy>64</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </blue>
+               
+               <listindex>5</listindex>
+               <xdefault>10</xdefault>
+               <xup>  &prev;</xup>
+               <xdown>&next;</xdown>
+               <xscroll>
+                  <copy src="sibling()" trait="xscroll" />
+                  <add>
+                     <copy>1</copy>
+                     <onlyif src="sibling()" trait="visible" />
+                  </add>
+               </xscroll>
+               
+               <text name="label">
+                  <_string_1><copy src="xxnStrings()" trait="_dialogueMenuPersuade01" /></_string_1>
+                  <_string_2><copy src="xxnStrings()" trait="_dialogueMenuPersuade02" /></_string_2>
+                  <_string_3><copy src="xxnStrings()" trait="_dialogueMenuPersuade03" /></_string_3>
+                  <_string_4><copy src="xxnStrings()" trait="_dialogueMenuPersuade04" /></_string_4>
+               
+                  <string>
+                     <rand>4</rand>
+                     <copy src="me()" trait="_string_" />
+                  </string>
+                  
+                  <depth>4</depth>
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <clips>&true;</clips>
+                  <wrapwidth><copy src="dialog_topics_layout" trait="width" /></wrapwidth>
+                  <wraplines>1</wraplines>
+                  <x>0</x>
+                  <y>2</y>
+                  <red>  <copy src="parent()" trait="red" />  </red>
+                  <green><copy src="parent()" trait="green" /></green>
+                  <blue> <copy src="parent()" trait="blue" /> </blue>
+               </text>
+            </rect>
+         </rect>
+			<rect name="dialog_topics_scroll_pane">
+				<id>1</id>
+				<locus>&true;</locus>
+				<width><copy src="parent()" trait="width"/></width>
+				<height> <!-- child count * (line height + line spacing) -->
+					<copy src="me()" trait="childcount"/>
+               <mult>
+                  <copy src="DialogMenu" trait="_line_height" />
+                  <add  src="DialogMenu" trait="_line_spacing"/>
+               </mult>
+				</height>
+				<x><copy src="sibling()" trait="x" /></x>
+				<y>
+               <copy src="sibling()" trait="y" />
+					<add  src="sibling()" trait="height" />
+               <add  src="menu()"    trait="_line_spacing"/>
+				</y>
+				<user7>96</user7> <!-- viewed topic red -->
+				<user8>96</user8> <!-- viewed topic green -->
+				<user9>96</user9> <!-- viewed topic blue -->
+				
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					 an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> 2 </xdefault>
+				<xlist> &xlist; </xlist>
+				<xup>  <ref src="sibling(prepend)" trait="mouseover" /></xup>
+				<xdown><ref src="sibling(append)" trait="mouseover" /></xdown>
+				<xscroll><ref src="dialog_scroll_bar" trait="user5" /></xscroll>
+				
+				<!-- template items are inserted here -->
+				<!-- all child tiles are deleted by the executable when populating the list -->
+			</rect>
+         <rect name="append">
+            <locus>&true;</locus>
+				<x><copy src="sibling()" trait="x" /></x>
+				<y> <!-- position after previous -->
+               <copy src="sibling()" trait="y" />
+					<add  src="sibling()" trait="height" />
+				</y>
+            <height>
+               <copy   src="child()" trait="height" />
+               <onlyif src="child()" trait="visible" />
+               <add    src="child()" trait="y" />
+            </height>
+            
+            <target>&false;</target>
+            <xdefault>&true;</xdefault>
+            <xlist>&xlist;</xlist>
+				<xup><ref src="sibling(dialog_topics_scroll_pane)" trait="mouseover" /></xup>
+            
+            <!-- items: -->
+            <rect name="embedded_action_goodbye">
+               <id>3</id>
+               <target>&true;</target>
+               <locus>&true;</locus>
+               <clips>&true;</clips>
+               <visible>&false;</visible> <!-- executable overrides this -->
+               <width><copy src="child(label)" trait="width" /></width>
+               <height>
+                  <copy   src="DialogMenu" trait="_line_height" />
+                  <onlyif src="me()"       trait="visible" />
+               </height>
+               <x>0</x>
+               <y> <!-- position after previous -->
+                  <copy>0</copy>
+                  <!--
+                  <add  src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>
+                     <copy   src="DialogMenu" trait="_line_spacing"/>
+                     <onlyif src="sibling()"  trait="visible" />
+                  </add>
+                  --> <!-- breaks if used on first element -->
+               </y>
+               <red>
+                  <copy>128</copy>
+                  <max>
+                     <copy>192</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </red>
+               <green>
+                  <copy>48</copy>
+                  <max>
+                     <copy>80</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </green>
+               <blue>
+                  <copy>48</copy>
+                  <max>
+                     <copy>80</copy>
+                     <mult src="me()" trait="mouseover" />
+                  </max>
+               </blue>
+               
+               <listindex>0</listindex>
+               <xdefault>&true;</xdefault>
+               <xdown>&next;</xdown>
+               
+               <text name="label">
+                  <_string_1><copy src="xxnStrings()" trait="_dialogueMenuBye01" /></_string_1>
+                  <_string_2><copy src="xxnStrings()" trait="_dialogueMenuBye02" /></_string_2>
+                  <_string_3><copy src="xxnStrings()" trait="_dialogueMenuBye03" /></_string_3>
+                  <_string_4><copy src="xxnStrings()" trait="_dialogueMenuBye04" /></_string_4>
+                  <_string_5><copy src="xxnStrings()" trait="_dialogueMenuBye05" /></_string_5>
+               
+                  <string>
+                     <rand>5</rand>
+                     <copy src="me()" trait="_string_" />
+                  </string>
+                  
+                  <depth>4</depth>
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <clips>&true;</clips>
+                  <wrapwidth><copy src="dialog_topics_layout" trait="width" /></wrapwidth>
+                  <wraplines>1</wraplines>
+                  <x>0</x>
+                  <y>2</y>
+                  <red>  <copy src="parent()" trait="red" />  </red>
+                  <green><copy src="parent()" trait="green" /></green>
+                  <blue> <copy src="parent()" trait="blue" /> </blue>
+               </text>
+            </rect>
+         </rect>
+		</rect>
+      <rect name="scrollbar_wrapper">
+         <include src="NorthernUI\scrollbars\wrapper.xml" />
+         <user0>&false;</user0> <!-- is horizontal? -->
+         <x> <!-- align with right edge of parent -->
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+         </x>
+         <y>0</y>
+         <height><copy src="parent()" trait="height" /></height>
+         
+         <!-- The executable appears to force visibility on the scrollbar.  
+              The wrapper gives us an opportunity to restore the original 
+              scrollbar visibility conditions, i.e. hiding the scrollbar 
+              when no scrolling is possible. -->
+         <visible>
+            <copy src="child()" trait="user2" />
+            <add  src="child()" trait="user8" />
+            <gt   src="child()" trait="user8" />
+            <or>
+               <not src="child()" trait="user10"/>
+            </or>
+            <and  src="child()" trait="visible" /> <!-- in case the executable wants to hide the scrollbar for some reason -->
+         </visible>
+         
+         <rect name="dialog_scroll_bar">
+            <include src="vert_floating_scroll.xml" />
+            <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+            <id>14</id>
+            
+            <user1>0</user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+            <user2>
+               <copy src="dialog_topics_layout" trait="_item_count" />
+               <sub  src="me()" trait="user8" />
+            </user2>					<!-- Maximum value that can be scrolled to (should be the number of
+                                     items minus the number of items visible.  i.e. if your list has
+                                     8 items and you can see 2 at any one time, this should be 6 -->
+            <user3> 1 </user3>			<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+            <user4> 4 </user4>			<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+            <user5> 0 </user5>			<!-- The starting position of the scroll bar (set this only once) -->
+            <user6> 15 </user6>			<!-- A unique ID so that the scroll marker can be dragged around -->
+            <!-- user7 = current value -->
+            <user8> 5 </user8>			<!-- How many items are visible at once -->
+            <user9> 0 </user9>			<!-- Manual step value (multiplied by step distance and added to scroll value -->
+            <user10> &true; </user10>	<!-- Should an empty list hide the scroll bar? -->
+         </rect>
+      </rect>
+   
+      <rect name="dialog_button_layout"> <!-- compatibility: Enhanced Economy -->
+         <x>0</x>
+         <y>0</y>
+         <depth>-100</depth>
+         <rect name="dialog_barter">
+            <visible>
+               <copy src="embedded_action_barter_items" trait="visible" />
+            </visible>
+            <id>9001</id> <!-- DLL-handled shim -->
+            <target>&true;</target>
+				<xdefault>&false;</xdefault>
+         </rect>
+      </rect>
+   </rect>
+	<template name="topic_template">
+		<rect name="topic_text_layout">
+			<id> 99 </id> <!-- overwritten by executable? -->
+			<string> <copy src="strings()" trait="_topic"/> </string> <!-- overwritten by executable -->
+			<target> &true; </target>
+			<alpha> 0 </alpha>
+			<height><copy src="DialogMenu" trait="_line_height" /></height>
+			<width><copy src="child(topic_text)" trait="width" /></width>
+			<locus>&true;</locus>
+			<clips>&true;</clips>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+            <mult>
+               <copy src="DialogMenu" trait="_line_height" />
+               <add  src="DialogMenu" trait="_line_spacing"/>
+            </mult>
+			</y>
+			<!-- Child (manually) inherits this color. It can be overridden by the executable. -->
+         <red>140</red><green>140</green><blue>140</blue>
+
+			<listindex> 0 </listindex>	<!-- position in list -->
+			<user5> &false; </user5>	<!-- "is this a service" -->
+			<user6></user6>				<!-- internal use -->
+
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> 3 </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()"    trait="listindex" />
+            <add  src="prepend" trait="_item_count" />
+				<sub>
+					<copy src="dialog_scroll_bar" trait="user8" />
+					<div> 2</div>
+					<ceil>0</ceil>
+				</sub>
+				<add>1</add>
+			</xscroll>
+			
+			<text name="topic_text">
+				<string><copy src="parent()" trait="string" /></string>
+				<depth>4</depth>
+            <include src="NorthernUI\fonts\normal-shadowed.xml" />
+            <red>
+               <copy src="parent()" trait="red" />
+               <max>
+                  <copy>224</copy>
+                  <mult src="parent()" trait="mouseover" />
+               </max>
+            </red>
+            <green>
+               <copy src="parent()" trait="green" />
+               <max>
+                  <copy>224</copy>
+                  <mult src="parent()" trait="mouseover" />
+               </max>
+            </green>
+            <blue>
+               <copy src="parent()" trait="blue" />
+               <max>
+                  <copy>224</copy>
+                  <mult src="parent()" trait="mouseover" />
+               </max>
+            </blue>
+				<alpha> 255 </alpha>
+				<clips> &true; </clips>
+            <wrapwidth><copy src="dialog_topics_layout" trait="width" /></wrapwidth>
+				<wraplines>1</wraplines>
+				<x> 0 </x>
+				<y> 2 </y>
+			</text>
+		</rect>
+	</template>
+	<rect name="dialog_text_layout"> <!-- subtitle -->
+		<id>4</id>
+		<target>&true;</target>
+		<alpha>0</alpha>
+		<depth>20</depth>
+		<x>0</x>
+		<y>0</y>
+		<width><copy src="screen()" trait="width" /></width>
+		<height><copy src="screen()" trait="height" /></height>
+		<locus> &true; </locus>
+		<visible>
+			<copy src="dialog_topics" trait="visible" /><eq>&false;</eq>
+		</visible>
+		
+		<xdefault>&true;</xdefault>
+		
+		<text name="dialog_text">
+			<id> 2 </id>
+			<depth> -2 </depth>
+			<string> <copy src="strings()" trait="_havenogreeting"/> </string>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+			<red> 220 </red>
+			<green> 218 </green>
+			<blue> 205 </blue>
+			<alpha> 255 </alpha>
+			<justify> &center; </justify>
+			<wrapwidth> 1000 </wrapwidth>
+			<x>
+				<copy src="screen()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="screen()" trait="height"/>
+				<sub>
+					 <copy src="screen()" trait="cropy"/>
+					 <mul>2</mul>
+				</sub>
+				<sub> 60 </sub>
+				<sub src="me()" trait="height"/>
+			</y>
+		</text>
+	</rect>
+	<rect name="dialog_focus_box">
+      <visible>&false;</visible>
+		<id> 5 </id>
+		<alpha> 0 </alpha>
+		<locus> &true; </locus>
+		<user1> -8 </user1> <!-- position offset x -->
+		<user2> -12 </user2> <!-- position offset y -->
+	</rect>
+</menu>

@@ -1,0 +1,1832 @@
+<!-- stats_menu.xml -->
+<menu name="StatsMenu">
+	<class> &StatsMenu; </class>
+	<alpha>	0 </alpha>
+	<menufade>0</menufade>
+	<x>-1</x><y>-1</y> <!-- yes, it needs to be -1 to correct for the layout system being buggy and a butt -->
+	<user0>1</user0> <!-- current visible tab page, one-indexed -->
+   
+   <user24>-1</user24> <!-- NorthernUI: listindex of last rendered misc-stat -->
+   
+   <!--
+      Prefab <NorthernUI\fragments\stats\row_attribute.xml> has its 
+      own copy of these values.
+   -->
+   <!-- normal text color for value -->
+   <_valueColorR_1>255</_valueColorR_1>
+   <_valueColorG_1>255</_valueColorG_1>
+   <_valueColorB_1>255</_valueColorB_1>
+   <!-- buffed text color for value -->
+   <_valueColorR_2> 64</_valueColorR_2>
+   <_valueColorG_2>192</_valueColorG_2>
+   <_valueColorB_2> 64</_valueColorB_2>
+   <!-- nerf'd text color for value -->
+   <_valueColorR_3>192</_valueColorR_3>
+   <_valueColorG_3> 64</_valueColorG_3>
+   <_valueColorB_3> 64</_valueColorB_3>
+   
+   <_skillListRowHeight>        69</_skillListRowHeight>
+   <_skillListColWidthType>     70</_skillListColWidthType>
+   <_skillListColWidthProgress>215</_skillListColWidthProgress>
+   <_skillListColWidthValue>    55</_skillListColWidthValue>
+   
+   <_factionListRowHeight>  155</_factionListRowHeight>
+   <_factionListIconX>       15</_factionListIconX>
+   <_factionListIconMarginX> 27</_factionListIconMarginX>
+   
+   <_miscStatListRowHeight>    32</_miscStatListRowHeight>
+   <_miscStatListColWidthValue>50</_miscStatListColWidthValue>
+	
+	<xleft> <ref src="inventory_tabs_prev" trait="clicked" /></xleft>
+	<xright><ref src="inventory_tabs_next" trait="clicked" /></xright>
+	<xbuttonlb><ref src="inventory_tabs_prev" trait="clicked" /></xbuttonlb>
+	<xbuttonrb><ref src="inventory_tabs_next" trait="clicked" /></xbuttonrb>
+   
+   <rect name="stats_data_character">
+      <!-- ID#10 receives information about the player-character. -->
+      <id>10</id>
+      <visible>&false;</visible>
+      <user1> Aryni </user1> <!------- player name -->
+      <user2> Dark Elf </user2> <!---- player race -->
+      <user3> Birthsign </user3> <!--- player birthsign -->
+      <user4> Class Name </user4> <!-- player class -->
+      <user5> 0</user5> <!------------ player level -->
+      <user6> 0</user6> <!------------ player health current -->
+      <user7> 0</user7> <!------------ player health max -->
+      <user8> 0</user8> <!------------ player magica current -->
+      <user9> 0</user9> <!------------ player magica max -->
+      <user10>0</user10> <!----------- player fatigue current -->
+      <user11>0</user11> <!----------- player fatigue max -->
+      
+      <!-- Buff/debuff magnitudes. Negative = debuff. -->
+      <user12>0</user12> <!-- player health  modification -->
+      <user13>0</user13> <!-- player magicka modification -->
+      <user14>0</user14> <!-- player fatigue modification -->
+   </rect>
+   <rect name="stats_data_attributes">
+      <!-- ID#20 receives information about the player's attributes. -->
+      <id>20</id>
+      <visible>&false;</visible>
+      <user1> 0</user1> <!--- attribute strength -->
+      <user2> 0</user2> <!--- attribute intelligence -->
+      <user3> 0</user3> <!--- attribute willpower -->
+      <user4> 0</user4> <!--- attribute agility -->
+      <user5> 0</user5> <!--- attribute speed -->
+      <user6> 0</user6> <!--- attribute endurance -->
+      <user7> 0</user7> <!--- attribute personality -->
+      <user8> 0</user8> <!--- attribute luck -->
+      <user9> 0</user9> <!--- base attribute strength -->
+      <user10>0</user10> <!-- base attribute intelligence -->
+      <user11>0</user11> <!-- base attribute willpower -->
+      <user12>0</user12> <!-- base attribute agility -->
+      <user13>0</user13> <!-- base attribute speed -->
+      <user14>0</user14> <!-- base attribute endurance -->
+      <user15>0</user15> <!-- base attribute personality -->
+      <user16>0</user16> <!-- base attribute luck -->
+   </rect>
+   <rect name="stats_data_skills">
+      <visible>&false;</visible>
+      <!--
+         ID#30 receives information about the player's leveling. However, it also 
+         handles the scroll wheel  for the third tab's list pane, so we can't just 
+         put it wherever we like.
+         
+         user1 = level progress, max
+         user2 = level progress, current
+         user3 = "minor skills" label position
+         user4 = boolean: true if there is no major/minor skill distinction in chargen
+      -->
+      <user1><copy src="content_tab_3" trait="user1" /></user1>
+      <user2><copy src="content_tab_3" trait="user2" /></user2>
+      <user3><copy src="content_tab_3" trait="user3" /></user3>
+      <user4><copy src="content_tab_3" trait="user4" /></user4>
+   </rect>
+
+	<rect name="stat_focus_box">
+		<id>60</id>
+		<visible>&false;</visible>
+      <include src="NorthernUI\focus_boxes\highlight.xml" />
+      <!--
+         compensate for hardcoded offsets in StatsMenu's focusbox code:
+         (why the hell did they hardcode offsets in?)
+      -->
+      <_paddingL>0.0</_paddingL>
+      <_paddingT>2.0</_paddingT>
+      <_paddingR>8.0</_paddingR>
+      <_paddingB>8.0</_paddingB>
+	</rect>
+   
+   <rect name="stats_base">
+      <_paddingX>4</_paddingX> <!-- Left-side padding on the list. -->
+      <_paddingY>4</_paddingY> <!-- Vertical  padding on the list. -->
+      <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+      
+      <include src="NorthernUI\fragments\main\base.xml" />
+      
+      <rect name="stats_player_header">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y> <!-- Position after the prefab's top-spacer. -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width><copy src="parent()" trait="width" /></width>
+         <height>
+            <copy src="child()" trait="height" />
+            <add  src="me()"    trait="_paddingTop" />
+            <add  src="me()"    trait="_paddingBottom" />
+         </height>
+         
+         <_paddingTop>   6</_paddingTop>
+         <_paddingBottom>4</_paddingBottom>
+         <_paddingX><copy src="parent()" trait="_paddingX" /></_paddingX>
+         
+         <image name="border_top">
+            <clips>&true;</clips>
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width><copy src="parent()" trait="width"/></width>
+            <height><copy src="me()" trait="fileheight"/></height>
+            <x><copy src="sibling(l)" trait="width"/></x>
+            <y>0</y>
+         </image>
+         <image name="border_bottom">
+            <clips>&true;</clips>
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width><copy src="parent()" trait="width"/></width>
+            <height><copy src="me()" trait="fileheight"/></height>
+            <x>0</x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()" trait="height" />
+            </y>
+         </image>
+         
+         <text name="playername">
+            <string><copy src="stats_data_character" trait="user1" /></string>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <justify>&left;</justify>
+            <x><copy src="parent()" trait="_paddingX" /></x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <red>255</red><green>255</green><blue>255</blue>
+         </text>
+         <rect name="level">
+            <locus>&true;</locus>
+            <id>14</id><target>&true;</target><user0>3</user0> <!-- Tooltip 3: Level -->
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <sub  src="parent()" trait="_paddingX" />
+            </x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <width> <!-- fit children -->
+               <copy src="child(meter)" trait="x" />
+               <add  src="child(meter)" trait="width" />
+            </width>
+            <height>
+               <copy src="child(label)" trait="height" />
+               <max  src="child(value)" trait="height" />
+            </height>
+            
+            <text name="label">
+               <string><copy src="strings()" trait="_level"/></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <justify>&left;</justify>
+               <x>0</x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub>
+                     <copy src="me()" trait="height" />
+                     <min  src="sibling(value)" trait="height" />
+                  </sub>
+                  <div>2</div>
+               </y>
+               <red>140</red><green>140</green><blue>140</blue>
+            </text>
+            <text name="value">
+               <string><copy src="stats_data_character" trait="user5" /></string>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <justify>&left;</justify>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>6</add>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+               </y>
+               <red>255</red><green>255</green><blue>255</blue>
+            </text>
+            <image name="meter">
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>1</add>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height"/>
+                  <sub  src="me()"     trait="height"/>
+                  <div>2</div>
+               </y>
+               
+               <include src="NorthernUI\meters\statbar.xml"/>
+               <_fillImage>Menus\NorthernUI\meters\statbar\hd_fill_generic.dds</_fillImage>
+               <_fillPercent>
+                  <copy src="stats_data_skills" trait="user2" />
+                  <div  src="stats_data_skills" trait="user1" />
+               </_fillPercent>
+            </image>
+         </rect>
+      </rect>
+      <rect name="category_tabs"> <!-- Character/Attributes/Skills/Factions/MiscStats -->
+         <x>0</x>
+         <y> <!-- after sibling -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         
+         <include src="NorthernUI\fragments\main\big_four_tabs.xml"/>
+         <_iconCount>5</_iconCount>
+         <_iconCropY>128</_iconCropY>
+         <_selectedTab><copy src="StatsMenu" trait="user0" /></_selectedTab>
+         <_idTab1>1</_idTab1>
+         <_idTab2>2</_idTab2>
+         <_idTab3>3</_idTab3>
+         <_idTab4>4</_idTab4>
+         <_idTab5>5</_idTab5>
+         <_idTabPrev>8</_idTabPrev>
+         <_idTabNext>9</_idTabNext>
+      </rect>
+      <rect name="content_tab_1">
+         <locus>&true;</locus>
+         <visible><copy src="StatsMenu" trait="user0" /><eq>1</eq></visible>
+         <x>0</x>
+         <y> <!-- after sibling -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width><copy src="parent()" trait="width" /></width>
+         <height> <!-- fill available space -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+         <_rowHeight>51</_rowHeight>
+         <_flexL>1</_flexL>
+         <_flexR>2</_flexR>
+         <_cellPaddingX>8</_cellPaddingX>
+         
+         <image name="divider"> <!-- vertical -->
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width><copy src="me()" trait="filewidth"/></width>
+            <height>
+               <copy src="sibling(end)" trait="y"/>
+               <add  src="sibling(end)" trait="height"/>
+            </height>
+            <x>
+               <copy src="parent()" trait="_flexL" />
+               <div>
+                  <copy src="parent()" trait="_flexL" />
+                  <add  src="parent()" trait="_flexR" />
+               </div>
+               <mult src="parent()" trait="width" />
+               <sub>
+                  <copy src="me()" trait="width" />
+                  <div>2</div>
+               </sub>
+            </x>
+            <y>0</y>
+         </image>
+         
+         <rect name="stats_tab1_row_race">
+            <id>14</id><target>&true;</target><user0>0</user0> <!-- Tooltip: Race -->
+            <x>0</x>
+            <y>0</y>
+            <height><copy src="parent()" trait="_rowHeight" /></height>
+            
+            <xdefault>&true;</xdefault>
+            <xdown><ref src="stats_tab1_row_birthsign" trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_mainstat.xml"/>
+            
+            <_cellPaddingX><copy src="parent()" trait="_cellPaddingX" /></_cellPaddingX>
+            <_flexL><copy src="parent()" trait="_flexL" /></_flexL>
+            <_flexR><copy src="parent()" trait="_flexR" /></_flexR>
+   
+            <_label><copy src="strings()" trait="_race"/></_label>
+            <_value><copy src="stats_data_character" trait="user2" /></_value>
+            <_isFirst>&true;</_isFirst>
+         </rect>
+         <rect name="stats_tab1_row_birthsign">
+            <id>14</id><target>&true;</target><user0>1</user0> <!-- Tooltip: Birthsign -->
+            <x>0</x>
+            <y> <!-- after sibling -->
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <height><copy src="parent()" trait="_rowHeight" /></height>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="stats_tab1_row_race"  trait="mouseover" /></xup>
+            <xdown><ref src="stats_tab1_row_class" trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_mainstat.xml"/>
+            <_cellPaddingX><copy src="parent()" trait="_cellPaddingX" /></_cellPaddingX>
+            <_flexL><copy src="parent()" trait="_flexL" /></_flexL>
+            <_flexR><copy src="parent()" trait="_flexR" /></_flexR>
+   
+            <_label><copy src="strings()" trait="_birthsign"/></_label>
+            <_value><copy src="stats_data_character" trait="user3" /></_value>
+         </rect>
+         <rect name="stats_tab1_row_class">
+            <id>14</id><target>&true;</target><user0>2</user0> <!-- Tooltip: Class -->
+            <x>0</x>
+            <y> <!-- after sibling -->
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <height><copy src="parent()" trait="_rowHeight" /></height>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="stats_tab1_row_birthsign" trait="mouseover" /></xup>
+            <xdown><ref src="stats_tab1_row_level"     trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_mainstat.xml"/>
+            <_cellPaddingX><copy src="parent()" trait="_cellPaddingX" /></_cellPaddingX>
+            <_flexL><copy src="parent()" trait="_flexL" /></_flexL>
+            <_flexR><copy src="parent()" trait="_flexR" /></_flexR>
+   
+            <_label><copy src="strings()" trait="_class"/></_label>
+            <_value><copy src="stats_data_character" trait="user4" /></_value>
+         </rect>
+         <rect name="stats_tab1_row_level"> <!-- hidden/disabled -->
+            <visible>&false;</visible> <!-- SEE COMMENTS BELOW -->
+            <id>14</id><target>&true;</target><user0>3</user0> <!-- Tooltip: Level -->
+            <x>0</x>
+            <y> <!-- after sibling -->
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <height> <!-- collapse if not visible -->
+               <copy src="parent()" trait="_rowHeight" />
+               <onlyif> <!-- Not ONLYIFfing the trait itself because we want undefined to be treated as true -->
+                  <copy src="me()" trait="visible" /><neq>&false;</neq>
+               </onlyif>
+            </height>
+            
+            <xdefault>&false;</xdefault>
+            <xup><ref src="stats_tab1_row_class" trait="mouseover" /></xup>
+            
+            <include src="NorthernUI\fragments\stats\row_mainstat.xml"/>
+            <_cellPaddingX><copy src="parent()" trait="_cellPaddingX" /></_cellPaddingX>
+            <_flexL><copy src="parent()" trait="_flexL" /></_flexL>
+            <_flexR><copy src="parent()" trait="_flexR" /></_flexR>
+   
+            <_label><copy src="strings()" trait="_level"/></_label>
+            <_value><copy src="stats_data_character" trait="user5" /></_value>
+            <_progressInfoEnabled>&true;</_progressInfoEnabled>
+            <!--
+               This is broken. Seems like the game only allows one of each ID#14 meter.
+            -->
+            <_progressCurrent><copy src="stats_data_skills" trait="user2" /></_progressCurrent>
+            <_progressMax>    <copy src="stats_data_skills" trait="user1" /></_progressMax>
+         </rect>
+         
+         <rect name="end"> <!-- invisible marker -->
+            <width>0</width>
+            <height>0</height>
+            <x>0</x>
+            <y> <!-- after previous -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+            </y>
+         </rect>
+      </rect>
+      <rect name="content_tab_2">
+         <locus>&true;</locus>
+         <visible><copy src="StatsMenu" trait="user0" /><eq>2</eq></visible>
+         <x>0</x>
+         <y><copy src="sibling()" trait="y" /></y> <!-- align with tab 1 -->
+         <width> <copy src="parent()"   trait="width" /></width>
+         <height> <!-- fill available space -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+         <_rowHeight>51</_rowHeight>
+         
+         <image name="divider">
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width> <copy src="me()" trait="filewidth" /></width>
+            <height><copy src="sibling(end)" trait="y" /></height>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub>60</sub> <!-- default width of value column -->
+            </x>
+            <y>0</y>
+         </image>
+         
+         <rect name="stats_attr_row_strength">
+            <id>24</id><target>&true;</target><user0>0</user0> <!-- attr tooltip #0: str -->
+            <width> <copy src="parent()" trait="width"/></width>
+            <height><copy src="parent()" trait="_rowHeight"/></height>
+            <x>0</x>
+            <y>0</y>
+            
+            <xdefault>&true;</xdefault>
+            <xdown><ref src="stats_attr_row_intelligence" trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_attribute.xml"/>
+            <_label><copy src="strings()" trait="_strength"/></_label>
+            <_valueBase>   <copy src="stats_data_attributes" trait="user9" /></_valueBase>
+            <_valueCurrent><copy src="stats_data_attributes" trait="user1" /></_valueCurrent>
+            <_isFirst>&true;</_isFirst>
+         </rect>
+         <rect name="stats_attr_row_intelligence">
+            <id>24</id><target>&true;</target><user0>1</user0> <!-- attr tooltip #1: int -->
+            <width> <copy src="parent()" trait="width"/></width>
+            <height><copy src="parent()" trait="_rowHeight"/></height>
+            <x><copy src="sibling()" trait="x"/></x>
+            <y> <!-- after previous -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+            </y>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="stats_attr_row_strength"  trait="mouseover" /></xup>
+            <xdown><ref src="stats_attr_row_willpower" trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_attribute.xml"/>
+            <_label><copy src="strings()" trait="_intelligence"/></_label>
+            <_valueBase>   <copy src="stats_data_attributes" trait="user10" /></_valueBase>
+            <_valueCurrent><copy src="stats_data_attributes" trait="user2" /> </_valueCurrent>
+         </rect>
+         <rect name="stats_attr_row_willpower">
+            <id>24</id><target>&true;</target><user0>2</user0>
+            <width> <copy src="parent()" trait="width"/></width>
+            <height><copy src="parent()" trait="_rowHeight"/></height>
+            <x><copy src="sibling()" trait="x"/></x>
+            <y> <!-- after previous -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+            </y>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="stats_attr_row_intelligence" trait="mouseover" /></xup>
+            <xdown><ref src="stats_attr_row_agility"      trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_attribute.xml"/>
+            <_label><copy src="strings()" trait="_willpower"/></_label>
+            <_valueBase>   <copy src="stats_data_attributes" trait="user11" /></_valueBase>
+            <_valueCurrent><copy src="stats_data_attributes" trait="user3" /> </_valueCurrent>
+         </rect>
+         <rect name="stats_attr_row_agility">
+            <id>24</id><target>&true;</target><user0>3</user0>
+            <width> <copy src="parent()" trait="width"/></width>
+            <height><copy src="parent()" trait="_rowHeight"/></height>
+            <x><copy src="sibling()" trait="x"/></x>
+            <y> <!-- after previous -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+            </y>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="stats_attr_row_willpower" trait="mouseover" /></xup>
+            <xdown><ref src="stats_attr_row_speed"     trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_attribute.xml"/>
+            <_label><copy src="strings()" trait="_agility"/></_label>
+            <_valueBase>   <copy src="stats_data_attributes" trait="user12" /></_valueBase>
+            <_valueCurrent><copy src="stats_data_attributes" trait="user4" /> </_valueCurrent>
+         </rect>
+         <rect name="stats_attr_row_speed">
+            <id>24</id><target>&true;</target><user0>4</user0>
+            <width> <copy src="parent()" trait="width"/></width>
+            <height><copy src="parent()" trait="_rowHeight"/></height>
+            <x><copy src="sibling()" trait="x"/></x>
+            <y> <!-- after previous -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+            </y>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="stats_attr_row_agility"   trait="mouseover" /></xup>
+            <xdown><ref src="stats_attr_row_endurance" trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_attribute.xml"/>
+            <_label><copy src="strings()" trait="_speed"/></_label>
+            <_valueBase>   <copy src="stats_data_attributes" trait="user13" /></_valueBase>
+            <_valueCurrent><copy src="stats_data_attributes" trait="user5" /> </_valueCurrent>
+         </rect>
+         <rect name="stats_attr_row_endurance">
+            <id>24</id><target>&true;</target><user0>5</user0>
+            <width> <copy src="parent()" trait="width"/></width>
+            <height><copy src="parent()" trait="_rowHeight"/></height>
+            <x><copy src="sibling()" trait="x"/></x>
+            <y> <!-- after previous -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+            </y>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="stats_attr_row_speed"       trait="mouseover" /></xup>
+            <xdown><ref src="stats_attr_row_personality" trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_attribute.xml"/>
+            <_label><copy src="strings()" trait="_endurance"/></_label>
+            <_valueBase>   <copy src="stats_data_attributes" trait="user14" /></_valueBase>
+            <_valueCurrent><copy src="stats_data_attributes" trait="user6" /> </_valueCurrent>
+         </rect>
+         <rect name="stats_attr_row_personality">
+            <id>24</id><target>&true;</target><user0>6</user0>
+            <width> <copy src="parent()" trait="width"/></width>
+            <height><copy src="parent()" trait="_rowHeight"/></height>
+            <x><copy src="sibling()" trait="x"/></x>
+            <y> <!-- after previous -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+            </y>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="stats_attr_row_endurance" trait="mouseover" /></xup>
+            <xdown><ref src="stats_attr_row_luck"      trait="mouseover" /></xdown>
+            
+            <include src="NorthernUI\fragments\stats\row_attribute.xml"/>
+            <_label><copy src="strings()" trait="_personality"/></_label>
+            <_valueBase>   <copy src="stats_data_attributes" trait="user15" /></_valueBase>
+            <_valueCurrent><copy src="stats_data_attributes" trait="user7" /> </_valueCurrent>
+         </rect>
+         <rect name="stats_attr_row_luck">
+            <id>24</id><target>&true;</target><user0>7</user0>
+            <width> <copy src="parent()" trait="width"/></width>
+            <height><copy src="parent()" trait="_rowHeight"/></height>
+            <x><copy src="sibling()" trait="x"/></x>
+            <y> <!-- after previous -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+            </y>
+            
+            <xdefault>&false;</xdefault>
+            <xup><ref src="stats_attr_row_personality" trait="mouseover" /></xup>
+            
+            <include src="NorthernUI\fragments\stats\row_attribute.xml"/>
+            <_label><copy src="strings()" trait="_luck"/></_label>
+            <_valueBase>   <copy src="stats_data_attributes" trait="user16" /></_valueBase>
+            <_valueCurrent><copy src="stats_data_attributes" trait="user8" /> </_valueCurrent>
+         </rect>
+         
+         <rect name="end"> <!-- invisible marker -->
+            <width>0</width>
+            <height>0</height>
+            <x>0</x>
+            <y> <!-- after previous -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+            </y>
+         </rect>
+      </rect>
+      <rect name="content_tab_3">
+         <locus>&true;</locus>
+         <visible><copy src="StatsMenu" trait="user0" /><eq>3</eq></visible>
+         <x>0</x>
+         <y><copy src="sibling()" trait="y" /></y> <!-- align with tab 1 -->
+         <width><copy src="parent()" trait="width" /></width>
+         <height> <!-- fill available space -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+         <!--
+            ID#30 is the scroll-ancestor for the Skills list pane (moving the 
+            scroll wheel over ID#30 scrolls that pane), and it also receives 
+            some values that we wish to use outside of the Skills pane. For 
+            cleanliness' sake, #stats_data_skills will copy these values, and 
+            they should be pulled from that instead.
+         -->
+         <id>30</id>
+         <user1>0</user1> <!-------- level progress max -->
+         <user2>0</user2> <!-------- level progress current -->
+         <user3>0</user3> <!-------- minor skills lable position -->
+         <user4>&false;</user4> <!-- true if there is no major/minor distinction (chargen) -->
+         
+         <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+         
+         <rect name="stats_skill_anchored_header">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="child(text)" trait="height" />
+               <add  src="child(border_bottom)" trait="height" />
+            </height>
+            
+            <_innerWidth>
+               <copy src="sibling(scrollbar_wrapper)" trait="x" />
+               <sub  src="parent()"  trait="_scrollbarMargin" />
+            </_innerWidth>
+            
+            <image name="border_bottom">
+               <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+               <tile>&true;</tile>
+               <width> <copy src="parent()" trait="width"/></width>
+               <height><copy src="me()"     trait="fileheight"/></height>
+               <x>0</x>
+               <y> <!-- align with bottom of parent -->
+                  <copy src="parent()" trait="height"/>
+                  <sub  src="me()"     trait="height"/>
+               </y>
+            </image>
+         
+				<text name="text">
+					<depth>3</depth>
+					<include src="NorthernUI\fonts\normal-shadowed.xml" />
+					<red>255</red><green>255</green><blue>255</blue>
+					<clips>&true;</clips>
+               
+					<justify>&left;</justify>
+					<string><copy src="strings()" trait="_skills"/></string>
+					<x>75</x>
+					<y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+				</text>
+				<text name="type">
+					<depth>3</depth>
+					<include src="NorthernUI\fonts\normal-shadowed.xml" />
+					<red>255</red><green>255</green><blue>255</blue>
+					<wrapwidth><copy src="parent()" trait="width"/></wrapwidth>
+					<clips>&true;</clips>
+               
+					<justify>&left;</justify>
+					<string><copy src="xxnStrings()" trait="_skillsMenuColSkillType" /></string>
+					<x>
+                  <copy src="parent()"  trait="_innerWidth" />
+                  <sub  src="StatsMenu" trait="_skillListColWidthValue" />
+                  <sub  src="StatsMenu" trait="_skillListColWidthProgress" />
+                  <sub  src="StatsMenu" trait="_skillListColWidthType" />
+               </x>
+					<y><copy src="sibling()" trait="y" /></y>
+				</text>
+				<text name="progress">
+					<depth>3</depth>
+					<include src="NorthernUI\fonts\normal-shadowed.xml" />
+					<red>255</red><green>255</green><blue>255</blue>
+					<wrapwidth><copy src="parent()" trait="width"/></wrapwidth>
+					<clips>&true;</clips>
+               
+					<justify>&left;</justify>
+					<string><copy src="xxnStrings()" trait="_skillsMenuColSkillProgress" /></string>
+					<x>
+                  <copy src="parent()"  trait="_innerWidth" />
+                  <sub  src="StatsMenu" trait="_skillListColWidthValue" />
+                  <sub  src="StatsMenu" trait="_skillListColWidthProgress" />
+               </x>
+					<y><copy src="sibling()" trait="y" /></y>
+				</text>
+				<text name="value">
+					<depth>3</depth>
+					<include src="NorthernUI\fonts\normal-shadowed.xml" />
+					<red>255</red><green>255</green><blue>255</blue>
+					<wrapwidth><copy src="parent()" trait="width"/></wrapwidth>
+					<clips>&true;</clips>
+               
+					<justify>&left;</justify>
+					<string><copy src="xxnStrings()" trait="_skillsMenuColSkillLevel" /></string>
+					<x>
+                  <copy src="parent()"  trait="_innerWidth" />
+                  <sub  src="StatsMenu" trait="_skillListColWidthValue" />
+               </x>
+					<y><copy src="sibling()" trait="y" /></y>
+				</text>
+         </rect>
+         <rect name="stats_skill_window">
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <clipwindow>&true;</clipwindow>
+            <alpha>0</alpha>
+            <depth>3</depth>
+            <width> <!-- width, minus scrollbar size and margins -->
+               <copy src="parent()" trait="width" />
+               <sub>
+                  <copy src="stats_skill_scrollbar" trait="width" />
+                  <add  src="parent()" trait="_scrollbarMargin" />
+                  <add  src="parent()" trait="_scrollbarMargin" />
+                  <onlyif src="stats_skill_scrollbar" trait="visible" />
+               </sub>
+            </width>
+            <height> <!-- fill remaining space -->
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="y" />
+            </height>
+            <x>0</x>
+            <y> <!-- after sibling -->
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            
+            <rect name="stats_skill_pane">
+               <id>31</id>
+               <locus>&true;</locus>
+               <depth>2</depth>
+               <width><copy src="parent()" trait="width" /></width>
+               <x>0</x>
+               <y> <!-- scrolling -->
+                  <copy>0</copy>
+                  <sub  src="stats_skill_scrollbar" trait="user7" />
+                  <mult src="StatsMenu" trait="_skillListRowHeight" />
+               </y>
+               <alpha>0</alpha>
+               
+               <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                  an input command, they defer to their parent. The following directions are for those times. -->
+               <target>&false;</target>
+               <xdefault>&true;</xdefault>
+               <xlist>&xlist;</xlist>
+               <xscroll><ref src="stats_skill_scrollbar" trait="user5" /></xscroll>
+               
+               <!-- TEMPLATE INSERTION POINT: stat_skill_template -->
+            </rect>
+         </rect>
+         <rect name="scrollbar_wrapper">
+            <include src="NorthernUI\scrollbars\wrapper.xml" />
+            <user0>&false;</user0> <!-- is horizontal? -->
+            <x> <!-- right-aligned -->
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <sub  src="parent()" trait="_scrollbarMargin" />
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add>4</add>
+            </y>
+            <height>
+               <copy src="sibling()" trait="height" />
+               <sub>8</sub>
+            </height>
+            
+            <image name="stats_skill_scrollbar">
+               <include src="vertical_scroll.xml" />
+               <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+               <id>32</id>
+               <depth>5</depth>
+               
+               <user1>0</user1> <!-- code set - minimum range value -->
+               <user2>
+                  <copy src="stats_skill_pane" trait="childcount" />
+                  <sub>
+                     <copy src="stats_skill_window" trait="height" />
+                     <div  src="StatsMenu" trait="_skillListRowHeight" />
+                     <floor>0.5</floor>
+                  </sub>
+               </user2> <!-- maximum range value -->
+               <user3> 1</user3> <!-- step distance -->
+               <user4> 6</user4> <!-- jump distance -->
+               <user5> 0</user5> <!-- code set - force value (must be 0 here) -->
+               <user6>33</user6> <!-- marker's id - must change to enable dragging -->
+               <!-- user7 --> <!-- current value -->
+               <user8> <!-- How many items are visible at once -->
+                  <copy src="stats_skill_window" trait="height" />
+                  <div  src="StatsMenu" trait="_skillListRowHeight" />
+                  <ceil>0</ceil>
+               </user8>
+            </image>
+         </rect>
+      </rect>
+      <rect name="content_tab_4">
+         <locus>&true;</locus>
+         <visible><copy src="StatsMenu" trait="user0" /><eq>4</eq></visible>
+         <x>0</x>
+         <y><copy src="sibling()" trait="y" /></y> <!-- align with tab 1 -->
+         <width><copy src="parent()" trait="width" /></width>
+         <height> <!-- fill available space -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+			<id>40</id>
+         
+         <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+         
+         <!-- invisible hitboxes to handle arrow key scrolling -->
+         <rect name="content_tab_4_up">
+            <target>&true;</target>
+            <xdefault>&true;</xdefault>
+            <width>5</width>
+            <height>5</height>
+            <x>60</x>
+            <y>60</y>
+            <xup>  <ref src="content_tab_4_up"   trait="clicked" /></xup>
+            <xdown><ref src="content_tab_4_down" trait="clicked" /></xdown>
+         </rect>
+         <rect name="content_tab_4_down">
+            <target>&true;</target>
+            <xdefault>&false;</xdefault>
+            <width>5</width>
+            <height>5</height>
+            <x>60</x>
+            <y>60</y>
+            <xup>  <ref src="content_tab_4_up"   trait="clicked" /></xup>
+            <xdown><ref src="content_tab_4_down" trait="clicked" /></xdown>
+         </rect>
+         
+         <!-- content: -->
+         <rect name="stats_factions_anchored_header">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="child(text)" trait="height" />
+               <add  src="child(border_bottom)" trait="height" />
+            </height>
+            
+            <image name="border_bottom">
+               <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+               <tile>&true;</tile>
+               <width> <copy src="parent()" trait="width"/></width>
+               <height><copy src="me()"     trait="fileheight"/></height>
+               <x>0</x>
+               <y> <!-- align with bottom of parent -->
+                  <copy src="parent()" trait="height"/>
+                  <sub  src="me()"     trait="height"/>
+               </y>
+            </image>
+         
+				<text name="text">
+					<depth>3</depth>
+					<include src="NorthernUI\fonts\normal-shadowed.xml" />
+					<red>255</red><green>255</green><blue>255</blue>
+					<clips>&true;</clips>
+               
+					<justify>&left;</justify>
+					<string><copy src="strings()" trait="_factions"/></string>
+					<x>8</x>
+					<y>0</y>
+				</text>
+         </rect>
+         <rect name="stats_faction_window">
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <clipwindow>&true;</clipwindow>
+            <alpha>0</alpha>
+            <depth>3</depth>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub>
+                  <copy src="stats_faction_scrollbar" trait="width" />
+                  <add  src="parent()" trait="_scrollbarMargin" />
+                  <add  src="parent()" trait="_scrollbarMargin" />
+                  <onlyif src="stats_faction_scrollbar" trait="visible" />
+               </sub>
+            </width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="y" />
+            </height>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            
+            <text name="text_no_factions">
+               <visible>
+                  <copy src="stats_faction_pane" trait="childcount" /><eq>0</eq>
+               </visible>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()" trait="height" />
+                  <div>2</div>
+               </y>
+               <justify>&center;</justify>
+               <red>255</red><green>255</green><blue>255</blue>
+               <string><copy src="xxnStrings()" trait="_statsMenuNoFactions" /></string>
+            </text>
+            <rect name="stats_faction_pane">
+               <id>41</id>
+               <locus>&true;</locus>
+               <depth>2</depth>
+               <width><copy src="parent()" trait="width" /></width>
+               <x>0</x>
+               <y> <!-- scrolling -->
+                  <copy>0</copy>
+                  <sub  src="stats_faction_scrollbar" trait="user7" />
+                  <mult src="StatsMenu" trait="_factionListRowHeight" />
+               </y>
+               <alpha>0</alpha>
+               
+               <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                  an input command, they defer to their parent. The following directions are for those times. -->
+               <target>&false;</target>
+               <xdefault>&true;</xdefault>
+               <xlist>&xlist;</xlist>
+               <xscroll><ref src="stats_faction_scrollbar" trait="user5" /></xscroll>
+               
+               <!-- TEMPLATE INSERTION POINT: stat_skill_template -->
+            </rect>
+         </rect>
+         <rect name="scrollbar_wrapper">
+            <include src="NorthernUI\scrollbars\wrapper.xml" />
+            <user0>&false;</user0> <!-- is horizontal? -->
+            <x> <!-- right-aligned -->
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <sub  src="parent()" trait="_scrollbarMargin" />
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add>4</add>
+            </y>
+            <height>
+               <copy src="sibling()" trait="height" />
+               <sub>8</sub>
+            </height>
+            
+            <image name="stats_faction_scrollbar">
+               <include src="vertical_scroll.xml" />
+               <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+               <id>42</id>
+               <depth>5</depth>
+               
+               <user1>0</user1> <!-- code set - minimum range value -->
+               <user2>
+                  <copy src="stats_faction_pane" trait="childcount" />
+                  <sub>
+                     <copy src="stats_faction_window" trait="height" />
+                     <div  src="StatsMenu" trait="_factionListRowHeight" />
+                     <floor>0.5</floor>
+                  </sub>
+               </user2> <!-- maximum range value -->
+               <user3> 1 </user3> 	<!-- step distance -->
+               <user4> 5 </user4> 	<!-- jump distance -->
+               <user5> 0 </user5> 	<!-- starting value - must be 0 here, change by code -->
+               <user6> 43 </user6> 	<!-- marker's id - must change to enable dragging -->
+               <!-- user7 --> 		<!-- current value -->
+               <user8> <!-- How many items are visible at once -->
+                  <copy src="stats_faction_window" trait="height" />
+                  <div  src="StatsMenu" trait="_factionListRowHeight" />
+                  <ceil>0</ceil>
+               </user8>
+               <user9>
+                  <copy src="content_tab_4_down" trait="clicked" />
+                  <sub  src="content_tab_4_up"   trait="clicked" />
+               </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+               <user10></user10>		<!-- reserved -->
+            </image>
+         </rect>
+      </rect>
+      <rect name="content_tab_5">
+         <locus>&true;</locus>
+         <visible><copy src="StatsMenu" trait="user0" /><eq>5</eq></visible>
+         <x>0</x>
+         <y><copy src="sibling()" trait="y" /></y> <!-- align with tab 1 -->
+         <width><copy src="parent()" trait="width" /></width>
+         <height> <!-- fill available space -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+			<id>50</id>
+         
+         <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+         
+         <!-- invisible hitboxes to handle arrow key scrolling -->
+         <rect name="content_tab_5_up">
+            <target>&true;</target>
+            <xdefault>&true;</xdefault>
+            <width>5</width>
+            <height>5</height>
+            <x>60</x>
+            <y>60</y>
+            <xup>  <ref src="content_tab_5_up"   trait="clicked"/></xup>
+            <xdown><ref src="content_tab_5_down" trait="clicked"/></xdown>
+         </rect>
+         <rect name="content_tab_5_down">
+            <target>&true;</target>
+            <xdefault>&false;</xdefault>
+            <width>5</width>
+            <height>5</height>
+            <x>60</x>
+            <y>60</y>
+            <xup>  <ref src="content_tab_5_up"   trait="clicked"/></xup>
+            <xdown><ref src="content_tab_5_down" trait="clicked"/></xdown>
+         </rect>
+         
+         <!-- content: -->
+         <rect name="stats_miscstat_window">
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <clipwindow>&true;</clipwindow>
+            <alpha>0</alpha>
+            <depth>3</depth>
+            <width> <!-- width, minus scrollbar size and margins -->
+               <copy src="parent()" trait="width" />
+               <sub>
+                  <copy src="stats_miscstat_scrollbar" trait="width" />
+                  <add  src="parent()" trait="_scrollbarMargin" />
+                  <add  src="parent()" trait="_scrollbarMargin" />
+                  <onlyif src="stats_miscstat_scrollbar" trait="visible" />
+               </sub>
+            </width>
+            <height> <!-- fill remaining space -->
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="y" />
+            </height>
+            <x>0</x>
+            <y>0</y>
+            
+            <rect name="stats_miscstat_pane">
+               <id>51</id>
+               <locus>&true;</locus>
+               <depth>2</depth>
+               <width><copy src="parent()" trait="width" /></width>
+               <x>0</x>
+               <y> <!-- scrolling -->
+                  <copy>0</copy>
+                  <sub  src="stats_miscstat_scrollbar" trait="user7" />
+                  <mult src="StatsMenu" trait="_miscStatListRowHeight" />
+               </y>
+               <alpha>0</alpha>
+               
+               <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                  an input command, they defer to their parent. The following directions are for those times. -->
+               <target>&false;</target>
+               <xdefault>&true;</xdefault>
+               <xlist>&xlist;</xlist>
+               <xscroll><ref src="stats_miscstat_scrollbar" trait="user5" /></xscroll>
+               
+               <!-- TEMPLATE INSERTION POINT: stat_skill_template -->
+            </rect>
+         </rect>
+         <rect name="scrollbar_wrapper">
+            <include src="NorthernUI\scrollbars\wrapper.xml" />
+            <user0>&false;</user0> <!-- is horizontal? -->
+            <x> <!-- right-aligned -->
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <sub  src="parent()" trait="_scrollbarMargin" />
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add>4</add>
+            </y>
+            <height>
+               <copy src="sibling()" trait="height" />
+               <sub>8</sub>
+            </height>
+            
+            <image name="stats_miscstat_scrollbar">
+               <include src="vertical_scroll.xml" />
+               <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+               <id>52</id>
+               <depth>5</depth>
+               
+               <user1>0</user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+               <user2>
+                  <!-- <copy src="stats_miscstat_pane" trait="childcount" /> -->
+                  <!--
+                     Childcount can't be used, because Bethesda doesn't use empty 
+                     tiles to produce the empty rows that separate some stats from 
+                     other stats; they just skip listindex values. This means that 
+                     there are some 44 children, but the last one has listindex 58 
+                     and effectively is Row #58.
+                  -->
+                  <copy src="menu()" trait="user24" />
+                  <add>1</add>
+                  <sub>
+                     <copy src="stats_miscstat_window" trait="height" />
+                     <div  src="StatsMenu" trait="_miscStatListRowHeight" />
+                     <floor>0</floor>
+                  </sub>
+                  <add>
+                     <copy>1</copy>
+                     <onlyif>
+                        <copy src="stats_miscstat_window" trait="height" />
+                        <mod  src="StatsMenu" trait="_miscStatListRowHeight" />
+                        <neq>0</neq>
+                     </onlyif>
+                  </add>
+               </user2> <!-- maximum range value -->
+               <user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+               <user4> 3 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+               <user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+               <user6> 53 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+               <!-- user7 --> <!-- current value -->
+               <user8> <!-- How many items are visible at once -->
+                  <copy src="stats_miscstat_window" trait="height" />
+                  <div  src="StatsMenu" trait="_miscStatListRowHeight" />
+                  <ceil>0</ceil>
+               </user8>
+               <user9>
+                  <copy src="content_tab_5_down" trait="clicked"/>
+                  <sub  src="content_tab_5_up"   trait="clicked"/>
+               </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+               <user10></user10>		<!-- reserved -->
+            </image>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="stats_bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>16</_entrySpacing>
+      
+      <rect name="bars">
+         <locus>&true;</locus>
+         <width> <!-- fit children -->
+            <copy src="child(field_stamina)" trait="x" />
+            <add  src="child(field_stamina)" trait="width" />
+         </width>
+         <height><copy src="child(field_stamina)" trait="height" /></height>
+         <x> <!-- center within parent -->
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         
+         <!-- <_spacing>64</_spacing> -->
+         <_spacing>
+            <copy src="parent()" trait="width" />
+            <sub>
+               <copy src="child(field_health)"  trait="width" />
+               <max  src="child(field_magicka)" trait="width" />
+               <max  src="child(field_stamina)" trait="width" />
+               <mult>3</mult>
+            </sub>
+            <div>2</div>
+            <min>64</min>
+         </_spacing>
+         
+         <rect name="field_magicka">
+            <id>14</id>
+            <target>&true;</target>
+				<user0>5</user0> <!-- Tooltip 4: Magicka -->
+            <x>0</x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <_label><copy src="strings()" trait="_magicka"/></_label>
+            <_value>  <copy src="stats_data_character" trait="user8" /></_value>
+            <_maximum><copy src="stats_data_character" trait="user9" /></_maximum>
+            
+            <_showMeter>&true;</_showMeter>
+            <_meterFillFilename>Menus\NorthernUI\meters\statbar\hd_fill_magicka.dds</_meterFillFilename>
+            
+            <_whichColor>
+               <copy>1</copy>
+               <max>
+                  <copy>2</copy>
+                  <onlyif><copy src="stats_data_character" trait="user13" /><gt>0</gt></onlyif>
+               </max>
+               <max>
+                  <copy>3</copy>
+                  <onlyif><copy src="stats_data_character" trait="user13" /><lt>0</lt></onlyif>
+               </max>
+            </_whichColor>
+            <_valueColorR>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorR_" />
+            </_valueColorR>
+            <_valueColorG>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorG_" />
+            </_valueColorG>
+            <_valueColorB>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorB_" />
+            </_valueColorB>
+         </rect>
+         <rect name="field_health">
+            <id>14</id>
+            <target>&true;</target>
+				<user0>4</user0> <!-- Tooltip 4: Health -->
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <_label><copy src="strings()" trait="_health"/></_label>
+            <_value>  <copy src="stats_data_character" trait="user6" /></_value>
+            <_maximum><copy src="stats_data_character" trait="user7" /></_maximum>
+            
+            <_showMeter>&true;</_showMeter>
+            <_meterFillFilename>Menus\NorthernUI\meters\statbar\hd_fill_health.dds</_meterFillFilename>
+            
+            <_whichColor>
+               <copy>1</copy>
+               <max>
+                  <copy>2</copy>
+                  <onlyif><copy src="stats_data_character" trait="user12" /><gt>0</gt></onlyif>
+               </max>
+               <max>
+                  <copy>3</copy>
+                  <onlyif><copy src="stats_data_character" trait="user12" /><lt>0</lt></onlyif>
+               </max>
+            </_whichColor>
+            <_valueColorR>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorR_" />
+            </_valueColorR>
+            <_valueColorG>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorG_" />
+            </_valueColorG>
+            <_valueColorB>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorB_" />
+            </_valueColorB>
+         </rect>
+         <rect name="field_stamina">
+            <!-- ID#14 shows a tooltip; user0 indicates which one. -->
+            <id>14</id>
+            <target>&true;</target>
+				<user0>6</user0> <!-- Tooltip 4: Fatigue -->
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <_label><copy src="strings()" trait="_fatigue"/></_label>
+            <_value>  <copy src="stats_data_character" trait="user10" /></_value>
+            <_maximum><copy src="stats_data_character" trait="user11" /></_maximum>
+            
+            <_showMeter>&true;</_showMeter>
+            <_meterFillFilename>Menus\NorthernUI\meters\statbar\hd_fill_stamina.dds</_meterFillFilename>
+            
+            <_whichColor>
+               <copy>1</copy>
+               <max>
+                  <copy>2</copy>
+                  <onlyif><copy src="stats_data_character" trait="user14" /><gt>0</gt></onlyif>
+               </max>
+               <max>
+                  <copy>3</copy>
+                  <onlyif><copy src="stats_data_character" trait="user14" /><lt>0</lt></onlyif>
+               </max>
+            </_whichColor>
+            <_valueColorR>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorR_" />
+            </_valueColorR>
+            <_valueColorG>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorG_" />
+            </_valueColorG>
+            <_valueColorB>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorB_" />
+            </_valueColorB>
+         </rect>
+      </rect>
+   </rect>
+	
+	<rect name="stat_pop_background"> <!-- info card -->
+		<id>61</id>
+		<target>&true;</target>
+		<depth>-9</depth>
+      <alpha>255</alpha>
+      
+      <!--
+         (recv) user0 = Animation step, [0.0, 1.0]. Always 0 if this element is 
+                        not visible (which is dumb, but okay, whatever).
+         (send) user1 = Animation speed in seconds; default is 0.24.
+         (recv) user2 = Icon filepath.
+         (recv) user3 = Text to show.
+         (recv) user4 = Boolean: icon should be shown?
+         (recv) user5 = Hand-to-hand damage. Set to -1 if the skill doesn't have 
+                        a damage value.
+      -->
+		<user0>0.00</user0>
+		<user1>0.01</user1>
+		<user2>Menus\Stats\stat_pop_icon_agility.dds</user2>
+		<user3>Cast spells to inflict magical, fire, frost, shock, and poison damage or to reduce resistances to magical attacks.</user3>
+		<user4>&true;</user4>
+		<user5>-1</user5>
+		
+      <_isHandToHand>
+         <copy src="StatsMenu" trait="user0" /><eq>3</eq>
+         <and>
+            <copy src="me()" trait="user5" /><gte>0</gte>
+         </and>
+      </_isHandToHand>
+      
+      <include src="NorthernUI\item_card.xml" />
+      <_modX> <!-- force off-screen if it should be hidden; workaround user0 breaking if we actually use visible. -->
+         <copy>9999999</copy>
+         <onlyif>
+            <copy src="me()" trait="user0" /><lte>0</lte>
+         </onlyif>
+      </_modX>
+		<user21>
+			<copy   src="stat_pop_image" trait="height" />
+         <onlyif src="stat_pop_image" trait="visible" />
+			<max    src="stat_pop_text"  trait="height" />
+         <max>
+            <copy   src="stat_pop_hand2hand_icon" trait="y" />
+            <add    src="stat_pop_hand2hand_icon" trait="height" />
+            <onlyif src="me()" trait="_isHandToHand" />
+         </max>
+         <max>
+            <copy   src="stat_pop_hand2hand_damage" trait="y" />
+            <add    src="stat_pop_hand2hand_damage" trait="height" />
+            <onlyif src="me()" trait="_isHandToHand" />
+         </max>
+		</user21>
+      <user22>&true;</user22>
+      
+		<!-- POPUP CONTENTS -->
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <image name="stat_pop_image">
+            <depth>1</depth>
+            <visible>
+               <copy src="stat_pop_background" trait="user4" />
+               <and>&false;</and> <!-- no-op for now -->
+            </visible>
+            <filename><copy src="stat_pop_background" trait="user2" /></filename>
+            <alpha><copy src="stat_pop_background" trait="alpha" /></alpha>
+            <width> <copy src="me()" trait="filewidth" /></width>
+            <height><copy src="me()" trait="fileheight" /></height>
+            <zoom>50</zoom>
+            <x>0</x>
+            <y>0</y>
+         </image>
+         <text name="stat_pop_text">
+            <depth>7</depth>
+            <string><copy src="stat_pop_background" trait="user3" /></string>
+            <justify>&left;</justify>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <red>255</red><green>255</green><blue>255</blue>
+            <alpha><copy src="stat_pop_background" trait="alpha" /></alpha>
+            <wrapwidth>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+            </wrapwidth>
+            <x>
+               <copy src="stat_pop_image" trait="x" />
+               <add  src="stat_pop_image" trait="width" />
+               <add>8</add>
+               <onlyif src="stat_pop_image" trait="visible" />
+            </x>
+            <y>0</y>
+         </text>
+         <image name="stat_pop_hand2hand_icon">
+            <visible><copy src="stat_pop_background" trait="_isHandToHand" /></visible>
+            <depth>7</depth>
+            <filename>Icons\Weapons\HandToHand.dds</filename>
+            <zoom>-1</zoom>
+            <alpha><copy src="stat_pop_background" trait="alpha" /></alpha>
+            <height>32</height>
+            <width> 32</width>
+            <x>0</x>
+            <y>
+               <copy src="stat_pop_image" trait="y" />
+               <add  src="stat_pop_image" trait="height" />
+               <max>
+                  <copy src="stat_pop_text" trait="y" />
+                  <add  src="stat_pop_text" trait="height" />
+               </max>
+               <add>8</add>
+            </y>
+         </image>
+         <text name="stat_pop_hand2hand_damage">
+            <visible><copy src="stat_pop_background" trait="_isHandToHand" /></visible>
+            <depth>7</depth>
+            <string><copy src="stat_pop_background" trait="user5" /></string>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <alpha><copy src="stat_pop_background" trait="alpha" /></alpha>
+            <red>140</red><green>140</green><blue>140</blue>
+            <x>
+               <copy src="stat_pop_hand2hand_icon" trait="x"/>
+               <add  src="stat_pop_hand2hand_icon" trait="width"/>
+               <add>10</add>
+            </x>
+            <y>
+               <copy src="stat_pop_hand2hand_icon" trait="y"/>
+            </y>
+         </text>
+      </rect>
+	</rect>
+	
+	<template name="stat_skill_template">
+		<rect name="stat_item">
+			<id>34</id>
+			<alpha> 0 </alpha>
+			<depth> 3 </depth>
+			<width> <copy src="parent()"  trait="width" /></width>
+			<height><copy src="StatsMenu" trait="_skillListRowHeight" /></height>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+            <sub> <!-- account for the gap in listindices created by the "minor skills" inline-header in vanilla -->
+               <copy>1</copy>
+               <onlyif>
+                  <copy src="me()" trait="listindex" />
+                  <gte  src="stats_data_skills" trait="user3" />
+                  <and>
+                     <!--
+                        Before finishing the tutorial and picking a class, you have 
+                        no major/minor skill distinction, so the label position is 
+                        zero. We don't want List Item #0 to be positioned as if it 
+                        were at -1.
+                     -->
+                     <copy src="stats_data_skills" trait="user3" />
+                     <gt>0</gt>
+                  </and>
+               </onlyif>
+            </sub>
+				<mult src="StatsMenu" trait="_skillListRowHeight" />
+			</y>
+			<listclip>
+				<copy src="me()" trait="listindex"/>
+				<gte>
+					<copy src="stats_skill_scrollbar" trait="user7"/>
+					<add  src="stats_skill_scrollbar" trait="user8"/>
+				</gte>
+				<or>
+					<copy src="me()" trait="listindex"/>
+					<lt   src="stats_skill_scrollbar" trait="user7"/>
+				</or>
+			</listclip>
+			<listindex>0</listindex> <!-- zero-indexed position in list -->
+			<user1>100</user1> <!-- skill progression max -->
+			<user2> 50</user2> <!-- skill progression current -->
+			<user3> 10</user3> <!-- skill current -->
+			<user4>Destruction</user4> <!-- skill name -->
+			<user5>Menus\Icons\Skills\test_skill_icon.dds</user5> <!-- skill icon -->
+			<user6>0</user6> <!-- internal use only -->
+			<user7>0</user7> <!-- skill base -->
+						
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to xitem triggers this. -->
+			<target> &true; </target>
+			<xdefault>&false;</xdefault>
+			<xlist>&xitem;</xlist>
+			<xup>&prev;</xup>
+			<xdown>&next;</xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="stats_skill_scrollbar" trait="user8"/>
+					<div>2</div>
+					<ceil>0</ceil>
+				</sub>
+				<add>1</add>
+			</xscroll>
+						
+			<image name="stat_item_icon">
+				<clips>&true;</clips>
+				<filename><copy src="parent()" trait="user5" /></filename>
+				<depth>1</depth>
+				<width>64</width>
+				<height>64</height>
+				<x>3</x>
+				<y>3</y>
+			</image>
+			<text name="stat_item_label">
+				<clips>&true;</clips>
+				<depth>1</depth>
+				<string><copy src="parent()" trait="user4" /></string>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<justify>&left;</justify>
+				<red>255</red><green>255</green><blue>255</blue>
+				<alpha>255</alpha>
+				<wrapwidth>
+               <copy src="parent()"  trait="width" />
+               <sub  src="StatsMenu" trait="_skillListColWidthValue" />
+               <sub  src="StatsMenu" trait="_skillListColWidthProgress" />
+               <sub  src="StatsMenu" trait="_skillListColWidthType" />
+               <sub  src="me()"      trait="x" />
+            </wrapwidth>
+				<x> <!-- 8px after sibling -->
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add>8</add>
+            </x>
+				<y> <!-- center within parent; nudge down by 1.5px -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+               <div>2</div>
+				</y>
+			</text>
+         <text name="stat_item_type">
+            <clips>&true;</clips>
+				<x>
+               <copy src="parent()"  trait="width" />
+               <sub  src="StatsMenu" trait="_skillListColWidthValue" />
+               <sub  src="StatsMenu" trait="_skillListColWidthProgress" />
+               <sub  src="StatsMenu" trait="_skillListColWidthType" />
+            </x>
+				<y> <!-- center within parent; nudge down by 1.5px -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+               <div>2</div>
+				</y>
+            
+            <_type_1><copy src="xxnStrings()" trait="_skillsMenuSkillTypeMajor" /></_type_1>
+            <_type_2><copy src="xxnStrings()" trait="_skillsMenuSkillTypeMinor" /></_type_2>
+         
+				<depth>1</depth>
+				<justify>&left;</justify>
+				<red>255</red><green>255</green><blue>255</blue>
+				<alpha>255</alpha>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <string>
+               <copy src="parent()" trait="listindex" />
+               <gte  src="stats_data_skills" trait="user3" />
+               <copy src="me()"     trait="_type_" />
+            </string>
+         </text>
+			
+			<image name="stat_item_meter">
+				<x>
+               <copy src="parent()"  trait="width" />
+               <sub  src="StatsMenu" trait="_skillListColWidthValue" />
+               <sub  src="StatsMenu" trait="_skillListColWidthProgress" />
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+               <div>2</div>
+            </y>
+				<depth>1</depth>
+            
+            <include src="NorthernUI\meters\generic_upward.xml"/>
+				<_fillPercent>
+					<copy src="parent()" trait="user2" />
+					<div  src="parent()" trait="user1" />
+				</_fillPercent>
+            
+				<clips>&true;</clips>
+			</image>
+			
+			<text name="stat_item_value">
+				<clips>&true;</clips>
+				<depth> 1 </depth>
+				<string><copy src="parent()" trait="user3" /></string>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<justify> &center; </justify>
+            
+            <_whichColor>
+               <copy>1</copy>
+               <max> <!-- buff -->
+                  <copy>2</copy>
+                  <onlyif>
+                     <copy src="parent()" trait="user3" />
+                     <gt   src="parent()" trait="user7" />
+                  </onlyif>
+               </max>
+               <max> <!-- nerf -->
+                  <copy>3</copy>
+                  <onlyif>
+                     <copy src="parent()" trait="user3" />
+                     <lt   src="parent()" trait="user7" />
+                  </onlyif>
+               </max>
+            </_whichColor>
+            <red>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorR_" />
+            </red>
+            <green>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorG_" />
+            </green>
+            <blue>
+               <copy src="me()"      trait="_whichColor" />
+               <copy src="StatsMenu" trait="_valueColorB_" />
+            </blue>
+				<alpha>255</alpha>
+				<x> <!-- rightmost column -->
+               <copy src="parent()"  trait="width" />
+               <sub  src="StatsMenu" trait="_skillListColWidthValue" />
+            </x>
+				<y> <!-- center within parent; nudge down by 1.5px -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+               <div>2</div>
+				</y>
+			</text>
+         <image name="stat_item_line">
+            <clips>&true;</clips>
+            <alpha>128</alpha>
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width> <copy src="parent()" trait="width"/></width>
+            <height><copy src="me()"     trait="fileheight"/></height>
+            <x>0</x>
+            <y> <!-- align with bottom of parent -->
+               <copy src="parent()" trait="height"/>
+               <sub>
+                  <copy src="me()" trait="height"/>
+                  <div>2</div>
+               </sub>
+            </y>
+         </image>
+		</rect>
+	</template>
+	<template name="stat_faction_template">
+		<rect name="stat_faction_item">
+			<id>44</id>
+			<target>&true;</target>
+			<clips>&true;</clips>
+			<locus>&true;</locus>
+			<alpha>0</alpha>
+			<depth>3</depth>
+			<width> <copy src="parent()"  trait="width" /></width>
+			<height><copy src="StatsMenu" trait="_factionListRowHeight" /></height>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="height" />
+				<mult src="me()" trait="listindex" />
+			</y>
+			<listindex>1</listindex> <!-- position in list -->
+			<user1>Mages Guild</user1> <!-- faction name -->
+			<user2>Apprentice</user2> <!-- faction rank -->
+			<user3>Wizard</user3> <!-- faction next rank -->
+			<user4>Menus\Stats\stat_fact_icon_mages_guild_1.dds</user4> <!-- faction icon -->
+			<user5>&false;</user5> <!-- is faction active/visible -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>&false;</xdefault>
+			<xlist>&xitem;</xlist>
+			<xup>&prev;</xup>
+			<xdown>&next;</xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="stats_faction_scrollbar" trait="user8" />
+					<div>2</div>
+					<ceil>0</ceil>
+				</sub>
+				<add>1</add>
+			</xscroll>
+			
+			<image name="stat_faction_item_icon">
+				<clips>&true;</clips>
+				<filename><copy src="parent()" trait="user4" /></filename>
+				<width> 128</width>
+				<height>128</height>
+				<x><copy src="StatsMenu" trait="_factionListIconX" /></x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+				<depth>1</depth>
+			</image>
+         <rect name="text_data">
+            <locus>&true;</locus>
+				<user1><copy src="parent()" trait="user1" /></user1> <!-- faction name -->
+				<user2><copy src="parent()" trait="user2" /></user2> <!-- current rank -->
+				<user3><copy src="parent()" trait="user3" /></user3> <!-- next rank -->
+            <x> <!-- after icon, with margin -->
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="StatsMenu" trait="_factionListIconMarginX" />
+            </x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="child(rank)" trait="y" />
+               <add  src="child(rank)" trait="height" />
+            </height>
+            
+            <text name="name">
+               <clips>&true;</clips>
+               <string><copy src="parent()" trait="user1" /></string>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <wrapwidth>
+                  <copy src="parent()"  trait="width" />
+                  <sub  src="me()"      trait="x" />
+               </wrapwidth>
+               <x>0</x>
+               <y>0</y>
+               <depth>1</depth>
+            </text>
+            <text name="rank">
+               <clips>&true;</clips>
+               <string><copy src="parent()" trait="user2" /></string>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>140</red><green>140</green><blue>140</blue>
+               <wrapwidth>
+                  <copy src="parent()"  trait="width" />
+                  <sub  src="me()"      trait="x" />
+               </wrapwidth>
+               <x><copy src="sibling()" trait="x" /></x>
+               <y> <!-- 8px after sibling -->
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+               <depth>1</depth>
+            </text>
+         </rect>
+         <image name="stat_faction_line">
+            <alpha>128</alpha>
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width> <copy src="parent()" trait="width" /></width>
+            <height><copy src="me()"     trait="fileheight" /></height>
+            <x>0</x>
+            <y> <!-- align with bottom of parent -->
+               <copy src="parent()" trait="height" />
+               <sub>
+                  <copy src="me()" trait="height" />
+                  <div>2</div>
+               </sub>
+            </y>
+         </image>
+		</rect>
+	</template>
+	<template name="stat_misc_template">
+		<rect name="stat_misc_item">
+			<id>44</id>
+			<target>&false;</target>
+			<clips>&true;</clips>
+			<locus>&true;</locus>
+			<alpha>0</alpha>
+			<depth>3</depth>
+			<width>
+            <copy src="parent()" trait="width" />
+            <min>400</min>
+         </width>
+			<height><copy src="StatsMenu" trait="_miscStatListRowHeight" /></height>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="height" />
+				<mult src="me()" trait="listindex" />
+			</y>
+			<listindex> 0 </listindex> <!-- position in list -->
+			<user1> Label </user1> <!-- label text -->
+			<user2> 0 </user2> <!-- value text -->
+			
+			<text name="stat_misc_label">
+				<clips>&true;</clips>
+				<depth>1</depth>
+				<string><copy src="parent()" trait="user1" /></string>
+				<justify>&left;</justify>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<red>140</red><green>140</green><blue>140</blue>
+				<alpha>255</alpha>
+				<x> 30 </x>
+				<y> 16 </y>
+				<wrapwidth>
+               <copy src="parent()"  trait="width" />
+               <sub  src="me()"      trait="x" />
+               <sub  src="StatsMenu" trait="_miscStatListColWidthValue" />
+            </wrapwidth>
+			</text>
+			<text name="stat_misc_value">
+				<clips>&true;</clips>
+				<depth>1</depth>
+				<string><copy src="parent()" trait="user2" /></string>
+				<justify>&right;</justify>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<red>255</red><green>255</green><blue>255</blue>
+				<alpha>255</alpha>
+				<x>
+               <copy src="parent()"  trait="width" />
+               <sub  src="StatsMenu" trait="_miscStatListColWidthValue" />
+            </x>
+				<y> 16 </y>
+			</text>
+		</rect>
+	</template>
+</menu>

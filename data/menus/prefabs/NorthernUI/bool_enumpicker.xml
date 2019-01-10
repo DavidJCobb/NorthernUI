@@ -1,0 +1,145 @@
+<!--<rect name="bool_enumpicker">-->
+   <!-- This prefab shows the selected option as a string bordered 
+        by left/right buttons, which change the string. In reality,
+        however, it only takes a bool, and the left/right buttons 
+        are the same button. -->
+   
+   <locus>&true;</locus>
+   <height>
+      <copy src="child(value)" trait="height" />
+      <max  src="child(button_left)" trait="height" />
+      <max  src="child(button_right)" trait="height" />
+   </height>
+	<_mouseover_any>
+		<copy src="child(check_hitbox)"  trait="mouseover" />
+		<add  src="me()" trait="mouseover" />
+		<gt> 0</gt>
+		<sub>1</sub>
+	</_mouseover_any>
+   
+   <!-- args -->
+   <user0>&generic;</user0> <!-- tile ID: value -->
+   <user1>&generic;</user1> <!-- tile ID: either arrow -->
+   <user3>255</user3> <!-- alpha -->
+   <user4>0</user4> <!-- OR'd with mouseover -->
+   <string> </string> <!-- string to show for the value (if not set by executable) -->
+   <user12> </user12> <!-- passed to hitbox -->
+   <user13> </user13> <!-- passed to hitbox -->
+   
+   <!-- out: -->
+   <user20><copy src="child(check_hitbox)" trait="user20" /></user20>
+   
+   <rect name="check_hitbox">
+      <clips><copy src="parent()" trait="clips" /></clips>
+      <id><copy src="parent()" trait="user1" /></id>
+      <target>&true;</target>
+      <clicksound>3</clicksound>
+      <xdefault>&false;</xdefault>
+      <locus>&true;</locus>
+      
+      <user12><copy src="parent()" trait="user12" /></user12>
+      <user13><copy src="parent()" trait="user13" /></user13>
+      <user20>&false;</user20> <!-- NorthernUI menus supply this from the executable -->
+      <user21> </user21> <!-- NorthernUI menus supply this from the executable -->
+      
+      <depth>5</depth>
+      <x><copy src="sibling(button_left)" trait="x" /></x>
+      <y><copy src="sibling(button_left)" trait="y" /></y>
+      <width>
+         <copy src="sibling(button_right)" trait="x" />
+         <add  src="sibling(button_right)" trait="width" />
+         <sub  src="sibling(button_left)"  trait="x" />
+      </width>
+      <height><copy src="sibling(button_left)" trait="height" /></height>
+      
+      <_holeX><copy src="sibling(button_left)" trait="width" /></_holeX>
+      <_holeW>
+         <copy src="sibling(button_right)" trait="x" />
+         <sub  src="me()"  trait="x" />
+      </_holeW>
+      
+      <rect name="check_hitbox_hole">
+         <id>&generic;</id>
+         <target>&true;</target>
+         <clicksound>0</clicksound>
+         <locus>&true;</locus>
+         <xdefault>-1</xdefault>
+         <depth>2</depth>
+         <x><copy src="parent()" trait="_holeX" /></x>
+         <y>0</y>
+         <width><copy src="parent()" trait="_holeW" /></width>
+         <height><copy src="parent()" trait="height" /></height>
+      </rect>
+   </rect>
+   
+   <text name="value">
+      <depth>0</depth>
+      <clips><copy src="parent()" trait="clips" /></clips>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <id><copy src="parent()" trait="user0" /></id>
+      <justify>&center;</justify>
+      <alpha><copy src="parent()" trait="user3" /></alpha>
+      <red>
+         <copy>140</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif>
+               <copy src="parent()" trait="_mouseover_any" />
+               <add  src="parent()" trait="user4" />
+               <gt>0</gt>
+            </onlyif>
+         </max>
+      </red>
+      <green><copy src="me()" trait="red" /></green>
+      <blue> <copy src="me()" trait="red" /></blue>
+      <x>
+         <copy src="parent()" trait="width" />
+         <div>2</div>
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <string><copy src="parent()" trait="string" /></string>
+   </text>
+   <image name="button_left">
+      <clips><copy src="parent()" trait="clips" /></clips>
+      <filename>\Menus\NorthernUI\buttons\hd_arrow_h.dds</filename>
+      <zoom>25</zoom>
+      <width>
+         <copy src="me()" trait="filewidth" />
+         <div>2</div>
+      </width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <alpha><copy src="parent()" trait="user3" /></alpha>
+   </image>
+   <image name="button_right">
+      <clips><copy src="parent()" trait="clips" /></clips>
+      <filename>\Menus\NorthernUI\buttons\hd_arrow_h.dds</filename>
+      <zoom>25</zoom>
+      <width>
+         <copy src="me()" trait="filewidth" />
+         <div>2</div>
+      </width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <cropX><copy src="me()" trait="width" /></cropX>
+      <depth>5</depth>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <alpha><copy src="parent()" trait="user3" /></alpha>
+   </image>
+<!--</rect>-->

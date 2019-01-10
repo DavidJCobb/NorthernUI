@@ -1,0 +1,136 @@
+<!-- <rect name="bolt_on"> -->
+   <locus>&true;</locus>
+   <zoom>75</zoom>
+   <x>
+      <copy src="parent()" trait="width" />
+      <sub  src="me()"     trait="width" />
+      <div>2</div>
+   </x>
+   <y>
+      <copy src="parent()" trait="height" />
+      <sub>
+         <copy>12</copy> <!-- px -->
+         <mult src="content_space" trait="zoom" />
+         <div>100</div>
+         <floor>0</floor>
+      </sub>
+   </y>
+   <depth>1</depth>
+   <width>
+      <copy src="sibling()" trait="width" />
+      <mult>0.75</mult>
+   </width>
+   <height>64</height> <!-- override me -->
+   
+   <user24> <!-- out: content box max height -->
+      <copy src="me()" trait="height" />
+      <sub  src="child(edge_b)" trait="height" />
+   </user24>
+   
+   <image name="endcap_l">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\journal_bolt_on\corners.dds</filename>
+      <width>
+         <copy src="me()" trait="filewidth" />
+         <div>2</div>
+      </width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+      </y>
+      <cropx>0</cropx>
+   </image>
+   <image name="endcap_r">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\journal_bolt_on\corners.dds</filename>
+      <width>
+         <copy src="me()" trait="filewidth" />
+         <div>2</div>
+      </width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y><copy src="sibling()" trait="y" /></y>
+      <cropx><copy src="me()" trait="width" /></cropx>
+   </image>
+   <image name="edge_b">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\journal_bolt_on\bottom_edge.dds</filename>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub>
+            <copy src="sibling()" trait="width" />
+            <mult>2</mult>
+         </sub>
+      </width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <x><copy src="sibling()" trait="width" /></x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+      </y>
+      <tile>&true;</tile>
+   </image>
+   <image name="fill">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\cards\fill_black.dds</filename>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="x" />
+         <sub  src="me()"     trait="x" />
+      </width>
+      <height>
+         <copy src="parent()"  trait="height" />
+         <sub  src="sibling()" trait="height" />
+      </height>
+      <x><copy src="sibling()" trait="x" /></x>
+      <y>0</y>
+      <tile>&true;</tile>
+   </image>
+   <image name="edge_l">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\journal_bolt_on\vertical_edges.dds</filename>
+      <width>
+         <copy src="me()" trait="filewidth" />
+         <div>2</div>
+      </width>
+      <height>
+         <copy src="parent()" trait="height" />
+         <sub  src="sibling(endcap_l)" trait="height" />
+      </height>
+      <x>0</x>
+      <y>0</y>
+      <tile>&true;</tile>
+   </image>
+   <image name="edge_r">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\journal_bolt_on\vertical_edges.dds</filename>
+      <width>
+         <copy src="me()" trait="filewidth" />
+         <div>2</div>
+      </width>
+      <height>
+         <copy src="parent()" trait="height" />
+         <sub  src="sibling(endcap_r)" trait="height" />
+      </height>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y>0</y>
+      <cropx><copy src="me()" trait="width" /></cropx>
+      <tile>&true;</tile>
+   </image>
+   
+   <!-- content box goes here -->
+<!-- </rect> -->

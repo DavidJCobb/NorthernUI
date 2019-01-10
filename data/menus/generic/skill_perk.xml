@@ -1,0 +1,123 @@
+<!-- skill_perk.xml -->
+<menu name="SkillPerkMenu">
+	<class> &GenericMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+
+	<user0></user0>		<!-- Icon filename -->
+	<user1></user1>		<!-- Perk description -->
+	<user2></user2>		<!-- "OK" -->
+	
+	<xbuttona><ref src="skillperk_ok_button" trait="clicked" /></xbuttona>
+   
+   <!--
+      Used when you increase from one skill mastery level to the next; 
+      so named because each such level gives you a perk of some kind.
+   -->
+   
+   <image name="back">
+      <filename>Menus\NorthernUI\Shared\simple_back.dds</filename>
+      <x>0</x>
+      <y>0</y>
+      <width> <copy src="screen()" trait="width" /></height>
+      <height><copy src="screen()"  trait="height" /></height>
+      <tile>&true;</tile>
+      <depth>-1</depth>
+      <alpha>160</alpha>
+   </image>
+   <rect name="base">
+		<id>&generic;</id>
+		<target>&true;</target>
+		<depth>1</depth>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+         <div> 2 </div>
+		</y>
+      
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>700</user20>
+		<user21>
+         <copy src="skill_icon"  trait="height" />
+         <max  src="description" trait="height" />
+      </user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      <user23>255</user23> <!-- fully opaque -->
+      
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <image name="skill_icon">
+            <filename><copy src="SkillPerkMenu" trait="user0" /></filename>
+            <width> 243</width>
+            <height>350</height>
+            <x>0</x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+         </image>
+         <text name="description">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <string><copy src="SkillPerkMenu" trait="user1" /></string>
+            <red>140</red>
+            <green>140</green>
+            <blue>140</blue>
+            <x>
+               <copy src="skill_icon" trait="x" />
+               <add  src="skill_icon" trait="width" />
+               <add>24</add>
+            </x>
+            <y>0</y>
+            <wrapwidth>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+            </wrapwidth>
+         </text>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      <user23>255</user23> <!-- fully opaque -->
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <width>
+            <copy src="child()" trait="x" />
+            <add  src="child()" trait="width" />
+         </width>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="skillperk_ok_button"> <!-- PC-only -->
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>276</_dxScanCode>
+            <clicksound>2</clicksound>
+            <id>1</id>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="SkillPerkMenu" trait="user2" /></string>
+            <xdefault>5</xdefault>
+            <target>&true;</target>
+         </rect>
+      </rect>
+   </rect>
+</menu>

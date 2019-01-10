@@ -1,0 +1,227 @@
+<!--<rect name="field">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <visible>&true;</visible>
+   
+   <!--
+      Specify the label.
+      
+      "Label concatenation" exists for cases where you need a dynamic 
+      string as part of the label, e.g. "[NPC Name] Gold" for the 
+      barter menu. The label concatenation mods are:
+      
+      0 = Don't concatenate
+      1 = Concatenate directly
+      2 = Concatenate with space (actually an invisible dash)
+   -->
+   <_label>Attribute Name</_label>
+   <_labelConcat></_labelConcat>
+   <_labelConcatMode>0</_labelConcatMode>
+   
+   <_value>0</_value>
+   <_maximum>-1</_maximum> <!-- Not displayed if negative. -->
+   <_valueSuffix>%</_valueSuffix>
+   <_useValueSuffix>&false;</_useValueSuffix>
+   
+   <_valueColorR>255</_valueColorR>
+   <_valueColorG>255</_valueColorG>
+   <_valueColorB>255</_valueColorB>
+   
+   <_showMeter>&false;</_showMeter>
+   <_meterFillFilename>Menus\NorthernUI\meters\statbar\hd_fill_health.dds</_meterFillFilename>
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <_spacing>4</_spacing>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <width> <!-- collapse if not visible -->
+      <copy src="child(value)" trait="x" />
+      <add  src="child(value)" trait="width" />
+      <max>
+         <copy src="child(max)" trait="x" />
+         <add  src="child(max)" trait="width" />
+         <onlyif><copy src="me()" trait="_maximum" /><gte>0</gte></onlyif>
+      </max>
+      <max>
+         <copy src="child(suffix)" trait="x" />
+         <add  src="child(suffix)" trait="width" />
+         <onlyif><copy src="me()" trait="_useValueSuffix" /><gte>0</gte></onlyif>
+      </max>
+      <max>
+         <copy   src="child(meter)" trait="x" />
+         <add    src="child(meter)" trait="width" />
+         <onlyif src="me()"         trait="_showMeter" />
+      </max>
+      <onlyif src="me()" trait="visible" />
+   </width>
+   <height>
+      <copy src="child(label)" trait="height" />
+      <max  src="child(value)" trait="height" />
+      <max  src="child(slash)" trait="height" />
+      <max  src="child(max)"   trait="height" />
+      <max  src="child(meter)" trait="height" />
+   </height>
+   
+   <rect name="label">
+      <locus>&true;</locus>
+      <x>0</x>
+      <y>0</y>
+      <width>
+         <copy   src="child(b)" trait="width" />
+         <onlyif src="child(b)" trait="visible" />
+         <add    src="child(b)" trait="x" />
+      </width>
+      <height>
+         <copy src="child(a)" trait="height" />
+         <max  src="child(b)" trait="height" />
+      </height>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   
+      <!-- Pass values to children: -->
+      <_a><copy src="parent()" trait="_label" /></_a>
+      <_b><copy src="parent()" trait="_labelConcat" /></_b>
+      <_useB><copy src="parent()" trait="_labelConcatMode" /><neq>0</neq></_useB>
+      <_useSpace>
+         <copy src="parent()" trait="_labelConcatMode" />
+         <eq>2</eq>
+         <and  src="me()" trait="_useB" />
+      </_useSpace>
+      
+      <text name="a">
+         <string><copy src="parent()" trait="_a" /></string>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <justify>&left;</justify>
+         <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+         <x>0</x>
+         <y>0</y>
+      </text>
+      <text name="b">
+         <visible><copy src="parent()" trait="_useB" /></visible>
+         <string> <copy src="parent()" trait="_b" /></string>
+         <include src="NorthernUI\fonts\normal-shadowed.xml" />
+         <justify>&left;</justify>
+         <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+         <x> <!-- after sibling -->
+            <copy>3</copy>
+            <onlyif src="parent()"  trait="_useSpace" />
+            <add    src="sibling(a)" trait="x" />
+            <add    src="sibling(a)" trait="width" />
+         </x>
+         <y>0</y>
+      </text>
+   </rect>
+   <text name="value">
+      <string><copy src="parent()" trait="_value" /></string>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <justify>&left;</justify>
+      <red>140</red><green>140</green><blue>140</blue><alpha>255</alpha>
+      <x> <!-- 8px after sibling -->
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add  src="parent()"  trait="_spacing" />
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <text name="slash">
+      <visible><copy src="parent()" trait="_maximum" /><gte>0</gte></visible>
+      <string>/</string>
+      <justify>&left;</justify>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <red>  <copy src="sibling()" trait="red"/></red>
+      <green><copy src="sibling()" trait="green"/></green>
+      <blue> <copy src="sibling()" trait="blue"/></blue>
+      <alpha><copy src="sibling()" trait="alpha"/></alpha>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add>
+            <copy>1</copy>
+            <onlyif src="me()" trait="visible" />
+         </add>
+      </x>
+      <y><copy src="sibling()" trait="y"/></y>
+   </text>
+   <text name="max">
+      <visible><copy src="parent()" trait="_maximum" /><gte>0</gte></visible>
+      <string> <copy src="parent()" trait="_maximum" /></string>
+      <justify>&left;</justify>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <red>  <copy src="sibling()" trait="red"/></red>
+      <green><copy src="sibling()" trait="green"/></green>
+      <blue> <copy src="sibling()" trait="blue"/></blue>
+      <alpha><copy src="sibling()" trait="alpha"/></alpha>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add>
+            <copy>1</copy>
+            <onlyif src="me()" trait="visible" />
+         </add>
+      </x>
+      <y><copy src="sibling()" trait="y"/></y>
+   </text>
+   <text name="suffix">
+      <visible><copy src="parent()" trait="_useValueSuffix" /></visible>
+      <string> <copy src="parent()" trait="_valueSuffix" /></string>
+      <justify>&left;</justify>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <red>  <copy src="sibling()" trait="red"/></red>
+      <green><copy src="sibling()" trait="green"/></green>
+      <blue> <copy src="sibling()" trait="blue"/></blue>
+      <alpha><copy src="sibling()" trait="alpha"/></alpha>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add>
+            <copy>1</copy>
+            <onlyif src="me()" trait="visible" />
+         </add>
+      </x>
+      <y><copy src="sibling()" trait="y"/></y>
+   </text>
+   
+   <image name="meter">
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add>
+            <copy>1</copy>
+            <onlyif src="me()" trait="visible" />
+         </add>
+      </x>
+      <y><copy src="sibling()" trait="y"/></y>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      
+      <include src="NorthernUI\meters\statbar.xml"/>
+      <visible>   <copy src="parent()" trait="_showMeter" /></visible>
+      <_fillImage><copy src="parent()" trait="_meterFillFilename" /></_fillImage>
+      <_fillPercent>
+         <copy src="parent()" trait="_value" />
+         <div  src="parent()" trait="_maximum" />
+      </_fillPercent>
+   </image>
+<!--</rect>-->

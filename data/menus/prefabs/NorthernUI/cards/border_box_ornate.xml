@@ -1,0 +1,206 @@
+<!--<rect name="GenericBackground">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <user18><copy src="me()" trait="user22" /></user18> <!-- use content-box width -->
+   <user19><copy src="me()" trait="user22" /></user19> <!-- use content-box height -->
+   <user20>400</user20> <!-- width -->
+   <user21>200</user21> <!-- height -->
+   <user22>&false;</user22> <!-- use content-box sizing (can be overridden per-axis with user18 and user19) -->
+   <user23><copy src="northernui()" trait="_xxnAlpha" /></user23> <!-- alpha -->
+   <_imgCorners>Menus\NorthernUI\cards\hd_ornate_corners.dds</_imgCorners>
+   <_imgBorderH>Menus\NorthernUI\cards\hd_ornate_side_tb.dds</_imgBorderH>
+   <_imgBorderV>Menus\NorthernUI\cards\hd_ornate_side_lr.dds</_imgBorderV>
+   <_imgFill>Menus\NorthernUI\cards\fill_black.dds</_imgFill>
+   <zoom>75</zoom>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <width>
+      <copy src="me()" trait="user20" />
+      <add>
+         <copy   src="child(corner_top_left)"  trait="filewidth" />
+         <onlyif src="me()" trait="user18" />
+      </add>
+   </width>
+   <height>
+      <copy src="me()" trait="user21" />
+      <add>
+         <copy   src="child(corner_top_left)"  trait="fileheight" />
+         <onlyif src="me()" trait="user19" />
+      </add>
+   </height>
+   
+   <image name="corner_top_left">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+		<filename><copy src="parent()" trait="_imgCorners" /></filename>
+		<cropx>0</cropx>
+		<cropy>0</cropy>
+		<width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+		<height><copy src="me()" trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="parent()" trait="user23" /></alpha>
+      
+		<x>0</x>
+		<y>0</y>
+	</image>
+   <image name="corner_top_right">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+		<filename><copy src="parent()" trait="_imgCorners" /></filename>
+		<cropx><copy src="me()" trait="width" /></cropx>
+		<cropy>0</cropy>
+		<width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+		<height><copy src="me()" trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="parent()" trait="user23" /></alpha>
+      
+		<x>
+         <copy src="parent()" trait="width" />
+			<sub  src="me()"     trait="width" />
+      </x>
+		<y>0</y>
+	</image>
+   <image name="corner_bottom_left">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+		<filename><copy src="parent()" trait="_imgCorners" /></filename>
+		<cropx>0</cropx>
+		<cropy> <copy src="me()" trait="height" /></cropy>
+		<width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+		<height><copy src="me()" trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="parent()" trait="user23" /></alpha>
+      
+		<x>0</x>
+		<y>
+         <copy src="parent()" trait="height" />
+			<sub  src="me()"     trait="height" />
+      </y>
+	</image>
+   <image name="corner_bottom_right">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+		<filename><copy src="parent()" trait="_imgCorners" /></filename>
+		<cropx> <copy src="me()" trait="width" /></cropx>
+		<cropy> <copy src="me()" trait="height" /></cropy>
+		<width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+		<height><copy src="me()" trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="parent()" trait="user23" /></alpha>
+      
+		<x>
+         <copy src="parent()" trait="width" />
+			<sub  src="me()"     trait="width" />
+      </x>
+		<y>
+         <copy src="parent()" trait="height" />
+			<sub  src="me()"     trait="height" />
+      </y>
+	</image>
+   
+   <image name="edge_top">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+		<filename><copy src="parent()" trait="_imgBorderH" /></filename>
+		<cropx>0</cropx>
+		<cropy>0</cropy>
+		<width>
+         <copy src="parent()" trait="width" />
+         <sub  src="sibling(corner_top_left)" trait="width" />
+         <sub  src="sibling(corner_top_right)" trait="width" />
+      </width>
+		<height><copy src="me()" trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="parent()" trait="user23" /></alpha>
+      
+		<x><copy src="sibling(corner_top_left)" trait="width" /></x>
+		<y>0</y>
+      
+      <tile>&true;</tile>
+	</image>
+   <image name="edge_bottom">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+		<filename><copy src="parent()" trait="_imgBorderH" /></filename>
+		<cropx>0</cropx>
+		<cropy> <copy src="me()" trait="height" /></cropy>
+		<width>
+         <copy src="parent()" trait="width" />
+         <sub  src="sibling(corner_bottom_left)" trait="width" />
+         <sub  src="sibling(corner_bottom_right)" trait="width" />
+      </width>
+		<height><copy src="me()" trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="parent()" trait="user23" /></alpha>
+      
+		<x><copy src="sibling(corner_top_left)" trait="width" /></x>
+		<y>
+         <copy src="parent()" trait="height" />
+			<sub  src="me()"     trait="height" />
+      </y>
+      
+      <tile>&true;</tile>
+	</image>
+   <image name="edge_left">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+		<filename><copy src="parent()" trait="_imgBorderV" /></filename>
+		<cropx>0</cropx>
+		<width> <copy src="me()" trait="filewidth" /><div>2</div></width>
+		<height>
+         <copy src="parent()" trait="height" />
+         <sub  src="sibling(corner_top_left)" trait="height" />
+         <sub  src="sibling(corner_bottom_left)" trait="height" />
+      </height>
+		<alpha> <copy src="parent()" trait="user23" /></alpha>
+      
+		<x>0</x>
+		<y><copy src="sibling(corner_top_left)" trait="height" /></y>
+      
+      <tile>&true;</tile>
+	</image>
+   <image name="edge_right">
+      <depth>-1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+		<filename><copy src="parent()" trait="_imgBorderV" /></filename>
+		<cropx> <copy src="me()" trait="width" /></cropx>
+		<width> <copy src="me()" trait="filewidth" /><div>2</div></width>
+		<height>
+         <copy src="parent()" trait="height" />
+         <sub  src="sibling(corner_top_left)" trait="height" />
+         <sub  src="sibling(corner_bottom_left)" trait="height" />
+      </height>
+		<alpha> <copy src="parent()" trait="user23" /></alpha>
+      
+		<x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()" trait="width" />
+      </x>
+		<y><copy src="sibling(corner_top_right)" trait="height" /></y>
+      
+      <tile>&true;</tile>
+	</image>
+   
+   <image name="fill">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgFill" /></filename>
+		<width>
+         <copy src="parent()" trait="width" />
+         <sub  src="sibling(corner_top_left)"  trait="filewidth" />
+      </width>
+		<height>
+         <copy src="parent()" trait="height" />
+         <sub  src="sibling(corner_top_left)" trait="fileheight" />
+      </height>
+		<alpha> <copy src="parent()" trait="user23" /></alpha>
+      
+		<x><copy src="sibling(corner_top_left)" trait="width" /></x>
+		<y><copy src="sibling(corner_top_left)" trait="height" /></y>
+      
+      <tile>&true;</tile>
+	</image>
+<!--</rect>-->

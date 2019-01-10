@@ -1,0 +1,198 @@
+<!--<rect name="GenericBackground">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <width> 400</width>
+   <height>200</height>
+   <_imgCorners>Menus\NorthernUI\boxes\box_ornate_corners.dds</_imgCorners>
+   <_imgBorderH>Menus\NorthernUI\boxes\box_ornate_border_h.dds</_imgBorderH>
+   <_imgBorderV>Menus\NorthernUI\boxes\box_ornate_border_v.dds</_imgBorderV>
+   <_imgFill>Menus\NorthernUI\boxes\box_ornate_fill.dds</_imgFill>
+   
+   <!-- OUTPUT VARIABLES ------------------------------------------- >
+      These are provided for callers to use.
+   <!------------------------------------------------------------- -->
+   <_borderWidth>
+      <copy>0</copy>
+      <max  src="edge_left" trait="width" />
+      <max  src="corner_top_left" trait="width" />
+   </_borderWidth>
+   <_borderHeight>
+      <copy>0</copy>
+      <max  src="edge_bottom" trait="height" />
+      <max  src="corner_bottom_right" trait="height" />
+   </_borderHeight>
+   <_outerWidth>
+      <copy src="me()" trait="width" />
+      <max>
+         <copy src="me()"       trait="width" />
+         <add  src="edge_left"  trait="width" />
+         <add  src="edge_right" trait="width" />
+      </max>
+      <max>
+         <copy src="me()" trait="width" />
+         <add  src="corner_top_left"  trait="width" />
+         <add  src="corner_top_right" trait="width" />
+      </max>
+   </_outerWidth>
+   <_outerHeight>
+      <copy src="me()" trait="height" />
+      <max>
+         <copy src="me()"        trait="height" />
+         <add  src="edge_top"    trait="height" />
+         <add  src="edge_bottom" trait="height" />
+      </max>
+      <max>
+         <copy src="me()" trait="height" />
+         <add  src="corner_top_left"    trait="height" />
+         <add  src="corner_bottom_left" trait="height" />
+      </max>
+   </_outerHeight>
+   <_outerX>
+      <copy src="me()" trait="x" />
+      <add>
+         <copy src="corner_top_left" trait="x" />
+         <min  src="edge_left"       trait="x" />
+         <min>0</min>
+      </add>
+   </_outerX>
+   <_outerY>
+      <copy src="me()" trait="y" />
+      <add>
+         <copy src="corner_top_left" trait="y" />
+         <min  src="edge_top"        trait="y" />
+         <min>0</min>
+      </add>
+   </_outerY>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   
+   <image name="corner_top_left">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgCorners" /></filename>
+		<cropx>0</cropx>
+		<cropy>0</cropy>
+		<width> <copy src="me()"     trait="filewidth" /> <div>2</div></width>
+		<height><copy src="me()"     trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      
+		<x><copy>0</copy><sub src="me()" trait="width" /></x>
+		<y><copy>0</copy><sub src="me()" trait="height" /></y>
+	</image>
+   <image name="corner_top_right">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgCorners" /></filename>
+		<cropx><copy src="me()" trait="width" /></cropx>
+		<cropy>0</cropy>
+		<width> <copy src="me()"     trait="filewidth" /> <div>2</div></width>
+		<height><copy src="me()"     trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      
+		<x><copy src="parent()" trait="width" /></x>
+		<y>
+			<copy>0</copy>
+			<sub src="me()" trait="height" />
+		</y>
+	</image>
+   <image name="corner_bottom_left">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgCorners" /></filename>
+		<cropx>0</cropx>
+		<cropy> <copy src="me()"     trait="height" /></cropy>
+		<width> <copy src="me()"     trait="filewidth" /> <div>2</div></width>
+		<height><copy src="me()"     trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      
+		<x><copy>0</copy><sub src="me()" trait="width" /></x>
+		<y><copy src="parent()" trait="height" /></y>
+	</image>
+   <image name="corner_bottom_right">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgCorners" /></filename>
+		<cropx> <copy src="me()"     trait="width" /></cropx>
+		<cropy> <copy src="me()"     trait="height" /></cropy>
+		<width> <copy src="me()"     trait="filewidth" /> <div>2</div></width>
+		<height><copy src="me()"     trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      
+		<x><copy src="parent()" trait="width" /></x>
+		<y><copy src="parent()" trait="height" /></y>
+	</image>
+   
+   <image name="edge_top">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgBorderH" /></filename>
+		<cropx>0</cropx>
+		<cropy>0</cropy>
+		<width> <copy src="parent()" trait="width" /></width>
+		<height><copy src="me()"     trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      
+		<x>0</x>
+		<y><copy>0</copy><sub src="me()" trait="height" /></y>
+      
+      <tile>&true;</tile>
+	</image>
+   <image name="edge_bottom">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgBorderH" /></filename>
+		<cropx>0</cropx>
+		<cropy> <copy src="me()"     trait="height" /></cropy>
+		<width> <copy src="parent()" trait="width" /></width>
+		<height><copy src="me()"     trait="fileheight" /><div>2</div></height>
+		<alpha> <copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      
+		<x>0</x>
+		<y><copy src="parent()" trait="height" /></y>
+      
+      <tile>&true;</tile>
+	</image>
+   <image name="edge_left">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgBorderV" /></filename>
+		<cropx>0</cropx>
+		<width> <copy src="me()"     trait="filewidth" /><div>2</div></width>
+		<height><copy src="parent()" trait="height" /></height>
+		<alpha> <copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      
+		<x><copy>0</copy><sub src="me()" trait="width" /></x>
+		<y>0</y>
+      
+      <tile>&true;</tile>
+	</image>
+   <image name="edge_right">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgBorderV" /></filename>
+		<cropx> <copy src="me()"     trait="width" /></cropx>
+		<width> <copy src="me()"     trait="filewidth" /><div>2</div></width>
+		<height><copy src="parent()" trait="height" /></height>
+		<alpha> <copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      
+		<x><copy src="parent()" trait="width" /></x>
+		<y>0</y>
+      
+      <tile>&true;</tile>
+	</image>
+   
+   <image name="fill">
+      <depth>-1</depth>
+		<filename><copy src="parent()" trait="_imgFill" /></filename>
+		<width> <copy src="parent()" trait="width" /></width>
+		<height><copy src="parent()" trait="height" /></height>
+		<alpha> <copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      
+		<x>0</x>
+		<y>0</y>
+      
+      <tile>&true;</tile>
+	</image>
+<!--</rect>-->

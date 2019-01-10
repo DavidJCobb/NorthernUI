@@ -1,0 +1,51 @@
+<!--<rect name="bottom_bar">-->
+   <!-- options: -->
+   <user23><copy src="northernui()" trait="_xxnAlpha" /></user23> <!-- alpha override -->
+
+   <!-- standard: -->
+   <depth>5</depth>
+   <locus>&true;</locus>
+   <width><copy src="screen()" trait="width" /></width>
+   <height>
+      <copy src="northernui()" trait="_xxnBottomBarHeight" />
+      <add> <!-- default -->
+         <copy>96</copy>
+         <onlyif>
+            <copy src="northernui()" trait="_xxnBottomBarHeight" /><lte>0</lte>
+         </onlyif>
+      </add>
+   </height>
+   <x>0</x>
+   <y> <!-- align with screen bottom -->
+      <copy src="screen()" trait="height" />
+      <sub  src="me()"     trait="height" />
+   </y>
+   
+   <image name="border_top">
+      <filename>Menus\NorthernUI\Shared\simple_border_top.dds</filename>
+      <x>0</x>
+      <y>0</y>
+      <width><copy src="parent()" trait="width" /></height>
+      <height>4</height>
+      <tile>&true;</tile>
+      <depth>-2</depth>
+      <alpha><copy src="parent()" trait="user23" /></alpha>
+   </image>
+   <image name="back">
+      <filename>Menus\NorthernUI\Shared\simple_back.dds</filename>
+      <x>0</x>
+      <y><copy src="sibling()" trait="height" /></y>
+      <width><copy src="parent()" trait="width" /></height>
+      <height>
+         <copy src="parent()"  trait="height" />
+         <sub  src="sibling()" trait="height" />
+      </height>
+      <tile>&true;</tile>
+      <depth>-2</depth>
+      <alpha><copy src="parent()" trait="user23" /></alpha>
+   </image>
+   
+   <!-- CONTENT INSERTION POINT ------------------------------------ >
+      Your child nodes will go here.
+   <!------------------------------------------------------------- -->
+<!--</rect>-->

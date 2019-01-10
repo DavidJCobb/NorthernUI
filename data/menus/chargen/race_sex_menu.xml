@@ -1,0 +1,715 @@
+<!-- race_sex_menu.xml -->
+<menu name="RaceSexMenu">
+	<class> &RaceSexMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<x> 0 </x>
+	<y> 0 </y>
+	<visible> &true; </visible>
+	<locus> &true; </locus>
+	<alpha>	0 </alpha>
+	<explorefade> 0.25 </explorefade>
+	
+	<user0> 0 </user0>		<!-- what pane/page is currently visible -->
+	<user1> 0 </user1>		<!-- how many items are in the currently visible pane -->
+	
+	<xbuttonb><ref src="race_button_done" trait="clicked" /></xbuttonb>
+	
+   <_listRowHeight>32</_listRowHeight>
+   <_listLabelWidth>325</_listLabelWidth>
+   
+   <rect name="background">
+      <include src="NorthernUI\fragments\main\base.xml" />
+      <_headerText><copy src="xxnStrings()" trait="_raceSexMenuTitle" /></_headerText>
+      <_headerEnabled>&true;</_headerEnabled>
+      
+      <width>600</width> <!-- override -->
+      
+		<id>&generic;</id>
+		<target>&true;</target>
+      
+      <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+      
+      <rect name="content">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y> <!-- after main menu base's header -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width><copy src="parent()" trait="width" /></width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()" trait="y" />
+         </height>
+         
+         <rect name="player_name_textedit">
+            <id>10</id>
+            <target>&true;</target>
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="child()" trait="height" />
+               <add>6</add>
+            </height>
+            
+            <string> </string> <!-- this tile is a textbox -->
+            
+            <clicksound>2</clicksound>
+            <xdefault>&false;</xdefault>
+            <xdown><ref src="race_window" trait="mouseover" /></xdown>
+            <depth>1</depth>
+            
+            <text name="label">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <x>8</x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="xxnStrings()" trait="_raceSexMenuCharNameLabel" /></string>
+               <red>
+                  <copy>140</copy>
+                  <max>
+                     <copy>255</copy>
+                     <mult src="parent()" trait="mouseover" />
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+               <depth>-1</depth>
+            </text>
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <id>10</id>
+               <target>&true;</target>
+               <string><copy src="parent()" trait="string" /></string>
+               <justify>&right;</justify>
+               <wrapwidth>425</wrapwidth>
+               <wraplines>1</wraplines>
+               <red>
+                  <copy>140</copy>
+                  <max>
+                     <copy>255</copy>
+                     <mult src="parent()" trait="mouseover" />
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+               <x>
+                  <copy src="parent()"  trait="width" />
+                  <sub  src="sibling()" trait="x" />
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <depth>-1</depth>
+            </text>
+         </rect>
+         <image name="border">
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width> <copy src="parent()" trait="width" /></width>
+            <height><copy src="me()" trait="fileheight" /></width>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <sub>
+                  <copy src="me()" trait="height" />
+                  <div>2</div>
+               </sub>
+            </y>
+         </image>
+         <rect name="race_window">
+            <id>1</id>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()" trait="y" />
+            </height>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <locus>&true;</locus>
+            <clipwindow>&true;</clipwindow>
+                     
+            <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+               an input command, they defer to their parent. The following directions are for those times. -->
+            <target> &false; </target>
+            <xdefault> &false; </xdefault>
+            <xlist> &xlist; </xlist>
+            <xup>  <ref src="player_name_textedit" trait="mouseover" /></xup>
+            <xdown><ref src="race_button_done"     trait="mouseover" /></xdown>
+            <xscroll><ref src="race_scroll_bar" trait="user5" /></xscroll>
+            
+            <!--
+               The panes themselves are templated and are inserted here. They all exist 
+               at once, and are configured to display only if they are the one currently 
+               in use (per the menu tile's traits).
+            -->
+         </rect>
+         <rect name="scrollbar_wrapper">
+            <include src="NorthernUI\scrollbars\wrapper.xml" />
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add>8</add>
+            </x>
+            <y>0</y>
+            <height><copy src="window" trait="height" /></height>
+            
+            <rect name="race_scroll_bar">
+               <include src="vertical_scroll.xml" />
+               <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+               <id>20</id>
+               <user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+               <user2> <!-- maximum range value -->
+                  <copy src="menu()" trait="user1" />
+                  <sub> <!-- same as me().user8, but round down -->
+                     <copy src="race_window" trait="height" />
+                     <div  src="RaceSexMenu" trait="_listRowHeight" />
+                     <floor>0.5</floor> <!-- this argument means "round to nearest int" as long as we're not negative -->
+                  </sub>
+               </user2>
+               <user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+               <user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+               <user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+               <user6> 21 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+               <!-- user7 = current value -->
+               <user8> <!-- How many items are visible at once -->
+                  <copy src="race_window" trait="height" />
+                  <div  src="RaceSexMenu" trait="_listRowHeight" />
+                  <ceil>0</ceil>
+               </user8>
+               <user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+               <user10> 0 </user10>	<!-- reserved -->
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <!-- <image name="skills_button_back">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <clicksound>2</clicksound>
+            <id>5</id>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="me()" trait="user0" /></string>
+            
+            <listindex>0</listindex>
+            <xdefault>1</xdefault>
+            <xup>  <ref src="race_window" trait="mouseover"/> </xup>
+            <xright>&next;</xright>
+         </image> -->
+         <image name="race_button_done">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>90</id>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <add    src="bottom_bar" trait="_entrySpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+               
+               <copy>0</copy>
+            </x>
+            <y>0</y>
+            
+            <_text_1><copy src="strings()" trait="_done" />  </_text_1>
+            <_text_2><copy src="strings()" trait="_return" /></_text_2>
+            <string>
+               <copy src="me()" trait="user5" />
+               <copy src="me()" trait="_text_" />
+            </string>
+            
+            <user5>&false;</user5> <!-- 1 (false) for Done and 2 (true) for Back -->
+            
+            <listindex>1</listindex>
+            <xdefault>1</xdefault>
+            <xup><ref src="race_window"  trait="mouseover" /></xup>
+            <xleft> &prev;</xleft>
+            <xright>&next;</xright>
+         </image>
+      </rect>
+   </rect>
+   <rect name="race_player_grab">
+      <id>2</id>
+      <target>&true;</target>
+      <width>  800</width>
+      <height>1000</height>
+      <x>650</x>
+      <y>  0</y>
+      <depth>0</depth>
+   </rect>
+			
+	<!-- pane template -->
+	<template name="race_template_pane">
+		<rect name="race_pane"> <!-- tile is renamed by executable -->
+			<id>100</id>
+			<visible>
+				<copy src="me()" trait="user0" />
+				<eq   src="RaceSexMenu" trait="user0" />
+			</visible>
+			<width>
+				<copy src="parent()" trait="width" />
+            <sub>
+               <copy src="scrollbar_wrapper" trait="width" />
+               <onlyif src="race_scroll_bar" trait="visible" />
+            </sub>
+			</width>
+			<x>0</x>
+			<y>
+				<copy>0</copy>
+				<sub>
+					<copy src="race_scroll_bar" trait="user7"/>
+					<mult src="RaceSexMenu" trait="_listRowHeight" />
+				</sub>
+				<onlyif src="me()" trait="visible"/>
+			</y>
+			<depth> 2 </depth>
+			<locus> &true; </locus>
+			<clips> &true; </clips>
+			<user0> 0 </user0>
+						
+			<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+				an input command, they defer to their parent. The following directions are for those times. -->
+			<target> &false; </target>
+			<xdefault> &false; </xdefault>
+			<xlist> &xlist; </xlist>
+			<xup> <ref src="player_name_textedit" trait="mouseover"/> </xup>
+			<xdown> <ref src="race_button_done" trait="mouseover"/> </xdown>
+			<xscroll> <ref src="race_scroll_bar" trait="user5" /> </xscroll>
+		
+			<!-- template items added here by code -->
+		</rect>
+	</template>
+	
+	<!-- option templates -->
+	<template name="race_template_button"> <!-- option or page link? -->
+		<rect name="race_template_button_layout">
+			<id>101</id>
+			<locus>&true;</locus>
+			<clips>&true;</clips>
+			<target>&true;</target>
+			<width><copy src="parent()" trait="width" /></width>
+			<height><copy src="RaceSexMenu" trait="_listRowHeight" /></height>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<depth>2</depth>
+			<clicksound>2</clicksound>
+			<listindex>0</listindex>
+         
+			<user0>
+				<add src="me()" trait="clicked" />
+				<add src="me()" trait="user3" />
+				<max>0</max>
+			</user0>				<!-- current index -->
+			<user1> 0 </user1>		<!-- starting value - compare this to current to see changes -->
+			<user2> </user2>	<!-- text label; game uses "          " as a blank string -->
+			<user3>	0 </user3>		<!-- manual set value -->
+			<user6> Button </user6>	<!-- button name -->
+         
+         <user24>&true;</user24> <!-- NorthernUI: user2 is not whitespace-only -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>&false;</xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="race_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<text name="race_template_button_label">
+				<clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="user2" /></string>
+            <red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <mult src="parent()" trait="mouseover" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+				<x>8</x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+				<depth>2</depth>
+			</text>
+         <text name="separator">
+				<clips>&true;</clips>
+            <visible><copy src="parent()" trait="user24" /></visible>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string>:</string>
+            <red>  <copy src="sibling()" trait="red" /></red>
+            <green><copy src="sibling()" trait="red" /></green>
+            <blue> <copy src="sibling()" trait="red" /></blue>
+				<x>
+					<copy src="sibling()"  trait="width" />
+					<add  src="sibling()" trait="x" />
+				</x>
+            <y><copy src="sibling()" trait="y" /></y>
+         </text>
+			<text name="race_template_button_text">
+				<clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="user6" /></string>
+            <red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <mult src="parent()" trait="mouseover" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+				<justify>&left;</justify>
+				<x>
+					<copy src="sibling()" trait="width" />
+					<add  src="sibling()" trait="x" />
+               <add>6</add>
+               <onlyif src="parent()" trait="user24" />
+               <add>
+                  <add>8</add>
+                  <onlyifnot src="parent()" trait="user24" />
+               </add>
+				</x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+				<depth>4</depth>
+			</text>
+		</rect>
+	</template>
+	<template name="race_template_toggle"> <!-- enumpicker option -->
+		<rect name="race_template_enumpicker">
+			<id>102</id>
+			<locus>&true;</locus>
+			<clips>&true;</clips>
+			<target><copy src="me()" trait="user13" /></target>
+			<width> <copy src="parent()" trait="width" /></width>
+			<height><copy src="RaceSexMenu" trait="_listRowHeight" /></height>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex"/>
+				<mult src="RaceSexMenu" trait="_listRowHeight" />
+			</y>
+			<listindex>0</listindex>
+			<clicksound>3</clicksound>
+         
+			<user0>					<!-- current index -->
+				<!-- retain old value -->
+				<!-- <add src="me()" trait="clicked" /> -->
+				<sub src="child(button_left)"  trait="clicked" />
+				<add src="child(button_right)" trait="clicked" />
+				<add src="me()" trait="user3" />
+				<sub src="me()" trait="user4" />
+				<mod>
+					<copy src="me()" trait="user5" />
+					<sub  src="me()" trait="user4" />
+					<add> 1 </add>
+				</mod>
+				<add src="me()" trait="user4"/>
+			</user0>				<!-- current index -->
+			<user1> 0 </user1>		<!-- starting value - compare this to current to see changes -->
+			<user2> Label </user2>	<!-- text label -->
+			<user3>	0 </user3>		<!-- manual set value -->
+			<user4>	0 </user4>		<!-- min index -->
+			<user5>	1 </user5>		<!-- max index -->
+			<user6> Value </user6>	<!-- current string - set by code from current index -->
+			<user13> &true; </user13>	<!-- true if enabled, false if disabled -->
+			<_mouseover_any>
+				<copy src="me()" trait="mouseover"/>
+				<add  src="child(enumpicker)" trait="_mouseover_any"/>
+				<gt>0</gt>
+				<sub>1</sub>
+			</_mouseover_any>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>&false;</xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xleft> <ref src="child(button_left)"  trait="clicked" /></xleft>
+			<xright><ref src="child(button_right)" trait="clicked" /></xright>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="race_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<text name="race_template_toggle_label">
+				<clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <mult src="parent()" trait="mouseover" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+				<string><copy src="parent()" trait="user2" /></string>
+				<x>8</x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+				<depth>2</depth>
+			</text>
+         <rect name="enumpicker">
+            <include src="NorthernUI\enumpicker.xml" />
+				<user3>
+					<copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif src="parent()" trait="user13" />
+               </max>
+				</user3>
+            <user4><copy src="parent()" trait="mouseover" /></user4>
+				<string><copy src="parent()" trait="user6" /></string>
+            
+            <x><copy src="menu()" trait="_listLabelWidth" /></x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <width>
+               <copy src="parent()"  trait="width" />
+               <sub  src="me()"      trait="x" />
+               <sub  src="sibling()" trait="x" />
+            </width>
+         </rect>
+		</rect><!--race_eyes_layout-->
+	</template>
+	<template name="race_template_slider"> <!-- slider option -->
+		<rect name="race_template_slider">
+			<id>103</id> <!-- IDs are overwritten for all generated options -->
+			<target><copy src="me()" trait="user13" /></target>
+         
+         <!--
+            RaceMenu seems to be bugged: dragging of the scrollbar thumb acts like 
+            the template list item's X=0 is the scrollbar track X=0. In order to 
+            use a two-column layout -- label / slider -- we need to cut the list 
+            item down to just the space the scrollbar occupies, and position 
+            everything else out of bounds.
+            
+            Code analysis suggests that the game is assuming that the list item 
+            itself is the scrollbar track. Stupid, stupid, stupid.
+         -->
+         <_width><copy src="parent()" trait="width" /></_width>
+         <_padding>8</_padding>
+         <_sliderX><copy src="menu()" trait="_listLabelWidth" /></_sliderX>
+         <_sliderWidth>
+            <copy src="me()" trait="_width" />
+            <sub  src="me()" trait="_padding" />
+            <sub  src="me()" trait="_sliderX" />
+         </_sliderWidth>
+         <_sliderCapWidth>
+            <copy src="child(horizontal_scroll_left)" trait="width" />
+         </_sliderCapWidth>
+         
+			<!-- <width><copy src="parent()" trait="width" /></width>
+			<x>0</x> -->
+			<width><copy src="me()" trait="_sliderWidth" /></width>
+			<x>
+            <copy src="me()" trait="_sliderX" />
+         </x>
+         
+			<y>
+				<copy src="me()" trait="listindex"/>
+				<mult src="RaceSexMenu" trait="_listRowHeight" />
+			</y>
+			<height><copy src="RaceSexMenu" trait="_listRowHeight" /></height>
+			<locus> &true; </locus>
+			<clips> &true; </clips>
+			<listindex> 0 </listindex>
+			<user0> <copy src="child(race_template_slider_bar)" trait="user7"/> </user0>	<!-- current value -->
+			<user1> 0 </user1>			<!-- starting value - compare this to current to see changes -->
+			<user2> Label </user2>		<!-- text label -->
+			<user3>	0 </user3>			<!-- manual set value -->
+			<user6> -1 </user6>			<!-- id for marker -->
+			<user7> -1 </user7>			<!-- this should really be in a seperate data structure and not xml, but it is the editor id of whatever I'm sliding -->
+			<user8> -1 </user8>			<!-- same as above, but this is a geometry/texture flag -->
+			<user10> 0 </user10>		<!-- again, same as above, but this one holds a flag for if this slider has been changed -->
+			<user13> &true; </user13>	<!-- true if enabled, false if disabled -->
+         <!-- executable forces user20 to 1.0 when the tile is generated -->
+
+			<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+
+			<_mouseover_any>
+				<copy src="me()" trait="mouseover"/>
+				<add  src="child(race_template_slider_bar)" trait="_mouseover_any"/>
+				<gt> 0 </gt>
+				<sub> 1 </sub>
+			</_mouseover_any>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>&false;</xdefault> <!-- executable forces this to 2 when the tile is generated -->
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+			<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="race_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<text name="race_template_slider_label">
+				<clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <mult src="parent()" trait="mouseover" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+				<string><copy src="parent()" trait="user2" /></string>
+				<x>
+               <!-- <copy src="parent()" trait="_padding" /> -->
+               <copy src="parent()" trait="_padding" />
+               <sub  src="parent()" trait="_sliderX" />
+            </x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+				<depth>3</depth>
+			</text>
+         
+         <rect name="race_template_slider_bar"> <!-- DO NOT USE A WRAPPER ELEMENT -->
+            <include src="horiz_floating_scroll.xml" />
+            <x>
+               <!-- <copy src="menu()" trait="_listLabelWidth" /> -->
+               <copy src="me()" trait="_sliderCapWidth" />
+               <add  src="child(horizontal_scroll_left)"  trait="width" />
+            </x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <width>
+               <!-- <copy src="parent()"  trait="width" />
+               <sub  src="me()"      trait="x" />
+               <sub  src="sibling()" trait="x" /> -->
+               <copy src="parent()"  trait="_sliderWidth" />
+               <sub  src="child(horizontal_scroll_left)"  trait="width" />
+               <sub  src="child(horizontal_scroll_right)" trait="width" />
+            </width>
+            
+            <clips>&true;</clips>
+            <zoom>33</zoom>
+            <id>&generic;</id>
+            <user1> 0 </user1>			<!-- minimum range value -->
+            <user2> 1 </user2>			<!-- maximum range value -->
+            <user3>						<!-- step distance -->
+               <copy> 0.04 </copy>
+               <onlyif> &xbox; </onlyif>
+               <add> 0.01 </add>
+            </user3>
+            <user4> 0.1 </user4>		<!-- jump distance -->
+            <user5><copy src="parent()" trait="user3" /></user5>
+            <user6><copy src="parent()" trait="user6" /></user6>		<!-- ID for marker/slider -->
+            <user8>&true;</user8>	<!-- show number at end? -->
+            <user13><copy src="parent()" trait="user13" /></user13>
+            <user15>1</user15> <!-- thumb style; 1 == slider -->
+         </rect>
+		</rect>
+	</template>
+	<template name="race_template_text"> <!-- text shown inline with the options (but may be multi-row) -->
+		<text name="race_template_text">
+			<id>104</id>
+			<clips>&true;</clips>
+         <include src="NorthernUI\fonts\normal.xml" />
+			<string><copy src="me()" trait="user6" /></string>
+         <red>255</red><green>255</green><blue>255</blue>
+			<wrapwidth>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()" trait="x" />
+            <sub  src="me()" trait="x" />
+         </wrapwidth>
+			<x>8</x>
+			<y>
+				<copy src="me()" trait="listindex"/>
+				<mult src="RaceSexMenu" trait="_listRowHeight" />
+				<add>8</add>
+			</y>
+			<depth> 2 </depth>
+			<listindex> 0 </listindex>
+			<user6> Text </user6>	<!-- text -->
+         
+         <!--
+            Any child tiles of a templated piece of text will be destroyed 
+            if that text is regenerated after the menu is opened. Main case 
+            is when a templated text element is used to display a race desc-
+            ription.
+         -->
+		</text>
+	</template>
+	
+	
+</menu>

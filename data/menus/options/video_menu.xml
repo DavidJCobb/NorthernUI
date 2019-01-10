@@ -1,0 +1,434 @@
+<!-- video_menu.xml -->
+<menu name="VideoMenu">
+	<class> &VideoMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<menufade>0</menufade>
+	<explorefade>0</explorefade>
+
+	<user0>
+		<copy>27</copy>		<onlyifnot>&xbox;</onlyifnot>
+		<add>
+			<copy>1</copy>	<onlyif>&xbox;</onlyif>
+		</add>
+	</user0>					<!-- Total number of items on this menu -->
+	<user1> 7 </user1>			<!-- Number of items visible on screen at once -->
+	<user2>						<!-- height of single menu item plus buffer zone -->
+		<copy src="video_main_rect" trait="height"/>	<!-- parent rect height -->
+		<div src="me()" trait="user1"/>					<!-- num items visible -->
+	</user2>
+	<user3> &false; </user3>	<!-- Resolution footnote visibility -->
+	<user4></user4>				<!-- Resolution text:  Set in code -->
+	<user5></user5>				<!-- Anti-aliasing text:  Set in code -->
+
+	<xbuttonb> <ref src="video_return_button" trait="clicked"/> </xbuttonb>
+	<xbuttony> <ref src="video_defaults_button" trait="clicked"/> </xbuttony>
+   
+   <_itemHeight><copy src="option_resolution" trait="height" /></_itemHeight>
+
+   <rect name="content_space">
+      <include src="NorthernUI/fragments/pause/base.xml" />
+      <rect name="content_box_2">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <rect name="column_right">
+            <locus>&true;</locus>
+            <clipwindow>&true;</clipwindow>
+            <width>
+               <copy src="parent()"  trait="width" />
+               <sub  src="pause_column_left" trait="x" />
+               <sub  src="pause_column_left" trait="width" />
+               <sub>16</sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <x>
+               <copy src="pause_column_left" trait="x" />
+               <add  src="pause_column_left" trait="width" />
+               <add>16</add>
+            </x>
+            <y>0</y><depth>10</depth>
+            
+            <!-- Submenu contents go here. -->
+            <id>7</id><target>&true;</target> <!-- handle scroll wheel -->
+            
+            <rect name="scrollbar_wrapper">
+               <include src="NorthernUI\scrollbars\wrapper.xml" />
+               <user0>&false;</user0> <!-- is horizontal? -->
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <sub>8</sub>
+               </x>
+               <y>0</y>
+               <height><copy src="parent()" trait="height" /></height>
+               
+               <rect name="pause_submenu_scrollbar">
+                  <include src="vertical_scroll.xml" />
+                  <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+                  <id> 2 </id>
+                  <user1>0</user1>					<!-- min -->
+                  <user2>
+                     <copy src="scrollable_pane" trait="childcount" />
+                     <sub>
+                        <copy src="column_right" trait="height" />
+                        <div  src="menu()" trait="_itemHeight" />
+                        <floor>0</floor>
+                     </sub>
+                     <add>
+                        <copy>1</copy>
+                        <onlyif>
+                           <copy src="column_right" trait="height" />
+                           <mod  src="menu()" trait="_itemHeight" />
+                           <neq>0</neq>
+                        </onlyif>
+                     </add>
+                  </user2>							<!-- max -->
+                  <user4>
+                     <copy src="me()" trait="user8"/>
+                     <sub>1</sub>
+                  </user4>							<!-- jump distance -->
+                  <user5> 0 </user5>					<!-- starting pos -->
+                  <user6> 3 </user6>					<!-- marker id -->
+                  <user8>								<!-- num visible -->
+                     <copy src="column_right" trait="height" />
+                     <div  src="menu()" trait="_itemHeight" />
+                     <ceil>0</ceil>
+                  </user8>
+               </rect>
+            </rect>
+            
+            <!-- Unused shim tiles: -->
+            <rect name="unused_keynav_shim_antialiasing">
+               <id>44</id>
+            </rect>
+            <rect name="unused_keynav_shim_itemlod">
+               <id>24</id>
+            </rect>
+            <rect name="unused_keynav_shim_objectlod">
+               <id>25</id>
+            </rect>
+            <rect name="unused_keynav_shim_resolution">
+               <id>27</id>
+            </rect>
+            
+            <!-- Menu items: -->
+            <rect name="scrollable_pane">
+               <locus>&true;</locus>
+               <width>
+                  <copy src="parent()"  trait="width" />
+                  <sub>
+                     <copy src="pause_submenu_scrollbar" trait="width" />
+                     <add>16</add>
+                     <onlyif src="pause_submenu_scrollbar" trait="visible" />
+                  </sub>
+                  <min>450</min>
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+               <x>0</x>
+               <y>
+                  <copy src="pause_submenu_scrollbar" trait="user7" />
+                  <mult src="menu()" trait="_itemHeight" />
+                  <mult>-1</mult>
+               </y>
+               
+               <user8>
+                  <copy src="pause_submenu_scrollbar" trait="user8" />
+               </user8>
+               <target>&false;</target>
+               <xdefault>&true;</xdefault>
+               <xlist>&xlist;</xlist>
+               <xscroll><ref src="pause_submenu_scrollbar" trait="user5" /></xscroll>
+               
+               <rect name="option_resolution">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <listindex><copy>0</copy></listindex> <!-- for some reason, this breaks if we don't use COPY -->
+                  <y><copy>0</copy></y> <!-- for some reason, this breaks if we don't use COPY -->
+                  <user1> 8</user1> <!-- enumpicker left ID -->
+                  <user2>26</user2> <!-- enumpicker right ID -->
+                  <user11><copy src="strings()" trait="_resolution" /></user11> <!-- label -->
+                  <string><copy src="VideoMenu" trait="user4" /></string> <!-- enumpicker value -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_gamma">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_gamma" /></user11>
+                  <user0>5</user0> <!-- slider ID -->
+                  <user1>6</user1> <!-- slider thumb ID -->
+                  <user2>25</user2> <!-- slider jump distance -->
+               </rect> <!-- /menuitem -->
+               <rect name="option_texturesize">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_texturesize" /></user11>
+                  <user0>20</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_treelod">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_treelod" /></user11>
+                  <user0>12</user0> <!-- slider ID -->
+                  <user1>13</user1> <!-- slider thumb ID -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_actorlod">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_actorlod" /></user11>
+                  <user0>14</user0> <!-- slider ID -->
+                  <user1>15</user1> <!-- slider thumb ID -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_itemlod">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_itemlod" /></user11>
+                  <user0>16</user0> <!-- slider ID -->
+                  <user1>17</user1> <!-- slider thumb ID -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_objectlod">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_objectlod" /></user11>
+                  <user0>18</user0> <!-- slider ID -->
+                  <user1>19</user1> <!-- slider thumb ID -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_grass">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_grass" /></user11>
+                  <user0>22</user0> <!-- slider ID -->
+                  <user1>23</user1> <!-- slider thumb ID -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_viewdistance">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_viewdist" /></user11>
+                  <user0>28</user0> <!-- slider ID -->
+                  <user1>29</user1> <!-- slider thumb ID -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_distantland">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_distantlod" /></user11>
+                  <user0>9</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_distantbuildings">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_distbuild" /></user11>
+                  <user0>30</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_distanttrees">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_disttrees" /></user11>
+                  <user0>31</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_shadowsinterior">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_intshad" /></user11>
+                  <user0>32</user0> <!-- slider ID -->
+                  <user1>33</user1> <!-- slider thumb ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_shadowsexterior">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_extshad" /></user11>
+                  <user0>34</user0> <!-- slider ID -->
+                  <user1>35</user1> <!-- slider thumb ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_selfshadows">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_self_shadows" /></user11>
+                  <user0>10</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_grassshadows">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_grass_shadows" /></user11>
+                  <user0>21</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_canopyshadows">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_canopyshadows" /></user11>
+                  <user0>11</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_shadowfiltering">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_shadowfiltering" /></user11>
+                  <user0>48</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_speculardistance">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="strings()" trait="_speclight" /></user11>
+                  <user0>36</user0> <!-- slider ID -->
+                  <user1>37</user1> <!-- slider thumb ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_hdr">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_hdr" /></user11>
+                  <user0>38</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_bloom">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_bloom" /></user11>
+                  <user0>47</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_waterdetail">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_water_detail" /></user11>
+                  <user0>39</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_waterreflections">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_water_reflections" /></user11>
+                  <user0>40</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_waterdisplacement">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_water_displacement" /></user11>
+                  <user0>41</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_windowreflections">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_window_reflections" /></user11>
+                  <user0>42</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_blood">
+                  <include src="NorthernUI/fragments/pause/option_button.xml" />
+                  <user11><copy src="strings()" trait="_blood" /></user11>
+                  <user0>43</user0> <!-- button ID -->
+                  
+                  <visible><not>&xbox;</not></visible>
+               </rect> <!-- /menuitem -->
+               <rect name="option_antialiasing">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user1>45</user1> <!-- enumpicker left ID -->
+                  <user2>46</user2> <!-- enumpicker right ID -->
+                  <user11><copy src="strings()" trait="_antialiasing" /></user11> <!-- label -->
+                  <string><copy src="VideoMenu" trait="user5" /></string> <!-- enumpicker value -->
+                  
+                  <visible><not>&xbox;</not></visible>
+                  <xdown><ref src="video_return_button" trait="mouseover" /></xdown>
+               </rect> <!-- /menuitem -->
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+	
+	<rect name="video_background"> <!-- VANILLA -- DO SOMETHING WITH IT? -->
+<!--------------------------------------- RESOLUTION FOOTNOTE ---------------------------------------->
+
+		<text name="video_resolution_footnote">
+			<font>3</font>
+			<visible> <copy src="VideoMenu" trait="user3"/> </visible>
+			<depth>3</depth>
+			<x> 20 </x>
+			<y> <copy src="parent()" trait="height"/> <sub>40</sub> </y>
+			<alpha>255</alpha>
+			<string> <copy src="strings()" trait="_widescreen"/> </string>
+			<red>	<copy src="VideoMenu" trait="red"/>   </red>
+			<green> <copy src="VideoMenu" trait="green"/> </green>
+			<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+		</text>
+
+	</rect>		<!-- video_background -->
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()" trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="video_return_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>1</id>
+            <target>&true;</target>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_return" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            <xleft> <ref src="video_defaults_button" trait="mouseover"/></xleft>
+            <xright><ref src="video_defaults_button" trait="mouseover"/></xright>
+            <xup>   <ref src="video_blood_button"    trait="mouseover"/></xup>
+         </rect>
+         <rect name="video_defaults_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>4</id>
+            <target>&true;</target>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_defaults" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            <xleft> <ref src="video_return_button" trait="mouseover"/></xleft>
+            <xright><ref src="video_return_button" trait="mouseover"/></xright>
+            <xup>   <ref src="video_blood_button"  trait="mouseover"/></xup>
+         </rect>
+      </rect>
+   </rect>
+
+</menu>

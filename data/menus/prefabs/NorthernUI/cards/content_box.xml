@@ -1,0 +1,8 @@
+<!--<rect name="content_box">-->
+   <locus>&true;</locus>
+   <x><copy src="sibling(fill)" trait="x" /></x>
+   <y><copy src="sibling(fill)" trait="y" /></y>
+   <width><copy src="sibling(fill)" trait="width" /></width>
+   <height><copy src="sibling(fill)" trait="height" /></height>
+   <depth>0</depth>
+<!--</rect>-->

@@ -1,0 +1,257 @@
+<!-- message_menu.xml -->
+<menu name="Messagemenu">
+	<class> &MessageMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+
+	<x>
+		<copy src="screen()"   trait="width"/>
+      <sub  src="border_box" trait="width" />
+		<div>2</div>
+	</x>
+	<y>
+		<copy src="screen()"   trait="height"/>
+      <sub  src="border_box" trait="height" />
+		<div>2</div>
+	</y>
+   
+	<rect name="message_focus_box">
+      <!--
+         Unlike most focus boxes, the MessageMenu focus box blindly copies the X and 
+         Y coordinates of the message menu item being hovered over -- their relative 
+         coordinates, not their absolute coordinates. This means that to get anything 
+         in the focus box to position properly, you need to copy the X and Y of the 
+         menu items' parent tile.
+         
+         Or something odd to that effect.
+      -->
+		<id>3</id>
+		<depth>1</depth>
+		<visible>&false;</visible>
+      <locus>&true;</locus>
+      
+      <image name="left">
+         <filename>Menus/NorthernUI/Shared/message_menu_selection_indicator.dds</filename>
+         <width>
+            <copy src="me()" trait="filewidth"/>
+            <div>2</div>
+         </width>
+         <height><copy src="me()" trait="fileheight"/></height>
+         <x>
+            <copy>0</copy>
+            <sub  src="me()" trait="width" />
+            <sub>16</sub> <!-- spacing -->
+            <add  src="content_box" trait="x" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+            <add  src="content_box" trait="y" />
+         </y>
+         <red>  <copy src="Messagemenu" trait="_btn_v_hover"/></red>
+         <green><copy src="Messagemenu" trait="_btn_v_hover"/></green>
+         <blue> <copy src="Messagemenu" trait="_btn_v_hover"/></blue>
+      </image>
+      <image name="right">
+         <filename><copy src="sibling()" trait="filename" /></filename>
+         <width>   <copy src="sibling()" trait="width" /> </width>
+         <height>  <copy src="sibling()" trait="height" /></height>
+         <cropx>   <copy src="me()"      trait="width" /> </cropx>
+         <x>
+            <copy src="parent()" trait="width"/>
+            <add>16</add> <!-- spacing -->
+            <add src="content_box" trait="x" />
+         </x>
+         <y><copy src="sibling()" trait="y" /></y>
+         <red>  <copy src="Messagemenu" trait="_btn_v_hover"/></red>
+         <green><copy src="Messagemenu" trait="_btn_v_hover"/></green>
+         <blue> <copy src="Messagemenu" trait="_btn_v_hover"/></blue>
+      </image>
+	</rect>
+   
+   <!-- Colors for message and button text (HSV: Value). -->
+   <_msg_v>192</_msg_v>
+   <_btn_v>140</_btn_v>
+   <_btn_v_hover>192</_btn_v_hover>
+	
+   <rect name="background">
+      <!--
+         Shim element to handle mod compatibility for Enhanced Economy and Map Marker 
+         Overhaul. Note that measures taken for Map Marker Overhaul may prevent other 
+         mods from tampering with the message menu.
+         
+         We need to offset this tile in order to line MMO-injected icons up with 
+         message menu options.
+      -->
+      <locus>&true;</locus>
+      <x>
+         <copy src="content_box" trait="width" />
+         <sub  src="content_box" trait="_maxMenuStringWidth" />
+         <div>2</div>
+         <sub>80</sub>
+      </x>
+      <y><copy src="content_box" trait="y" /></y>
+      <depth>4</depth>
+      
+      <_maxMenuItemWidth>
+      </_maxMenuItemWidth>
+      
+      <!-- ----------------------------------------------------------------------------- -->
+      <text name="message_text"> <!-- compatibility: Enhanced Economy -->
+         <!--
+            My normal approach would be to make this an invisible element that 
+            duplicates the visible element's content, so that the mod can simply 
+            read it. However, Enhanced Economy actually writes to the displayed 
+            string in some cases, so the tile it looks for needs to be the "real" 
+            one and the tile we display needs to copy from that.
+            
+            So that's annoying. :\
+         -->
+         <id>2</id>
+         <visible>&false;</visible>
+         <listclip>&true;</listclip>
+         <x>0</x>
+         <y>0</y>
+         <depth>-100</depth>
+         <!-- <string><copy src="message_display_text" trait="string" /></string> -->
+         <string></string>
+         <justify>&center;</justify>
+      </text>
+      <!-- ----------------------------------------------------------------------------- -->
+      <!-- compatibility: Map Marker Overhaul -->
+      <image name="button_1">
+         <include src="NorthernUI\fragments\message\mmo_icon.xml" />
+         <y>
+            <copy src="message_display_text" trait="y" />
+            <add  src="message_display_text" trait="height" />
+            <add>20</add>
+         </y>
+      </image>
+      <image name="button_2">
+         <include src="NorthernUI\fragments\message\mmo_icon.xml" />
+      </image>
+      <image name="button_3">
+         <include src="NorthernUI\fragments\message\mmo_icon.xml" />
+      </image>
+      <image name="button_4">
+         <include src="NorthernUI\fragments\message\mmo_icon.xml" />
+      </image>
+   </rect>
+   
+	<rect name="border_box">
+		<id>1</id>
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<visible>&true;</visible>
+		<target>&true;</target>
+		<depth>3</depth>
+      
+      <x>0</x>
+      <y>0</y>
+      
+		<user20>700</user20> <!-- width -->
+		<user21>
+			<copy   src="button_10" trait="height"/>
+			<onlyif src="button_10" trait="visible" />
+			<add    src="button_10" trait="y"/>
+		</user21> <!-- height -->
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      <!-- <user23>
+         <copy src="northernui()" trait="_xxnAlpha" />
+         <add>
+            <copy>255</copy>
+            <sub  src="northernui()" trait="_xxnAlpha" />
+            <div>2</div>
+         </add>
+      </user23> --> <!-- alpha override -->
+      
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         
+         <_maxMenuStringWidth> <!-- compatibility: Map Marker Overhaul -->
+            <copy src="child(message_display_text)" trait="width" />
+            <max  src="child(button_1)" trait="width" />
+            <max  src="child(button_2)" trait="width" />
+            <max  src="child(button_3)" trait="width" />
+            <max  src="child(button_4)" trait="width" />
+            <max  src="child(button_5)" trait="width" />
+            <max  src="child(button_6)" trait="width" />
+            <max  src="child(button_7)" trait="width" />
+            <max  src="child(button_8)" trait="width" />
+            <max  src="child(button_9)" trait="width" />
+            <max  src="child(button_10)" trait="width" />
+         </_maxMenuStringWidth>
+
+         <text name="message_display_text">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <target>&true;</target>
+            <!-- <id>2</id> -->
+            <depth>5</depth>
+            <!-- <string></string> -->
+            <string>
+               <copy>1</copy>
+               <copy src="message_text" trait="string" />
+            </string>
+            <justify>&center;</justify>
+            <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            <wraplines>5</wraplines>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+            <red>  <copy src="Messagemenu" trait="_msg_v"/></red>
+            <green><copy src="Messagemenu" trait="_msg_v"/></green>
+            <blue> <copy src="Messagemenu" trait="_msg_v"/></blue>
+         </text>
+         <rect name="button_1">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>4</id>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>20</add>
+            </y>
+         </rect>
+         <rect name="button_2">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>5</id>
+         </rect>
+         <rect name="button_3">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>6</id>
+         </rect>
+         <rect name="button_4">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>7</id>
+         </rect>
+         <rect name="button_5">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>8</id>
+         </rect>
+         <rect name="button_6">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>9</id>
+         </rect>
+         <rect name="button_7">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>10</id>
+         </rect>
+         <rect name="button_8">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>11</id>
+         </rect>
+         <rect name="button_9">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>12</id>
+         </rect>
+         <rect name="button_10">
+            <include src="NorthernUI\fragments\message\menu_item.xml" />
+            <id>13</id>
+         </rect>
+      </rect>
+   </rect>
+
+</menu>

@@ -1,0 +1,2479 @@
+<!-- map_menu.xml -->
+<menu name="MapMenu">
+	<class> &MapMenu; </class>
+	<alpha>	0 </alpha> 
+	<locus> &true; </locus>
+	<x>-1</x><y>-1</y> <!-- yes, it needs to be -1 to correct for the layout system being buggy and a butt -->
+	<menufade>0</menufade>
+	<_global_alpha> 255 </_global_alpha>
+	<user1> <copy src="strings()" trait="_missing"/> </user1>		<!-- Location Name -->
+	<user2> <copy src="strings()" trait="_missing"/> </user2>		<!-- Date -->
+	<user3> <copy src="strings()" trait="_missing"/> </user3>		<!-- Quest List Title -->
+	<user4> 1090 </user4>
+	<user5> 460 </user5>
+	
+	<!-- <xleft> <ref src="map_tabs_prev" trait="clicked" /></xleft>
+	<xright><ref src="map_tabs_next" trait="clicked" /></xright> -->
+	
+   <!--
+      HARDCODED MAPPINGS:
+       - LT and RT are hardcoded to switch between Big Four menus.
+       
+       - X is hardcoded to set/move the player's custom marker if the 
+         menu is currently showing the world or local maps.
+      
+       - Directional mappings are disabled if USER21 == 2.
+   -->
+	<xbuttonx> <ref src="handler_x" trait="clicked" /></xbuttonx>
+	<xbuttony> <ref src="handler_y" trait="clicked" /></xbuttony>
+	<xbuttonlb><ref src="handler_lb" trait="clicked" /></xbuttonlb>
+	<xbuttonrb><ref src="handler_rb" trait="clicked" /></xbuttonrb>
+	
+   <!-- USER20: NorthernUI patch: Selecting a quest changes the menu tab to 3? -->
+   <!-- TODO: Add executable-level functionality for a Skyrim-style quest pane, i.e. one column for active quest and another for in-progress AND completed, in that order -->
+   <user20>&true;</user20>
+   <!-- USER21: NorthernUI patch: enable joystick control of the maps?
+        1 = No
+        2 = Use menu stick
+        3 = Use non-menu stick
+   -->
+   <user21>2</user21>
+   <!-- USER22: Bitmask
+        1 = User can hold LB to force panning
+   -->
+   <user22>1</user22>
+   
+   <_mapicon_1>Menus\NorthernUI\icons\map.dds              </_mapicon_1> <!-- all map markers -->
+   <_mapicon_2>Menus\NorthernUI\icons\objective_marker.dds </_mapicon_2> <!-- quest marker icon -->
+   <_mapicon_3>Menus\NorthernUI\icons\custom_marker.dds    </_mapicon_3> <!-- marker icon -->
+   <_mapicon_4>Menus\Map\world_map_arrow_icon.dds          </_mapicon_4> <!-- you are here icon -->
+   <_mapicon_5>Menus\NorthernUI\icons\objective_door_marker.dds</_mapicon_5> <!-- quest door -->
+
+	<!-- PRE-LOAD MAP ICONS ==========================================================================-->
+	<image name="map_preload_map_icons_1">
+		<filename> Menus\Icons\Map\map_icons_all.dds </filename>
+		<width> 1 </width>
+		<height> 1 </height>
+		<x> -100 </x>
+	</image>
+	<image name="map_preload_map_icons_2">
+		<filename> Menus\HUD\hud_compass_goal.dds </filename>
+		<width> 1 </width>
+		<height> 1 </height>
+		<x> -100 </x>
+	</image>
+	<image name="map_preload_map_icons_3">
+		<filename> Menus\Map\world_map_arrow_icon.dds </filename>
+		<width> 1 </width>
+		<height> 1 </height>
+		<x> -100 </x>
+	</image>
+	
+   <rect name="show_objective_on_map_FALLBACK">
+      <!--
+         menu breaks if ID#31 isn't used anywhere at the time the menu opens;
+         we use that ID conditionally in our actual design;
+         ensure the ID is in use if the gamepad doesn't read as connected when the menu opens
+      -->
+      <id>31</id>
+   </rect>
+   
+	<rect name="map_focusBox">
+		<id>23</id>
+		<visible>&false;</visible>
+      <include src="NorthernUI\focus_boxes\highlight.xml" />
+	</rect>
+	
+	<rect name="map_world_icon_paper"> <!-- map tooltip -->
+		<id>42</id>
+		<locus>&true;</locus>
+		<visible>&false;</visible>
+		<depth>
+			<copy src="me()" trait="user0" />
+			<add>-2</add>
+		</depth>
+		<width>32</width>
+		<height>32</height>
+		<x>
+         <copy src="me()" trait="user1" />
+         <add>1</add>
+      </x>
+		<y>
+         <copy src="me()" trait="user2" />
+         <add>1</add>
+      </y>
+		<user0> 0 </user0>			<!-- set by code - depth of target -->
+		<user1> 0 </user1>			<!-- set by code - x position of target -->
+		<user2> 0 </user2>			<!-- set by code - y position of target -->
+		<user6> &false; </user6>	<!-- true if marker is fast-travel enabled -->
+		<_right_side>
+         <!-- Code to prefer left: -->
+			<!-- <copy src="me()" trait="user1" />
+         <sub>
+            <copy src="child(circle)"   trait="width" />
+            <add  src="child(endcap_l)" trait="width" />
+            <add  src="child(endcap_r)" trait="width" />
+            <add  src="child(content)"  trait="width" />
+         </sub>
+         <lte>0</lte> -->
+         <!-- Code to prefer right: -->
+         <copy src="me()" trait="user1" />
+         <add>
+            <copy src="child(circle)"   trait="width" />
+            <add  src="child(endcap_l)" trait="width" />
+            <add  src="child(endcap_r)" trait="width" />
+            <add  src="child(content)"  trait="width" />
+         </add>
+         <lt src="local_map_window" trait="width" />
+		</_right_side>
+      
+      <zoom>50</zoom>
+		<image name="circle">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+			<depth>1</depth>
+         <filename>Menus\NorthernUI\map_tooltip\hd_circle.dds</filename>
+         <width> <copy src="me()" trait="filewidth" /></width>
+         <height><copy src="me()" trait="fileheight" /></height>
+			<x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+			<y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+		</image>
+      <rect name="content">
+         <locus>&true;</locus>
+         <width>
+            <copy src="child(location_name)" trait="width" />
+            <add>8</add>
+         </width>
+         <height><copy src="child(mid)" trait="height" /></height>
+			<x>
+            <copy src="sibling(circle)" trait="x" />
+            <sub>
+               <copy src="me()" trait="width" />
+               <onlyifnot src="parent()" trait="_right_side"/>
+            </sub>
+            <add>
+               <copy src="sibling(circle)" trait="width" />
+               <onlyif src="parent()" trait="_right_side"/>
+            </add>
+         </x>
+			<y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <string><copy src="parent()" trait="string" /></string>
+         
+         <image name="mid">
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <depth>1</depth>
+            <filename>Menus\NorthernUI\map_tooltip\hd_mid.dds</filename>
+            <width> <copy src="parent()"  trait="width" /></width>
+            <height><copy src="me()" trait="fileheight" /></height>
+            <x>0</x>
+            <y>0</y>
+            <tile>&true;</tile>
+         </image>
+         <text name="location_name">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <font>3</font>
+            <depth>2</depth>
+            <string><copy src="parent()" trait="string" /></string>
+            <justify>&left;</justify>
+            <x>4</x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <red>  255</red>
+            <green>255</green>
+            <blue> 255</blue>
+            <alpha>255</alpha>
+         </text>
+      </rect>
+      
+		<image name="endcap_l">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+			<depth>1</depth>
+         <filename>Menus\NorthernUI\map_tooltip\hd_endcaps.dds</filename>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+			<x>
+            <copy src="sibling(circle)" trait="x" />
+            <sub  src="me()" trait="width" />
+            <sub>
+               <copy src="sibling(content)" trait="width" />
+               <onlyifnot src="parent()" trait="_right_side"/>
+            </sub>
+         </x>
+			<y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+		</image>
+		<image name="endcap_r">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+			<depth>1</depth>
+         <filename>Menus\NorthernUI\map_tooltip\hd_endcaps.dds</filename>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <cropX><copy src="me()" trait="width" /></cropX>
+			<x>
+            <copy src="sibling(circle)" trait="x" />
+            <add  src="sibling(circle)" trait="width" />
+            <add>
+               <copy src="sibling(content)" trait="width" />
+               <onlyif src="parent()" trait="_right_side"/>
+            </add>
+         </x>
+			<y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+		</image>
+	</rect>
+	
+	<rect name="map_menu_base">
+		<id>9</id>
+		<target>&true;</target>
+      <depth>1</depth>
+      <locus>&true;</locus>
+      <x>
+         <copy src="screen()" trait="cropX" />
+         <add>20</add>
+      </x>
+      <y>0</y>
+      <width>
+         <copy src="screen()" trait="width" />
+         <sub>
+            <copy src="me()" trait="x" />
+            <mult>2</mult>
+         </sub>
+      </width>
+      <height>
+         <copy src="screen()"   trait="height" />
+         <sub  src="bottom_bar" trait="height" />
+      </height>
+      
+      <!-- USER0: Current page number; managed by executable.
+         1 = Local Map
+         2 = World Map
+         3 = Active Quest (shows list of stages/objectives)
+         4 = In-Progress Quests (shows list of quests)
+         5 = Completed Quests (shows list of quests)
+         
+         Note that when you view quest stages for a completed quest, that's 
+         still page 5, even though it's showing stages the way page 3 does.
+      -->
+		<user0>2</user0>
+      
+      <image name="border_left">
+         <filename>Menus\NorthernUI\Shared\simple_border_vert.dds</filename>
+         <x> <!-- Position the border outside of the element body. -->
+            <copy>0</copy>
+            <sub  src="me()" trait="width" />
+         </x>
+         <y>0</y>
+         <width>4</width>
+         <height><copy src="screen()" trait="height" /></height>
+         <tile>&true;</tile>
+         <depth>-15</depth>
+         <alpha><copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      </image>
+      <image name="border_right">
+         <filename>Menus\NorthernUI\Shared\simple_border_vert.dds</filename>
+         <x><copy src="parent()" trait="width" /></x> <!-- Position the border outside of the element body. -->
+         <y>0</y>
+         <cropX>12</cropX>
+         <width>4</width>
+         <height><copy src="screen()" trait="height" /></height>
+         <tile>&true;</tile>
+         <depth>-15</depth>
+         <alpha><copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      </image>
+      <image name="back">
+         <filename>Menus\NorthernUI\Shared\simple_back.dds</filename>
+         <x>0</x>
+         <y>0</y>
+         <width> <copy src="parent()" trait="width" /></width>
+         <height><copy src="screen()" trait="height" /></height>
+         <tile>&true;</tile>
+         <depth>-15</depth>
+         <alpha><copy src="northernui()" trait="_xxnAlpha" /></alpha>
+      </image>
+      
+      <image name="border_top">
+         <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+         <tile>&true;</tile>
+         <width> <copy src="parent()" trait="width" /></width>
+         <height><copy src="me()"     trait="fileheight" /></width>
+         <x>0</x>
+         <y>
+            <copy src="sibling(header)" trait="y" />
+            <add  src="sibling(header)" trait="height" />
+         </y>
+      </image>
+      <rect name="header">
+         <locus>&true;</locus>
+         <x>8</x>
+         <y>0</y>
+         <visible>&false;</visible>
+         
+         <height>
+            <copy src="child(text)" trait="height" /> <!-- tests as 51? not 50?? -->
+            <add>13</add>
+         </height> <!-- result is 64px with out "51px" font -->
+         
+         <text name="text">
+            <string>SPACER</string>
+            <include src="NorthernUI\fonts\large.xml" />
+            <x>0</x>
+            <y>5</y>
+            <red>255</red><green>255</green><blue>255</blue>
+         </text>
+      </rect>
+      
+      <!-- START OF MENU CONTENTS -->
+      
+      <rect name="maps">
+         <locus>&true;</locus>
+         <visible><copy src="map_menu_base" trait="user0" /><lt>3</lt></visible>
+         <x>
+            <copy src="sibling(border_left)" trait="width" />
+         </x>
+         <y> <!-- after sibling -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width>
+            <copy src="parent()"              trait="width" />
+            <sub  src="sibling(border_left)"  trait="width" />
+            <sub  src="sibling(border_right)" trait="width" />
+         </width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+         <rect name="zoom">
+            <locus>&true;</locus>
+            <visible>
+               <copy src="map_menu_base" trait="user0" /><eq>2</eq>
+            </visible>
+            <x><copy src="sibling(world_map)" trait="x" /></x>
+            <y>
+               <copy src="sibling(world_map)" trait="y" />
+               <sub>8</sub>
+               <sub  src="me()" trait="height" />
+            </y>
+            <width>
+               <copy src="child()" trait="x" />
+               <add  src="child()" trait="width" />
+            </width>
+            <height>
+               <copy src="child(label)" trait="height" />
+               <max  src="child(zoom_control_world)" trait="height" />
+            </height>
+            <!-- <visible><copy src="NorthernUI()" trait="_xxnGamepadAvailable" /></visible> -->
+            
+            <image name="label">
+               <filename>Menus\NorthernUI\zoom\label.dds</filename>
+               <width><copy src="me()" trait="filewidth" /></width>
+               <height><copy src="me()" trait="fileheight" /></height>
+               <x>0</x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <zoom>50</zoom>
+            </image>
+            <text name="value_prefix"> <!-- TODO: Make this an actual zoom% readout -->
+               <include src="NorthernUI\fonts\normal.xml" />
+               <depth>1</depth>
+               <string>Zoom:&nbsp;</string>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>8</add>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </text>
+            <text name="value"> <!-- TODO: Make this an actual zoom% readout -->
+               <include src="NorthernUI\fonts\normal.xml" />
+               <depth>2</depth>
+               <string><copy src="sibling(zoom_control_world)" trait="user7" /></string>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+               </x>
+               <y><copy src="sibling()" trait="y" /></y>
+            </text>
+            <text name="value_suffix"> <!-- TODO: Make this an actual zoom% readout -->
+               <include src="NorthernUI\fonts\normal.xml" />
+               <depth>2</depth>
+               <string>%</string>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+               </x>
+               <y><copy src="sibling()" trait="y" /></y>
+            </text>
+            <rect name="zoom_control_world">
+               <locus>&true;</locus>
+               <depth>60</depth>
+               <!-- <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>8</add>
+               </x> -->
+               <x>150</x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <width>
+                  <copy src="child()" trait="x" />
+                  <add  src="child()" trait="width" />
+               </width>
+               <height>
+                  <copy src="child(zoom_out)"   trait="height" />
+                  <max  src="child(zoom_in)"    trait="height" />
+                  <max  src="child(zoom_reset)" trait="height" />
+               </height>
+               
+               <!-- block mouseover on map icons beneath the zoom panel -->
+               <id>&generic;</id>
+               <target>&true;</target>
+               
+               <!--
+                  This uses the same basic principle as scrollbars. I'm so 
+                  proud that I got a chance to apply that principle on my 
+                  own after figuring it out!
+               -->
+               <user1> 50</user1> <!-- minimum value -->
+               <user2>400</user2> <!-- maximum value -->
+               <user3> 25</user3> <!-- step -->
+               <user5>200</user5> <!-- starting value -->
+               <user7> <!-- current value -->
+                  <!-- copy old value (initializes to zero) -->
+                  <add>
+                     <copy src="child(zoom_in)"  trait="clicked" />
+                     <sub  src="child(zoom_out)" trait="clicked" />
+                     <mult src="me()" trait="user3" />
+                  </add>
+                  <mult>
+                     <copy src="child(zoom_reset)" trait="clicked" />
+                     <neq>1</neq>
+                     <sub>1</sub>
+                  </mult>
+                  <add>
+                     <copy src="me()" trait="user5" />
+                     <mult src="child(zoom_reset)" trait="clicked" />
+                  </add>
+                  <xxnOpSetIfZero src="me()" trait="user5" /> <!-- apply default value -->
+                  <max src="me()" trait="user1" />
+                  <min src="me()" trait="user2" />
+               </user7>
+               
+               <rect name="zoom_out">
+                  <id>9001</id>
+                  <clicksound>3</clicksound>
+                  <x>0</x>
+                  <y>0</y>
+                  <depth>1</depth>
+                  
+                  <include src="NorthernUI\buttons\basic_rounded_small.xml" />
+                  <string>&minus;</string>
+                  <_useHoverBehavior>&true;</_useHoverBehavior>
+                  <_paddingX>12</_paddingX>
+                  <_paddingY>6</_paddingY>
+               </rect>
+               <rect name="zoom_in">
+                  <id>9001</id>
+                  <clicksound>3</clicksound>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>8</add>
+                  </x>
+                  <y>0</y>
+                  <depth>1</depth>
+                  
+                  <include src="NorthernUI\buttons\basic_rounded_small.xml" />
+                  <string>+</string>
+                  <_useHoverBehavior>&true;</_useHoverBehavior>
+                  <_paddingX>12</_paddingX>
+                  <_paddingY>6</_paddingY>
+               </rect>
+               <rect name="zoom_reset">
+                  <id>9001</id>
+                  <clicksound>3</clicksound>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>8</add>
+                  </x>
+                  <y>0</y>
+                  <depth>1</depth>
+                  
+                  <include src="NorthernUI\buttons\basic_rounded_small.xml" />
+                  <string>Reset</string>
+                  <_useHoverBehavior>&true;</_useHoverBehavior>
+                  <_paddingX>12</_paddingX>
+                  <_paddingY>6</_paddingY>
+               </rect>
+            </rect>
+         </rect>
+         <rect name="title">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="child(current_date)"  trait="y" />
+               <add  src="child(current_date)"  trait="height" />
+               <add  src="child(location_name)" trait="y" /> <!-- padding-bottom -->
+            </height>
+            
+            <text name="location_name">
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <depth>120</depth>
+               <string><copy src="MapMenu" trait="user1" /></string>
+               <justify>&center;</justify>
+               <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>8</y>
+            </text>
+            <text name="current_date">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <depth>140</depth>
+               <string><copy src="MapMenu" trait="user2" /></string>
+               <justify>&center;</justify>
+               <red>140</red><green>140</green><blue>140</blue><alpha>255</alpha>
+               <wrapwidth>690</wrapwidth>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- after sibling -->
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+            </text>
+         </rect>
+         <rect name="local_map">
+            <include src="NorthernUI\cards\border_box_basic.xml" />
+            <locus>&true;</locus>
+            <visible><copy src="map_menu_base" trait="user0"/><eq>1</eq></visible>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub>
+                  <copy src="me()" trait="_borderWidth" />
+                  <mult>2</mult>
+               </sub>
+               <sub>32</sub>
+            </width>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <height>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="y" />
+               <sub>
+                  <copy src="me()" trait="_borderHeight" />
+                  <mult>2</mult>
+               </sub>
+               <sub>8</sub>
+            </height>
+            
+            <rect name="content_box">
+               <include src="NorthernUI\cards\content_box.xml" />
+               <rect name="default_local_focus">
+                  <id>22</id>
+                  <width> 3</width>
+                  <height>3</height>
+                  <x>10</x>
+                  <y>10</y>
+                  <target>&true;</target>
+                  <xdefault>-1</xdefault>
+               </rect>
+               <text name="local_no_map"> <!-- Shown if there is no local map. -->
+                  <visible><copy src="local_map_canvas" trait="visible" /><eq>&false;</eq></visible>
+                  <justify>&center;</justify>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <div>2</div>
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+                  <depth>8</depth>
+                  <wrapwidth>400</wrapwidth>
+                  <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+               </text>
+               
+               <image name="fill">
+                  <depth>-1</depth>
+                  <filename>Menus\NorthernUI\black.dds</filename>
+                  <width> <copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <alpha>160</alpha>
+                  <x>0</x>
+                  <y>0</y>
+                  <tile>&true;</tile>
+               </image>
+               
+               <rect name="local_grab_layer">
+                  <id>45</id>
+                  <target>&true;</target>
+                  <visible>&true;</visible>
+                  <alpha>0</alpha>
+                  <width> <copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <x>0</x>
+                  <y>0</y>
+                  <depth>6</depth>
+               </rect>
+               <rect name="local_map_window">
+                  <depth>1</depth>
+                  <alpha>0</alpha>
+                  <width> <copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <x>1</x>
+                  <y>1</y>
+                  <locus>&true;</locus>
+                  <clipwindow>&true;</clipwindow>
+                  
+                  <image name="local_map_cursor"> <!-- Xbox-only cursor -->
+                     <id>62</id>
+                     <visible><copy src="NorthernUI()" trait="_xxnGamepadAvailable" /></visible>
+                     <filename>Menus\NorthernUI\Shared\cursor_gamepad.dds</filename>
+                     <width> 64</width>
+                     <height>64</height>
+                     <x>
+                        <copy src="me()" trait="user0" />
+                        <max  src="me()" trait="user2" />
+                        <min  src="me()" trait="user4" />
+                     </x>
+                     <y>
+                        <copy src="me()" trait="user1" />
+                        <max  src="me()" trait="user3" />
+                        <min  src="me()" trait="user5" />
+                     </y>
+                     <depth>40 </depth>
+                     <user0> 0 </user0>	<!-- x position -->
+                     <user1> 0 </user1>	<!-- y position -->
+                     <user2> 0 </user2>	<!-- cursor min x range -->
+                     <user3> 0 </user3>	<!-- cursor min y range -->
+                     <user4>				<!-- cursor max x range -->
+                        <copy src="parent()" trait="width" />
+                        <sub  src="me()"     trait="width" />
+                     </user4>
+                     <user5>				<!-- cursor max y range -->
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                     </user5>
+                  </image>
+                  <rect name="local_map_canvas_layout">
+                     <id>46</id>
+                     <!-- <visible/> is overridden by executable -->
+                     <width> <copy src="child(local_map_canvas)" trait="user0" /></width>
+                     <height><copy src="child(local_map_canvas)" trait="user1" /></height>
+                     <x>
+                        <copy src="me()" trait="user12" />
+                        <sub  src="me()" trait="width" />
+                        <add>
+                           <copy src="parent()" trait="width" />
+                           <div>2</div>
+                        </add>
+                        <sub>14</sub>
+                     </x>
+                     <y>
+                        <copy src="me()" trait="user13" />
+                        <sub  src="me()" trait="height" />
+                        <add>
+                           <copy src="parent()" trait="height" />
+                           <div>2</div>
+                        </add>
+                        <sub>21</sub>
+                     </y>
+                     <user10>0</user10>	<!-- center x position -->
+                     <user11>0</user11>	<!-- center y position -->
+                     <user12> <!-- read by executable in panning code -->
+                        <copy src="me()" trait="user10" />
+                        <min>
+                           <copy src="me()" trait="width" />
+                           <sub>
+                              <copy src="parent()" trait="width" />
+                              <div>2</div>
+                           </sub>
+                        </min>
+                        <max>
+                           <copy src="parent()" trait="width" />
+                           <div>2</div>
+                        </max>
+                     </user12>
+                     <user13> <!-- read by executable in panning code -->
+                        <copy src="me()" trait="user11" />
+                        <min>
+                           <copy src="me()" trait="height" />
+                           <sub>
+                              <copy src="parent()" trait="height" />
+                              <div>2</div>
+                           </sub>
+                        </min>
+                        <max>
+                           <copy src="parent()" trait="height" />
+                           <div>2</div>
+                        </max>
+                     </user13>
+                     <locus>&true;</locus>
+                     
+                     <rect name="local_map_canvas"> <!-- map is drawn here -->
+                        <id>47</id>
+                        <x>0</x>
+                        <y>0</y>
+                        <depth>4</depth>
+                        <locus>&true;</locus>
+                        <clips>&true;</clips> <!-- May be forced by the executable. -->
+                        <alpha>0</alpha>
+                        <!-- <disablefade>&true;</disablefade> -->
+                        <user0>0</user0> <!-- width, set by code -->
+                        <user1>0</user1> <!-- height, set by code -->
+                        <!--
+                           The local map is rendered to BSScissorTriShapes that are 
+                           created and injected into this tile's NiNode by the MapMenu 
+                           when the map is first rendered. Each cell appears to get 
+                           its own shape within the node. Additional shapes are 
+                           injected for a rendered background.
+                           
+                           The rendered map uses vertex alpha for "fog of war."
+                        -->
+                        <!-- USER24: NorthernUI patch - use background image if possible? (overrides INI bLocalMapShader=1) -->
+                        <user24>&false;</user24>
+                        <!-- USER25: NorthernUI patch - background image to use for each (256x256px) cell; uses default if unspecified or blank -->
+                        <user25>Data\Textures\Menus\NorthernUI\stipple_512.dds</user25>
+                     </rect>
+                     <rect name="map_local_icons">
+                        <id>48</id>
+                        <depth>6</depth>
+                        <alpha>0</alpha>
+                        <width> <copy src="local_map_window" trait="width" /></width>
+                        <height><copy src="local_map_window" trait="height" /></height>
+                        <locus>&true;</locus>
+                        
+                        <!-- Template insertion point: map_local_icon -->
+                     </rect>
+                  </rect>
+               </rect>
+            </rect>
+         </rect>
+         <rect name="world_map">
+            <include src="NorthernUI\cards\border_box_basic.xml" />
+            <locus>&true;</locus>
+            <visible><copy src="map_menu_base" trait="user0"/><eq>2</eq></visible>
+            <x><copy src="sibling()" trait="x" /></x>
+            <y><copy src="sibling()" trait="y" /></y>
+            <width> <copy src="sibling()" trait="width" /> </width>
+            <height><copy src="sibling()" trait="height" /></height>
+            
+            <rect name="content_box">
+               <include src="NorthernUI\cards\content_box.xml" />
+               <image name="fill">
+                  <depth>-1</depth>
+                  <filename>Menus\NorthernUI\black.dds</filename>
+                  <width> <copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <alpha>160</alpha>
+                  <x>0</x>
+                  <y>0</y>
+                  <tile>&true;</tile>
+               </image>
+               
+               <rect name="default_world_map_focus">
+                  <id>21</id>
+                  <width> 3</width>
+                  <height>3</height>
+                  <x>10</x>
+                  <y>10</y>
+                  <target>&true;</target>
+                  <xdefault>-1</xdefault>
+               </rect>
+               <text name="world_no_map">
+                  <visible> <copy src="map_world_map" trait="visible"/> <eq> &false; </eq> </visible>
+                  <string> <copy src="strings()" trait="_nomap"/> </string>
+                  <justify> &center; </justify>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <div>2</div>
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+                  <depth> 8 </depth>
+                  <wrapwidth> 400 </wrapwidth>
+                  <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+               </text>
+               
+               <rect name="map_world_map_window">
+                  <id>63</id>
+                  <depth>1</depth>
+                  <alpha>0</alpha>
+                  <width> <copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <x>0.5</x>
+                  <y>0.5</y>
+                  <locus>&true;</locus>
+                  <clipwindow>&true;</clipwindow>
+                  
+                  <image name="map_world_map_cursor"> <!-- Xbox-only map cursor -->
+                     <id>61</id>
+                     <visible><copy src="NorthernUI()" trait="_xxnGamepadAvailable" /></visible>
+                     <filename>Menus\NorthernUI\Shared\cursor_gamepad.dds</filename>
+                     <width> 64</width>
+                     <height>64</height>
+                     <x>
+                        <copy src="me()" trait="user0" />
+                        <max  src="me()" trait="user2" />
+                        <min  src="me()" trait="user4" />
+                     </x>
+                     <y>
+                        <copy src="me()" trait="user1" />
+                        <max  src="me()" trait="user3" />
+                        <min  src="me()" trait="user5" />
+                     </y>
+                     <depth> 50 </depth>
+                     <user0> 545 </user0>	<!-- x position -->
+                     <user1> 230 </user1>	<!-- y position -->
+                     <user2> 0 </user2>	<!-- cursor min x range -->
+                     <user3> 0 </user3>	<!-- cursor min y range -->
+                     <user4>				<!-- cursor max x range -->
+                        <copy src="parent()" trait="width" />
+                        <sub  src="me()"     trait="width" />
+                     </user4>
+                     <user5>				<!-- cursor max y range -->
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                     </user5>
+                  </image>
+                  <image name="map_world_map">
+                     <id>41</id>
+                     <visible>&true;</visible> <!-- overridden by executable -->
+                     <target>&true;</target>
+                     <filename></filename>
+                     <depth>4</depth>
+                     <width>0</width>
+                     <height>0</height>
+                     <x>
+                        <copy> 0 </copy>
+                        <sub src="me()" trait="user12" />
+                        <add>
+                           <copy src="parent()" trait="width" />
+                           <div>2</div>
+                        </add>
+                     </x>
+                     <y>
+                        <copy> 0 </copy>
+                        <sub src="me()" trait="user13"/>
+                        <add>
+                           <copy src="parent()" trait="height" />
+                           <div>2</div>
+                        </add>
+                     </y>
+                     <user10> 0 </user10>	<!-- center x position -->
+                     <user11> 0 </user11>	<!-- center y position -->
+                     <user12> <!-- read by executable in panning code -->
+                        <copy src="me()" trait="user10"/>
+                        <min>
+                           <copy src="me()" trait="width" />
+                           <sub>
+                              <copy src="parent()" trait="width" />
+                              <div>2</div>
+                           </sub>
+                        </min>
+                        <max>
+                           <copy src="parent()" trait="width" />
+                           <div>2</div>
+                        </max>
+                     </user12>
+                     <user13> <!-- read by executable in panning code -->
+                        <copy src="me()" trait="user11"/>
+                        <min>
+                           <copy src="me()" trait="height" />
+                           <sub>
+                              <copy src="parent()" trait="height" />
+                              <div>2</div>
+                           </sub>
+                        </min>
+                        <max>
+                           <copy src="parent()" trait="height" />
+                           <div>2</div>
+                        </max>
+                     </user13>
+                     
+                     <locus> &true; </locus>
+                     <clips> &true; </clips>
+                     <zoom> 200 </zoom> <!-- checked by executable -->
+                     <zoom><copy src="zoom_control_world" trait="user7" /></zoom>
+                     <user1> inactive </user1>	<!-- icon filename ending for non-travel markers -->
+                     <user2> 0 </user2> <!-- executable forces this to const 5.0 -->
+                     
+                     <!-- Template insertion point: map_world_icon -->
+                     <!-- Child tiles will be deleted at run-time whenever the map is regenerated. -->
+                  </image>
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+      <rect name="quests">
+         <locus>&true;</locus>
+         <visible><copy src="map_menu_base" trait="user0"/><gt>2</gt></visible>
+         <x><copy src="sibling(border_left)"  trait="width" /></x>
+         <y><copy src="sibling()" trait="y" /></y>
+         <width>
+            <copy src="parent()"              trait="width" />
+            <sub  src="sibling(border_left)"  trait="width" />
+            <sub  src="sibling(border_right)" trait="width" />
+         </width>
+         <height><copy src="sibling()" trait="height" /></height>
+         
+         <rect name="title">
+            <locus>&true;</locus>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="child(current_date)"  trait="y" />
+               <add  src="child(current_date)"  trait="height" />
+               <add  src="child(location_name)" trait="y" /> <!-- padding-bottom -->
+            </height>
+            
+            <text name="location_name">
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <string><copy src="MapMenu" trait="user1" /></string>
+               <justify>&center;</justify>
+               <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>8</y>
+            </text>
+            <text name="current_date">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="MapMenu" trait="user2" /></string>
+               <justify>&center;</justify>
+               <red>140</red><green>140</green><blue>140</blue><alpha>255</alpha>
+               <wrapwidth>690</wrapwidth>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- after sibling -->
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+            </text>
+         </rect>
+         
+			<rect name="scrollbar_wrapper">
+            <include src="NorthernUI\scrollbars\wrapper.xml" />
+            <user0>&false;</user0> <!-- is horizontal? -->
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <sub>8</sub>
+            </x>
+            <y><copy src="quests_window" trait="y" /></y>
+            <height><copy src="quests_window" trait="height" /></height>
+            <visible>
+               <!--
+                  Additional scrollbar visibility condition: there must be 
+                  content in the pane. The pane can be empty if the user 
+                  views the active quest but has no active quest set.
+               -->
+               <copy src="quests_window_pane" trait="childcount" /><gt>0</gt>
+            </visible>
+            
+            <image name="quests_scrollbar">
+               <include src="vertical_scroll.xml" />
+               <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+               <id>11</id>
+               <depth>5</depth>
+               <user1>0</user1>		<!-- code set - minimum range value -->
+               <user2>
+                  <copy src="quests_window_pane" trait="user20" />
+                  <sub  src="me()" trait="user8"/>
+               </user2>				<!-- maximum range value -->
+               <user3> 40 </user3>		<!-- step distance -->
+               <user4>
+                  <copy src="quest_content_box" trait="height"/>
+                  <sub> 35 </sub>
+               </user4>		<!-- jump distance -->
+               <user5> 0 </user5>		<!-- code set - force value (must be 0 here) -->
+               <user6> 12 </user6>		<!-- marker's id - must change to enable dragging -->
+               <!-- user7 -->			<!-- current value -->
+               <user8> <copy src="quest_content_box" trait="height" /> </user8>		<!-- number of items visible -->
+            </image>
+         </rect>
+			<rect name="quests_window">
+            <include src="NorthernUI\cards\border_box_basic.xml" />
+				<locus>&true;</locus>
+				<depth>4</depth>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub>
+                  <copy>8</copy>
+                  <add  src="scrollbar_wrapper" trait="width" />
+                  <onlyif src="quests_scrollbar" trait="visible" />
+                  <onlyif src="scrollbar_wrapper" trait="visible" />
+               </sub>
+               <sub>
+                  <copy src="me()" trait="x" />
+                  <mult>2</mult>
+               </sub>
+            </width>
+            <x>16</x>
+            <y>
+               <copy src="sibling(title)" trait="y" />
+               <add  src="sibling(title)" trait="height" />
+               <add>8</add>
+            </y>
+				<height>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="y" />
+               <sub>
+                  <copy src="me()" trait="_borderHeight" />
+                  <mult>2</mult>
+               </sub>
+               <sub>8</sub>
+            </height>
+				
+            <rect name="quest_content_box">
+               <include src="NorthernUI\cards\content_box.xml" />
+               <clipwindow>&true;</clipwindow>
+               
+               <rect name="map_log_mapit"> <!-- Active Quest: Show current quest objective on map, if possible -->
+                  <id>
+                     <copy>31</copy>
+                     <onlyifnot src="NorthernUI()" trait="_xxnGamepadAvailable" />
+                  </id>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <sub>8</sub> <!-- margin -->
+                  </x>
+                  <y>8</y>
+                  <depth>10</depth>
+                  
+                  <!--
+                     VISIBLE status is managed by the executable when this tile 
+                     actually is serving as the "Show Objective On Map" button. 
+                     However, when the gamepad is plugged in, we use a different 
+                     tile for that purpose, and we accomplish this by changing 
+                     tile IDs at run-time. This can lead to some problems... We 
+                     get around that by using LISTCLIP to hide this button when 
+                     it isn't actually the button that does the thing.
+                  -->
+                  <listclip>
+                     <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+                  </listclip>
+                  
+                  <include src="NorthernUI\buttons\basic_rounded.xml" />
+                  <string><copy src="xxnStrings()" trait="_mapMenuShowObjectiveOnMap" /></string>
+                  <_useHoverBehavior>&true;</_useHoverBehavior>
+                  <_paddingX>16</_paddingX>
+                  <_paddingY> 8</_paddingY>
+                  <target><not src="NorthernUI()" trait="_xxnGamepadAvailable" /></target>
+               </rect>
+               <text name="no_active_quest"> <!-- kludge until we can patch the game to always tell us whether the player has set any quest as active -->
+                  <visible>
+                     <copy src="quests_window_pane" trait="childcount" /><eq>0</eq>
+                  </visible>
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>255</red><green>255</green><blue>255</blue>
+                  
+                  <_strings_3><copy src="xxnStrings()" trait="_mapMenuNoActiveQuest" /></_strings_3>
+                  <_strings_4><copy src="xxnStrings()" trait="_mapMenuNoInProgressQuests" /></_strings_4>
+                  <_strings_5><copy src="xxnStrings()" trait="_mapMenuNoCompletedQuests" /></_strings_5>
+                  
+                  <string>
+                     <copy src="map_menu_base" trait="user0" />
+                     <copy src="me()" trait="_strings_" />
+                  </string>
+                  <wrapwidth>600</wrapwidth>
+                  <justify>&center;</justify>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <div>2</div>
+                  </x>
+                  <y>
+                     <copy src="parent()" trait="height" />
+                     <sub  src="me()"     trait="height" />
+                     <div>2</div>
+                  </y>
+               </text>
+               
+               <rect name="quests_window_pane">
+                  <id>13</id>
+                  <alpha>0</alpha>
+                  <locus>&true;</locus>
+                  <width><copy src="parent()" trait="width" /></width>
+                  <height>0</height> <!-- gets set by the executable -->
+                  <y>
+                     <copy>0</copy>
+                     <sub src="quests_scrollbar" trait="user7" />
+                  </y>
+                  <user0>0</user0> <!-- number of items in list -->
+                  
+                  <!-- NORTHERNUI: USER20: True list pane height
+                     The executable sets this tile's height to the total heights of all 
+                     generated list items. However, if list items have any spacing between 
+                     them, that breaks down. NorthernUI sets the USER20 trait to the Y-
+                     coordinate of the last list item plus the height of that list item, 
+                     to offer an alternative.
+                     
+                     You would make use of that by sending user20 to the scrollbar instead 
+                     of height.
+                  -->
+                  <user20>0</user20>
+                  
+                  <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                     an input command, they defer to their parent. The following directions are for those times. -->
+                  <target> &false; </target>
+                  <xdefault> &true; </xdefault>
+                  <xlist> &xlist; </xlist>
+                  <xscroll><ref src="quests_scrollbar" trait="user5" /></xscroll>
+                  
+                  <!-- Below is the template for quests (and active quest stages) listed 
+                       in the "quest" tabs. Yes, the template is really named that, and 
+                       yes, it specifically has to be HERE, inside of the element with 
+                       ID#13. It's asinine, disorganized, and goddamned irritating. -->
+                  <template name="map_item_template">
+                     <rect name="map_item">
+                        <id>51</id>
+                        <clips>&true;</clips>
+                        <locus>&true;</locus>
+                        <target>&true;</target>
+                        <x>0</x>
+                        <y>
+                           <!-- <copy src="me()" trait="user5" /> -->
+                           <copy src="sibling()" trait="y" />
+                           <add  src="sibling()" trait="height" />
+                           <!-- <add>8</add> --> <!-- spacing -- but it looks bad with the focus box -->
+                           <onlyif>
+                              <copy src="me()" trait="listindex" /><gt>0</gt>
+                           </onlyif>
+                        </y>
+                        <depth>4</depth>
+                        <alpha>0</alpha>
+                        <width><copy src="parent()" trait="width" /></width>
+                        <height>
+                           <copy src="child(quest_item_description)" trait="y" />
+                           <add  src="child(quest_item_description)" trait="height" />
+                           <add>10</add>
+                        </height>
+                        <wrapwidth> <!-- copied by descendants -->
+                           <copy src="me()" trait="width" />
+                           <sub>32</sub>
+                           <sub>64</sub> <!-- because wrapwidth is actually super broken -->
+                        </wrapwidth>
+                        <listindex>0</listindex>		<!-- list position index... set by code -->
+                        <user1>xxx</user1>			<!-- entry's name -->
+                        <user2>xxx</user2>			<!-- entry's date -->
+                        <user3>xxx</user3>			<!-- entry's body -->
+                        <user4>Icons\icon_inv_armor_1.dds</user4>	<!-- icon for this entry -->
+                        <user5>0</user5> <!-- computed Y-position -->
+                        <user6>&false;</user6> <!-- lists: is this the selected quest? -->
+                        <user7>0</user7>				<!-- auction id (what???) -->
+                        
+                        <user20> <!-- is a quest stage rather than a whole quest? -->
+                           <copy src="map_menu_base" trait="user0" /><eq>3</eq>
+                           <or>
+                              <!-- The BACK button is shown only when viewing a Completed Quest's stages. -->
+                              <copy src="button_quests_back_to_completed" trait="visible" />
+                              <eq>&true;</eq>
+                           </or>
+                        </user20>
+                        
+                        <_is_body>
+                           <copy src="me()" trait="listindex" />
+                           <gt>0</gt>
+                           <and  src="me()" trait="user20" />
+                        </_is_body>
+                     
+                        <!-- This element is a list item. If it gets an input command it doesn't know how to handle
+                           it will defer the command to its parent. The xlist trait set to true triggers this. -->
+                        <xdefault>&false;</xdefault>
+                        <xlist>&xitem;</xlist>
+                        <xup>  &prev;</xup>
+                        <xdown>&next;</xdown>
+                        <xscroll>
+                           <copy src="me()" trait="y" />
+                           <sub>
+                              <copy src="quests_scrollbar" trait="height"/>
+                              <sub  src="me()" trait="height"/>
+                              <div> 2 </div>
+                              <ceil> 0 </ceil>
+                              <onlyif>
+                                 <copy src="quests_scrollbar" trait="height"/>
+                                 <gt   src="me()" trait="height"/>
+                              </onlyif>
+                           </sub>
+                        </xscroll>
+                        
+                        <rect name="quest_item_header">
+                           <locus>&true;</locus>
+                           <x>10</x>
+                           <y>10</y>
+                           <height>
+                              <copy src="child(text)" trait="height" />
+                              <onlyifnot src="child(icon)" trait="visible" />
+                              <max>
+                                 <copy   src="child(icon)" trait="y" />
+                                 <add    src="child(icon)" trait="height" />
+                                 <onlyif src="child(icon)" trait="visible" />
+                              </max>
+                           </height>
+                           
+                           <wrapwidth><copy src="parent()" trait="wrapwidth" /></wrapwidth>
+                           <user1><copy src="parent()" trait="user1" /></user1>
+                           <user2><copy src="parent()" trait="user2" /></user2>
+                           <user4><copy src="parent()" trait="user4" /></user4>
+                           <user6><copy src="parent()" trait="user6" /></user6>
+                           <_is_body><copy src="parent()" trait="_is_body" /></_is_body>
+                           
+                           <image name="quest_item_is_active"> <!-- for now -->
+                              <clips>&true;</clips>
+                              <depth>1</depth>
+                              <visible>
+                                 <copy src="map_menu_base" trait="user0" /><neq>3</neq>
+                                 <and  src="parent()"      trait="user6" />
+                              </visible>
+                              <filename>Menus\Inventory\inv_equiped_marker_1.dds</filename>
+                              <width>
+                                 <copy src="sibling(text)" trait="_text_width"/>
+                                 <add  src="sibling(icon)" trait="width"/>
+                                 <add>15</add>
+                              </width>
+                              <height>64</height>
+                              <x>0</x>
+                              <y>0</y>
+                              <alpha>192</alpha> <!-- for now -->
+                           </image>
+                           <image name="icon">
+                              <clips>&true;</clips>
+                              <visible><not src="parent()" trait="_is_body" /></visible>
+                              <depth>2</depth>
+                              <filename><copy src="parent()" trait="user4" /></filename>
+                              <width> 64</width>
+                              <height>64</height>
+                              <x>0</x>
+                              <y>0</y>
+                           </image>
+                           <rect name="text">
+                              <locus>&true;</locus>
+                              <x>
+                                 <copy src="sibling(icon)" trait="width" />
+                                 <add>6</add>
+                                 <onlyif src="sibling(icon)" trait="visible" />
+                              </x>
+                              <y>
+                                 <copy src="parent()" trait="height" />
+                                 <sub  src="me()"     trait="height" />
+                                 <div>2</div>
+                              </y>
+                              <width>
+                                 <copy src="parent()" trait="width" />
+                                 <sub  src="me()"     trait="x" />
+                              </width>
+                              <height>
+                                 <copy src="child(date)" trait="y" />
+                                 <add  src="child(date)" trait="height" />
+                              </height>
+                              
+                              <_text_width>
+                                 <copy src="child(name)" trait="width"/>
+                                 <max  src="child(date)" trait="width"/>
+                              </_text_width>
+                              
+                              <wrapwidth><copy src="parent()" trait="wrapwidth" /></wrapwidth>
+                              <user1><copy src="parent()" trait="user1" /></user1>
+                              <user2><copy src="parent()" trait="user2" /></user2>
+                              <_is_body><copy src="parent()" trait="_is_body" /></_is_body>
+                              
+                              <text name="name">
+                                 <clips>&true;</clips>
+                                 <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                                 <visible>
+                                    <not src="parent()" trait="_is_body" />
+                                 </visible>
+                                 <depth>2</depth>
+                                 <justify>&left;</justify>
+                                 <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                                 <wrapwidth><copy src="parent()" trait="wrapwidth" /></wrapwidth>
+                                 <string><copy src="parent()" trait="user1" /></string>
+                                 <x>0</x>
+                                 <y>0</y>
+                              </text>
+                              <text name="date">
+                                 <clips>&true;</clips>
+                                 <include src="NorthernUI\fonts\normal.xml" />
+                                 <depth> 2 </depth>
+                                 <justify>&left;</justify>
+                                 <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                                 <wrapwidth><copy src="parent()" trait="wrapwidth" /></wrapwidth>
+                                 <string><copy src="parent()" trait="user2" /></string>
+                                 <x>0</x>
+                                 <y>
+                                    <copy   src="sibling()" trait="height" />
+                                    <onlyif src="sibling()" trait="visible" />
+                                    <add    src="sibling()" trait="y" />
+                                 </y>
+                              </text>
+                           </rect>
+                        </rect>
+                        <text name="quest_item_description">
+                           <clips>&true;</clips>
+                           <include src="NorthernUI\fonts\normal.xml" />
+                           <depth>2</depth>
+                           <justify>&left;</justify>
+                           <red>140</red><green>140</green><blue>140</blue><alpha>255</alpha>
+                           <wrapwidth><copy src="parent()" trait="wrapwidth" /></wrapwidth>
+                           <string><copy src="parent()" trait="user3" /></string>
+                           <x><copy src="sibling()" trait="x" /></x>
+                           <y>
+                              <copy src="sibling()" trait="y" />
+                              <add  src="sibling()" trait="height" />
+                              <add>
+                                 <copy>6</copy>
+                                 <onlyifnot src="parent()" trait="_is_body" />
+                              </add>
+                           </y>
+                        </text>
+                     </rect>
+                  </template>
+               </rect>
+            </rect>
+			</rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml" />
+      
+      <_entrySpacing>16</_entrySpacing>
+      
+      <rect name="controls_gamepad">
+         <visible>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" /><eq>&true;</eq>
+         </visible>
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropX" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="x" />
+            <sub  src="me()"     trait="x" />
+         </width>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <_viewingQuests><copy src="map_menu_base" trait="user0" /><gt>2</gt></_viewingQuests>
+         
+         <!--
+            Here's the setup we're going for here, for gamepad users.
+            
+            Visually, we want to show a "switch to something map-related" button on 
+            the left, and a "switch to something quest-related" button on the right. 
+            We want to have a "do something context-sensitive" button in the middle. 
+            So for example, if you're viewing the active quest, the button to switch 
+            to the maps would be on the left, the button to show the current quest 
+            objective on the map would be in the middle, and the button to show the 
+            lists of running/completed quests would be on the right.
+            
+            In terms of button mappings, however, we want the bumpers to serve as 
+            navigation, the Y button to serve as a button for switching within your 
+            current context, and the X button to always be a context-sensitive 
+            action. So for example, if you're viewing anything quest-related, then 
+            pressing LB should take you to the maps; but if you're viewing one of 
+            the maps, pressing Y should switch to the other map.
+            
+            This means that displayed buttons have to change their button mappings 
+            at run-time. The left-side button can be LB (to switch away from quests) 
+            or Y (to switch within maps). The right-side button can be RB (to switch 
+            to quests) or Y (to switch within quest lists). There's no direct way to 
+            do this in Oblivion XML, so we do it indirectly.
+            
+            We have three visible tiles that display the left, middle, and right-side 
+            mappings. They vary their displayed buttons and text labels, but they 
+            don't actually handle any behaviors. Instead, we have four more tiles, 
+            which serve as invisible hitboxes, and these are the tiles that actually 
+            handle behaviors: they switch their IDs and positions depending on what 
+            you're currently looking at, such that they cover up the visible buttons 
+            and allow us to (pretend to) vary button mappings at run-time. One hitbox 
+            per mappable gamepad button; one visible tile per UI button element.
+            
+            There are a few things to note here:
+            
+             - Even if a hitbox is hidden, it can still block clicks to other hitbox-
+               es. Logically, a non-visible hitbox should do jack squat, but this is 
+               a decade-old game and it hasn't fully withstood the test of time, so, 
+               y'know. The workaround for this is to give all hitboxes conditional 
+               depth -- 8 if they're active, or -2 if they're inactive.
+               
+             - The maps don't have a contextual action, so the context button hides 
+               when viewing a map.
+               
+                - If I ever get panning working on gamepad, I might map X to setting 
+                  a custom waypoint.
+               
+             - To get from a map to any quest list, press RB twice -- first to get to 
+               the active quest, and second to move from that to the quest lists.
+               
+             - Because the Y button is used for switching views within a given context 
+               (maps/quests), it can be on the left or right sides. This is the origin 
+               of that depth problem I mentioned earlier: somehow the Y hitbox ends up 
+               fighting with the LB or RB hitboxes unless we screw with the depth.
+               
+             - This view is only for gamepad users. To enforce this, we make all IDs 
+               conditional on whether a gamepad is connected, and we make visibility  
+               of the container conditional on the same. K&M users get to see all the 
+               buttons at once -- akin to the "tabs" that this menu used to use.
+            
+             - Menu tab 5 is used for browsing completed quests and for viewing the 
+               stages of any completed quest. As such, we need a little extra handling 
+               to make the latter behave consistently with viewing the stages of an 
+               active quest (i.e. use RB to browse quests).
+         -->
+         
+         <rect name="handler_lb">
+            <locus>&true;</locus>
+            <target><copy src="me()" trait="visible" /></target>
+            <clicksound>2</clicksound>
+            <depth>
+               <copy>10</copy>
+               <onlyif src="me()" trait="visible" /> <!-- game's being an idiot about mouse focus, so... -->
+               <sub>2</sub>
+            </depth>
+            <user24> <!-- ID conditions -->
+               <copy>2</copy> <!-- if viewing any quest data: swap to world map -->
+               <onlyif src="parent()"     trait="_viewingQuests" />
+               <onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </user24>
+            <id>
+               <copy>0</copy>
+               <onlyif><copy src="me()" trait="user24" /><eq>0</eq></onlyif>
+               <add src="me()" trait="user24" />
+            </id>
+            <x>     <copy src="sibling(button_map)" trait="x" /></x>
+            <y>     <copy src="sibling(button_map)" trait="y" /></y>
+            <width> <copy src="sibling(button_map)" trait="width" /></width>
+            <height><copy src="sibling(button_map)" trait="height" /></height>
+            <visible><copy src="me()" trait="id" /><neq>0</neq></visible>
+         </rect>
+         <rect name="handler_rb">
+            <locus>&true;</locus>
+            <target><copy src="me()" trait="visible" /></target>
+            <clicksound>2</clicksound>
+            <depth>
+               <copy>10</copy>
+               <onlyif src="me()" trait="visible" /> <!-- game's being an idiot about mouse focus, so... -->
+               <sub>2</sub>
+            </depth>
+            <user24> <!-- ID conditions -->
+               <copy>
+                  <copy>3</copy>
+                  <onlyif><copy src="map_menu_base" trait="user0" /><lte>2</lte></onlyif>
+               </copy>
+               <max>
+                  <copy>4</copy>
+                  <onlyif><copy src="map_menu_base" trait="user0" /><eq>3</eq></onlyif>
+               </max>
+               <max>
+                  <copy>5</copy>
+                  <onlyif>
+                     <copy src="map_menu_base" trait="user0" /><eq>5</eq>
+                     <!-- The BACK button is shown only when viewing a Completed Quest's stages. -->
+                     <and src="button_quests_back_to_completed" trait="visible" />
+                  </onlyif>
+               </max>
+               <onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </user24>
+            <id>
+               <copy>0</copy>
+               <onlyif><copy src="me()" trait="user24" /><eq>0</eq></onlyif>
+               <add src="me()" trait="user24" />
+            </id>
+            <x>     <copy src="sibling(button_quest)" trait="x" /></x>
+            <y>     <copy src="sibling(button_quest)" trait="y" /></y>
+            <width> <copy src="sibling(button_quest)" trait="width" /></width>
+            <height><copy src="sibling(button_quest)" trait="height" /></height>
+            <visible><copy src="me()" trait="id" /><neq>0</neq></visible>
+         </rect>
+         <rect name="handler_x">
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <visible>&true;</visible> <!-- set to false if X would trigger "view active quest" but there is no active quest -->
+            <clicksound>2</clicksound>
+            <depth>10</depth>
+            <user24> <!-- ID conditions -->
+               <copy> <!-- if viewing active quest: show objective on map -->
+                  <copy>31</copy>
+                  <onlyif><copy src="map_menu_base" trait="user0" /><eq>3</eq></onlyif>
+               </copy>
+               <add> <!-- if viewing a quest list: swap to active quest -->
+                  <copy>3</copy>
+                  <onlyif><copy src="map_menu_base" trait="user0" /><gt>3</gt></onlyif>
+               </add>
+               <onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </user24>
+            <id>
+               <copy>0</copy>
+               <onlyif><copy src="me()" trait="user24" /><eq>0</eq></onlyif>
+               <add src="me()" trait="user24" />
+            </id>
+            <x>
+               <copy src="buttons_mid"    trait="x" />
+               <add  src="button_context" trait="x" />
+            </x>
+            <y>
+               <copy src="buttons_mid"    trait="y" />
+               <add  src="button_context" trait="y" />
+            </y>
+            <width> <copy src="button_context" trait="width" /></width>
+            <height><copy src="button_context" trait="height" /></height>
+            
+            <!--
+               The child tile below exists to work around an edge-case.
+               
+               When you change the journal tab to the in-progress quest list or the 
+               completed quest list, the button that shows the current quest object-
+               ive on the map has its VISIBLE trait set to false. This is accomplish-
+               ed through code like this:
+               
+                  this->journalMapButton->UpdateFloat(kTileValue_visible, 1.0);
+               
+               However, we're changing tile IDs at run-time, and that leads to some 
+               shenanigans. When a tile's ID changes, the menu receives an event 
+               (which will execute instantly, interrupting any other operations the 
+               menu is engaging in, such as processing a changing journal tab). The 
+               menu will typically have code like this:
+               
+                  switch (newID) {
+                     case 1:
+                     case 2:
+                     case 3:
+                     case 4:
+                     case 5:
+                        this->pageTabTargets[newID - 1] = newTile;
+                        return;
+                     case 31:
+                        this->journalMapButton = new Tile;
+                        return;
+                  }
+               
+               Note that it doesn't attempt to locate and clear anywhere else that 
+               the tile might be. This means that when our "handler_x" tile changes 
+               from ID 31 back to ID 3, it's still stored in this->journalMapButton, 
+               so its visibility gets tampered with!
+               
+               The solution is to have a different tile that takes ID 31 when the 
+               "handler_x" tile isn't using it, so that that tile has its visibility 
+               tampered with instead. Thus, this child tile.
+            -->
+            <rect name="safety">
+               <id>
+                  <copy>0</copy>
+                  <onlyif>
+                     <copy src="parent()" trait="id" /><eq>31</eq>
+                     <or>
+                        <not src="NorthernUI()" trait="_xxnGamepadAvailable" />
+                     </or>
+                  </onlyif>
+                  <add>
+                     <copy>31</copy>
+                     <onlyifnot>
+                        <copy src="parent()" trait="id" /><eq>31</eq>
+                     </onlyifnot>
+                     <onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+                  </add>
+               </id>
+            </rect>
+         </rect>
+         <rect name="handler_y">
+            <locus>&true;</locus>
+            <target><copy src="me()" trait="visible" /></target>
+            <clicksound>2</clicksound>
+            <depth>
+               <copy>10</copy>
+               <onlyif src="me()" trait="visible" /> <!-- game's being an idiot about mouse focus, so... -->
+               <sub>2</sub>
+            </depth>
+            
+            <_isLeft>
+               <copy src="map_menu_base" trait="user0" /><lte>2</lte>
+            </_isLeft>
+            <_isRight>
+               <copy src="map_menu_base" trait="user0" /><gte>4</gte>
+            </_isRight>
+            
+            <user24> <!-- ID conditions -->
+               <copy> <!-- if viewing world map: swap to local map -->
+                  <copy>1</copy>
+                  <onlyif><copy src="map_menu_base" trait="user0" /><eq>2</eq></onlyif>
+               </copy>
+               <max> <!-- if viewing local map: swap to world map -->
+                  <copy>2</copy>
+                  <onlyif><copy src="map_menu_base" trait="user0" /><eq>1</eq></onlyif>
+               </max>
+               <!--
+                  NO HANDLER FOR VIEWING ACTIVE QUEST.
+               -->
+               <max> <!-- if viewing completed quests: swap to running quests -->
+                  <copy>4</copy>
+                  <onlyif><copy src="map_menu_base" trait="user0" /><eq>5</eq></onlyif>
+               </max>
+               <max> <!-- if viewing running quests: swap to completed quests -->
+                  <copy>5</copy>
+                  <onlyif>
+                     <copy src="map_menu_base" trait="user0" /><eq>4</eq>
+                     <and>
+                        <!-- The BACK button is shown only when viewing a Completed Quest's stages. -->
+                        <not src="button_quests_back_to_completed" trait="visible" />
+                     </and>
+                  </onlyif>
+               </max>
+               <onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </user24>
+            <id>
+               <copy>0</copy>
+               <onlyif><copy src="me()" trait="user24" /><eq>0</eq></onlyif>
+               <add src="me()" trait="user24" />
+            </id>
+            <x>
+               <copy   src="sibling(button_map)" trait="x" />
+               <onlyif src="me()" trait="_isLeft" />
+               <add>
+                  <copy   src="sibling(button_quest)" trait="x" />
+                  <onlyif src="me()" trait="_isRight" />
+               </add>
+            </x>
+            <y>
+               <copy src="sibling(button_map)" trait="y" />
+               <onlyif src="me()" trait="_isLeft" />
+               <add>
+                  <copy src="sibling(button_quest)" trait="y" />
+                  <onlyif src="me()" trait="_isRight" />
+               </add>
+            </y>
+            <width>
+               <copy   src="sibling(button_map)" trait="width" />
+               <onlyif src="me()" trait="_isLeft" />
+               <add>
+                  <copy   src="sibling(button_quest)" trait="width" />
+                  <onlyif src="me()" trait="_isRight" />
+               </add>
+            </width>
+            <height>
+               <copy   src="sibling(button_map)" trait="height" />
+               <onlyif src="me()" trait="_isLeft" />
+               <add>
+                  <copy   src="sibling(button_quest)" trait="height" />
+                  <onlyif src="me()" trait="_isRight" />
+               </add>
+            </height>
+            <visible><copy src="me()" trait="id" /><neq>0</neq></visible>
+         </rect>
+         
+         <rect name="button_map">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>
+               <copy>279</copy>
+               <onlyifnot src="parent()" trait="_viewingQuests" />
+               <max>
+                  <copy>274</copy>
+                  <onlyif src="parent()" trait="_viewingQuests" />
+               </max>
+            </_dxScanCode>
+            <x>0</x>
+            <y>0</y>
+            <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+            
+            <_labels_0><copy src="xxnStrings()" trait="_mapMenuShowMap" /></_labels_0>
+            <_labels_1><copy src="xxnStrings()" trait="_mapMenuShowMapWorld" /></_labels_1>
+            <_labels_2><copy src="xxnStrings()" trait="_mapMenuShowMapLocal" /></_labels_2>
+            <_labels_3><copy src="xxnStrings()" trait="_mapMenuShowMap" /></_labels_3>
+            <_labels_4><copy src="xxnStrings()" trait="_mapMenuShowMap" /></_labels_4>
+            <_labels_5><copy src="xxnStrings()" trait="_mapMenuShowMap" /></_labels_5>
+            
+            <string>
+               <copy src="map_menu_base" trait="user0" />
+               <copy src="me()" trait="_labels_" />
+            </string>
+         </rect>
+         <rect name="buttons_mid">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+            <width>
+               <copy   src="child()" trait="width" />
+               <onlyif src="child()" trait="visible" />
+               <add    src="child()" trait="x" />
+            </width>
+            
+            <rect name="button_context">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+               <_dxScanCode>278</_dxScanCode>
+               <x>0</x>
+               <y>0</y>
+               <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+               <visible>
+                  <copy>&true;</copy>
+                  <copy src="handler_x" trait="visible" />
+               </visible>
+               
+               <_labels_0> </_labels_0>
+               <_labels_1><copy src="xxnStrings()" trait="_mapMenuPlaceCustomMarker" /></_labels_1>
+               <_labels_2><copy src="xxnStrings()" trait="_mapMenuPlaceCustomMarker" /></_labels_2>
+               <_labels_3><copy src="xxnStrings()" trait="_mapMenuShowObjectiveOnMapGamepad" /></_labels_3>
+               <_labels_4><copy src="xxnStrings()" trait="_mapMenuShowQuestActive" /></_labels_4>
+               <_labels_5><copy src="xxnStrings()" trait="_mapMenuShowQuestActive" /></_labels_5>
+               
+               <string>
+                  <copy src="map_menu_base" trait="user0" />
+                  <copy src="me()" trait="_labels_" />
+               </string>
+            </rect>
+            <rect name="button_select">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+               <_dxScanCode>276</_dxScanCode>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>24</add>
+                  <onlyif src="sibling()" trait="visible" />
+               </x>
+               <y>0</y>
+               <target>&false;</target>
+               <_dontGreyOut>
+                  <copy src="map_menu_base" trait="user0" /><gt>3</gt>
+                  <or>
+                     <copy src="map_menu_base" trait="user0" /><lt>3</lt>
+                     <and  src="map_world_icon_paper" trait="visible" />
+                  </or>
+               </_dontGreyOut>
+               <visible>
+                  <copy src="map_menu_base" trait="user0" /><gt>3</gt>
+                  <and>
+                     <!-- The BACK button is shown only when viewing a Completed Quest's stages. -->
+                     <not src="button_quests_back_to_completed" trait="visible" />
+                  </and>
+                  <or>
+                     <copy src="map_menu_base" trait="user0" /><eq>2</eq>
+                  </or>
+               </visible>
+               
+               <_labels_0> </_labels_0>
+               <_labels_1><copy src="xxnStrings()" trait="_mapMenuFastTravel" /> </_labels_1>
+               <_labels_2><copy src="xxnStrings()" trait="_mapMenuFastTravel" /> </_labels_2>
+               <_labels_3> </_labels_3>
+               <_labels_4><copy src="xxnStrings()" trait="_mapMenuShowQuestDetails" /></_labels_4>
+               <_labels_5><copy src="xxnStrings()" trait="_mapMenuShowQuestDetails" /></_labels_5>
+               
+               <string>
+                  <copy src="map_menu_base" trait="user0" />
+                  <copy src="me()" trait="_labels_" />
+               </string>
+            </rect>
+         </rect>
+         <rect name="button_quest">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>
+               <copy>279</copy>
+               <onlyif>
+                  <copy src="map_menu_base" trait="user0" /><gt>3</gt>
+                  <and>
+                     <!-- The BACK button is shown only when viewing a Completed Quest's stages. -->
+                     <not src="button_quests_back_to_completed" trait="visible" />
+                  </and>
+               </onlyif>
+               <max>
+                  <copy>275</copy>
+                  <onlyifnot>
+                     <copy src="map_menu_base" trait="user0" /><gt>3</gt>
+                     <and>
+                        <!-- The BACK button is shown only when viewing a Completed Quest's stages. -->
+                        <not src="button_quests_back_to_completed" trait="visible" />
+                     </and>
+                  </onlyifnot>
+               </max>
+            </_dxScanCode>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+            </x>
+            <y>0</y>
+            <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+            
+            <_labels_0><copy src="xxnStrings()" trait="_mapMenuShowQuest" /></_labels_0>
+            <_labels_1><copy src="xxnStrings()" trait="_mapMenuShowQuest" /></_labels_1>
+            <_labels_2><copy src="xxnStrings()" trait="_mapMenuShowQuest" /></_labels_2>
+            <_labels_3><copy src="xxnStrings()" trait="_mapMenuShowQuestRunning" /></_labels_3>
+            <_labels_4><copy src="xxnStrings()" trait="_mapMenuShowQuestCompleted" /></_labels_4>
+            <_labels_5><copy src="xxnStrings()" trait="_mapMenuShowQuestRunning" /></_labels_5>
+            
+            <string>
+               <copy src="map_menu_base" trait="user0" />
+               <copy src="me()" trait="_labels_" />
+            </string>
+         </rect>
+      </rect>
+      <rect name="controls_keyboard">
+         <visible><not src="NorthernUI()" trait="_xxnGamepadAvailable" /></visible>
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropX" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="button_map">
+            <id>
+               <copy>0</copy>
+               <add>
+                  <copy>
+                     <copy>1</copy>
+                     <onlyif><copy src="map_menu_base" trait="user0" /><neq>1</neq></onlyif>
+                  </copy>
+                  <max>
+                     <copy>2</copy>
+                     <onlyif><copy src="map_menu_base" trait="user0" /><neq>2</neq></onlyif>
+                  </max>
+                  <!-- End of conditions. -->
+                  <onlyifnot src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </add>
+            </id>
+            <clicksound>2</clicksound>
+            <x>0</x>
+            <y>0</y>
+            
+            <xright><ref src="sibling(button_quests_active)"    trait="mouseover" /></xright>
+            <xdown> <ref src="sibling(button_quests_completed)" trait="mouseover" /></xdown>
+            
+            <_labels_0><copy src="xxnStrings()" trait="_mapMenuShowMap" /></_labels_0>
+            <_labels_1><copy src="xxnStrings()" trait="_mapMenuShowMapWorld" /></_labels_1>
+            <_labels_2><copy src="xxnStrings()" trait="_mapMenuShowMapLocal" /></_labels_2>
+            <_labels_3><copy src="xxnStrings()" trait="_mapMenuShowMap" /></_labels_3>
+            <_labels_4><copy src="xxnStrings()" trait="_mapMenuShowMap" /></_labels_4>
+            <_labels_5><copy src="xxnStrings()" trait="_mapMenuShowMap" /></_labels_5>
+            
+            <include src="NorthernUI\buttons\basic_rounded.xml" />
+            <string>
+               <copy src="map_menu_base" trait="user0" />
+               <copy src="me()" trait="_labels_" />
+            </string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+         </rect>
+         <rect name="button_quests_active">
+            <id>
+               <copy>0</copy>
+               <add>
+                  <copy>3</copy>
+                  <onlyifnot src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </add>
+            </id>
+            <clicksound>2</clicksound>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            
+            <xleft> <ref src="sibling(button_map)"              trait="mouseover" /></xleft>
+            <xright><ref src="sibling(button_quests_available)" trait="mouseover" /></xright>
+            <xdown> <ref src="sibling(button_quests_completed)" trait="mouseover" /></xdown>
+         
+            <include src="NorthernUI\buttons\basic_rounded.xml" />
+            <string><copy src="xxnStrings()" trait="_mapMenuShowQuestActive" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+         </rect>
+         <rect name="button_quests_available">
+            <id>
+               <copy>0</copy>
+               <add>
+                  <copy>4</copy>
+                  <!-- End of conditions. -->
+                  <onlyifnot src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </add>
+            </id>
+            <clicksound>2</clicksound>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            
+            <xleft> <ref src="sibling(button_quests_active)"    trait="mouseover" /></xleft>
+            <xright><ref src="sibling(button_quests_completed)" trait="mouseover" /></xright>
+            <xdown> <ref src="sibling(button_quests_completed)" trait="mouseover" /></xdown>
+         
+            <include src="NorthernUI\buttons\basic_rounded.xml" />
+            <string><copy src="xxnStrings()" trait="_mapMenuShowQuestRunning" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+         </rect>
+         <rect name="button_quests_completed">
+            <id>
+               <copy>0</copy>
+               <add>
+                  <copy>5</copy>
+                  <!-- End of conditions. -->
+                  <onlyifnot src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </add>
+            </id>
+            <clicksound>2</clicksound>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            
+            <xleft><ref src="sibling(button_quests_available)" trait="mouseover" /></xleft>
+         
+            <include src="NorthernUI\buttons\basic_rounded.xml" />
+            <string><copy src="xxnStrings()" trait="_mapMenuShowQuestCompleted" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="hidden_controls">
+      <rect name="button_quests_back_to_completed">
+         <id>32</id>
+         <!-- VISIBLE status is managed by the executable. -->
+         
+         <!--
+            It's redundant to have a "Back" button be shown when viewing a completed 
+            quest's stages at the same time as having buttons for the other quest lists. 
+            However, we can't hide the other buttons conditionally (positioning breaks; 
+            don't have time to find out why), and we need this button to still exist 
+            because the executable manages its visibility, and it's the only way we have 
+            for a quest-list item to know that it's a stage in a completed quest.
+         -->
+      </rect>
+      
+      <!--
+         At present, we don't actually want to use these buttons. They would only 
+         fire for tab changes not caught by some other tile.
+         
+         If we find a way to have the K&M buttons differentiate between being sel-
+         ected and being moused over, we can re-enable these at that time.
+      -->
+      <rect name="map_tabs_prev">
+         <id>7</id>
+         <target>&false;</target>
+         <width> 1</width>
+         <height>1</height>
+         <x>-1</x>
+         <y>-1</y>
+         <clicksound>5</clicksound>
+         <visible>&false;</visible>
+      </rect>
+      <rect name="map_tabs_next">
+         <id>8</id>
+         <target>&false;</target>
+         <width> 1</width>
+         <height>1</height>
+         <x>-1</x>
+         <y>-1</y>
+         <clicksound>5</clicksound>
+         <visible>&false;</visible>
+      </rect>
+   </rect>
+   
+   <rect name="map_background">
+		<depth>-3</depth>
+		<locus>&true;</locus>
+      
+      <rect name="map_page_3"> <!-- compatibility: Enhanced Economy -->
+			<_is_topmost>
+				<copy src="map_menu_base" trait="user0" />
+				<eq>3</eq>
+			</_is_topmost>
+      </rect>
+		
+		<!-- TAB BUTTONS *******************************************************************************-->
+		<rect name="map_tab_layout">
+			<x> 26 </x>
+			<y> 20 </y>
+			<locus> &true; </locus>
+         
+         <!-- The menu fails to load unless the five tab buttons exist when it's first opened. -->
+				
+			<rect name="map_tab_page_5_target">
+				<id> 5 </id>
+				<target><copy src="map_menu_base" trait="user0" /><neq>5</neq></target>
+				<depth> 2 </depth>
+				<width> 132 </width>
+				<height> 85 </height>
+				<x> 555 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 5 </user0>
+			</rect>
+			<rect name="map_tab_page_4_target">
+				<id> 4 </id>
+				<target><copy src="map_menu_base" trait="user0" /><neq>4</neq></target>
+				<depth> 2 </depth>
+				<alpha> 0 </alpha>
+				<width> 132 </width>
+				<height> 85 </height>
+				<x> 415 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 4 </user0>
+			</rect>
+			<rect name="map_tab_page_3_target">
+				<id> 3 </id>
+				<target><copy src="map_menu_base" trait="user0" /><neq>3</neq></target>
+				<depth> 2 </depth>
+				<alpha> 0 </alpha>
+				<width> 132 </width>
+				<height> 85 </height>
+				<x> 279 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 3 </user0>
+			</rect>
+			<rect name="map_tab_page_2_target">
+				<id> 2 </id>
+				<target><copy src="map_menu_base" trait="user0" /><neq>2</neq></target>
+				<depth> 2 </depth>
+				<alpha> 0 </alpha>
+				<width> 132 </width>
+				<height> 85 </height>
+				<x> 144 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 2 </user0>
+			</rect>
+			<rect name="map_tab_page_1_target">
+				<id> 1 </id>
+				<target><copy src="map_menu_base" trait="user0" /><neq>1</neq></target>
+				<depth> 2 </depth>
+				<alpha> 0 </alpha>
+				<width> 140 </width>
+				<height> 85 </height>
+				<x> 0 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 2 </user0>
+			</rect>
+		</rect>
+	</rect>	<!-- map_background -->
+	
+	<!-- template for map icons -->
+	<template name="map_world_icon">
+		<image name="map_world_icon">
+         <!--
+            Tile is renamed by the executable to the map marker's name capped to 
+            0x400 chars, with spaces converted to underscores. If it's the player's 
+            custom marker, it's renamed to "player_set_marker". If it's the player 
+            themselves, tile is renamed to "map_world_player".
+         -->
+			<id>43</id>
+         
+         <_isSpecial>   <copy src="me()" trait="user5" /><gt>90</gt></_isSpecial>
+         <_isCustom>    <copy src="me()" trait="user5" /><eq>99</eq></_isCustom>
+         <_isYouAreHere><copy src="me()" trait="user5" /><eq>98</eq></_isYouAreHere>
+         
+			<target>
+				<not src="me()" trait="_isSpecial" />
+				<and src="me()" trait="user8" />
+			</target>
+			<filename>
+            <copy>1</copy>
+            <max> <!-- force file 2 for quest objective markers in the same cell -->
+               <copy>2</copy>
+               <onlyif    src="me()" trait="user11" />
+               <onlyifnot src="me()" trait="user10" />
+            </max>
+				<max> <!-- force file 3 for the player's custom marker -->
+					<copy>3</copy>
+					<onlyifnot src="me()" trait="_isYouAreHere" />
+               <onlyif    src="me()" trait="user12" /> <!-- is player's custom marker -->
+				</max>
+				<max> <!-- force file 4 for the you-are-here marker -->
+					<copy>4</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+				</max>
+            <max> <!-- force file 5 for quest markers through a door -->
+               <copy>5</copy>
+               <onlyif src="me()" trait="user11" />
+               <onlyif src="me()" trait="user10" />
+            </max>
+				<copy src="MapMenu" trait="_mapicon_" />
+			</filename>
+			<cropx>
+				<copy src="me()" trait="user5" />
+				<sub> 1</sub>
+				<mul>32</mul>
+				<onlyifnot src="me()" trait="_isSpecial" />
+			</cropx>
+			<cropy>
+				<copy src="me()" trait="user6" />
+				<sub> 1</sub>
+				<mul>32</mul>
+				<onlyifnot src="me()" trait="_isSpecial" />
+			</cropy>
+			<depth>
+				<copy src="me()" trait="_random_depth" />
+				<max>
+					<copy>90</copy>
+					<onlyif src="me()" trait="_isSpecial" />
+				</max>
+				<max src="me()" trait="user7" />
+				<add>1</add>
+			</depth>
+			<width>
+            <copy>32</copy>
+            <max>
+					<copy>64</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+            </max>
+			</width>
+			<height>
+            <copy>32</copy>
+            <max>
+					<copy>64</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+            </max>
+			</height>
+			<x>
+				<copy src="me()" trait="user1" />
+				<sub>15.5</sub>
+				<sub>
+					<copy>15.5</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+				</sub>
+			</x>
+			<y>
+				<copy src="me()" trait="user2" />
+				<sub>15.5</sub>
+				<sub>
+					<copy>15.5</copy>
+					<onlyif    src="me()" trait="_isSpecial" />
+					<onlyifnot src="me()" trait="user10" /> <!-- through load door? -->
+				</sub>
+			</y>
+			<clips> &true; </clips>
+			<locus> &true; </locus>		<!-- needs to be a locus in case it needs to be rotated -->
+			
+			<user0> &true; </user0>		<!-- set by code: marker is visible? -->
+			<user1> 0 </user1>			<!-- set by code: x position on map -->
+			<user2> 0 </user2>			<!-- set by code: y position on map -->
+			<user4>  </user4>			<!-- set by code: location name (or float 0.0 for player-related markers) -->
+         
+         <!-- USER 5:
+            For map markers, it's the location type (ExtraMapMarker::Data::type).
+            For the player's you-are-here marker, it's 98.
+            For the player's custom marker, it's 99.
+         -->
+			<user5> 0 </user5>
+         
+			<user6> &false; </user6>	<!-- set by code: fast travel enabled -->
+			<user7> 0 </user7>			<!-- set by code: depth adjustment; 100 for icon being hovered over, 4 for you-are-here marker, 3 for player's marker, 2 for objectives, 1 for map markers, 0 for icon after you mouseoff it -->
+			<user8> &false; </user8>	<!-- set by code: is targetable? -->
+         
+         <user10></user10> <!-- quest marker is through a door? -->
+         <user11></user11> <!-- is quest marker? -->
+         <user12></user12> <!-- true for the player's custom marker; false for all other markers -->
+			
+			<_random_depth> <rand>50</rand> </_random_depth>
+		</image>
+	</template>
+	
+	
+	<!-- template for local map icons -->
+	<template name="map_local_icon">
+		<image name="map_local_icon">
+			<id>49</id>
+         
+         <_isSpecial>   <copy src="me()" trait="user5" /><gt>90</gt></_isSpecial>
+         <_isCustom>    <copy src="me()" trait="user5" /><eq>99</eq></_isCustom>
+         <_isYouAreHere><copy src="me()" trait="user5" /><eq>98</eq></_isYouAreHere>
+         
+			<visible> &true; </visible>
+			<target>
+				<not src="me()" trait="_isSpecial" />
+				<and src="me()" trait="user8"/>
+			</target>
+			<filename>
+            <copy>1</copy>
+            <max> <!-- force file 2 for quest objective markers in the same cell -->
+               <copy>2</copy>
+               <onlyif    src="me()" trait="user11" />
+               <onlyifnot src="me()" trait="user10" />
+            </max>
+				<max> <!-- force file 3 for the player's custom marker -->
+					<copy>3</copy>
+					<onlyifnot src="me()" trait="_isYouAreHere" />
+               <onlyif    src="me()" trait="user12" /> <!-- is player's custom marker -->
+				</max>
+				<max> <!-- force file 4 for the you-are-here marker -->
+					<copy>4</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+				</max>
+            <max> <!-- force file 5 for quest markers through a door -->
+               <copy>5</copy>
+               <onlyif src="me()" trait="user11" />
+               <onlyif src="me()" trait="user10" />
+            </max>
+				<copy src="MapMenu" trait="_mapicon_" />
+			</filename>
+			<cropx>
+				<copy src="me()" trait="user5" />
+				<sub> 1</sub>
+				<mul>32</mul>
+				<onlyifnot src="me()" trait="_isSpecial" />
+			</cropx>
+			<cropy>
+				<copy src="me()" trait="user6" />
+				<sub> 1</sub>
+				<mul>32</mul>
+				<onlyifnot src="me()" trait="_isSpecial" />
+			</cropy>
+			<depth>
+				<copy src="me()" trait="_random_depth" />
+				<max>
+					<copy>90</copy>
+					<onlyif src="me()" trait="_isSpecial" />
+				</max>
+				<max src="me()" trait="user7" />
+				<add>1</add>
+			</depth>
+			<width>
+            <copy>32</copy>
+            <max>
+					<copy>64</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+            </max>
+			</width>
+			<height>
+            <copy>32</copy>
+            <max>
+					<copy>64</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+            </max>
+			</height>
+			<x>
+				<copy src="me()" trait="user1" />
+				<sub>15.5</sub>
+				<sub>
+					<copy>15.5</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+				</sub>
+			</x>
+			<y>
+				<copy src="me()" trait="user2" />
+				<sub>15.5</sub>
+				<sub>
+					<copy>15.5</copy>
+					<onlyif    src="me()" trait="_isSpecial" />
+					<onlyifnot src="me()" trait="user10" /> <!-- through load door? -->
+				</sub>
+			</y>
+			<clips> &true; </clips>
+			
+			<user0> &true; </user0>		<!-- set by code - is visible -->
+			<user1> 0 </user1>			<!-- set by code - x position on map -->
+			<user2> 0 </user2>			<!-- set by code - y position on map -->
+			<user4> xxxx </user4>		<!-- set by code - location name -->
+         
+         <!-- USER 5:
+            For map markers, it's the location type (ExtraMapMarker::Data::type).
+            For the player's you-are-here marker, it's 98.
+            For the player's custom marker, it's 99.
+         -->
+			<user5> 99 </user5>			<!-- set by code - location type -->
+         
+			<user6> &true; </user6>		<!-- set by code - fast travel enabled -->
+			<user7> 0 </user7>			<!-- set by code - depth adjustment -->
+			<user8> &false; </user8>	<!-- set by code - is targetable? -->
+			<locus> &true; </locus>		<!-- needs to be a locus in case it needs to be rotated -->
+         
+         <user10>&false;</user10> <!-- is through load door -->
+         <user11>&false;</user11> <!-- is a quest target -->
+         <user12>&false;</user12> <!-- is the player marker -->
+			
+			<_random_depth> <rand>50</rand> </_random_depth>
+		</image>
+	</template>
+   
+	<template name="dynamic_map_overlay">
+		<image name="dynamic_map_overlay">
+         <!--
+            This isn't final and I guarantee NOTHING,...
+            
+            ...but Dynamic Map uses scripts to place images on the map, in order to 
+            have the map reflect added towns, cities, and so on. It uses an INI file 
+            with a readily legible (but decidedly NOT INI-appropriate) format for its 
+            data.
+            
+            In theory, we can replicate that functionality ourselves.
+         -->
+			<user0> </user0> <!-- texture filename -->
+			<user1> -999 </user1> <!-- x-position on map -->
+			<user2> -999 </user2> <!-- y-position on map -->
+			<user3> 0 </user3> <!-- width -->
+			<user4> 0 </user4> <!-- height -->
+			<user5> 100 </user5> <!-- zoom -->
+			<user6> 0 </user6> <!-- depth -->
+         
+			<clips>&true;</clips>
+			<visible>&true;</visible>
+         
+			<filename><copy src="me()" trait="user0" /></filename>
+			<depth>
+            <copy src="me()" trait="user6" />
+         </depth>
+         <zoom>
+            <copy src="map_world_map" trait="zoom"/>
+            <mult src="me()" trait="user5" />
+         </zoom>
+			<width>
+            <copy src="me()" trait="user3" />
+            <mult>
+               <copy src="map_world_map" trait="zoom"/>
+               <div>100</div>
+            </mult>
+            <mult src="me()" trait="user5" />
+         </width>
+			<height>
+            <copy src="me()" trait="user4" />
+            <mult>
+               <copy src="map_world_map" trait="zoom"/>
+               <div>100</div>
+            </mult>
+            <mult src="me()" trait="user5" />
+         </height>
+			<x>
+            <copy src="me()" trait="user1" />
+            <mult>
+               <copy src="map_world_map" trait="zoom"/>
+               <div>100</div>
+            </mult>
+         </x>
+			<y>
+            <copy src="me()" trait="user2" />
+            <mult>
+               <copy src="map_world_map" trait="zoom"/>
+               <div>100</div>
+            </mult>
+         </y>
+		</image>
+	</template>
+				
+	<!-- preload quest icons -->
+	<rect name="preload">
+		<y> -1000 </y>
+		<x> 10 </x>
+		<image name="pre01"><filename>Icons\Quest\icon_amulet_of_king.dds</filename></image>
+		<image name="pre02"><filename>Icons\Quest\icon_arena.dds</filename></image>
+		<image name="pre03"><filename>Icons\Quest\icon_bruma.dds</filename></image>
+		<image name="pre04"><filename>Icons\Quest\icon_daedra.dds</filename></image>
+		<image name="pre05"><filename>Icons\Quest\icon_dark_brotherhood.dds</filename></image>
+		<image name="pre06"><filename>Icons\Quest\icon_dragonfires.dds</filename></image>
+		<image name="pre07"><filename>Icons\Quest\icon_fighters_guild.dds</filename></image>
+		<image name="pre08"><filename>Icons\Quest\icon_imperial_city.dds</filename></image>
+		<image name="pre09"><filename>Icons\Quest\icon_kvatch.dds</filename></image>
+		<image name="pre10"><filename>Icons\Quest\icon_leyawiin.dds</filename></image>
+		<image name="pre11"><filename>Icons\Quest\icon_mages_guild.dds</filename></image>
+		<image name="pre12"><filename>Icons\Quest\icon_master_trainer.dds</filename></image>
+		<image name="pre13"><filename>Icons\Quest\icon_miscarcand.dds</filename></image>
+		<image name="pre14"><filename>Icons\Quest\icon_miscellaneous.dds</filename></image>
+		<image name="pre15"><filename>Icons\Quest\icon_mythic_dawn.dds</filename></image>
+		<image name="pre16"><filename>Icons\Quest\icon_oblivion_gate.dds</filename></image>
+		<image name="pre17"><filename>Icons\Quest\icon_paradise.dds</filename></image>
+		<image name="pre18"><filename>Icons\Quest\icon_settlements_quest_icon.dds</filename></image>
+		<image name="pre19"><filename>Icons\Quest\icon_thieves_guild.dds</filename></image>
+		<image name="pre20"><filename>Icons\Quest\icon_tiber_septim's_armor.dds</filename></image>
+		<image name="pre21"><filename>Icons\Quest\icon_weynon_priory.dds</filename></image>
+	</rect>
+</menu>

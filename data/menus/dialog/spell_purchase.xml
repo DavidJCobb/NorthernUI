@@ -1,0 +1,651 @@
+<!-- spell_purchase.xml -->
+<menu name="SpellPurchaseMenu">
+	<class> &SpellPurchaseMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade>0.25</menufade>
+	
+	<user0> 5 </user0>			<!-- Buffer between left border and icon -->
+	<user2> 8 </user2>			<!-- Buffer between icon and spell text -->
+	<user3> 370 </user3>		<!-- Wrap width of spell text -->
+	<user10>					<!-- X-position of fully-exposed magic popup menu -->
+		<copy src="me()" trait="x"/>
+		<add src="child(spell_background)" trait="x"/>
+		<add src="child(spell_background)" trait="width"/>
+		<sub> 24 </sub>
+	</user10>
+	<user12>					<!-- lowest possible drop for the pop-up menu -->
+		<copy src="screen()" trait="height"/>
+		<sub src="screen()" trait="cropy"/>
+		<sub src="screen()" trait="cropy"/>
+		<sub> 75 </sub>
+	</user12>
+	
+	<xbuttonb><ref src="close_menu"    trait="clicked" /></xbuttonb>
+	<xbuttony><ref src="button_haggle" trait="clicked" /></xbuttony>
+	
+   <_itemInfoColumnWidth>160</_itemInfoColumnWidth>
+   <_itemIconZoom>66</_itemIconZoom>
+   <_itemIconSize>
+      <copy>64</copy>
+      <mult src="me()" trait="_itemIconZoom" />
+      <div>100</div>
+   </_itemIconSize>
+   <_listRowHeight>
+      <copy src="me()" trait="_itemIconSize" />
+      <add>16</add>
+      <floor>0</floor>
+   </_listRowHeight>
+	
+	<rect name="inv_FocusBox">
+		<id>8</id>
+		<depth>1</depth>
+		<visible>&false;</visible>
+      <include src="NorthernUI\focus_boxes\highlight.xml"/>
+	</rect>
+   
+   <rect name="menu_base">
+      <include src="NorthernUI\fragments\main\base.xml" />
+      <_headerEnabled>&true;</_headerEnabled>
+      <_headerText><copy src="xxnStrings()" trait="_spellPurchaseMenuTitle" /></_headerText>
+      <_isMainMenu>&false;</_isMainMenu>
+      
+		<id>1</id>
+      <target>&true;</target>
+      
+      <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+      
+      <rect name="content">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y> <!-- after sibling -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width>
+            <copy src="parent()"       trait="width" />
+            <sub>
+               <copy src="spell_buy_list_scroll_bar" trait="width" />
+               <add> <!-- scrollbar margin; also acts as list padding-right -->
+                  <copy src="parent()" trait="_scrollbarMargin" />
+                  <mult>2</mult>
+               </add>
+               <onlyif src="spell_buy_list_scroll_bar" trait="visible" />
+            </sub>
+         </width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+         <rect name="anchored_category_header">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height> <!-- height of children -->
+               <copy src="child(anchored_category_header_content)" trait="height" />
+            </height>
+            
+            <image name="border_bottom">
+               <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+               <tile>&true;</tile>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <add>
+                     <copy src="spell_buy_list_scroll_bar" trait="width" />
+                     <add> <!-- scrollbar margin; also acts as list padding-right -->
+                        <copy src="menu_base" trait="_scrollbarMargin" />
+                        <mult>2</mult>
+                     </add>
+                     <onlyif src="spell_buy_list_scroll_bar" trait="visible" />
+                  </add>
+               </width>
+               <height><copy src="me()" trait="fileheight" /></width>
+               <x>0</x>
+               <y> <!-- align with bottom of parent -->
+                  <copy src="parent()" trait="height"/>
+                  <sub  src="me()"     trait="height"/>
+               </y>
+            </image>
+            <rect name="anchored_category_header_content">
+               <!--
+                  Unfortunately, we can't prefab this element. XLEFT and similar 
+                  keyboard navigation traits appear to be completely broken within 
+                  prefabs and between prefabbed and "real" content.
+               -->
+               <id>15</id>
+               <depth>3</depth>
+               <locus>&true;</locus>
+               <visible>&true;</visible>
+               <x>0</x>
+               <y>0</y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child(anchored_category_header_name)" trait="height" /></height>
+               
+               <_columnCount>2</_columnCount>
+               
+               <rect name="anchored_category_header_name">
+                  <!-- Re: name: element is referred to by other elements. -->
+                  <locus>&true;</locus>
+                  <id>9</id>
+                  <target>&true;</target>
+                  <clicksound>3</clicksound>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>
+                     <copy src="parent()" trait="width"/>
+                     <sub>
+                        <copy src="menu()"   trait="_itemInfoColumnWidth" />
+                        <mult src="parent()" trait="_columncount" />
+                     </sub>
+                  </width>
+                  <height>
+                     <copy src="child(label)" trait="height"/>
+                     <add>6</add>
+                  </height>
+                  
+                  <!-- Keyboard/Xbox behavior: -->
+                  <xright><ref src="col_header_1"   trait="mouseover"/></xright>
+                  <xdown> <ref src="spell_buy_list" trait="mouseover"/></xdown>
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                     <string><copy src="strings()" trait="_spells" /></string>
+                     <justify>&left;</justify>
+                     <x>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add>
+                        <add>11</add>
+                     </x>
+                     <y>
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                        <div>2</div>
+                     </y>
+                     <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                  </text>
+               </rect>
+               <rect name="col_header_1"> <!-- cost to cast -->
+                  <locus>&true;</locus>
+                  <id>10</id>
+                  <target>&true;</target>
+                  <clicksound>3</clicksound>
+                  <x> <!-- after previous -->
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                  </x>
+                  <y><copy src="sibling()" trait="y" /></y>
+                  <width> <copy src="menu()"    trait="_itemInfoColumnWidth" /></width>
+                  <height><copy src="sibling()" trait="height" /></height>
+                  
+                  <!-- Keyboard/Xbox behavior: -->
+                  <xleft> <ref src="sibling()"    trait="mouseover"/></xleft>
+                  <xright><ref src="col_header_2" trait="mouseover"/></xright>
+                  <xdown> <ref src="spell_buy_list" trait="mouseover"/></xdown>
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                     <string><copy src="xxnStrings()" trait="_spellPurchaseColMagickaCost" /></string>
+                     <justify>&center;</justify>
+                     <x> <!-- center within parent -->
+                        <copy src="parent()" trait="width" />
+                        <div>2</div>
+                     </x>
+                     <y>
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                        <div>2</div>
+                     </y>
+                     <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                  </text>
+               </rect>
+               <rect name="col_header_2"> <!-- cost to purchase -->
+                  <locus>&true;</locus>
+                  <id>11</id>
+                  <target>&true;</target>
+                  <clicksound>3</clicksound>
+                  <x> <!-- after previous -->
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                  </x>
+                  <y><copy src="sibling()" trait="y" /></y>
+                  <width> <copy src="menu()"    trait="_itemInfoColumnWidth" /></width>
+                  <height><copy src="sibling()" trait="height" /></height>
+                  
+                  <!-- Keyboard/Xbox behavior: -->
+                  <xleft><ref src="sibling()" trait="mouseover"/></xleft>
+                  <xdown><ref src="spell_buy_list" trait="mouseover"/></xdown>
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                     <string><copy src="xxnStrings()" trait="_spellPurchaseColGoldCost" /></string>
+                     <justify>&center;</justify>
+                     <x> <!-- center within parent -->
+                        <copy src="parent()" trait="width" />
+                        <div>2</div>
+                     </x>
+                     <y>
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                        <div>2</div>
+                     </y>
+                     <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                  </text>
+               </rect>
+            </rect>
+         </rect>
+         <rect name="spell_buy_window">
+            <depth>10</depth>
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="y" />
+            </height>
+            <clipwindow>&true;</clipwindow>
+            
+            <text name="no_items">
+               <visible>
+                  <copy src="spell_buy_list" trait="childcount" /><eq>0</eq>
+               </visible>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>140</red><green>140</green><blue>140</blue>
+               <string><copy src="xxnStrings()" trait="_spellPurchaseNoMoreSpells" /></string>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <justify>&center;</justify>
+               <wrapwidth>
+                  <copy src="parent()" trait="width" />
+                  <sub>128</sub>
+               </wrapwidth>
+            </text>
+            <rect name="spell_buy_pane">
+               <locus>&true;</locus>
+               <x>0</x>
+               <y> <!-- handle panel scrolling -->
+                  <copy src="spell_buy_list_scroll_bar" trait="user7"/>
+                  <mult src="menu()" trait="_listRowHeight" />
+                  <mult>-1</mult>
+               </y>
+               <width> <!-- fill available space -->
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="x" />
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+            
+               <rect name="spell_buy_list">
+                  <id>3</id>
+                  <user0>0</user0> <!-- set by code: number of visible elements in list -->
+                  <width><copy src="parent()" trait="width" /></width>
+                  
+                  <!-- code created template items are inserted here -->
+                     
+                  <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                     an input command, they defer to their parent. The following directions are for those times. -->
+                  <target>&false;</target>
+                  <xdefault>&true;</xdefault>
+                  <xlist>&xlist;</xlist>
+                  <xup><ref src="anchored_category_header_name" trait="mouseover"/></xup>
+                  <!--xdown> &first; </xdown-->
+                  <xscroll><ref src="spell_buy_list_scroll_bar" trait="user5" /></xscroll> <!-- Attempts to scroll this element into view should reset the pane's scroll position to the default (i.e. 0). -->
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+      <rect name="scrollbar_wrapper">
+         <include src="NorthernUI\scrollbars\wrapper.xml" />
+         <user0>&false;</user0> <!-- is horizontal? -->
+         <x> <!-- 8px from right edge -->
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <sub  src="parent()" trait="_scrollbarMargin" />
+         </x>
+         <y> <!-- align with window -->
+            <copy src="sibling(content)" trait="y" />
+            <add  src="spell_buy_window" trait="y" />
+            <add>4</add>
+         </y>
+         <height>
+            <copy src="spell_buy_window" trait="height" />
+            <sub>8</sub>
+         </height>
+         
+         <rect name="spell_buy_list_scroll_bar">
+            <include src="vertical_scroll.xml" />
+            <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+            <id>4</id>
+            <depth>20</depth>
+            
+            <user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+            <user2>
+               <copy src="spell_buy_list" trait="childcount" />	<!-- set by code - number of visible elements in list -->
+               <sub>
+                  <copy src="spell_buy_window" trait="height" />
+                  <div  src="menu()" trait="_listRowHeight" />
+                  <floor>0</floor>
+               </sub>
+               <!-- <add>
+                  <copy>1</copy>
+                  <onlyif>
+                     <copy src="spell_buy_window" trait="height" />
+                     <mod  src="menu()" trait="_listRowHeight" />
+                     <neq>0</neq>
+                  </onlyif>
+               </add> -->
+            </user2>				<!-- Maximum value that can be scrolled to (should be the number of
+                                  items minus the number of items visible.  i.e. if your list has
+                                  8 items and you can see 2 at any one time, this should be 6 -->
+            <user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+            <user4> 7 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+            <user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+            <user6> 5 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+            <!-- user7 = current value -->
+            <user8> <!-- How many items are visible at once -->
+               <copy src="spell_buy_window" trait="height" />
+               <div  src="menu()" trait="_listRowHeight" />
+               <ceil>0</ceil>
+            </user8>
+            <user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+            <user10> 0 </user10>	<!-- reserved -->
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="equip">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>276</_dxScanCode>
+            <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+            <visible>
+               <copy src="spell_buy_list" trait="childcount" />
+               <neq>0</neq>
+               <and  src="northernui()" trait="_xxnGamepadAvailable" />
+            </visible>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="xxnStrings()" trait="_spellPurchaseButtonBuy" /></string>
+         </rect>
+         <rect name="button_haggle">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>6</id>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_haggle" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>0</listindex>
+            <xright>&next;</xright>
+            <xup><ref src="spell_buy_list" trait="mouseover"/></xup>
+         </rect>
+         <rect name="close_menu">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>2</id>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="xxnStrings()" trait="_closeMenu" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>1</listindex>
+            <xleft>&prev;</xleft>
+            <xup><ref src="spell_buy_list" trait="mouseover"/></xup>
+         </rect>
+      </rect>
+      <rect name="right_side_info">
+         <locus>&true;</locus>
+         <width> <!-- combined width of all children -->
+            <copy src="child(gold)" trait="x" />
+            <add  src="child(gold)" trait="width" />
+         </width>
+         <height> <!-- expected child height -->
+            <copy src="child(gold)" trait="y" />
+            <add  src="child(gold)" trait="height" />
+         </height>
+         <x> <!-- align on right -->
+            <copy src="parent()"     trait="width" />
+            <sub  src="me()"         trait="width" />
+            <sub  src="screen()"     trait="cropx" />
+            <sub  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         
+         <rect name="gold">
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <x>0</x>
+            <y>0</y>
+            <id>7</id>
+            <_label><copy src="xxnStrings()" trait="_gold" /></_label>
+            <_value><copy src="me()" trait="string"/></_value>
+            <_maximum>-1</_maximum>
+         </rect>
+      </rect>
+   </rect>
+   
+	<template name="spell_item_template">
+		<rect name="spell_list_item">
+			<clips>&true;</clips>
+			<locus>&true;</locus>
+			<target>&true;</target>
+			<depth>1</depth>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<width> <copy src="parent()" trait="width"/></width>
+			<height><copy src="menu()"   trait="_listRowHeight" /></height>
+			<listindex><copy src="me()" trait="user0" /></listindex>
+         
+			<user0> 0 </user0>   <!-- listindex (why is it not set directly?) -->
+			<user1> xxx </user1>	<!-- icon pathname -->
+			<user3> xxx </user3>	<!-- effect name -->
+			<user5> 0 </user5>	<!-- magicka cost to cast -->
+			<user9> 0 </user9>	<!-- monetary cost to buy -->
+			<user10>&false;</user10> <!-- ????? -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>3</xdefault>
+			<xlist>&xitem;</xlist>
+			<xup>&prev;</xup>
+			<xdown>&next;</xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="spell_buy_list_scroll_bar" trait="user8" />
+					<div> 2</div>
+					<ceil>0</ceil>
+				</sub>
+				<add>1</add>
+			</xscroll>
+         
+         <listclip> <!-- prevent list items that are 90% off-screen from showing a focusbox -->
+            <!-- "visible" can block keynav; "listclip" will not -->
+            <copy src="me()" trait="y" />
+            <add  src="spell_buy_pane" trait="y" />
+            <add  src="child(icon)" trait="y" />
+            <add>6</add> <!-- more than 6px of the icon must be visible -->
+            <gt   src="spell_buy_window" trait="height" />
+         </listclip>
+			
+			<image name="icon">
+            <zoom><copy src="menu()" trait="_itemIconZoom" /></zoom>
+				<clips>&true;</clips>
+				<filename><copy src="parent()" trait="user1" /></filename>
+				<width> <copy src="menu()" trait="_itemIconSize" /></width>
+				<height><copy src="menu()" trait="_itemIconSize" /></height>
+				<x>8</x>
+            <y> <!-- center within parent -->
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+			</image>
+			<rect name="item_name">
+				<depth>3</depth>
+            <locus>&true;</locus>
+            <clips>&true;</clips>
+				<string><copy src="parent()" trait="user3" /></string>
+            <x> <!-- 11px after sibling -->
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add>11</add>
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+					<div>2</div>
+				</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+               <sub>
+                  <copy src="menu()" trait="_itemInfoColumnWidth" />
+                  <mult>2</mult>
+               </sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <clips>&true;</clips>
+               <depth>3</depth>
+               <justify>&left;</justify>
+               <red>255</red><green>255</green><blue>255</blue>
+               <alpha>255</alpha>
+               <wrapwidth>
+                  <copy src="parent()" trait="width" />
+                  <sub>16</sub>
+                  <max>280</max>
+               </wrapwidth>
+               <wraplines>2</wraplines>
+               <string><copy src="parent()" trait="string" /></string>
+               <x>0</x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()" trait="height" />
+                  <div>2</div>
+               </y>
+            </text>
+         </rect>
+         <rect name="column_1"> <!-- magicka cost -->
+				<depth>3</depth>
+				<locus>&true;</locus>
+				<clips>&true;</clips>
+				<string><copy src="parent()" trait="user5" /></string>
+            <width> <copy src="menu()"   trait="_itemInfoColumnWidth" /></width>
+            <height><copy src="parent()" trait="height" /></height>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+            </x>
+				<y>0</y>
+            
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <clips>&true;</clips>
+               <justify>&center;</justify>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="parent()" trait="string" /></string>
+               <red>255</red><green>255</green><blue>255</blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            </text>
+         </rect>
+         <rect name="column_2"> <!-- cost to purchase -->
+				<depth>3</depth>
+				<locus>&true;</locus>
+				<clips>&true;</clips>
+				<string><copy src="parent()" trait="user9" /></string>
+            <width><copy src="menu()" trait="_itemInfoColumnWidth" /></width>
+            <height><copy src="parent()" trait="height" /></height>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+            </x>
+				<y>0</y>
+            
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <clips>&true;</clips>
+               <justify>&center;</justify>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="parent()" trait="string" /></string>
+               <red>255</red><green>255</green><blue>255</blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            </text>
+         </rect>
+		</rect>
+	</template>
+</menu>

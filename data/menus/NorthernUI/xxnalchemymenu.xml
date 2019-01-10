@@ -1,0 +1,1162 @@
+<!-- Data\menus\NorthernUI\xxnalchemymenu.xml -->
+<menu name="XXNAlchemyMenu">
+	<class>&AlchemyMenu;</class>
+	<stackingtype>&no_click_past;</stackingtype>
+	<alpha>0</alpha>
+	<locus>&true;</locus>
+	<x>-1</x>
+	<y>-1</y>
+	<menufade>0.25</menufade>
+   
+   <_rowHeightCategory>32</_rowHeightCategory>
+   <_rowHeightItem>    32</_rowHeightItem>
+   <_rowHeightPotionEffect>32</_rowHeightPotionEffect>
+   
+   <xbuttonx><ref src="button_cook"  trait="clicked" /></xbuttonx>
+   <xbuttony><ref src="button_clear" trait="clicked" /></xbuttony>
+   <xbuttonb><ref src="button_close" trait="clicked" /></xbuttonb>
+   <xbuttonrb><ref src="potion_name" trait="clicked" /></xbuttonrb>
+   
+   <image name="PRELOAD_CHEVRON">
+      <visible>&false;</visible>
+      <filename>Menus\NorthernUI\Shared\menu_item_sel_indicator_chevron.dds</filename>
+   </image>
+   
+   <rect name="focusbox"> <!-- Underlay displayed on certain targetable elements. -->
+		<id>9</id>
+		<visible>&false;</visible>
+      <include src="NorthernUI\focus_boxes\highlight.xml"/>
+      <user15>1</user15>
+	</rect>
+   
+   <rect name="base">
+      <include src="NorthernUI\fragments\main\base.xml" />
+      <_headerEnabled>&true;</_headerEnabled>
+      <_headerText><copy src="xxnStrings()" trait="_alchemyMenuTitle" /></_headerText>
+      <_isMainMenu>&false;</_isMainMenu>
+      <id>0</id>
+      
+      <rect name="content">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y> <!-- after main menu base's header -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width><copy src="parent()" trait="width" /></width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()" trait="y" />
+         </height>
+         
+         <image name="border">
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width> <copy src="me()" trait="filewidth" /></width>
+            <height><copy src="parent()" trait="height" /></width>
+            <x>
+               <copy src="sibling(categories_col)" trait="width" />
+               <sub>
+                  <copy src="me()" trait="width" />
+                  <div>2</div>
+               </sub>
+            </x>
+            <y>0</y>
+         </image>
+         <rect name="categories_col">
+            <id>15</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <x>0</x>
+            <y>0</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <div>3</div>
+               <add>10</add> <!-- we need all the width we can get -->
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <rect name="categories_window">
+               <locus>&true;</locus>
+               <clipwindow>&true;</clipwindow>
+               <x>0</x>
+               <y>0</y>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <sub>
+                     <copy   src="categories_scrollbar" trait="width" />
+                     <add>4</add>
+                     <onlyif src="categories_scrollbar" trait="visible" />
+                  </sub>
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+               
+               <rect name="categories_list">
+                  <id>16</id>
+                  <locus>&true;</locus>
+                  <width> <copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <x>0</x>
+                  <y> <!-- handle panel scrolling -->
+                     <copy src="categories_scrollbar" trait="user7"/>
+                     <mult src="XXNAlchemyMenu"  trait="_rowHeightCategory" />
+                     <mult>-1</mult>
+                  </y>
+                  
+                  <target>&false;</target> <!-- needed for keynav across list panes -->
+                  <xdefault>&true;</xdefault>
+                  <xlist>&xlist;</xlist>
+                  <xscroll><ref src="categories_scrollbar" trait="user5" /></xscroll>
+                  <xright><ref src="items_list" trait="mouseover" /></xright>
+                  
+                  <!-- template insertion point: effect_list_item_template -->
+               </rect>
+            </rect>
+            <rect name="scrollbar_wrapper">
+               <include src="NorthernUI\scrollbars\wrapper.xml" />
+               <x><copy src="sibling()" trait="width" /></x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add>4</add>
+               </y>
+               <height>
+                  <copy src="sibling()" trait="height" />
+                  <sub>8</sub>
+               </height>
+               <depth>20</depth>
+               
+               <rect name="categories_scrollbar">
+                  <include src="vertical_scroll.xml"/>
+                  <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+                  <id>17</id>
+                  <target>&true;</target>
+                  <user1>0</user1> <!-- minimum range value -->
+                  <user2>
+                     <copy src="categories_list" trait="child_count" />
+                     <sub>
+                        <copy src="me()" trait="height" />
+                        <div  src="XXNAlchemyMenu" trait="_rowHeightCategory" />
+                        <floor>0</floor>
+                     </sub>
+                     <add>
+                        <copy>1</copy>
+                        <onlyif>
+                           <copy src="me()" trait="height" />
+                           <mod  src="XXNAlchemyMenu" trait="_rowHeightCategory" />
+                           <neq>0</neq>
+                        </onlyif>
+                     </add>
+                  </user2>
+                  <user2> <!-- maximum range value -->
+                     <copy src="categories_list" trait="child_count" />
+                     <sub> <!-- same as me().user8, but round down -->
+                        <copy src="categories_window" trait="height" />
+                        <div  src="XXNAlchemyMenu" trait="_rowHeightCategory" />
+                        <floor>0</floor>
+                     </sub>
+                  </user2>
+                  <user3> 1</user3> <!-- step distance -->
+                  <user4> 6</user4> <!-- jump distance -->
+                  <user5> 0</user5> <!-- starting value -->
+                  <user6>18</user6> <!-- marker's id - must change to enable dragging -->
+                  <!-- user7 = current value -->
+                  <user8> <!-- How many items are visible at once -->
+                     <copy src="categories_window" trait="height" />
+                     <div  src="XXNAlchemyMenu" trait="_rowHeightCategory" />
+                     <ceil>0</ceil>
+                  </user8>
+               </rect>
+            </rect>
+         </rect>
+         <rect name="items_col">
+            <id>20</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <x><copy src="sibling()" trait="width" /></x>
+            <y>0</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            
+            <rect name="items_window">
+               <locus>&true;</locus>
+               <clipwindow>&true;</clipwindow>
+               <x>0</x>
+               <y>0</y>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <sub>
+                     <copy   src="items_scrollbar" trait="width" />
+                     <add>8</add>
+                     <onlyif src="items_scrollbar" trait="visible" />
+                  </sub>
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+               
+               <rect name="items_list">
+                  <id>21</id>
+                  <locus>&true;</locus>
+                  <width> <copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <x>0</x>
+                  <y> <!-- handle panel scrolling -->
+                     <copy src="items_scrollbar" trait="user7"/>
+                     <mult src="XXNAlchemyMenu"  trait="_rowHeightItem" />
+                     <mult>-1</mult>
+                  </y>
+                  
+                  <target>&false;</target> <!-- needed for keynav across list panes -->
+                  <xdefault>&true;</xdefault>
+                  <xlist>&xlist;</xlist>
+                  <xscroll><ref src="items_scrollbar" trait="user5" /></xscroll>
+                  <xleft><ref src="categories_list" trait="mouseover" /></xleft> <!-- TODO: test this, get it working -->
+                  
+                  <!-- template insertion point: ingredient_list_item_template -->
+               </rect>
+            </rect>
+            <rect name="scrollbar_wrapper">
+               <include src="NorthernUI\scrollbars\wrapper.xml" />
+               <x><copy src="sibling()" trait="width" /></x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add>4</add>
+               </y>
+               <height>
+                  <copy src="sibling()" trait="height" />
+                  <sub>8</sub>
+               </height>
+               <depth>20</depth>
+               
+               <rect name="items_scrollbar">
+                  <include src="vertical_scroll.xml" />
+                  <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+                  <id>22</id>
+                  <target>&true;</target>
+                  <user1>0</user1> <!-- minimum range value -->
+                  <user2> <!-- maximum range value -->
+                     <copy src="items_list" trait="child_count" />
+                     <sub> <!-- same as me().user8, but round down -->
+                        <copy src="items_window"   trait="height" />
+                        <div  src="XXNAlchemyMenu" trait="_rowHeightItem" />
+                        <floor>0</floor>
+                     </sub>
+                  </user2>
+                  <user3> 1</user3> <!-- step distance -->
+                  <user4> 6</user4> <!-- jump distance -->
+                  <user5> 0</user5> <!-- starting value -->
+                  <user6>23</user6> <!-- marker's id - must change to enable dragging -->
+                  <!-- user7 = current value -->
+                  <user8> <!-- How many items are visible at once -->
+                     <copy src="items_window"   trait="height" />
+                     <div  src="XXNAlchemyMenu" trait="_rowHeightItem" />
+                     <ceil>0</ceil>
+                  </user8>
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="right_side">
+      <locus>&true;</locus>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+      </x>
+      <y>0</y>
+      <width>
+         <copy src="screen()" trait="width" />
+         <sub  src="me()"     trait="x" />
+      </width>
+      <height>
+         <copy src="screen()"   trait="height" />
+         <sub  src="bottom_bar" trait="height" />
+      </height>
+      
+      <rect name="item_card">
+         <include src="NorthernUI\cards\border_box_ornate.xml" />
+         <locus>&true;</locus>
+         
+         <_listHeight>
+            <copy src="potion_effect_list"  trait="childcount" />
+            <min>5</min>
+            <mult src="XXNAlchemyMenu"  trait="_rowHeightPotionEffect" />
+         </_listHeight>
+         
+         <user20>500</user20>
+         <user21>
+            <copy src="child(SIZER)" trait="y" />
+            <add  src="me()" trait="_listHeight" />
+            <add>
+               <copy>8</copy>
+               <add src="child(waste_warning)" trait="height" />
+               <onlyif src="child(waste_warning)" trait="visible" />
+            </add>
+         </user21>
+         <user22>&true;</user22> <!-- box-sizing:content-box -->
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="sibling(apparati)" trait="y" />
+            <sub  src="me()" trait="height" />
+            <sub  src="northernui()" trait="_xxnItemCardYOffset" />
+         </y>
+         
+         <rect name="content_box">
+            <include src="NorthernUI\cards\content_box.xml" />
+            <rect name="potion_name">
+               <id>30</id>
+               <locus>&true;</locus>
+               <target>&true;</target>
+               <x>0</x>
+               <y>0</y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child(value)" trait="height" /></height>
+               
+               <xdefault>&false;</xdefault>
+               
+               <text name="value">
+                  <id>31</id>
+                  <depth>1</depth>
+                  <string></string> <!-- (recv) current potion name -->
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <red>  <copy src="northernui()" trait="_xxnColorTextMain" /></red>
+                  <green><copy src="northernui()" trait="_xxnColorTextMain" /></green>
+                  <blue> <copy src="northernui()" trait="_xxnColorTextMain" /></blue>
+                  <alpha>255</alpha>
+                  <wrapwidth>300</wrapwidth>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <div>2</div>
+                  </x>
+                  <y>0</y>
+                  <justify>&center;</justify>
+               </text>
+            </rect>
+            <rect name="potion_item_stats">
+               <id>8</id>
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child(content)" trait="height" /></height>
+               
+               <user0>0</user0> <!-- string: potion weight -->
+               <user1>0</user1> <!-- string: potion value -->
+               
+               <rect name="content">
+                  <locus>&true;</locus>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <div>2</div>
+                  </x>
+                  <y>0</y>
+                  <width>
+                     <copy src="child(value)" trait="x" />
+                     <add  src="child(value)" trait="width" />
+                  </width>
+                  <height>
+                     <copy src="child(value)" trait="height" />
+                     <max  src="child(value)" trait="height" />
+                  </height>
+                  
+                  <rect name="weight">
+                     <locus>&true;</locus>
+                     <x>0</x>
+                     <y>0</y>
+                     <width>
+                        <copy src="child(number)" trait="x" />
+                        <add  src="child(number)" trait="width" />
+                     </width>
+                     <height>
+                        <copy src="child(label)"  trait="height" />
+                        <max  src="child(number)" trait="height" />
+                     </height>
+                     
+                     <text name="label">
+                        <x>0</x>
+                        <y>
+                           <copy src="parent()" trait="height" />
+                           <sub  src="me()"     trait="height" />
+                           <div>2</div>
+                        </y>
+                        <include src="NorthernUI\fonts\small.xml" />
+                        <justify>&left;</justify>
+                        <string><copy src="xxnStrings()" trait="_alchemyMenuLabelWeight" /></string>
+                        <red>140</red><green>140</green><blue>140</blue>
+                     </text>
+                     <text name="number">
+                        <x>
+                           <copy src="sibling()" trait="x" />
+                           <add  src="sibling()" trait="width" />
+                           <add>8</add>
+                        </x>
+                        <y>0</y>
+                        <include src="NorthernUI\fonts\normal.xml" />
+                        <justify>&left;</justify>
+                        <string><copy src="potion_item_stats" trait="user0" /></string>
+                        <red>255</red><green>255</green><blue>255</blue>
+                     </text>
+                  </rect>
+                  <rect name="value">
+                     <locus>&true;</locus>
+                     <x>
+                        <copy src="sibling()" trait="x" />
+                        <add  src="sibling()" trait="width" />
+                        <add>32</add>
+                     </x>
+                     <y>0</y>
+                     <width>
+                        <copy src="child(number)" trait="x" />
+                        <add  src="child(number)" trait="width" />
+                     </width>
+                     <height>
+                        <copy src="child(label)"  trait="height" />
+                        <max  src="child(number)" trait="height" />
+                     </height>
+                     
+                     <text name="label">
+                        <x>0</x>
+                        <y>
+                           <copy src="parent()" trait="height" />
+                           <sub  src="me()"     trait="height" />
+                           <div>2</div>
+                        </y>
+                        <include src="NorthernUI\fonts\small.xml" />
+                        <justify>&left;</justify>
+                        <string><copy src="xxnStrings()" trait="_alchemyMenuLabelValue" /></string>
+                        <red>140</red><green>140</green><blue>140</blue>
+                     </text>
+                     <text name="number">
+                        <x>
+                           <copy src="sibling()" trait="x" />
+                           <add  src="sibling()" trait="width" />
+                           <add>8</add>
+                        </x>
+                        <y>0</y>
+                        <include src="NorthernUI\fonts\normal.xml" />
+                        <justify>&left;</justify>
+                        <string><copy src="potion_item_stats" trait="user1" /></string>
+                        <red>255</red><green>255</green><blue>255</blue>
+                     </text>
+                  </rect>
+               </rect>
+            </rect>
+            <rect name="SIZER">
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+            </rect>
+            <rect name="potion_effect_window">
+               <id>40</id>
+               <locus>&true;</locus>
+               <clipwindow>&true;</clipwindow>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <sub>
+                     <copy   src="parent()" trait="_scrollbarMargin" />
+                     <add    src="potion_effect_scrollbar" trait="width" />
+                     <onlyif src="potion_effect_scrollbar" trait="visible" />
+                  </sub>
+               </width>
+               <height>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="y" />
+               </height>
+               
+               <rect name="potion_effect_list">
+                  <id>41</id>
+                  <locus>&true;</locus>
+                  <target>&true;</target> <!-- capture scroll wheel -->
+                  <width> <copy src="parent()" trait="width" /></width>
+                  <height><copy src="parent()" trait="height" /></height>
+                  <x>0</x>
+                  <y> <!-- handle panel scrolling -->
+                     <copy src="potion_effect_scrollbar" trait="user7"/>
+                     <mult src="XXNAlchemyMenu"  trait="_rowHeightPotionEffect" />
+                     <mult>-1</mult>
+                  </y>
+                  
+                  <!-- template insertion point: potion_effect_template -->
+               </rect>
+            </rect>
+            <rect name="potion_effect_scrollbar">
+               <include src="vertical_scroll.xml"/>
+               <id>42</id>
+               <x>
+                  <copy src="sibling()" trait="width"/>
+                  <add  src="parent()"  trait="_scrollbarMargin" />
+               </x>
+               <y><copy src="sibling()" trait="y" /></y>
+               <height><copy src="sibling()" trait="height" /></height>
+               <depth>20</depth>
+               <target>&true;</target>
+               <user1>0</user1> <!-- minimum range value -->
+               <user2> <!-- maximum range value -->
+                  <copy src="potion_effect_list" trait="child_count" />
+                  <sub> <!-- same as me().user8, but round down -->
+                     <copy src="potion_effect_window" trait="height" />
+                     <div  src="XXNAlchemyMenu" trait="_rowHeightPotionEffect" />
+                     <floor>0</floor>
+                  </sub>
+               </user2>
+               <user3> 1</user3> <!-- step distance -->
+               <user4> 3</user4> <!-- jump distance -->
+               <user5> 0</user5> <!-- starting value -->
+               <user6>43</user6> <!-- marker's id - must change to enable dragging -->
+               <!-- user7 = current value -->
+               <user8> <!-- How many items are visible at once -->
+                  <copy src="potion_effect_window" trait="height" />
+                  <div  src="XXNAlchemyMenu" trait="_rowHeightPotionEffect" />
+                  <ceil>0</ceil>
+               </user8>
+            </rect>
+            <text name="waste_warning">
+               <id>44</id>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <x>0</x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()" trait="height" />
+               </y>
+               <visible><copy src="me()" trait="user5" /></visible>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+               <string></string> <!-- set by code -->
+               <red>255</red>
+               <green>45</green>
+               <blue>45</blue>
+               
+               <!-- Input: Format strings for wasted ingredients.
+                  USER0: None of the ingredients are compatible.
+                  USER1: One of the ingredients would be wasted.
+                  USER2: Two of the ingredients would be wasted.
+               -->
+               <user0>These ingredients won't react with each other. If you try to cook with them, they will be wasted.</user0>
+               <user1>%s isn't adding anything to your potion. If you cook this potion, it will be wasted.</user1>
+               <user2>%s and %s aren't adding anything to your potion. If you cook this potion, they will be wasted.</user2>
+               
+               <!-- Output: USER5: Visible -->
+               <user5>&false;</user5>
+            </text>
+         </rect>
+      </rect>
+      <rect name="apparati">
+         <locus>&true;</locus>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <sub  src="northernui()" trait="_xxnItemCardYOffset" />
+         </y>
+         <width><copy src="sibling()" trait="width" /></width>
+         <height>
+            <copy src="child(icon_1)" trait="height" />
+            <add  src="me()" trait="_paddingY" />
+            <add  src="me()" trait="_paddingY" />
+            <add  src="child(border_top)"    trait="height" />
+            <add  src="child(border_bottom)" trait="height" />
+         </height>
+         
+         <_iconCount>4</_iconCount>
+         <_iconWholeSize>
+            <copy src="child(icon_1)" trait="width" />
+         </_iconWholeSize>
+         <_computedIconSpacing>
+            <copy src="me()" trait="width" />
+            <div  src="me()" trait="_iconCount" />
+            <sub  src="me()" trait="_iconWholeSize" />
+         </_computedIconSpacing>
+         
+         <image name="icon_1">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="_computedIconSpacing" />
+               <div>2</div>
+            </x>
+            <y><copy src="parent()" trait="_paddingY" /></y>
+            <filename>NorthernUI\Shared\icon_border_opaque.dds</filename>
+            <width> <copy src="me()" trait="filewidth" /></width>
+            <height><copy src="me()" trait="fileheight"/></height>
+            
+            <image name="mortar_icon">
+               <id>1</id>
+               <depth>1</depth>
+               <filename>Shared\shared_empty.dds</filename>
+               <width> 64</width>
+               <height>64</height>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </image>
+         </image>
+         <image name="icon_2">
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_computedIconSpacing" />
+            </x>
+            <y><copy src="sibling()" trait="y" /></y>
+            <filename>NorthernUI\Shared\icon_border_opaque.dds</filename>
+            <width> <copy src="me()" trait="filewidth" /></width>
+            <height><copy src="me()" trait="fileheight"/></height>
+            
+            <image name="retort_icon">
+               <id>4</id>
+               <depth>1</depth>
+               <filename>Shared\shared_empty.dds</filename>
+               <width> 64</width>
+               <height>64</height>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </image>
+         </image>
+         <image name="icon_3">
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_computedIconSpacing" />
+            </x>
+            <y><copy src="sibling()" trait="y" /></y>
+            <filename>NorthernUI\Shared\icon_border_opaque.dds</filename>
+            <width> <copy src="me()" trait="filewidth" /></width>
+            <height><copy src="me()" trait="fileheight"/></height>
+            
+            <image name="alembic_icon">
+               <id>2</id>
+               <depth>1</depth>
+               <filename>Shared\shared_empty.dds</filename>
+               <width> 64</width>
+               <height>64</height>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </image>
+         </image>
+         <image name="icon_4">
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_computedIconSpacing" />
+            </x>
+            <y><copy src="sibling()" trait="y" /></y>
+            <filename>NorthernUI\Shared\icon_border_opaque.dds</filename>
+            <width> <copy src="me()" trait="filewidth" /></width>
+            <height><copy src="me()" trait="fileheight"/></height>
+            
+            <image name="calcinator_icon">
+               <id>3</id>
+               <depth>1</depth>
+               <filename>Shared\shared_empty.dds</filename>
+               <width> 64</width>
+               <height>64</height>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </image>
+         </image>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml" />
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="button_cook">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>278</_dxScanCode>
+            <id>11</id>
+            <x>0</x>
+            <y>0</y>
+            
+            <user1>&false;</user1> <!-- enable state; set by executable -->
+            
+            <string><copy src="strings()" trait="_create"/></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <target><copy src="me()" trait="user1" /></target>
+            
+            <listindex>0</listindex>
+            <xright>&next;</xright>
+            <xup><ref src="items_list" trait="mouseover" /></xup>
+         </rect>
+         <rect name="button_rename">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>275</_dxScanCode>
+            <visible>
+               <copy src="northernui()" trait="_xxnGamepadAvailable" />
+            </visible>
+            <target>&false;</target> <_dontGreyOut>&true;</_dontGreyOut>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="xxnStrings()" trait="_alchemyMenuRenamePotion" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+         </rect>
+         <rect name="button_clear">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>12</id>
+            <target><copy src="me()" trait="user1" /></target>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="xxnStrings()" trait="_alchemyMenuDeselectAllItems" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            
+            <user1>&false;</user1> <!-- enabled? checked and modified by executable -->
+            
+            <listindex>2</listindex>
+            <xleft> &prev;</xleft>
+            <xright>&next;</xright>
+            <xup><ref src="items_list" trait="mouseover" /></xup>
+         </rect>
+         <rect name="button_close">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>10</id>
+            <target>&true;</target>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_exit"/></string>
+            
+            <listindex>3</listindex>
+            <xleft> &prev;</xleft>
+            <xright>&next;</xright>
+            <xup><ref src="items_list" trait="mouseover" /></xup>
+         </rect>
+      </rect>
+   </rect>
+   
+   <template name="ingredient_list_item_template"> <!-- items in inventory list -->
+		<rect name="list_item">
+			<locus>&true;</locus>
+         <clips>&true;</clips>
+			<target>&true;</target>
+			<depth> 1 </depth>
+			<visible>
+				<copy src="me()" trait="y" /><gte>0</gte>
+				<and>
+					<copy src="me()" trait="y" />
+					<add>20</add>
+					<lt   src="parent()" trait="height" />
+				</and>
+            <copy>&true;</copy>
+			</visible>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<width><copy src="parent()" trait="width"/></width>
+			<height><copy src="XXNAlchemyMenu"  trait="_rowHeightItem" /></height>
+         
+         <xdefault>10</xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="items_scrollbar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+         
+         <listindex>0</listindex> <!-- list position index; set by code -->
+			<user1></user1> <!-- item name -->
+			<user6></user6> <!-- item icon path -->
+			<user7>0</user7> <!-- item count -->
+			<user10>&false;</user10> <!-- item is selected -->
+			<user20>&false;</user20> <!-- item is usable (i.e. compatible with potion) -->
+         
+         <image name="equipped_marker">
+				<clips>&true;</clips>
+				<visible><copy src="parent()" trait="user10" /></visible>
+				<depth>2</depth>
+            <zoom>33</zoom>
+				<filename>Menus\NorthernUI\Shared\hd_selection_indicator.dds</filename>
+				<alpha>160</alpha>
+				<width> <copy src="me()" trait="filewidth" /></width>
+				<height><copy src="me()" trait="fileheight" /></height>
+				<x>8</x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+			</image>
+			<image name="icon">
+            <clips>&true;</clips>
+				<filename><copy src="parent()" trait="user6" /></filename>
+				<zoom>-1</zoom>
+				<width> 32</width>
+				<height>32</height>
+				<x>
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+               <add>5</add>
+            </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+			</image>
+			<text name="name">
+            <clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="user1" /></string>
+				<wrapwidth>
+					<copy src="parent()" trait="width" />
+					<sub  src="me()"     trait="x" />
+				</wrapwidth>
+				<x> <!-- 13px after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+               <add>13</add>
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+            <red>
+               <copy src="northernui()" trait="_xxnColorTextLess" />
+               <max>
+                  <copy   src="northernui()" trait="_xxnColorTextMain" />
+                  <onlyif src="parent()" trait="user20" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+				<alpha>255</alpha>
+			</text>
+			<text name="count_paren_l">
+            <clips>&true;</clips>
+            <visible><copy src="parent()" trait="user7" /><gt>1</gt></visible>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string>(</string>
+				<x> <!-- 8px after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+               <add>8</add>
+            </x>
+				<y><copy src="sibling()" trait="y" /></y>
+            <red>  <copy src="sibling()" trait="red" /></red>
+            <green><copy src="sibling()" trait="green" /></green>
+            <blue> <copy src="sibling()" trait="blue" /></blue>
+				<alpha><copy src="sibling()" trait="alpha" /></alpha>
+			</text>
+			<text name="count">
+            <clips>&true;</clips>
+            <visible><copy src="sibling()" trait="visible" /></visible>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="user7" /></string>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+               <add>-1</add>
+            </x>
+				<y><copy src="sibling()" trait="y" /></y>
+            <red>  <copy src="sibling()" trait="red" /></red>
+            <green><copy src="sibling()" trait="green" /></green>
+            <blue> <copy src="sibling()" trait="blue" /></blue>
+				<alpha><copy src="sibling()" trait="alpha" /></alpha>
+			</text>
+			<text name="count_paren_r">
+            <clips>&true;</clips>
+            <visible><copy src="sibling()" trait="visible" /></visible>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string>)</string>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+               <add>-1</add>
+            </x>
+				<y><copy src="sibling()" trait="y" /></y>
+            <red>  <copy src="sibling()" trait="red" /></red>
+            <green><copy src="sibling()" trait="green" /></green>
+            <blue> <copy src="sibling()" trait="blue" /></blue>
+				<alpha><copy src="sibling()" trait="alpha" /></alpha>
+			</text>
+		</rect>
+	</template>
+   <template name="effect_list_item_template"> <!-- categories for inventory list -->
+		<rect name="list_item">
+			<locus>&true;</locus>
+         <clips>&true;</clips>
+			<target>&true;</target>
+			<depth> 1 </depth>
+			<visible>
+				<copy src="me()" trait="y" /><gte>0</gte>
+				<and>
+					<copy src="me()" trait="y" />
+					<add>20</add>
+					<lt   src="parent()" trait="height" />
+				</and>
+            <copy>&true;</copy>
+			</visible>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<width><copy src="parent()" trait="width"/></width>
+			<height><copy src="XXNAlchemyMenu" trait="_rowHeightCategory" /></height>
+         
+         <xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="categories_scrollbar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+         
+         <listindex>0</listindex> <!-- list position index; set by code -->
+         <string></string> <!-- effect name -->
+			<user0></user0> <!-- is selected -->
+			<user1>&false;</user1> <!-- is usable -->
+         <user2>ALCH</user2> <!-- four-character effect code -->
+         <user3>0</user3> <!-- actor value index or other value -->
+         
+         <!--
+            An effect is considered "usable" if any of the following conditions 
+            are met.
+            
+            A) The player has two or more ingredients bearing the effect, which 
+               can be combined to make a potion.
+            
+            B) The player is a master alchemist and has not yet selected any 
+               ingredients. The next ingredient they select can be used to make 
+               a single-ingredient potion.
+         -->
+         
+         <image name="equipped_marker">
+				<clips>&true;</clips>
+				<visible><copy src="parent()" trait="user0" /></visible>
+				<depth>2</depth>
+            <filename>Menus\NorthernUI\Shared\menu_item_sel_indicator_chevron.dds</filename>
+            <width>
+               <copy src="PRELOAD_CHEVRON" trait="filewidth" />
+               <mult>
+                  <copy src="parent()" trait="height" />
+                  <div  src="PRELOAD_CHEVRON" trait="fileheight" />
+               </mult>
+            </width>
+				<height><copy src="parent()" trait="height" /></height>
+            <y>0</y>
+            <x>0</x>
+            <alpha>180</alpha>
+            <zoom>-1</zoom>
+            <zoom>
+               <copy src="parent()" trait="height" />
+               <div  src="PRELOAD_CHEVRON" trait="fileheight" />
+               <mult>100</mult>
+            </zoom>
+			</image>
+			<text name="name">
+            <clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="string" /></string>
+				<wrapwidth>
+					<copy src="parent()" trait="width" />
+					<sub  src="me()"     trait="x" />
+				</wrapwidth>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+               <add>5</add>
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+            <red>
+               <copy src="northernui()" trait="_xxnColorTextLess" />
+               <max>
+                  <copy   src="northernui()" trait="_xxnColorTextMain" />
+                  <onlyif src="parent()" trait="user1" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+				<alpha>255</alpha>
+				<alpha>255</alpha>
+			</text>
+		</rect>
+	</template>
+   <template name="potion_effect_template">
+		<rect name="list_item">
+			<locus>&true;</locus>
+         <clips>&true;</clips>
+			<depth> 1 </depth>
+			<visible>
+				<copy src="me()" trait="y" /><gte>0</gte>
+				<and>
+					<copy src="me()" trait="y" />
+					<add>20</add>
+					<lt   src="parent()" trait="height" />
+				</and>
+            <copy>&true;</copy>
+			</visible>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<width><copy src="parent()" trait="width"/></width>
+			<height><copy src="XXNAlchemyMenu" trait="_rowHeightPotionEffect" /></height>
+         
+         <xdefault> &false; </xdefault>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="categories_scrollbar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+         
+         <listindex>0</listindex> <!-- list position index; set by code -->
+			<user0></user0> <!-- effect description -->
+			<user1></user1> <!-- effect icon -->
+         
+			<image name="icon">
+            <clips>&true;</clips>
+				<filename><copy src="parent()" trait="user1" /></filename>
+				<zoom>-1</zoom>
+				<width> 32</width>
+				<height>32</height>
+				<x>0</x>
+				<y> <!-- center within parent; offset down by 2px -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+					<add>2</add>
+				</y>
+			</image>
+			<text name="name">
+            <clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<string><copy src="parent()" trait="user0" /></string>
+				<wrapwidth>
+					<copy src="parent()" trait="width" />
+					<sub  src="me()"     trait="x" />
+				</wrapwidth>
+				<x> <!-- 13px after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+               <add>13</add>
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+            <red>
+               <copy src="northernui()" trait="_xxnColorTextLess" />
+               <max>
+                  <copy   src="northernui()" trait="_xxnColorTextMain" />
+                  <onlyif src="parent()" trait="user1" />
+               </max>
+            </red>
+            <green><copy src="me()" trait="red" /></green>
+            <blue> <copy src="me()" trait="red" /></blue>
+				<alpha>255</alpha>
+				<alpha>255</alpha>
+			</text>
+		</rect>
+	</template>
+</menu>

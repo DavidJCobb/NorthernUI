@@ -1,0 +1,218 @@
+<!-- breath_meter_menu.xml -->
+<menu name="BreathMenu">
+	<class> &BreathMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<visible> &false; </visible>
+	<alpha>	0 </alpha>
+	<depth> 0 </depth>
+	<x>
+		<copy src="screen()" trait="width"/>
+		<div> 2 </div>
+		<sub src="me()" trait="_center_width"/>
+	</x>
+	<y>
+		<copy src="screen()" trait="height"/>
+		<div> 2 </div>
+		<sub src="me()" trait="_center_height"/>
+	</y>
+	<id> 1 </id>
+	<locus> &true; </locus>
+	<user0> 1 </user0>
+	<user1> 600 </user1>
+	
+
+	<width> 1280 </width>
+	<height> 960 </height>
+	<_center_width>
+		<copy src="me()" trait="width"/>
+		<div> 2 </div>
+	</_center_width>
+	<_center_height>
+		<copy src="me()" trait="height"/>
+		<div> 2 </div>
+	</_center_height>
+
+	
+
+	<!--text name="breath_text">
+		<id> 0 </id>
+		<depth> 4 </depth>
+		<string> <copy src="strings()" trait="_breath"/> </string>
+		<font> 2 </font>
+		<red> 254 </red>
+		<green> 244 </green>
+		<blue> 183 </blue>
+		<alpha> 255 </alpha>
+		<wrapwidth> 480 </wrapwidth>
+		<justify> &center; </justify>
+		<x> <copy src="parent()" trait="_center_width"/> </x>
+		<y> 122 </y>
+	</text-->
+   
+   <!-- We get some weird black lines and gaps in the meter (back and fill) where 
+        the bulb meets the mid, due to the usual sub-pixel irregularities in how 
+        Oblivion renders the UI. Quick-and-dirty fix: add a second "mid" tile that 
+        is three pixels wide, to "band-aid" the gaps. Thus, the "FIX" tiles. -->
+   
+   <rect name="meter">
+      <locus>&true;</locus>
+      <depth>5</depth>
+		<width>418</width>
+      <height><copy src="child(back_bulb)" trait="height" /></height>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+         <div>2</div>
+      </x>
+      <y>80</y>
+      
+      <zoom>60</zoom>
+      
+      <image name="back_bulb">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>NorthernUI\meters\breath\meter_back_bulb.dds</filename>
+         <x>0</x>
+         <y>0</y>
+         <width> <copy src="me()" trait="filewidth" /></width>
+         <height><copy src="me()" trait="fileheight" /></height>
+      </image>
+      <image name="back_mid">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>NorthernUI\meters\breath\meter_back_mid.dds</filename>
+         <x><copy src="sibling()" trait="width" /></x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="x" />
+            <sub  src="back_end" trait="width" />
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <tile>&true;</tile>
+      </image>
+      <image name="back_end">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>NorthernUI\meters\breath\meter_back_end.dds</filename>
+         <x>
+            <copy src="sibling()" trait="x" />
+            <add  src="sibling()" trait="width" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <width> <copy src="me()" trait="filewidth" /></width>
+         <height><copy src="me()" trait="fileheight" /></height>
+      </image>
+      <image name="back_FIX">
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <depth>2</depth>
+         <filename><copy src="back_mid" trait="filename" /></filename>
+         <x>
+            <copy src="back_bulb" trait="width" />
+            <sub>1</sub>
+         </x>
+         <y><copy src="back_mid" trait="y" /></y>
+         <width>2</width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <tile>&true;</tile>
+      </image>
+      
+      <rect name="fill">
+			<id>2</id>
+         <clipwindow>&true;</clipwindow>
+         <locus>&true;</locus>
+         <depth>3</depth>
+         <x>
+            <copy>12</copy>
+            <mult src="parent()" trait="zoom" />
+            <div>100</div>
+            <floor>0</floor> <!-- sub-pixel bullcrap -->
+         </x>
+         <y>
+            <copy>12</copy>
+            <mult src="parent()" trait="zoom" />
+            <div>100</div>
+            <floor>0</floor> <!-- sub-pixel bullcrap -->
+         </y>
+         <height><copy src="child(fill_bulb)" trait="height" /></height>
+         
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <user0><copy src="parent()" trait="width" /></user0>
+         
+			<user1> 0 </user1> <!-- executable: breath percentage -->
+			<user2> 100 </user2>
+         
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="x" />
+            <sub  src="back_end" trait="width" />
+            <mult src="me()"     trait="user1" />
+            <div  src="me()"     trait="user2" />
+         </width>
+         
+         <image name="fill_bulb">
+            <clips>&true;</clips>
+            <depth>2</depth>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename>NorthernUI\meters\breath\meter_fill_bulb.dds</filename>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="me()" trait="filewidth" /></width>
+            <height><copy src="me()" trait="fileheight" /></height>
+         </image>
+         <image name="fill_mid">
+            <clips>&true;</clips>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename>NorthernUI\meters\breath\meter_fill_mid.dds</filename>
+            <x><copy src="sibling()" trait="width" /></x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <width>
+               <copy src="parent()" trait="user0" />
+               <sub  src="me()"     trait="x" />
+               <sub  src="back_end" trait="width" />
+            </width>
+            <height><copy src="me()" trait="fileheight" /></height>
+            <tile>&true;</tile>
+         </image>
+         <image name="fill_end">
+            <clips>&true;</clips>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename>NorthernUI\meters\breath\meter_fill_end.dds</filename>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+            </x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <width> <copy src="me()" trait="filewidth" /></width>
+            <height><copy src="me()" trait="fileheight" /></height>
+         </image>
+         <image name="fill_FIX">
+            <clips>&true;</clips>
+            <depth>3</depth>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
+            <filename><copy src="fill_mid" trait="filename" /></filename>
+            <x>
+               <copy src="fill_mid" trait="width" />
+               <sub>2</sub>
+            </x>
+            <y><copy src="fill_mid" trait="y" /></y>
+            <width>3</width>
+            <height><copy src="me()" trait="fileheight" /></height>
+            <tile>&true;</tile>
+         </image>
+      </rect>
+   </rect>
+</menu>

@@ -1,0 +1,41 @@
+<!--<rect name="magicpop_ds0">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+   <!------------------------------------------------------------- -->
+   <_showDivider>&false;</_showDivider>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <visible>&false;</visible>
+   <locus>&true;</locus>
+   <depth>2</depth>
+   <width>
+      <copy src="parent()" trait="width"/>
+      <sub>30</sub>
+   </width>
+   <height><copy src="menu()" trait="_item_height"/></height>
+   <x>
+      <copy src="parent()" trait="width"/>
+      <sub  src="me()"     trait="width"/>
+      <div>2</div>
+   </x>
+   <y>
+      <copy   src="sibling()" trait="height" />
+      <onlyif src="sibling()" trait="visible" />
+      <add    src="sibling()" trait="y" />
+      <add    src="menu()"    trait="_buffer"/>
+   </y>
+   
+   <!--
+   <image name="magicpop_ds0_icon">
+      <filename>Menus\DisplayStats\icon01.dds</filename>
+      <include src="NorthernUI\fragments\itemcard\displaystats_listicon.xml" />
+   </image>
+   <text name="magicpop_ds0_text">
+      <filename>Menus\DisplayStats\icon01.dds</filename>
+      <include src="NorthernUI\fragments\itemcard\displaystats_listtext.xml" />
+   </text>
+   -->
+<!--</rect>-->

@@ -1,0 +1,480 @@
+<!-- book_menu.xml -->
+<!-- Scrolls are run by the BookMenu code -->
+<menu name="BookMenu">
+	<class>&BookMenu;</class>
+	<stackingtype>&no_click_past;</stackingtype>
+	<alpha>0</alpha> 
+	<locus>&true;</locus>
+	<x>0</x>
+	<y>0</y>
+	<menufade> 0.25 </menufade>
+   
+	<user0>&false;</user0> <!-- false = scroll, true = book -->
+	<user1>0</user1> <!-------- number of total lines -->
+	<user2></user2> <!--------- the text of the book/scroll -->
+	<user3>&false;</user3> <!-- can be taken? -->
+	<user4> <!-- page width -->
+		<copy>260</copy>
+		<onlyifnot src="me()" trait="user0"/>
+		<add>510</add>
+	</user4>
+	<user5> 1 </user5>				<!-- font -->
+	<user6> 0 </user6>				<!-- force page/scroll adjust -->
+	<user7> 32 </user7>				<!-- lineheight -->
+	<user8> 5 </user8>				<!-- clicksound for turning pages - used by code for scrollwheel movement -->
+	<user9><copy src="book_background" trait="_pagenum" /></user9>	<!-- current page number (on left) -->
+	
+	<xbuttonb> <ref src="book_exit" trait="clicked" /></xbuttonb>
+	<xbuttonx> <ref src="book_take" trait="clicked" /></xbuttonx>
+	<xbuttonlt><ref src="book_prev" trait="clicked" /></xbuttonlt>
+	<xbuttonrt><ref src="book_next" trait="clicked" /></xbuttonrt>
+	
+   <!--
+      Books and scrolls use their own layouts. Scrolls unroll downward, so they 
+      only show one page of text at a time and don't have page numbers, in con-
+      trast to books. In the vanilla game, this also affects which buttons need 
+      to be displayed and how they're positioned, so the layouts have their own 
+      copies of the Take and Exit buttons.
+      
+      For NorthernUI, we're moving the buttons to a bottom bar, so we only need 
+      one each of the Take and Exit buttons. Moving the buttons doesn't affect 
+      the layouts because we still need to display page numbers in books (I do 
+      need to check whether any empty space is left on scrolls, if I can find a 
+      scroll with enough text). However, adding the bottom bar leaves us with 
+      very little space on-screen for books; they end up right up against the 
+      top edge of the screen and the edge of the bottom bar. Fortunately, we 
+      have a solution: books have more top padding than they need to (45px for 
+      the edge of the graphic, plus a further 16px offset on the text). We can 
+      remove the 16px offset and then crop the book graphic.
+   -->
+   
+	<!--===================================================================================-->
+	<!-- BOOKS ============================================================================-->
+	<!--===================================================================================-->
+	<image name="book_background">
+		<visible><copy src="BookMenu" trait="user0" /></visible> <!-- false = scroll, true = book -->
+		<target>&true;</target>
+		<filename>Menus\Book\book_background.dds</filename>
+		<width> 1152</width>
+		<height>
+         <copy src="me()" trait="_graphicHeight" />
+         <sub>45</sub>
+         <sub>16</sub> <!-- amount to shorten by; we removed 16px vertical padding from the text -->
+      </height>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+			<sub  src="child(book_bottom)" trait="height" />
+			<sub  src="northernui()" trait="_xxnBottomBarHeight" />
+			<div>2</div>
+		</y>
+		<locus> &true; </locus>
+		<_pagenum> <!-- left page's page number -->
+			<add src="BookMenu" trait="user6"/>
+			<sub>
+				<copy src="book_prev" trait="clicked" />
+				<mul>2</mul>
+			</sub>
+			<add>
+				<copy src="book_next" trait="clicked" />
+				<mul>2</mul>
+			</add>
+			<min>
+				<copy src="book_page_1_text" trait="pagecount"/>
+				<div> 2 </div>
+				<floor>0</floor>
+				<mul> 2 </mul>
+				<add>
+					<copy src="book_page_1_text" trait="pagecount"/>
+					<mod> 2 </mod>
+					<mul> 2 </mul>
+				</add>
+				<sub> 2 </sub>
+			</min>
+			<max> 0 </max>
+		</_pagenum>
+		
+      <_graphicHeight>856</_graphicHeight>
+      
+      <image name="book_bottom">
+         <visible><copy src="BookMenu" trait="user0" /></visible> <!-- false = scroll, true = book -->
+         <target>&true;</target>
+         <filename>Menus\Book\book_background.dds</filename>
+         <width><copy src="parent()" trait="width" /></width>
+         <height>45</height>
+         <x>0</x>
+         <y><copy src="parent()" trait="height" /></y>
+         <cropY>
+            <copy src="parent()" trait="_graphicHeight" />
+            <sub  src="me()" trait="height" />
+         </cropY>
+      </image>
+      
+		<rect name="book_page_1_window">
+			<width><copy src="BookMenu" trait="user4" /></width>
+			<height>600</height>
+			<x>45</x>
+			<y>45</y>
+			<locus>&true;</locus>
+			
+			<rect name="book_page_1_pane">
+				<width><copy src="BookMenu" trait="user4" /></width>
+				<x>0</x>
+				<y>0</y>
+				<locus>&true;</locus>
+				
+				<!--<image name="test">
+					<filename> Menus\BreathMeter\Breath_Meter_fill.dds</filename>
+					<depth> 1 </depth>
+					<width> 200 </width>
+					<height> 40 </height>
+					<x> 100 </x>
+					<y> 300 </y>
+				</image>-->
+				<text name="book_page_1_text">
+					<ishtml>&true;</ishtml>
+					<depth>2</depth>
+					<x>0</x>
+					<y>0</y>
+					<alpha>255</alpha>
+					<wrapwidth><copy src="BookMenu" trait="user4" /></wrapwidth>
+					<wraplimit>680</wraplimit>
+					<string><copy src="BookMenu" trait="user2" /></string>
+					<font>  <copy src="BookMenu" trait="user5" /></font>
+					<pagenum><copy src="book_background" trait="_pagenum"/></pagenum>
+				</text>
+			</rect>
+		</rect>
+		<rect name="book_page_2_window">
+			<width><copy src="BookMenu" trait="user4" /></width>
+			<height>600</height>
+			<x>600</x>
+			<y> 45</y>
+			<locus>&true;</locus>
+			
+			<rect name="book_page_2_pane">
+				<width> <copy src="BookMenu" trait="user4" /></width>
+				<height><copy src="child(book_page_2_text)" trait="height" /></height>
+				<x>0</x>
+				<locus>&true;</locus>
+			
+				<text name="book_page_2_text">
+					<ishtml>&true;</ishtml>
+					<depth>2</depth>
+					<x>0</x>
+					<y>0</y>
+					<alpha>255</alpha>
+					<wrapwidth><copy src="BookMenu" trait="user4" /></wrapwidth>
+					<wraplimit>680</wraplimit>
+					<string><copy src="BookMenu" trait="user2" /></string>
+					<font>  <copy src="BookMenu" trait="user5" /></font>
+					<pagenum>
+						<copy src="book_background" trait="_pagenum"/>
+						<add>1</add>
+					</pagenum>
+				</text>
+			</rect>
+		</rect>
+		<text name="book_page_1_num">
+			<visible> &true; </visible>
+			<target> &xbox; </target>
+			<depth> 6 </depth>
+			<x> 300 </x>
+			<y> 749 </y>
+			<justify> &center; </justify>
+			<_page1>
+				<copy src="parent()" trait="_pagenum"/>
+				<add> 1 </add>
+			</_page1>
+			<string>
+				<copy src="me()" trait="_page1"/>
+			</string>
+			<red> 117</red>
+			<green>59</green>
+			<blue> 33</blue>
+			<alpha>255</alpha>
+			<xdefault>10</xdefault>
+		</text>
+		<text name="book_page_2_num">
+			<visible> &true; </visible>
+			<depth> 6 </depth>
+			<x> 850 </x>
+			<y> 749 </y>
+			<justify> &center; </justify>
+			<_page2>
+				<copy src="parent()" trait="_pagenum"/>
+				<add> 2 </add>
+			</_page2>
+			<string>
+				<copy src="me()" trait="_page2"/>
+			</string>
+			<red> 117</red>
+			<green>59</green>
+			<blue> 33</blue>
+			<alpha>255</alpha>
+		</text>
+	</image>
+	
+	<!--===================================================================================-->
+	<!-- SCROLLS ==========================================================================-->
+	<!--===================================================================================-->
+	<image name="book_background_scroll">
+		<visible> <copy src="BookMenu" trait="user0"/> <eq> &false; </eq> </visible>			<!-- false = scroll, true = book -->
+		<target> &true; </target>
+		<filename> Menus\Book\scroll_background.dds </filename>
+		<depth> 30 </depth>
+		<width> 990 </width>
+		<height> 740 </height>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub  src="me()" trait="height"/>
+			<sub  src="book_scroll_roller" trait="height"/>
+			<sub  src="northernui()" trait="_xxnBottomBarHeight" />
+			<div> 2 </div>
+			<sub> 25 </sub>
+		</y>
+		<locus> &true; </locus>
+		<user0> 0 </user0>			<!-- number of lines - set by code -->
+		
+		<xbuttonb> <ref src="book_scroll_exit" trait="clicked"/> </xbuttonb>
+		<xbuttonx> <ref src="book_scroll_take" trait="clicked"/> </xbuttonx>
+		
+		<image name="book_scroll_roller">
+			<filename> Menus\Book\scroll_roll.dds </filename>
+			<width> 1171 </width>
+			<height> 148 </height>
+			<x> -111 </x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<sub> 1 </sub>
+			</y>
+		</image>
+		
+			
+		<rect name="book_scroll_window">
+			<depth> 5 </depth>
+			<width>
+				<copy src="BookMenu" trait="user4"/>
+				<add> 20 </add>
+			</width>
+			<height>
+				<copy src="book_scroll_roller" trait="y"/>
+				<sub> 116 </sub>
+			</height>
+			<x> 115 </x>
+			<y> 156 </y>
+			<locus> &true; </locus>
+			<clipwindow> &true; </clipwindow>
+		
+			<image name="book_scroll_bar">
+<include src="vertical_scroll.xml"/>
+				<id> 11 </id>
+				<depth> 5 </depth>
+				<x>
+					<copy src="book_scroll_window" trait="width"/>
+					<add> 32 </add>
+				</x>
+				<y> 32 </y>
+				<height>
+					<copy src="book_scroll_window" trait="height"/>
+					<sub> 80 </sub>
+				</height>
+				
+				<user1> 0 </user1>			<!-- minimum range value -->
+				<user2>						<!-- maximum range value -->
+					<copy src="book_scroll_text" trait="height"/>
+					<sub src="parent()" trait="height"/>
+					<add> 30 </add>
+				</user2>
+				<user3>						<!-- step distance -->
+					35
+				</user3>
+				<user4>						<!-- jump distance -->
+					<copy src="parent()" trait="height"/>
+					<sub> 35 </sub>
+				</user4>
+				<user5> 0 </user5>			<!-- starting value -->
+				<user6> 12 </user6>			<!-- marker's id - must change to enable dragging -->
+				<!-- user7 = current value -->
+				<user8> &false; </user8>		<!-- is text value field visible -->
+				<user9>						<!-- maximum range -->
+					<copy src="parent()" trait="user0"/>
+					<add src="book_scroll_down" trait="clicked"/>
+					<sub src="book_scroll_up" trait="clicked"/>
+				</user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+			</image>
+				
+			<rect name="book_scroll_up">
+				<target> &true; </target>
+				<xdefault> &true; </xdefault>
+				<width> 5 </width>
+				<height> 5 </height>
+				<x> 60 </x>
+				<y> 60 </y>
+				
+				<xup> <ref src="book_scroll_up" trait="clicked"/> </xup>
+				<xdown> <ref src="book_scroll_down" trait="clicked"/> </xdown>
+			</rect>
+			<rect name="book_scroll_down">
+				<target> &true; </target>
+				<repeatvertical> &true; </repeatvertical>
+				<xdefault> &false; </xdefault>
+				<width> 5 </width>
+				<height> 5 </height>
+				<x> 60 </x>
+				<y> 60 </y>
+				
+				<xdefault> &true; </xdefault>
+				<xup> <ref src="book_scroll_up" trait="clicked"/> </xup>
+				<xdown> <ref src="book_scroll_down" trait="clicked"/> </xdown>
+			</rect>
+			
+			<rect name="book_scroll_pane">
+				<width> <copy src="BookMenu" trait="user4"/> </width>
+				<height> <copy src="child(book_page_1_text)" trait="height"/> </height>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub src="vertical_scroll" trait="user7"/>	<!-- current scroll value -->
+					<mult> 33 </mult>							<!-- height of lines -->
+				</y>
+				<locus> &true; </locus>
+				<clips> &true; </clips>
+			
+				<text name="book_scroll_text">
+					<ishtml> &true; </ishtml>
+					<depth> 2 </depth>
+					<x> 10 </x>
+					<y>
+						<copy> 0 </copy>
+						<sub src="book_scroll_bar" trait="user7"/>
+					</y>
+					<wrapwidth>
+						<copy src="BookMenu" trait="user4"/>
+						<sub> 20 </sub>
+					</wrapwidth>
+					<string> <copy src="BookMenu" trait="user2"/> </string>
+					<font> <copy src="BookMenu" trait="user5"/> </font>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+					<clips> &true; </clips>
+				</text>
+			</rect>
+		</rect>
+		
+		
+	</image>
+   
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <!-- <copy src="screen()"     trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" /> -->
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <width>
+            <copy src="child()" trait="x" />
+            <add  src="child()" trait="width" />
+         </width>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="book_take">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>278</_dxScanCode>
+            <id>32</id>
+            <visible><copy src="BookMenu" trait="user3" /></visible> <!-- can be taken? -->
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_take" /></string>
+         </rect>
+         <rect name="book_prev">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>280</_dxScanCode>
+            <id>&generic;</id>
+            <visible>
+               <copy src="BookMenu" trait="user0" /> <!-- is a book rather than a scroll -->
+               <and>
+                  <copy src="BookMenu" trait="user9"/> <!-- page number -->
+                  <gt>1</gt>
+               </and>
+            </visible>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+               <add>
+                  <copy   src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_prev" /></string>
+            <clicksound><copy src="BookMenu" trait="user8" /></clicksound>
+         </rect>
+         <rect name="book_next">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>281</_dxScanCode>
+            <id>&generic;</id>
+            <visible>
+               <copy src="BookMenu" trait="user0" /> <!-- is a book rather than a scroll -->
+               <and>
+                  <copy src="BookMenu" trait="user9"/> <!-- page number -->
+                  <add>2</add>
+                  <lt   src="book_page_1_text" trait="pagecount"/>
+               </and>
+            </visible>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+               <add>
+                  <copy   src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_next" /></string>
+            <clicksound><copy src="BookMenu" trait="user8" /></clicksound>
+         </rect>
+         <rect name="book_exit">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>31</id>
+            <x>
+               <copy   src="sibling()" trait="width" />
+               <add    src="bottom_bar" trait="_entrySpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_exit" /></string>
+         </rect>
+      </rect>
+      
+   </rect>
+</menu>

@@ -1,0 +1,8 @@
+<!--<image name="colorbox">-->
+   <filename>Menus\NorthernUI\Shared\white.dds</filename>
+   <x>0</x>
+   <y>0</y>
+   <width> <copy src="screen()" trait="width" /> </width>
+   <height><copy src="screen()" trait="height" /></height>
+   <tile>&true;</tile>
+<!--</image>-->

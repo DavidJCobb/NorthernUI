@@ -1,0 +1,410 @@
+<!-- Data\Menus\NorthernUI\strings.xml -->
+<!-- This file defines the tile that will be accessible through src="xxnStrings()" -->
+<rect name="NorthernUIStringstore">
+   <!----- GENERIC --------------------------------------------------------->
+   <_armor>Armor</_armor>
+   <_carryWeight>Carry Weight</_carryWeight>
+   <_closeMenu>Close Menu</_closeMenu>
+   <_deleteSaveFile>Delete Save File</_deleteSaveFile>
+   <_gold>Gold</_gold>
+   <_repairHammers>Repair Hammers</_repairHammers>
+   <_select>Select</_select>
+   <_takeAll>Take All</_takeAll>
+   
+   <_labelArmor>ARMOR</_labelArmor> <!-- protection offered by armor -->
+   <_labelCost>COST</_labelCost> <!-- cost to cast a spell -->
+   <_labelConditionAbbr>CND</_labelConditionAbbr> <!-- condition of an equippable item -->
+   <_labelDamageAbbr>DMG</_labelDamageAbbr> <!-- damage dealt by a weapon -->
+   <_labelMagnitude>MAG</_labelMagnitude> <!-- magicka of an active effect -->
+   <_labelQualityAbbr>QUAL</_labelQualityAbbr> <!-- quality of an alchemy apparatus -->
+   <_labelValueAbbr>VAL</_labelValueAbbr> <!-- gold value of an item -->
+   <_labelWeightAbbr>WT</_labelWeightAbbr> <!-- weight of an item -->
+
+   <!----- BIG FOUR -------------------------------------------------------->
+   <!-- These menu titles actually have to be used in HUDMainMenu: -->
+   <_inventoryMenuTitle>ITEMS</_inventoryMenuTitle>
+   <_magicMenuTitle>MAGIC</_magicMenuTitle>
+   <_mapMenuTitle>JOURNAL</_mapMenuTitle>
+   <_statsMenuTitle>STATS</_statsMenuTitle>
+
+   <!----- ALCHEMYMENU AND XXNALCHEMYMENU ---------------------------------->
+   <_alchemyMenuTitle>ALCHEMY</_alchemyMenuTitle>
+   <_alchemyMenuLabelValue>VALUE</_alchemyMenuLabelValue> <!-- potion gold value -->
+   <_alchemyMenuLabelWeight>WEIGHT</_alchemyMenuLabelWeight> <!-- potion weight -->
+   
+   <_alchemyMenuDeselectAllItems>Deselect All</_alchemyMenuDeselectAllItems>
+   <_alchemyMenuRenamePotion>Rename Potion</_alchemyMenuRenamePotion>
+   
+   <_alchemyMenuPotionNamePrefix>Potion Name:</_alchemyMenuPotionNamePrefix>
+
+   <!----- CLASSMENU ------------------------------------------------------>
+   <_classMenuButtonSelect>Select Class</_classMenuButtonSelect>
+
+   <!----- CONTAINERMENU --------------------------------------------------->
+   <_containerMenuTitlePlayer>INVENTORY</_containerMenuTitlePlayer>
+   <_containerMenuTitleContainer>CONTAINER</_containerMenuTitleContainer>
+   <_containerMenuTitleBarter>BARTER</_containerMenuTitleBarter>
+   
+   <!-- Labels for the "swapper," to decide which inventory to view: -->
+   <_containerMenuSwapperPlayer>You</_containerMenuSwapperPlayer>
+   <_containerMenuSwapperContainer>Container</_containerMenuSwapperContainer>
+   
+   <!-- Label for the highest price a merchant will pay for any single item: -->
+   <_containerMenuMaxSellPrice>Max Sell Price</_containerMenuMaxSellPrice>
+
+   <!----- CONTROLSMENU ---------------------------------------------------->
+   <_controlsMenuEscToCancel>Press Esc to cancel.</_controlsMenuEscToCancel>
+
+   <!----- DIALOGMENU ------------------------------------------------------>
+   <_dialogueMenuBarterItems01>Have anything good for sale?</_dialogueMenuBarterItems01>
+   <_dialogueMenuBarterItems02>What have you got for sale?</_dialogueMenuBarterItems02>
+   
+   <_dialogueMenuBarterMagic01>Have any good spells for sale?</_dialogueMenuBarterMagic01>
+   <_dialogueMenuBarterMagic02>What spells do you have for sale?</_dialogueMenuBarterMagic02>
+   
+   <_dialogueMenuRepair01>My equipment needs some repairs...</_dialogueMenuRepair01>
+   <_dialogueMenuRepair02>Can you repair my equipment?</_dialogueMenuRepair02>
+   
+   <_dialogueMenuRecharge01>I need my enchanted weapons recharged.</_dialogueMenuRecharge01>
+   <_dialogueMenuRecharge02>Can you recharge my enchanted weapons?</_dialogueMenuRecharge02>
+   
+   <_dialogueMenuTraining01>I'll pay you to train me.</_dialogueMenuTraining01>
+   <_dialogueMenuTraining02>Can you train me? I'll pay you.</_dialogueMenuTraining02>
+   <_dialogueMenuTraining03>Can you train me? I can pay you.</_dialogueMenuTraining03>
+   
+   <!-- Skyrim prefixed speech checks with "(Persuade)" or "(Intimidate)" in 
+   parentheses. When translating, mimic what Skyrim did for your language: -->
+   <_dialogueMenuPersuade01>(Persuade.) Let's chat.</_dialogueMenuPersuade01>
+   <_dialogueMenuPersuade02>(Persuade.) Do you have time to chat?</_dialogueMenuPersuade02>
+   <_dialogueMenuPersuade03>(Persuade.) Do you have a second?</_dialogueMenuPersuade03>
+   <_dialogueMenuPersuade04>(Persuade.) Care to chat?</_dialogueMenuPersuade04>
+   
+   <_dialogueMenuBye01>Farewell.</_dialogueMenuBye01>
+   <_dialogueMenuBye02>I should go.</_dialogueMenuBye02>
+   <_dialogueMenuBye03>Bye.</_dialogueMenuBye03>
+   <_dialogueMenuBye04>See you around.</_dialogueMenuBye04>
+   <_dialogueMenuBye05>Goodbye.</_dialogueMenuBye05>
+
+   <!----- EFFECTSETTINGMENU ----------------------------------------------->
+   <_effectSettingCost>Cost to Apply:</_effectSettingCost>
+   <_effectSettingLabelMagnitude>Magicka Cost per Use:</_effectSettingLabelMagnitude>
+   <_effectSettingCostPerUseRatioSym>/</_effectSettingCostPerUseRatioSym>
+   <_effectSettingCostPerUseMaxSuffix>max</_effectSettingCostPerUseMaxSuffix>
+   
+   <_effectSettingAdd>Add Effect</_effectSettingAdd>
+   <_effectSettingSave>Save Changes</_effectSettingSave>
+   <_effectSettingChangeAttribute>Select Attribute</_effectSettingChangeAttribute>
+   
+   <!--
+      The intention is to make it clear that clicking this will open a dialog 
+      box, without necessarily being unsubtle.
+   -->
+   <_effectSettingStatSuffix>...</_effectSettingStatSuffix>
+
+   <!----- ENCHANTMENTMENU ------------------------------------------------->
+   <_enchantmentMenuTitle>ENCHANTING</_enchantmentMenuTitle>
+   <_enchantmentMenuItemNamePrefix>Item Name:</_enchantmentMenuItemNamePrefix>
+   <_enchantmentMenuCostToEnchant>Cost to Enchant:</_enchantmentMenuCostToEnchant>
+   <_enchantmentMenuCostRatioSym>gold /</_enchantmentMenuCostRatioSym>
+   <_enchantmentMenuGoldAvailable>available</_enchantmentMenuGoldAvailable>
+   <_enchantmentMenuLabelCharge>Charge:</_enchantmentMenuLabelCharge>
+   <_enchantmentMenuLabelMagnitude>Charge Cost per Use:</_enchantmentMenuLabelMagnitude>
+   <_enchantmentMenuUsesPrefix>(</_enchantmentMenuUsesPrefix>
+   <_enchantmentMenuUsesSuffix>uses)</_enchantmentMenuUsesSuffix>
+   <_enchantmentMenuLabelEffType>Effect Type:</_enchantmentMenuLabelEffType>
+
+   <!----- HUDINFOMENU ----------------------------------------------------->
+   <!-- Verbs shown when aiming at something: -->
+   <_activateVerbGeneric>Interact</_activateVerbGeneric>
+   <_activateVerbOpenContainer>Open</_activateVerbOpenContainer>
+   <_activateVerbReadBook>Read</_activateVerbReadBook>
+   <_activateVerbRideMount>Ride</_activateVerbRideMount>
+   <_activateVerbSit>Sit</_activateVerbSit>
+   <_activateVerbSpeakToNPC>Talk</_activateVerbSpeakToNPC>
+   <_activateVerbTakeItem>Take</_activateVerbTakeItem>
+   <_activateVerbUseBed>Sleep</_activateVerbUseBed>
+   <_activateVerbUseDoor>Use</_activateVerbUseDoor>
+   <_activateVerbVampireFeed>Feed</_activateVerbVampireFeed>
+   
+   <!-- Verbs shown when aiming at something, if interacting would be a crime: -->
+   <_activateCrimeGeneric>Interact</_activateCrimeGeneric>
+   <_activateCrimeOpenContainer>Open</_activateCrimeOpenContainer>
+   <_activateCrimeReadBook>Read</_activateCrimeReadBook>
+   <_activateCrimeRideMount>Steal</_activateCrimeRideMount>
+   <_activateCrimeSit>Sit</_activateCrimeSit>
+   <_activateCrimePickpocketNPC>Pickpocket</_activateCrimePickpocketNPC>
+   <_activateCrimeTakeItem>Steal</_activateCrimeTakeItem>
+   <_activateCrimeUseBed>Sleep</_activateCrimeUseBed>
+   <_activateCrimeUseDoor>Trespass</_activateCrimeUseDoor>
+   <_activateCrimeVampireFeed>Feed</_activateCrimeVampireFeed>
+   
+   <!-- Verbs shown when aiming at something (miscellaneous): -->
+   <_activateVerbOpenDoor>Open</_activateVerbOpenDoor>
+   <_activateVerbCloseDoor>Close</_activateVerbCloseDoor>
+   <_activateVerbOpenCorpse>Search</_activateVerbOpenCorpse>
+   <_activateVerbHarvestFlora>Harvest</_activateVerbHarvestFlora>
+   <_activateVerbYieldToEnemy>Yield</_activateVerbYieldToEnemy>
+   
+   <!-- Shown when aiming at an empty container: -->
+   <_hudInfoContainerIsEmpty>Empty</_hudInfoContainerIsEmpty>
+
+   <!----- INVENTORYMENU --------------------------------------------------->
+   <_inventoryUseItem>Use Item</_inventoryUseItem>
+   <_inventoryDropItem>Drop Item</_inventoryDropItem>
+
+   <!----- LEVELUPMENU ----------------------------------------------------->
+   <_levelUpMenuTitle>LEVEL UP</_levelUpMenuTitle>
+   
+   <!----- LOADGAMEMENU ---------------------------------------------------->
+   <_loadgameMenuLoadSave>Load Save File</_loadgameMenuLoadSave>
+   
+   <!----- LOCKPICKMENU ---------------------------------------------------->
+   <_lockpickFixTumbler>Fix Tumbler in Place</_lockpickFixTumbler>
+
+   <!----- MAGICMENU ------------------------------------------------------->
+   <_magicMenuEquipSpell>Equip Spell</_magicMenuEquipSpell>
+
+   <!----- MAPMENU --------------------------------------------------------->
+   <!-- Labels for the "Show Map" button. It changes depending on whether 
+        the player is looking at a map, and which map they're looking at. -->
+   <_mapMenuShowMap>Show Map</_mapMenuShowMap>
+   <_mapMenuShowMapWorld>Show World Map</_mapMenuShowMapWorld>
+   <_mapMenuShowMapLocal>Show Local Map</_mapMenuShowMapLocal>
+   
+   <_mapMenuShowQuest>Show Quests</_mapMenuShowQuest>
+   <_mapMenuShowQuestActive>Show Active Quest</_mapMenuShowQuestActive>
+   <_mapMenuShowQuestRunning>Show In-Progress Quests</_mapMenuShowQuestRunning>
+   <_mapMenuShowQuestCompleted>Show Completed Quests</_mapMenuShowQuestCompleted>
+   
+   <!-- Label for the button to show a quest objective's location on the map. 
+        This button is shown to keyboard-and-mouse users, and is displayed as 
+        part of the quest pane. -->
+   <_mapMenuShowObjectiveOnMap>Show on Map</_mapMenuShowObjectiveOnMap>
+   
+   <!-- Label for the button to show a quest objective's location on the map. 
+        This button is shown to gamepad users in the bottom bar, right next 
+        to the _mapMenuShowMap string. (That's why it's a different string: 
+        having English "Show Map" and "Show on Map" buttons right next to each 
+        other would be confusing!) -->
+   <_mapMenuShowObjectiveOnMapGamepad>Show Objective on Map</_mapMenuShowObjectiveOnMapGamepad>
+   
+   <_mapMenuPlaceCustomMarker>Place Custom Marker</_mapMenuPlaceCustomMarker>
+   <_mapMenuFastTravel>Travel to Location</_mapMenuFastTravel>
+   <_mapMenuShowQuestDetails>View Quest Details</_mapMenuShowQuestDetails>
+   
+   <!-- Text for if the user gets to the Active Quest subscreen when no quest 
+        has been set as active. -->
+   <_mapMenuNoActiveQuest>No quest has been set as active. Browse to the list of in-progress quests and select one to set it as active and view its objectives. If possible, the maps and your HUD compass will show the location of the active quest's next objective.</_mapMenuNoActiveQuest>
+   <_mapMenuNoCompletedQuests>No quests have been completed yet.</_mapMenuNoCompletedQuests>
+   <_mapMenuNoInProgressQuests>No quests are in progress right now.</_mapMenuNoInProgressQuests>
+
+   <!----- NEGOTIATEMENU --------------------------------------------------->
+   <!-- This menu allows you to choose how you plan on haggling with merchants. 
+        It shows the prices you'll get for buying and selling items as a percent-
+        age of their actual value. The menu concatenates these strings with the 
+        actual value at run-time. -->
+   <_negotiateMenuBuyRatioPrefix>Buying Items at </_negotiateMenuBuyRatioPrefix>
+   <_negotiateMenuBuyRatioSuffix>% of value</_negotiateMenuBuyRatioSuffix>
+   <_negotiateMenuSellRatioPrefix>Selling Items at </_negotiateMenuSellRatioPrefix>
+   <_negotiateMenuSellRatioSuffix>% of value</_negotiateMenuSellRatioSuffix>
+
+   <!----- OPTIONSMENU ----------------------------------------------------->
+   <_optionsMenuNorthernUISubmenuLabel>NorthernUI</_optionsMenuNorthernUISubmenuLabel>
+   <_optionsMenuXInputSubmenuLabel>Controls (Gamepad)</_optionsMenuXInputSubmenuLabel>
+   
+   <!----- PERSUASIONMENU -------------------------------------------------->
+   <_persuadeTypeAdmire>Admire</_persuadeTypeAdmire>
+   <_persuadeTypeBoast>Boast</_persuadeTypeBoast>
+   <_persuadeTypeCoerce>Coerce</_persuadeTypeCoerce>
+   <_persuadeTypeJoke>Joke</_persuadeTypeJoke>
+   
+   <_persuadeBribeCostLabel>Bribe Cost:</_persuadeBribeCostLabel>
+   <_persuadeXboxMappingPickDirection>Choose Approach</_persuadeXboxMappingPickDirection>
+
+   <!----- RACESEXMENU ----------------------------------------------------->
+   <_raceSexMenuTitle>CHARACTER CREATION</_raceSexMenuTitle>
+   <_raceSexMenuCharNameLabel>Your Name:</_raceSexMenuCharNameLabel>
+
+   <!----- RECHARGEMENU ---------------------------------------------------->
+   <_rechargeMenuTitle>RECHARGE</_rechargeMenuTitle>
+   
+   <!-- Column headers: -->
+   <_rechargeMenuColItem>Item</_rechargeMenuColItem>
+   <_rechargeMenuColCharge>Charge</_rechargeMenuColCharge>
+   
+   <_rechargeMenuPrefixCost>Cost to recharge:</_rechargeMenuPrefixCost>
+   
+   <!-- Added content in NorthernUI: a reminder on precisely how soul gem 
+        charge is handled: -->
+   <_rechargeMenuWasteGemWarning>Each soul gem can only recharge one item, even if the soul inside is strong enough to recharge more. Be careful not to waste your soul gems!</_rechargeMenuWasteGemWarning>
+   
+   <_rechargeMenuButtonRecharge>Recharge</_rechargeMenuButtonRecharge>
+
+   <!----- REPAIRMENU ------------------------------------------------------>
+   <!-- RepairMenu is used for repairing items, but also: for selecting the 
+        ingredients to use in a potion; for selecting what enchantment to 
+        apply to an item; and for selecting the soul gem and sigil stone to 
+        use when enchanting an item. -->
+   <_repairMenuTitleRepair>REPAIR</_repairMenuTitleRepair>
+   <_repairMenuTitleAlchemy>SELECT INGREDIENT</_repairMenuTitleAlchemy>
+   <_repairMenuTitleEnchantTarget>SELECT ITEM TO ENCHANT</_repairMenuTitleEnchantTarget>
+   <_repairMenuTitleEnchantGem>SELECT SOUL GEM</_repairMenuTitleEnchantGem>
+   <_repairMenuTitleEnchantStone>SELECT SIGIL STONE</_repairMenuTitleEnchantStone>
+   
+   <!-- Non-vanilla column headers: -->
+   <_repairMenuColEnchantTarget>Equipment</_repairMenuColEnchantTarget>
+   <_repairMenuColEnchantGem>Soul Gems</_repairMenuColEnchantGem>
+
+   <!----- SAVEMENU -------------------------------------------------------->
+   <_savegameMenuNewSave>Create New Save File</_savegameMenuNewSave>
+   <_savegameMenuOverwrite>Overwrite Existing Save File</_savegameMenuOverwrite>
+   
+   <!-- for if we can't ID the selected option for some reason: -->
+   <_savegameMenuGenericSave>Save</_savegameMenuGenericSave>
+
+   <!----- SKILLSMENU ------------------------------------------------------>
+   <!-- Column headers: -->
+   <_skillsMenuColSkillLevel>Level</_skillsMenuColSkillLevel>
+   <_skillsMenuColSkillProgress>Progress</_skillsMenuColSkillProgress>
+   <_skillsMenuColSkillType>Type</_skillsMenuColSkillType>
+   
+   <!-- Column values for the skill type: -->
+   <_skillsMenuSkillTypeMajor>Major</_skillsMenuSkillTypeMajor>
+   <_skillsMenuSkillTypeMinor>Minor</_skillsMenuSkillTypeMinor>
+   
+   <_skillsMenuButtonSelectAttr>Select Attribute</_skillsMenuButtonSelectAttr>
+   <_skillsMenuButtonSelectSign>Select Birthsign</_skillsMenuButtonSelectSign>
+   <_skillsMenuButtonSelectSkill>Select Skill</_skillsMenuButtonSelectSkill>
+   <_skillsMenuButtonSelectSpec>Select Specialization</_skillsMenuButtonSelectSpec>
+
+   <!----- SPELLMAKINGMENU ------------------------------------------------->
+   <_spellmakingMenuSpellName>Spell Name:</_spellmakingMenuSpellName>
+   
+   <_spellmakingMenuCostToCreate>Cost to Create:</_spellmakingMenuCostToCreate>
+   <_spellmakingMenuCostRatioSym>gold /</_spellmakingMenuCostRatioSym>
+   <_spellmakingMenuGoldAvailable>available</_spellmakingMenuGoldAvailable>
+   <_spellmakingMenuCostToCast>Cost to Cast:</_spellmakingMenuCostToCast>
+   <_spellmakingMenuCostToCastSuffix>magicka</_spellmakingMenuCostToCastSuffix>
+   
+   <_spellmakingMenuCannotCastPrefix>You won't be able to cast this spell.</_spellmakingMenuCannotCastPrefix>
+   <_spellmakingMenuCannotCastSuffix>.</_spellmakingMenuCannotCastSuffix>
+   <_spellmakingMenuCannotCastAddendum>It would be cheaper and easier to wait until you're skilled enough to cast a spell like this before creating it.</_spellmakingMenuCannotCastAddendum>
+   
+   <!----- SPELLPURCHASEMENU ----------------------------------------------->
+   <_spellPurchaseMenuTitle>BUY SPELLS</_spellPurchaseMenuTitle>
+   <_spellPurchaseButtonBuy>Purchase Spell</_spellPurchaseButtonBuy>
+   
+   <!-- Column headers: -->
+   <_spellPurchaseColMagickaCost>Magicka Cost</_spellPurchaseColMagickaCost> <!-- cost to cast the spell -->
+   <_spellPurchaseColGoldCost>Cost to Buy</_spellPurchaseColGoldCost> <!-- cost to buy the spell -->
+   
+   <_spellPurchaseNoMoreSpells>You already know all of the spells you could've paid this person to teach you.</_spellPurchaseNoMoreSpells>
+
+   <!----- STATSMENU ------------------------------------------------------->
+   <_statsMenuNoFactions>You aren't in any factions.</_statsMenuNoFactions>
+
+   <!----- TRAININGMENU ---------------------------------------------------->
+   <_trainingMenuButtonTrain>Train</_trainingMenuButtonTrain>
+   
+   <!----- XXNOPTIONSMENU -------------------------------------------------->
+   <_optionHintRequiresRestart>(requires restart)</_optionHintRequiresRestart>
+   
+   <_optionsSaveChanges>Save Changes</_optionsSaveChanges>
+   <_optionsCancel>Cancel</_optionsCancel>
+   <_optionsExit>Exit</_optionsExit>
+   
+   <_optionLocalMapRes>Local Map Resolution:</_optionLocalMapRes>
+   <_optionShowHUDClock>Show HUD Clock:</_optionShowHUDClock>
+   <_optionShowHUDInputViewer>Show HUD Input Viewer:</_optionShowHUDInputViewer>
+   <_optionStopDLCSpam>Suppress DLC Startup Spam:</_optionStopDLCSpam>
+   <_optionUseXXNAlchemyMenu>Enhanced Alchemy Menu:</_optionUseXXNAlchemyMenu>
+   <_optionUseXInputifPatched>Enable Xbox Gamepad Controls:</_optionUseXInputifPatched>
+   <_optionQuantityHandlerDefault>Quantity Menu Handler (Default):</_optionQuantityHandlerDefault>
+   <_optionQuantityHandlerAlt>Quantity Menu Handler (Alt):</_optionQuantityHandlerAlt>
+   <_optionQuantityHandlerCtrl>Quantity Menu Handler (Ctrl):</_optionQuantityHandlerCtrl>
+   <_optionBarterConfirmHandlerDefault>Barter Confirm Prompt (Default):</_optionBarterConfirmHandlerDefault>
+   <_optionBarterConfirmHandlerAlt>Barter Confirm Prompt (Alt):</_optionBarterConfirmHandlerAlt>
+   <_optionBarterConfirmHandlerCtrl>Barter Confirm Prompt (Ctrl):</_optionBarterConfirmHandlerCtrl>
+   
+   <_optEnumBarterConfirmHandlerDefault>Always (Default)</_optEnumBarterConfirmHandlerDefault>
+   <_optEnumBarterConfirmHandlerTakeOne>When Not Free</_optEnumBarterConfirmHandlerTakeOne>
+   <_optEnumBarterConfirmHandlerTakeAll>Never</_optEnumBarterConfirmHandlerTakeAll>
+   
+   <_optEnumQuantityHandlerDefault>Ask</_optEnumQuantityHandlerDefault>
+   <_optEnumQuantityHandlerTakeOne>Transfer One</_optEnumQuantityHandlerTakeOne>
+   <_optEnumQuantityHandlerTakeAll>Transfer All</_optEnumQuantityHandlerTakeAll>
+   
+   <_optDescLocalMapRes>Adjust the render resolution of the Local Map. Oblivion's world is divided into grid cells, and this option is measured in pixels per grid cell.</_optDescLocalMapRes>
+   <_optDescShowHUDClock>Control whether the in-game time of day is displayed on the HUD.</_optDescShowHUDClock>
+   <_optDescShowHUDInputViewer>Control whether your gamepad button presses and joystick input are displayed on the HUD.</_optDescShowHUDInputViewer>
+   <_optDescStopDLCSpam>Prevent DLCs from showing their quest-start notifications, most notably during Oblivion's introduction.</_optDescStopDLCSpam>
+   <_optDescUseXXNAlchemyMenu>Control whether Oblivion uses a NorthernUI-provided alchemy menu or a reskinned version of the vanilla menu. Changes will not take effect until you restart the game.</_optDescUseXXNAlchemyMenu>
+   <_optDescUseXinputIfPatched>Enable or disable NorthernUI's gamepad support. Turning this option off causes NorthernUI to pretend that no gamepads are connected or in use -- useful if you want to use something like Xpadder.</_optDescUseXinputIfPatched>
+   <_optDescQuantityHandlerDefault>Control whether the game asks you how many items to transfer to or from your inventory.</_optDescQuantityHandlerDefault>
+   <_optDescQuantityHandlerAlt>Control whether the game asks you how many items to transfer to or from your inventory, when you're holding the Alt key.</_optDescQuantityHandlerAlt>
+   <_optDescQuantityHandlerCtrl>Control whether the game asks you how many items to transfer to or from your inventory, when you're holding the Ctrl key.</_optDescQuantityHandlerCtrl>
+   <_optDescBarterConfirmHandlerDefault>Control when the game asks you to confirm a sale or purchase.</_optDescBarterConfirmHandlerDefault>
+   <_optDescBarterConfirmHandlerAlt>Control when the game asks you to confirm a sale or purchase, when you're holding the Alt key.</_optDescBarterConfirmHandlerAlt>
+   <_optDescBarterConfirmHandlerCtrl>Control when the game asks you to confirm a sale or purchase, when you're holding the Ctrl key.</_optDescBarterConfirmHandlerCtrl>
+   
+   <!----- XXNCONTROLSMENU ------------------------------------------------->
+   <_optCtrlGStick>Gameplay Sticks:</_optCtrlGStick>
+   <_optCtrlGStickNormal>LS = Move, RS = Look</_optCtrlGStickNormal>
+   <_optCtrlGStickSwapped>RS = Move, LS = Look</_optCtrlGStickSwapped>
+   
+   <_optCtrlMStick>Menu Sticks:</_optCtrlMStick>
+   <_optCtrlMStickNormal>LS for Navigation</_optCtrlMStickNormal>
+   <_optCtrlMStickSwapped>RS for Navigation</_optCtrlMStickSwapped>
+   
+   <_optCtrlSensX>Look Sensitivity (X):</_optCtrlSensX>
+   <_optCtrlSensY>Look Sensitivity (Y):</_optCtrlSensY>
+   <_optCtrlSensRun>Run Sensitivity:</_optCtrlSensRun>
+   
+   <_optCtrlSelectedScheme>Control Scheme:</_optCtrlSelectedScheme>
+   
+   <_optCtrlSaveScheme>Save Changes to Scheme</_optCtrlSaveScheme>
+   <_optCtrlCreateScheme>Create New Scheme</_optCtrlCreateScheme>
+   <_optCtrlRenameScheme>Rename Scheme</_optCtrlRenameScheme>
+   <_optCtrlDeleteScheme>Delete Scheme</_optCtrlDeleteScheme>
+   
+   <_optCtrlHowToAssign>Press the gamepad button you want to map to this control, or press Start to unmap the control.</_optCtrlHowToAssign>
+   <_optCtrlAlreadyAssigned>This control is currently mapped to:</_optCtrlAlreadyAssigned>
+   
+   <_optCtrlButtonDU>D-Pad Up</_optCtrlButtonDU>
+   <_optCtrlButtonDD>D-Pad Down</_optCtrlButtonDD>
+   <_optCtrlButtonDL>D-Pad Left</_optCtrlButtonDL>
+   <_optCtrlButtonDR>D-Pad Right</_optCtrlButtonDR>
+   <_optCtrlStickStart>Start</_optCtrlStickStart>
+   <_optCtrlStickBack>Back</_optCtrlStickBack>
+   <_optCtrlStickLS>Left Stick</_optCtrlStickLS>
+   <_optCtrlStickRS>Right Stick</_optCtrlStickRS>
+   <_optCtrlButtonA>A</_optCtrlButtonA>
+   <_optCtrlButtonB>B</_optCtrlButtonB>
+   <_optCtrlButtonX>X</_optCtrlButtonX>
+   <_optCtrlButtonY>Y</_optCtrlButtonY>
+   <_optCtrlButtonLB>Left Bumper</_optCtrlButtonLB>
+   <_optCtrlButtonRB>Right Bumper</_optCtrlButtonRB>
+   <_optCtrlButtonLS>LS Click</_optCtrlButtonLS>
+   <_optCtrlButtonRS>RS Click</_optCtrlButtonRS>
+   <_optCtrlButtonLT>Left Trigger</_optCtrlButtonLT>
+   <_optCtrlButtonRT>Right Trigger</_optCtrlButtonRT>
+   
+   <_optCtrlDescSwapSticksG>The left and right joysticks are used to look around and move around in the world. Set which joystick handles which function.</_optCtrlDescSwapSticksG>
+   <_optCtrlDescSwapSticksM>The left or right joystick can be used to operate the menus. Set which joystick handles that function.</_optCtrlDescSwapSticksM>
+   <_optCtrlDescLookSens>Control how quickly you turn and aim.</_optCtrlDescLookSens>
+   <_optCtrlDescRunSens>Control how far the joystick must be pushed for you to switch from walking to running. If your gamepad has hardware variations or issues, you may need to lower this setting from its default (95).</_optCtrlDescRunSens>
+   
+   <_optCtrlDescSchemeName>Choose a control scheme to use. You can create, keep, and delete multiple custom control schemes freely.</_optCtrlDescSchemeName>
+   
+   <_optCtrlDescActivate>This key is used to interact with objects, items, and people in the world.</_optCtrlDescActivate>
+   <_optCtrlDescAttack>This key is used to attack with your currently-equipped weapon.</_optCtrlDescAttack>
+   <_optCtrlDescBlock>This key is used to block incoming attacks. You can also use this key to yield to an enemy: if you hold this key and activate someone who is attacking you, they may stop fighting you.</_optCtrlDescBlock>
+   <_optCtrlDescCast>This key is used to cast your currently-equipped spell.</_optCtrlDescCast>
+   <_optCtrlDescDrawSheathe>This key is used to draw or sheathe your currently-equipped weapon.</_optCtrlDescDrawSheathe>
+   <_optCtrlDescGrab>This key is used to grab loose objects in the world and move them around.</_optCtrlDescGrab>
+   <_optCtrlDescJump>This key is used to jump.</_optCtrlDescJump>
+   <_optCtrlDescMenuMode>This key is used to open the "Big Four" menus and view your Stats, Items, Magic, and Journal.</_optCtrlDescMenuMode>
+   <_optCtrlDescSneak>This key is used to crouch down and sneak around. While sneaking, you can steal items unnoticed, pickpocket other people, and launch surprise attacks on enemies.</_optCtrlDescSneak>
+   <_optCtrlDescTogglePOV>This key is used to switch between first- and third-person mode.</_optCtrlDescTogglePOV>
+   <_optCtrlDescWait>This key is used to skip in-game time while in a bed.</_optCtrlDescWait>
+</rect>

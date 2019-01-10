@@ -1,0 +1,777 @@
+<!-- xcontrols_menu.xml -->
+<menu name="XControlsMenu">
+	<class> &ControlsMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+
+	<user0>						<!-- height of single list item plus buffer zone -->
+		<copy src="xcontrols_main_rect" trait="height"/>	<!-- parent rect height -->
+		<div src="xcontrols_vertical_scroll" trait="user8"/>	<!-- num items visible -->
+	</user0>
+	<user1> &true; </user1>		<!-- true = "normal" mode, false = "selected" mode -->
+	<user2> 1 </user2>			<!-- Page number (1 = sliders/toggles, 2 = controls remapping -->
+
+	<!-- Text colors -->
+	<red>  117 </red>
+	<green>	59 </green>
+	<blue>	33 </blue>
+	
+	<rect name="xcontrols_background">
+<include src="generic_background.xml"/>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+		<user0>666</user0>	<!-- width -->
+		<user1>570</user1>	<!-- height -->
+
+		<!--====================================== VERTICAL SENSITIVITY =======================================-->
+		<text name="xcontrols_vertsens_label">
+			<visible>
+				<copy src="XControlsMenu" trait="user2"/>	<!-- page number -->
+				<eq>1</eq>
+				<and src="XControlsMenu" trait="user1"/>	<!-- "normal" mode -->
+			</visible>
+			<string> <copy src="strings()" trait="_verticalsensitivity"/> </string>
+			<depth> 3 </depth>
+			<alpha>255</alpha>
+			<red>
+				<copy src="XControlsMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="XControlsMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="XControlsMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div>2</div>
+			</x>
+			<y>
+				<copy src="xcontrols_main_rect_label" trait="y"/>
+			</y>
+		</text>
+		
+		<image name="xcontrols_vertsens_slider_marker">
+			<id> &generic; </id>
+			<visible>
+				<copy src="XControlsMenu" trait="user2"/>	<!-- page number -->
+				<eq>1</eq>
+				<and src="XControlsMenu" trait="user1"/>	<!-- "normal" mode -->
+			</visible>
+			<target> &true; </target>
+			<depth> 1 </depth>
+			<repeathorizontal> &true; </repeathorizontal>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="xcontrols_vertsens_slider" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="xcontrols_vertsens_slider" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="xcontrols_vertsens_label" trait="y"/>
+				<add src="xcontrols_vertsens_label" trait="height"/>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &true; </xdefault>
+			<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+			<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+			<xdown> <ref src="xcontrols_horizsens_slider_marker" trait="mouseover"/> </xdown>
+			<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+			
+			<image name="xcontrols_vertsens_slider_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+	
+			<image name="xcontrols_vertsens_slider">
+<include src="horiz_floating_scroll.xml"/>
+				<depth> 3 </depth>
+				<id> 5 </id>
+				<x> 60 </x>
+				<y> 22 </y>
+				
+				<user4> 20 </user4>			<!-- jump distance -->
+				<user6> 6 </user6>			<!-- scroll marker id -->
+				<user8> &false; </user8>	<!-- text visibility -->
+			</image>
+		</image>
+		
+		<!--====================================== HORIZONTAL SENSITIVITY =======================================-->
+		<text name="xcontrols_horizsens_label">
+			<visible>
+				<copy src="XControlsMenu" trait="user2"/>	<!-- page number -->
+				<eq>1</eq>
+				<and src="XControlsMenu" trait="user1"/>	<!-- "normal" mode -->
+			</visible>
+			<string> <copy src="strings()" trait="_horizontalsensitivity"/> </string>
+			<depth> 3 </depth>
+			<alpha>255</alpha>
+			<red>
+				<copy src="XControlsMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="XControlsMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="XControlsMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div>2</div>
+			</x>
+			<y>
+				<copy src="xcontrols_vertsens_slider_marker" trait="y"/>
+				<add src="xcontrols_vertsens_slider_marker" trait="height"/>
+				<add> 20 </add>
+			</y>
+		</text>
+
+		<image name="xcontrols_horizsens_slider_marker">
+			<id> &generic; </id>
+			<visible>
+				<copy src="XControlsMenu" trait="user2"/>	<!-- page number -->
+				<eq>1</eq>
+				<and src="XControlsMenu" trait="user1"/>	<!-- "normal" mode -->
+			</visible>
+			<target> &true; </target>
+			<repeathorizontal> &true; </repeathorizontal>
+			<depth> 1 </depth>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="xcontrols_horizsens_slider" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="xcontrols_horizsens_slider" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="xcontrols_horizsens_label" trait="y"/>
+				<add src="xcontrols_horizsens_label" trait="height"/>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &false; </xdefault>
+			<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+			<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+			<xup> <ref src="xcontrols_vertsens_slider_marker" trait="mouseover"/> </xup>
+			<xdown> <ref src="xcontrols_invert_y_button" trait="mouseover"/> </xdown>
+			<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+
+			<image name="xcontrols_horizsens_slider_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+
+			<image name="xcontrols_horizsens_slider">
+<include src="horiz_floating_scroll.xml"/>
+				<depth> 3 </depth>
+				<id> 7 </id>
+				<x> 60 </x>
+				<y> 22 </y>
+				
+				<user4> 20 </user4>			<!-- jump distance -->
+				<user6> 8 </user6>			<!-- scroll marker id -->
+				<user8> &false; </user8>	<!-- text visibility -->
+			</image>
+		</image>
+		
+		<!--==================================== INVERT Y ====================================-->
+		<text name="xcontrols_invert_y_label">
+			<visible>
+				<copy src="XControlsMenu" trait="user2"/>	<!-- page number -->
+				<eq>1</eq>
+			</visible>
+			<depth>3</depth>
+			<string> <copy src="strings()" trait="_inverty"/> </string>
+			<alpha>255</alpha>
+			<red>
+				<copy src="XControlsMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="XControlsMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="XControlsMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="xcontrols_vertsens_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="xcontrols_horizsens_slider_marker" trait="y"/>
+				<add src="xcontrols_horizsens_slider_marker" trait="height"/>
+				<add> 20 </add>
+			</y>
+		</text>
+		<rect name="xcontrols_invert_y_button">
+<include src="button_floating_2.xml"/>
+			<visible>
+				<copy src="XControlsMenu" trait="user2"/>	<!-- page number -->
+				<eq>1</eq>
+			</visible>
+			<id> 9 </id>
+			<depth>3</depth>
+			<_center_x>
+				<copy src="parent()" trait="width"/>
+				<mult>0.7</mult>
+			</_center_x>
+			<_top>
+				<copy src="xcontrols_invert_y_label" trait="y"/>
+				<sub>12</sub>
+			</_top>
+			<string> <copy src="strings()" trait="_onoff"/> </string>
+			<clicksound>3</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="xcontrols_horizsens_slider_marker" trait="mouseover"/> </xup>
+			<xdown> <ref src="xcontrols_rumble_button" trait="mouseover"/> </xdown>
+		</rect>
+
+		<!--==================================== RUMBLE ====================================-->
+		<text name="xcontrols_rumble_label">
+			<visible>
+				<copy src="XControlsMenu" trait="user2"/>	<!-- page number -->
+				<eq>1</eq>
+			</visible>
+			<depth>3</depth>
+			<string> <copy src="strings()" trait="_rumble"/> </string>
+			<alpha>255</alpha>
+			<red>
+				<copy src="XControlsMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="XControlsMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="XControlsMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="xcontrols_invert_y_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="xcontrols_invert_y_label" trait="y"/>
+				<add src="xcontrols_invert_y_label" trait="height"/>
+				<add> 30 </add>
+			</y>
+		</text>
+		<rect name="xcontrols_rumble_button">
+<include src="button_floating_2.xml"/>
+			<visible>
+				<copy src="XControlsMenu" trait="user2"/>	<!-- page number -->
+				<eq>1</eq>
+			</visible>
+			<id> 10 </id>
+			<depth>3</depth>
+			<_center_x>
+				<copy src="xcontrols_invert_y_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="xcontrols_rumble_label" trait="y"/>
+				<sub>12</sub>
+			</_top>
+			<string> <copy src="strings()" trait="_onoff"/> </string>
+			<clicksound>3</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="xcontrols_invert_y_button" trait="mouseover"/> </xup>
+		</rect>
+
+		<!--========================================= INSTRUCTIONS ===========================================-->
+		<text name="xcontrols_instructions">
+			<id> 4 </id>
+			<visible> <not src="XControlsMenu" trait="user1"/> </visible>
+			<depth> 3 </depth>
+			<justify>&center;</justify>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<div>2</div>
+			</x>
+			<y> 20 </y>
+			<alpha> 255 </alpha>
+			<red>
+				<copy src="XControlsMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="XControlsMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="XControlsMenu" trait="blue"/>
+			</blue>
+			<wrapwidth>
+				<copy src="parent()" trait="width"/>
+				<sub>32</sub>
+			</wrapwidth>
+		</text>
+
+		<!--==================================== CONTROLS LIST LABEL ====================================-->
+		<text name="xcontrols_main_rect_label">
+			<visible>
+				<copy src="xcontrols_main_rect" trait="visible"/>
+				<and><not src="xcontrols_instructions" trait="visible"/></and>
+			</visible>
+			<string> <copy src="strings()" trait="_actionmapping"/> </string>
+			<depth> 3 </depth>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div>2</div>
+			</x>
+			<y> 60 </y>
+			<alpha> 255 </alpha>
+			<red>
+				<copy src="XControlsMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="XControlsMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="XControlsMenu" trait="blue"/>
+			</blue>
+		</text>
+
+		<!--=========================================== CONTROLS LIST ============================================-->
+		<rect name="xcontrols_main_rect">
+			<visible>
+				<copy src="XControlsMenu" trait="user2"/>	<!-- page number -->
+				<eq>2</eq>
+			</visible>
+			<depth> 3 </depth>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div>2</div>
+			</x>
+			<y>
+				<copy src="xcontrols_main_rect_label" trait="y"/>
+				<add src="xcontrols_main_rect_label" trait="height"/>
+				<add>10</add>
+			</y>
+			<width> 538 </width>
+			<height>
+				<copy src="parent()" trait="height"/>
+				<sub src="me()" trait="y"/>
+				<sub>72</sub>					<!-- bottom buffer -->
+			</height>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<clipwindow> &true; </clipwindow>
+
+			<!--======================================== BORDERS ===========================================-->
+			<image name="xcontrols_border_top">
+				<filename> Menus\Shared\shared_border_horizontal_1.dds </filename>
+				<x> -24 </x>
+				<y>
+					<copy>0</copy>
+					<sub src="me()" trait="height"/>
+				</y>
+				<width>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="x"/>
+					<sub>32</sub>
+				</width>
+				<height> 6 </height>
+			</image>
+
+			<image name="xcontrols_border_left">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<x>
+					<copy>0</copy>
+					<sub src="me()" trait="width"/>
+				</x>
+				<y> 0 </y>
+				<width> 4 </width>
+				<height> 
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="y"/>
+				</height>
+			</image>
+
+			<image name="xcontrols_border_middle">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<x> 400 </x>
+				<y> 0 </y>
+				<width> 4 </width>
+				<height> 
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="y"/>
+				</height>
+			</image>
+
+			<image name="xcontrols_border_right">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<x> <copy src="parent()" trait="width"/> <sub>32</sub> </x>
+				<y> 0 </y>
+				<width> 4 </width>
+				<height> 
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="y"/>
+				</height>
+			</image>
+
+			<image name="xcontrols_border_bottom">
+				<filename> Menus\Shared\shared_border_horizontal_1.dds </filename>
+				<x> -24 </x>
+				<y> <copy src="parent()" trait="height"/> </y>
+				<width>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="x"/>
+					<sub>32</sub>
+				</width>
+				<height> 6 </height>
+			</image>
+			
+			<!--========================================= SCROLL BAR ===========================================-->
+			<image name="xcontrols_vertical_scroll">
+<include src="vert_floating_scroll.xml"/>
+				<id> 1 </id>
+				<x> <copy src="parent()" trait="width"/> </x>
+				<y> <copy src="child(vertical_scroll_top)" trait="height"/> </y>
+				<depth> 3 </depth>
+				<height>
+					<copy src="parent()" trait="height"/>
+					<sub src="child(vertical_scroll_top)" trait="height"/>
+					<sub src="child(vertical_scroll_bottom)" trait="height"/>
+				</height>
+				<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+				<user2>
+					<copy src="xcontrols_list_pane" trait="childcount" />
+					<sub src="me()" trait="user8"/>
+				</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+											items minus the number of items visible.  i.e. if your list has
+											8 items and you can see 2 at any one time, this should be 6 -->
+				<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+				<user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+				<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+				<user6> 2 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+				<!-- user7 = current value -->
+				<user8> 6 </user8>		<!-- How many items are visible at once -->
+			</image>
+
+
+			<!--======================================== TEMPLATE PANE =========================================-->
+			<rect name="xcontrols_list_pane">
+				<id> 3 </id>
+				<alpha>0</alpha>
+				<locus> &true; </locus>
+				<clips> &true; </clips>
+				<width>
+					<copy src="parent()" trait="width"/>
+				</width>
+				<height>
+					<copy src="me()" trait="childcount"/>
+					<mul src="XControlsMenu" trait="user0"/>	<!-- height of a menu item plus buffer zone -->
+				</height>
+				<x> 0 </x>
+				<y>
+					<copy>0</copy>
+					<sub src="xcontrols_vertical_scroll" trait="user7"/> <!-- user7 = current value -->
+					<mul src="XControlsMenu" trait="user0"/>	<!-- height of a menu item plus buffer zone -->
+				</y>
+				
+				<_left_edge_buffer> 10 </_left_edge_buffer>
+						
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &false; </xdefault>
+				<xlist> &xlist; </xlist>
+				<xup> <ref src="xcontrols_horizsens_slider_marker" trait="mouseover"/> </xup>
+				<!--xdown> &first; </xdown-->
+				<xscroll> <ref src="xcontrols_vertical_scroll" trait="user5" /> </xscroll>
+				
+				<!-- list items are added here in code from the template -->
+				
+			</rect>	<!-- xcontrols_list_pane -->
+		</rect>  <!-- xcontrols_main_rect -->
+
+		<image name="xcontrols_icon_1">
+			<visible> <copy src="XControlsMenu" trait="user1"/> </visible>
+			<_icon_1> Menus\Icons\icon_xbox_x_large.dds </_icon_1>
+			<_icon_2> Menus\Icons\icon_xbox_y_large.dds </_icon_2>
+			<filename>
+				<copy src="XControlsMenu" trait="user2"/>
+				<copy src="me()" trait="_icon_"/>
+			</filename>
+			<depth>3</depth>
+			<height>64</height>
+			<width>64</width>
+			<x>
+				<copy src="xcontrols_main_rect" trait="x"/>
+			</x>
+			<y>
+				<copy src="xcontrols_main_rect" trait="y"/>
+				<add src="xcontrols_main_rect" trait="height"/>
+				<add>4</add>
+			</y>
+		</image>
+
+		<text name="xcontrols_text_1">
+			<visible> <copy src="XControlsMenu" trait="user1"/> </visible>
+			<_text_1> <copy src="strings()" trait="_controls"/> </_text_1>
+			<_text_2> <copy src="strings()" trait="_defaults"/> </_text_2>
+			<string>
+				<copy src="XControlsMenu" trait="user2"/>
+				<copy src="me()" trait="_text_"/>
+			</string>
+			<depth> 3 </depth>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="xcontrols_icon_1" trait="x"/>
+				<add src="xcontrols_icon_1" trait="width"/>
+			</x>
+			<y>
+				<copy src="xcontrols_icon_1" trait="y"/>
+				<add>
+					<copy src="xcontrols_icon_1" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</add>
+			</y>
+			<red>
+				<copy src="XControlsMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="XControlsMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="XControlsMenu" trait="blue"/>
+			</blue>
+		</text>
+
+		<image name="xcontrols_icon_2">
+			<visible> <copy src="XControlsMenu" trait="user1"/> </visible>
+			<filename>Menus\Icons\icon_xbox_b_large.dds</filename>
+			<depth>3</depth>
+			<height>64</height>
+			<width>64</width>
+			<x> 410 </x>
+			<y>
+				<copy src="xcontrols_icon_1" trait="y"/>
+			</y>
+		</image>
+
+		<text name="xcontrols_text_2">
+			<visible> <copy src="XControlsMenu" trait="user1"/> </visible>
+			<string> <copy src="strings()" trait="_return"/> </string>
+			<depth> 3 </depth>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="xcontrols_icon_2" trait="x"/>
+				<add src="xcontrols_icon_2" trait="width"/>
+			</x>
+			<y>
+				<copy src="xcontrols_icon_2" trait="y"/>
+				<add>
+					<copy src="xcontrols_icon_2" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</add>
+			</y>
+			<red>
+				<copy src="XControlsMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="XControlsMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="XControlsMenu" trait="blue"/>
+			</blue>
+		</text>
+
+	</rect> <!-- end xcontrols_background -->
+
+<!--========================================== TEMPLATE ============================================-->
+
+	<template name="xcontrols_template">
+		<rect name="xcontrols_template_item">
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex"/>
+				<mult src="me()" trait="height"/>
+			</y>
+			<depth>1</depth>
+			<width>
+				<copy src="parent()" trait="width"/>
+			</width>
+			<locus> &true; </locus>
+			<clips> &true; </clips>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			
+			<red></red>			<!-- text color - red component -->
+			<green></green>		<!-- text color - green component -->
+			<blue></blue>		<!-- text color - blue component -->
+
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			<user0></user0>		<!-- index -->
+			<user1></user1>		<!-- label string -->
+			<user2>				<!-- x-position around which to center button -->
+				<copy src="parent()" trait="width"/>
+				<sub> 112 </sub>
+			</user2>
+			<user3></user3>		<!-- button icon index -->
+			
+			<_left_edge_buffer> <copy src="parent()" trait="_left_edge_buffer"/> </_left_edge_buffer>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="xcontrols_vertical_scroll" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="xcontrols_template_floating">
+				<visible>
+					<copy src="parent()" trait="mouseover"/>
+					<gt> 0 </gt>
+				</visible>
+				<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+				<width>
+					<copy src="parent()" trait="width"/>
+					<sub> 32 </sub>
+				</width>
+				<height> 64 </height>
+				<depth> 1 </depth>
+				<x> 0 </x>
+				<y> 0 </y>
+				
+				<image name="effset_attribute_floating_end">
+					<depth> 2 </depth>
+					<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width"/>
+						<add> 8 </add>
+						<sub src="me()" trait="width"/>
+					</x>
+					<y> 0 </y>
+				</image>
+			</image>
+
+			<text name="xcontrols_template_label">
+				<depth>3</depth>
+				<alpha>255</alpha>
+				<clips> &true; </clips>
+				<string>
+					<copy src="parent()" trait="user1"/>
+				</string>
+				<red>
+					<copy src="parent()" trait="red"/>
+				</red>
+				<green>
+					<copy src="parent()" trait="green"/>
+				</green>
+				<blue>
+					<copy src="parent()" trait="blue"/>
+				</blue>
+				<x>
+					<copy src="parent()" trait="_left_edge_buffer"/>
+				</x>
+				<y> 12 </y>
+			</text>
+			
+			<image name="xcontrols_template_button_icon">
+				<clips> &true; </clips>
+				<depth> 3 </depth>
+				<filename> Menus\Shared\all_xbox_buttons.dds </filename>
+				<cropx>
+					<copy src="parent()" trait="user3"/>
+					<copy src="me()" trait="_crop_"/>
+				</cropx>
+				<height> 64 </height>
+				<width> 64 </width>
+				<alpha>
+					<copy> 255 </copy>
+					<sub>
+						<copy> 128 </copy>
+						<onlyifnot src="parent()" trait="target"/>
+					</sub>
+				</alpha>
+				<x> <copy src="parent()" trait="user2"/> </x>
+				<y> 0 </y>
+				<_crop_0> 704 </_crop_0>	<!-- start -->
+				<_crop_1> 640 </_crop_1>	<!-- back -->
+				<_crop_2> 512 </_crop_2>	<!-- left thumb button -->
+				<_crop_3> 576 </_crop_3>	<!-- right thumb button -->
+				<_crop_4> 128 </_crop_4>	<!-- A -->
+				<_crop_5> 192 </_crop_5>	<!-- B -->
+				<_crop_6> 0 </_crop_6>		<!-- X -->
+				<_crop_7> 64 </_crop_7>		<!-- Y -->
+				<_crop_8> 448 </_crop_8>	<!-- right bumper -->
+				<_crop_9> 384 </_crop_9>	<!-- left bumper -->
+				<_crop_10> 320 </_crop_10>	<!-- left trigger -->
+				<_crop_11> 256 </_crop_11>	<!-- right trigger -->
+			</image>
+		</rect>
+	</template>
+	
+</menu>
+
+<!--====================================================================================================-->
+<!--====================================================================================================-->

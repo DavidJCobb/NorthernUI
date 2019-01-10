@@ -1,0 +1,24 @@
+<!--<image name="button_1">--> <!-- compatibility: Map Marker Overhaul -->
+   <!-- image doesn't show properly unless we predefine all traits, and query some, too -->
+   <visible>&true;</visible>
+   <filename> </filename>
+   <x>0</x>
+   <y>
+      <copy   src="child(sizer)" trait="height" />
+      <add>10</add> <!-- spacing between items -->
+      <onlyif src="sibling()" trait="visible" />
+      <add    src="sibling()" trait="y" />
+   </y>
+   <width>0</width>
+   <height>0</height>
+   
+   <text name="sizer"> <!-- size of a menu item == size of its label -->
+      <include src="NorthernUI\fonts\normal.xml" />
+      <listclip>&true;</listclip>
+      <string>
+         <!-- query some traits, to force them to update -->
+         <copy src="parent()" trait="filename" />
+         <copy src="parent()" trait="x" />
+      </string>
+   </text>
+<!--</image>-->

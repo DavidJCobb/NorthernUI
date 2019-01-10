@@ -1,0 +1,220 @@
+<!-- loading_menu.xml -->
+<menu name="LoadingMenu">
+	<class> &LoadingMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<visible> &true; </visible>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	<menufade> 0.0 </menufade>
+	<user0> 0 </user0>										<!-- slideshow step number, 0=title page, set by code -->
+	<user1> Menus\Loading\load_in_game_default.dds </user1>	<!-- background image, set by code -->
+	<user2> <copy src="strings()" trait="_missing"/> </user2><!-- text to display, set by code -->
+	<user3> 0 </user3>										<!-- current progress bar position, set by code -->
+	<user4> 100 </user4>									<!-- maximum progress bar position, set by code -->
+	<user5>  </user5>										<!-- debug text to display, set by code -->
+	
+	
+	<rect name="black">
+		<depth> -1 </depth>
+		<red> 0 </red>
+		<green> 0 </green>
+		<blue> 0 </blue>
+		<alpha> 255 </alpha>
+		<width> <copy src="screen()" trait="width"/> </width>
+		<height> <copy src="screen()" trait="height"/> </height>
+		<x> 0 </x>
+		<y> 0 </y>
+	</rect>
+	
+	
+	<image name="load_title_page">
+		<visible>
+			<copy src="LoadingMenu" trait="user0"/>
+			<eq> 0 </eq>
+		</visible>
+		<filename>Menus\NorthernUI\title_loading_screen.dds</filename>
+		<depth> 1000 </depth>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+			<div> 2 </div>
+		</y>
+		<width>
+			<copy src="screen()" trait="height" />
+			<mul>
+				<copy>16</copy>
+				<div>  9</div>
+			</mul>
+		</width>
+		<height><copy src="screen()" trait="height" /></height>
+		<zoom> -1 </zoom>
+		<locus> &true; </locus>
+	</image>
+		
+	
+	<image name="load_main">
+		<visible>
+			<copy src="LoadingMenu" trait="user0" /><gt>0</gt>
+		</visible>
+		<filename><copy src="LoadingMenu" trait="user1" /></filename>
+		<depth>1000</depth>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+			<div> 2 </div>
+		</y>
+		<width>
+			<copy src="screen()" trait="height" />
+			<mul>
+				<copy>16</copy>
+				<div>  9</div>
+			</mul>
+		</width>
+		<height><copy src="screen()" trait="height" /></height>
+		<zoom> -1</zoom>
+		<locus>&true;</locus>
+      
+      <image name="fade_f">
+         <depth>1</depth>
+         <x>0</x>
+         <y>0</y>
+         <width> <copy src="parent()" trait="width" /></width>
+         <height>
+            <copy src="me()" trait="fileheight" />
+            <sub>1</sub> <!-- artifacts -->
+         </height>
+         <filename>Menus\NorthernUI\load_screen_fade.dds</filename>
+         <tile>&true;</tile>
+      </image>
+      <image name="fade_b">
+         <depth>1</depth>
+         <x>0</x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+         </y>
+         <width>   <copy src="sibling()" trait="width" /></width>
+         <height><copy src="sibling()" trait="height" /></height>
+         <filename>Menus\NorthernUI\load_screen_fade_bottom.dds</filename>
+         <tile>&true;</tile>
+         <cropY>1</cropY> <!-- artifacts -->
+      </image>
+	
+		<text name="load_text">
+         <include src="NorthernUI\fonts\normal.xml" />
+			<depth>3</depth>
+			<string><copy src="LoadingMenu" trait="user2" /></string>
+			<red>255</red><green>255</green><blue>255</blue>
+			<wrapwidth> 850 </wrapwidth>
+			<justify>&center;</justify>
+			<x>
+				<copy src="parent()" trait="width" />
+				<div>2</div>
+			</x>
+			<y>
+				<copy>60</copy>
+				<sub src="me()" trait="height" />
+				<div>  2</div>
+				<add>752</add>
+			</y>
+         <locus>&true;</locus>
+         
+         <image name="fade">
+            <alpha>192</alpha>
+            <filename>Menus\NorthernUI\box_shadows\circle64.dds</filename>
+            <zoom>-1</zoom>
+            <depth>-0.5</depth>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub src="me()"      trait="width" />
+               <div>2</div>
+               <sub>16</sub>
+            </x>
+            <y>-4</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <add>80</add>
+            </width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <add>8</add>
+            </height>
+         </image>
+		</text>
+	</image>
+		
+		
+   <text name="load_loading">
+		<!-- <visible>
+			<copy src="LoadingMenu" trait="user0" /><gt>0</gt>
+		</visible> -->
+      <include src="NorthernUI\fonts\medium-large-upper.xml" />
+      <depth>1004</depth>
+      <string><copy src="strings()" trait="_loading" /></string>
+      <red>255</red>
+      <green>255</green>
+      <blue>255</blue>
+      <justify>&center;</justify>
+      <x>
+         <copy src="screen()" trait="width"/>
+         <div>2</div>
+      </x>
+      <y>
+         <copy>724</copy>
+         <sub  src="me()" trait="height"/>
+         <max>
+				<copy>60</copy>
+				<sub src="me()" trait="height" />
+				<div>  2</div>
+				<add>752</add>
+            
+            <onlyif>
+               <copy src="LoadingMenu" trait="user0" /><eq>0</eq>
+            </onlyif>
+         </max>
+      </y>
+   </text>
+	<rect name="load_progress">
+      <include src="NorthernUI\meters\generic_upward.xml" />
+		<depth>1005</depth>
+		<width> 600</width>
+      <zoom>50</zoom>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+			<div>2</div>
+		</x>
+		<y>844</y>
+      <_fillPercent>
+         <copy src="LoadingMenu" trait="user3" />
+         <div  src="LoadingMenu" trait="user4" />
+      </_fillPercent>
+	</rect>
+		
+		
+	<text name="load_debug_info">
+		<depth> 1004 </depth>
+		<string> <copy src="LoadingMenu" trait="user5" /> </string>
+		<font> 1 </font>
+		<red> 117 </red>
+		<green> 59 </green>
+		<blue> 33  </blue>
+		<alpha> 255 </alpha>
+		<justify> &left; </justify>
+		<x> 60 </x>
+		<y> 885 </y>
+	</text>
+	
+</menu>

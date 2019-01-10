@@ -1,0 +1,439 @@
+<!-- magic_popup_menu.xml -->
+<menu name="MagicPopupMenu">
+   <!-- DOCUMENTATION ---------------------------------------------- >
+      This menu is spawned when the user is operating the Magic, 
+      Inventory, and similar menus: the "magic popup" appears when 
+      the user hovers the mouse over an item that has additional 
+      details, be those enchantments, spell effects, potion effects, 
+      or just the type of armor (Light/Heavy) being examined.
+      
+      The game supplies this menu with the Y-position of the object 
+      being hovered over (screen-relative), and the depth that 
+      should be used for the menu.
+   <!------------------------------------------------------------- -->
+	<class> &MagicPopupMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0 </menufade>
+	<user0>0</user0> <!---- (recv.) Y-position of the item being hovered over -->
+	<user1>0</user1> <!---- (recv.) Number of pixels from bottom of screen below which the menu should not go. -->
+	<user2>1.5</user2> <!-- (send?) Slide-in rate of menu in pixels/ms -->
+	<user3>0</user3> <!---- (recv.) Depth to display the menu at -->
+	
+	<_item_height>52</_item_height>
+	<_buffer>0</_buffer> <!-- extra spacing between list items -->
+	
+   <!-- OUTPUTS FOR OBSE ------------------------------------------- >
+      These values will be passed to other menus by NorthernUI's DLL.
+   <!------------------------------------------------------------- -->
+   <user20>
+      <copy src="magicpop_fake_background" trait="height" />
+   </user20>
+   
+   <!-- COMPATIBILITY -------------------------------------------- -->
+   <!-- Display Stats: -->
+	<_tno_icons_first>&false;</_tno_icons_first> <!-- set by script -->
+	<_tno_filepath>2</_tno_filepath> <!-- read by script; determines tile hierarchy -->
+   
+   <!-- START OF MENU CODE ----------------------------------------- >
+   <!------------------------------------------------------------- -->
+   <rect name="id1">
+      <!-- Executable sets its X-coordinate to slide it out, but we don't want that. -->
+		<id>1</id>
+		<target>&true;</target>
+      <width>0</width>
+      <height>0</height>
+   </rect>
+   
+   <!--
+      For compatibility's sake, some tiles had to be renamed.
+      
+      PROPER NAME         | DISPLAY STATS EXPECTED NAME
+      magicpop_background | magicpop_fake_background
+      content_box         | magicpop_background
+      magicpop_contents   | magicpop_contents
+    -->
+	<rect name="magicpop_fake_background">
+		<target>&true;</target>
+		<depth>
+			<copy src="parent()" trait="user3"/>
+			<sub>10</sub>
+		</depth>
+      
+      <include src="NorthernUI\item_card.xml" />
+      <user20>500</user20> <!-- width -->
+		<user21>
+			<copy   src="addendum" trait="height" />
+			<onlyif src="addendum" trait="visible" />
+			<add    src="addendum" trait="y" />
+		</user21> <!-- height -->
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+
+      <rect name="magicpop_background">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <rect name="magicpop_contents">
+            <alpha> 0 </alpha>
+            <depth> 1 </depth>
+            <locus> &true; </locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width"/></width>
+            <height>
+               <copy src="magicpop_effect_1" trait="visible" />
+               <add  src="magicpop_effect_2" trait="visible" />
+               <add  src="magicpop_effect_3" trait="visible" />
+               <add  src="magicpop_effect_4" trait="visible" />
+               <add  src="magicpop_effect_5" trait="visible" />
+               <add  src="magicpop_effect_6" trait="visible" />
+               <add  src="magicpop_effect_7" trait="visible" />
+               <add  src="magicpop_effect_8" trait="visible" />
+               <add  src="magicpop_ds0" trait="visible" />
+               <add  src="magicpop_ds1" trait="visible" />
+               <add  src="magicpop_ds2" trait="visible" />
+               <add  src="magicpop_ds3" trait="visible" />
+               <add  src="magicpop_ds4" trait="visible" />
+               <add  src="magicpop_ds5" trait="visible" />
+               <add  src="magicpop_ds6" trait="visible" />
+               <add  src="magicpop_ds7" trait="visible" />
+               <sub>16</sub> <!-- because false == 1 and true == 2 -->
+               <mult>
+                  <copy src="menu()" trait="_item_height" />
+                  <add  src="menu()" trait="_buffer" />
+               </mult>
+               <!-- <copy   src="child()" trait="height" />
+               <onlyif src="child()" trait="visible" />
+               <add    src="child()" trait="y" />
+               <add    src="menu()"  trait="_buffer" /> -->
+            </height>
+            
+            <rect name="magicpop_ds0">
+               <include src="NorthernUI\fragments\itemcard\displaystats_listitem.xml" />
+               <id>80</id>
+               <y><copy>0</copy></y> <!-- COPY needed to override Y-operators in the prefab -->
+               <image name="magicpop_ds0_icon">
+                  <filename>Menus\DisplayStats\icon01.dds</filename>
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listicon.xml" />
+               </image>
+               <text name="magicpop_ds0_text">
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listtext.xml" />
+               </text>
+            </rect>
+            <rect name="magicpop_effect_1">
+               <id>11</id>
+               <visible>&true;</visible>
+               
+               <height><copy src="MagicPopupMenu" trait="_item_height"/></height>
+               <x>
+                  <copy src="parent()" trait="width"/>
+                  <sub  src="me()"     trait="width"/>
+                  <div>2</div>
+               </x>
+               <y>
+                  <copy   src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="y" />
+                  <add    src="menu()"    trait="_buffer"/>
+               </y>
+               
+               <user0></user0> <!-- effect description string -->
+               <user1></user1> <!-- icon pathname -->
+               <user2>&scale;</user2> <!-- icon zoom -->
+               
+               <include src="NorthernUI\fragments\itemcard\list_item.xml" />
+            </rect>
+            <rect name="magicpop_ds1">
+               <include src="NorthernUI\fragments\itemcard\displaystats_listitem.xml" />
+               <id>71</id>
+               <image name="magicpop_ds1_icon">
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listicon.xml" />
+               </image>
+               <text name="magicpop_ds1_text">
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listtext.xml" />
+               </text>
+            </rect>
+            <rect name="magicpop_ds2">
+               <include src="NorthernUI\fragments\itemcard\displaystats_listitem.xml" />
+               <id>72</id>
+               <image name="magicpop_ds2_icon">
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listicon.xml" />
+               </image>
+               <text name="magicpop_ds2_text">
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listtext.xml" />
+               </text>
+            </rect>
+            <rect name="magicpop_ds3">
+               <include src="NorthernUI\fragments\itemcard\displaystats_listitem.xml" />
+               <id>73</id>
+               <image name="magicpop_ds3_icon">
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listicon.xml" />
+               </image>
+               <text name="magicpop_ds3_text">
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listtext.xml" />
+               </text>
+            </rect>
+            <rect name="magicpop_ds4">
+               <include src="NorthernUI\fragments\itemcard\displaystats_listitem.xml" />
+               <id>74</id>
+               <image name="magicpop_ds4_icon">
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listicon.xml" />
+               </image>
+               <text name="magicpop_ds4_text">
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listtext.xml" />
+               </text>
+            </rect>
+            <rect name="magicpop_ds5">
+               <include src="NorthernUI\fragments\itemcard\displaystats_listitem.xml" />
+               <id>75</id>
+               <image name="magicpop_ds5_icon">
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listicon.xml" />
+               </image>
+               <text name="magicpop_ds5_text">
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listtext.xml" />
+               </text>
+            </rect>
+            <rect name="magicpop_ds6">
+               <include src="NorthernUI\fragments\itemcard\displaystats_listitem.xml" />
+               <id>76</id>
+               <image name="magicpop_ds6_icon">
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listicon.xml" />
+               </image>
+               <text name="magicpop_ds6_text">
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listtext.xml" />
+               </text>
+            </rect>
+            <rect name="magicpop_ds7">
+               <include src="NorthernUI\fragments\itemcard\displaystats_listitem.xml" />
+               <id>77</id>
+               <image name="magicpop_ds7_icon">
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listicon.xml" />
+               </image>
+               <text name="magicpop_ds7_text">
+                  <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                  <include src="NorthernUI\fragments\itemcard\displaystats_listtext.xml" />
+               </text>
+            </rect>
+            <rect name="magicpop_effect_2">
+               <id>12</id>
+               <visible>&true;</visible>
+               
+               <height><copy src="MagicPopupMenu" trait="_item_height"/></height>
+               <x><copy src="sibling()"      trait="x" /></x>
+               <y>
+                  <copy   src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="y" />
+                  <add    src="menu()"    trait="_buffer"/>
+               </y>
+               
+               <user0></user0> <!-- effect description string -->
+               <user1></user1> <!-- icon pathname -->
+               <user2>&scale;</user2> <!-- icon zoom -->
+               
+               <include src="NorthernUI\fragments\itemcard\list_item.xml" />
+               <_showDivider>&true;</_showDivider>
+            </rect>
+            <rect name="magicpop_effect_3">
+               <id>13</id>
+               <visible>&true;</visible>
+               
+               <height><copy src="MagicPopupMenu" trait="_item_height"/></height>
+               <x><copy src="sibling()"      trait="x" /></x>
+               <y>
+                  <copy   src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="y" />
+                  <add    src="menu()"    trait="_buffer"/>
+               </y>
+               
+               <user0></user0> <!-- effect description string -->
+               <user1></user1> <!-- icon pathname -->
+               <user2>&scale;</user2> <!-- icon zoom -->
+               
+               <include src="NorthernUI\fragments\itemcard\list_item.xml" />
+               <_showDivider>&true;</_showDivider>
+            </rect>
+            <rect name="magicpop_effect_4">
+               <id>14</id>
+               <visible>&true;</visible>
+               
+               <height><copy src="MagicPopupMenu" trait="_item_height"/></height>
+               <x><copy src="sibling()"      trait="x" /></x>
+               <y>
+                  <copy   src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="y" />
+                  <add    src="menu()"    trait="_buffer"/>
+               </y>
+               
+               <user0></user0> <!-- effect description string -->
+               <user1></user1> <!-- icon pathname -->
+               <user2>&scale;</user2> <!-- icon zoom -->
+               
+               <include src="NorthernUI\fragments\itemcard\list_item.xml" />
+               <_showDivider>&true;</_showDivider>
+            </rect>
+            <rect name="magicpop_effect_5">
+               <id> 15 </id>
+               <visible> &true; </visible>
+               
+               <height><copy src="MagicPopupMenu" trait="_item_height"/></height>
+               <x><copy src="sibling()" trait="x" /></x>
+               <y>
+                  <copy   src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="y" />
+                  <add    src="menu()"    trait="_buffer"/>
+               </y>
+               
+               <user0></user0> <!-- effect description string -->
+               <user1></user1> <!-- icon pathname -->
+               <user2>&scale;</user2> <!-- icon zoom -->
+               
+               <include src="NorthernUI\fragments\itemcard\list_item.xml" />
+               <_showDivider>&true;</_showDivider>
+            </rect>
+            <rect name="magicpop_effect_6">
+               <id> 16 </id>
+               <visible> &true; </visible>
+               
+               <height><copy src="MagicPopupMenu" trait="_item_height"/></height>
+               <x><copy src="sibling()" trait="x" /></x>
+               <y>
+                  <copy   src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="y" />
+                  <add    src="menu()"    trait="_buffer"/>
+               </y>
+               
+               <user0></user0> <!-- effect description string -->
+               <user1></user1> <!-- icon pathname -->
+               <user2>&scale;</user2> <!-- icon zoom -->
+               
+               <include src="NorthernUI\fragments\itemcard\list_item.xml" />
+               <_showDivider>&true;</_showDivider>
+            </rect>
+            <rect name="magicpop_effect_7">
+               <id> 17 </id>
+               <visible> &true; </visible>
+               
+               <height><copy src="MagicPopupMenu" trait="_item_height"/></height>
+               <x><copy src="sibling()" trait="x" /></x>
+               <y>
+                  <copy   src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="y" />
+                  <add    src="menu()"    trait="_buffer"/>
+               </y>
+               
+               <user0></user0> <!-- effect description string -->
+               <user1></user1> <!-- icon pathname -->
+               <user2>&scale;</user2> <!-- icon zoom -->
+               
+               <include src="NorthernUI\fragments\itemcard\list_item.xml" />
+               <_showDivider>&true;</_showDivider>
+            </rect>
+            <rect name="magicpop_effect_8">
+               <id> 18 </id>
+               <visible> &true; </visible>
+               
+               <height><copy src="MagicPopupMenu" trait="_item_height"/></height>
+               <x><copy src="sibling()" trait="x" /></x>
+               <y>
+                  <copy   src="sibling()" trait="height" />
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="y" />
+                  <add    src="menu()"    trait="_buffer"/>
+               </y>
+               
+               <user0></user0> <!-- effect description string -->
+               <user1></user1> <!-- icon pathname -->
+               <user2>&scale;</user2> <!-- icon zoom -->
+               
+               <include src="NorthernUI\fragments\itemcard\list_item.xml" />
+               <_showDivider>&true;</_showDivider>
+            </rect>
+         </rect> <!-- "magicpop_contents" -->
+         <rect name="addendum">
+            <!--
+               The full list of data displayed by this element isn't known, but it 
+               receives only a single STRING. Observed values:
+               
+                - "Uses: w/x  Charge: y/z"
+                - "Magic School: [name]"
+                
+               There goes any possibility of showing a meter... -_-
+            -->
+            <id>21</id>
+            <depth>1</depth>
+            <visible>&false;</visible>
+            <locus>&true;</locus>
+            <x> <!-- center within parent -->
+               <copy src="parent()" trait="width"/>
+               <sub  src="me()"     trait="width"/>
+               <div>2</div>
+            </x>
+            <y> <!-- 25px after sibling -->
+               <copy src="sibling()" trait="y"/>
+               <add  src="sibling()" trait="height"/>
+               <add>
+                  <copy>25</copy>
+                  <onlyif src="me()" trait="visible" />
+               </add>
+            </y>
+            <width>
+               <copy src="parent()" trait="width"/>
+               <sub>30</sub>
+            </width>
+            <height>
+               <copy src="magicpop_requires_text" trait="y"/>
+               <add  src="magicpop_requires_text" trait="height"/>
+            </height>
+            <!-- STRING is set by the executable. -->
+            
+            <image name="divider">
+               <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+               <tile>&true;</tile>
+               <width> <copy src="parent()" trait="width" /> </width>
+               <height><copy src="me()" trait="fileheight" /></height>
+               <alpha>128</alpha>
+               <x>0</x>
+               <y>
+                  <copy src="me()" trait="height" />
+                  <div>-2</div>
+               </y>
+            </image>
+            <text name="magicpop_requires_text">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="parent()" trait="string" /></string>
+               <wrapwidth>
+                  <copy src="parent()"  trait="width" />
+                  <sub>26</sub>
+               </wrapwidth>
+               <depth> 1 </depth>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width"/>
+                  <sub  src="me()"     trait="width"/>
+                  <div>2</div>
+               </x>
+               <y> <!-- 8px after sibling -->
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height"/>
+                  <add>8</add>
+               </y>
+               <red>140</red><green>140</green><blue>140</blue>
+               <alpha>255</alpha>
+            </text>
+         </rect>
+      </rect>
+	</rect>
+</menu>

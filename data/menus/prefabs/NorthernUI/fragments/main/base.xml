@@ -1,0 +1,143 @@
+<!--<rect name="main_menu_base">-->
+   <!--
+      A "base" menu element useful as the top-level container for the 
+      character, inventory, magic, barter, container, and similar 
+      menus. This prefab takes care of:
+      
+       - The main menu background and side borders
+       
+       - A top padding element matching the height of the main menu 
+         tabbar: take advantage of this by having the first child you 
+         define position itself after its previous-sibling.
+   -->
+
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+   <!------------------------------------------------------------- -->
+   <_align>&left;</_align>
+   <_headerEnabled>&false;</_headerEnabled>
+   <_headerText> MENU NAME</_headerText>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <depth>1</depth>
+   <locus>&true;</locus>
+   <x> <!-- Keep consistent with HUD_Main_Menu.xml. -->
+      <copy src="NorthernUI()" trait="_xxnMainMenuXOffset" />
+      <onlyif>
+         <copy src="me()" trait="_align" /><eq>&left;</eq>
+      </onlyif>
+      <add>
+         <copy src="screen()" trait="width" />
+         <sub  src="me()"     trait="width" />
+         <sub  src="NorthernUI()" trait="_xxnMainMenuXOffset" />
+         <onlyif>
+            <copy src="me()" trait="_align" /><eq>&right;</eq>
+         </onlyif>
+      </add>
+      <add>
+         <copy src="screen()" trait="width" />
+         <sub  src="me()"     trait="width" />
+         <div>2</div>
+         <onlyif>
+            <copy src="me()" trait="_align" /><eq>&center;</eq>
+         </onlyif>
+      </add>
+   </x>
+   <y>0</y>
+   <width>
+      <copy src="northernui()" trait="_xxnStdMenuWidth" />
+      <add> <!-- default -->
+         <copy>745</copy>
+         <onlyif>
+            <copy src="northernui()" trait="_xxnStdMenuWidth" /><lte>0</lte>
+         </onlyif>
+      </add>
+   </width>
+   <height>
+      <copy src="screen()"     trait="height" />
+      <sub  src="northernui()" trait="_xxnBottomBarHeight"/>
+   </height>
+   
+   <image name="border_left">
+      <filename>Menus\NorthernUI\Shared\simple_border_vert.dds</filename>
+      <x> <!-- Position the border outside of the element body. -->
+         <copy>0</copy>
+         <sub  src="me()" trait="width" />
+      </x>
+      <y>0</y>
+      <width>4</width>
+      <height>
+         <copy src="parent()"     trait="height" />
+         <add  src="northernui()" trait="_xxnBottomBarHeight"/>
+      </height>
+      <tile>&true;</tile>
+      <depth>-3</depth>
+      <alpha><copy src="northernui()" trait="_xxnAlpha" /></alpha>
+   </image>
+   <image name="border_right">
+      <filename>Menus\NorthernUI\Shared\simple_border_vert.dds</filename>
+      <x><copy src="parent()" trait="width" /></x> <!-- Position the border outside of the element body. -->
+      <y>0</y>
+      <cropX>12</cropX>
+      <width>4</width>
+      <height>
+         <copy src="parent()"     trait="height" />
+         <add  src="northernui()" trait="_xxnBottomBarHeight"/>
+      </height>
+      <tile>&true;</tile>
+      <depth>-3</depth>
+      <alpha><copy src="northernui()" trait="_xxnAlpha" /></alpha>
+   </image>
+   <image name="back">
+      <filename>Menus\NorthernUI\Shared\simple_back.dds</filename>
+      <x>0</x>
+      <y>0</y>
+      <width> <copy src="parent()" trait="width" /></width>
+      <height>
+         <copy src="parent()"     trait="height" />
+         <add  src="northernui()" trait="_xxnBottomBarHeight"/>
+      </height>
+      <tile>&true;</tile>
+      <depth>-3</depth>
+      <alpha><copy src="northernui()" trait="_xxnAlpha" /></alpha>
+   </image>
+   
+   <image name="border_top">
+      <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+      <tile>&true;</tile>
+      <width> <copy src="parent()" trait="width" /></width>
+      <height><copy src="me()"     trait="fileheight"/></width>
+      <x>0</x>
+      <y>
+         <copy src="sibling(header)" trait="y" />
+         <add  src="sibling(header)" trait="height" />
+      </y>
+   </image>
+   <rect name="header">
+      <locus>&true;</locus>
+      <x>8</x>
+      <y>0</y>
+      <visible><copy src="parent()" trait="_headerEnabled" /></visible>
+      <string><copy src="parent()" trait="_headerText" /></string>
+      
+      <height>
+         <copy src="child(text)" trait="height" /> <!-- tests as 51? not 50?? -->
+         <add>13</add>
+      </height> <!-- result is 64px with our "51px" font -->
+      
+      <text name="text">
+         <string><copy src="parent()" trait="string" /></string>
+         <include src="NorthernUI\fonts\large.xml" />
+         <x>0</x>
+         <y>7</y>
+         <red>255</red><green>255</green><blue>255</blue>
+      </text>
+   </rect>
+
+   <!-- CONTENT INSERTION POINT ------------------------------------ >
+      Your child nodes will go here.
+   <!------------------------------------------------------------- -->
+<!--</rect>-->

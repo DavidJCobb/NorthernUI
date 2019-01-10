@@ -1,0 +1,369 @@
+<!-- save_menu.xml -->
+<menu name="SaveMenu">
+	<class> &SaveMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<explorefade> 0.25 </explorefade>
+	<locus> &true; </locus>
+	<menufade> 0.25 </menufade>
+	<_item_height> 82 </_item_height> <!-- height in pixels that a save game item text is -->
+	
+   <!--
+      USER0: Is the player hovering over an existing save, or the 
+      "new save" button? True for existing; false for new.
+      
+      The above function is per Bethesda's code comments, but in 
+      the vanilla game, this trait is never actually set. NorthernUI 
+      patches the game to set it as intended.
+   -->
+	<user0>&false;</user0>
+	
+   <!-- X is hardcoded to map to deleting a save file. -->
+	<xbuttonb><ref src="save_return_button" trait="clicked" /></xbuttonb>
+	
+	<rect name="save_FocusBox">
+		<id>2</id>
+		<visible>&false;</visible>
+      <include src="NorthernUI\focus_boxes\highlight.xml"/>
+	</rect>
+   
+   <rect name="content_space">
+      <include src="NorthernUI/fragments/pause/base.xml" />
+      <rect name="content_box_2">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <rect name="column_right">
+            <locus>&true;</locus>
+            <clipwindow>&true;</clipwindow>
+            <width>
+               <copy src="parent()"  trait="width" />
+               <sub  src="pause_column_left" trait="x" />
+               <sub  src="pause_column_left" trait="width" />
+               <sub>16</sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <x>
+               <copy src="pause_column_left" trait="x" />
+               <add  src="pause_column_left" trait="width" />
+               <add>16</add>
+            </x>
+            <y>0</y><depth>10</depth>
+            
+            <!-- Submenu contents go here. -->
+            <text name="save_instructions">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <visible>&true;</visible>
+               <string><copy src="strings()" trait="_savemenuinstructions" /></string>
+               <justify>&left;</justify>
+               <x>0</x>
+               <y>0</y>
+               <red>255</red><green>255</green><blue>255</blue>
+            </text>
+            <rect name="savefile_info_pane">
+               <locus>&true;</locus>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+               </x>
+               <y>
+                  <copy   src="sibling()" trait="height" />
+                  <add>16</add>
+                  <onlyif src="sibling()" trait="visible" />
+                  <add    src="sibling()" trait="y" />
+               </y>
+               <width><copy src="savefile_image_frame" trait="width" /></width>
+               
+               <image name="savefile_image_frame">
+                  <locus>&true;</locus>
+                  <filename> Menus\Loading\loading_save_wide_frame.dds </filename>
+                  <depth>10</depth>
+                  <width> 305</width>
+                  <height>175</height>
+                  <zoom>77</zoom>
+                  <x>0</x>
+                  <y>0</y>
+                  
+                  <image name="save_Picture">
+                     <id>6</id>
+                     <locus>&true;</locus>
+                     <filename>Menus\Shared\shared_empty_large.dds</filename>
+                     <depth>11</depth>
+                     <width><copy src="parent()" trait="width" /></width>
+                     <height> <!-- generated pixel data has no fileheight -->
+                        <copy src="me()" trait="user0" />
+                        <mult src="me()" trait="zoom" />
+                        <div>100</div>
+                     </height>
+                     <zoom>
+                        <copy src="parent()" trait="height" />
+                        <div  src="me()" trait="user0" />
+                        <mult>100</mult>
+                     </zoom>
+                     <x>0</x>
+                     <y>0</y>
+                     <user0>0</user0> <!-- height of active pixels in image - set by code -->
+                     
+                     <!--
+                        The visible trait is forced to false or true depending on whether 
+                        the user is hovering over the "New Game" option.
+                     -->
+                  </image>
+               </image>
+               <text name="savefile_description">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <id>7</id>
+                  <justify>&left;</justify>
+                  <red>255</red>
+                  <green>255</green>
+                  <blue>255</blue>
+                  <alpha> 200 </alpha>
+                  <wrapwidth>
+                     <copy src="parent()" trait="width" />
+                     <sub>32</sub>
+                  </wrapwidth>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="y" />
+                     <add  src="sibling()" trait="height" />
+                     <add>16</add>
+                  </y>
+               </text>
+            </rect>
+            <rect name="save_list">
+               <id>5</id>
+               <locus>&true;</locus>
+               <clipwindow>&true;</clipwindow>
+               <height>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="y" />
+               </height>
+               <width>
+                  <copy src="savefile_info_pane" trait="x" />
+                  <sub>16</sub>
+               </width>
+               <x>0</x>
+               <y><copy src="savefile_info_pane" trait="y" /></y>
+               
+               <rect name="scrollbar_wrapper">
+                  <include src="NorthernUI\scrollbars\wrapper.xml" />
+                  <user0>&false;</user0> <!-- is horizontal? -->
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <sub>8</sub>
+                  </x>
+                  <y>0</y>
+                  <height><copy src="parent()" trait="height" /></height>
+                  
+                  <rect name="save_scroll_bar">
+                     <include src="vertical_scroll.xml" />
+                     <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+                     <id>3</id>
+                     <user1>0</user1>					<!-- min -->
+                     <user2>
+                        <copy src="save_list_pane" trait="childcount" />
+                        <sub>
+                           <copy src="save_list" trait="height" />
+                           <div  src="menu()" trait="_item_height" />
+                           <!-- <floor>0</floor> -->
+                        </sub>
+                        <add>
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="save_list" trait="height" />
+                              <mod  src="menu()" trait="_item_height" />
+                              <!-- <neq>0</neq> -->
+                              <gt>55</gt> <!-- value arrived at through random tinkering -->
+                           </onlyif>
+                        </add>
+                     </user2>							<!-- max -->
+                     <user4>
+                        <copy src="me()" trait="user8"/>
+                        <sub>1</sub>
+                     </user4>							<!-- jump distance -->
+                     <user5>0</user5>					<!-- starting pos -->
+                     <user6>4</user6>					<!-- marker id -->
+                     <user8>								<!-- num visible -->
+                        <copy src="save_list" trait="height" />
+                        <div  src="menu()" trait="_item_height" />
+                        <!-- <ceil>0</ceil> -->
+                     </user8>
+                  </rect>
+               </rect>
+               <rect name="save_list_pane">
+                  <id>9</id>
+                  <clips>&true;</clips>
+                  <locus>&true;</locus>
+                  <width>
+                     <copy src="sibling()" trait="x" />
+                     <sub>8</sub>
+                  </width>
+                  <height>
+                     <copy src="me()"   trait="childcount" />
+                     <mult src="menu()" trait="_item_height" />
+                  </height>
+                  <x>0</x>
+                  <y>
+                     <copy>0</copy>
+                     <sub  src="save_scroll_bar" trait="user7" /> <!-- user7 = current value -->
+                     <mult src="menu()" trait="_item_height" />
+                  </y>
+                  
+                  <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                       an input command, they defer to their parent. The following directions are for those times. -->
+                  <target> &false; </target>
+                  <xdefault> &true; </xdefault>
+                  <xlist> &xlist; </xlist>
+                  <xup> &last; </xup>
+                  <xdown> &first; </xdown>
+                  <xleft><ref src="save_return_button" trait="mouseover" /></xleft>
+                  <xright><ref src="save_return_button" trait="mouseover" /></xright>
+                  <xscroll><ref src="save_scroll_bar" trait="user5" /></xscroll>
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()" trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="label_a">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>276</_dxScanCode>
+            <visible><copy src="northernui()" trait="_xxnGamepadAvailable" /></visible>
+            <x>0</x>
+            <y>0</y>
+            <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+            
+            <_strings_1><copy src="xxnStrings()" trait="_savegameMenuNewSave" /></_strings_1>
+            <_strings_2><copy src="xxnStrings()" trait="_savegameMenuOverwrite" /></_strings_2>
+            <_strings_3><copy src="xxnStrings()" trait="_savegameMenuGenericSave" /></_strings_3>
+            <string>
+               <copy src="menu()" trait="user0" />
+               <copy src="me()"   trait="_strings_" />
+            </string>
+         </rect>
+         <rect name="label_x">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>278</_dxScanCode>
+            <visible>
+               <copy src="northernui()" trait="_xxnGamepadAvailable" />
+               <and  src="menu()" trait="user0" />
+            </visible>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+            <string><copy src="xxnStrings()" trait="_deleteSaveFile" /></string>
+         </rect>
+         <rect name="save_return_button">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>1</id>
+            <target>&true;</target>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_return" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            <xup><ref src="save_list_pane" trait="mouseover" /></xup>
+         </rect>
+      </rect>
+   </rect>
+   
+   <template name="save_game_template">
+		<rect name="SAVES">
+         <!--
+            List items' ID traits are set to 101 + user0.
+         -->
+			<clips>&true;</clips>
+			<locus>&true;</locus>
+			<target>&true;</target>
+			<depth>5</depth>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="user0" />
+				<mult src="me()" trait="height" />
+			</y>
+			<height><copy src="menu()" trait="_item_height" /></height>
+			<width>
+				<copy src="parent()" trait="width" />
+				<sub>15</sub>
+			</width>
+			<alpha>0</alpha>
+         
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			<user0> 0 </user0> <!-- list position index -->
+			<user1> Save Game Image File Name</user1>
+			<user2> Save Game Name</user2>
+			<user3> SaveGameName </user3> <!-- save form id -->
+			<user10>&false;</user10>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>&false;</xdefault>
+			<xlist>&xitem;</xlist>
+			<xup>  &prev;</xup>
+			<xdown>&next;</xdown>
+			<xscroll>
+				<copy src="me()" trait="user0" />
+				<sub>
+					<copy src="save_scroll_bar" trait="user8" />
+					<div> 2</div>
+					<ceil>0</ceil>
+				</sub>
+				<add>1</add>
+			</xscroll>
+			
+			<text name="save_game_name">
+				<clips>&true;</clips>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<depth> 1 </depth>
+				<string><copy src="parent()" trait="user3" /></string>
+				<red>255</red>
+				<green>255</green>
+				<blue>255</blue>
+				<wrapwidth>
+               <copy src="parent()" trait="width" />
+               <sub  src="parent()" trait="x" />
+               <sub  src="parent()" trait="x" />
+            </wrapwidth>
+				<x>4</x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+			</text>
+		</rect>
+	</template>
+</menu>

@@ -1,0 +1,422 @@
+<!-- main_menu.xml -->
+<menu name="MainMenu">
+	<class> &MainMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<visible> &true; </visible>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<depth> 1 </depth>
+	<locus> &true; </locus>
+	
+	<user0> &true; </user0>		<!-- is the logo visible set by code -->
+	<user1> &true; </user1>		<!-- are the buttons visible set by code -->
+	<user2> &false; </user2>	<!-- is Press Start visible set by code -->
+	<user3> 255 </user3>		<!-- alpha value set by animated code -->
+	<user4> 3 </user4>			<!-- how many seconds to fade from bink logo to real logo -->
+   
+   <!-- <rect name="screen_safe_area"><include src="NorthernUI\tests\screensafe_4_3.xml" /></rect> -->
+   
+   <_NorthernUIAlpha>180</_NorthernUIAlpha>
+   
+   <rect name="game_crashes_if_not_present">
+      <id>8</id>
+      <depth>-100</depth>
+      <!-- This may be the container for the scrolling map animation, which is a Bink video. -->
+   </rect>
+   
+   <image name="bgcolor">
+		<!-- <id>8</id> -->
+      <filename>Menus\NorthernUI\black.dds</filename>
+      <x>0</x>
+      <y>0</y>
+      <width>
+         <copy src="MainMenu" trait="width" />
+         <max  src="screen()" trait="width" />
+      </width>
+      <height>
+         <copy src="MainMenu" trait="height" />
+         <max  src="screen()" trait="height" />
+      </height>
+      <tile>&true;</tile>
+      <depth>-10</depth>
+   </image>
+   
+   <rect name="decor_wrap"> <!-- left-side space for menu images -->
+      <locus>&true;</locus>
+      <x>
+         <copy src="screen()" trait="cropX" />
+      </x>
+      <y>0</y>
+      <width>
+         <copy src="screen()" trait="width" />
+         <sub  src="content"  trait="width" />
+         <sub  src="screen()" trait="cropX" />
+         <sub  src="me()"     trait="x" />
+      </width>
+      <height><copy src="screen()" trait="height" /></height>
+      <depth>5</depth>
+      
+      <image name="oblivion_logo">
+         <visible><copy src="MainMenu" trait="user0" /></visible>
+         <filename>Menus\Loading\tes_oblivion_logo_final.dds</filename>
+         <zoom>-1</zoom>
+         <width> 748</width>
+         <height>159</height>
+         <x>
+            <copy src="parent()" trait="width"/>
+            <sub  src="me()"     trait="width"/>
+            <div>2</div>
+            <add>3</add>
+         </x>
+         <y>
+            <copy src="parent()" trait="height"/>
+            <sub  src="me()"     trait="height"/>
+            <sub>90</sub>
+            <div> 2</div>
+         </y>
+      </image>
+   </rect>
+   <rect name="content">
+      <locus>&true;</locus>
+		<visible><copy src="MainMenu" trait="user1"/></visible>
+		<depth>10</depth>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+      </x>
+      <y>0</y>
+      <width>320</width>
+      <height><copy src="screen()" trait="height" /></height>
+      
+      <rect name="background">
+         <width> <copy src="parent()" trait="width" /></width>
+         <height><copy src="parent()" trait="height" /></height>
+         
+         <image name="border_left">
+            <filename>Menus\NorthernUI\Shared\simple_border_vert.dds</filename>
+            <x>0</x>
+            <y>0</y>
+            <width>
+               <copy src="me()" trait="filewidth" />
+               <div>2</div>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <tile>&true;</tile>
+            <depth>-15</depth>
+            <alpha><copy src="MainMenu" trait="_NorthernUIAlpha" /></alpha>
+         </image>
+         <image name="border_right">
+            <filename><copy src="sibling()" trait="filename" /></filename>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+            </x>
+            <y>0</y>
+            <cropX> <copy src="sibling()" trait="width" /></cropX>
+            <width> <copy src="sibling()" trait="width" /></width>
+            <height><copy src="parent()"  trait="height" /></height>
+            <tile>&true;</tile>
+            <depth>-15</depth>
+            <alpha><copy src="sibling()" trait="alpha" /></alpha>
+         </image>
+         <image name="back">
+            <filename>Menus\NorthernUI\Shared\simple_back.dds</filename>
+            <x><copy src="sibling()" trait="width" /></x>
+            <y>0</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub>
+                  <copy src="sibling()" trait="width" />
+                  <mult>2</mult>
+               </sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <tile>&true;</tile>
+            <depth>-15</depth>
+            <alpha><copy src="sibling()" trait="alpha" /></alpha>
+         </image>
+      </rect>
+      
+      <rect name="content_menu">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y>
+            <!--<copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>-->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <sub>
+               <copy src="screen()" trait="height" />
+               <mult>0.10</mult>
+            </sub>
+            <sub  src="screen()" trait="cropY" />
+         </y>
+         <width><copy src="parent()" trait="width" /></width>
+         <height>
+            <copy   src="main_exit" trait="height" />
+            <onlyif src="main_exit" trait="visible" />
+            <add    src="main_exit" trait="y" />
+         </height>
+         
+         <_colorNormal>140</_colorNormal>
+         <_colorHover> 255</_colorHover>
+         <_itemSpacing> 12</_itemSpacing>
+         
+         <rect name="main_continue">
+            <id>2</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <visible>&true;</visible>
+            <x>16</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height><copy src="child(label)" trait="height" /></height>
+            <clicksound>1</clicksound>
+            
+            <xdefault>&true;</xdefault>
+            <xdown><ref src="main_new" trait="mouseover"/></xdown>
+            
+            <text name="label">
+               <x>0</x>
+               <y>0</y>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_continue" /></string>
+            
+               <red>
+                  <copy src="content_menu" trait="_colorNormal" />
+                  <max>
+                     <copy src="content_menu" trait="_colorHover" />
+                     <mult src="parent()" trait="mouseover" />
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+            </text>
+         </rect>
+         <rect name="main_new">
+            <id>3</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <visible>&true;</visible>
+            <x><copy src="sibling()" trait="x" /></x>
+            <y>
+               <copy   src="sibling()" trait="height" />
+               <add    src="parent()"  trait="_itemSpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="y" />
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height><copy src="child(label)" trait="height" /></height>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="main_continue" trait="mouseover"/></xup>
+            <xdown><ref src="main_load"     trait="mouseover"/></xdown>
+            
+            <text name="label">
+               <x>0</x>
+               <y>0</y>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_new" /></string>
+            
+               <red>
+                  <copy src="content_menu" trait="_colorNormal" />
+                  <max>
+                     <copy src="content_menu" trait="_colorHover" />
+                     <mult src="parent()" trait="mouseover" />
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+            </text>
+         </rect>
+         <rect name="main_load">
+            <id>4</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <visible>&true;</visible>
+            <x><copy src="sibling()" trait="x" /></x>
+            <y>
+               <copy   src="sibling()" trait="height" />
+               <add    src="parent()"  trait="_itemSpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="y" />
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height><copy src="child(label)" trait="height" /></height>
+            <clicksound>1</clicksound>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="main_new"     trait="mouseover"/></xup>
+            <xdown><ref src="main_options" trait="mouseover"/></xdown>
+            
+            <text name="label">
+               <x>0</x>
+               <y>0</y>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_load" /></string>
+            
+               <red>
+                  <copy src="content_menu" trait="_colorNormal" />
+                  <max>
+                     <copy src="content_menu" trait="_colorHover" />
+                     <mult src="parent()" trait="mouseover" />
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+            </text>
+         </rect>
+         <rect name="main_options">
+            <id>5</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <visible>&true;</visible>
+            <x><copy src="sibling()" trait="x" /></x>
+            <y>
+               <copy   src="sibling()" trait="height"/>
+               <add    src="parent()"  trait="_itemSpacing" />
+               <onlyif src="sibling()" trait="visible"/>
+               <add    src="sibling()" trait="y"/>
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height><copy src="child(label)" trait="height" /></height>
+            <clicksound>1</clicksound>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="main_load"    trait="mouseover"/></xup>
+            <xdown><ref src="main_credits" trait="mouseover"/></xdown>
+            
+            <text name="label">
+               <x>0</x>
+               <y>0</y>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_options" /></string>
+            
+               <red>
+                  <copy src="content_menu" trait="_colorNormal" />
+                  <max>
+                     <copy src="content_menu" trait="_colorHover" />
+                     <mult src="parent()" trait="mouseover" />
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+            </text>
+         </rect>
+         <rect name="main_credits">
+            <id>6</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <visible>&true;</visible>
+            <x><copy src="sibling()" trait="x" /></x>
+            <y>
+               <copy   src="sibling()" trait="height" />
+               <add    src="parent()"  trait="_itemSpacing" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="y" />
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height><copy src="child(label)" trait="height" /></height>
+            <clicksound>1</clicksound>
+            
+            <xdefault>&false;</xdefault>
+            <xup>  <ref src="main_options" trait="mouseover"/></xup>
+            <xdown><ref src="main_exit"    trait="mouseover"/></xdown>
+            
+            <text name="label">
+               <x>0</x>
+               <y>0</y>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_credits" /></string>
+            
+               <red>
+                  <copy src="content_menu" trait="_colorNormal" />
+                  <max>
+                     <copy src="content_menu" trait="_colorHover" />
+                     <mult src="parent()" trait="mouseover" />
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+            </text>
+         </rect>
+         <rect name="main_exit">
+            <id>7</id>
+            <locus>&true;</locus>
+            <target>&true;</target>
+            <visible><not>&xbox;</not></visible>
+            <x><copy src="sibling()" trait="x"/></x>
+            <y>
+               <copy   src="sibling()" trait="height"/>
+               <add    src="parent()"  trait="_itemSpacing" />
+               <onlyif src="sibling()" trait="visible"/>
+               <add    src="sibling()" trait="y"/>
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height><copy src="child(label)" trait="height" /></height>
+            <clicksound>1</clicksound>
+            
+            <xdefault>&false;</xdefault>
+            <xup><ref src="main_credits" trait="mouseover"/></xup>
+            
+            <text name="label">
+               <x>0</x>
+               <y>0</y>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_exit" /></string>
+            
+               <red>
+                  <copy src="content_menu" trait="_colorNormal" />
+                  <max>
+                     <copy src="content_menu" trait="_colorHover" />
+                     <mult src="parent()" trait="mouseover" />
+                  </max>
+               </red>
+               <green><copy src="me()" trait="red" /></green>
+               <blue> <copy src="me()" trait="red" /></blue>
+            </text>
+         </rect>
+      </rect>
+      
+      <text name="version">
+         <id>9</id>
+         <alpha>255</alpha>
+         <include src="NorthernUI\fonts\small.xml" />
+         <depth>10</depth>
+         <zoom>100</zoom>
+         <!--
+            If the ZOOM trait is missing (and therefore defaults to zero), then this element 
+            isn't visible. If the ZOOM trait is applied to other TEXT elements, it doesn't 
+            work. Is the executable hardcoded to scale the element named "version" in this 
+            menu? And if so, why only this one??
+         -->
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <sub>8</sub>
+         </x>
+         <y>10</y>
+         <string>unknown game version</string>
+         <red>255</red><green>255</green><blue>255</blue>
+      </text>
+   </rect>
+	
+	<text name="press_start">
+      <include src="NorthernUI\fonts\normal.xml" />
+		<alpha>255</alpha>
+		<visible>
+			<copy src="MainMenu" trait="user2"/>
+			<and> &xbox; </and>
+		</visible>
+		<depth> 10 </depth>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div> 2 </div>
+		</x>
+		<y> 725 </y>
+		<string> <copy src="strings()" trait="_pressstart"/> </string>
+	</text>
+</menu>

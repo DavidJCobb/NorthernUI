@@ -1,0 +1,166 @@
+<!-- TextEditMenu.xml -->
+<menu name="TextEditMenu">
+	<class> &TextEditMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	
+	<user0></user0>	<!-- Prompt string -->
+   
+	<xbuttona><ref src="textedit_button_ok"   trait="clicked" /></xbuttona>
+	<xbuttonb><ref src="textedit_button_back" trait="clicked" /></xbuttonb>
+   
+   <rect name="base">
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>700</user20> <!-- width -->
+		<user21>
+			<copy src="buttons" trait="height"/>
+			<add  src="buttons" trait="y"/>
+		</user21> <!-- height -->
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+         <div> 2 </div>
+		</y>
+      
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <text name="message_text">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <target>&true;</target>
+            <id>2</id>
+            <depth>5</depth>
+            <string></string>
+            <justify>&center;</justify>
+            <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            <wraplines>5</wraplines>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+            <string><copy src="TextEditMenu" trait="user0"/></string>
+            <red>  140</red>
+            <green>140</green>
+            <blue> 140</blue>
+         </text>
+         <rect name="textbox">
+            <locus>&true;</locus>
+            <id>1</id>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>16</add>
+            </y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub>64</sub>
+            </width>
+            <height>
+               <copy src="child(textedit_text)" trait="height" />
+               <add>16</add>
+            </height>
+            
+            <xdefault>&true;</xdefault>
+            
+            <image name="back">
+               <filename>Menus\NorthernUI\Shared\white.dds</filename>
+               <zoom>-1</zoom>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="parent()" trait="height" /></width>
+               <x>0</x>
+               <y>0</y>
+               <alpha>160</alpha>
+               <depth>-1</depth>
+            </image>
+            <text name="textedit_text">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <red>  255</red>
+               <green>255</green>
+               <blue> 255</blue>
+               <depth>  3</depth>
+               <alpha>255</alpha>
+               <string><copy src="parent()" trait="string" /></string>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <justify>&center;</justify>
+            </text>
+         </rect>
+         <rect name="buttons">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width"/>
+               <sub  src="me()"     trait="width"/>
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>24</add>
+            </y>
+            <width>
+               <copy src="child(textedit_button_back)" trait="x" />
+               <add  src="child(textedit_button_back)" trait="width" />
+            </width>
+            <height>
+               <copy src="child(textedit_button_ok)"   trait="height" />
+               <max  src="child(textedit_button_back)" trait="height" />
+            </height>
+            
+            <rect name="textedit_button_ok">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml" />
+               <_dxScanCode>276</_dxScanCode>
+               <id>2</id>
+               <x>0</x>
+               <y>0</y>
+               <depth>3</depth>
+               <string><copy src="strings()" trait="_ok" /></string>
+               
+               <xleft> <ref src="textedit_button_back" trait="mouseover"/></xleft>
+               <xright><ref src="textedit_button_back" trait="mouseover"/></xright>
+               <xdown> <ref src="textbox" trait="mouseover"/></xdown>
+               <xup>   <ref src="textbox" trait="mouseover"/></xup>
+            </rect>
+            <rect name="textedit_button_back">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml" />
+               <_dxScanCode>277</_dxScanCode>
+               <id>3</id>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>24</add>
+               </x>
+               <y>0</y>
+               <depth>3</depth>
+               <string><copy src="strings()" trait="_back" /></string>
+               
+               <xleft> <ref src="textedit_button_ok" trait="mouseover"/></xleft>
+               <xright><ref src="textedit_button_ok" trait="mouseover"/></xright>
+               <xdown> <ref src="textbox" trait="mouseover"/></xdown>
+               <xup>   <ref src="textbox" trait="mouseover"/></xup>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+</menu>

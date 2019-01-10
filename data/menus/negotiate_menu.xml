@@ -1,0 +1,330 @@
+<!-- negotiate_menu.xml -->
+<menu name="NegotiateMenu">
+	<class> &NegotiateMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	
+	<xbuttonb> <ref src="negotiate_button_cancel"     trait="clicked"/></xbuttonb>
+	<xbuttona> <ref src="negotiate_button_ok"       trait="clicked"/></xbuttona>
+   <xleft>    <ref src="horizontal_scroll_left"      trait="clicked" /></xleft>
+   <xright>   <ref src="horizontal_scroll_right"     trait="clicked" /></xright>
+	<xbuttonlb><ref src="horizontal_scroll_leftside"  trait="clicked"/></xbuttonlb>
+	<xbuttonrb><ref src="horizontal_scroll_rightside" trait="clicked"/></xbuttonrb>
+   <xdown><ref src="negotiate_button_ok"   trait="mouseover" /></xdown>
+   <xup>  <ref src="negotiate_button_cancel" trait="mouseover" /></xup>
+	
+   <rect name="negotiate_background">
+		<id>1</id>
+		<target>&true;</target>
+      <xdefault>10</xdefault> <!-- something needs to have focus for most keynav stuff to work -->
+		<depth>1</depth>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+         <div>2</div>
+		</y>
+      
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>500</user20>
+		<user21>
+         <copy src="buttons" trait="y" />
+         <add  src="buttons" trait="height" />
+      </user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      <user23>255</user23> <!-- opaque box -->
+      
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <text name="merchant_name">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <id>2</id>
+            <string><copy src="strings()" trait="_haggle" /></string>
+            <justify>&center;</justify>
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+            <alpha>255</alpha>
+            <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>-16</y>
+         </text>
+         <image name="separator">
+            <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+            <tile>&true;</tile>
+            <width> <copy src="parent()" trait="width" /></width>
+            <height><copy src="me()"     trait="fileheight" /></width>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>16</add>
+            </y>
+         </image>
+         <rect name="row_skill">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>16</add>
+            </y>
+            <width>350</width>
+            <height><copy src="child()" trait="height" /></height>
+            
+            <text name="label">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_mercantile" /></string>
+               <red>140</red>
+               <green>140</green>
+               <blue>140</blue>
+               <x>0</x>
+               <y>0</y>
+            </text>
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <id>11</id>
+               <string> </string> <!-- XML-specified value is prepended to the player's skill value, and then displayed -->
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
+               <x> <!-- can't shortcut this with &right; because whitespace from the prepend offsets us and &right; doesn't handle that -->
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()" trait="width" />
+               </x>
+               <y>0</y>
+            </text>
+         </rect>
+         <rect name="row_disposition">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <width>350</width>
+            <height><copy src="child()" trait="height" /></height>
+            
+            <text name="label">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_disposition" /></string>
+               <red>140</red>
+               <green>140</green>
+               <blue>140</blue>
+               <x>0</x>
+               <y>0</y>
+            </text>
+            <text name="value">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <id>12</id>
+               <string> </string> <!-- XML-specified value is prepended to the player's skill value, and then displayed -->
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
+               <x> <!-- can't shortcut this with &right; because whitespace from the prepend offsets us and &right; doesn't handle that -->
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()" trait="width" />
+               </x>
+               <y>0</y>
+            </text>
+         </rect>
+         <rect name="row_slider">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>16</add>
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height><copy src="child()" trait="height" /></height>
+            
+            <text name="scroll_axis_label_easy">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_easy" /></string>
+               <justify>&right;</justify>
+               <red>140</red>
+               <green>140</green>
+               <blue>140</blue>
+               <x>
+                  <copy src="scrollbar_wrapper" trait="x" />
+                  <sub>16</sub>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </text>
+            <rect name="scrollbar_wrapper">
+               <include src="NorthernUI\scrollbars\wrapper_h.xml" />
+               <user0>&true;</user0> <!-- is horizontal? -->
+               <width>350</width>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <div>2</div>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               
+               <rect name="negotiate_slider">
+                  <include src="horiz_floating_scroll.xml" />
+                  <include src="NorthernUI\scrollbars\wrapped_h.xml" />
+                  <id>3</id>
+                  <zoom>40</zoom>
+                  <depth>6</depth>
+                  
+                  <user3> 1 </user3>
+                  <user6> 4 </user6>	<!-- ID for marker/slider -->
+                  <user8> &false; </user8> <!-- don't show numeric value -->
+                  <user15>1</user15> <!-- use slider thumb -->
+               </rect>
+            </rect>
+            <text name="scroll_axis_label_hard">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <string><copy src="strings()" trait="_hard" /></string>
+               <justify>&left;</justify>
+               <red>140</red>
+               <green>140</green>
+               <blue>140</blue>
+               <x>
+                  <copy src="scrollbar_wrapper" trait="x" />
+                  <add  src="scrollbar_wrapper" trait="width" />
+                  <add>16</add>
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+            </text>
+         </rect>
+         <text name="negotiate_buy_text">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <id>9</id>
+            <string><copy src="strings()" trait="_buyingitemsat" /></string>
+            <justify>&center;</justify>
+            <red>140</red>
+            <green>140</green>
+            <blue>140</blue>
+            <user1><copy src="xxnStrings()" trait="_negotiateMenuBuyRatioPrefix" /></user1>
+            <user2><copy src="xxnStrings()" trait="_negotiateMenuBuyRatioSuffix" /></user2>
+            <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>16</add>
+            </y>
+         </text>
+         <text name="negotiate_sell_text">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <id>10</id>
+            <string><copy src="strings()" trait="_sellingitemsat" /></string>
+            <justify>&center;</justify>
+            <red>140</red>
+            <green>140</green>
+            <blue>140</blue>
+            <user1><copy src="xxnStrings()" trait="_negotiateMenuSellRatioPrefix" /></user1>
+            <user2><copy src="xxnStrings()" trait="_negotiateMenuSellRatioSuffix" /></user2>
+            <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+         </text>
+         <rect name="buttons">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width"/>
+               <sub  src="me()"     trait="width"/>
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>24</add>
+            </y>
+            <width>
+               <copy src="child(negotiate_button_cancel)" trait="x" />
+               <add  src="child(negotiate_button_cancel)" trait="width" />
+            </width>
+            <height>
+               <copy src="child(negotiate_button_ok)"     trait="height" />
+               <max  src="child(negotiate_button_cancel)" trait="height" />
+            </height>
+            
+            <image name="negotiate_button_ok">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml" />
+               <_dxScanCode>276</_dxScanCode>
+               <id>6</id>
+               <x>0</x>
+               <y>0</y>
+               <depth>3</depth>
+               <string><copy src="strings()" trait="_ok" /></string>
+               
+               <xright><ref src="button_cancel" trait="mouseover"/></xright>
+               <xdown> <ref src="horizontal_scroll_marker" trait="mouseover"/></xdown>
+               <xup>   <ref src="horizontal_scroll_marker" trait="mouseover"/></xup>
+               
+               <visible><copy src="negotiate_button_okay" trait="visible" /></visible> <!-- compatibility: Enhanced Economy -->
+            </image>
+            <image name="negotiate_button_cancel">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml" />
+               <_dxScanCode>277</_dxScanCode>
+               <id>7</id>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>24</add>
+               </x>
+               <y>0</y>
+               <depth>3</depth>
+               <string><copy src="strings()" trait="_cancel" /></string>
+               
+               <xleft><ref src="button_cancel" trait="mouseover"/></xleft>
+               <xdown><ref src="horizontal_scroll_marker" trait="mouseover"/></xdown>
+               <xup>  <ref src="horizontal_scroll_marker" trait="mouseover"/></xup>
+            </image>
+         </rect>
+      </rect>
+      
+      <rect name="negotiate_button_okay"> <!-- compatibility: Enhanced Economy -->
+         <id>9001</id>
+         <target>&true;</target>
+         <xdefault>&false;</xdefault>
+         <visible>&true;</visible>
+      </rect>
+      <rect name="negotiate_slider"> <!-- compatibility: Enhanced Economy -->
+         <user7><copy src="parent()" trait="user7" /></user7>
+      </rect>
+   </rect>
+</menu>

@@ -1,0 +1,921 @@
+<!-- magic_menu.xml -->
+<menu name="MagicMenu">
+	<class> &MagicMenu; </class>
+	<alpha>	0 </alpha> 
+	<locus> &true; </locus>
+	<x>-1</x><y>-1</y> <!-- yes, it needs to be -1 to correct for the layout system being buggy and a butt -->
+	<menufade>0</menufade>
+	<user0> 1 </user0>				<!-- current tab -->
+	<user1> -1 </user1>				<!-- position of greater powers header in list -->
+	<user2> -1 </user2>				<!-- position of lesser powers header in list -->
+	<user3> -1 </user3>				<!-- position of spell hseader in list -->
+	<user4> -1 </user4>				<!-- position of scrolls header in list -->
+	<user5> 0 </user5>				<!-- number of items in list -->
+	<user6> 0 </user6>				<!-- magic effectiveness -->
+	<user7>							<!-- X-position of fully-exposed magic popup menu -->
+		<copy src="me()"              trait="x"/>
+		<add  src="child(magic_base)" trait="x"/>
+		<add  src="child(magic_base)" trait="width"/>
+      <add>4</add> <!-- width of magic_base's borders -->
+	</user7>
+	<user11> &false; </user11>		<!-- true if selected item is equiped -->
+	<user12>						<!-- lowest possible drop for the pop-up menu -->
+		<copy src="screen()" trait="height"/>
+		<sub  src="screen()" trait="cropy"/>
+		<sub  src="screen()" trait="cropy"/>
+		<sub> 175 </sub>
+		<min>
+			<copy> 9999 </copy>
+			<onlyifnot> &xbox; </onlyifnot>
+			<add src="magic_xbox_hints" trait="y"/>
+		</min>
+	</user12>
+	<user23><copy src="magic_base" trait="depth"/></user23>	<!-- depth of background, read by code -->
+	
+	<xleft> <ref src="inventory_tabs_prev" trait="clicked" /></xleft>
+	<xright><ref src="inventory_tabs_next" trait="clicked" /></xright>
+	<xbuttonlb><ref src="inventory_tabs_prev" trait="clicked" /></xbuttonlb>
+	<xbuttonrb><ref src="inventory_tabs_next" trait="clicked" /></xbuttonrb>
+   
+   <!-- Config for this menu. Some of this may get moved to prefabs. -->
+   <_itemInfoColumnWidth> 60 </_itemInfoColumnWidth>
+   <_equipMarkerOffset>    8 </_equipMarkerOffset> <!-- Distance between "equipped item" marker and menu outer edge -->
+   <_itemIconZoom>66</_itemIconZoom>
+   <_itemIconSize>
+      <copy>64</copy>
+      <mult src="me()" trait="_itemIconZoom" />
+      <div>100</div>
+   </_itemIconSize>
+   <_listRowHeight>
+      <copy src="me()" trait="_itemIconSize" />
+      <add>16</add>
+   </_listRowHeight>
+	
+	<rect name="magic_FocusBox">
+		<id>9</id>
+		<visible>&false;</visible>
+      <!-- Position, size, and depth are all set by the executable. -->
+      <include src="NorthernUI\focus_boxes\highlight.xml"/>
+	</rect>
+	
+   <rect name="magic_base">
+      <_paddingX>0</_paddingX> <!-- Left-side padding on the list. -->
+      <_paddingY>4</_paddingY> <!-- Vertical  padding on the list. -->
+      <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+      
+      <include src="NorthernUI\fragments\main\base.xml" />
+      
+      <rect name="category_tabs"> <!-- All/Ranged/Melee/Self and Summons/Active Effects -->
+         <x>0</x>
+         <y> <!-- Position after the prefab's top-spacer. -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         
+         <include src="NorthernUI\fragments\main\big_four_tabs.xml"/>
+         <_iconCount>5</_iconCount>
+         <_iconCropY>64</_iconCropY>
+         <_selectedTab><copy src="MagicMenu" trait="user0" /></_selectedTab>
+         <_idTab1>1</_idTab1>
+         <_idTab2>2</_idTab2>
+         <_idTab3>3</_idTab3>
+         <_idTab4>4</_idTab4>
+         <_idTab5>5</_idTab5>
+         <_idTabPrev>7</_idTabPrev>
+         <_idTabNext>8</_idTabNext>
+      </rect>
+      <rect name="content"> <!-- anchored column header, and scrollable list -->
+         <!--
+            Though the anchored column header doesn't scroll, we've grouped it with the 
+            scrollable list so that it's easier to line its columns up with the inline 
+            column headers.
+            
+            The width of this grouping element is the inner width of the list pane, with 
+            all paddings and margins applied. Elements meant to span the full width of 
+            the inventory UI will simply overflow.
+         -->
+         <locus>&true;</locus>
+         <x>0</x>
+         <y>
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub>
+               <copy src="magic_scroll_bar" trait="width" />
+               <add>
+                  <copy src="parent()" trait="_scrollbarMargin" />
+                  <mult>2</mult>
+               </add>
+               <onlyif src="magic_scroll_bar" trait="visible" />
+            </sub>
+         </width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+         <!--
+            Making this element targetable is necessary in order for the mouse wheel 
+            to scroll the list when the mouse is over an inline header.
+         -->
+         <target>&true;</target>
+         
+         <_outerwidth><copy src="parent()" trait="width" /></_outerwidth> <!-- used by anchored header borders -->
+         <_innerwidth><copy src="me()"     trait="width" /></_innerwidth>
+         
+         <rect name="anchored_category_header">
+            <!--
+               In Oblivion, you don't get a tab for every individual magic school. 
+               Instead, you get five very general tabs: All Magic, Ranged, Melee, 
+               Self/Summon, and Active Effects. Within these, subheadings for each 
+               magic category are embedded directly into the list.
+               
+               When you scroll to or below a given subheading, it gets anchored to 
+               the top of the overall list. This element is used for the anchored 
+               header.
+            -->
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height> <!-- height of children -->
+               <copy src="child(anchored_category_header_content)" trait="height" />
+               <add  src="child(border_bottom)" trait="height" />
+            </height>
+            
+            <_innerX>    <copy src="parent()" trait="x" />          </_innerX>
+            <_outerwidth><copy src="parent()" trait="_outerwidth" /></_outerwidth> <!-- used by anchored header borders -->
+            <_innerwidth><copy src="parent()" trait="_innerwidth" /></_innerwidth>
+            
+            <image name="border_bottom">
+               <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+               <tile>&true;</tile>
+               <width> <copy src="parent()" trait="_outerwidth"/></width>
+               <height><copy src="me()"     trait="fileheight"/></width>
+               <x>
+                  <copy src="parent()" trait="_innerX" />
+                  <mult>-1</mult>
+               </x>
+               <y> <!-- align with bottom of parent -->
+                  <copy src="parent()" trait="height"/>
+                  <sub  src="me()"     trait="height"/>
+               </y>
+            </image>
+            <rect name="anchored_category_header_content">
+               <!--
+                  Unfortunately, we can't prefab this element. XLEFT and similar 
+                  keyboard navigation traits appear to be completely broken within 
+                  prefabs and between prefabbed and "real" content.
+               -->
+               <depth>3</depth>
+               <locus>&true;</locus>
+               <visible>&true;</visible>
+               <x>0</x>
+               <y>0</y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height> <!-- height of "name" text plus padding -->
+                  <copy src="child(anchored_category_header_name)" trait="height" />
+               </height>
+               
+               <_header_0> <copy src="strings()" trait="_spells"/>       </_header_0>
+               <_header_1> <copy src="strings()" trait="_greaterpower"/> </_header_1>
+               <_header_2> <copy src="strings()" trait="_lesserpower"/>  </_header_2>
+               <_header_3> <copy src="strings()" trait="_spells"/>       </_header_3>
+               <_header_4> <copy src="strings()" trait="_scrolls"/>      </_header_4>
+               <_header_5> <copy src="strings()" trait="_activeeffects"/></_header_5>
+               
+               <_headernum>
+                  <copy src="magic_scroll_bar" trait="user7"/>		<!-- scrollbar's current value -->
+                  <gt   src="MagicMenu" trait="user1"/>					<!-- position of greater power header in list -->
+                  <add>
+                     <copy src="magic_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+                     <gt   src="MagicMenu" trait="user2"/>				<!-- position of lesser power header in list -->
+                  </add>
+                  <add>
+                     <copy src="magic_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+                     <gt   src="MagicMenu" trait="user3"/>				<!-- position of spells header in list -->
+                  </add>
+                  <add>
+                     <copy src="magic_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+                     <gt   src="MagicMenu" trait="user4"/>				<!-- position of scrolls header in list -->
+                  </add>
+                  <sub>4</sub> <!-- 2=true, 1=false -> 1, 0 -->
+                  <max>0</max> <!-- This and the next line clamp to [0, 4].  -->
+                  <min>4</min>
+                  <max> <!-- Force to header 5 if we're on the Active Effects tab. -->
+                     <copy>5</copy>
+                     <onlyif><copy src="MagicMenu" trait="user0"/><eq>5</eq></onlyif>
+                  </max>
+               </_headernum>
+               
+               <_columncount>1</_columncount>
+               
+               <rect name="anchored_category_header_name">
+                  <!-- Re: name: element is referred to by other elements. -->
+                  <locus>&true;</locus>
+                  <id>13</id>
+                  <target>&true;</target>
+                  <clicksound>3</clicksound>
+                  <string>
+                     <copy src="parent()" trait="_headernum"/>
+                     <copy src="parent()" trait="_header_"/> 
+                  </string>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>
+                     <copy src="parent()" trait="width"/>
+                     <sub>
+                        <copy src="MagicMenu" trait="_itemInfoColumnWidth" />
+                        <mult src="parent()"  trait="_columncount" />
+                     </sub>
+                  </width>
+                  <height><copy src="child(label)" trait="height"/></height>
+                  
+                  <!-- Keyboard/Xbox behavior: -->
+                  <xright><ref src="col_header_1"        trait="mouseover"/></xright>
+                  <xdown> <ref src="magic_list_contents" trait="mouseover"/></xdown>
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                     <string><copy src="parent()" trait="string" /></string>
+                     <justify>&left;</justify>
+                     <x>
+                        <copy src="MagicMenu" trait="_itemIconSize" />
+                        <add>8</add> <!-- icon X-offset -->
+                        <add>11</add> <!-- item name X-spacing -->
+                     </x>
+                     <y>0</y>
+                     <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                  </text>
+               </rect>
+               <rect name="col_header_1"> <!-- typically value -->
+                  <locus>&true;</locus>
+                  <id>14</id>
+                  <target>&true;</target>
+                  <clicksound>3</clicksound>
+                  <x> <!-- after previous -->
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                  </x>
+                  <y><copy src="sibling()" trait="y" /></y>
+                  <width> <copy src="MagicMenu" trait="_itemInfoColumnWidth" /></width>
+                  <height><copy src="sibling()" trait="height" /></height>
+                  
+                  <!-- Keyboard/Xbox behavior: -->
+                  <xleft> <ref src="anchored_category_header_name" trait="mouseover"/></xleft>
+                  <xright><ref src="col_header_2"                  trait="mouseover"/></xright>
+                  <xdown> <ref src="magic_list_contents"           trait="mouseover"/></xdown>
+                  
+                  <text name="label">
+                     <_strings_1><copy src="xxnStrings()" trait="_labelCost"/></_strings_1>
+                     <_strings_2><copy src="xxnStrings()" trait="_labelMagnitude"/></_strings_2>
+                     
+                     <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                     <string>
+                        <copy src="menu()" trait="user0" />
+                        <eq>5</eq>
+                        <copy src="me()" trait="_strings_"/>
+                     </string>
+                     <justify>&center;</justify>
+                     <x>
+                        <copy src="parent()" trait="width" />
+                        <div>2</div>
+                     </x>
+                     <y>0</y>
+                     <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                  </text>
+               </rect>
+               <!--
+                  If we figure out how to script extra columns, or provide extra information 
+                  via an injected DLL, then more columns should go here. Refer to the code 
+                  in <inventory_menu.xml> for reference.
+               -->
+            </rect>
+         </rect>
+         
+         <rect name="magic_window">
+            <depth>10</depth>
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>
+               <copy src="sibling()"  trait="y" />
+               <add  src="sibling()"  trait="height" />
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="y" />
+            </height>
+            <clipwindow>&true;</clipwindow>
+            
+            <rect name="magic_pane">
+               <locus> &true; </locus>
+               <x>0</x>
+               <y> <!-- handle panel scrolling -->
+                  <copy src="magic_scroll_bar" trait="user7"/>
+                  <mult src="MagicMenu"  trait="_listRowHeight" />
+                  <mult>-1</mult>
+               </y>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="x" />
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+            
+               <!--
+                  In Oblivion, you don't get a tab for every individual magic category. 
+                  Instead, you get five very general tabs: All Magic, Ranged, Melee, 
+                  Self and Summons, and Active Effects. Within these, subheadings for 
+                  each magic category are embedded directly into the list.
+                  
+                  The headers are "hardcoded" into the UI rather than generated, and 
+                  the menu is supplied with their list indices. It's up to us to compute 
+                  their Y-offsets and position them.
+                  
+                  Note that Active Effects are only shown in their own tab, and have no 
+                  subcategories; as such, they will never have or need an inline header.
+               -->
+               <rect name="mag_greaterpow_header">
+                  <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                  <_menuCurrentTab> <copy src="MagicMenu" trait="user0"/></_menuCurrentTab>
+                  <_mainIndexOfMe>  <copy src="MagicMenu" trait="user1"/></_mainIndexOfMe>
+                  <_mainIndexOfNext><copy src="MagicMenu" trait="user2"/></_mainIndexOfNext>
+                  
+                  <height><copy src="MagicMenu" trait="_listRowHeight" /></height>
+                  <_headerXOffset>
+                     <copy src="MagicMenu" trait="_itemIconSize" />
+                     <add>8</add> <!-- icon X-offset -->
+                     <add>11</add> <!-- item name X-spacing -->
+                  </_headerXOffset>
+                  
+                  <_headerText><copy src="strings()" trait="_greaterpower"/></_headerText>
+                  <_columnText1><copy src="xxnStrings()" trait="_labelCost"/></_columnText1>
+                  <_columnCount>1</_columnCount>
+               </rect>
+               <rect name="mag_lesserpow_header">
+                  <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                  <_menuCurrentTab> <copy src="MagicMenu" trait="user0"/></_menuCurrentTab>
+                  <_mainIndexOfMe>  <copy src="MagicMenu" trait="user2"/></_mainIndexOfMe>
+                  <_mainIndexOfNext><copy src="MagicMenu" trait="user3"/></_mainIndexOfNext>
+                  
+                  <height><copy src="MagicMenu" trait="_listRowHeight" /></height>
+                  <_headerXOffset>
+                     <copy src="MagicMenu" trait="_itemIconSize" />
+                     <add>8</add> <!-- icon X-offset -->
+                     <add>11</add> <!-- item name X-spacing -->
+                  </_headerXOffset>
+                  
+                  <_headerText><copy src="strings()" trait="_lesserpower"/></_headerText>
+                  <_columnText1><copy src="xxnStrings()" trait="_labelCost"/></_columnText1>
+                  <_columnCount>1</_columnCount>
+               </rect>
+               <rect name="mag_spells_header">
+                  <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                  <_menuCurrentTab> <copy src="MagicMenu" trait="user0"/></_menuCurrentTab>
+                  <_mainIndexOfMe>  <copy src="MagicMenu" trait="user3"/></_mainIndexOfMe>
+                  <_mainIndexOfNext><copy src="MagicMenu" trait="user4"/></_mainIndexOfNext>
+                  
+                  <height><copy src="MagicMenu" trait="_listRowHeight" /></height>
+                  <_headerXOffset>
+                     <copy src="MagicMenu" trait="_itemIconSize" />
+                     <add>8</add> <!-- icon X-offset -->
+                     <add>11</add> <!-- item name X-spacing -->
+                  </_headerXOffset>
+                  
+                  <_headerText><copy src="strings()" trait="_spells"/></_headerText>
+                  <_columnText1><copy src="xxnStrings()" trait="_labelCost"/></_columnText1>
+                  <_columnCount>1</_columnCount>
+               </rect>
+               <rect name="mag_scrolls_header">
+                  <include src="NorthernUI\fragments\main\big_four_list_subheader_inline.xml" />
+                  <_menuCurrentTab> <copy src="MagicMenu" trait="user0"/></_menuCurrentTab>
+                  <_mainIndexOfMe>  <copy src="MagicMenu" trait="user4"/></_mainIndexOfMe>
+                  <_mainIndexOfNext><copy src="MagicMenu" trait="user5"/></_mainIndexOfNext>
+                  
+                  <height><copy src="MagicMenu" trait="_listRowHeight" /></height>
+                  <_headerXOffset>
+                     <copy src="MagicMenu" trait="_itemIconSize" />
+                     <add>8</add> <!-- icon X-offset -->
+                     <add>11</add> <!-- item name X-spacing -->
+                  </_headerXOffset>
+                  
+                  <_headerText><copy src="strings()" trait="_scrolls"/></_headerText>
+                  <_columnText1><copy src="xxnStrings()" trait="_labelCost"/></_columnText1>
+                  <_columnCount>1</_columnCount>
+               </rect>
+               
+               <!-- CONTENTNS ======================================================= -->
+               <rect name="magic_list_contents">
+                  <id>10</id>
+                  <user0>0</user0> <!-- set by code: number of visible elements in list -->
+                  <width><copy src="parent()" trait="width"/></width>
+                  
+                  <!-- code created template items are inserted here -->
+                     
+                  <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                     an input command, they defer to their parent. The following directions are for those times. -->
+                  <target>&false;</target>
+                  <xdefault>&true;</xdefault>
+                  <xlist>&xlist;</xlist>
+                  <xup> <ref src="anchored_category_header_name" trait="mouseover"/> </xup>
+                  <!--xdown> &first; </xdown-->
+                  <xscroll> <ref src="magic_scroll_bar" trait="user5" /> </xscroll>
+               </rect>
+            </rect>	<!--/magic_pane -->
+         </rect>	<!--/magic_window -->
+      </rect>
+      <rect name="scrollbar_wrapper">
+         <include src="NorthernUI\scrollbars\wrapper.xml" />
+         <user0>&false;</user0> <!-- is horizontal? -->
+         <x> <!-- 8px from right edge -->
+            <copy src="parent()" trait="width"/>
+            <sub  src="me()"     trait="width"/>
+            <sub  src="parent()" trait="_scrollbarMargin" />
+         </x>
+         <y> <!-- align with inv_window -->
+            <copy src="sibling()"    trait="y" />
+            <add  src="magic_window" trait="y" />
+            <add>4</add>
+         </y>
+         <height>
+            <copy src="magic_window" trait="height" />
+            <sub>8</sub>
+         </height>
+         
+         <image name="magic_scroll_bar">
+            <include src="vertical_scroll.xml" />
+            <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+            <id>11</id>
+            <depth>12</depth>
+            
+            <user1>0</user1> <!-- Minimum value that can be scrolled to (should usually be zero) -->
+            
+            <!--
+               User2 should be the maximum value that can be scrolled to -- generally, the 
+               number of items in the list minus the number of items visible at any one 
+               time. If your list has 8 items and you can see 2 at any one time, then user2 
+               should be 6.
+               
+               If you're allowing items to be partially scrolled into view, then you also 
+               need to add 1 to this value if-and-only-if the list is tall enough to fit a 
+               non-integer number of items. Ergo, for a dynamically-sized list pane, you 
+               want:
+               
+               (item count) - floor(list height / row height) + ((list height % row height) ? 1 : 0)
+            -->
+            <user2>
+               <copy src="magic_list_contents" trait="user0" />	<!-- list's visible element count -->
+               <sub>
+                  <copy src="magic_window" trait="height" />
+                  <div  src="MagicMenu" trait="_listRowHeight" />
+                  <floor>0</floor>
+               </sub>
+               <add>
+                  <copy>1</copy>
+                  <onlyif>
+                     <copy src="magic_window" trait="height" />
+                     <mod  src="MagicMenu" trait="_listRowHeight" />
+                     <neq>0</neq>
+                  </onlyif>
+               </add>
+            </user2>
+            
+            <user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+            <user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+            <user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+            <user6> 12 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+            <!-- user7 = current value -->
+            
+            <!--
+               User8 should be the number of items visible at any one time. Though your clip-
+               window will hide any items scrolled out of view, the executable also prefers 
+               to manually set visibility on individual items based on this value. As such, 
+               if you want items that are partially scrolled out of view to be visible, you 
+               need to set this to ceil(pane height / row height).
+            -->
+            <user8> <!-- How many items are visible at once -->
+               <copy src="magic_window" trait="height" />
+               <div  src="MagicMenu" trait="_listRowHeight" />
+               <ceil>0</ceil>
+            </user8>
+            <user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+            <user10></user10>		<!-- reserved -->
+         </image>
+      </rect>
+   </rect>
+	<rect name="magic_bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="equip">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>276</_dxScanCode>
+            <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+            <visible><copy src="northernui()" trait="_xxnGamepadAvailable" /></visible>
+            <x>0</x>
+            <y>0</y>
+            <!-- <include src="NorthernUI\key_binding.xml"/>
+            <_keyCodeXbox>276</_keyCodeXbox>
+            <_keyCodePC>  256</_keyCodePC>
+            <_keyCodePCModifier>0</_keyCodePCModifier> -->
+            <string><copy src="xxnStrings()" trait="_magicMenuEquipSpell" /></string>
+         </rect>
+         <rect name="close_menu">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
+            <visible><copy src="northernui()" trait="_xxnGamepadAvailable" /></visible>
+            <visible>&false;</visible> <!-- TODO: Make it possible to map a close button for the Big Four menus. -->
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy   src="sibling()" trait="width" />
+               <onlyif src="sibling()" trait="visible" />
+               <add    src="sibling()" trait="x" />
+               <add>
+                  <copy   src="magic_bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <!-- <include src="NorthernUI\key_binding.xml"/>
+            <_keyCodeXbox>277</_keyCodeXbox>
+            <_keyCodePC>   15</_keyCodePC>
+            <_keyCodePCModifier>0</_keyCodePCModifier> -->
+            <string><copy src="xxnStrings()" trait="_closeMenu" /></string>
+         </rect>
+      </rect>
+      
+      <rect name="right_side_info">
+         <locus>&true;</locus>
+         <width> <!-- combined width of all children -->
+            <copy src="child(effectiveness)" trait="x" />
+            <add  src="child(effectiveness)" trait="width" />
+         </width>
+         <height> <!-- expected child height -->
+            <copy src="child(effectiveness)" trait="y" />
+            <add  src="child(effectiveness)" trait="height" />
+         </height>
+         <x> <!-- align on right -->
+            <copy src="parent()"     trait="width" />
+            <sub  src="me()"         trait="width" />
+            <sub  src="screen()"     trait="cropx" />
+            <sub  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         
+         <rect name="effectiveness">
+            <!--
+               We can't use the NorthernUI\bottom_bar_field.xml prefab for this because 
+               Bethesda screwed it up. MagicMenu:user6 doesn't contain the value of your 
+               spell effectiveness; it contains the entire string. We can't change how 
+               it's formatted, or show the "header" in a different font color. Ugh.
+            -->
+            <visible>&true;</visible>
+            <locus>&true;</locus>
+            <width> <!-- collapse if not visible -->
+               <copy src="child()" trait="x" />
+               <add  src="child()" trait="width" />
+               <onlyif src="me()"  trait="visible" />
+            </width>
+            <height><copy src="child()" trait="height" /></height>
+            <x>0</x>
+            <y>0</y>
+            
+            <text name="label">
+               <string><copy src="MagicMenu" trait="user6" /></string>
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <justify>&left;</justify>
+               <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+               <x>0</x>
+               <y>0</y>
+            </text>
+         </rect>
+      </rect>
+   </rect>
+   
+	<!-- TEMPLATES ======================================================= -->
+	<template name="magic_item_template">
+		<rect name="magic_item">
+			<visible><copy src="me" trait="user8"/></visible>
+			<listclip>
+				<copy src="me()" trait="listindex"/>
+				<gte>
+					<copy src="magic_scroll_bar" trait="user7"/>
+					<add src="magic_scroll_bar" trait="user8"/>
+				</gte>
+				<or>
+					<copy src="me()" trait="listindex"/>
+					<lt src="magic_scroll_bar" trait="user7"/>
+				</or>
+			</listclip>
+			<target>&true;</target>
+			<locus>&true;</locus>
+			<clips>&true;</clips>
+			<x>0</x>
+			<y> <!-- listindex * height -->
+				<copy src="me()" trait="listindex"/>
+				<mult src="me()" trait="height"/>
+			</y>
+			<width> <copy src="parent()"  trait="width"/></width>
+			<height><copy src="MagicMenu" trait="_listRowHeight" /></height>
+			<depth>1</depth>
+			<alpha>0</alpha>
+			<listindex>0</listindex>			<!-- list position index -->
+			<user1>Item Name</user1>			<!-- item name -->
+         
+         <!--
+            According to Bethesda's code comments, the next four values determine 
+            the contents of the four info columns in this row (though the first is 
+            "unused").
+            
+            In practice: the executable doesn't set the first value at all; and 
+            the second and third appear to always be blank, with their purported 
+            values always ending up in the fourth instead. Apparently this menu was 
+            meant to show costs, magnitudes, and durations, potentially all at once; 
+            but in the release build, I guess it only ever shows costs for spells 
+            and magnitudes for active effects.
+         -->
+			<user2></user2> <!-- Unused. Executable doesn't set it. -->
+			<user3></user3> <!-- (int as string; can be blank) 1st column value -->
+			<user4></user4> <!-- (int as string; can be blank) 2nd column value -->
+			<user5></user5> <!-- (int as string; can be blank) 3rd column value -->
+         
+			<user6>icon/pathname.dds</user6>	<!-- icon pathname -->
+			<user7>category</user7>			<!-- float: category (greater/lesser power, spell, scroll) -->
+			<user8>&true;</user8>				<!-- visible -->
+			<user9>type</user9>				<!-- type (target, touch, self, active) -->
+			<user10>&false;</user10>			<!-- is equipped -->
+			<user11>0</user11>				<!-- magic system index -->
+			<user13>0</user13>				<!-- unknown float -->
+						
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &true; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup>   &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="magic_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+         
+         <_columncount>3</_columncount>
+         
+         <_text_r>255</_text_r>
+         <_text_g><copy src="me()" trait="_text_r" /></_text_g>
+         <_text_b><copy src="me()" trait="_text_r" /></_text_b>
+			
+			<!-- Preserve value for use by children: -->
+         <_computedEquipOffset><copy src="parent()" trait="_computedEquipOffset" /></_computedEquipOffset>
+			
+         <image name="magic_equipped_marker">
+				<visible>
+               <!-- Is Not Y-Axis-Clipped: -->
+               <copy src="parent()"     trait="y" />
+               <add  src="magic_pane"   trait="y" /> <!-- negative offset from scrolling -->
+               <add  src="parent()"     trait="height" />
+               <lt   src="magic_window" trait="height" />
+               <and> <!-- isn't above the window top edge -->
+                  <copy src="parent()"   trait="y" />
+                  <add  src="magic_pane" trait="y" />
+                  <gte>0</gte>
+               </and>
+               <!-- /Is Not Y-Axis-Clipped -->
+               <and  src="parent()" trait="user10" /> <!-- is equipped -->
+            </visible>
+				<depth>2</depth>
+            <zoom>33</zoom>
+				<filename>Menus\NorthernUI\Shared\hd_selection_indicator.dds</filename>
+				<alpha>192</alpha>
+				<width> <copy src="me()" trait="filewidth" /></width>
+				<height><copy src="me()" trait="fileheight" /></height>
+				<x>-36</x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+			</image>
+			
+			<image name="magic_item_icon">
+            <zoom><copy src="menu()" trait="_itemIconZoom" /></zoom>
+				<depth>3</depth>
+				<filename><copy src="parent()" trait="user6" /></filename>
+				<width> <copy src="menu()" trait="_itemIconSize" /></width>
+				<height><copy src="menu()" trait="_itemIconSize" /></height>
+				<x>8</x>
+            <y> <!-- center within parent -->
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+				<clips> &true; </clips>
+			</image>
+         <rect name="magic_item_name">
+				<depth>3</depth>
+            <locus>&true;</locus>
+            <clips>&true;</clips>
+				<string><copy src="parent()" trait="user1" /></string>
+            <x> <!-- 11px after sibling -->
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add>11</add>
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+					<div>2</div>
+				</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+               <sub>
+                  <copy src="MagicMenu" trait="_itemInfoColumnWidth" />
+                  <mult src="parent()"  trait="_columncount" />
+               </sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            
+            <text name="value">
+               <clips>&true;</clips>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <depth>3</depth>
+               <justify>&left;</justify>
+               <red>  <copy src="parent()" trait="_text_r" /></red>
+               <green><copy src="parent()" trait="_text_g" /></green>
+               <blue> <copy src="parent()" trait="_text_b" /></blue>
+               <alpha>255</alpha>
+               <wrapwidth>
+                  <copy src="parent()" trait="width" />
+                  <sub>16</sub>
+                  <max>280</max>
+               </wrapwidth>
+               <wraplines>2</wraplines>
+               <string><copy src="parent()" trait="string" /></string>
+               <x>0</x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()" trait="height" />
+                  <div>2</div>
+               </y>
+            </text>
+         </rect>
+         <rect name="column_1"> <!-- magnitude -->
+				<depth>3</depth>
+				<locus>&true;</locus>
+				<clips>&true;</clips>
+				<string><copy src="parent()" trait="user3" /></string>
+            <visible><copy src="parent()" trait="_columncount" /><gte>1</gte></visible>
+            <width> <!-- Collapse if not visible. -->
+               <copy   src="MagicMenu" trait="_itemInfoColumnWidth" />
+               <onlyif src="me()" trait="visible" />
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+            </x>
+				<y>0</y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            
+            <text name="value">
+               <clips>&true;</clips>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <justify>&center;</justify>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="parent()" trait="string" /></string>
+               <red>   <copy src="parent()" trait="_text_r" /></red>
+               <green> <copy src="parent()" trait="_text_g" /></green>
+               <blue>  <copy src="parent()" trait="_text_b" /></blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            </text>
+         </rect>
+         <rect name="column_2"> <!-- duration -->
+				<depth>3</depth>
+				<locus>&true;</locus>
+				<clips>&true;</clips>
+				<string><copy src="parent()" trait="user4" /></string>
+            <visible><copy src="parent()" trait="_columncount" /><gte>2</gte></visible>
+            <width> <!-- Collapse if not visible. -->
+               <copy   src="MagicMenu" trait="_itemInfoColumnWidth" />
+               <onlyif src="me()" trait="visible" />
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+            </x>
+				<y>0</y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            
+            <text name="value">
+               <clips>&true;</clips>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <justify>&center;</justify>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="parent()" trait="string" /></string>
+               <red>   <copy src="parent()" trait="_text_r" /></red>
+               <green> <copy src="parent()" trait="_text_g" /></green>
+               <blue>  <copy src="parent()" trait="_text_b" /></blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            </text>
+         </rect>
+         <rect name="column_3"> <!-- cost -->
+				<depth>3</depth>
+				<locus>&true;</locus>
+				<clips>&true;</clips>
+				<string><copy src="parent()" trait="user5" /></string>
+            <visible><copy src="parent()" trait="_columncount" /><gte>3</gte></visible>
+            <width> <!-- Collapse if not visible. -->
+               <copy   src="MagicMenu" trait="_itemInfoColumnWidth" />
+               <onlyif src="me()" trait="visible" />
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+				<x> <!-- after sibling -->
+					<copy src="sibling()" trait="x" />
+					<add  src="sibling()" trait="width" />
+            </x>
+				<y>0</y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <_text_r><copy src="parent()" trait="_text_r" /></_text_r>
+            <_text_g><copy src="parent()" trait="_text_g" /></_text_g>
+            <_text_b><copy src="parent()" trait="_text_b" /></_text_b>
+            
+            <text name="value">
+               <clips>&true;</clips>
+               <include src="NorthernUI\fonts\normal.xml" />
+               <justify>&center;</justify>
+               <x> <!-- center within parent -->
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y> <!-- center within parent -->
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <string><copy src="parent()" trait="string" /></string>
+               <red>   <copy src="parent()" trait="_text_r" /></red>
+               <green> <copy src="parent()" trait="_text_g" /></green>
+               <blue>  <copy src="parent()" trait="_text_b" /></blue>
+               <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+            </text>
+         </rect>
+		</rect>
+	</template>
+</menu>
