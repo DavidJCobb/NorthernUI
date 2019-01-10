@@ -455,7 +455,7 @@ void Tile::Value::DoActionEnumeration(bool forceUpdateInbound) {
       if (this->num != myInitialValue)
          SprintfBSStringT(&this->str, "%i", (SInt32)this->num);
    // at 0x0058C8D5
-   if (myInitialValue != this->num || !this->HasStringValue() || forceUpdateInbound == true) {
+   if (myInitialValue != this->num || this->HasStringValue() || forceUpdateInbound == true) {
       this->UpdateInboundReferences(); // at 0x0058C8F8
       Tile* ecx = this->owner;
       if (ecx && /*byte*/ ecx->unk04)
