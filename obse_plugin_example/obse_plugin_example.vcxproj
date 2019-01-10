@@ -136,6 +136,7 @@
     <ClCompile Include="Patches\HUDMainMenu.cpp" />
     <ClCompile Include="Patches\InventoryMenu.cpp" />
     <ClCompile Include="Patches\LockPickMenu.cpp" />
+    <ClCompile Include="Patches\MessageMenu.cpp" />
     <ClCompile Include="Patches\NegotiateMenu.cpp" />
     <ClCompile Include="Patches\NewMenus\Helpers\Checkbox.cpp" />
     <ClCompile Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.cpp" />
@@ -257,6 +258,7 @@
     <ClInclude Include="Patches\HUDMainMenu.h" />
     <ClInclude Include="Patches\InventoryMenu.h" />
     <ClInclude Include="Patches\LockPickMenu.h" />
+    <ClInclude Include="Patches\MessageMenu.h" />
     <ClInclude Include="Patches\NegotiateMenu.h" />
     <ClInclude Include="Patches\NewMenus\Helpers\Checkbox.h" />
     <ClInclude Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.h" />
@@ -333,6 +335,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\LoadgameMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\LockPickMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\MapMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\MessageMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\NegotiateMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\OptionsMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\PersuasionMenu.h" />

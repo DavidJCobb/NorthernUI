@@ -21,4 +21,5 @@ extern const UInt32 g_pluginVersion;
 // DEFINE_SUBROUTINE(void, UnknownSubroutineDEADBEEF, 0xDEADBEEF, UInt32, UInt32);
 // UnknownSubroutineDEADBEEF(0, 1);
 
+extern void SafeMemcpy(UInt32 destination, UInt32 source, UInt32 size);
 extern void SafeMemset(UInt32 destination, UInt8 byte, UInt32 size); // based on OBSE SafeWriteXX // TODO: some patch files still have their own copy; have them share this one instead

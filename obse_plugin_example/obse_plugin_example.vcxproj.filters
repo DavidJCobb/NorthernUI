@@ -105,6 +105,7 @@
     <ClCompile Include="Patches\Compatibility\Dynamic Map\Types.cpp" />
     <ClCompile Include="Patches\Compatibility\Dynamic Map\Main.cpp" />
     <ClCompile Include="Patches\StatsMenu.cpp" />
+    <ClCompile Include="Patches\MessageMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -261,7 +262,6 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
-    <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\Commands_ActiveEffect.h" />
     <ClInclude Include="..\obse\obse\Commands_Actor.h" />
     <ClInclude Include="..\obse\obse\Commands_ActorValue.h" />
@@ -362,7 +362,6 @@
     <ClInclude Include="..\obse\obse\ThreadLocal.h" />
     <ClInclude Include="..\obse\obse\Utilities.h" />
     <ClInclude Include="..\obse\obse\VarMap.h" />
-    <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
@@ -8014,6 +8013,8 @@
     <ClInclude Include="Patches\Compatibility\Dynamic Map\Types.h" />
     <ClInclude Include="Patches\Compatibility\Dynamic Map\Main.h" />
     <ClInclude Include="Patches\StatsMenu.h" />
+    <ClInclude Include="Patches\MessageMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\MessageMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

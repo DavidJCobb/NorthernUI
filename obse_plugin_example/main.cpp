@@ -48,6 +48,7 @@
 #include "Patches/LockPickMenu.h"
 #include "Patches/Logging.h"
 #include "Patches/MenuTextInputState.h"
+#include "Patches/MessageMenu.h"
 #include "Patches/NegotiateMenu.h"
 #include "Patches/OptionsMenu.h"
 #include "Patches/PersuasionMenu.h"
@@ -198,7 +199,7 @@ extern "C" {
       return true;
    }
 
-   bool OBSEPlugin_Load(const OBSEInterface* obse) {
+   bool OBSEPlugin_Load(const OBSEInterface* obse) { 
       //
       // Plugins load before the game does anything substantial, so most game objects 
       // and singletons will be under construction or non-existent when this runs.
@@ -248,7 +249,7 @@ extern "C" {
          {
             auto& man = PatchManager::GetInstance();
             man.RegisterPatch("Miscellaneous", &CobbPatches::Miscellaneous::Apply, {});
-            man.RegisterPatch("Exploratory",   &CobbPatches::Exploratory::Apply,   {});
+            //man.RegisterPatch("Exploratory",   &CobbPatches::Exploratory::Apply,   {});
             man.RegisterPatch("Logging",       &CobbPatches::Logging::Apply,       {});
             man.RegisterPatch("MenuTextInputState", &CobbPatches::MenuTextInputState::Apply, {});
             man.RegisterPatch("SavegameSafeDelete", &CobbPatches::SavegameSafeDelete::Apply, {});
@@ -281,6 +282,7 @@ extern "C" {
             man.RegisterPatch("InventoryMenu",  &CobbPatches::InventoryMenu::Apply, {});
             man.RegisterPatch("LockPickMenu",   &CobbPatches::LockPickMenu::Apply, {});
             man.RegisterPatch("MapMenu",        &CobbPatches::MapMenu::Apply, { PatchManager::Req::P_XInput });
+            man.RegisterPatch("MessageMenu",    &CobbPatches::MessageMenu::Apply, {});
             man.RegisterPatch("NegotiateMenu",  &CobbPatches::NegotiateMenu::Apply, {});
             man.RegisterPatch("OptionsMenu",    &CobbPatches::OptionsMenu::Apply, {});
             man.RegisterPatch("PersuasionMenu", &CobbPatches::PersuasionMenu::Apply, {});
