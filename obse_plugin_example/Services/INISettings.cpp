@@ -50,8 +50,9 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(fMapMenuPanSpeed,         "XInput", 4.5F);
          XXN_MAKE_INI_SETTING(fJoystickSensAccelOffset, "XInput", 0.8F);
          XXN_MAKE_INI_SETTING(fJoystickSensAccelTime,   "XInput", 1.0F);
-         XXN_MAKE_INI_SETTING(fMaxJoystickSensForUI,    "XInput", 8.0F);
-         XXN_MAKE_INI_SETTING(fMinJoystickSensForUI,    "XInput", 1.0F);
+         XXN_MAKE_INI_SETTING(fLookSensitivityMin,       "XInput", 1.0F);
+         XXN_MAKE_INI_SETTING(fLookSensitivityStep,      "XInput", 0.8F);
+         XXN_MAKE_INI_SETTING(iLookSensitivityStepCount, "XInput", 6);
       };
       #undef XXN_MAKE_INI_SETTING
       //
@@ -103,12 +104,12 @@ namespace NorthernUI {
                out = this->bCurrent ? "TRUE" : "FALSE";
                break;
             case INISetting::kType_Float:
-               sprintf(working, "%f", this->fCurrent);
+               sprintf_s(working, "%f", this->fCurrent);
                working[19] = '\0';
                out = working;
                break;
             case INISetting::kType_SInt:
-               sprintf(working, "%i", this->iCurrent);
+               sprintf_s(working, "%i", this->iCurrent);
                working[19] = '\0';
                out = working;
                break;
@@ -146,7 +147,7 @@ namespace NorthernUI {
             return nullptr;
          for (auto it = this->settings.begin(); it != this->settings.end(); ++it) {
             auto& setting = *it;
-            if (!stricmp(setting->category, category) && !stricmp(setting->name, name))
+            if (!_stricmp(setting->category, category) && !_stricmp(setting->name, name))
                return setting;
          }
          return nullptr;

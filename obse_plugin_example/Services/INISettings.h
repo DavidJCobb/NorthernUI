@@ -70,8 +70,9 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(fMapMenuPanSpeed,         "XInput", 4.5F);
          XXN_MAKE_INI_SETTING(fJoystickSensAccelOffset, "XInput", 0.8F);
          XXN_MAKE_INI_SETTING(fJoystickSensAccelTime,   "XInput", 1.0F);
-         XXN_MAKE_INI_SETTING(fMaxJoystickSensForUI,    "XInput", 8.0F);
-         XXN_MAKE_INI_SETTING(fMinJoystickSensForUI,    "XInput", 1.0F);
+         XXN_MAKE_INI_SETTING(fLookSensitivityMin,       "XInput", 1.0F);
+         XXN_MAKE_INI_SETTING(fLookSensitivityStep,      "XInput", 0.8F);
+         XXN_MAKE_INI_SETTING(iLookSensitivityStepCount, "XInput", 6);
       };
       #undef XXN_MAKE_INI_SETTING
       //
