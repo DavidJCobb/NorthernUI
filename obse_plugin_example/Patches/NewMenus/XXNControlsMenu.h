@@ -111,6 +111,8 @@ class XXNControlsMenu : public RE::Menu {
          kModal_SaveAsNewAndExit,
       };
 
+      static constexpr float ce_lookSensitivitySliderOffset = 1.0F;
+
       RE::Tile* tileButtonExit      = nullptr;
       RE::Tile* tileListPane        = nullptr;
       RE::Tile* tileListScrollbar   = nullptr;

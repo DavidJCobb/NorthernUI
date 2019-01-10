@@ -4,6 +4,7 @@
 #include "ReverseEngineered/UI/Menus/OptionsMenu.h"
 #include "ReverseEngineered/UI/Menus/TextEditMenu.h"
 #include "ReverseEngineered/GameSettings.h"
+#include "Miscellaneous/math.h"
 #include "Miscellaneous/strings.h"
 #include "Services/INISettings.h"
 #include "Services/Translations.h"
@@ -428,17 +429,18 @@ void XXNControlsMenu::Setup() {
       this->optionSwapSticksMenuMode.index = manager.swapSticksMenuMode;
       this->optionSwapSticksMenuMode.Render();
       {  // look sensitivity
-         this->optionSensitivityX.valueMin = NorthernUI::INI::XInput::fMinJoystickSensForUI.fCurrent;
-         this->optionSensitivityX.valueMax = NorthernUI::INI::XInput::fMaxJoystickSensForUI.fCurrent;
-         this->optionSensitivityY.valueMin = NorthernUI::INI::XInput::fMinJoystickSensForUI.fCurrent;
-         this->optionSensitivityY.valueMax = NorthernUI::INI::XInput::fMaxJoystickSensForUI.fCurrent;
-         this->optionSensitivityX.Set(manager.sensitivityX);
-         this->optionSensitivityY.Set(manager.sensitivityY);
+         this->optionSensitivityX.slider_min(ce_lookSensitivitySliderOffset);
+         this->optionSensitivityX.slider_max(NorthernUI::INI::XInput::iLookSensitivityStepCount.iCurrent);
+         this->optionSensitivityY.slider_min(ce_lookSensitivitySliderOffset);
+         this->optionSensitivityY.slider_max(NorthernUI::INI::XInput::iLookSensitivityStepCount.iCurrent);
+         //
+         float sensMin  = NorthernUI::INI::XInput::fLookSensitivityMin.fCurrent;
+         float sensStep = NorthernUI::INI::XInput::fLookSensitivityStep.fCurrent;
+         this->optionSensitivityX.set_value((manager.sensitivityX - sensMin) / sensStep + ce_lookSensitivitySliderOffset);
+         this->optionSensitivityY.set_value((manager.sensitivityY - sensMin) / sensStep + ce_lookSensitivitySliderOffset);
       }
       {  // run sensitivity
-         this->optionSensitivityRun.valueMin = 0.0F;
-         this->optionSensitivityRun.valueMax = 100.0F;
-         this->optionSensitivityRun.Set(manager.sensitivityRun);
+         this->optionSensitivityRun.set_value(manager.sensitivityRun);
       }
    }
    this->RenderScheme();
@@ -777,16 +779,17 @@ void XXNControlsMenu::Save(bool prefs, bool scheme) {
       manager.swapSticksGameplay = this->optionSwapSticksGameplay.index;
       manager.swapSticksMenuMode = this->optionSwapSticksMenuMode.index;
       {  // look sensitivity
-         float f;
-         f = this->optionSensitivityX.Get();
-         if (f)
-            manager.sensitivityX = f;
+         float sensMin = NorthernUI::INI::XInput::fLookSensitivityMin.fCurrent;
+         float sensStep = NorthernUI::INI::XInput::fLookSensitivityStep.fCurrent;
          //
-         f = this->optionSensitivityY.Get();
-         if (f)
-            manager.sensitivityY = f;
+         float sensX = ((this->optionSensitivityX.get_value() - ce_lookSensitivitySliderOffset) * sensStep) + sensMin;
+         if (sensX)
+            manager.sensitivityX = sensX;
+         float sensY = ((this->optionSensitivityY.get_value() - ce_lookSensitivitySliderOffset) * sensStep) + sensMin;
+         if (sensY)
+            manager.sensitivityY = sensY;
       }
-      manager.sensitivityRun = this->optionSensitivityRun.Get();
+      manager.sensitivityRun = cobb::clamp<int>(this->optionSensitivityRun.get_value(), 0, 100);
    }
    if (prefs || scheme) {
       auto name = this->optionControlScheme.Get();

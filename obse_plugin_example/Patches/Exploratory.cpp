@@ -1,19 +1,12 @@
 #include "Exploratory.h"
+#include "shared.h"
 #include "obse_common/SafeWrite.h"
-#include "ReverseEngineered/UI/TagIDs.h"
-#include "ReverseEngineered/UI/Menu.h"
-#include "ReverseEngineered/UI/Tile.h"
-#include "ReverseEngineered/UI/InterfaceManager.h"
-#include "ReverseEngineered/UI/Menus/LockPickMenu.h"
 
-#include "obse/GameTiles.h"
+#include "obse/Commands_TextInput.h"
 
 namespace CobbPatches {
    namespace Exploratory {
-      //
-
       void Apply() {
-         //
-      };
-   };
-};
+      }
+   }
+}

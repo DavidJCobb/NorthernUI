@@ -402,7 +402,7 @@ void XXNGamepadConfigManager::SaveCustomProfiles() {
    }
    {  // Write base settings.
       char line[64];
-      snprintf(line, sizeof(line), "iVersion=%d\n", g_pluginVersion);
+      snprintf(line, sizeof(line), "iVersion=0x%08X\n", g_pluginVersion);
       oFile.write(line, strlen(line));
       snprintf(line, sizeof(line), "%s=%d\n", "bSwapSticksGameplay", this->swapSticksGameplay);
       oFile.write(line, strlen(line));
