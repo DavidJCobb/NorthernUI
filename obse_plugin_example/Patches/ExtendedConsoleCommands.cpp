@@ -5,6 +5,8 @@
 #include "Miscellaneous/strings.h"
 #include "obse_common/SafeWrite.h"
 #include "obse/GameAPI.h" // g_bConsoleMode
+//
+#include "Services/INISettings.h"
 
 namespace CobbPatches {
    namespace ExtendedConsoleCommands {
@@ -19,13 +21,15 @@ namespace CobbPatches {
       // Here's a list of the vanilla commands. They're generally parsed by using a string 
       // compare first, and any arguments are extracted using sscanf; as a consequence of 
       // this, you *generally* can't create new commands that start with the same substrings 
-      // (but since we use the !xxn prefix, that doesn't apply to us).
+      // (but since we use the !xxn prefix, that doesn't apply to us). Note that these are 
+      // also less polished than real script commands; for example, entering "set trait" 
+      // without any arguments causes a crash.
       //
       //    dof %f                    | Unknown.
       //    usz %i                    | Sets the screen safe zone size. Takes two args?
       //    clr                       | Clears the command console.
       //    cls                       | Clears the command console.
-      //    tag                       | Unknown.
+      //    tag                       | Makes an object render its formID as in-world text.
       //    reload strings            | Reloads the strings.xml file.
       //    reload HUDReticle         | Reloads the HUDReticle menu.
       //    reload HUDSafeZone        | Reloads the HUDSafeZone menu.
@@ -95,6 +99,9 @@ namespace CobbPatches {
             } else
                _MESSAGE("activeTileID: No tile.");
          }
+         void refreshINI() {
+            NorthernUI::INI::INISettingManager::GetInstance().Load();
+         }
          void setForceLog(const char* args) {
             bool flag = false;
             if (args[0] == '\0')
@@ -110,7 +117,7 @@ namespace CobbPatches {
       }
       namespace Hook {
          bool _startsWith(const char* a, const char* b) {
-            return !strncmp(a, b, cobb::cstrlen(b));
+            return !strnicmp(a, b, cobb::cstrlen(b));
          }
          //
          bool _stdcall Inner(const char* input) {
@@ -118,6 +125,10 @@ namespace CobbPatches {
                return false;
             if (_startsWith(input + cobb::cstrlen("!xxn "), "activeTileID")) {
                Commands::activeTileID();
+               return true;
+            }
+            if (_startsWith(input + cobb::cstrlen("!xxn "), "refreshINI")) {
+               Commands::refreshINI();
                return true;
             }
             if (_startsWith(input + cobb::cstrlen("!xxn "), "setForceLog")) {
@@ -153,6 +164,7 @@ namespace CobbPatches {
       }
       //
       void Apply() {
+return;
          Hook::Apply();
          HACK_ForceLogAllCommandResults::Apply();
       };

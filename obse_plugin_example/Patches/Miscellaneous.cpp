@@ -20,21 +20,14 @@ namespace CobbPatches {
    namespace Miscellaneous {
       namespace Tile3DRenderChanges {
          namespace KeepNiPropertiesInTile3D {
-            float uiFalse = 1.0F;
-            float uiTrue  = 2.0F;
             void Inner(RE::Tile* tile, RE::NiAVObject* node, NiProperty** out, UInt32 propertyType) {
-//_MESSAGE("Importing 3D content for tile %08X - tampering with a NiProperty of type %d...", tile, propertyType);
-//if (tile && tile->name.m_data) _MESSAGE(" - Tile name is %s", std::string(tile->name.m_data, 64).c_str());
                if (CALL_MEMBER_FN(tile, GetFloatTraitValue)(CobbPatches::TagIDs::_traitKeepNiProperties) == 2.0F) {
-//_MESSAGE(" - Property will be protected.", propertyType);
                   *out = nullptr;
                   return;
                }
-//_MESSAGE(" - Property will not be protected.");
                CALL_MEMBER_FN(node, RemoveAndReturnProperty)(out, propertyType);
-//_MESSAGE(" - Property removed.");
-            };
-
+            }
+            //
             __declspec(naked) void Outer1() { // protect NiMaterialProperty (1 of 2)
                _asm {
                   push ecx;
@@ -105,17 +98,15 @@ namespace CobbPatches {
                WriteRelJump(0x005908D5, (UInt32)&Outer3);
                WriteRelJump(0x00590909, (UInt32)&Outer4);
                WriteRelJump(0x00590B0A, (UInt32)&OuterNoCreate); // prevent the game from adding a new NiMaterialProperty and the IM alpha property
-            };
+            }
          }
          namespace Scale {
             void Inner(RE::Tile3D* tile) {
                auto node = tile->renderedNode;
-//_MESSAGE("xxnNiScale hook hit.");
                if (!node)
                   return;
                float f = CALL_MEMBER_FN(tile, GetFloatTraitValue)(CobbPatches::TagIDs::_traitNiScale);
-//_MESSAGE("xxnNiScale trait on tile is %f", f);
-               if (f > 0)
+               if (f > 0.0F)
                   node->m_fLocalScale = (std::min)(f, 1.0F);
             };
             __declspec(naked) void Hook1() {
