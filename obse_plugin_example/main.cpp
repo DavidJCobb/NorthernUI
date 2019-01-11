@@ -250,7 +250,7 @@ extern "C" {
          {
             auto& man = PatchManager::GetInstance();
             man.RegisterPatch("Miscellaneous", &CobbPatches::Miscellaneous::Apply, {});
-            //man.RegisterPatch("Exploratory",   &CobbPatches::Exploratory::Apply,   {});
+            man.RegisterPatch("Exploratory",   &CobbPatches::Exploratory::Apply,   {});
             man.RegisterPatch("Logging",       &CobbPatches::Logging::Apply,       {});
             man.RegisterPatch("MenuTextInputState", &CobbPatches::MenuTextInputState::Apply, {});
             man.RegisterPatch("SavegameSafeDelete", &CobbPatches::SavegameSafeDelete::Apply, {});
