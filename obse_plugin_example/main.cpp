@@ -40,6 +40,7 @@
 #include "Patches/EffectSettingMenu.h"
 #include "Patches/EnchantingAndSigilStoneMenus.h"
 #include "Patches/Exploratory.h" // ====== TEST PATCHES ======
+#include "Patches/ExtendedConsoleCommands.h"
 #include "Patches/Fonts.h"
 #include "Patches/GameplayMenu.h"
 #include "Patches/HUDInfoMenu.h"
@@ -275,6 +276,7 @@ extern "C" {
             man.RegisterPatch("ContainerMenu",  &CobbPatches::ContainerMenu::Apply, {});
             man.RegisterPatch("EffectSettingMenu", &CobbPatches::EffectSettingMenu::Apply, {});
             man.RegisterPatch("EnchantingAndSigilStoneMenus", &CobbPatches::EnchantingAndSigilStoneMenus::Apply, {});
+            man.RegisterPatch("ExtendedConsoleCommands", &CobbPatches::ExtendedConsoleCommands::Apply, {});
             man.RegisterPatch("GameplayMenu",   &CobbPatches::GameplayMenu::Apply, {});
             man.RegisterPatch("HUDInfoMenu",    &CobbPatches::HUDInfoMenu::Apply, {});
             man.RegisterPatch("HUDMainMenu",    &CobbPatches::HUDMainMenu::Apply, {});

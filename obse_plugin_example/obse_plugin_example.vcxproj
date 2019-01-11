@@ -133,6 +133,7 @@
     <ClCompile Include="Patches\DialogMenu.cpp" />
     <ClCompile Include="Patches\EffectSettingMenu.cpp" />
     <ClCompile Include="Patches\EnchantingAndSigilStoneMenus.cpp" />
+    <ClCompile Include="Patches\ExtendedConsoleCommands.cpp" />
     <ClCompile Include="Patches\HUDMainMenu.cpp" />
     <ClCompile Include="Patches\InventoryMenu.cpp" />
     <ClCompile Include="Patches\LockPickMenu.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="Patches\EffectSettingMenu.h" />
     <ClInclude Include="Patches\EnchantingAndSigilStoneMenus.h" />
     <ClInclude Include="Patches\Exploratory.h" />
+    <ClInclude Include="Patches\ExtendedConsoleCommands.h" />
     <ClInclude Include="Patches\Fonts.h" />
     <ClInclude Include="Patches\GameplayMenu.h" />
     <ClInclude Include="Patches\HUDInfoMenu.h" />

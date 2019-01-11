@@ -106,6 +106,7 @@
     <ClCompile Include="Patches\Compatibility\Dynamic Map\Main.cpp" />
     <ClCompile Include="Patches\StatsMenu.cpp" />
     <ClCompile Include="Patches\MessageMenu.cpp" />
+    <ClCompile Include="Patches\ExtendedConsoleCommands.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -8015,6 +8016,7 @@
     <ClInclude Include="Patches\StatsMenu.h" />
     <ClInclude Include="Patches\MessageMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\MessageMenu.h" />
+    <ClInclude Include="Patches\ExtendedConsoleCommands.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
