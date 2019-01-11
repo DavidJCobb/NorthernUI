@@ -1,0 +1,112 @@
+<!--<rect name="binding">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <visible>&true;</visible>
+   <_keyCodeXbox>0</_keyCodeXbox>
+   <_keyCodePC>  0</_keyCodePC>
+   <_keyCodePCModifier>0</_keyCodePCModifier> <!-- not displayed if zero or negative -->
+   <_label>Control Name</_label>
+   <_clickableID>-1</_clickableID> <!-- use this instead of "id" when you want the keybind to be clickable -->
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <_spacing>8</_spacing>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <width> <!-- collapse if not visible -->
+      <copy src="child(label)" trait="x" />
+      <add  src="child(label)" trait="width" />
+      <onlyif src="me()" trait="visible" />
+   </width>
+   <height> <!-- fit all content -->
+      <copy src="child(key)"      trait="height" />
+      <max  src="child(modifier)" trait="height" />
+      <max  src="child(label)"    trait="height" />
+   </height>
+   
+   <rect name="modifier">
+      <visible> <!-- if positive non-zero modifier key, and not Xbox -->
+         <not>
+            <copy src="parent()" trait="_keyCodePCModifier" />
+            <lte>0</lte>
+            <or src="northernui()" trait="_xxnGamepadAvailable" />
+         </not>
+      </visible>
+      <x>0</x>
+      <y> <!-- center within parent -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <include src="NorthernUI\key.xml"/>
+      <_keyCode><copy src="parent()" trait="_keyCodePCModifier" /></_keyCode>
+   </rect>
+   <rect name="key">
+      <x> <!-- after sibling with spacing -->
+         <copy   src="sibling()" trait="width" />
+         <add    src="parent()"  trait="_spacing" />
+         <onlyif src="sibling()" trait="visible" />
+         <add    src="sibling()" trait="x" />
+      </x>
+      <y> <!-- center within parent -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <include src="NorthernUI\key.xml"/>
+      <_keyCode>
+         <copy src="parent()" trait="_keyCodePC" />
+         <onlyifnot src="northernui()" trait="_xxnGamepadAvailable" />
+         <add>
+            <copy src="parent()" trait="_keyCodeXbox" />
+            <onlyif src="northernui()" trait="_xxnGamepadAvailable" />
+         </add>
+      </_keyCode>
+   </rect>
+   <text name="label">
+      <string><copy src="parent()" trait="_label" /></string>
+      <include src="NorthernUI\fonts\normal-shadowed.xml" />
+      <justify>&left;</justify>
+      <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+      <x> <!-- after sibling with spacing -->
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+         <add  src="parent()"  trait="_spacing" />
+      </x>
+      <y> <!-- center within parent -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   
+   <image name="back"> <!-- mouseover underlay if binding is clickable -->
+      <filename>Menus\NorthernUI\Shared\white.dds</filename>
+      <visible>
+         <copy>&true;</copy>
+         <and>
+            <copy src="parent()" trait="mouseover" />
+            <eq>1</eq>
+         </and>
+         <and  src="parent()" trait="target" />
+      </visible>
+      <depth>-1</depth>
+      <zoom>-1</zoom>
+      <width> <copy src="parent()" trait="width"/></width>
+      <height><copy src="parent()" trait="height"/></width>
+      <x>0</x>
+      <y>0</y>
+      <alpha>64</alpha>
+   </image>
+<!--</rect>-->

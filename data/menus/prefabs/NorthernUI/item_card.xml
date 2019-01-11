@@ -1,0 +1,57 @@
+<!--<rect name="item_card">-->
+   <!-- DOCUMENTATION ---------------------------------------------- >
+      Set HEIGHT after including the prefab.
+   <!------------------------------------------------------------- -->
+   <_modX>0</_modX>
+   <_modY>0</_modY>
+   <_showOnTop>&false;</_showOnTop>
+   
+   <!-- OUTPUT VARIABLES ------------------------------------------- >
+      These are provided for callers to use.
+   <!------------------------------------------------------------- -->
+   <!-- All vars provided by box.xml. -->
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <_computedMainMenuArea>
+      <copy src="NorthernUI()" trait="_xxnMainMenuXOffset" />
+      <add  src="NorthernUI()" trait="_xxnStdMenuWidth" />
+      <add>4</add> <!-- main menu border widths -->
+   </_computedMainMenuArea>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <x>
+      <copy src="screen()" trait="width" />
+      <sub  src="me()" trait="_computedMainMenuArea" />
+      <sub  src="me()" trait="width" />
+      <div>2</div>
+      <add  src="me()" trait="_computedMainMenuArea" />
+      <add  src="me()" trait="_modX" />
+   </x>
+   <y>
+      <copy> <!-- show on bottom -->
+         <copy src="screen()" trait="height" />
+         <sub  src="northernui()" trait="_xxnBottomBarHeight" />
+         <sub  src="northernui()" trait="_xxnItemCardYOffset" />
+         <min>
+            <copy src="screen()" trait="height" />
+            <sub  src="screen()" trait="cropY" />
+         </min>
+         <sub  src="me()" trait="height" />
+         <add  src="me()" trait="_modY" />
+         <onlyifnot src="me()" trait="_showOnTop" />
+      </copy>
+      <add> <!-- show on top -->
+         <copy>96</copy> <!-- distance to the top of the screen -->
+         <max    src="screen()" trait="cropY" />
+         <onlyif src="me()"     trait="_showOnTop" />
+      </add>
+   </y>
+   
+   <include src="NorthernUI\cards\border_box_ornate.xml" />
+   <user20>500</user20>
+   <user18>&true;</user18> <!-- use content-box width? -->
+<!--</rect>-->

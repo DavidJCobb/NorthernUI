@@ -106,6 +106,7 @@
 		<user1> 0 </user1>			<!-- set by code - x position of target -->
 		<user2> 0 </user2>			<!-- set by code - y position of target -->
 		<user6> &false; </user6>	<!-- true if marker is fast-travel enabled -->
+		<string> </string>			<!-- set by executable to map marker name -->
 		<_right_side>
          <!-- Code to prefer left: -->
 			<!-- <copy src="me()" trait="user1" />
@@ -843,7 +844,7 @@
                   <xdefault>-1</xdefault>
                </rect>
                <text name="world_no_map">
-                  <visible> <copy src="map_world_map" trait="visible"/> <eq> &false; </eq> </visible>
+                  <visible> <copy src="map_world_map_pane" trait="visible"/> <eq> &false; </eq> </visible>
                   <string> <copy src="strings()" trait="_nomap"/> </string>
                   <justify> &center; </justify>
                   <x>
@@ -860,7 +861,7 @@
                   <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
                </text>
                
-               <rect name="map_world_map_window">
+               <rect name="map_world_map_pane_window">
                   <id>63</id>
                   <depth>1</depth>
                   <alpha>0</alpha>
@@ -871,7 +872,7 @@
                   <locus>&true;</locus>
                   <clipwindow>&true;</clipwindow>
                   
-                  <image name="map_world_map_cursor"> <!-- Xbox-only map cursor -->
+                  <image name="map_world_map_pane_cursor"> <!-- Xbox-only map cursor -->
                      <id>61</id>
                      <visible><copy src="NorthernUI()" trait="_xxnGamepadAvailable" /></visible>
                      <filename>Menus\NorthernUI\Shared\cursor_gamepad.dds</filename>
@@ -901,7 +902,7 @@
                         <sub  src="me()"     trait="height" />
                      </user5>
                   </image>
-                  <image name="map_world_map">
+                  <image name="map_world_map_pane">
                      <id>41</id>
                      <visible>&true;</visible> <!-- overridden by executable -->
                      <target>&true;</target>
@@ -2071,6 +2072,21 @@
 		<depth>-3</depth>
 		<locus>&true;</locus>
       
+      <rect name="map_page_2"> <!-- compatibility: Map Marker Overhaul -->
+			<visible>
+				<copy src="map_menu_base" trait="user0" />
+				<eq>2</eq>
+			</visible>
+         <rect name="map_world_layout">
+            <rect name="map_world_map_window">
+               <rect name="map_world_map">
+                  <!-- getters supported; setters currently unsupported -->
+                  <user10><copy src="map_world_map_name" trait="user10" /></user10>
+                  <user11><copy src="map_world_map_name" trait="user11" /></user11>
+               </rect>
+            </rect>
+         </rect>
+      </rect>
       <rect name="map_page_3"> <!-- compatibility: Enhanced Economy -->
 			<_is_topmost>
 				<copy src="map_menu_base" trait="user0" />
@@ -2414,13 +2430,13 @@
             <copy src="me()" trait="user6" />
          </depth>
          <zoom>
-            <copy src="map_world_map" trait="zoom"/>
+            <copy src="map_world_map_pane" trait="zoom"/>
             <mult src="me()" trait="user5" />
          </zoom>
 			<width>
             <copy src="me()" trait="user3" />
             <mult>
-               <copy src="map_world_map" trait="zoom"/>
+               <copy src="map_world_map_pane" trait="zoom"/>
                <div>100</div>
             </mult>
             <mult src="me()" trait="user5" />
@@ -2428,7 +2444,7 @@
 			<height>
             <copy src="me()" trait="user4" />
             <mult>
-               <copy src="map_world_map" trait="zoom"/>
+               <copy src="map_world_map_pane" trait="zoom"/>
                <div>100</div>
             </mult>
             <mult src="me()" trait="user5" />
@@ -2436,14 +2452,14 @@
 			<x>
             <copy src="me()" trait="user1" />
             <mult>
-               <copy src="map_world_map" trait="zoom"/>
+               <copy src="map_world_map_pane" trait="zoom"/>
                <div>100</div>
             </mult>
          </x>
 			<y>
             <copy src="me()" trait="user2" />
             <mult>
-               <copy src="map_world_map" trait="zoom"/>
+               <copy src="map_world_map_pane" trait="zoom"/>
                <div>100</div>
             </mult>
          </y>

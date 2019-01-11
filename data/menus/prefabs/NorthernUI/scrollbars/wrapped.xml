@@ -1,0 +1,41 @@
+<!--<rect name="scrollbar_wrapped">-->
+   <!-- This prefab SHOULD work for both horizontal and vertical scrollbars 
+        if they're wrapped in wrapper.xml, but for some reason, the condition 
+        checks here go completely haywire. I don't have time to decode the 
+        entire trait system and fix it for Bethesda ten years late, so this 
+        file is UNUSED and we have specific variants for V and H scrollbars. -->
+   <x>
+      <copy>0</copy>
+      <copy   src="child(horizontal_scroll_left)" trait="width" />
+      <onlyif src="parent()" trait="user0" /> <!-- horiz -->
+   </x>
+   <y>
+      <copy>0</copy>
+      <copy      src="child(vertical_scroll_top)" trait="height" />
+      <onlyifnot src="parent()" trait="user0" /> <!-- !horiz -->
+   </y>
+	<width>
+      <copy>0</copy>
+      <copy src="child(track)" trait="width" />
+      <onlyifnot src="parent()" trait="user0" /> <!-- !horiz -->
+      <add>
+         <copy src="parent()" trait="height" />
+         <sub  src="child(vertical_scroll_left)" trait="width" />
+         <sub  src="child(vertical_scroll_right)" trait="width" />
+         <onlyif src="parent()" trait="user0" /> <!-- horiz -->
+      </add>
+   </width>
+	<height>
+      <copy>0</copy>
+      <add>
+         <copy src="child(track)" trait="height" />
+         <onlyif src="parent()" trait="user0" /> <!-- horiz -->
+      </add>
+      <add>
+         <copy src="parent()" trait="height" />
+         <sub  src="child(vertical_scroll_top)"    trait="height" />
+         <sub  src="child(vertical_scroll_bottom)" trait="height" />
+         <onlyifnot src="parent()" trait="user0" /> <!-- !horiz -->
+      </add>
+   </height>
+<!--</rect>-->

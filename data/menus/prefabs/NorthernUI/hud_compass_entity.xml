@@ -1,0 +1,58 @@
+<!--<rect name="compass_entity">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+   <!------------------------------------------------------------- -->
+   <user0> 0</user0>  <!-- tile heading, in degrees -->
+   <user3> 1</user3>  <!-- degree-to-pixel conversion factor -->
+   <user9> &true;</user9> <!-- undocumented Bethesda var for compass icons -->
+   <user16>0</user16> <!-- player heading -->
+   <user18>0</user18> <!-- width of the compass body -->
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <!-- for details on these calculations, see "compass math docs.txt" -->
+   <user13>
+      <copy src="me()" trait="user0" />
+      <mod>360</mod> <!-- normalize to [0, 359] -->
+      <div>180</div>
+      <add>0.5</add> <!-- == 180 /360 -->
+      <sub>
+         <copy src="me()" trait="user16" />
+         <mod>360</mod> <!-- normalize to [0, 359] -->
+         <div>180</div>
+      </sub>
+   </user13>
+   <user19> <!-- heading-to-icon in pixels -->
+      <copy src="me()" trait="user13" />
+      <sub>
+         <copy>2</copy>
+         <onlyif>
+            <copy src="me()" trait="user13" /><gt>1</gt>
+         </onlyif>
+      </sub>
+      <add>
+         <copy>2</copy>
+         <onlyif>
+            <copy src="me()" trait="user13" /><lt>-1</lt>
+         </onlyif>
+      </add>
+      <mult src="me()" trait="user18" />
+   </user19>
+   
+   <visible>&true;</visible>
+   <clips>&true;</clips>
+   <y>
+      <copy src="parent()" trait="height" />
+      <sub  src="me()"     trait="height" />
+      <div>2</div>
+   </y>
+   <x>
+      <copy src="me()" trait="user19" />
+      <sub> <!-- Align so that the above calculations determine our centerpoint. -->
+         <copy src="me()" trait="width" />
+         <div>2</div>
+      </sub>
+   </x>
+<!--</rect>-->

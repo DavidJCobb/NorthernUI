@@ -1,0 +1,313 @@
+<!--<rect name="button">-->
+
+   <!-- USAGE EXAMPLE ---------------------------------------------- >
+   <rect name="EscapeKey">
+      <x>64</x>
+      <y>384</y>
+      <include src="NorthernUI\key.xml"/>
+      <_keyCode>1</_keyCode>
+   </rect>
+   <!------------------------------------------------------------- -->
+
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <_keyCode>0</_keyCode>
+   <user23>255</user23> <!-- alpha -->
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <_labels_1>Esc</_labels_1>
+   <_labels_2>1</_labels_2>
+   <_labels_3>2</_labels_3>
+   <_labels_4>3</_labels_4>
+   <_labels_5>4</_labels_5>
+   <_labels_6>5</_labels_6>
+   <_labels_7>6</_labels_7>
+   <_labels_8>7</_labels_8>
+   <_labels_9>8</_labels_9>
+   <_labels_10>9</_labels_10>
+   <_labels_11>0</_labels_11>
+   <_labels_12>-</_labels_12>
+   <_labels_13>=</_labels_13>
+   <_labels_14>Bksp</_labels_14>
+   <_labels_15>Tab</_labels_15>
+   <_labels_16>Q</_labels_16>
+   <_labels_17>W</_labels_17>
+   <_labels_18>E</_labels_18>
+   <_labels_19>R</_labels_19>
+   <_labels_20>T</_labels_20>
+   <_labels_21>Y</_labels_21>
+   <_labels_22>U</_labels_22>
+   <_labels_23>I</_labels_23>
+   <_labels_24>O</_labels_24>
+   <_labels_25>P</_labels_25>
+   <_labels_26>[</_labels_26>
+   <_labels_27>]</_labels_27>
+   <_labels_28>Enter</_labels_28>
+   <_labels_29>L Ctrl</_labels_29>
+   <_labels_30>A</_labels_30>
+   <_labels_31>S</_labels_31>
+   <_labels_32>D</_labels_32>
+   <_labels_33>F</_labels_33>
+   <_labels_34>G</_labels_34>
+   <_labels_35>H</_labels_35>
+   <_labels_36>J</_labels_36>
+   <_labels_37>K</_labels_37>
+   <_labels_38>L</_labels_38>
+   <_labels_39>;</_labels_39>
+   <_labels_40>'</_labels_40>
+   <_labels_41>~</_labels_41>
+   <_labels_42>Shift</_labels_42>
+   <_labels_43>\</_labels_43>
+   <_labels_44>Z</_labels_44>
+   <_labels_45>X</_labels_45>
+   <_labels_46>C</_labels_46>
+   <_labels_47>V</_labels_47>
+   <_labels_48>B</_labels_48>
+   <_labels_49>N</_labels_49>
+   <_labels_50>M</_labels_50>
+   <_labels_51>,</_labels_51>
+   <_labels_52>.</_labels_52>
+   <_labels_53>/</_labels_53>
+   <_labels_54>R Shift</_labels_54>
+   <_labels_55>Numpad *</_labels_55>
+   <_labels_56>L Alt</_labels_56>
+   <_labels_57>Space</_labels_57>
+   <_labels_58>Caps Lock</_labels_58>
+   <_labels_59>F1</_labels_59>
+   <_labels_60>F2</_labels_60>
+   <_labels_61>F3</_labels_61>
+   <_labels_62>F4</_labels_62>
+   <_labels_63>F5</_labels_63>
+   <_labels_64>F6</_labels_64>
+   <_labels_65>F7</_labels_65>
+   <_labels_66>F8</_labels_66>
+   <_labels_67>F9</_labels_67>
+   <_labels_68>F10</_labels_68>
+   <_labels_69>Num Lock</_labels_69>
+   <_labels_70>Scroll Lock</_labels_70>
+   <_labels_71>Numpad 7</_labels_71>
+   <_labels_72>Numpad 8</_labels_72>
+   <_labels_73>Numpad 9</_labels_73>
+   <_labels_74>Numpad -</_labels_74>
+   <_labels_75>Numpad 4</_labels_75>
+   <_labels_76>Numpad 5</_labels_76>
+   <_labels_77>Numpad 6</_labels_77>
+   <_labels_78>Numpad +</_labels_78>
+   <_labels_79>Numpad 1</_labels_79>
+   <_labels_80>Numpad 2</_labels_80>
+   <_labels_81>Numpad 3</_labels_81>
+   <_labels_82>Numpad 0</_labels_82>
+   <_labels_83>Numpad .</_labels_83>
+   <_labels_87>F11</_labels_87>
+   <_labels_88>F12</_labels_88>
+   <_labels_156>Numpad Enter</_labels_156>
+   <_labels_157>R Ctrl</_labels_157>
+   <_labels_181>Numpad /</_labels_181>
+   <_labels_183>Prnt Scn</_labels_183>
+   <_labels_184>R Alt</_labels_184>
+   <_labels_197>Pause</_labels_197>
+   <_labels_199>Home</_labels_199>
+   <_labels_200>Up Arrow</_labels_200>
+   <_labels_201>Pg Up</_labels_201>
+   <_labels_203>Left Arrow</_labels_203>
+   <_labels_205>Right Arrow</_labels_205>
+   <_labels_207>End</_labels_207>
+   <_labels_208>Down Arrow</_labels_208>
+   <_labels_209>Pg Down</_labels_209>
+   <_labels_210>Ins</_labels_210>
+   <_labels_211>Del</_labels_211>
+   <!-- MOUSE: -->
+   <_labels_256>M1</_labels_256> <!-- LMB -->
+   <_labels_257>M2</_labels_257> <!-- RMB -->
+   <_labels_258>M Wheel</_labels_258> <!-- Mouse Wheel -->
+   <_labels_259>Mouse Button 3</_labels_259>
+   <_labels_260>Mouse Button 4</_labels_260>
+   <_labels_261>Mouse Button 5</_labels_261>
+   <_labels_262>Mouse Button 6</_labels_262>
+   <_labels_263>Mouse Button 7</_labels_263>
+   <_labels_264>Mouse Wheel Up</_labels_264>
+   <_labels_265>Mouse Wheel Down</_labels_265>
+   <!-- GAMEPAD: -->
+   <_labels_266>D-Pad Up</_labels_266>
+   <_labels_267>D-Pad Down</_labels_267>
+   <_labels_268>D-Pad Left</_labels_268>
+   <_labels_269>D-Pad Right</_labels_269>
+   <_labels_270>Start</_labels_270>
+   <_labels_271>Back</_labels_271>
+   <_labels_272>LS</_labels_272>
+   <_labels_273>RS</_labels_273>
+   <_labels_274>LB</_labels_274>
+   <_labels_275>RB</_labels_275>
+   <_labels_276>A</_labels_276>
+   <_labels_277>B</_labels_277>
+   <_labels_278>X</_labels_278>
+   <_labels_279>Y</_labels_279>
+   <_labels_280>LT</_labels_280>
+   <_labels_281>RT</_labels_281>
+   <!-- SPECIAL CASES: -->
+   <_labels_999>Not Bound</_labels_999>
+   <_labels_9001>Move Stick</_labels_9001>
+   
+   <_icons_266>Menus/NorthernUI/icons/gamepad_button_du.dds</_icons_266>
+   <_icons_267>Menus/NorthernUI/icons/gamepad_button_dd.dds</_icons_267>
+   <_icons_268>Menus/NorthernUI/icons/gamepad_button_dl.dds</_icons_268>
+   <_icons_269>Menus/NorthernUI/icons/gamepad_button_dr.dds</_icons_269>
+   <_icons_270>Menus/NorthernUI/icons/gamepad_button_start.dds</_icons_270>
+   <_icons_271>Menus/NorthernUI/icons/gamepad_button_back.dds</_icons_271>
+   <_icons_276>Menus/NorthernUI/icons/gamepad_button_a.dds</_icons_276>
+   <_icons_277>Menus/NorthernUI/icons/gamepad_button_b.dds</_icons_277>
+   <_icons_278>Menus/NorthernUI/icons/gamepad_button_x.dds</_icons_278>
+   <_icons_279>Menus/NorthernUI/icons/gamepad_button_y.dds</_icons_279>
+   
+   <_iconIndex>
+      <copy>1</copy>
+      <max>
+         <copy src="me()" trait="_keyCode" />
+         <onlyifnot src="me()" trait="_isFlex" />
+      </max>
+   </_iconIndex>
+   <_isFlex>
+      <not>
+             <copy src="me()" trait="_keyCode" /><eq>266</eq>
+         <or><copy src="me()" trait="_keyCode" /><eq>267</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>268</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>269</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>270</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>271</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>276</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>277</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>278</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>279</eq></or>
+      </not>
+   </_isFlex>
+   <_hideLabel>
+          <copy src="me()" trait="_keyCode" /><eq>266</eq>
+      <or><copy src="me()" trait="_keyCode" /><eq>267</eq></or>
+      <or><copy src="me()" trait="_keyCode" /><eq>268</eq></or>
+      <or><copy src="me()" trait="_keyCode" /><eq>269</eq></or>
+      <or><copy src="me()" trait="_keyCode" /><eq>270</eq></or>
+      <or><copy src="me()" trait="_keyCode" /><eq>271</eq></or>
+   </_hideLabel>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <width>
+      <copy src="child(icon)" trait="width" />
+      <max>
+         <copy src="child(text)" trait="width" />
+         <onlyif src="child(text)" trait="visible" />
+      </max>
+      <onlyifnot src="me()" trait="_isFlex" />
+      <add>
+         <copy   src="child(icon_flex_l)"   trait="width" />
+         <add    src="child(icon_flex_r)"   trait="width" />
+         <add    src="child(icon_flex_mid)" trait="width" />
+         <onlyif src="me()" trait="_isFlex" />
+      </add>
+   </width>
+   <height>
+      <copy src="child(icon)" trait="height" />
+      <onlyifnot src="me()" trait="_isFlex" />
+      <add>
+         <copy   src="child(icon_flex_mid)" trait="height" />
+         <onlyif src="me()" trait="_isFlex" />
+      </add>
+   </height>
+   
+   <image name="icon">
+      <visible><not src="parent()" trait="_isFlex" /></visible>
+      <zoom>40</zoom>
+      <filename>
+         <copy src="parent()" trait="_iconIndex" />
+         <copy src="parent()" trait="_icons_" />
+      </filename>
+      <depth>0</depth>
+      <x>0</x>
+      <y>0</y>
+      <width> <copy src="me()" trait="filewidth" /> </width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <alpha><copy src="parent()" trait="user23" /></alpha>
+   </image>
+   <text name="text">
+      <depth>1</depth>
+      <visible><not src="parent()" trait="_hideLabel" /></visible>
+      <string>
+         <copy src="parent()" trait="_keyCode" />
+         <max> <!-- "Not Bound" -->
+            <copy>999</copy>
+            <onlyif>
+               <copy src="parent()" trait="_keyCode" /><eq>0</eq>
+            </onlyif>
+         </max>
+         <copy src="parent()" trait="_labels_" />
+      </string>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+         <div>2</div>
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <red>255</red><green>255</green><blue>255</blue>
+      <alpha><copy src="parent()" trait="user23" /></alpha>
+   </text>
+   
+   <image name="icon_flex_l">
+      <depth>0</depth>
+      <zoom>40</zoom>
+      <visible><copy src="parent()" trait="_isFlex" /></visible>
+      <filename>Menus/NorthernUI/icons/gamepad_button_box_sides.dds</filename>
+      <width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <x>0</x>
+      <y>0</y>
+      <alpha><copy src="parent()" trait="user23" /></alpha>
+   </image>
+   <image name="icon_flex_mid">
+      <depth>0</depth>
+      <zoom>40</zoom>
+      <visible><copy src="parent()" trait="_isFlex" /></visible>
+      <filename>Menus/NorthernUI/icons/gamepad_button_box_mid.dds</filename>
+      <width>
+         <copy src="sibling(text)" trait="width" />
+         <add>8</add>
+      </width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <tile>&true;</tile>
+      <x>
+         <copy src="sibling(icon_flex_l)" trait="width" />
+      </x>
+      <y>0</y>
+      <alpha><copy src="parent()" trait="user23" /></alpha>
+   </image>
+   <image name="icon_flex_r">
+      <depth>0</depth>
+      <zoom>40</zoom>
+      <visible><copy src="parent()" trait="_isFlex" /></visible>
+      <filename>Menus/NorthernUI/icons/gamepad_button_box_sides.dds</filename>
+      <width> <copy src="me()" trait="filewidth" /> <div>2</div></width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <cropX><copy src="me()" trait="width" /></cropX>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y>0</y>
+      <alpha><copy src="parent()" trait="user23" /></alpha>
+   </image>
+<!--</rect>-->

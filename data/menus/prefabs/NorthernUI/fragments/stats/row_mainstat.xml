@@ -1,0 +1,115 @@
+<!--<rect name="trait_row">-->
+   <!-- START OF ARGUMENTS ----------------------------------------- >
+      Arguments. You must supply values for them AFTER the INCLUDE 
+      tag, or your values will be overwritten with these defaults.
+      
+      Note also that Oblivion's XML parser chokes on any property 
+      values that come after child elements (unless MenuQue is 
+      installed). If you wish to set properties other than these 
+      arguments, those properties must precede the INCLUDE tag.
+   <!------------------------------------------------------------- -->
+   <_label>Attribute</_label>
+   <_value>0</_value>
+   
+   <_progressInfoEnabled>&false;</_progressInfoEnabled>
+   <_progressCurrent>0</_progressCurrent>
+   <_progressMax>    0</_progressMax>
+   
+   <_cellPaddingX>8</_cellPaddingX>
+   <_flexL>1</_flexL>
+   <_flexR>2</_flexR>
+   <_isFirst>&false;</_isFirst>
+   
+   <!-- PRECOMPUTED VALUES ----------------------------------------- >
+      These are here for convenience's sake.
+   <!------------------------------------------------------------- -->
+   <_mainColumnWidth>
+      <copy src="me()" trait="_flexL" />
+      <div>
+         <copy src="me()" trait="_flexL" />
+         <add  src="me()" trait="_flexR" />
+      </div>
+      <mult src="parent()" trait="width" />
+   </_mainColumnWidth>
+   <_valueColumnWidth>
+      <copy src="parent()" trait="width" />
+      <sub  src="me()"     trait="_mainColumnWidth" />
+   </_valueColumnWidth>
+   
+   <!-- START OF ELEMENT DEFINITION -------------------------------- >
+      What follows is the actual content of the element.
+   <!------------------------------------------------------------- -->
+   <locus>&true;</locus>
+   <depth>5</depth>
+   <width><copy src="parent()" trait="width" /></width>
+   
+   <text name="label">
+      <depth>3</depth>
+      <string><copy src="parent()" trait="_label"/></string>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <justify>&left;</justify>
+      <red> <!-- grey 140; white on mouseover -->
+         <copy>140</copy>
+         <max><copy>255</copy><mult src="parent()" trait="mouseover" /></max>
+      </red>
+      <green><copy src="me()" trait="red"/></green>
+      <blue> <copy src="me()" trait="red"/></blue>
+      
+      <x>
+         <copy src="parent()" trait="_mainColumnWidth" />
+         <sub  src="parent()" trait="_cellPaddingX" />
+         <sub  src="me()"     trait="width" /> <!-- we can't use &right; because that doesn't ignore trailing whitespace -->
+      </x>
+      <y> <!-- vertically center -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <wrapwidth><copy src="parent()" trait="_mainColumnWidth" /></wrapwidth>
+   </text>
+   <rect name="value">
+      <x>
+         <copy src="parent()" trait="_mainColumnWidth" />
+         <add  src="parent()" trait="_cellPaddingX" />
+      </x>
+      <y> <!-- vertically center -->
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <include src="NorthernUI\concat_text.xml"/>
+      
+      <include src="NorthernUI\fonts\normal.xml" />
+      <red>255</red><green>255</green><blue>255</blue>
+      
+      <_concatCount>
+         <copy>1</copy>
+         <max>
+            <copy>6</copy>
+            <onlyif src="parent()" trait="_progressInfoEnabled" />
+         </max>
+      </_concatCount>
+      <_concatString1><copy src="parent()" trait="_value" /></_concatString1>
+      <_concatString2>(</_concatString2>
+      <_concatString3><copy src="parent()" trait="_progressCurrent" /></_concatString3>
+      <_concatString4>/</_concatString4>
+      <_concatString5><copy src="parent()" trait="_progressMax" />    </_concatString5>
+      <_concatString6>)</_concatString6>
+      <_concatWithSpace1>&true;</_concatWithSpace1>
+      
+      <width><copy src="parent()" trait="_rightColumnWidth" /></width>
+   </rect>
+   <image name="bottom_divider">
+      <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+      <tile>&true;</tile>
+      <width> <copy src="parent()" trait="width"/></width>
+      <height><copy src="me()"     trait="fileheight"/></height>
+      <x>0</x>
+      <y>
+         <copy src="me()" trait="height"/>
+         <div>-2</div>
+         <add  src="parent()" trait="height"/>
+      </y>
+      <alpha>140</alpha>
+   </image>
+<!--</rect>-->

@@ -1,0 +1,213 @@
+<!-- vertical_scroll.xml -->
+<!-- image name="vertical_scroll" -->
+   <!-- These tags should be changed by the parent menu: -->
+   <id>&generic;</id> <!-- Needs a unique ID so it can receive events -->
+   <filename>Menus\Shared\shared_empty.dds</filename>
+   <width><copy src="child(track)" trait="width" /></width>
+   <height>300</height>   <!-- marks the distance between the two arrows, including them -->   
+   <locus>&true;</locus>
+   <depth>1</depth>
+   <zoom>50</zoom> <!-- scrollbar size; 50 is the default; 25 is also an option -->
+   
+   <x>0</x>            <!-- marks the position of the right edge of the left arrow -->   
+   <y>0</y>            <!-- vertical position (where the arrow begins) -->
+   <user1>  1</user1> <!-- Minimum value that can be scrolled to (should usually be zero) -->
+   <user2>100</user2> <!-- Maximum value that can be scrolled to (should be the number of
+                         items minus the number of items visible.  i.e. if your list has
+                         8 items and you can see 2 at any one time, this should be 6 -->
+   <user3> 1 </user3>      <!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+   <user4> 10 </user4>      <!-- When the scroll bar is clicked on, this is how many items it will advance -->
+   <user5> 0 </user5>      <!-- The starting position of the scroll bar (set this only once); some menus modify this directly -->
+   <user6> -1 </user6>      <!-- A unique ID so that the scroll marker can be dragged around -->
+   <user7>               <!-- DO NOT SET - The current value of the scrollbar -->
+      <copy src="child(vertical_scroll_marker)" trait="_value_scrolled_to"/>
+   </user7>
+   <user8> 5 </user8>      <!-- How many items are visible at once -->
+   <user9> 0 </user9>      <!-- Manual step value (multiplied by step distance and added to scroll value -->
+   <user10></user10>      <!-- used by the scroll marker; undocumented -->
+   
+   <!-- NorthernUI by DavidJCobb: a Skyrim look-alike UI redesign for Oblivion. -->
+
+   <visible> <!-- Visible only if scrolling can be done -->
+      <copy src="me()" trait="user2" />
+      <add  src="me()" trait="user8" />
+      <gt   src="me()" trait="user8" />
+   </visible>
+   
+   <_scrollable_range>
+      <copy src="me()" trait="user2"/>
+      <sub  src="me()" trait="user1"/>
+      <max>0</max>
+   </_scrollable_range>
+
+   <!-- Hitboxes for clicking on the scrollbar track: -->
+	<rect name="vertical_scroll_topside">
+		<id>&generic;</id>
+		<target>&true;</target>
+		<depth>3</depth>
+		<height> <!-- make it long enough to stretch from the top arrow to the marker -->
+			<copy src="sibling(vertical_scroll_marker)" trait="y" />
+		</height>
+		<width><copy src="sibling(track)" trait="width" /></width>
+		<x>0</x>
+		<y>0</y>
+		<clicksound>3</clicksound>
+	</rect>
+	<rect name="vertical_scroll_bottomside">
+		<id>&generic;</id>
+		<target>&true;</target>
+		<depth>2</depth>
+		<height>
+			<copy src="parent()" trait="height"/>
+			<sub  src="sibling(vertical_scroll_topside)" trait="height"/>
+			<sub  src="sibling(vertical_scroll_marker)"  trait="height"/>
+		</height>
+		<width><copy src="sibling(track)" trait="width"/></width>
+		<x>0</x>
+		<y>
+			<copy src="sibling(vertical_scroll_topside)" trait="height"/>
+			<add  src="sibling(vertical_scroll_marker)"  trait="height"/>
+		</y>
+		<clicksound>3</clicksound>
+	</rect>
+   
+   <!-- Scrollbar graphics: -->
+   <image name="vertical_scroll_top"> <!-- arrow button -->
+      <id>&generic;</id>
+      <target>&true;</target>
+      <depth>4</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\scrollbars\hd_v_endcaps.dds</filename>
+      <width><copy src="me()" trait="filewidth" /></width>
+      <height>
+         <copy src="me()" trait="fileheight" />
+         <div>2</div>
+      </height>
+      <x>0</x>
+      <y>
+         <copy src="me()" trait="height" />
+         <mult>-1</mult>
+      </y>
+      <clicksound>3</clicksound>
+   </image>
+   <image name="vertical_scroll_bottom"> <!-- arrow button -->
+      <id>&generic;</id>
+      <target>&true;</target>
+      <depth>4</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\scrollbars\hd_v_endcaps.dds</filename>
+      <width><copy src="me()" trait="filewidth" /></width>
+      <height>
+         <copy src="me()" trait="fileheight" />
+         <div>2</div>
+      </height>
+      <cropy><copy src="me()" trait="height" /></cropy>
+      <x>0</x>
+      <y><copy src="parent()" trait="height" /></y>
+      <clicksound>3</clicksound>
+   </image>
+   <image name="track"> <!-- graphics for the scrollbar track -->
+      <depth>1</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\scrollbars\hd_v_track.dds</filename>
+      <width><copy src="me()" trait="filewidth" /></width>
+      <height><copy src="parent()" trait="height" /></height>
+      <x>0</x>
+      <y>0</y>
+      <tile>&true;</tile>
+   </image>
+   <image name="vertical_scroll_marker"> <!-- the scrollbar thumb -->
+      <id><copy src="parent()" trait="user6"/></id>
+      <target>&true;</target>
+      <depth>6</depth>
+      <zoom><copy src="parent()" trait="zoom" /></zoom>
+      <filename>Menus\NorthernUI\scrollbars\hd_v_thumb.dds</filename>
+      <width><copy src="me()" trait="filewidth" /></width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <x>0</x>
+      <y> <!-- set my position relative to the current scroll -->
+         <copy src="parent()" trait="height"/>
+         <!-- == track height, so far -->
+         <sub  src="me()" trait="height"/>
+         <mul>
+            <copy src="me()"     trait="_value_scrolled_to"/>
+            <sub  src="parent()" trait="user1"/>
+            <div  src="parent()" trait="_scrollable_range"/>
+         </mul>
+      </y>
+      
+      <!--
+         This code actually does compute the current scroll value, which is 
+         copied by the parent scrollbar's USER7 trait and (presumably) read 
+         by the executable. The executable "feeds" us inputs (see comment 
+         on USER9) and we're responsible for maintaining our scroll value 
+         ourselves.
+      -->
+      <_value_scrolled_to>
+         <!--
+            The lack of an initial COPY operator means that we operate on 
+            the trait's last computed value, modifying it instead of over-
+            writing it. Traits don't recompute every frame; they recompute 
+            only when they change or when a trait that they pull something 
+            from (via SRC/TRAIT) has changed.
+            
+            In other words: see all these traits we pull? Our own USER9, 
+            the parent tile's USER5, and the CLICKED traits on the scroll-
+            bar arrow buttons and track "collision?" We only update this 
+            value when any of those change. CLICKED is automatically set 
+            to 1 for a single frame when a targetable element is clicked, 
+            so that means that this trait is only recomputed when someth-
+            ing actually happens.
+            
+            The upshot of all of which is that you can build systems like 
+            that and *actually remember changes to things* solely within 
+            the XML! And Bethesda *never documented this!*
+         -->
+         <add> <!-- handle scrollbar arrow clicks -->
+            <copy src="sibling(vertical_scroll_bottom)" trait="clicked" />
+            <sub  src="sibling(vertical_scroll_top)"    trait="clicked" />
+            <mult src="parent()" trait="user3" /> <!-- step distance -->
+         </add>
+         <add> <!-- handle scrollbar track clicks -->
+            <copy src="sibling(vertical_scroll_bottomside)" trait="clicked" />
+            <sub  src="sibling(vertical_scroll_topside)"    trait="clicked" />
+            <mult src="parent()" trait="user4" />   <!-- jump distance -->
+         </add>
+         <add> <!-- handle "manual step" (when dragging); relies on executable code in the specific menu; not every menu uses this -->
+            <copy src="me()"     trait="user9" />  <!-- input from executable; see below -->
+            <add  src="me()"     trait="user10" /> <!-- "manual step" -->
+            <mult src="parent()" trait="user3" />  <!-- step distance -->
+         </add>
+         <add src="parent()" trait="user5" /> <!-- initial position (some menus also use this for scroll pos instead of relying on user9) -->
+         <add src="parent()" trait="user10" />
+         <min> <!-- constrain to max position -->
+            <copy src="parent()" trait="user2" />
+            <sub  src="parent()" trait="user1" />
+         </min>
+         <max>0</max> <!-- constrain to min position -->
+      </_value_scrolled_to>
+      <user8>   <!-- for dragging - drag interval -->
+         <copy src="parent()" trait="height"/>
+         <!-- == track height, so far -->
+         <sub  src="me()"     trait="height"/>
+         <div  src="parent()" trait="_scrollable_range"/>
+      </user8>
+      
+      <!--
+         USER9: On every frame that the user is dragging the scrollbar thumb, this 
+         trait is set by the executable to force recalculation of _value_scrolled_to. 
+         It is first set to -1000000000; then, it's set to a meaningful value; and 
+         then, it's reset to zero.
+         
+         The meaningful value is typically: the Y-axis distance from the cursor to 
+         the top edge of the containing scrollbar, divided by the drag interval on 
+         the thumb tile. For the MapMenu's quest list, the meaningful value is also 
+         divided by the scrollbar's arrow step distance, but I honestly think that 
+         might be a mistake or something.
+      -->
+      <user9>0</user9>
+      
+      <user10><copy src="parent()" trait="user9" /></user10>
+      <clicksound>3</clicksound>
+   </image>
+<!-- /rect -->

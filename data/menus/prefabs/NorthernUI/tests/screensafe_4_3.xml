@@ -1,0 +1,65 @@
+<!--<rect name="screen_safe_area">-->
+   <locus>&true;</locus>
+   <depth>99</depth>
+   <x>
+      <copy src="screen()" trait="width" />
+      <sub  src="me()"     trait="_displaywidth" />
+      <div>2</div>
+   </x>
+   <y><copy src="screen()" trait="cropY" /></y>
+   <width>0</width>
+   <height>0</height>
+   
+   <_displaywidth>
+      <copy src="screen()" trait="height" />
+      <mult>4</mult>
+      <div> 3</div>
+      <sub>
+         <copy src="screen()" trait="cropX" />
+         <mult>2</mult>
+      </sub>
+   </_displaywidth>
+   <_displayheight>
+      <copy src="screen()" trait="height" />
+      <sub>
+         <copy src="screen()" trait="cropY" />
+         <mult>2</mult>
+      </sub>
+   </_displayheight>
+   
+   <image name="border_top">
+      <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+      <x>0</x>
+      <y>0</y>
+      <width> <copy src="parent()" trait="_displaywidth" /></width>
+      <height><copy src="me()"     trait="fileheight" /></height>
+   </image>
+   <image name="border_bottom">
+      <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="_displayheight" />
+         <sub  src="me()"     trait="height" />
+      </y>
+      <width> <copy src="parent()" trait="_displaywidth" /></width>
+      <height><copy src="me()"     trait="fileheight" /></height>
+   </image>
+   
+   <image name="border_left">
+      <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+      <x>0</x>
+      <y>0</y>
+      <width> <copy src="me()"     trait="filewidth" /></width>
+      <height><copy src="parent()" trait="_displayheight" /></height>
+   </image>
+   <image name="border_right">
+      <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+      <x>
+         <copy src="parent()" trait="_displaywidth" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y>0</y>
+      <width> <copy src="me()"     trait="filewidth" /></width>
+      <height><copy src="parent()" trait="_displayheight" /></height>
+   </image>
+<!--</rect>-->

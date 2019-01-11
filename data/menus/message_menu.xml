@@ -89,7 +89,7 @@
       <locus>&true;</locus>
       <x>
          <copy src="content_box" trait="width" />
-         <sub  src="content_box" trait="_maxMenuStringWidth" />
+         <sub  src="content_box" trait="_maxMenuItemWidth" />
          <div>2</div>
          <sub>80</sub>
       </x>
@@ -170,9 +170,8 @@
       <rect name="content_box">
          <include src="NorthernUI\cards\content_box.xml" />
          
-         <_maxMenuStringWidth> <!-- compatibility: Map Marker Overhaul -->
-            <copy src="child(message_display_text)" trait="width" />
-            <max  src="child(button_1)" trait="width" />
+         <_maxMenuItemWidth> <!-- compatibility: Map Marker Overhaul -->
+            <copy src="child(button_1)" trait="width" />
             <max  src="child(button_2)" trait="width" />
             <max  src="child(button_3)" trait="width" />
             <max  src="child(button_4)" trait="width" />
@@ -182,7 +181,7 @@
             <max  src="child(button_8)" trait="width" />
             <max  src="child(button_9)" trait="width" />
             <max  src="child(button_10)" trait="width" />
-         </_maxMenuStringWidth>
+         </_maxMenuItemWidth>
 
          <text name="message_display_text">
             <include src="NorthernUI\fonts\normal.xml" />
