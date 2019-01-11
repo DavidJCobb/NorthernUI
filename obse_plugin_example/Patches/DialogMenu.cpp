@@ -74,21 +74,21 @@ namespace CobbPatches {
                if (s_needsUpdate) {
                   auto root = menu->tile;
                   auto list = menu->tileTopicScrollPane;
-                  _MESSAGE("DialogMenu hook!");
+                  //_MESSAGE("DialogMenu hook!");
                   if (!list)
                      return;
-                  _MESSAGE(" - List pane exists");
+                  //_MESSAGE(" - List pane exists");
                   float largest = 0.0F;
                   for (auto node = list->childList.start; node; node = node->next) {
                      auto tile = node->data;
                      if (!tile)
                         continue;
                      float width = CALL_MEMBER_FN(tile, GetFloatTraitValue)(RE::kTagID_width);
-                     _MESSAGE(" - Tile has width %f", width);
+                     //_MESSAGE(" - Tile has width %f", width);
                      if (width > largest)
                         largest = width;
                   }
-                  _MESSAGE(" - Largest width was %f", largest);
+                  //_MESSAGE(" - Largest width was %f", largest);
                   CALL_MEMBER_FN(root, UpdateFloat)(kTrait_LargestWidth, largest);
                   //
                   s_needsUpdate = false;
