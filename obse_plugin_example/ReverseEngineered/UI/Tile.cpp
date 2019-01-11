@@ -154,19 +154,6 @@ namespace RE {
       return false;
    };
    bool Tile::GetStringValue(UInt32 traitID, const char** out) {
-      /*
-      for (auto node = valueList.start; node; node = node->next) {
-         auto data = node->data;
-         if (data && data->id == traitID) {
-            if (data->bIsNum == 0) {
-               *out = data->str.m_data;
-               return true;
-            }
-            return false;
-         }
-      }
-      return false;
-      //*/
       auto trait = CALL_MEMBER_FN(this, GetTrait)(traitID);
       if (trait && !trait->bIsNum) {
          auto str = trait->str.m_data;

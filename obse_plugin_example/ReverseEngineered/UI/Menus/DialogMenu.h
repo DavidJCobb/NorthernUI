@@ -10,16 +10,18 @@ namespace RE {
          ~DialogMenu();
 
          enum {
-            kTileID_ButtonBarter = 8,
+            kTileID_TopicsList    = 1,
+            kTileID_TopicsWrapper = 6,
+            kTileID_ButtonBarter  = 8,
             kTileID_NorthernUI_ButtonBarterShim = 9001,
          };
 
-         Tile* tileTopicScrollPane;		//028
+         Tile* tileTopicScrollPane;		//028 // ID#1
          Tile* tileDialogText;			//02C
          Tile* tileButtonGoodbye;		//030
          Tile* tileDialogTextLayout;		//034
          Tile* tileFocusBox;				//038
-         Tile* tileTopics;				//03C
+         Tile* tileTopics;				//03C // ID#6
          Tile* tileButtonPersuade;			//040
          Tile* tileScrollBar;			//044
          Tile* tileScrollMarker;			//048
@@ -44,5 +46,8 @@ namespace RE {
          BSStringT				str08C;			//08C
          UInt8				unk094[3];		//094
          UInt8				pad097;
+
+         MEMBER_FN_PREFIX(DialogMenu);
+         DEFINE_MEMBER_FN(RenderTopics, bool, 0x0056E680);
    };
 };
