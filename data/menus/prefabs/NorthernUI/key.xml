@@ -153,6 +153,23 @@
    <_labels_279>Y</_labels_279>
    <_labels_280>LT</_labels_280>
    <_labels_281>RT</_labels_281>
+   <!-- PLAYSTATION: -->
+   <_labels_1266>D-Pad Up</_labels_1266>
+   <_labels_1267>D-Pad Down</_labels_1267>
+   <_labels_1268>D-Pad Left</_labels_1268>
+   <_labels_1269>D-Pad Right</_labels_1269>
+   <_labels_1270>Options</_labels_1270>
+   <_labels_1271>Share</_labels_1271>
+   <_labels_1272>L</_labels_1272>
+   <_labels_1273>R</_labels_1273>
+   <_labels_1274>L1</_labels_1274>
+   <_labels_1275>R1</_labels_1275>
+   <_labels_1276>X</_labels_1276>
+   <_labels_1277>O</_labels_1277>
+   <_labels_1278>Square</_labels_1278>
+   <_labels_1279>Triangle</_labels_1279>
+   <_labels_1280>L2</_labels_1280>
+   <_labels_1281>R2</_labels_1281>
    <!-- SPECIAL CASES: -->
    <_labels_999>Not Bound</_labels_999>
    <_labels_9001>Move Stick</_labels_9001>
@@ -168,21 +185,48 @@
    <_icons_278>Menus/NorthernUI/icons/gamepad_button_x.dds</_icons_278>
    <_icons_279>Menus/NorthernUI/icons/gamepad_button_y.dds</_icons_279>
    
+   <_icons_1266>Menus/NorthernUI/icons/gamepad_button_du.dds</_icons_1266>
+   <_icons_1267>Menus/NorthernUI/icons/gamepad_button_dd.dds</_icons_1267>
+   <_icons_1268>Menus/NorthernUI/icons/gamepad_button_dl.dds</_icons_1268>
+   <_icons_1269>Menus/NorthernUI/icons/gamepad_button_dr.dds</_icons_1269>
+   <_icons_1270>Menus/NorthernUI/icons/gamepad_button_start.dds</_icons_1270>
+   <_icons_1271>Menus/NorthernUI/icons/gamepad_button_back.dds</_icons_1271>
+   <_icons_1276>Menus/NorthernUI/icons/playstation_button_x.dds</_icons_1276>
+   <_icons_1277>Menus/NorthernUI/icons/playstation_button_o.dds</_icons_1277>
+   <_icons_1278>Menus/NorthernUI/icons/playstation_button_sq.dds</_icons_1278>
+   <_icons_1279>Menus/NorthernUI/icons/playstation_button_tri.dds</_icons_1279>
+   
    <_iconIndex>
       <copy>1</copy>
       <max>
          <copy src="me()" trait="_keyCode" />
+         <add> <!-- PlayStation button names and labels -->
+            <copy>1000</copy>
+            <onlyif src="me()" trait="_isXbox" />
+            <onlyif src="NorthernUI()" trait="_xxnUsePlaystationButtonIcons" />
+         </add>
          <onlyifnot src="me()" trait="_isFlex" />
       </max>
    </_iconIndex>
+   <_isXbox>
+       <copy src="me()" trait="_keyCode" /><gte>266</gte>
+       <and>
+         <copy src="me()" trait="_keyCode" /><lte>281</lte>
+       </and>
+   </_isXbox>
    <_isFlex>
       <not>
              <copy src="me()" trait="_keyCode" /><eq>266</eq>
          <or><copy src="me()" trait="_keyCode" /><eq>267</eq></or>
          <or><copy src="me()" trait="_keyCode" /><eq>268</eq></or>
          <or><copy src="me()" trait="_keyCode" /><eq>269</eq></or>
-         <or><copy src="me()" trait="_keyCode" /><eq>270</eq></or>
-         <or><copy src="me()" trait="_keyCode" /><eq>271</eq></or>
+         <or> <!-- Start/Back should be icons for Xbox; text (Options/Share) for PS4 -->
+                <copy src="me()" trait="_keyCode" /><eq>270</eq>
+            <or><copy src="me()" trait="_keyCode" /><eq>271</eq></or>
+            <and>
+               <copy src="NorthernUI()" trait="_xxnUsePlaystationButtonIcons" /><neq>&true;</neq>
+            </and>
+         </or>
          <or><copy src="me()" trait="_keyCode" /><eq>276</eq></or>
          <or><copy src="me()" trait="_keyCode" /><eq>277</eq></or>
          <or><copy src="me()" trait="_keyCode" /><eq>278</eq></or>
@@ -194,8 +238,20 @@
       <or><copy src="me()" trait="_keyCode" /><eq>267</eq></or>
       <or><copy src="me()" trait="_keyCode" /><eq>268</eq></or>
       <or><copy src="me()" trait="_keyCode" /><eq>269</eq></or>
-      <or><copy src="me()" trait="_keyCode" /><eq>270</eq></or>
-      <or><copy src="me()" trait="_keyCode" /><eq>271</eq></or>
+      <or> <!-- Start/Back should be icons for Xbox; text (Options/Share) for PS4 -->
+             <copy src="me()" trait="_keyCode" /><eq>270</eq>
+         <or><copy src="me()" trait="_keyCode" /><eq>271</eq></or>
+         <and>
+            <copy src="NorthernUI()" trait="_xxnUsePlaystationButtonIcons" /><neq>&true;</neq>
+         </and>
+      </or>
+      <or> <!-- face buttons don't use text labels for PS4 -->
+             <copy src="me()" trait="_keyCode" /><eq>276</eq>
+         <or><copy src="me()" trait="_keyCode" /><eq>277</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>278</eq></or>
+         <or><copy src="me()" trait="_keyCode" /><eq>279</eq></or>
+         <and src="NorthernUI()" trait="_xxnUsePlaystationButtonIcons" />
+      </or>
    </_hideLabel>
    
    <!-- START OF ELEMENT DEFINITION -------------------------------- >
@@ -244,6 +300,11 @@
       <visible><not src="parent()" trait="_hideLabel" /></visible>
       <string>
          <copy src="parent()" trait="_keyCode" />
+         <add> <!-- PlayStation button names and labels -->
+            <copy>1000</copy>
+            <onlyif src="me()" trait="_isXbox" />
+            <onlyif src="NorthernUI()" trait="_xxnUsePlaystationButtonIcons" />
+         </add>
          <max> <!-- "Not Bound" -->
             <copy>999</copy>
             <onlyif>

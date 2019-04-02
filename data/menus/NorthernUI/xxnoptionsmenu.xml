@@ -154,6 +154,12 @@
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   <user11><copy src="xxnStrings()" trait="_optionStopDLCSpam" /></user11> <!-- label -->
                </rect>
+               <rect name="option_use_playstation_icons">
+                  <include src="NorthernUI/fragments/pause/option_checkbox.xml" />
+                  <user0>36</user0> <!-- checkbox ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionUsePlaystationButtonIcons" /></user11> <!-- label -->
+               </rect>
                <rect name="option_xxnalchemymenu">
                   <include src="NorthernUI/fragments/pause/option_checkbox.xml" />
                   <user0>14</user0> <!-- checkbox ID -->
@@ -275,6 +281,7 @@
                <_strings_27><copy src="xxnStrings()" trait="_optDescBarterConfirmHandlerDefault" /></_strings_27>
                <_strings_30><copy src="xxnStrings()" trait="_optDescBarterConfirmHandlerAlt" /></_strings_30>
                <_strings_33><copy src="xxnStrings()" trait="_optDescBarterConfirmHandlerCtrl" /></_strings_33>
+               <_strings_36><copy src="xxnStrings()" trait="_optDescUsePlaystationButtonIcons" /></_strings_36>
                <user24>
                   <copy src="option_local_map_resolution"        trait="_mouseover_any" /><mult>10</mult>
                   <add><copy src="option_use_xinput_if_patched"  trait="_mouseover_any" /><mult>17</mult></add>
@@ -288,6 +295,7 @@
                   <add><copy src="option_barter_confirm_default" trait="_mouseover_any" /><mult>27</mult></add>
                   <add><copy src="option_barter_confirm_alt"     trait="_mouseover_any" /><mult>30</mult></add>
                   <add><copy src="option_barter_confirm_ctrl"    trait="_mouseover_any" /><mult>33</mult></add>
+                  <add><copy src="option_use_playstation_icons"  trait="_mouseover_any" /><mult>36</mult></add>
                </user24>
                
                <include src="NorthernUI\fonts\normal.xml" />

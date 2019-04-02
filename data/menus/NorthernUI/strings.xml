@@ -325,6 +325,7 @@
    <_optionBarterConfirmHandlerDefault>Barter Confirm Prompt (Default):</_optionBarterConfirmHandlerDefault>
    <_optionBarterConfirmHandlerAlt>Barter Confirm Prompt (Alt):</_optionBarterConfirmHandlerAlt>
    <_optionBarterConfirmHandlerCtrl>Barter Confirm Prompt (Ctrl):</_optionBarterConfirmHandlerCtrl>
+   <_optionUsePlaystationButtonIcons>Use PlayStation Button Icons:</_optionUsePlaystationButtonIcons>
    
    <_optEnumBarterConfirmHandlerDefault>Always (Default)</_optEnumBarterConfirmHandlerDefault>
    <_optEnumBarterConfirmHandlerTakeOne>When Not Free</_optEnumBarterConfirmHandlerTakeOne>
@@ -346,6 +347,7 @@
    <_optDescBarterConfirmHandlerDefault>Control when the game asks you to confirm a sale or purchase.</_optDescBarterConfirmHandlerDefault>
    <_optDescBarterConfirmHandlerAlt>Control when the game asks you to confirm a sale or purchase, when you're holding the Alt key.</_optDescBarterConfirmHandlerAlt>
    <_optDescBarterConfirmHandlerCtrl>Control when the game asks you to confirm a sale or purchase, when you're holding the Ctrl key.</_optDescBarterConfirmHandlerCtrl>
+   <_optDescUsePlaystationButtonIcons>Control whether the gamepad UI uses Xbox or PlayStation button icons.</_optDescUsePlaystationButtonIcons>
    
    <!----- XXNCONTROLSMENU ------------------------------------------------->
    <_optCtrlGStick>Gameplay Sticks:</_optCtrlGStick>
@@ -389,10 +391,29 @@
    <_optCtrlButtonLT>Left Trigger</_optCtrlButtonLT>
    <_optCtrlButtonRT>Right Trigger</_optCtrlButtonRT>
    
+   <_optCtrlPSButtonDU>D-Pad Up</_optCtrlPSButtonDU>
+   <_optCtrlPSButtonDD>D-Pad Down</_optCtrlPSButtonDD>
+   <_optCtrlPSButtonDL>D-Pad Left</_optCtrlPSButtonDL>
+   <_optCtrlPSButtonDR>D-Pad Right</_optCtrlPSButtonDR>
+   <_optCtrlPSStickStart>Options</_optCtrlPSStickStart>
+   <_optCtrlPSStickBack>Share</_optCtrlPSStickBack>
+   <_optCtrlPSStickLS>Left Stick</_optCtrlPSStickLS>
+   <_optCtrlPSStickRS>Right Stick</_optCtrlPSStickRS>
+   <_optCtrlPSButtonA>X</_optCtrlPSButtonA>
+   <_optCtrlPSButtonB>Circle</_optCtrlPSButtonB>
+   <_optCtrlPSButtonX>Square</_optCtrlPSButtonX>
+   <_optCtrlPSButtonY>Triangle</_optCtrlPSButtonY>
+   <_optCtrlPSButtonLB>Left 1</_optCtrlPSButtonLB>
+   <_optCtrlPSButtonRB>Right 1</_optCtrlPSButtonRB>
+   <_optCtrlPSButtonLS>LS Click</_optCtrlPSButtonLS>
+   <_optCtrlPSButtonRS>RS Click</_optCtrlPSButtonRS>
+   <_optCtrlPSButtonLT>Left 2</_optCtrlPSButtonLT>
+   <_optCtrlPSButtonRT>Right 2</_optCtrlPSButtonRT>
+   
    <_optCtrlDescSwapSticksG>The left and right joysticks are used to look around and move around in the world. Set which joystick handles which function.</_optCtrlDescSwapSticksG>
    <_optCtrlDescSwapSticksM>The left or right joystick can be used to operate the menus. Set which joystick handles that function.</_optCtrlDescSwapSticksM>
    <_optCtrlDescLookSens>Control how quickly you turn and aim.</_optCtrlDescLookSens>
-   <_optCtrlDescRunSens>Control how far the joystick must be pushed for you to switch from walking to running. If your gamepad has hardware variations or issues, you may need to lower this setting from its default (95).</_optCtrlDescRunSens>
+   <_optCtrlDescRunSens>Control how far the joystick must be pushed for you to switch from walking to running. If your gamepad has hardware variations or issues, you may need to lower this setting from its default (92).</_optCtrlDescRunSens>
    
    <_optCtrlDescSchemeName>Choose a control scheme to use. You can create, keep, and delete multiple custom control schemes freely.</_optCtrlDescSchemeName>
    

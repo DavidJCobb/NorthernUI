@@ -7,6 +7,10 @@
    <user12>
       <copy src="me()" trait="user1" />
       <add>1</add>
+      <add> <!-- support for PlayStation button names -->
+         <copy>100</copy>
+         <onlyif src="NorthernUI()" trait="_xxnUsePlaystationButtonIcons" />
+      </add>
       <copy src="menu()" trait="_keynames_" />
    </user12> <!-- displayed value -->
    <string></string> <!-- label; set by executable for XXNControlsMenu -->

@@ -16,6 +16,7 @@
    <_xxnGamepadAvailable>&false;</_xxnGamepadAvailable>
    <_xxnShowHUDClock>&false;</_xxnShowHUDClock>
    <_xxnShowHUDInputViewer>&false;</_xxnShowHUDInputViewer>
+   <_xxnUsePlaystationButtonIcons>&false;</_xxnUsePlaystationButtonIcons>
    <_xxnXInputPatchApplied>&false;</_xxnXInputPatchApplied>
    
    <!-- Vars we just want to be able to access from anywhere: -->

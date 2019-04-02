@@ -29,6 +29,23 @@
    <_keynames_16><copy src="xxnStrings()" trait="_optCtrlButtonY" /></_keynames_16>
    <_keynames_17><copy src="xxnStrings()" trait="_optCtrlButtonLT" /></_keynames_17>
    <_keynames_18><copy src="xxnStrings()" trait="_optCtrlButtonRT" /></_keynames_18>
+   <!-- use (keycode + 1 + 100) for playstation button names -->
+   <_keynames_101><copy src="xxnStrings()" trait="_optCtrlPSButtonDU" /></_keynames_101>
+   <_keynames_102><copy src="xxnStrings()" trait="_optCtrlPSButtonDD" /></_keynames_102>
+   <_keynames_103><copy src="xxnStrings()" trait="_optCtrlPSButtonDL" /></_keynames_103>
+   <_keynames_104><copy src="xxnStrings()" trait="_optCtrlPSButtonDR" /></_keynames_104>
+   <_keynames_105><copy src="xxnStrings()" trait="_optCtrlPSStickStart" /></_keynames_105>
+   <_keynames_106><copy src="xxnStrings()" trait="_optCtrlPSStickBack" /></_keynames_106>
+   <_keynames_107><copy src="xxnStrings()" trait="_optCtrlPSButtonLS" /></_keynames_107>
+   <_keynames_108><copy src="xxnStrings()" trait="_optCtrlPSButtonRS" /></_keynames_108>
+   <_keynames_109><copy src="xxnStrings()" trait="_optCtrlPSButtonLB" /></_keynames_109>
+   <_keynames_110><copy src="xxnStrings()" trait="_optCtrlPSButtonRB" /></_keynames_110>
+   <_keynames_113><copy src="xxnStrings()" trait="_optCtrlPSButtonA" /></_keynames_113>
+   <_keynames_114><copy src="xxnStrings()" trait="_optCtrlPSButtonB" /></_keynames_114>
+   <_keynames_115><copy src="xxnStrings()" trait="_optCtrlPSButtonX" /></_keynames_115>
+   <_keynames_116><copy src="xxnStrings()" trait="_optCtrlPSButtonY" /></_keynames_116>
+   <_keynames_117><copy src="xxnStrings()" trait="_optCtrlPSButtonLT" /></_keynames_117>
+   <_keynames_118><copy src="xxnStrings()" trait="_optCtrlPSButtonRT" /></_keynames_118>
    <_keynames_256>--</_keynames_256>
    
    <!-- EXE: Out -->
@@ -352,6 +369,10 @@
                   <string>
                      <copy src="menu()" trait="user2" />
                      <add>1</add>
+                     <add> <!-- support for PlayStation button names -->
+                        <copy>100</copy>
+                        <onlyif src="NorthernUI()" trait="_xxnUsePlaystationButtonIcons" />
+                     </add>
                      <copy src="menu()" trait="_keynames_" />
                   </string>
                   <red>255</red><green>255</green><blue>255</blue>
