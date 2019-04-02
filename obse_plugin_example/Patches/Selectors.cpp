@@ -66,6 +66,13 @@ namespace CobbPatches {
                CALL_MEMBER_FN(g_northernUIDatastore, UpdateFloat)(traitID, desired.bCurrent ? RE::kEntityID_true : RE::kEntityID_false);
             }
          }
+         {  // bUsePlaystationButtonIcons
+            auto& desired = NorthernUI::INI::Features::bUsePlaystationButtonIcons;
+            if (!s || s == &desired) {
+               UInt32 traitID = RE::GetOrCreateTempTagID("_xxnuseplaystationbuttonicons", -1);
+               CALL_MEMBER_FN(g_northernUIDatastore, UpdateFloat)(traitID, desired.bCurrent ? RE::kEntityID_true : RE::kEntityID_false);
+            }
+         }
       };
       //
       namespace SetupAndTeardown {

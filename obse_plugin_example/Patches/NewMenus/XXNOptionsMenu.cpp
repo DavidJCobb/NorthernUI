@@ -119,6 +119,9 @@ void XXNOptionsMenu::HandleTileIDChange(SInt32 newID, RE::Tile* tile) {
       case kTileID_OptionBarterConfirmHandlerCtrl_Value:
          this->optionBarterConfirmHandlerCtrl.tileValue = tile;
          return;
+      case kTileID_OptionUsePlaystationButtonIcons:
+         this->optionUsePlaystationButtonIcons.tile = tile;
+         return;
    }
 };
 void XXNOptionsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
@@ -162,6 +165,8 @@ void XXNOptionsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
    if (this->optionBarterConfirmHandlerCtrl.HandleClick(target))
       return;
    if (this->optionBarterConfirmHandlerAlt.HandleClick(target))
+      return;
+   if (this->optionUsePlaystationButtonIcons.HandleClick(target))
       return;
 };
 void XXNOptionsMenu::HandleMouseover(SInt32 tileID, RE::Tile* target) {
@@ -225,6 +230,8 @@ bool XXNOptionsMenu::AnyUnchanged() const {
       return true;
    if (NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iCurrent != !this->optionBarterConfirmHandlerCtrl.index)
       return true;
+   if (NorthernUI::INI::Features::bUsePlaystationButtonIcons.bCurrent != this->optionUsePlaystationButtonIcons.Get())
+      return true;
    return false;
 };
 void XXNOptionsMenu::Commit() {
@@ -240,6 +247,7 @@ void XXNOptionsMenu::Commit() {
    NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iCurrent = this->optionBarterConfirmHandlerDefault.index;
    NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iCurrent = this->optionBarterConfirmHandlerAlt.index;
    NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iCurrent = this->optionBarterConfirmHandlerCtrl.index;
+   NorthernUI::INI::Features::bUsePlaystationButtonIcons.bCurrent = this->optionUsePlaystationButtonIcons.Get();
    //
    (NorthernUI::INI::INISettingManager::GetInstance()).Save();
    NorthernUI::INI::SendChangeEvent();
@@ -257,6 +265,7 @@ void XXNOptionsMenu::ResetDefaults() {
    this->optionBarterConfirmHandlerDefault.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iDefault);
    this->optionBarterConfirmHandlerAlt.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iDefault);
    this->optionBarterConfirmHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iDefault);
+   this->optionUsePlaystationButtonIcons.Set(NorthernUI::INI::Features::bUsePlaystationButtonIcons.bDefault);
 };
 void XXNOptionsMenu::Setup() {
    //
@@ -302,6 +311,7 @@ void XXNOptionsMenu::Setup() {
    this->optionBarterConfirmHandlerDefault.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iCurrent);
    this->optionBarterConfirmHandlerAlt.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iCurrent);
    this->optionBarterConfirmHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iCurrent);
+   this->optionUsePlaystationButtonIcons.Set(NorthernUI::INI::Features::bUsePlaystationButtonIcons.bCurrent);
 };
 
 /*static*/ void XXNOptionsMenu::Confirm_ResetDefaults() {

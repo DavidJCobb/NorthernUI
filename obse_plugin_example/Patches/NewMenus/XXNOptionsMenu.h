@@ -51,6 +51,7 @@ class XXNOptionsMenu : public RE::Menu {
          kTileID_OptionBarterConfirmHandlerCtrl_Left  = 33,
          kTileID_OptionBarterConfirmHandlerCtrl_Right = 34,
          kTileID_OptionBarterConfirmHandlerCtrl_Value = 35,
+         kTileID_OptionUsePlaystationButtonIcons = 36,
       };
       enum {
          kTraitID_CheckboxState = kTileValue_user20,
@@ -76,6 +77,7 @@ class XXNOptionsMenu : public RE::Menu {
       Checkbox optionUseXXNAlchemyMenu = Checkbox(true);
       Checkbox optionShowHUDClock;
       Checkbox optionShowHUDInputViewer;
+      Checkbox optionUsePlaystationButtonIcons;
       Checkbox optionUseXInputIfPatched;
       Confirmation confirmation;
       EnumpickerStr optionQuantityHandlerDefault;
