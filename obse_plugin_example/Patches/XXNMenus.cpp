@@ -22,7 +22,7 @@
 
 namespace CobbPatches {
    namespace XXNMenus {
-	   static bool bPatchedMenuMaxIndex = false;
+      static bool bPatchedMenuMaxIndex = false;
       static bool bPatchedAlchemyMenu  = false;
 
       namespace ExpandMenuIndices {
@@ -135,6 +135,17 @@ namespace CobbPatches {
                _MESSAGE(" - Menus with expanded IDs have been written into the repointed table.");
             };
          };
+         namespace GetTileMenuByMenuID_MenuIDSwitchCasePatch {
+            //
+            // Patch (TileMenu* GetMenuByType(UInt32)) to return extended menus; needed for 
+            // proper mouse focus handling (i.e. without this, it's possible to mouseover 
+            // and click tiles in menus "below" a no-click-past extended menu).
+            //
+            void Apply() {
+               UInt8 upperLimit = expandedMenuCount - 1;
+               SafeWrite8(0x00589B7C, upperLimit);
+            }
+         };
 
          void Apply() {
             _MESSAGE("%s We are going to expand the menu indices to permit %d menu types (max ID %04X).", "[Patch][XXNMenus][ExpandMenuIndices]", expandedMenuCount, kMenuType_Message + expandedMenuCount - 1);
@@ -143,6 +154,7 @@ namespace CobbPatches {
             SafeWrite8(0x00587B7E, expandedMenuCount); // capacity setter for g_TileMenuArray
             //g_TileMenuArray->SetCapacity(expandedMenuSize); // not needed (and will CTD): array doesn't exist yet
             CreateMenu_MenuIDSwitchCasePatch::Setup();
+            GetTileMenuByMenuID_MenuIDSwitchCasePatch::Apply();
             bPatchedMenuMaxIndex = true;
          };
       };
