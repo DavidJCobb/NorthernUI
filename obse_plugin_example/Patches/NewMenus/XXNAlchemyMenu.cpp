@@ -789,7 +789,8 @@ void XXNAlchemyMenu::UpdatePotion() {
 void XXNAlchemyMenu::CreatePotion() {
 //_MESSAGE("%s: Start", __FUNCTION__);
    (*g_thePlayer)->ModExperience(0x13, 0, 0.0F);
-   (*g_thePlayer)->miscStats[0x30]++;
+   //(*g_thePlayer)->miscStats[0xC]++;
+   RE::ModPCMiscStat(0xC, 1); // compiler is an idiot and compiles the previous line as ((**g_thePlayer)->miscStats[0xC]++); use this instead
    UInt32 dataHandlerResult;
    {  // Fire OBSE hook and run data-handler code
       auto dummy = (UInt32*) malloc(0x98);
