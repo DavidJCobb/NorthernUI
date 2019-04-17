@@ -172,7 +172,7 @@ namespace RE {
          UInt32  unk0D8; // D8
          UInt32  unk0DC; // DC
          UInt32  activeMenuIDs[9]; // E0 ... 104 // lists open menus with certain stackingtypes, in order from bottom to top // the "big four" menus are represented as 1, not with their IDs; empty slots are zero
-         UInt32  unk104;
+         UInt32  unk104; // 104 // menu ID
          void*   unk108; // struct, size 0xC bytes; no VTBL or RTTI; constructor at 00538B20
          UInt32  playerQueuedToGoToJail; // 10C // if truthy, player is queued to go to jail and will be sent there by InterfaceManager::Update; this field then gets reset to 0
          UInt32  unk110; // if truthy, a call to PlayerCharacter::00670CA0 is queued and will be run by InterfaceManager::Update; this field then gets reset to 0

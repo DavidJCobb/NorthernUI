@@ -268,7 +268,7 @@ namespace RE {
          float  requiredSkillExp[21];			// 7A4 total amt of exp needed to increase each skill
          UInt32 unk7F8;							// 7F8
          UInt32 unk7FC;							// 7FC
-                                                // 800
+
          bool	SetActiveSpell(MagicItem * item);
          UInt8	GetAttributeBonus(UInt32 whichAttribute) {
             return whichAttribute < kActorVal_Luck ? (*attributeBonuses)[whichAttribute] : -1;
@@ -315,4 +315,8 @@ namespace RE {
          //
          DEFINE_MEMBER_FN(HandleArcheryZoom, void, 0x00666670, float maybeSeconds);
    };
+   static_assert(sizeof(PlayerCharacter) == 0x800, "RE::PlayerCharacter is the wrong size.");
+   static_assert(offsetof(PlayerCharacter, miscStats) == 0x658, "RE::PlayerCharacter is the wrong size.");
+
+   extern void ModPCMiscStat(UInt32 statIndex, UInt32 changeBy);
 };
