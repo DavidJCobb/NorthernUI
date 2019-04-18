@@ -28,7 +28,7 @@ class XXNGamepadConfigManager {
       float sensitivityY = 1.0F; // degrees per 1% joystick tilt per second
       float sensitivityAccelOffset = 0.8F; // your look speed starts at (sensitivity - accelOffset) * gamepad
       float sensitivityAccelTime   = 1.0F; // once you keep the joystick out of the deadzone for this many seconds, we stop applying accelOffset
-      UInt8 sensitivityRun = 95; // magnitude > this = you're running
+      UInt8 sensitivityRun = 92; // magnitude > this = you're running
       //
       struct Profile : public RE::OSInputGlobals::Scheme {
          Profile() {

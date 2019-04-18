@@ -883,9 +883,8 @@ bool XXNAlchemyMenu::IngredientIsCompatible(IngredientItem* ingredient) {
       if (CALL_MEMBER_FN((RE::PlayerCharacter*) *g_thePlayer, GetSkillMasteryLevelBySkill)(kActorVal_Alchemy) >= RE::kSkillMastery_Master)
          return true;
       auto current = &(ingredient->magicItem.list.effectList);
-      for (UInt8 i = 0; i < count; i++) {
+      for (uint8_t i = 0; (i < count) && current; i++, current = current->next) {
          auto effectItem = (RE::EffectItem*) current->effectItem;
-         current = current->next;
          EffectCodeAndAV code = XXNAlchemyMenu::GetCombinedIdentifier(effectItem);
          if (!code)
             continue;
@@ -903,7 +902,7 @@ bool XXNAlchemyMenu::IngredientIsCompatible(IngredientItem* ingredient) {
       auto activeAV   = effect->actorValueOrOther;
       //
       auto  current = &(ingredient->magicItem.list.effectList);
-      UInt8 i = 0;
+      uint8_t i = 0;
       do {
          if (++i > count)
             break;
@@ -1049,10 +1048,10 @@ void XXNAlchemyMenu::RenderInventory() {
          } catch (std::out_of_range&) {}
    }
 //_MESSAGE("%s: Got list.", __FUNCTION__);
-   UInt32 size   = list->size();
+   size_t size   = list->size();
    UInt32 effect = this->selectedEffect;
    UInt32 listindex = 0;
-   for (UInt32 i = 0; i < size; i++) {
+   for (size_t i = 0; i < size; i++) {
 //_MESSAGE("%s: Iteration %d", __FUNCTION__, i);
       auto& item = list->at(i);
       auto  data = item.data;
@@ -1066,7 +1065,7 @@ void XXNAlchemyMenu::RenderInventory() {
          CALL_MEMBER_FN(listItem, UpdateString)(kInventoryTrait_ItemName, itemName);
          char tileName[256];
          {
-            for(UInt8 f = 0; f < 256; f++) {
+            for(uint8_t f = 0; f < 256; f++) {
                char c = itemName[f];
                if (c == ' ')
                   c = '_';
@@ -1090,7 +1089,7 @@ void XXNAlchemyMenu::RenderInventory() {
       {
          bool found = false;
          auto& list = this->selectedIngredients;
-         for (UInt8 i = 0; i < std::extent<decltype(XXNAlchemyMenu::selectedIngredients)>::value; i++) {
+         for (uint8_t i = 0; i < std::extent<decltype(XXNAlchemyMenu::selectedIngredients)>::value; i++) {
             if (list[i] == data) {
                found = true;
                break;

@@ -1,5 +1,5 @@
 void InterfaceManager::Update() {
-   auto ebx = *g_Singleton00B33398->unk20; // input manager
+   auto ebx = OSInputGlobals::GetInstance(); // input manager
    auto esi = this;
    auto edi = 0;
    auto esp50 = ebx;
@@ -190,9 +190,29 @@ void InterfaceManager::Update() {
       auto eax = esp2C = GetGlobalScriptStateObj(0);
       if (edi) { // at 0x00583531
          if (eax) {
-            //
-            // ...
-            //
+            do { // at 0x00583540
+               if (esp30 == 0x29) {
+                  bl = false;
+               } else {
+                  bl = esp2C->TES4_00586000(edi); // handles console rendering, input parsing, and execution
+                  if (bl) {
+                     auto input = OSInputGlobals::GetInstance();
+                     auto eax = input->GetBufferedKeyStateChange(&esp30);
+                     if (eax == 2) {
+                        edi = 0;
+                        do {
+                           UInt32 ecx = g_timeInfo->unk10; // most likely the current executable time in milliseconds
+                           edx = esp30;
+                           this->KeyStateChangeToChar(2, esp30);
+                           this->lastRepeatableKeyFire = 0;
+                           this->unk11C = 0;
+                        } while (input->GetBufferedKeyStateChange(&esp30) == 2);
+                     }
+                     edi = this->KeyStateChangeToChar(eax, esp30);
+                  }
+               }
+               if (!edi) jump to 0x0058368C;
+            } while (bl);
          }
          Tile* ecx = GetMenuByType(this->GetTopmostMenuID());
          Menu* eax = ecx->GetContainingMenu();

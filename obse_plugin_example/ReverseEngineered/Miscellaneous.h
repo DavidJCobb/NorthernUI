@@ -3,6 +3,7 @@
 #include "obse/Utilities.h"
 
 class TESBipedModelForm;
+class TESQuest;
 namespace RE {
    enum SkillMasteryLevel {
       kSkillMastery_Novice = 0,
@@ -18,6 +19,8 @@ namespace RE {
    DEFINE_SUBROUTINE_EXTERN(UInt32, GetSkillMasteryLevel,   0x0056A300, UInt32 skillLevel);
    DEFINE_SUBROUTINE_EXTERN(TESBipedModelForm*, GetTESBipedModelForm, 0x004691B0, TESForm* form);
    DEFINE_SUBROUTINE_EXTERN(float,  RoundToMultipleOf,      0x004843B0, float value, float divisor);
+   DEFINE_SUBROUTINE_EXTERN(UInt32, SkillMasteryLevelToMinimumSkillLevel, 0x0056A360, UInt32 skillMasteryLevel);
+   DEFINE_SUBROUTINE_EXTERN(const char*, SkillMasteryLevelToString, 0x0056A340, UInt32 skillMasteryLevel);
 
    struct NiMatrix33 {
       //
@@ -45,4 +48,6 @@ namespace RE {
       UInt32 threadID;
       UInt32 counter;
    };
+
+   bool GetScriptVariableValue(TESQuest* quest, const char* variableName, double& out);
 };

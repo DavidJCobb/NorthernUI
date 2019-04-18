@@ -783,7 +783,7 @@ namespace CobbPatches {
                static bool   dPadRepeating     = false;
                UInt32 current = RE::g_timeInfo->unk10;
                bool   didDPad = false;
-               {
+               if (NorthernUI::INI::XInput::bMenuConsumesDPad.bCurrent) { // D-Pad
                   SInt8 x = 0;
                   SInt8 y = 0;
                   x = gamepad->GetButtonState(XXNGamepad::kGamepadButton_DPadRight, XXNGamepad::KeyQuery::kKeyQuery_Hold) - gamepad->GetButtonState(XXNGamepad::kGamepadButton_DPadLeft, XXNGamepad::KeyQuery::kKeyQuery_Hold);

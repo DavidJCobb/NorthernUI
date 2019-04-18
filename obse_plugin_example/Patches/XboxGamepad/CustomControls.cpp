@@ -275,12 +275,9 @@ void XXNGamepadConfigManager::LoadCustomProfiles() {
    std::fstream file;
    file.open(_GetPathCustom(), std::ios_base::in);
    if (!file) {
-      if (CopyFile(_GetPathDefault().c_str(), _GetPathCustom().c_str(), true))
-         file.open(_GetPathCustom(), std::ios_base::in);
-      if (!file) {
-         _MESSAGE("Unable to open gamepad config file for reading.");
-         return;
-      }
+      _MESSAGE("Unable to open gamepad config file for reading. Attempting to create the file...");
+      this->SaveCustomProfiles();
+      return;
    }
    std::string currentSchemeName;
    Profile     working;
@@ -387,6 +384,9 @@ void XXNGamepadConfigManager::LoadCustomProfiles() {
       //
       this->sensitivityX = 1.8F;
       this->sensitivityY = 1.0F;
+   }
+   if (version < 0x01020000) { // we didn't correctly generate missing files before v1.2.0; this primarily affects NorthernUIAway users
+      this->SaveCustomProfiles();
    }
 };
 void XXNGamepadConfigManager::SaveCustomProfiles() {

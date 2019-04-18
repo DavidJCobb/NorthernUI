@@ -8,6 +8,9 @@
 //
 #include "Services/INISettings.h"
 
+#include "ReverseEngineered/Miscellaneous.h" // quest testing
+#include "obse/GameData.h" // quest testing
+
 namespace CobbPatches {
    namespace ExtendedConsoleCommands {
       //
@@ -99,6 +102,20 @@ namespace CobbPatches {
             } else
                _MESSAGE("activeTileID: No tile.");
          }
+         void genericTestCommand() { // modify this to test whatever we need to test
+            _MESSAGE("genericTestCommand: Running...");
+            //_MESSAGE("No test has been written for the generic test command.");
+            TESQuest* quest = nullptr;
+            quest = (*g_dataHandler)->GetQuestByEditorName("migTrainingQ", strlen("migTrainingQ"));
+            if (quest) {
+               _MESSAGE("Got quest! Pointer is %08X.", quest);
+               double out;
+               if (RE::GetScriptVariableValue(quest, "bDisplayTrainAdjust", out)) {
+                  _MESSAGE("Got variable! Value is %f.", out);
+               }
+            }
+            _MESSAGE("genericTestCommand: Done...");
+         }
          void refreshINI() {
             NorthernUI::INI::INISettingManager::GetInstance().Load();
          }
@@ -125,6 +142,10 @@ namespace CobbPatches {
                return false;
             if (_startsWith(input + cobb::cstrlen("!xxn "), "activeTileID")) {
                Commands::activeTileID();
+               return true;
+            }
+            if (_startsWith(input + cobb::cstrlen("!xxn "), "genericTestCommand")) {
+               Commands::genericTestCommand();
                return true;
             }
             if (_startsWith(input + cobb::cstrlen("!xxn "), "refreshINI")) {
@@ -164,7 +185,6 @@ namespace CobbPatches {
       }
       //
       void Apply() {
-return;
          Hook::Apply();
          HACK_ForceLogAllCommandResults::Apply();
       };

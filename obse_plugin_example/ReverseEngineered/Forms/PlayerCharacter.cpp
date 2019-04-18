@@ -6,6 +6,10 @@ namespace RE {
    // 0x00B3BB05 may be an "auto vanity" bool, but auto vanity also sets 0x00B3BB04 to true
 
    __declspec(naked) void ModPCMiscStat(UInt32 statIndex, UInt32 changeBy) {
+      //
+      // Writing this in C++ can cause the compiler to compile wrong code; sometimes, 
+      // (*g_thePlayer)->miscStats[x]++ compiles as (**g_thePlayer)->miscStats[x]++.
+      //
       _asm {
          mov  ecx, 0x00B333C4;      // ecx = g_thePlayer;
          mov  ecx, dword ptr [ecx]; // ecx = *g_thePlayer;

@@ -66,6 +66,7 @@
 #include "Patches/XXNMenus.h"
 #include "Patches/XboxGamepad/Patch.h"
 #include "Patches/Compatibility/Dynamic Map/Main.h"
+#include "Patches/Compatibility/Dynamic Training Cost/Main.h"
 #include "shared.h"
 
 IDebugLog gLog("Data\\OBSE\\Plugins\\NorthernUI.log");
@@ -297,6 +298,7 @@ extern "C" {
             // compat:
             //
             man.RegisterPatch("DynamicMapEmulation", &CobbPatches::DynamicMapEmulation::Apply, { PatchManager::Req::G_MainMenu });
+            man.RegisterPatch("DynamicTrainingCost", &CobbPatches::DynamicTrainingCost::Apply, { PatchManager::Req::G_MainMenu });
          }
       }
 

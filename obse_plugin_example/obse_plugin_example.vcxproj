@@ -129,6 +129,7 @@
     <ClCompile Include="Patches\AudioMenu.cpp" />
     <ClCompile Include="Patches\ClassMenu.cpp" />
     <ClCompile Include="Patches\Compatibility\Dynamic Map\Types.cpp" />
+    <ClCompile Include="Patches\Compatibility\Dynamic Training Cost\Main.cpp" />
     <ClCompile Include="Patches\ContainerMenu.cpp" />
     <ClCompile Include="Patches\DialogMenu.cpp" />
     <ClCompile Include="Patches\EffectSettingMenu.cpp" />
@@ -244,6 +245,7 @@
     <ClInclude Include="Patches\ClassMenu.h" />
     <ClInclude Include="Patches\CleanUpAfterMenuQue.h" />
     <ClInclude Include="Patches\Compatibility\Dynamic Map\Types.h" />
+    <ClInclude Include="Patches\Compatibility\Dynamic Training Cost\Main.h" />
     <ClInclude Include="Patches\ContainerMenu.h" />
     <ClInclude Include="Patches\DialogMenu.h" />
     <ClCompile Include="Patches\Compatibility\Dynamic Map\Main.cpp">
@@ -347,6 +349,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\SigilStoneMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\SpellMakingMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\TextEditMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\TrainingMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\VideoMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\MenuTextInputState.h" />
     <ClInclude Include="ReverseEngineered\UI\TagIDs.h" />
