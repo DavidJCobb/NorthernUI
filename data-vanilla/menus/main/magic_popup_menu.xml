@@ -1,0 +1,796 @@
+<!-- magic_popup_menu.xml -->
+<menu name="MagicPopupMenu">
+	<class> &MagicPopupMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0 </menufade>
+	<user0> 0 </user0>				<!-- Y position of source object -->
+	<user1> 0 </user1>				<!-- Number of pixels from bottom of screen below which the menu should not go. -->
+	<user2> 1.5 </user2>			<!-- Slide-in rate of menu in pixels/ms -->
+	<user3> 0 </user3>				<!-- Real Depth to display -->
+	
+	<_item_height> 52 </_item_height>
+	<_buffer> 9 </_buffer><!-- NOTE:  This is the highest this can go without overrunning the size of the background texture when we have 8 effects (the max) to display. -->
+	
+	<image name="magicpop_background">
+		<id> 1 </id>
+		<target> &true; </target>
+		<filename> Menus\Magic\magic_popup_background.dds </filename>
+		<zoom> -1 </zoom>
+		<width>
+			<copy src="magicpop_effect_1_text" trait="width"/>
+			<max>
+				<copy src="magicpop_effect_2_text" trait="width"/>
+				<onlyif src="magicpop_effect_2" trait="visible"/>
+			</max>
+			<max>
+				<copy src="magicpop_effect_3_text" trait="width"/>
+				<onlyif src="magicpop_effect_3" trait="visible"/>
+			</max>
+			<max>
+				<copy src="magicpop_effect_4_text" trait="width"/>
+				<onlyif src="magicpop_effect_4" trait="visible"/>
+			</max>
+			<max>
+				<copy src="magicpop_effect_5_text" trait="width"/>
+				<onlyif src="magicpop_effect_5" trait="visible"/>
+			</max>
+			<max>
+				<copy src="magicpop_effect_6_text" trait="width"/>
+				<onlyif src="magicpop_effect_6" trait="visible"/>
+			</max>
+			<max>
+				<copy src="magicpop_effect_7_text" trait="width"/>
+				<onlyif src="magicpop_effect_7" trait="visible"/>
+			</max>
+			<max>
+				<copy src="magicpop_effect_8_text" trait="width"/>
+				<onlyif src="magicpop_effect_8" trait="visible"/>
+			</max>
+			<max>
+				<copy src="magicpop_requires_text" trait="width"/>
+				<onlyif src="magicpop_background_bottom" trait="visible"/>
+			</max>
+			<add>100</add>
+			<min>430</min>
+		</width>
+		<height>
+			<copy src="magicpop_effect_1" trait="visible" />
+			<add src="magicpop_effect_2" trait="visible" />
+			<add src="magicpop_effect_3" trait="visible" />
+			<add src="magicpop_effect_4" trait="visible" />
+			<add src="magicpop_effect_5" trait="visible" />
+			<add src="magicpop_effect_6" trait="visible" />
+			<add src="magicpop_effect_7" trait="visible" />
+			<add src="magicpop_effect_8" trait="visible" />
+			<sub> 8 </sub>
+			<mul>
+				<copy src="MagicPopupMenu" trait="_item_height"/>
+				<add src="MagicPopupMenu" trait="_buffer"/>
+			</mul>
+			<add> 25 </add>
+			<add>
+				<copy src="magicpop_background_bottom" trait="height"/>
+				<onlyif>
+					<copy src="magicpop_background_bottom" trait="visible"/>
+				</onlyif>
+			</add>
+		</height>
+		<x>
+			<copy src="parent()" trait="user1"/>
+			<sub src="me()" trait="width"/>
+		</x>
+		<y>
+			<copy> 999999 </copy>
+			<onlyif>
+				<copy src="parent()" trait="user0" />
+				<eq> 0 </eq>
+			</onlyif>
+			<add src="parent()" trait="user0" />
+			<min>
+				<copy src="screen()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub src="parent()" trait="user1"/>
+			</min>
+		</y>
+		<depth>
+			<copy src="parent()" trait="user3"/>
+			<sub> 10 </sub>
+		</depth>
+		<locus> &true; </locus>
+		
+<!-- MENU BORDER ==============================================================================-->
+
+		<image name="magicpop_border_ULcorner">
+			<depth>1</depth>
+			<filename>Menus\Magic\magic_popup_border_corner.dds</filename>
+			<x>0</x>
+			<y>0</y>
+			<width>10</width>
+			<height>10</height>
+		</image>
+		<image name="magicpop_border_top">
+			<depth>1</depth>
+			<filename>Menus\Magic\magic_popup_border_edge_horizontal.dds</filename>
+			<x>
+				<copy src="magicpop_border_ULcorner" trait="x"/>
+				<add src="magicpop_border_ULcorner" trait="width"/>
+			</x>
+			<y>
+				<copy src="magicpop_border_ULcorner" trait="y"/>
+			</y>
+			<width>
+				<copy src="magicpop_border_URcorner" trait="x"/>
+				<sub src="magicpop_border_ULcorner" trait="x"/>
+				<sub src="magicpop_border_ULcorner" trait="width"/>
+			</width>
+			<height>11</height>
+		</image>
+		<image name="magicpop_border_URcorner">
+			<depth>1</depth>
+			<filename>Menus\Magic\magic_popup_border_corner.dds</filename>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<add>2</add>
+			</x>
+			<y>0</y>
+			<width>
+				<copy src="magicpop_border_ULcorner" trait="width"/>
+			</width>
+			<height>
+				<copy src="magicpop_border_ULcorner" trait="height"/>
+			</height>
+		</image>
+		<image name="magicpop_border_left">
+			<depth>1</depth>
+			<filename>Menus\Magic\magic_popup_border_edge_vertical.dds</filename>
+			<x>
+				<copy src="magicpop_border_ULcorner" trait="x"/>
+			</x>
+			<y>
+				<copy src="magicpop_border_ULcorner" trait="y"/>
+				<add src="magicpop_border_ULcorner" trait="height"/>
+			</y>
+			<width>11</width>
+			<height>
+				<copy src="magicpop_border_LLcorner" trait="y"/>
+				<sub src="magicpop_border_ULcorner" trait="y"/>
+				<sub src="magicpop_border_ULcorner" trait="height"/>
+			</height>
+		</image>
+		<image name="magicpop_border_LLcorner">
+			<depth>1</depth>
+			<filename>Menus\Magic\magic_popup_border_corner.dds</filename>
+			<x>0</x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<add>2</add>
+			</y>
+			<width>10</width>
+			<height>10</height>
+		</image>
+		<image name="magicpop_border_bottom">
+			<depth>1</depth>
+			<filename>Menus\Magic\magic_popup_border_edge_horizontal.dds</filename>
+			<x>
+				<copy src="magicpop_border_LLcorner" trait="x"/>
+				<add src="magicpop_border_LLcorner" trait="width"/>
+			</x>
+			<y>
+				<copy src="magicpop_border_LLcorner" trait="y"/>
+			</y>
+			<width>
+				<copy src="magicpop_border_LRcorner" trait="x"/>
+				<sub src="magicpop_border_LLcorner" trait="x"/>
+				<sub src="magicpop_border_LLcorner" trait="width"/>
+			</width>
+			<height>11</height>
+		</image>
+		<image name="magicpop_border_LRcorner">
+			<depth>1</depth>
+			<filename>Menus\Magic\magic_popup_border_corner.dds</filename>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<add>2</add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<add>2</add>
+			</y>
+			<width>
+				<copy src="magicpop_border_ULcorner" trait="width"/>
+			</width>
+			<height>
+				<copy src="magicpop_border_ULcorner" trait="height"/>
+			</height>
+		</image>
+		<image name="magicpop_border_right">
+			<depth>1</depth>
+			<filename>Menus\Magic\magic_popup_border_edge_vertical.dds</filename>
+			<x>
+				<copy src="magicpop_border_URcorner" trait="x"/>
+			</x>
+			<y>
+				<copy src="magicpop_border_URcorner" trait="y"/>
+				<add src="magicpop_border_URcorner" trait="height"/>
+			</y>
+			<width>11</width>
+			<height>
+				<copy src="magicpop_border_LRcorner" trait="y"/>
+				<sub src="magicpop_border_URcorner" trait="y"/>
+				<sub src="magicpop_border_URcorner" trait="height"/>
+			</height>
+		</image>
+
+<!-- BOTTOM OF POPUP TEXT ==============================================================-->
+
+		<rect name="magicpop_background_bottom">
+			<id> 21 </id>
+			<depth>1</depth>
+			<visible> &false; </visible>
+			<locus> &true; </locus>
+			<x> 0 </x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<sub src="me()" trait="height"/>
+			</y>
+			<width>
+				<copy src="parent()" trait="width"/>
+			</width>
+			<height>
+				<copy src="magicpop_requires_text" trait="y"/>
+				<add src="magicpop_requires_text" trait="height"/>
+				<add>16</add>
+			</height>
+			<image name="magicpop_divider">
+				<filename> Menus\Magic\magic_popup_divider.dds </filename>
+				<depth> 1 </depth>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<div>2</div>
+				</x>
+				<y>
+					<copy>0</copy>
+					<sub>
+						<copy src="me()" trait="height"/>
+						<div>2</div>
+					</sub>					
+				</y>
+				<width> 320 </width>
+				<height> 16 </height>
+			</image>
+			<text name="magicpop_requires_text">
+				<font> 3 </font>
+				<string>
+					<copy src="parent()" trait="string" />
+				</string>
+				<wrapwidth> 340 </wrapwidth>
+				<depth> 1 </depth>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<div>2</div>
+				</x>
+				<y>
+					<copy src="magicpop_divider" trait="y" />
+					<add src="magicpop_divider" trait="height"/>
+					<add> 8 </add>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+			</text>
+		</rect>
+
+<!-- MAIN CONTENTS ==============================================================-->
+
+		<rect name="magicpop_contents">
+			<alpha> 0 </alpha>
+			<depth> 1 </depth>
+			<locus> &true; </locus>
+			<x> 0 </x>
+			<rect name="magicpop_effect_1">
+				<id> 11 </id>
+				<visible> &true; </visible>
+				<depth> 1 </depth>
+				<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+				<height> <copy src="MagicPopupMenu" trait="_item_height"/> </height>
+				<x> 15 </x>
+				<y>
+					<copy> 15 </copy>
+					<add>
+						<copy src="MagicPopupMenu" trait="_buffer"/>
+						<div>2</div>
+					</add>
+				</y>
+				<alpha> 0 </alpha>
+				<locus> &true; </locus>
+				<user0></user0> <!-- effect description string -->
+				<user1></user1> <!-- icon pathname -->
+				<user2>-1</user2> <!-- icon zoom -->
+				<image name="magicpop_effect_1_icon">
+					<zoom> <copy src="parent()" trait="user2"/> </zoom>
+					<filename>
+						<copy src="parent()" trait="user1" />
+					</filename>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub> 32 </sub>
+						<div> 2 </div>
+						<add> 2 </add>
+					</y>
+				</image>
+				<text name="magicpop_effect_1_text">
+					<font> 3 </font>
+					<string>
+						<copy src="parent()" trait="user0" />
+					</string>
+					<wrapwidth> 340 </wrapwidth>
+					<x> 45 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub src="me()" trait="height" />
+						<div> 2 </div>
+					</y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+				</text>
+			</rect>
+			<rect name="magicpop_effect_2">
+				<id> 12 </id>
+				<visible> &true; </visible>
+				<depth> 2 </depth>
+				<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+				<height> <copy src="MagicPopupMenu" trait="_item_height"/> </height>
+				<x> 15 </x>
+				<y>
+					<copy src="magicpop_effect_1" trait="y" />
+					<add src="me()" trait="height" />
+					<add src="MagicPopupMenu" trait="_buffer"/>
+				</y>
+				<alpha> 0 </alpha>
+				<locus> &true; </locus>
+				<user0></user0> <!-- effect description string -->
+				<user1></user1> <!-- icon pathname -->
+				<user2>-1</user2> <!-- icon zoom -->
+				<image name="magicpop_effect_2_divider">
+					<filename> Menus\Magic\magic_popup_divider_1.dds </filename>
+					<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+					<height> 4 </height>
+					<x> -5 </x>
+					<y>
+						<copy> 0 </copy>
+						<sub>
+							<copy src="MagicPopupMenu" trait="_buffer"/>
+							<div>2</div>
+						</sub>
+					</y>
+				</image>
+				<image name="magicpop_effect_2_icon">
+					<zoom> <copy src="parent()" trait="user2"/> </zoom>
+					<filename>
+						<copy src="parent()" trait="user1" />
+					</filename>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub> 32 </sub>
+						<div> 2 </div>
+						<add> 2 </add>
+					</y>
+				</image>
+				<text name="magicpop_effect_2_text">
+					<font> 3 </font>
+					<string>
+						<copy src="parent()" trait="user0" />
+					</string>
+					<wrapwidth> 340 </wrapwidth>
+					<x> 45 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub src="me()" trait="height" />
+						<div> 2 </div>
+					</y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+				</text>
+			</rect>
+			<rect name="magicpop_effect_3">
+				<id> 13 </id>
+				<visible> &true; </visible>
+				<depth> 2 </depth>
+				<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+				<height> <copy src="MagicPopupMenu" trait="_item_height"/> </height>
+				<x> 15 </x>
+				<y>
+					<copy src="magicpop_effect_2" trait="y" />
+					<add src="me()" trait="height" />
+					<add src="MagicPopupMenu" trait="_buffer"/>
+				</y>
+				<alpha> 0 </alpha>
+				<locus> &true; </locus>
+				<user0></user0> <!-- effect description string -->
+				<user1></user1> <!-- icon pathname -->
+				<user2>-1</user2> <!-- icon zoom -->
+				<image name="magicpop_effect_3_divider">
+					<filename> Menus\Magic\magic_popup_divider_1.dds </filename>
+					<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+					<height> 4 </height>
+					<x> -5 </x>
+					<y>
+						<copy> 0 </copy>
+						<sub>
+							<copy src="MagicPopupMenu" trait="_buffer"/>
+							<div>2</div>
+						</sub>
+					</y>
+				</image>
+				<image name="magicpop_effect_3_icon">
+					<zoom> <copy src="parent()" trait="user2"/> </zoom>
+					<filename>
+						<copy src="parent()" trait="user1" />
+					</filename>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub> 32 </sub>
+						<div> 2 </div>
+						<add> 2 </add>
+					</y>
+				</image>
+				<text name="magicpop_effect_3_text">
+					<font> 3 </font>
+					<string>
+						<copy src="parent()" trait="user0" />
+					</string>
+					<wrapwidth> 340 </wrapwidth>
+					<x> 45 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub src="me()" trait="height" />
+						<div> 2 </div>
+					</y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+				</text>
+			</rect>
+			<rect name="magicpop_effect_4">
+				<id> 14 </id>
+				<visible> &true; </visible>
+				<depth> 2 </depth>
+				<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+				<height> <copy src="MagicPopupMenu" trait="_item_height"/> </height>
+				<x> 15 </x>
+				<y>
+					<copy src="magicpop_effect_3" trait="y" />
+					<add src="me()" trait="height" />
+					<add src="MagicPopupMenu" trait="_buffer"/>
+				</y>
+				<alpha> 0 </alpha>
+				<locus> &true; </locus>
+				<user0></user0> <!-- effect description string -->
+				<user1></user1> <!-- icon pathname -->
+				<user2>-1</user2> <!-- icon zoom -->
+				<image name="magicpop_effect_4_divider">
+					<filename> Menus\Magic\magic_popup_divider_1.dds </filename>
+					<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+					<height> 4 </height>
+					<x> -5 </x>
+					<y>
+						<copy> 0 </copy>
+						<sub>
+							<copy src="MagicPopupMenu" trait="_buffer"/>
+							<div>2</div>
+						</sub>
+					</y>
+				</image>
+				<image name="magicpop_effect_4_icon">
+					<zoom> <copy src="parent()" trait="user2"/> </zoom>
+					<filename>
+						<copy src="parent()" trait="user1" />
+					</filename>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub> 32 </sub>
+						<div> 2 </div>
+						<add> 2 </add>
+					</y>
+				</image>
+				<text name="magicpop_effect_4_text">
+					<font> 3 </font>
+					<string>
+						<copy src="parent()" trait="user0" />
+					</string>
+					<wrapwidth> 340 </wrapwidth>
+					<x> 45 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub src="me()" trait="height" />
+						<div> 2 </div>
+					</y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+				</text>
+			</rect>
+			<rect name="magicpop_effect_5">
+				<id> 15 </id>
+				<visible> &true; </visible>
+				<depth> 2 </depth>
+				<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+				<height> <copy src="MagicPopupMenu" trait="_item_height"/> </height>
+				<x> 15 </x>
+				<y>
+					<copy src="magicpop_effect_4" trait="y" />
+					<add src="me()" trait="height" />
+					<add src="MagicPopupMenu" trait="_buffer"/>
+				</y>
+				<alpha> 0 </alpha>
+				<locus> &true; </locus>
+				<user0></user0> <!-- effect description string -->
+				<user1></user1> <!-- icon pathname -->
+				<user2>-1</user2> <!-- icon zoom -->
+				<image name="magicpop_effect_5_divider">
+					<filename> Menus\Magic\magic_popup_divider_1.dds </filename>
+					<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+					<height> 4 </height>
+					<x> -5 </x>
+					<y>
+						<copy> 0 </copy>
+						<sub>
+							<copy src="MagicPopupMenu" trait="_buffer"/>
+							<div>2</div>
+						</sub>
+					</y>
+				</image>
+				<image name="magicpop_effect_5_icon">
+					<zoom> <copy src="parent()" trait="user2"/> </zoom>
+					<filename>
+						<copy src="parent()" trait="user1" />
+					</filename>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub> 32 </sub>
+						<div> 2 </div>
+						<add> 2 </add>
+					</y>
+				</image>
+				<text name="magicpop_effect_5_text">
+					<font> 3 </font>
+					<string>
+						<copy src="parent()" trait="user0" />
+					</string>
+					<wrapwidth> 340 </wrapwidth>
+					<x> 45 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub src="me()" trait="height" />
+						<div> 2 </div>
+					</y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+				</text>
+			</rect>
+			<rect name="magicpop_effect_6">
+				<id> 16 </id>
+				<visible> &true; </visible>
+				<depth> 2 </depth>
+				<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+				<height> <copy src="MagicPopupMenu" trait="_item_height"/> </height>
+				<x> 15 </x>
+				<y>
+					<copy src="magicpop_effect_5" trait="y" />
+					<add src="me()" trait="height" />
+					<add src="MagicPopupMenu" trait="_buffer"/>
+				</y>
+				<alpha> 0 </alpha>
+				<locus> &true; </locus>
+				<user0></user0> <!-- effect description string -->
+				<user1></user1> <!-- icon pathname -->
+				<user2>-1</user2> <!-- icon zoom -->
+				<image name="magicpop_effect_6_divider">
+					<filename> Menus\Magic\magic_popup_divider_1.dds </filename>
+					<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+					<height> 4 </height>
+					<x> -5 </x>
+					<y>
+						<copy> 0 </copy>
+						<sub>
+							<copy src="MagicPopupMenu" trait="_buffer"/>
+							<div>2</div>
+						</sub>
+					</y>
+				</image>
+				<image name="magicpop_effect_6_icon">
+					<zoom> <copy src="parent()" trait="user2"/> </zoom>
+					<filename>
+						<copy src="parent()" trait="user1" />
+					</filename>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub> 32 </sub>
+						<div> 2 </div>
+						<add> 2 </add>
+					</y>
+				</image>
+				<text name="magicpop_effect_6_text">
+					<font> 3 </font>
+					<string>
+						<copy src="parent()" trait="user0" />
+					</string>
+					<wrapwidth> 340 </wrapwidth>
+					<x> 45 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub src="me()" trait="height" />
+						<div> 2 </div>
+					</y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+				</text>
+			</rect>
+			<rect name="magicpop_effect_7">
+				<id> 17 </id>
+				<visible> &true; </visible>
+				<depth> 2 </depth>
+				<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+				<height> <copy src="MagicPopupMenu" trait="_item_height"/> </height>
+				<x> 15 </x>
+				<y>
+					<copy src="magicpop_effect_6" trait="y" />
+					<add src="me()" trait="height" />
+					<add src="MagicPopupMenu" trait="_buffer"/>
+				</y>
+				<alpha> 0 </alpha>
+				<locus> &true; </locus>
+				<user0></user0> <!-- effect description string -->
+				<user1></user1> <!-- icon pathname -->
+				<user2>-1</user2> <!-- icon zoom -->
+				<image name="magicpop_effect_7_divider">
+					<filename> Menus\Magic\magic_popup_divider_1.dds </filename>
+					<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+					<height> 4 </height>
+					<x> -5 </x>
+					<y>
+						<copy> 0 </copy>
+						<sub>
+							<copy src="MagicPopupMenu" trait="_buffer"/>
+							<div>2</div>
+						</sub>
+					</y>
+				</image>
+				<image name="magicpop_effect_7_icon">
+					<zoom> <copy src="parent()" trait="user2"/> </zoom>
+					<filename>
+						<copy src="parent()" trait="user1" />
+					</filename>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub> 32 </sub>
+						<div> 2 </div>
+						<add> 2 </add>
+					</y>
+				</image>
+				<text name="magicpop_effect_7_text">
+					<font> 3 </font>
+					<string>
+						<copy src="parent()" trait="user0" />
+					</string>
+					<wrapwidth> 340 </wrapwidth>
+					<x> 45 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub src="me()" trait="height" />
+						<div> 2 </div>
+					</y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+				</text>
+			</rect>
+			<rect name="magicpop_effect_8">
+				<id> 18 </id>
+				<visible> &true; </visible>
+				<depth> 2 </depth>
+				<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+				<height> <copy src="MagicPopupMenu" trait="_item_height"/> </height>
+				<x> 15 </x>
+				<y>
+					<copy src="magicpop_effect_7" trait="y" />
+					<add src="me()" trait="height" />
+					<add src="MagicPopupMenu" trait="_buffer"/>
+				</y>
+				<alpha> 0 </alpha>
+				<locus> &true; </locus>
+				<user0></user0> <!-- effect description string -->
+				<user1></user1> <!-- icon pathname -->
+				<user2>-1</user2> <!-- icon zoom -->
+				<image name="magicpop_effect_8_divider">
+					<filename> Menus\Magic\magic_popup_divider_1.dds </filename>
+					<width> <copy src="magicpop_background" trait="width"/> <sub>40</sub> </width>
+					<height> 4 </height>
+					<x> -5 </x>
+					<y>
+						<copy> 0 </copy>
+						<sub>
+							<copy src="MagicPopupMenu" trait="_buffer"/>
+							<div>2</div>
+						</sub>
+					</y>
+				</image>
+				<image name="magicpop_effect_8_icon">
+					<zoom> <copy src="parent()" trait="user2"/> </zoom>
+					<filename>
+						<copy src="parent()" trait="user1" />
+					</filename>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub> 32 </sub>
+						<div> 2 </div>
+						<add> 2 </add>
+					</y>
+				</image>
+				<text name="magicpop_effect_8_text">
+					<font> 3 </font>
+					<string>
+						<copy src="parent()" trait="user0" />
+					</string>
+					<wrapwidth> 340 </wrapwidth>
+					<x> 45 </x>
+					<y>
+						<copy src="parent()" trait="height" />
+						<sub src="me()" trait="height" />
+						<div> 2 </div>
+					</y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+				</text>
+			</rect>
+		</rect> <!-- "magicpop_contents" -->
+	</image> <!-- "magicpop_background" -->
+</menu>

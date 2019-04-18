@@ -1,0 +1,585 @@
+<!-- spell_purchase.xml -->
+<menu name="SpellPurchaseMenu">
+	<class> &SpellPurchaseMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	
+	<user0> 5 </user0>			<!-- Buffer between left border and icon -->
+	<user1> 64 </user1>			<!-- Icon size -->
+	<user2> 8 </user2>			<!-- Buffer between icon and spell text -->
+	<user3> 370 </user3>		<!-- Wrap width of spell text -->
+	<user10>					<!-- X-position of fully-exposed magic popup menu -->
+		<copy src="me()" trait="x"/>
+		<add src="child(spell_background)" trait="x"/>
+		<add src="child(spell_background)" trait="width"/>
+		<sub> 24 </sub>
+	</user10>
+	<user12>					<!-- lowest possible drop for the pop-up menu -->
+		<copy src="screen()" trait="height"/>
+		<sub src="screen()" trait="cropy"/>
+		<sub src="screen()" trait="cropy"/>
+		<sub> 75 </sub>
+	</user12>
+	
+	<xbuttonb> <ref src="spell_button_exit" trait="clicked"/> </xbuttonb>
+	<xbuttony> <ref src="spell_button_haggle" trait="clicked"/> </xbuttony>
+	
+	
+	<rect name="inv_FocusBox">
+<include src="focus_box.xml"/>
+		<id> 8 </id>
+		<visible> &false; </visible>
+		<user15>
+			<copy src="parent()" trait="depth" />
+			<add> 0.5 </add>
+		</user15>
+	</rect>
+	
+	<image name="spell_background">
+		<filename> Menus\Shared\shared_combo_background_1.dds </filename>
+		<red> 255 </red>
+		<width> 746 </width>
+		<height> 799 </height>
+		<id> 1 </id>
+		<depth> 0 </depth>
+		<user0> 760 </user0>
+		<user1> 600 </user1>
+		<x> 60		<!-- This cannot be a relative value because the magic popup background x value is absolute.
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+			<sub> 200 </sub>	-->
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		<target> &true; </target>
+	
+		<image name="spell_background_2">
+			<filename> Menus\Shared\shared_combo_background_2.dds </filename>
+			<width> 64 </width>
+			<height> 799 </height>
+			<x> 700 </x>
+			<y> 0 </y>
+			<depth> -15 </depth>
+		</image>
+		
+		<text name="spell_menu_title">
+			<id>9</id>
+			<target>&true;</target>
+			<clicksound>3</clicksound>
+			<depth> 3 </depth>
+			<string> <copy src="strings()" trait="_spells" /> </string>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="spell_buy_window" trait="x"/>
+				<add src="vert_grid_column1" trait="x"/>
+				<sub>
+					<copy src="vert_grid_column1" trait="x"/>
+					<sub src="vert_grid_left" trait="x"/>
+					<add src="me()" trait="width"/>
+					<div>2</div>
+				</sub>
+			</x>
+			<y> <copy src="spell_cost_icon" trait="y"/> </y>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33  </blue>
+			<xright><ref src="spell_cost_icon" trait="mouseover"/> </xright>
+			<xdown> <ref src="spell_buy_list" trait="mouseover"/> </xdown>
+		</text>
+		
+		<image name="spell_cost_icon">
+			<id>10</id>
+			<target>&true;</target>
+			<clicksound>3</clicksound>
+			<depth> 3 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 288 </cropx>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x>
+				<copy src="spell_buy_window" trait="x"/>
+				<add src="vert_grid_column1" trait="x"/>
+				<add>
+					<copy src="vert_grid_column2" trait="x"/>
+					<sub src="vert_grid_column1" trait="x"/>
+					<sub src="me()" trait="width"/>
+					<div>2</div>
+				</add>
+			</x>
+			<y> 45 </y>
+			<xleft><ref src="spell_menu_title" trait="mouseover"/> </xleft>
+			<xright><ref src="spell_gold_money_icon" trait="mouseover"/> </xright>
+			<xdown> <ref src="spell_buy_list" trait="mouseover"/> </xdown>
+		</image>
+		<image name="spell_gold_money_icon">
+			<id>11</id>
+			<target>&true;</target>
+			<clicksound>3</clicksound>
+			<depth> 3 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 224 </cropx>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x>
+				<copy src="spell_buy_window" trait="x"/>
+				<add src="vert_grid_column2" trait="x"/>
+				<add>
+					<copy src="vert_grid_right" trait="x"/>
+					<sub src="vert_grid_column2" trait="x"/>
+					<sub src="me()" trait="width"/>
+					<div>2</div>
+				</add>
+				<sub> 5 </sub>
+			</x>
+			<y> 45 </y>
+			<locus> &true; </locus>
+			<xleft><ref src="spell_cost_icon" trait="mouseover"/> </xleft>
+			<xdown> <ref src="spell_buy_list" trait="mouseover"/> </xdown>
+			
+			<image name="spell_gold_arrow_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 352 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 23 </x>
+				<y> 0 </y>
+			</image>
+		</image>
+		
+		
+		<!-- SCROLL BAR ==========================================================================-->
+		<image name="spell_buy_list_scroll_bar">
+<include src="vertical_scroll.xml"/>
+			<id> 4 </id>
+			<target> &true; </target>
+			<x>
+				<copy src="spell_buy_window" trait="x"/>
+				<add src="spell_buy_window" trait="width"/>
+			</x>
+			<y>
+				<copy src="spell_buy_window" trait="y" />
+				<add> 32 </add>
+			</y>
+			<height>
+				<copy src="spell_buy_window" trait="height" />
+				<sub> 64 </sub>
+			</height>
+			<depth> 20 </depth>
+			
+			<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+			<user2>
+				<copy src="spell_buy_list" trait="child_count" />	<!-- set by code - number of visible elements in list -->
+				<sub> 8 </sub>
+			</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+										 items minus the number of items visible.  i.e. if your list has
+										 8 items and you can see 2 at any one time, this should be 6 -->
+			<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+			<user4> 7 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+			<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+			<user6> 5 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+			<!-- user7 = current value -->
+			<user8> 8 </user8>		<!-- How many items are visible at once -->
+			<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+			<user10> 0 </user10>	<!-- reserved -->
+		</image>
+		
+		
+		<!-- WINDOW ========================================================================================-->
+		<rect name="spell_buy_window">
+			<clipwindow> &true; </clipwindow>
+			<height> 600 </height>
+			<width> 640 </width>
+			<x> 50 </x>
+			<y> 80 </y>
+			<locus> &true; </locus>
+
+			<rect name="spell_buy_list">
+				<id> 3 </id>
+				<alpha> 0 </alpha>
+				<depth> 2 </depth>
+				<locus> &true; </locus>
+				<clips> &true; </clips>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> 
+					<copy src="me()" trait="childcount"/>
+					<mul> 75 </mul>
+				</height>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub>
+						<copy src="spell_buy_list_scroll_bar" trait="user7" />
+						<mult> 75 </mult>
+					</sub>
+				</y>
+						
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &false; </xdefault>
+				<xlist> &xlist; </xlist>
+				<xleft> <ref src="spell_button_exit" trait="mouseover" /> </xleft>
+				<xright> <ref src="spell_button_haggle" trait="mouseover" /> </xright>
+				<xup> <ref src="spell_menu_title" trait="mouseover"/> </xup>
+				<!--xdown> &first; </xdown-->
+				<xscroll> <ref src="spell_buy_list_scroll_bar" trait="user5" /> </xscroll>
+				
+				<!-- template items are attached here in code -->
+				
+			</rect>
+			
+			<image name="horiz_grid_top">
+				<filename> Menus\Shared\shared_border_horizontal_1.dds </filename>
+				<depth> 2 </depth>
+				<x> 0 </x>
+				<y>
+					<copy>0</copy>
+					<sub>
+						<copy src="me()" trait="height"/>
+						<div> 2 </div>
+					</sub>
+				</y>
+				<width>
+					<copy src="parent()" trait="width"/>
+				</width>
+				<height> 4 </height>
+			</image>
+			
+			<image name="horiz_grid_bottom">
+				<filename> Menus\Shared\shared_border_horizontal_3.dds </filename>
+				<depth>
+					<copy src="horiz_grid_top" trait="depth"/>
+				</depth>
+				<x> 0 </x>
+				<y>
+					<copy src="parent()" trait="height"/>
+					<sub>
+						<copy src="me()" trait="height"/>
+						<div> 2 </div>
+					</sub>
+				</y>
+				<width>
+					<copy src="parent()" trait="width"/>
+				</width>
+				<height> 4 </height>
+			</image>
+
+			<image name="vert_grid_left">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<depth>
+					<copy src="horiz_grid_top" trait="depth"/>
+				</depth>
+				<x>
+					<copy>0</copy>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div> 2 </div>
+					</sub>
+				</x>
+				<y> 0 </y>
+				<height>
+					<copy src="parent()" trait="height"/>
+				</height>
+				<width> 4 </width>
+			</image>
+
+			<image name="vert_grid_column1">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<depth>
+					<copy src="horiz_grid_top" trait="depth"/>
+				</depth>
+				<x>
+					<copy src="SpellPurchaseMenu" trait="user0"/>
+					<add src="SpellPurchaseMenu" trait="user1"/>
+					<add src="SpellPurchaseMenu" trait="user2"/>
+					<add src="SpellPurchaseMenu" trait="user3"/>
+				</x>
+				<y> 0 </y>
+				<height>
+					<copy src="parent()" trait="height"/>
+				</height>
+				<width> 4 </width>
+				<clips> &true; </clips>
+			</image>
+
+			<image name="vert_grid_column2">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<depth>
+					<copy src="horiz_grid_top" trait="depth"/>
+				</depth>
+				<x>
+					<copy src="vert_grid_column1" trait="x"/>
+					<add>
+						<copy src="vert_grid_right" trait="x"/>
+						<sub src="vert_grid_column1" trait="x"/>
+						<div>2</div>
+					</add>
+				</x>
+				<y> 0 </y>
+				<height>
+					<copy src="parent()" trait="height"/>
+				</height>
+				<width> 4 </width>
+			</image>
+
+			<image name="vert_grid_right">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<depth>
+					<copy src="horiz_grid_top" trait="depth"/>
+				</depth>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div> 2 </div>
+					</sub>
+				</x>
+				<y> 0 </y>
+				<height>
+					<copy src="parent()" trait="height"/>
+				</height>
+				<width> 4 </width>
+			</image>
+		</rect>
+		
+		
+		<!-- GOLD ============================================================================-->
+		<image name="cont_money_icon">
+			<depth> 2 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 224 </cropx>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x> 60 </x>
+			<y>
+				<copy src="spell_button_haggle" trait="y"/>
+			</y>
+		</image>
+		<text name="player_money_text">
+			<id> 7 </id>
+			<depth> 2 </depth>
+			<string></string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33  </blue>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="cont_money_icon" trait="x" />
+				<add src="cont_money_icon" trait="width"/>
+				<add> 16 </add>
+			</x>
+			<y>
+				<copy src="spell_button_haggle" trait="y"/>
+			</y>
+		</text>
+		
+		
+		<!-- BUTTONS ===========================================================================-->
+		<image name="spell_button_haggle">
+<include src="button_long.xml" />
+			<id> 6 </id>
+			<depth> 2 </depth>
+			<x>
+				<copy src="spell_button_exit" trait="x"/>
+				<sub src="me()" trait="width"/>
+				<sub> 40 </sub>
+			</x>
+			<y> <copy src="spell_button_exit" trait="y"/> </y>
+			<clicksound> 2 </clicksound>
+			<user0> <copy src="strings()" trait="_haggle" /> </user0>
+			
+			<user20><!--&xbuttony;-->4 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="spell_button_exit" trait="mouseover"/> </xleft>
+			<xright> <ref src="spell_button_exit" trait="mouseover"/> </xright>
+			<xdown> <ref src="spell_buy_list" trait="mouseover"/> </xdown>
+			<xup> <ref src="spell_buy_list" trait="mouseover"/> </xup>
+		</image>
+		
+		<image name="spell_button_exit">
+<include src="button_short.xml" />
+			<id> 2 </id>
+			<depth> 2 </depth>
+			<target> &true; </target>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 50 </sub>
+				<sub>
+					<copy>32</copy>
+					<onlyif>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </onlyif>
+				</sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 50 </sub>
+			</y>
+			<clicksound> 2 </clicksound>
+			<user0> <copy src="strings()" trait="_exit" /> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="spell_button_haggle" trait="mouseover"/> </xleft>
+			<xright> <ref src="spell_button_haggle" trait="mouseover"/> </xright>
+			<xdown> <ref src="spell_buy_list" trait="mouseover"/> </xdown>
+			<xup> <ref src="spell_buy_list" trait="mouseover"/> </xup>
+		</image>
+		
+	</image>
+	
+	
+	<!-- TEMPLATE =================================================================================-->
+	<template name="spell_item_template">
+		<rect name="spell_list_item">
+			<clips> &true; </clips>
+			<alpha> 0 </alpha>
+			<user10> &false; </user10>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<depth> 1 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult> 75 </mult>
+			</y>
+			<width>
+				<copy src="spell_buy_window" trait="width"/>
+			</width>
+			<height> 71 </height>
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			<user0> 0 </user0>		<!-- effect description string -->
+			<user1> xxx </user1>	<!-- icon pathname -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="spell_buy_list_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="effect_icon">
+				<clips> &true; </clips>
+				<filename>
+					<copy src="parent()" trait="user1" />
+				</filename>
+				<width>
+					<copy src="SpellPurchaseMenu" trait="user1"/>
+				</width>
+				<height>
+					<copy src="SpellPurchaseMenu" trait="user1"/>
+				</height>
+				<x>
+					<copy src="SpellPurchaseMenu" trait="user0"/>
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div>2</div>
+				</y>
+			</image>
+			<text name="effect_text">
+				<clips> &true; </clips>
+				<string>
+					<copy src="parent()" trait="user3" />
+				</string>
+				<wrapwidth>
+					<copy src="SpellPurchaseMenu" trait="user3"/>
+				</wrapwidth>
+				<x>
+					<copy src="effect_icon" trait="x"/>
+					<add src="effect_icon" trait="width"/>
+					<add src="SpellPurchaseMenu" trait="user2"/>	<!-- buffer -->
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div>2</div>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+			</text>
+			
+			<text name="spell_cost">
+				<clips> &true; </clips>
+				<string>
+					<copy src="parent()" trait="user5" />
+				</string>
+				<justify> &center; </justify>
+				<wrapwidth>
+					<copy src="vert_grid_column2" trait="x"/>
+					<sub src="vert_grid_column1" trait="x"/>
+				</wrapwidth>
+				<x>
+					<copy src="vert_grid_column1" trait="x"/>
+					<add>
+						<copy src="me()" trait="wrapwidth"/>
+						<div>2</div>
+					</add>
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+			</text>
+			
+			<text name="spell_gold_cost">
+				<clips> &true; </clips>
+				<string>
+					<copy src="parent()" trait="user9" />
+				</string>
+				<justify> &center; </justify>
+				<wrapwidth>
+					<copy src="vert_grid_right" trait="x"/>
+					<sub src="vert_grid_column2" trait="x"/>
+				</wrapwidth>
+				<x>
+					<copy src="vert_grid_column2" trait="x"/>
+					<add>
+						<copy src="me()" trait="wrapwidth"/>
+						<div>2</div>
+					</add>
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+			</text>
+		</rect>
+	</template>
+</menu>

@@ -1,0 +1,1156 @@
+<!-- magic_menu.xml -->
+<menu name="MagicMenu">
+	<class> &MagicMenu; </class>
+	<alpha>	0 </alpha> 
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<user0> 1 </user0>				<!-- current tab -->
+	<user1> -1 </user1>				<!-- position of greater powers header in list -->
+	<user2> -1 </user2>				<!-- position of lesser powers header in list -->
+	<user3> -1 </user3>				<!-- position of spell hseader in list -->
+	<user4> -1 </user4>				<!-- position of scrolls header in list -->
+	<user5> 0 </user5>				<!-- number of items in list -->
+	<user6> 0 </user6>				<!-- magic effectiveness -->
+	<user7>							<!-- X-position of fully-exposed magic popup menu -->
+		<copy src="me()" trait="x"/>
+		<add src="child(magic_background)" trait="x"/>
+		<add src="child(magic_background)" trait="width"/>
+		<sub> 20 </sub>
+	</user7>
+	<user11> &false; </user11>		<!-- true if selected item is equiped -->
+	<user12>						<!-- lowest possible drop for the pop-up menu -->
+		<copy src="screen()" trait="height"/>
+		<sub src="screen()" trait="cropy"/>
+		<sub src="screen()" trait="cropy"/>
+		<sub> 175 </sub>
+		<min>
+			<copy> 9999 </copy>
+			<onlyifnot>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </onlyifnot>
+			<add src="magic_xbox_hints" trait="y"/>
+		</min>
+	</user12>
+	<user23> <copy src="magic_background" trait="depth"/> </user23>	<!-- depth of background, read by code -->
+	
+	<xleft> <ref src="magic_tabs_prev" trait="clicked" /> </xleft>
+	<xright> <ref src="magic_tabs_next" trait="clicked" /> </xright>
+	
+	
+	<!-- XBOX (ONLY) HINTS ==================================================================-->
+	<rect name="magic_xbox_hints">
+		<visible>
+         <copy>&true;</copy>
+         <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+      </visible>
+		<width> 100 </width>
+		<height> 100 </height>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub>
+				<copy src="child(magic_hint_equip)" trait="width"/>
+				<max src="child(magic_hint_quickkey)" trait="width"/>
+				<max src="child(magic_hint_left_stick)" trait="width"/>
+			</sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="child(magic_hint_left_stick)" trait="y"/>
+			<sub src="child(magic_hint_left_stick)" trait="height"/>
+			<add> 15 </add>
+		</y>
+		<depth> 1 </depth>
+		<locus> &true; </locus>
+	
+		<rect name="magic_hint_equip">
+<include src="xbox_floating_hint.xml" />
+			<visible> <not src="MagicMenu" trait="user11"/> </visible>
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y> 0 </y>
+			<user0> <copy src="strings()" trait="_equip"/> </user0>
+			<user20><!--&xbuttona;-->1 </user20>
+		</rect>
+	
+		<rect name="magic_hint_quickkey">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y> <copy src="me()" trait="height"/> </y>
+			<user0> <copy src="strings()" trait="_quickkey"/> </user0>
+			<user20><!--&xbuttony;-->4 </user20>
+		</rect>
+	
+		<rect name="magic_hint_left_stick">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="height"/>
+				<mul> 2 </mul>
+			</y>
+			<user0> <copy src="strings()" trait="_move_tab"/> </user0>
+			<user20><!--&xbuttonls;-->9 </user20>
+		</rect>
+	</rect>
+		
+	
+	
+	<!-- FOCUS BOX ==================================================================-->
+	<rect name="magic_FocusBox">
+<include src="focus_box.xml"/>
+		<id> 9 </id>
+		<visible> &false; </visible>
+	</rect>
+	
+	
+	<image name="magic_background">
+		<id> &generic; </id>
+		<target> &true; </target>
+		<filename> Menus\Shared\shared_main_background_1.dds </filename>
+		<depth> 1 </depth>
+		<width> 745 </width>
+		<height> 792 </height>
+		<x>
+			<copy src="screen()" trait="cropx"/>
+			<add src="screen()" trait="cropx"/>
+			<sub> 60 </sub>
+			<max src="screen()" trait="cropx"/>
+			<add> 7 </add>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+			<add> 3 </add>
+		</y>
+		<locus> &true; </locus>
+		
+		<image name="magic_background_2">
+			<filename> Menus\Shared\shared_main_background_2.dds </filename>
+			<depth> -15 </depth>
+			<width> 54 </width>
+			<height> 792 </height>
+			<x> 700 </x>
+			<y> 0 </y>
+		</image>
+		
+		
+		<!-- PAGES ============================================================== -->
+		<image name="magic_p1">
+			<visible> <copy src="MagicMenu" trait="user0"/> <eq> 1 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_01_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 4 </depth>
+		</image>
+		
+		<image name="magic_p2">
+			<visible> <copy src="MagicMenu" trait="user0"/> <eq> 2 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_02_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 4 </depth>
+		</image>
+		
+		<image name="magic_p3">
+			<visible> <copy src="MagicMenu" trait="user0"/> <eq> 3 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_03_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 4 </depth>
+		</image>
+		
+		<image name="magic_p4">
+			<visible> <copy src="MagicMenu" trait="user0"/> <eq> 4 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_04_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 4 </depth>
+		</image>
+		
+		<image name="magic_p5">
+			<visible> <copy src="MagicMenu" trait="user0"/> <eq> 5 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_05_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 4 </depth>
+		</image>
+			
+
+		<!-- LINES ============================================================== -->
+		<rect name="magic_misc_elements">
+			<width> 596 </width>
+			<height> 160 </height>
+			<x> 110 </x>
+			<y> 65 </y>
+			<depth> 6 </depth>
+			<locus> &true; </locus>
+			
+			<image name="magic_line_top">
+				<filename> Menus\Shared\shared_border_horizontal_1.dds </filename>
+				<width> 636 </width>
+				<height> 8 </height>
+				<x> -50 </x>
+				<y> 20 </y>
+				<depth> 1 </depth>
+			</image>
+			<image name="magic_line_bottom">
+				<filename> Menus\Shared\shared_border_horizontal_2.dds </filename>
+				<width> 630 </width>
+				<height> 8 </height>
+				<x> -50 </x>
+				<y> 500 </y>
+				<depth> 1 </depth>
+			</image>
+			<image name="magic_line_left">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<width> 8 </width>
+				<height> 512 </height>
+				<x> 2 </x>
+				<y> 8 </y>
+				<depth> 1 </depth>
+			</image>
+			<image name="magic_line_center">
+				<filename> Menus\Shared\shared_border_vertical_1.dds </filename>
+				<width> 8 </width>
+				<height> 512 </height>
+				<x> 480 </x>
+				<y> 8 </y>
+				<depth> 1 </depth>
+			</image>
+			<image name="magic_line_right">
+				<filename> Menus\Shared\shared_border_vertical_1.dds </filename>
+				<width> 8 </width>
+				<height> 512 </height>
+				<x> 568 </x>
+				<y> 8 </y>
+				<depth> 1 </depth>
+			</image>
+			
+			<image name="magic_cost_icon">
+				<id>14</id>
+				<target>&true;</target>
+				<clicksound>3</clicksound>
+				<visible>
+					<copy src="MagicMenu" trait="user0"/>
+					<neq> 5 </neq>
+				</visible>
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 288 </cropx>
+				<x> 514 </x>
+				<y> -20 </y>
+				<width> 32 </width>
+				<height> 32 </height>
+				<xleft> <ref src="magic_p1234_header_top" trait="mouseover"/> </xleft>
+				<xdown> <ref src="magic_list_contents" trait="mouseover"/> </xdown>
+			</image>
+			
+			<image name="magic_magnitude_icon">
+				<visible>
+					<copy src="MagicMenu" trait="user0"/>
+					<eq> 5 </eq>
+				</visible>
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 64 </cropx>
+				<x> 514 </x>
+				<y> -20 </y>
+				<width> 32 </width>
+				<height> 32 </height>
+			</image>
+		</rect>
+		
+
+		<!-- EXTRAS ============================================================== -->
+		<text name="magic_effectivness">
+			<depth> 28 </depth>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33  </blue>
+			<alpha> 255 </alpha>
+			<wrapwidth> 500 </wrapwidth>
+			<string> <copy src="MagicMenu" trait="user6" /> </string>
+			<x> 370 </x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub> 213 </sub>
+			</y>
+		</text>
+
+
+		<!-- TABS ============================================================== -->
+		<image name="magic_tabs">
+			<filename> Menus\Shared\shared_page_tabs.dds </filename>
+			<locus> &true; </locus>
+			<depth> 1 </depth>
+			<width> 730 </width>
+			<height> 128 </height>
+			<x> 0 </x>
+			<y> 594 </y>
+				
+			<rect name="magic_tabs_prev">
+				<id> 7 </id>
+				<target> &true; </target>
+				<width> 1 </width>
+				<height> 1 </height>
+				<x> -1 </x>
+				<y> -1 </y>
+				<clicksound>5</clicksound>
+			</rect>
+			
+			<rect name="magic_tabs_next">
+				<id> 8 </id>
+				<target> &true; </target>
+				<width> 1 </width>
+				<height> 1 </height>
+				<x> -1 </x>
+				<y> -1 </y>
+				<clicksound>5</clicksound>
+			</rect>
+			
+			<rect name="magic_tabs_p1">
+				<id> 1 </id>
+				<target> <copy src="magic_p1" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 28 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="magic_tabs_p1_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 0 </cropx>
+					<cropy> 64 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="magic_tabs_p1_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="magic_tabs_p1_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="magic_tabs_p2">
+				<id> 2 </id>
+				<target> <copy src="magic_p2" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 165 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="magic_tabs_p2_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 192 </cropx>
+					<cropy> 64 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="magic_tabs_p2_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="magic_tabs_p2_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="magic_tabs_p3">
+				<id> 3 </id>
+				<target> <copy src="magic_p3" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 304 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="magic_tabs_p3_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 64 </cropx>
+					<cropy> 64 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="magic_tabs_p3_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="magic_tabs_p3_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="magic_tabs_p4">
+				<id> 4 </id>
+				<target> <copy src="magic_p4" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 443 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="magic_tabs_p4_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 128 </cropx>
+					<cropy> 64 </cropy>
+					<depth> -1 </depth>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="magic_tabs_p4_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<depth> -3 </depth>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="magic_tabs_p4_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="magic_tabs_p5">
+				<id> 5 </id>
+				<target> <copy src="magic_p5" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 578 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="magic_tabs_p5_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 256 </cropx>
+					<cropy> 64 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="magic_tabs_p5_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="magic_tabs_p5_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+		</image>
+		
+				
+		<!-- SCROLL ============================================================== -->
+		<image name="magic_scroll_bar">
+<include src="vertical_scroll.xml"/>
+			<id> 11 </id>
+			<depth> 12 </depth>
+			<x> 690 </x>
+			<y> <copy src="magic_window" trait="y"/> </y>
+			<height> <copy src="magic_window" trait="height"/> </height>
+			
+			<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+			<user2>
+				<copy src="magic_list_contents" trait="user0"/>	<!-- set by code - number of visible elements in list -->
+				<sub> 5 </sub>
+			</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+										 items minus the number of items visible.  i.e. if your list has
+										 8 items and you can see 2 at any one time, this should be 6 -->
+			<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+			<user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+			<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+			<user6> 12 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+			<!-- user7 = current value -->
+			<user8> 6 </user8>		<!-- How many items are visible at once -->
+			<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+			<user10></user10>		<!-- reserved -->
+		</image>
+	
+	
+		<!-- TOP HEADERS ============================================================== -->
+		<rect name="magic_headers_top">
+			<x> 145 </x>
+			<y> 45 </y>
+			<depth> 7 </depth>
+			<locus> &true; </locus>
+
+			<_headernum>
+				<copy src="magic_scroll_bar" trait="user7"/>		<!-- scrollbar's current value -->
+				<gt src="MagicMenu" trait="user1"/>					<!-- position of greater power header in list -->
+				<add>
+					<copy src="magic_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+					<gt src="MagicMenu" trait="user2"/>				<!-- position of lesser power header in list -->
+				</add>
+				<add>
+					<copy src="magic_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+					<gt src="MagicMenu" trait="user3"/>				<!-- position of spells header in list -->
+				</add>
+				<add>
+					<copy src="magic_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+					<gt src="MagicMenu" trait="user4"/>				<!-- position of scrolls header in list -->
+				</add>
+				<sub>4</sub>										<!-- 2=true, 1=false -->
+				<max>0</max>
+				<min>4</min>
+			</_headernum>
+
+			<_header_0> <copy src="strings()" trait="_spells"/>       </_header_0>
+			<_header_1> <copy src="strings()" trait="_greaterpower"/> </_header_1>
+			<_header_2> <copy src="strings()" trait="_lesserpower"/>  </_header_2>
+			<_header_3> <copy src="strings()" trait="_spells"/>       </_header_3>
+			<_header_4> <copy src="strings()" trait="_scrolls"/>      </_header_4>
+
+			<text name="magic_p1234_header_top">
+				<id>13</id>
+				<target>&true;</target>
+				<clicksound>3</clicksound>
+				<visible>
+					<copy src="MagicMenu" trait="user0"/>
+					<neq> 5 </neq>
+				</visible>
+				<string>
+					<copy src="parent()" trait="_headernum"/>
+					<copy src="parent()" trait="_header_"/> 
+				</string>
+				<font> 3 </font>
+				<x> 130 </x>
+				<y> 5 </y>
+				<depth> 7 </depth>
+				<red> 51 </red>
+				<green> 79 </green>
+				<blue> 142 </blue>
+				<alpha> 255 </alpha>
+				<justify> &center; </justify>
+				<xright> <ref src="magic_cost_icon" trait="mouseover"/> </xright>
+				<xdown> <ref src="magic_list_contents" trait="mouseover"/> </xdown>
+			</text>			
+			
+			<text name="magic_active_header_top">
+				<visible>
+					<copy src="MagicMenu" trait="user0"/>
+					<eq> 5 </eq>
+				</visible>
+				<string> <copy src="strings()" trait="_activeeffects"/> </string>
+				<font> 3 </font>
+				<x> 130 </x>
+				<y> 5 </y>
+				<depth> 7 </depth>
+				<red> 51 </red>
+				<green> 79 </green>
+				<blue> 142 </blue>
+				<alpha> 255 </alpha>
+				<justify> &center; </justify>
+			</text>
+			
+			
+			<image name="magic_header_left">
+				<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+				<depth> 7 </depth>
+				<width> 35 </width>
+				<height> 17 </height>
+				<clips> &true; </clips>
+				<x>
+					<copy src="magic_p1234_header_top" trait="x"/>
+					<sub>
+						<copy src="magic_p1234_header_top" trait="width"/>
+						<div>2</div>
+					</sub>
+					<sub src="me()" trait="width"/>
+					<sub> 20 </sub>
+				</x>
+				<y>
+					<copy src="magic_p1234_header_top" trait="y" />
+					<add> 7 </add>
+				</y>
+			</image>
+			<image name="magic_header_right">
+				<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+				<depth> 7 </depth>
+				<width> 35 </width>
+				<height> 17 </height>
+				<clips> &true; </clips>
+				<x>
+					<copy src="magic_p1234_header_top" trait="x"/>
+					<add>
+						<copy src="magic_p1234_header_top" trait="width"/>
+						<div>2</div>
+					</add>
+					<add> 20 </add>
+				</x>
+				<y>
+					<copy src="magic_header_left" trait="y" />
+				</y>
+			</image>
+			
+		</rect> <!-- magic_headers_top -->
+
+		
+		<!-- WINDOW ============================================================== -->
+		<rect name="magic_window">
+			<depth> 10 </depth>
+			<locus> &true; </locus>
+			<width> 645 </width>
+			<height> 479 </height>
+			<x> 40 </x>
+			<y> 90 </y>
+			<clipwindow> &true; </clipwindow>
+					
+					
+			<rect name="magic_pane">
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y>
+					<copy src="magic_scroll_bar" trait="user7"/>
+					<mul> -81 </mul>
+					<add> -8 </add>
+				</y>
+					
+					
+				<!-- LIST HEADERS ============================================================== -->
+					
+				<rect name="magic_greater_header">
+					<visible>
+						<copy src="MagicMenu" trait="user1"/>
+						<neq src="MagicMenu" trait="user2"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="MagicMenu" trait="user1"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="magic_greater_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="magic_greater_header_text" trait="x"/>
+							<sub>
+								<copy src="magic_greater_header_text" trait="width"/>
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="magic_greater_header_text" trait="y" />
+							<add> 7 </add>
+						</y>
+					</image>
+					<image name="magic_greater_header_left_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="magic_greater_header_text" trait="x"/>
+							<add>
+								<copy src="magic_greater_header_text" trait="width"/>
+								<div> 2 </div>
+							</add>
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="magic_greater_header_text" trait="y" />
+							<add> 7 </add>
+						</y>
+					</image>
+					<text name="magic_greater_header_text">
+						<string> <copy src="strings()" trait="_greaterpower"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+					
+				</rect>
+				
+				
+				<rect name="magic_lesser_header">
+					<visible>
+						<copy src="MagicMenu" trait="user2"/>
+						<neq src="MagicMenu" trait="user3"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="MagicMenu" trait="user2"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="magic_lesser_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="magic_lesser_header_text" trait="x"/>
+							<sub>
+								<copy src="magic_lesser_header_text" trait="width"/>
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="magic_lesser_header_text" trait="y" />
+							<add> 7 </add>
+						</y>
+					</image>
+					<image name="magic_lesser_header_left_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="magic_lesser_header_text" trait="x"/>
+							<add>
+								<copy src="magic_lesser_header_text" trait="width"/>
+								<div> 2 </div>
+							</add>
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="magic_lesser_header_text" trait="y" />
+							<add> 7 </add>
+						</y>
+					</image>
+					<text name="magic_lesser_header_text">
+						<string> <copy src="strings()" trait="_lesserpower"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+					
+				</rect>
+				
+				
+				<rect name="magic_spells_header">
+					<visible>
+						<copy src="MagicMenu" trait="user3"/>
+						<neq src="MagicMenu" trait="user4"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="MagicMenu" trait="user3"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="magic_spells_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="magic_spells_header_text" trait="x"/>
+							<sub>
+								<copy src="magic_spells_header_text" trait="width"/>
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="magic_spells_header_text" trait="y" />
+							<add> 7 </add>
+						</y>
+					</image>
+					<image name="magic_spells_header_left_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="magic_spells_header_text" trait="x"/>
+							<add>
+								<copy src="magic_spells_header_text" trait="width"/>
+								<div> 2 </div>
+							</add>
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="magic_spells_header_text" trait="y" />
+							<add> 7 </add>
+						</y>
+					</image>
+					<text name="magic_spells_header_text">
+						<string> <copy src="strings()" trait="_spells"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+					
+				</rect>
+				
+				
+				<rect name="magic_scrolls_header">
+					<visible>
+						<copy src="MagicMenu" trait="user4"/>
+						<neq src="MagicMenu" trait="user5"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="MagicMenu" trait="user4"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="magic_scrolls_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="magic_scrolls_header_text" trait="x"/>
+							<sub>
+								<copy src="magic_scrolls_header_text" trait="width"/>
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="magic_scrolls_header_text" trait="y" />
+							<add> 7 </add>
+						</y>
+					</image>
+					<image name="magic_scrolls_header_left_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="magic_scrolls_header_text" trait="x"/>
+							<add>
+								<copy src="magic_scrolls_header_text" trait="width"/>
+								<div> 2 </div>
+							</add>
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="magic_scrolls_header_text" trait="y" />
+							<add> 7 </add>
+						</y>
+					</image>
+					<text name="magic_scrolls_header_text">
+						<string> <copy src="strings()" trait="_scrolls"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+					
+				</rect>
+				
+				
+				<!-- CONTENTNS ======================================================= -->
+				<rect name="magic_list_contents">
+					<id> 10 </id>
+					<user0> 0 </user0>	<!-- set by code - number of visible elements in list -->
+					
+					<!-- code created template items are inserted here -->
+						
+					<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+						an input command, they defer to their parent. The following directions are for those times. -->
+					<target> &false; </target>
+					<xdefault> &true; </xdefault>
+					<xlist> &xlist; </xlist>
+					<xup> <ref src="magic_p1234_header_top" trait="mouseover"/> </xup>
+					<!--xdown> &first; </xdown-->
+					<xscroll> <ref src="magic_scroll_bar" trait="user5" /> </xscroll>
+				</rect>
+				
+			</rect>	<!-- magic_pane -->
+		</rect>	<!-- magic_window -->
+	</image> <!-- magic_background -->
+	
+	
+	
+	<!-- TEMPLATES ======================================================= -->
+	
+	<template name="magic_item_template">
+		<rect name="magic_item">
+			<visible> <copy src="me" trait="user8"/> </visible>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<focusinset> 8 </focusinset>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex"/>
+				<mult src="me()" trait="height"/>
+			</y>
+			<depth> 1 </depth>
+			<locus> &true; </locus>
+			<alpha> 0 </alpha>
+			<width> 650 </width>
+			<height> 81 </height>
+			<clips> &true; </clips>
+			<listclip>
+				<copy src="me()" trait="listindex"/>
+				<gte>
+					<copy src="magic_scroll_bar" trait="user7"/>
+					<add src="magic_scroll_bar" trait="user8"/>
+				</gte>
+				<or>
+					<copy src="me()" trait="listindex"/>
+					<lt src="magic_scroll_bar" trait="user7"/>
+				</or>
+			</listclip>
+			<listindex> 0 </listindex>			<!-- list position index -->
+			<user1> Item Name </user1>			<!-- item name -->
+			<user2> First Value </user2>		<!-- 1st column value... unused -->
+			<user3> Second Value </user3>		<!-- 2nd column value -->
+			<user4> Third Value </user4>		<!-- 3rd column value -->
+			<user5> Fourth Value </user5>		<!-- 4th column value -->
+			<user6> icon/pathname.dds </user6>	<!-- icon pathname -->
+			<user7> category </user7>			<!-- category (greater/lesser power, spell, scroll -->
+			<user8> &true; </user8>				<!-- visible -->
+			<user9> type </user9>				<!-- type (target, touch, self, active) -->
+			<user10> &false; </user10>			<!-- is equiped -->
+			<user11> 0 </user11>				<!-- magic system index -->
+						
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="magic_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="magic_equiped_marker">
+				<visible> <copy src="parent()" trait="user10" /> </visible>
+				<depth> 2 </depth>
+				<filename> Menus\Inventory\inv_equiped_marker_1.dds </filename>
+				<alpha> 160 </alpha>
+				<width> 635 </width>
+				<height> 64 </height>
+				<x> 7 </x>
+				<y> 7 </y>
+				<clips> &true; </clips>
+			</image>
+			
+			<image name="magic_item_icon">
+				<depth> 3 </depth>
+				<filename>
+					<copy src="parent()" trait="user6" />
+				</filename>
+				<width> 64 </width>
+				<height> 64 </height>
+				<x> 5 </x>
+				<y> 7 </y>
+				<clips> &true; </clips>
+			</image>
+			
+			<text name="magic_item_name">
+				<depth> 3 </depth>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="x"/>
+					<sub src="sibling(magic_item_magnitude)" trait="wrapwidth"/>
+					<sub>16</sub>
+				</wrapwidth>
+				<wraplines> 2 </wraplines>
+				<string>
+					<copy src="parent()" trait="user1" />
+				</string>
+				<x> 80 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<clips> &true; </clips>
+			</text>
+			
+			<text name="magic_item_magnitude">
+				<depth> 3 </depth>
+				<justify> &center; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 50 </wrapwidth>
+				<string>
+					<copy src="parent()" trait="user3" />
+				</string>
+				<x> 496 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<clips> &true; </clips>
+			</text>
+			
+			<text name="magic_item_duration">
+				<depth> 3 </depth>
+				<justify> &center; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 70 </wrapwidth>
+				<string>
+					<copy src="parent()" trait="user4" />
+				</string>
+				<x> 556 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<clips> &true; </clips>
+			</text>
+			
+			<text name="magic_item_cost">
+				<depth> 3 </depth>
+				<justify> &center; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 150 </wrapwidth>
+				<string>
+					<copy src="parent()" trait="user5" />
+				</string>
+				<x> 600 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<clips> &true; </clips>
+			</text>
+		</rect>
+	</template>
+	
+</menu>

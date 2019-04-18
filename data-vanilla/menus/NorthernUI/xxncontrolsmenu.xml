@@ -1,0 +1,640 @@
+<menu name="XXNControlsMenu">
+	<class>1055</class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>0</alpha>
+	<locus>&true;</locus>
+	<menufade>0</menufade>
+	<explorefade>0</explorefade>
+
+	<xbuttonx> <ref src="button_save_scheme" trait="clicked"/></xbuttonx>
+	<xbuttony> <ref src="button_delete" trait="clicked"/></xbuttony>
+	<xbuttonb> <ref src="button_exit"   trait="clicked"/></xbuttonb>
+	<xbuttonlt><ref src="button_create_new" trait="clicked"/></xbuttonlt>
+	<xbuttonrt><ref src="button_rename" trait="clicked"/></xbuttonrt>
+   
+   <!-- add 1 to the keycode, since they're zero-indiced -->
+   <_keynames_1> <copy src="xxnStrings()" trait="_optCtrlButtonDU" /></_keynames_1>
+   <_keynames_2> <copy src="xxnStrings()" trait="_optCtrlButtonDD" /></_keynames_2>
+   <_keynames_3> <copy src="xxnStrings()" trait="_optCtrlButtonDL" /></_keynames_3>
+   <_keynames_4> <copy src="xxnStrings()" trait="_optCtrlButtonDR" /></_keynames_4>
+   <_keynames_5> <copy src="xxnStrings()" trait="_optCtrlStickStart" /></_keynames_5>
+   <_keynames_6> <copy src="xxnStrings()" trait="_optCtrlStickBack" /></_keynames_6>
+   <_keynames_7> <copy src="xxnStrings()" trait="_optCtrlButtonLS" /></_keynames_7>
+   <_keynames_8> <copy src="xxnStrings()" trait="_optCtrlButtonRS" /></_keynames_8>
+   <_keynames_9> <copy src="xxnStrings()" trait="_optCtrlButtonLB" /></_keynames_9>
+   <_keynames_10><copy src="xxnStrings()" trait="_optCtrlButtonRB" /></_keynames_10>
+   <_keynames_13><copy src="xxnStrings()" trait="_optCtrlButtonA" /></_keynames_13>
+   <_keynames_14><copy src="xxnStrings()" trait="_optCtrlButtonB" /></_keynames_14>
+   <_keynames_15><copy src="xxnStrings()" trait="_optCtrlButtonX" /></_keynames_15>
+   <_keynames_16><copy src="xxnStrings()" trait="_optCtrlButtonY" /></_keynames_16>
+   <_keynames_17><copy src="xxnStrings()" trait="_optCtrlButtonLT" /></_keynames_17>
+   <_keynames_18><copy src="xxnStrings()" trait="_optCtrlButtonRT" /></_keynames_18>
+   <_keynames_256>--</_keynames_256>
+   
+   <!-- EXE: Out -->
+   <user0>&false;</user0> <!-- are we assigning a key? -->
+   <user1> </user1> <!-- control being assigned (string) -->
+   <user2>255</user2> <!-- key already mapped to that control, or 255 for "none" -->
+   <user3>&false;</user3> <!-- are we viewing the default scheme? -->
+   <user4>&true;</user4> <!-- are there unsaved changes to the current scheme? -->
+   
+   <!-- EXE: In -->
+   <!-- USER12 and USER13: Value strings for "swap game sticks" options; "not swapped" or "swapped" -->
+   <user12><copy src="xxnStrings()" trait="_optCtrlGStickNormal" /></user12>
+   <user13><copy src="xxnStrings()" trait="_optCtrlGStickSwapped" /></user13>
+   <!-- USER14 and USER15: Value strings for "swap menu sticks" options; "not swapped" or "swapped" -->
+   <user14><copy src="xxnStrings()" trait="_optCtrlMStickNormal" /></user14>
+   <user15><copy src="xxnStrings()" trait="_optCtrlMStickSwapped" /></user15>
+   
+   <_itemHeight>
+      <copy src="child(invisible_for_sizing)" trait="height" />
+      <add>8</add>
+   </_itemHeight>
+   <text name="invisible_for_sizing">
+      <depth>-10</depth>
+      <listclip>&true;</listclip>
+      <font>1</font>
+      <string>A</string>
+      <x>0</x>
+      <y>-99999</y>
+   </text>
+   
+   <rect name="content_space">
+      <include src="generic_background.xml" />
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+         <sub>
+            <copy src="me()" trait="height" />
+            <add  src="bolt_on" trait="height" />
+            <add>88</add>
+            <add>12</add>
+         </sub>
+			<div>2</div>
+		</y>
+		<user0>900</user0>	<!-- width -->
+		<user1>540</user1>	<!-- height -->
+      
+      <rect name="content_box_2">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y>0</y>
+         <width>
+            <copy src="parent()"  trait="width" />
+         </width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="sibling(controls)" trait="height" />
+            <!-- <sub>25</sub> -->
+            <div  src="menu()" trait="_itemHeight" />
+            <floor>0</floor>
+            <mult src="menu()" trait="_itemHeight" />
+         </height>
+         
+         <rect name="column_right">
+            <visible><not src="menu()" trait="user0" /></visible>
+            <locus>&true;</locus>
+            <clipwindow>&true;</clipwindow>
+            <width>
+               <copy src="parent()"  trait="width" />
+               <sub  src="pause_column_left" trait="x" />
+               <sub  src="pause_column_left" trait="width" />
+               <sub>16</sub>
+            </width>
+            <height><copy src="parent()" trait="height" /></height>
+            <x>
+               <copy src="pause_column_left" trait="x" />
+               <add  src="pause_column_left" trait="width" />
+               <add>16</add>
+            </x>
+            <y>0</y>
+            <depth>10</depth>
+            
+            <!-- Submenu contents go here. -->
+            <id>2</id>
+            <target>&true;</target> <!-- handle scroll wheel -->
+            
+            <rect name="scrollbar_wrapper">
+               <include src="NorthernUI\scrollbars\wrapper.xml" />
+               <user0>&false;</user0> <!-- is horizontal? -->
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <sub>8</sub>
+               </x>
+               <y>0</y>
+               <height><copy src="parent()" trait="height" /></height>
+               
+               <image name="pause_submenu_scrollbar">
+                  <include src="vertical_scroll.xml" />
+                  <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+                  <id>3</id>
+                  <user1>0</user1>					<!-- min -->
+                  <user2>
+                     <copy src="scrollable_pane" trait="childcount" />
+                     <sub>
+                        <copy src="column_right" trait="height" />
+                        <div  src="menu()" trait="_itemHeight" />
+                        <floor>0.5</floor>
+                     </sub>
+                  </user2>							<!-- max -->
+                  <user4>
+                     <copy src="me()" trait="user8"/>
+                     <sub>1</sub>
+                  </user4>							<!-- jump distance -->
+                  <user5> 0 </user5>					<!-- starting pos -->
+                  <user6>4</user6>					<!-- marker id -->
+                  <user8>								<!-- num visible -->
+                     <copy src="column_right" trait="height" />
+                     <div  src="menu()" trait="_itemHeight" />
+                     <ceil>0</ceil>
+                  </user8>
+               </image>
+            </rect>
+            <!-- Menu items: -->
+            <rect name="scrollable_pane">
+               <locus>&true;</locus>
+               <width>
+                  <copy src="parent()"  trait="width" />
+                  <sub>
+                     <copy src="pause_submenu_scrollbar" trait="width" />
+                     <add>16</add>
+                     <onlyif src="pause_submenu_scrollbar" trait="visible" />
+                  </sub>
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+               <x>0</x>
+               <y>
+                  <copy src="pause_submenu_scrollbar" trait="user7" />
+                  <mult src="menu()" trait="_itemHeight" />
+                  <mult>-1</mult>
+               </y>
+               
+               <user8>
+                  <copy src="pause_submenu_scrollbar" trait="user8" />
+               </user8>
+               <target>&false;</target>
+               <xdefault>&true;</xdefault>
+               <xlist>&xlist;</xlist>
+               <xscroll><ref src="pause_submenu_scrollbar" trait="user5" /></xscroll>
+               
+               <user10>350</user10>
+               
+               <!-- CUSTOMIZATION OPTIONS SHOULD GO HERE -->
+               <rect name="option_swap_sticks_gameplay">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <listindex><copy>0</copy></listindex> <!-- for some reason, this breaks if we don't use COPY -->
+                  <y><copy>0</copy></y> <!-- for some reason, this breaks if we don't use COPY -->
+                  <user0>6</user0> <!-- enumpicker text ID -->
+                  <user1>7</user1> <!-- enumpicker left ID -->
+                  <user2>8</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optCtrlGStick" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_swap_sticks_menumode">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>9</user0> <!-- enumpicker text ID -->
+                  <user1>10</user1> <!-- enumpicker left ID -->
+                  <user2>11</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optCtrlMStick" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_sensitivity_x">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="xxnStrings()" trait="_optCtrlSensX" /></user11> <!-- label -->
+                  <user0>16</user0> <!-- slider ID -->
+                  <user1>17</user1> <!-- slider thumb ID -->
+                  <user2>2</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>1</user4> <!-- slider min -->
+                  <user5>10</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows value? -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_sensitivity_y">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="xxnStrings()" trait="_optCtrlSensY" /></user11> <!-- label -->
+                  <user0>18</user0> <!-- slider ID -->
+                  <user1>19</user1> <!-- slider thumb ID -->
+                  <user2>2</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>1</user4> <!-- slider min -->
+                  <user5>10</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows value? -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_sensitivity_run">
+                  <include src="NorthernUI/fragments/pause/option_slider.xml" />
+                  <user11><copy src="xxnStrings()" trait="_optCtrlSensRun" /></user11> <!-- label -->
+                  <user0>24</user0> <!-- slider ID -->
+                  <user1>25</user1> <!-- slider thumb ID -->
+                  <user2>10</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>1</user4> <!-- slider min -->
+                  <user5>100</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows value? -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_schemename">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>12</user0> <!-- enumpicker text ID -->
+                  <user1>13</user1> <!-- enumpicker left ID -->
+                  <user2>14</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optCtrlSelectedScheme" /></user11> <!-- label -->
+               </rect>
+               
+               <rect name="option_ctrl_attack">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>4</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_ctrl_activate">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>5</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_ctrl_block">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>6</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_ctrl_cast">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>7</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_ctrl_drawsheathe">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>8</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_ctrl_sneak">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>9</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_ctrl_jump">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>13</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_ctrl_toggle_pov">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>14</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_ctrl_menumode">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>15</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <rect name="option_ctrl_wait">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>16</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+               <!--
+                  In theory we could offer access to Quick Keys 1 - 8, but I'm not 100% 
+                  sure how to get that fully working and make sure it behaves sanely. 
+                  Among other things, I think the menus are hardcoded to check for the 
+                  keyboard keys 1 - 8 when assigning a quick key.
+               -->
+               <rect name="option_ctrl_grab">
+                  <include src="NorthernUI/fragments/pause/option_xcontrol.xml" />
+                  <id>15</id>
+                  <user0>28</user0>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+               </rect>
+            </rect>
+         </rect>
+         <rect name="is_customizing">
+            <visible><copy src="menu()" trait="user0" /></visible>
+            <locus>&true;</locus>
+            <width> <copy src="sibling()" trait="width" /></width>
+            <height>
+               <copy src="child()" trait="y" />
+               <add  src="child()" trait="height" />
+            </height>
+            <x><copy src="sibling()" trait="x" /></x>
+            <y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+            <depth>11</depth>
+            
+            <text name="controlname">
+               <font>1</font>
+               <justify>&center;</justify>
+               <string><copy src="menu()" trait="user1" /></string>
+               <wrapwidth>
+                  <copy src="parent()" trait="width" />
+                  <sub>32</sub>
+               </wrapwidth>
+               <red>0</red>
+               <green>0</green>
+               <blue>0</blue>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>0</y>
+            </text>
+            <rect name="already_assigned">
+               <locus>&true;</locus>
+               <width>
+                  <copy src="child()" trait="x" />
+                  <add  src="child()" trait="width" />
+               </width>
+               <height><copy src="child()" trait="height" /></height>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <div>2</div>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+               
+               <text name="label">
+                  <font>1</font>
+                  <string><copy src="xxnStrings()" trait="_optCtrlAlreadyAssigned" /></string>
+                  <red>117</red>
+                  <green>59</green>
+                  <blue>33</blue>
+                  <x>0</x>
+                  <y>0</y>
+               </text>
+               <text name="value">
+                  <font>1</font>
+                  <string>
+                     <copy src="menu()" trait="user2" />
+                     <add>1</add>
+                     <copy src="menu()" trait="_keynames_" />
+                  </string>
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>0</blue>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>6</add> <!-- width of one space -->
+                  </x>
+                  <y>0</y>
+               </text>
+            </rect>
+            <text name="instructions">
+               <font>1</font>
+               <justify>&center;</justify>
+               <string><copy src="xxnStrings()" trait="_optCtrlHowToAssign" /></string>
+               <wrapwidth>
+                  <copy src="parent()" trait="width" />
+                  <sub>32</sub>
+               </wrapwidth>
+               <red>117</red>
+               <green>59</green>
+               <blue>33</blue>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+            </text>
+         </rect>
+      </rect>
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y>
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+            <add>12</add>
+         </y>
+         <height>
+            <copy src="child()" trait="y" />
+            <add  src="child()" trait="height" />
+         </height>
+         
+         <_entrySpacing>24</_entrySpacing>
+         <_row2Y>
+            <copy src="child(button_create_new)" trait="height" />
+            <add>8</add>
+         </_row2Y>
+         
+         <rect name="button_create_new">
+<include src="button_long.xml"/>
+            <visible><not src="menu()" trait="user0" /></visible>
+            <id>23</id>
+            <x>0</x>
+            <y>0</y>
+            <user0><copy src="xxnStrings()" trait="_optCtrlCreateScheme" /></user0>
+            <clicksound>2</clicksound>
+            <user20><!--xbuttonlt-->5</user20>
+            
+            <width> 300 </width>
+         </rect>
+         <rect name="button_rename">
+<include src="button_long.xml"/>
+            <visible>
+               <not>
+                  <copy src="menu()" trait="user0" />
+                  <or   src="menu()" trait="user3" />
+               </not>
+            </visible>
+            <id>20</id>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()" trait="width" />
+                  <add    src="parent()"  trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <user0><copy src="xxnStrings()" trait="_optCtrlRenameScheme" /></user0>
+            <clicksound>2</clicksound>
+            <user20><!--xbuttonrt-->6</user20>
+         </rect>
+         <rect name="button_delete">
+<include src="button_long.xml"/>
+            <visible>
+               <not>
+                  <copy src="menu()" trait="user0" />
+                  <or   src="menu()" trait="user3" />
+               </not>
+            </visible>
+            <id>22</id>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()" trait="width" />
+                  <add    src="parent()"  trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <user0><copy src="xxnStrings()" trait="_optCtrlDeleteScheme" /></user0>
+            <clicksound>2</clicksound>
+            <user20><!--xbuttony-->4</user20>
+         </rect>
+         <rect name="button_save_scheme">
+<include src="button_long.xml"/>
+            <visible>
+               <not>
+                  <copy src="menu()" trait="user0" />
+                  <or   src="menu()" trait="user3" />
+               </not>
+               <and src="menu()" trait="user4" />
+            </visible>
+            <id>21</id>
+            <x>0</x>
+            <y><copy src="parent()" trait="_row2Y" /></y>
+            <user0><copy src="xxnStrings()" trait="_optCtrlSaveScheme" /></user0>
+            <clicksound>1</clicksound>
+            <user20><!--xbuttonx-->3</user20>
+            
+            <width> 465 </width>
+         </rect>
+         <rect name="button_exit">
+<include src="button_long.xml"/>
+            <visible><not src="menu()" trait="user0" /></visible>
+            <id>1</id>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()" trait="width" />
+                  <add    src="parent()"  trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y><copy src="parent()" trait="_row2Y" /></y>
+            <user0><copy src="strings()" trait="_exit" /></user0>
+            <clicksound>2</clicksound>
+            <user20><!--xbuttonb-->2</user20>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bolt_on">
+      <include src="generic_background.xml" />
+      <locus>&true;</locus>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="content_space" trait="y" />
+			<add  src="content_space" trait="height" />
+			<add>88</add>
+            <add>12</add>
+		</y>
+      
+		<user0>900</user0>	<!-- width -->
+		<user1>100</user1>	<!-- height -->
+      
+      <depth>30</depth>
+      
+      <visible>
+         <!-- <copy src="child(opt_description)" trait="user24" /><neq>0</neq>
+         <and>
+            <not src="menu()" trait="user0" />
+         </and> -->
+         <not src="menu()" trait="user0" />
+      </visible>
+      
+      <text name="opt_description">
+         <_strings_1><copy src="xxnStrings()" trait="_optCtrlDescActivate" /></_strings_1>
+         <_strings_2><copy src="xxnStrings()" trait="_optCtrlDescAttack" /></_strings_2>
+         <_strings_3><copy src="xxnStrings()" trait="_optCtrlDescBlock" /></_strings_3>
+         <_strings_4><copy src="xxnStrings()" trait="_optCtrlDescCast" /></_strings_4>
+         <_strings_5><copy src="xxnStrings()" trait="_optCtrlDescDrawSheathe" /></_strings_5>
+         <_strings_6><copy src="xxnStrings()" trait="_optCtrlDescGrab" /></_strings_6>
+         <_strings_7><copy src="xxnStrings()" trait="_optCtrlDescJump" /></_strings_7>
+         <_strings_8><copy src="xxnStrings()" trait="_optCtrlDescMenuMode" /></_strings_8>
+         <_strings_9><copy src="xxnStrings()" trait="_optCtrlDescSneak" /></_strings_9>
+         <_strings_10><copy src="xxnStrings()" trait="_optCtrlDescTogglePOV" /></_strings_10>
+         <_strings_11><copy src="xxnStrings()" trait="_optCtrlDescWait" /></_strings_11>
+         <_strings_20><copy src="xxnStrings()" trait="_optCtrlDescSwapSticksG" /></_strings_20>
+         <_strings_21><copy src="xxnStrings()" trait="_optCtrlDescSwapSticksM" /></_strings_21>
+         <_strings_22><copy src="xxnStrings()" trait="_optCtrlDescLookSens" /></_strings_22>
+         <_strings_23><copy src="xxnStrings()" trait="_optCtrlDescSchemeName" /></_strings_23>
+         <_strings_24><copy src="xxnStrings()" trait="_optCtrlDescRunSens" /></_strings_24>
+         
+         <_strings_99><copy src="xxnStrings()" trait="_optCtrlDescNone" /></_strings_99>
+         
+         <user24>
+            <copy src="option_ctrl_activate"         trait="_mouseover_any" /><mult> 1</mult>
+            <max><copy src="option_ctrl_attack"      trait="_mouseover_any" /><mult> 2</mult></max>
+            <max><copy src="option_ctrl_block"       trait="_mouseover_any" /><mult> 3</mult></max>
+            <max><copy src="option_ctrl_cast"        trait="_mouseover_any" /><mult> 4</mult></max>
+            <max><copy src="option_ctrl_drawsheathe" trait="_mouseover_any" /><mult> 5</mult></max>
+            <max><copy src="option_ctrl_grab"        trait="_mouseover_any" /><mult> 6</mult></max>
+            <max><copy src="option_ctrl_jump"        trait="_mouseover_any" /><mult> 7</mult></max>
+            <max><copy src="option_ctrl_menumode"    trait="_mouseover_any" /><mult> 8</mult></max>
+            <max><copy src="option_ctrl_sneak"       trait="_mouseover_any" /><mult> 9</mult></max>
+            <max><copy src="option_ctrl_toggle_pov"  trait="_mouseover_any" /><mult>10</mult></max>
+            <max><copy src="option_ctrl_wait"        trait="_mouseover_any" /><mult>11</mult></max>
+            <max><copy src="option_swap_sticks_gameplay" trait="_mouseover_any" /><mult>20</mult></max>
+            <max><copy src="option_swap_sticks_menumode" trait="_mouseover_any" /><mult>21</mult></max>
+            <max><copy src="option_sensitivity_x"        trait="_mouseover_any" /><mult>22</mult></max>
+            <max><copy src="option_sensitivity_y"        trait="_mouseover_any" /><mult>22</mult></max>
+            <max><copy src="option_schemename"           trait="_mouseover_any" /><mult>23</mult></max>
+            <max><copy src="option_sensitivity_run"      trait="_mouseover_any" /><mult>24</mult></max>
+         </user24>
+         <user23>
+            <copy src="me()" trait="user24" />
+            <add>
+               <copy>99</copy>
+               <onlyif>
+                  <copy src="me()" trait="user24" /><eq>0</eq>
+               </onlyif>
+            </add>
+         </user23>
+         
+         <font>3</font>
+         <string>
+            <copy src="me()" trait="user23" />
+            <copy src="me()" trait="_strings_" />
+         </string>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <red>117</red>
+         <green>59</green>
+         <blue>33</blue>
+         <depth>31</depth>
+         <wrapwidth>
+            <copy src="parent()" trait="width"/>
+            <sub>32</sub>
+         </wrapwidth>
+      </text>
+   </rect>
+</menu>

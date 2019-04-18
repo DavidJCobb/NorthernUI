@@ -1,0 +1,193 @@
+<!-- generic_background.xml -->
+<!-- rect name="GenericBackground" -->
+	<visible> &true; </visible>
+	<locus> &true; </locus>
+	
+	<!--
+	*** IMPORTANT ***
+	To set the width and height, use user0 and user1.  This is because the border
+	is built around the passed-in values.
+	-->
+	<user0> 800 </user0>	<!-- menu width -->
+	<user1> 500 </user1>	<!-- menu height -->
+	
+	<width>
+		<copy src="me()" trait="_rounded_width" />
+	</width>
+	<height>
+		<copy src="me()" trait="_rounded_height" />
+	</height>
+
+	<_tile_size> 1 </_tile_size>					<!-- repeating length of border elements -->
+	<_border_thickness> 44 </_border_thickness>		<!-- thickness of border elements -->
+	
+	<_rounded_width>
+		<copy src="me()" trait="user0" />
+		<div src="me()" trait="_tile_size" />
+		<ceil> 0 </ceil>
+		<mul src="me()" trait="_tile_size" />
+	</_rounded_width>
+	<_rounded_height>
+		<copy src="me()" trait="user1" />
+		<div src="me()" trait="_tile_size" />
+		<ceil> 0 </ceil>
+		<mul src="me()" trait="_tile_size" />
+	</_rounded_height>
+	
+	
+	
+	<image name="Background_TopLeft">
+		<filename>Menus\GenericBackground\edge_corners.dds</filename>
+		<cropx> 0 </cropx>
+		<cropy> 0 </cropy>
+		<x>
+			<copy> 0 </copy>
+			<sub src="me()" trait="width" />
+		</x>
+		<y>
+			<copy> 0 </copy>
+			<sub src="me()" trait="height" />
+		</y>
+		<width>
+			<copy src="parent()" trait="_border_thickness" />
+		</width>
+		<height>
+			<copy src="parent()" trait="_border_thickness" />
+		</height>
+	</image>
+	
+	<image name="Background_Top">
+		<filename>Menus\GenericBackground\edge_horizontal.dds</filename>
+		<cropx> 0 </cropx>
+		<cropy> 0 </cropy>
+		<x> 0 </x>
+		<y>
+			<copy> 0 </copy>
+			<sub src="me()" trait="height" />
+		</y>
+		<width>
+			<copy src="parent()" trait="_rounded_width" />
+		</width>
+		<height>
+			<copy src="parent()" trait="_border_thickness" />		
+		</height>
+	</image>
+	
+	<image name="Background_TopRight">
+		<filename>Menus\GenericBackground\edge_corners.dds</filename>
+		<cropx> 64 </cropx>
+		<cropy> 0 </cropy>
+		<x>
+			<copy src="parent()" trait="_rounded_width" />
+		</x>
+		<y>
+			<copy> 0 </copy>
+			<sub src="me()" trait="height" />
+		</y>
+		<width>
+			<copy src="parent()" trait="_border_thickness" />
+		</width>
+		<height>
+			<copy src="parent()" trait="_border_thickness" />
+		</height>
+	</image>
+
+	<image name="Background_LeftCenter">
+		<filename>Menus\GenericBackground\edge_vertical.dds</filename>
+		<cropx> 0 </cropx>
+		<cropy> 0 </cropy>
+		<x>
+			<copy> 0 </copy>
+			<sub src="me()" trait="width" />
+		</x>
+		<y> 0 </y>
+		<width>
+			<copy src="parent()" trait="_border_thickness" />
+		</width>
+		<height>
+			<copy src="parent()" trait="_rounded_height" />
+		</height>
+	</image>
+	
+	<image name="Background_Center">
+		<filename>Menus\GenericBackground\center_background.dds</filename>
+		<x> 0 </x>
+		<y> 0 </y>
+		<width>
+			<copy src="parent()" trait="_rounded_width" />
+		</width>
+		<height>
+			<copy src="parent()" trait="_rounded_height" />
+		</height>
+		<zoom> -1 </zoom>
+		<depth> 2 </depth>
+	</image>
+
+	<image name="Background_RightCenter">
+		<filename>Menus\GenericBackground\edge_vertical.dds</filename>
+		<cropx> 64 </cropx>
+		<cropy> 0 </cropy>
+		<x>
+			<copy src="parent()" trait="_rounded_width" />
+		</x>
+		<y> 0 </y>
+		<width>
+			<copy src="parent()" trait="_border_thickness" />
+		</width>
+		<height>
+			<copy src="parent()" trait="_rounded_height" />
+		</height>
+	</image>
+
+	<image name="Background_BottomLeft">
+		<filename>Menus\GenericBackground\edge_corners.dds</filename>
+		<cropx> 0 </cropx>
+		<cropy> 64 </cropy>
+		<x>
+			<copy> 0 </copy>
+			<sub src="me()" trait="width" />
+		</x>
+		<y>
+			<copy src="parent()" trait="_rounded_height" />
+		</y>
+		<width>
+			<copy src="parent()" trait="_border_thickness" />
+		</width>
+		<height>
+			<copy src="parent()" trait="_border_thickness" />
+		</height>
+	</image>
+	<image name="Background_Bottom">
+		<filename>Menus\GenericBackground\edge_horizontal.dds</filename>
+		<cropx> 0 </cropx>
+		<cropy> 64 </cropy>
+		<x> 0 </x>
+		<y>
+			<copy src="parent()" trait="_rounded_height" />
+		</y>
+		<width>
+			<copy src="parent()" trait="_rounded_width" />
+		</width>
+		<height>
+			<copy src="parent()" trait="_border_thickness" />
+		</height>
+	</image>
+	<image name="Background_BottomRight">
+		<filename>Menus\GenericBackground\edge_corners.dds</filename>
+		<cropx> 64 </cropx>
+		<cropy> 64 </cropy>
+		<x>
+			<copy src="parent()" trait="_rounded_width" />
+		</x>
+		<y>
+			<copy src="parent()" trait="_rounded_height" />
+		</y>
+		<width>
+			<copy src="parent()" trait="_border_thickness" />
+		</width>
+		<height>
+			<copy src="parent()" trait="_border_thickness" />
+		</height>
+	</image>
+
+<!-- /rect -->

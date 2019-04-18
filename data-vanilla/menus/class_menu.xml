@@ -1,0 +1,596 @@
+<menu name="ClassMenu">
+	<class> &ClassMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	<menufade> 0.25 </menufade>
+	
+	<!-- the following text strings are set by code - do not translate here -->
+	<user1> skill_1_name </user1>
+	<user2> skill_2_name </user2>
+	<user3> skill_3_name </user3>
+	<user4> skill_4_name </user4>
+	<user5> skill_5_name </user5>
+	<user6> skill_6_name </user6>
+	<user7> skill_7_name </user7>
+	<user8> specialization_name </user8>
+	<user9> attribute_1_name </user9>
+	<user10> attribute_2_name </user10>
+	<user11> 0 </user11>					<!-- corresponding actor values for user 1-10 -->
+	<user12> 0 </user12>
+	<user13> 0 </user13>
+	<user14> 0 </user14>
+	<user15> 0 </user15>
+	<user16> 0 </user16>
+	<user17> 0 </user17>
+	<user18> 0 </user18>
+	<user19> 0 </user19>
+	<user20> 0 </user20>
+	<user21>  </user21>						<!-- picture pathname -->
+
+	<!-- BACKGROUND ===================================================================-->
+	<rect name="class_background">
+<include src="generic_background.xml" />
+		<depth> 1 </depth>
+		<user0> 900 </user0>
+		<user1> 700 </user1>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+
+		<!-- INFORMATIONAL TEXT =======================================================-->
+		<text name="class_information_text">
+			<depth>3</depth>
+			<justify>&center;</justify>
+			<font>3</font>
+			<alpha>255</alpha>
+			<red> 120 </red>
+			<green> 34 </green>
+			<blue> 0 </blue>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<div>2</div>
+			</x>
+			<y>18</y>
+			<string> <copy src="strings()" trait="_selectclass"/> </string>
+		</text>
+
+		<!-- SCROLL ===================================================================-->
+		<rect name="class_list_scroll_bar">
+			<include src="vertical_scroll.xml" />
+			<id> 2 </id>
+			<target> &true; </target>
+			<x> 260 </x>
+			<y>
+				<copy src="class_list_window" trait="y" />
+				<add src="child(vertical_scroll_top)" trait="height"/>
+			</y>
+			<height>
+				<copy src="class_list_window" trait="height" />
+				<sub src="child(vertical_scroll_top)" trait="height"/>
+				<sub src="child(vertical_scroll_bottom)" trait="height"/>
+			</height>
+			<depth> 20 </depth>
+			<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+			<user2>
+				<copy src="class_list_pane" trait="childcount" />
+				<sub> 12 </sub>
+			</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+										 items minus the number of items visible.  i.e. if your list has
+										 8 items and you can see 2 at any one time, this should be 6 -->
+			<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+			<user4> 11 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+			<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+			<user6> 3 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+			<!-- user7 = current value -->
+			<user8> 12 </user8>		<!-- How many items are visible at once -->
+			<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+			<user10> 0 </user10>	<!-- reserved -->
+		</rect>
+		
+		
+		<!-- WINDOW ===================================================================-->
+		<rect name="class_list_window">
+			<clipwindow> &true; </clipwindow>
+			<locus> &true; </locus>
+			<height> 600 </height>
+			<width> 250 </width>
+			<x> 10 </x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<add src="class_information_text" trait="height"/>
+				<div> 2 </div>
+			</y>
+			
+			<rect name="class_list_pane">
+				<depth> 8 </depth>
+				<id> 1 </id>
+				<clips> &true; </clips>
+				<locus> &true; </locus>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> 10 </height>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub>
+						<copy src="class_list_scroll_bar" trait="user7" />
+						<mult> 50 </mult>
+					</sub>
+				</y>
+						
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &false; </xdefault>
+				<xlist> &xlist; </xlist>
+				<xleft> <ref src="class_data_layout" trait="mouseover" /> </xleft>
+				<xright> <ref src="class_data_layout" trait="mouseover" /> </xright>
+				<!--xup> &last; </xup>
+				<xdown> &first; </xdown-->
+				<xscroll> <ref src="class_list_scroll_bar" trait="user5" /> </xscroll>
+				
+				<!-- list items are added here in code from the template -->
+				
+			</rect>
+		</rect>
+		
+		
+		<!-- PICTURE ===================================================================-->
+		<image name="class_picture">
+			<filename> <copy src="ClassMenu" trait="user21"/> </filename>
+			<depth> 10 </depth>
+			<width> 368 </width>
+			<height> 507 </height>
+			<x>
+				<copy src="class_list_window" trait="x" />
+				<add src="class_list_window" trait="width" />
+				<add> 55 </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<div> 2 </div>
+			</y>
+			<locus> &true; </locus>
+		</image>
+		
+		
+		<!-- CLASS DATA =======================================================-->
+		<rect name="class_data_layout">
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub> 30 </sub>
+			</x>
+				<y> <copy src="class_list_window" trait="y"/> </y>
+			<depth> 5 </depth>
+			<locus> &true; </locus>
+			
+			<_major_buffer> 32 </_major_buffer>
+			<_minor_buffer> 8 </_minor_buffer>
+						
+			<!-- SPECIALIZATION =======================================================-->
+			<text name="class_special_label">
+				<string>
+					<copy src="strings()" trait="_specialization" />
+				</string>
+				<justify> &right; </justify>
+				<red> 0 </red>
+				<green> 34 </green>
+				<blue> 120 </blue>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y> 16 </y>
+			</text>
+			
+			
+			<text name="class_special_text">
+				<string> <copy src="ClassMenu" trait="user8" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_special_label" trait="y"/>
+					<add src="class_special_label" trait="height"/>
+				</y>
+				<depth> 2 </depth>
+			</text>
+			
+			
+			<!-- ATTRIBUTES =======================================================-->
+			<text name="class_attribute_label_1">
+				<string>
+					<copy src="strings()" trait="_favored" />
+				</string>
+				<justify> &right; </justify>
+				<red> 0 </red>
+				<green> 34 </green>
+				<blue> 120</blue>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_special_text" trait="y" />
+					<add src="class_special_text" trait="height" />
+					<add src="parent()" trait="_major_buffer"/>
+				</y>
+			</text>
+			
+			<text name="class_attribute_label_2">
+				<string>
+					<copy src="strings()" trait="_attributes" />
+				</string>
+				<justify> &right; </justify>
+				<red> 0 </red>
+				<green> 34 </green>
+				<blue> 120 </blue>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_attribute_label_1" trait="y" />
+					<add src="class_attribute_label_1" trait="height"/>
+					<sub> 8 </sub>
+				</y>
+			</text>
+
+			<text name="class_attribute_1_text">
+				<string> <copy src="ClassMenu" trait="user9" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_attribute_label_2" trait="y"/>
+					<add src="class_attribute_label_2" trait="height"/>
+				</y>
+				<depth> 2 </depth>
+			</text>
+
+			<text name="class_attribute_2_text">
+				<string> <copy src="ClassMenu" trait="user10" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_attribute_1_text" trait="y"/>
+					<add src="class_attribute_1_text" trait="height"/>
+					<add src="parent()" trait="_minor_buffer"/>
+				</y>
+				<depth> 2 </depth>
+			</text>
+			
+			
+			<!-- MAJOR SKILLS =======================================================-->
+			<text name="class_major_skills_label">
+				<string>
+					<copy src="strings()" trait="_majorskills" />
+				</string>
+				<justify> &right; </justify>
+				<red> 0 </red>
+				<green> 34 </green>
+				<blue> 120 </blue>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_attribute_2_text" trait="y" />
+					<add src="class_attribute_2_text" trait="height" />
+					<add src="parent()" trait="_major_buffer"/>
+				</y>
+			</text>
+
+			<text name="class_major_skills_1_text">
+				<string> <copy src="ClassMenu" trait="user1" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_major_skills_label" trait="y" />
+					<add src="class_major_skills_label" trait="height" />
+				</y>
+				<depth> 2 </depth>
+			</text>
+
+			<text name="class_major_skills_2_text">
+				<string> <copy src="ClassMenu" trait="user2" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_major_skills_1_text" trait="y" />
+					<add src="class_major_skills_1_text" trait="height" />
+					<add src="parent()" trait="_minor_buffer"/>
+				</y>
+				<depth> 2 </depth>
+			</text>
+
+			<text name="class_major_skills_3_text">
+				<string> <copy src="ClassMenu" trait="user3" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_major_skills_2_text" trait="y" />
+					<add src="class_major_skills_2_text" trait="height" />
+					<add src="parent()" trait="_minor_buffer"/>
+				</y>
+				<depth> 2 </depth>
+			</text>
+
+			<text name="class_major_skills_4_text">
+				<string> <copy src="ClassMenu" trait="user4" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_major_skills_3_text" trait="y" />
+					<add src="class_major_skills_3_text" trait="height" />
+					<add src="parent()" trait="_minor_buffer"/>
+				</y>
+				<depth> 2 </depth>
+			</text>
+
+			<text name="class_major_skills_5_text">
+				<string> <copy src="ClassMenu" trait="user5" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_major_skills_4_text" trait="y" />
+					<add src="class_major_skills_4_text" trait="height" />
+					<add src="parent()" trait="_minor_buffer"/>
+				</y>
+				<depth> 2 </depth>
+			</text>
+
+			<text name="class_major_skills_6_text">
+				<string> <copy src="ClassMenu" trait="user6" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_major_skills_5_text" trait="y" />
+					<add src="class_major_skills_5_text" trait="height" />
+					<add src="parent()" trait="_minor_buffer"/>
+				</y>
+				<depth> 2 </depth>
+			</text>
+
+			<text name="class_major_skills_7_text">
+				<string> <copy src="ClassMenu" trait="user7" /> </string>
+				<justify> &right; </justify>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<font>3</font>
+				<alpha> 200 </alpha>
+				<x> 0 </x>
+				<y>
+					<copy src="class_major_skills_6_text" trait="y" />
+					<add src="class_major_skills_6_text" trait="height" />
+					<add src="parent()" trait="_minor_buffer"/>
+				</y>
+				<depth> 2 </depth>
+			</text>
+		</rect>
+
+		<image name="class_button_create">
+<include src="button_xtralong.xml" />
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<target> &true; </target>
+			<x>
+				<copy src="class_button_done" trait="x"/>
+				<sub src="me()" trait="width"/>
+				<sub> 20 </sub>
+				<sub>
+               <copy>40</copy>
+               <onlyif>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </onlyif>
+            </sub>
+			</x>
+			<y> <copy src="class_button_done" trait="y" /> </y>
+			<clicksound> 2 </clicksound>
+
+			<user0> <copy src="strings()" trait="_customclass" /> </user0>
+
+			<user20><!--&xbuttonx;-->3 </user20>
+			<xleft> <ref src="class_button_create" trait="mouseover"/> </xleft>
+			<xright> <ref src="class_button_create" trait="mouseover"/> </xright>
+			<xup> <ref src="class_list_pane" trait="mouseover"/> </xup>
+			<xdown> <ref src="class_list_pane" trait="mouseover"/> </xdown>
+		</image>
+		
+		
+		<!-- DONE BUTTON ==============================================================-->
+		<image name="class_button_done">
+<include src="button_short.xml" />
+			<id> 4 </id>
+			<depth> 5 </depth>
+			<target> &true; </target>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 20 </sub>
+				<add>
+               <copy>40</copy>
+               <onlyif>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </onlyif>
+            </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<user0>
+				<copy src="strings()" trait="_done" />
+			</user0>
+			
+			<clicksound>2</clicksound>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xleft> <ref src="class_button_create" trait="mouseover"/> </xleft>
+			<xright> <ref src="class_button_create" trait="mouseover"/> </xright>
+			<xup> <ref src="class_list_pane" trait="mouseover"/> </xup>
+			<xdown> <ref src="class_list_pane" trait="mouseover"/> </xdown>
+		</image>
+	</rect>
+	
+	
+	
+	
+	<!-- TEMPLATE ==============================================================-->
+	<template name="class_template">
+		<rect name="class_template">
+			<id> 99 </id>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<locus> &true; </locus>
+			<clips> &true; </clips>
+			<width> <copy src="parent()" trait="width"/> </width>
+			<height> 50 </height>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult> 50 </mult>
+			</y>
+			<depth> 1 </depth>
+			<listindex> 0 </listindex>
+			<clicksound>3</clicksound>
+			<wrapwidth> <copy src="child(class_template_name)" trait="wrapwidth"/> </wrapwidth>
+			<user1> xxx </user1> <!-- name -->
+			<user2> &false; </user2> <!-- selected -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &true; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="class_list_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<text name="class_template_name">
+				<clips> &true; </clips>
+				<depth> 3 </depth>
+				<font> 1 </font>
+				<string>
+					<copy src="parent()" trait="user1" />
+				</string>
+				<red> 0 </red>
+				<green> 34 </green>
+				<blue> 120</blue>
+				<alpha> 200 </alpha>
+				<wrapwidth>
+					<copy src="parent()" trait="width"/>
+					<sub> 10 </sub>
+				</wrapwidth>
+				<x> 10 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</text>
+			
+			<image name="class_selected">
+				<clips> &true; </clips>
+				<visible> <copy src="parent()" trait="user2" /> </visible>
+				<depth> 0 </depth>
+				<filename> Menus\Inventory\inv_equiped_marker_1.dds </filename>
+				<width>
+					<copy src="sibling(class_template_name)" trait="width" />
+					<add> 10 </add>
+				</width>
+				<height> 64 </height>
+				<x> 5 </x>
+				<y> -6 </y>
+			</image>
+			
+			<image name="class_mouseover_marker">
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul src="parent()" trait="mouseover" />
+				</alpha>
+				<width> <copy src="sibling(class_template_name)" trait="width"/> </width>
+				<height> 64 </height>
+				<x> 5 </x>
+				<y> -2 </y>
+			</image>
+			
+			<image name="class_mouseover_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul src="parent()" trait="mouseover" />
+				</alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="sibling(class_template_name)" trait="width" />
+					<add> 24 </add>
+					<sub src="me()" trait="width" />
+				</x>
+				<y> -2 </y>
+			</image>
+		</rect>
+	</template>
+</menu>

@@ -1,0 +1,669 @@
+<!-- recharge_menu.xml -->
+<menu name="RechargeMenu">
+	<class> &RechargeMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	
+	<user0>1</user0> <!-- 0 = Recharging with soul gem; 1 = Buying recharge from NPC. -->
+	<user1></user1> <!-- soul gem icon -->
+	<user2></user2> <!-- Soul gem name / Player gold -->
+	<user3> 
+		<copy src="recharge_contents"   trait="height"/>
+		<div  src="recharge_scroll_bar" trait="user8"/>
+	</user3> <!-- Template item height (not used by exe?) -->
+	<user4>0</user4> <!-- Soul gem pts / Cost to recharge -->
+	<user6>0</user6> <!-- Soul gem count (doesn't work in vanilla?) -->
+   
+   <!-- When purchasing a recharge, USER4 is set to the cost to recharge the 
+        item you're currently hovering over. This is a stringified value, so 
+        you can't do math or comparisons on it.
+        
+        When not hovering over an item, it's set to the string "-".
+   -->
+	
+	<xbuttonb><ref src="button_exit" trait="clicked" /></xbuttonb>
+	
+   <_itemInfoColumnWidth>100</_itemInfoColumnWidth>
+   <_itemIconZoom>66</_itemIconZoom>
+   <_itemIconSize>
+      <copy>64</copy>
+      <mult src="me()" trait="_itemIconZoom" />
+      <div>100</div>
+   </_itemIconSize>
+   <_listRowHeight>
+      <copy src="me()" trait="_itemIconSize" />
+      <add>16</add>
+      <floor>0</floor>
+   </_listRowHeight>
+	
+	<rect name="recharge_FocusBox">
+		<id>1</id>
+		<visible>&false;</visible>
+      <include src="NorthernUI\focus_boxes\highlight.xml" />
+	</rect>
+   
+   <rect name="menu_base">
+      <include src="NorthernUI\fragments\main\base.xml" />
+      <_headerEnabled>&true;</_headerEnabled>
+      <_headerText><copy src="xxnStrings()" trait="_rechargeMenuTitle" /></_headerText>
+      <_isMainMenu>&false;</_isMainMenu>
+      
+      <target>&true;</target>
+      
+      <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+      
+      <rect name="content">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y> <!-- after main menu base's header -->
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub>
+               <copy src="recharge_scroll_bar" trait="width" />
+               <add> <!-- scrollbar margin; also acts as list padding-right -->
+                  <copy src="parent()" trait="_scrollbarMargin" />
+                  <mult>2</mult>
+               </add>
+               <onlyif src="recharge_scroll_bar" trait="visible" />
+            </sub>
+         </width>
+         <height>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()" trait="y" />
+         </height>
+         
+         <rect name="anchored_category_header">
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height> <!-- height of children -->
+               <copy src="child(anchored_category_header_content)" trait="height" />
+            </height>
+            
+            <image name="border_bottom">
+               <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+               <tile>&true;</tile>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <add>
+                     <copy src="recharge_scroll_bar" trait="width" />
+                     <add> <!-- scrollbar margin; also acts as list padding-right -->
+                        <copy src="menu_base" trait="_scrollbarMargin" />
+                        <mult>2</mult>
+                     </add>
+                     <onlyif src="recharge_scroll_bar" trait="visible" />
+                  </add>
+               </width>
+               <height><copy src="me()" trait="fileheight" /></width>
+               <x>0</x>
+               <y> <!-- align with bottom of parent -->
+                  <copy src="parent()" trait="height"/>
+                  <sub  src="me()"     trait="height"/>
+               </y>
+            </image>
+            <rect name="anchored_category_header_content">
+               <depth>3</depth>
+               <locus>&true;</locus>
+               <visible>&true;</visible>
+               <x>0</x>
+               <y>0</y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child(anchored_category_header_name)" trait="height" /></height>
+               
+               <rect name="anchored_category_header_name">
+                  <!-- Re: name: element is referred to by other elements. -->
+                  <locus>&true;</locus>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>
+                     <copy src="parent()" trait="width"/>
+                     <sub  src="menu()"   trait="_itemInfoColumnWidth" />
+                  </width>
+                  <height>
+                     <copy src="child(label)" trait="height"/>
+                     <add>6</add>
+                  </height>
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                     <string><copy src="xxnStrings()" trait="_rechargeMenuColItem" /></string>
+                     <justify>&left;</justify>
+                     <x>
+                        <copy src="menu()" trait="_itemIconSize" />
+                        <add>8</add>
+                        <add>11</add>
+                     </x>
+                     <y>
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                        <div>2</div>
+                     </y>
+                     <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                  </text>
+               </rect>
+               <rect name="col_header_1"> <!-- charge (current/max) -->
+                  <locus>&true;</locus>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                  </x>
+                  <y><copy src="sibling()" trait="y" /></y>
+                  <width> <copy src="menu()"    trait="_itemInfoColumnWidth" /></width>
+                  <height><copy src="sibling()" trait="height" /></height>
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal-shadowed.xml" />
+                     <string><copy src="xxnStrings()" trait="_rechargeMenuColCharge" /></string>
+                     <justify>&center;</justify>
+                     <x> <!-- center within parent -->
+                        <copy src="parent()" trait="width" />
+                        <div>2</div>
+                     </x>
+                     <y>
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                        <div>2</div>
+                     </y>
+                     <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+                  </text>
+               </rect>
+            </rect>
+         </rect>
+         <rect name="recharge_window">
+            <depth>10</depth>
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="y" />
+            </height>
+            <clipwindow>&true;</clipwindow>
+            
+            <rect name="recharge_list_pane">
+               <id>6</id>
+               
+               <clips>&true;</clips>
+               <locus>&true;</locus>
+               <x>0</x>
+               <y> <!-- handle panel scrolling -->
+                  <copy src="recharge_scroll_bar" trait="user7"/>
+                  <mult src="menu()" trait="_listRowHeight" />
+                  <mult>-1</mult>
+               </y>
+               <width> <!-- fill available space -->
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="x" />
+               </width>
+               <height>
+                  <copy src="me()"   trait="childcount" />
+                  <mult src="menu()" trait="_listRowHeight" />
+               </height>
+               
+               <target>&false;</target>
+               <xdefault>&true;</xdefault>
+               <xlist>&xlist;</xlist>
+               <xup><ref src="anchored_category_header_name" trait="mouseover"/></xup>
+               <!--xdown> &first; </xdown-->
+               <xscroll><ref src="recharge_scroll_bar" trait="user5" /></xscroll>
+            </rect>
+         </rect>
+      </rect>
+      <rect name="scrollbar_wrapper">
+         <include src="NorthernUI\scrollbars\wrapper.xml" />
+         <user0>&false;</user0> <!-- is horizontal? -->
+         <x> <!-- 8px from right edge -->
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <sub  src="parent()" trait="_scrollbarMargin" />
+         </x>
+         <y> <!-- align with window -->
+            <copy src="sibling(content)" trait="y" />
+            <add  src="recharge_window" trait="y" />
+         </y>
+         <height><copy src="recharge_window" trait="height" /></height>
+         
+			<rect name="recharge_scroll_bar">
+            <include src="vertical_scroll.xml" />
+            <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+				<id>4</id>
+				
+				<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+				<user2>
+               <copy src="recharge_list_pane" trait="childcount" />	<!-- set by code - number of visible elements in list -->
+               <sub>
+                  <copy src="recharge_window" trait="height" />
+                  <div  src="menu()" trait="_listRowHeight" />
+                  <floor>0</floor>
+               </sub>
+               <!-- <add>
+                  <copy>1</copy>
+                  <onlyif>
+                     <copy src="spell_buy_window" trait="height" />
+                     <mod  src="menu()" trait="_listRowHeight" />
+                     <neq>0</neq>
+                  </onlyif>
+               </add> -->
+            </user2>				<!-- Maximum value that can be scrolled to (should be the number of
+                                  items minus the number of items visible.  i.e. if your list has
+                                  8 items and you can see 2 at any one time, this should be 6 -->
+				<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+				<user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+				<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+				<user6> 5 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+				<!-- user7: current value -->
+				<user8> <!-- How many items are visible at once -->
+               <copy src="recharge_window" trait="height" />
+               <div  src="menu()" trait="_listRowHeight" />
+               <ceil>0</ceil>
+            </user8>
+				<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+				<user10></user10>		<!-- reserved -->
+			</rect>
+      </rect>
+   </rect>
+   <rect name="right_side">
+      <locus>&true;</locus>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+      </x>
+      <y>0</y>
+      <width>
+         <copy src="screen()" trait="width" />
+         <sub  src="me()"     trait="x" />
+      </width>
+      <height>
+         <copy src="screen()"   trait="height" />
+         <sub  src="bottom_bar" trait="height" />
+      </height>
+      
+      <rect name="item_card">
+         <include src="NorthernUI\cards\border_box_ornate.xml" />
+         <locus>&true;</locus>
+         <user20>500</user20>
+         <user21><copy src="child(SIZER)" trait="y" /></user21>
+         <user22>&true;</user22> <!-- box-sizing:content-box -->
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()" trait="height" />
+            <sub  src="northernui()" trait="_xxnItemCardYOffset" />
+         </y>
+         
+         <rect name="content_box">
+            <include src="NorthernUI\cards\content_box.xml" />
+            
+            <rect name="if_buying">
+               <visible>
+                  <copy src="RechargeMenu" trait="user0" /><eq>1</eq>
+               </visible>
+               <x>0</x>
+               <y>0</y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="child()" trait="height" />
+                  <onlyif src="me()" trait="visible" />
+               </height>
+            
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <x>0</x>
+                  <y>0</y>
+                  <string><copy src="xxnStrings()" trait="_rechargeMenuPrefixCost" /></string>
+                  <red>140</red><green>140</green><blue>140</blue>
+               </text>
+               <text name="value">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                  </x>
+                  <y>0</y>
+                  <string><copy src="RechargeMenu" trait="user4" /></string>
+                  <red>255</red><green>255</green><blue>255</blue>
+               </text>
+            </rect>
+            <rect name="if_soul_gem">
+               <visible>
+                  <copy src="RechargeMenu" trait="user0" /><eq>0</eq>
+               </visible>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy src="child()" trait="y" />
+                  <add  src="child()" trait="height" />
+                  <onlyif src="me()" trait="visible" />
+               </height>
+               
+               <image name="gem_icon">
+                  <locus>&true;</locus>
+                  <zoom>
+                     <copy src="sibling(gem_info)" trait="height" />
+                     <div  src="child(icon_size_ref)" trait="fileheight" />
+                     <mult>100</mult>
+                  </zoom>
+                  <filename><copy src="RechargeMenu" trait="user1" /></filename>
+                  <width>
+                     <copy>64</copy>
+                     <mult src="me()" trait="zoom" />
+                     <div>100</div>
+                  </width>
+                  <height>
+                     <copy>64</copy>
+                     <mult src="me()" trait="zoom" />
+                     <div>100</div>
+                  </height>
+                  <x>0</x>
+                  <y>0</y>
+                  
+                  <image name="icon_size_ref"> <!-- used to get fileheight without zoom getting in the way -->
+                     <filename><copy src="parent()" trait="filename" /></filename>
+                     <x>-9999999</x>
+                     <y>-9999999</y>
+                  </image>
+                  <text name="gem_count"> <!-- how many of this gem do we have? -->
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <depth>1</depth>
+                     <string><copy src="RechargeMenu" trait="user6" /></string>
+                     <visible>
+                        <copy src="RechargeMenu" trait="user6" /><gt>1</gt>
+                     </visible>
+                     <red>255</red>
+                     <green>255</green>
+                     <blue>255</blue>
+                     <x>
+                        <copy src="parent()" trait="width" />
+                        <sub  src="me()"     trait="width" />
+                     </x>
+                     <y>
+                        <copy src="parent()" trait="height" />
+                        <sub  src="me()"     trait="height" />
+                     </y>
+                  </text>
+               </image>
+               <rect name="gem_info">
+                  <locus>&true;</locus>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>16</add>
+                  </x>
+                  <y>0</y>
+                  <width>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="x" />
+                  </width>
+                  <height>
+                     <copy src="child()" trait="height" />
+                     <add  src="child()" trait="y" />
+                  </height>
+                  
+                  <text name="gem_name">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <string><copy src="RechargeMenu" trait="user2" /></string>
+                     <x>0</x>
+                     <y>0</y>
+                     <red>255</red><green>255</green><blue>255</blue>
+                  </text>
+                  <text name="soul_label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <string><copy src="strings()" trait="_soul"/></string>
+                     <x>0</x>
+                     <y>
+                        <copy src="sibling()" trait="y" />
+                        <add  src="sibling()" trait="height" />
+                     </y>
+                     <red>140</red><green>140</green><blue>140</blue>
+                  </text>
+                  <text name="soul_value">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <string><copy src="RechargeMenu" trait="user4" /></string>
+                     <x>
+                        <copy src="sibling()" trait="x" />
+                        <add  src="sibling()" trait="width" />
+                        <add>8</add>
+                     </x>
+                     <y><copy src="sibling()" trait="y" /></y>
+                     <red>255</red><green>255</green><blue>255</blue>
+                  </text>
+               </rect>
+               <image name="separator">
+                  <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+                  <tile>&true;</tile>
+                  <width> <copy src="parent()" trait="width" /></width>
+                  <height><copy src="me()"     trait="fileheight" /></width>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="y" />
+                     <add  src="sibling()" trait="height" />
+                     <add>8</add>
+                  </y>
+               </image>
+               <text name="warning">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+                  <string><copy src="xxnStrings()" trait="_rechargeMenuWasteGemWarning" /></string>
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <x>0</x>
+                  <y>
+                     <copy src="sibling()" trait="y" />
+                     <add  src="sibling()" trait="height" />
+                     <add>8</add>
+                  </y>
+               </text>
+            </rect>
+            <rect name="SIZER">
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="button_select">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>276</_dxScanCode>
+            <visible><copy src="northernui()" trait="_xxnGamepadAvailable" /></visible>
+            <x>0</x>
+            <y>0</y>
+            <string><copy src="xxnStrings()" trait="_rechargeMenuButtonRecharge" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>0</listindex>
+            <xright>&next;</xright>
+            <xup><ref src="spell_buy_list" trait="mouseover"/></xup>
+         </rect>
+         <rect name="button_exit">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>3</id>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()"  trait="width" />
+                  <add    src="bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()"  trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_exit" /></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>1</listindex>
+            <xleft>&prev;</xleft>
+            <xup><ref src="recharge_list_pane" trait="mouseover"/></xup>
+         </rect>
+      </rect>
+      <rect name="right_side_info">
+         <locus>&true;</locus>
+         <width> <!-- combined width of all children -->
+            <copy src="child(gold)" trait="x" />
+            <add  src="child(gold)" trait="width" />
+         </width>
+         <height> <!-- expected child height -->
+            <copy src="child(gold)" trait="y" />
+            <add  src="child(gold)" trait="height" />
+         </height>
+         <x> <!-- align on right -->
+            <copy src="parent()"     trait="width" />
+            <sub  src="me()"         trait="width" />
+            <sub  src="screen()"     trait="cropx" />
+            <sub  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         
+         <rect name="gold">
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <x>0</x>
+            <y>0</y>
+            <_label><copy src="xxnStrings()" trait="_gold" /></_label>
+            <_value><copy src="RechargeMenu" trait="user2"/></_value>
+            <_maximum>-1</_maximum>
+            <visible>
+               <copy src="RechargeMenu" trait="user0" /><eq>1</eq>
+            </visible>
+         </rect>
+      </rect>
+   </rect>
+	
+	<template name="recharge_item_template">
+		<rect name="recharge_item">
+			<target>&true;</target>
+			<clips>&true;</clips>
+			<locus>&true;</locus>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<width> <copy src="parent()" trait="width"/></width>
+			<height><copy src="menu()"   trait="_listRowHeight" /></height>
+			
+			<listindex><copy src="me()" trait="user0" /></listindex>
+			<user0> 0 </user0>	<!-- Item Index -->
+			<user1> Item name </user1>
+			<user2> Charge Text </user2>
+			<user3> Icon filename </user3>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>3</xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="recharge_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+
+			<image name="item_icon">
+            <zoom><copy src="menu()" trait="_itemIconZoom" /></zoom>
+				<clips>&true;</clips>
+				<filename><copy src="parent()" trait="user3" /></filename>
+				<width> <copy src="menu()" trait="_itemIconSize" /></width>
+				<height><copy src="menu()" trait="_itemIconSize" /></height>
+				<x>8</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+            <depth>3</depth>
+			</image>
+			<text name="item_name">
+            <include src="NorthernUI\fonts\normal.xml" />
+				<clips>&true;</clips>
+            <red>255</red><green>255</green><blue>255</blue>
+				<wrapwidth>380</wrapwidth>
+				<wraplines>  2</wraplines>
+				<string><copy src="parent()" trait="user1" /></string>
+				<x>
+					<copy src="sibling(item_icon)" trait="x" />
+					<add  src="sibling(item_icon)" trait="width" />
+					<add>11</add>
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+            <depth>3</depth>
+			</text>
+			<text name="item_charge">
+            <include src="NorthernUI\fonts\normal.xml" />
+				<clips>&true;</clips>
+            <red>255</red><green>255</green><blue>255</blue>
+				<string><copy src="parent()" trait="user2" /></string>
+				<x>
+               <copy src="parent()" trait="width" />
+               <sub  src="menu()"   trait="_itemInfoColumnWidth" />
+               <add>
+                  <copy src="menu()"   trait="_itemInfoColumnWidth" />
+                  <sub  src="me()" trait="width" />
+                  <div>2</div>	
+               </add>
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub  src="me()"     trait="height" />
+					<div>2</div>
+				</y>
+            <depth>3</depth>
+			</text>
+		</rect>
+	</template>
+</menu>

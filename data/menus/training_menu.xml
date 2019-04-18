@@ -1,0 +1,502 @@
+<!-- training_menu.xml -->
+<menu name="TrainingMenu">
+	<class> &TrainingMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	<menufade> 0.25 </menufade>
+	
+	<user0></user0>		<!-- Player gold text, with label (damn it) -->
+   
+   <!-- NorthernUI extensions: -->
+	<user22></user22>        <!-- string: how long will Dynamic Training Cost make training take -->
+	<user23>&false;</user23> <!-- Dynamic Training Cost will make training take time -->
+	<user24>&false;</user24> <!-- Dynamic Training Cost is showing extra info -->
+
+	<xbuttonb> <ref src="button_exit" trait="clicked"/> </xbuttonb>
+	<xbuttona> <ref src="button_train" trait="clicked"/> </xbuttona>
+   
+   <_compatDTCHidingTrainCount>
+      <not src="Times_Trained_Text" trait="visible" />
+   </_compatDTCHidingTrainCount>
+   
+   <rect name="background">
+		<id>1</id>
+		<target>&true;</target>
+      <xdefault>&true;</xdefault> <!-- because there has to be one focus, doesn't have to DO anything though -->
+		<depth>1</depth>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+         <sub>64</sub>
+		</y>
+      
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>524</user20>
+		<user21>
+         <copy src="buttons" trait="y" />
+         <add  src="buttons" trait="height" />
+      </user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+		
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         <image name="skill_image">
+            <zoom>
+               <copy src="right" trait="height" />
+               <div> 343</div> <!-- see HEIGHT trait -->
+               <mult>100</mult>
+            </zoom>
+            <id>3</id>
+            <filename></filename>
+            <depth>10</depth>
+            <width>
+               <!-- <copy src="me()" trait="filewidth" /> -->
+               <copy>237</copy> <!-- the goddamn skill images all have tons of padding in them! -->
+               <mult src="me()" trait="zoom" />
+               <div>100</div>
+            </width>
+            <height>
+               <!-- <copy src="me()" trait="fileheight" /> -->
+               <copy>343</copy> <!-- measured image in editor; ACTUAL size is 237x343 -->
+               <mult src="me()" trait="zoom" />
+               <div>100</div>
+            </height>
+            <x>0</x>
+            <y>0</y>
+         </image>
+         <rect name="right">
+            <locus>&true;</locus>
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add>32</add>
+            </x>
+            <y>0</y>
+            <width>
+               <copy src="parent()" trait="width" />
+               <sub  src="me()"     trait="x" />
+            </width>
+            <height>
+               <copy src="child(buttons)" trait="y" />
+               <add  src="child(buttons)" trait="height" />
+            </height>
+            
+            <text name="skill_name">
+               <include src="NorthernUI\fonts\normal.xml" />
+               <id>2</id>
+               <string></string>
+               <justify>&center;</justify>
+               <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <div>2</div>
+               </x>
+               <y>0</y>
+            </text>
+            <rect name="row_trainer_level">
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child()" trait="height" /></height>
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="strings()" trait="_trainerskill" /></string>
+                  <justify>&left;</justify>
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <x>0</x>
+                  <y>0</y>
+               </text>
+               <text name="value">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <!-- <id>9</id>
+                  <string></string> --> <!-- level string is appended to initial XML-specified string? -->
+                  <string><copy src="Trainer_Level_Text" trait="string" /></string>
+                  <justify>&right;</justify>
+                  <red>255</red><green>255</green><blue>255</blue>
+                  <x><copy src="parent()" trait="width" /></x>
+                  <y>0</y>
+               </text>
+            </rect>
+            <rect name="row_player_level">
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height><copy src="child()" trait="height" /></height>
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="strings()" trait="_playerskill" /></string>
+                  <justify>&left;</justify>
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <x>0</x>
+                  <y>0</y>
+               </text>
+               <text name="value">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <!-- <id>11</id>
+                  <string></string> --> <!-- level string is appended to initial XML-specified string? -->
+                  <string><copy src="Player_Level_Text" trait="string" /></string>
+                  <justify>&right;</justify>
+                  <red>255</red><green>255</green><blue>255</blue>
+                  <x><copy src="parent()" trait="width" /></x>
+                  <y>0</y>
+               </text>
+            </rect>
+            <rect name="row_times_trained">
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy   src="child()" trait="height" />
+                  <onlyif src="me()" trait="visible" />
+               </height>
+               <visible>
+                  <copy>&true;</copy>
+                  <not src="menu()" trait="_compatDTCHidingTrainCount" />
+               </visible>
+               
+               <text name="label">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="strings()" trait="_timestrained" /></string>
+                  <justify>&left;</justify>
+                  <red>140</red><green>140</green><blue>140</blue>
+                  <x>0</x>
+                  <y>0</y>
+               </text>
+               <text name="value">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <id>12</id>
+                  <string></string> <!-- level string is appended to initial XML-specified string? -->
+                  <justify>&right;</justify>
+                  <red>255</red><green>255</green><blue>255</blue>
+                  <x><copy src="parent()" trait="width" /></x>
+                  <y>0</y>
+               </text>
+            </rect>
+            <image name="separator">
+               <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+               <tile>&true;</tile>
+               <width> <copy src="parent()" trait="width" /></width>
+               <height><copy src="me()"     trait="fileheight" /></width>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+            </image>
+            <rect name="row_budget">
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+               <width> <copy src="parent()" trait="width" /></width>
+               <height><copy src="child()" trait="height" /></height>
+               
+               <rect name="data_cost">
+                  <locus>&true;</locus>
+                  <x>24</x>
+                  <y>0</y>
+                  <height><copy src="child()" trait="height" /></height>
+                  
+                  <text name="label">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <string><copy src="strings()" trait="_cost" /></string>
+                     <justify>&left;</justify>
+                     <red>140</red><green>140</green><blue>140</blue>
+                     <x>0</x>
+                     <y>0</y>
+                  </text>
+                  <text name="value">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <id>8</id>
+                     <string></string> <!-- value is appended to initial XML-specified string? -->
+                     <justify>&left;</justify>
+                     <red>255</red><green>255</green><blue>255</blue>
+                     <x>
+                        <copy src="sibling()" trait="x" />
+                        <add  src="sibling()" trait="width" />
+                         <!--
+                           The string format is " [PREFIX] [VALUE]" where [PREFIX] is the 
+                           XML-specified STRING; as such, we need to move to the right to 
+                           compensate for three spaces (because string traits cannot be 
+                           empty; they are always at least a single space, so we get things 
+                           like "   50").
+                           
+                           And yes, this is obnoxious as well and I want to try to patch it 
+                           out.
+                         -->
+                        <sub>8</sub>
+                     </x>
+                     <y>0</y>
+                  </text>
+               </rect>
+               <rect name="data_gold">
+                  <locus>&true;</locus>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <sub  src="me()"     trait="width" />
+                     <sub>24</sub>
+                  </x>
+                  <y>0</y>
+                  <width>
+                     <copy src="child(text)" trait="x" />
+                     <add  src="child(text)" trait="width" />
+                  </width>
+                  <height><copy src="child()" trait="height" /></height>
+                  
+                  <text name="text">
+                     <include src="NorthernUI\fonts\normal.xml" />
+                     <string><copy src="menu()" trait="user0" /></string>
+                     <justify>&left;</justify>
+                     <red>255</red><green>255</green><blue>255</blue>
+                     <x>0</x>
+                     <y>0</y>
+                  </text>
+               </rect>
+            </rect>
+            <rect name="row_dtc_training_timer">
+               <locus>&true;</locus>
+               <x>0</x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+               </y>
+               <width><copy src="parent()" trait="width" /></width>
+               <height>
+                  <copy   src="child()" trait="height" />
+                  <onlyif src="me()" trait="visible" />
+               </height>
+               <visible><copy src="menu()" trait="user23" /></visible>
+               
+               <text name="value">
+                  <include src="NorthernUI\fonts\normal.xml" />
+                  <string><copy src="menu()" trait="user22" /></string>
+                  <justify>&center;</justify>
+                  <red>255</red><green>255</green><blue>255</blue>
+                  <x>
+                     <copy src="parent()" trait="width" />
+                     <div>2</div>
+                  </x>
+                  <y>0</y>
+               </text>
+            </rect>
+            <rect name="buttons">
+               <locus>&true;</locus>
+               <x>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="width" />
+                  <div>2</div>
+               </x>
+               <y>
+                  <copy src="sibling()" trait="y" />
+                  <add  src="sibling()" trait="height" />
+                  <add>8</add>
+               </y>
+               <width>
+                  <copy src="child()" trait="x" />
+                  <add  src="child()" trait="width" />
+               </width>
+               <height><copy src="child()" trait="height" /></height>
+               
+               <rect name="button_train">
+                  <!--
+                     Executable disables this button (by setting user1 to false) if the 
+                     player has insufficient gold.
+                     
+                     Executable hides this button entirely if the player has outleveled 
+                     this trainer, or if the player has already trained the maximum 
+                     number of times for this level.
+                  -->
+                  <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+                  <_dxScanCode>276</_dxScanCode>
+                  <id>6</id>
+                  <x>0</x>
+                  <y>0</y>
+                  <target><copy src="me()" trait="user1" /></target>
+                  <string><copy src="xxnStrings()" trait="_trainingMenuButtonTrain" /></string>
+                  <_useHoverBehavior>&true;</_useHoverBehavior>
+                  <_paddingX>16</_paddingX>
+                  <_paddingY> 8</_paddingY>
+                  <!-- <user1><not src="skill_warning_text" trait="visible" /></user1> -->
+                  <user1>&true;</user1>
+                  
+                  <listindex>1</listindex>
+                  <xleft>&prev;</xleft>
+                  <xright>&next;</xright>
+               </rect>
+               <rect name="button_exit">
+                  <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+                  <_dxScanCode>277</_dxScanCode>
+                  <id>7</id>
+                  <x>
+                     <copy src="sibling()" trait="x" />
+                     <add  src="sibling()" trait="width" />
+                     <add>24</add>
+                  </x>
+                  <y>0</y>
+                  <string><copy src="strings()" trait="_exit" /></string>
+                  <_useHoverBehavior>&true;</_useHoverBehavior>
+                  <_paddingX>16</_paddingX>
+                  <_paddingY> 8</_paddingY>
+                  
+                  <listindex>2</listindex>
+                  <xleft>&prev;</xleft>
+                  <xright>&next;</xright>
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+   <rect name="warning_box">
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div>2</div>
+		</x>
+		<y>
+			<copy src="background" trait="y" />
+         <sub>
+            <copy src="me()" trait="height" />
+            <add>16</add>
+            <onlyif src="me()" trait="visible" />
+         </sub>
+		</y>
+      
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>524</user20>
+		<user21>
+         <copy src="skill_warning_text" trait="y" />
+         <add  src="skill_warning_text" trait="height" />
+      </user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      
+      <visible><copy src="skill_warning_text" trait="visible" /></visible>
+		
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         
+         <text name="skill_warning_text">
+            <visible>&false;</visible> <!-- overridden by executable -->
+            <include src="NorthernUI\fonts\normal.xml" />
+            <id>10</id>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+            <red>255</red>
+            <green>24</green>
+            <blue>24</blue>
+            <string></string>
+            
+            <justify>&center;</justify>
+            <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+         </text>
+      </rect>
+   </rect>
+   <rect name="dynamic_training_cost_data_box">
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div>2</div>
+		</x>
+		<y>
+			<copy src="warning_box" trait="y" />
+			<sub  src="me()"        trait="height" />
+         <sub>16</sub>
+		</y>
+      
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>524</user20>
+		<user21>
+         <copy src="skill_description" trait="y" />
+         <add  src="skill_description" trait="height" />
+      </user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      
+      <visible><copy src="menu()" trait="user24" /></visible>
+		
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         
+         <text name="skill_description">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <x>0</x>
+            <y>0</y>
+            <red>140</red>
+            <green>140</green>
+            <blue>140</blue>
+            <string><copy src="skill_text" trait="string" /></string>
+            
+            <justify>&left;</justify>
+            <wrapwidth><copy src="parent()" trait="width" /></wrapwidth>
+         </text>
+      </rect>
+   </rect>
+   <!-- <text name="skill_description">
+      <id>4</id>
+      <string></string>
+      <visible>&false;</visible>
+   </text> -->
+   
+   <rect name="Training_background"> <!-- partial compatibility: Dynamic Training Cost -->
+      <locus>&true;</locus>
+      <visible>&false;</visible>
+      <x>0</x>
+      <y>0</y>
+      
+      <text name="Times_Trained_Text">
+         <!--
+            Dynamic Training Cost hides the "times trained" text when "unlimited training" 
+            is enabled. TODO: Have the "real" text in our UI pull "visible" from this tile.
+         -->
+         <visible>&true;</visible>
+      </text>
+      <text name="skill_Text"> <!-- modified by migTrainingQ.bDisplayTrainAdjust -->
+         <id>4</id>
+         <string><copy src="skill_description" trait="string" /></string>
+      </text>
+      <text name="Player_Level_Text"> <!-- modified by migTrainingQ.bDisplaySkillNumbers and migTrainingQ.bTrainTakesTime -->
+         <!--
+            Skill number pref replaces the player level text (e.g. Novice) with the skill's 
+            raw numeric value. The "training takes time" pref appends the time it takes to 
+            train to the string, which if not handled will break our layout.
+         -->
+         <id>11</id>
+         <string></string> <!-- native code appends level text to the trait's initial value? -->
+      </text>
+      <text name="Trainer_Level_Text"> <!-- modified by migTrainingQ.bDisplaySkillNumbers -->
+         <!-- Pref replaces the trainer level text (e.g. Novice) with the stat as a number. -->
+         <id>9</id>
+         <string></string> <!-- native code appends level text to the trait's initial value? -->
+      </text>
+      <text name="cost_text">
+         <y>256</y> <!-- set to 0 if unlimited training is on -->
+      </text>
+   </rect>
+</menu>

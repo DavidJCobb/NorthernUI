@@ -1,0 +1,389 @@
+<!-- levelup_menu.xml -->
+<menu name="LevelUpMenu">
+	<class> &LevelUpMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	<menufade> 0.25 </menufade>
+	
+	<user1>&false;</user1>	<!-- Exit button enabled? --> 
+	
+	<user2></user2>		<!-- Descriptive text -->
+	<user3></user3>		<!-- "You have ascended to level x" -->
+	<user4></user4>		<!-- Filename for picture -->
+	<user5></user5>		<!-- Attribute description -->
+	
+	<xbuttonb> <ref src="levelup_exit_button" trait="clicked"/> </xbuttonb>
+	
+	
+	<rect name="levelup_background">
+<include src="generic_background.xml"/>
+		<depth> 1 </depth>
+		<user0> 1000 </user0>
+		<user1>
+			<copy src="levelup_pane" trait="y" />
+			<add src="levelup_pane" trait="height" />
+			<add> 20 </add>
+		</user1>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		
+		
+		<!-- TITLE MESSAGE ===========================================================-->
+		<text name="levelup_title">
+			<string> <copy src="LevelUpMenu" trait="user3"/> </string>
+			<justify> &left; </justify>
+			<red> 33 </red>
+			<green> 59 </green>
+			<blue> 117 </blue>
+			<alpha> 255 </alpha>
+			<wrapwidth> 900 </wrapwidth>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<div> 2 </div>
+			</x>
+			<y> 20 </y>
+			<depth> 4 </depth>
+		</text>
+		
+		
+		<!-- DESCRIPTIVE MESSAGE ===========================================================-->
+		<text name="levelup_description">
+			<string> <copy src="LevelUpMenu" trait="user2"/> </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 255 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 40 </sub>
+			</wrapwidth>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="levelup_title" trait="y" />
+				<add src="levelup_title" trait="height" />
+				<add> 20 </add>
+			</y>
+			<depth> 4 </depth>
+		</text>
+		
+		
+		<!-- INSTRUCTIONAL MESSAGE =========================================================-->
+		<text name="levelup_instructions">
+			<string> <copy src="strings()" trait="_threeattributes"/> </string>
+			<justify> &left; </justify>
+			<red> 33 </red>
+			<green> 59 </green>
+			<blue> 117 </blue>
+			<alpha> 255 </alpha>
+			<font> 3 </font>
+			<wrapwidth> 900 </wrapwidth>
+			<x>
+				<copy src="levelup_pane" trait="width" />
+				<sub src="me()" trait="width" />
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="levelup_description" trait="y" />
+				<add src="levelup_description" trait="height" />
+				<add> 30 </add>
+			</y>
+			<depth> 4 </depth>
+		</text>
+		
+		
+		<!-- IMAGE/ATTRIBUTE TEXT =======================================================-->
+		<image name="level_up_picture">
+			<filename> <copy src="LevelUpMenu" trait="user4"/> </filename>
+			<depth> 10</depth>
+			<width> 256 </width>
+			<height> 256 </height>
+			<x> 620 </x>
+			<y> <copy src="levelup_pane" trait="y"/> </y>
+		</image>
+		<text name="levelup_attribute_description">
+			<string> <copy src="LevelUpMenu" trait="user5"/> </string>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 255 </alpha>
+			<font>3</font>
+			<wrapwidth>
+				<copy src="level_up_picture" trait="width"/>
+				<add src="me()" trait="_extend_text"/>
+				<add src="me()" trait="_extend_text"/>
+			</wrapwidth>
+			<x>
+				<copy src="level_up_picture" trait="x" />
+				<sub src="me()" trait="_extend_text" />
+			</x>
+			<y>
+				<copy src="level_up_picture" trait="y" />
+				<add src="level_up_picture" trait="height" />
+				<add> 20 </add>
+			</y>
+			<depth> 4 </depth>
+			<_extend_text> 60 </_extend_text>
+		</text>
+		
+		<!-- LIST OF ATTRIBUTES ======================================================================-->
+		<rect name="levelup_pane">
+			<id> 2 </id>
+			<width> 540 </width>
+			<height> 536 </height>
+			<x> 30 </x>
+			<y>
+				<copy src="levelup_instructions" trait="y" />
+				<add src="levelup_instructions" trait="height" />
+				<add> 20 </add>
+			</y>
+			<depth> 5 </depth>
+			<locus> &true; </locus>
+						
+			<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+				an input command, they defer to their parent. The following directions are for those times. -->
+			<target> &false; </target>
+			<xdefault> &false; </xdefault>
+			<xlist> &xlist; </xlist>
+			<!--xleft> <ref src="levelup_exit_button" trait="mouseover" /> </xleft-->
+			<xright> <ref src="levelup_exit_button" trait="mouseover" /> </xright>
+			<!--xup> &last; </xup>
+			<xdown> &first; </xdown-->
+			
+			<!-- template items go here, set by code -->
+			
+		</rect>
+		
+		
+		<!-- DONE BUTTON ======================================================================-->
+		<image name="levelup_exit_button">
+<include src="button_long.xml"/>
+			<id> 1 </id>
+			<target> <copy src="LevelUpMenu" trait="user1"/> </target>
+			<depth> 6 </depth>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 30 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<user0> <copy src="strings()" trait="_exit"/> </user0>
+			<user1> <copy src="LevelUpMenu" trait="user1"/> </user1>
+			
+			<user20><!--&xbuttonb;-->2</user20>
+			
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="levelup_pane" trait="mouseover"/> </xleft>
+			<!--xright> <ref src="levelup_pane" trait="mouseover"/> </xright>
+			<xup> <ref src="levelup_pane" trait="mouseover"/> </xup>
+			<xdown> <ref src="levelup_pane" trait="mouseover"/> </xdown-->
+		</image>
+		
+	</rect>
+	
+	
+	
+	<!-- TEMPLATE ======================================================================-->
+	<template name="levelup_template">
+		<rect name="levelup_item">
+			<alpha> 0 </alpha>
+			<id> 3 </id>
+			<visible> &true; </visible>
+			<locus> &true; </locus>
+			<target>
+				<copy src="me()" trait="user6"/>
+				<or src="me()" trait="user0"/>
+			</target>
+			<focusinset> 8 </focusinset>
+			<height> 67 </height>
+			<width> 450 </width>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult> 67 </mult>
+			</y>
+			<depth> 1 </depth>
+			<listindex> 0 </listindex>
+
+			<user0> &false; </user0>	<!-- is attribute selected by player for level-up? -->
+			<user1> &false; </user1>	<!-- is multiplier text visible? -->
+			<user2> x </user2>			<!-- multiplier text -->
+			<user3> 0 </user3>			<!-- attribute value -->
+			<user4> x </user4>			<!-- item name text -->
+			<user5> x </user5>			<!-- item icon pathname -->
+			<user6> &true; </user6>		<!-- is enabled -->
+			
+			<_enabled_alpha>
+				<copy src="me()" trait="user6"/>
+				<or src="me()" trait="user0"/>
+				<sub> 1 </sub>
+				<mul> 127 </mul>
+				<add> 128 </add>
+			</_enabled_alpha>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to xitem triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+
+			<image name="levelup_item_coin">
+				<visible> <copy src="parent()" trait="user0" /> </visible>
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 224 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> -10 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<depth> 4 </depth>
+				<locus> &true; </locus>
+			</image>
+			
+			<image name="levelup_item_icon">
+				<filename> <copy src="parent()" trait="user5" /> </filename>
+				<width> 64 </width>
+				<height> 64 </height>
+				<x> 40 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<depth> 4 </depth>
+				<alpha> <copy src="parent()" trait="_enabled_alpha"/> </alpha>
+			</image>
+			
+			<text name="levelup_item_text">
+				<string> <copy src="parent()" trait="user4" /> </string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 31 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 300 </wrapwidth>
+				<x> 130 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<depth> 4 </depth>
+				<alpha> <copy src="parent()" trait="_enabled_alpha"/> </alpha>
+			</text>
+			
+			<text name="levelup_item_value">
+				<string> <copy src="parent()" trait="user3" /> </string>
+				<justify> &left; </justify>
+				<red> 33 </red>
+				<green> 59 </green>
+				<blue> 117 </blue>
+				<alpha> 255 </alpha>
+				<x> 380 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<depth> 4 </depth>
+				<alpha> <copy src="parent()" trait="_enabled_alpha"/> </alpha>
+			</text>
+			
+			<text name="levelup_item_multiplier">
+				<string> <copy src="parent()" trait="user2" /> </string>
+				<visible> <copy src="parent()" trait="user1" /> </visible>
+				<justify> &right; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 31 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 300 </wrapwidth>
+				<x> 480 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<depth> 4 </depth>
+				<alpha> <copy src="parent()" trait="_enabled_alpha"/> </alpha>
+			</text>
+			
+			<image name="levelup_item_selected">
+				<clips> &true; </clips>
+				<visible> <copy src="parent()" trait="user0" /> </visible>
+				<filename> Menus\Inventory\inv_equiped_marker_1.dds </filename>
+				<width>
+					<copy src="parent()" trait="width" />
+					<sub> 70 </sub>
+				</width>
+				<height> 64 </height>
+				<x> 115 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+					<add> 1 </add>
+				</y>
+				<depth> 1 </depth>
+			</image>
+			
+			<image name="levelup_item_mouseover_marker">
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul src="parent()" trait="mouseover" />
+				</alpha>
+				<width>
+					<copy src="parent()" trait="width"/>
+					<sub> 90 </sub>
+				</width>
+				<height> 64 </height>
+				<x> 115 </x>
+				<y> 5 </y>
+				<depth> 2 </depth>
+			</image>
+			
+			<image name="levelup_item_mouseover_marker_2">
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul src="parent()" trait="mouseover" />
+				</alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<add> 55 </add>
+					<sub src="me()" trait="width" />
+				</x>
+				<y> 5 </y>
+				<depth> 3 </depth>
+			</image>
+		</rect>
+	</template>
+</menu>

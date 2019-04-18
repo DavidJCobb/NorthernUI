@@ -1,0 +1,5 @@
+<!--<rect name="scrollbar_wrap">-->
+   <locus>&true;</locus>
+   <width>400</width>
+   <height><copy src="child()" trait="height" /></height>
+<!--</rect>-->

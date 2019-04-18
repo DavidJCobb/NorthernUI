@@ -1,0 +1,331 @@
+<!-- downloads_menu.xml -->
+<menu name="DownloadsMenu">
+	<class> &DownloadsMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+
+	<user0>		<!-- height of single template item plus buffer zone -->
+		<copy src="downloads_content_rect" trait="height"/>		<!-- parent rect height -->
+		<div src="downloads_vertical_scroll" trait="user8"/>	<!-- num items visible -->
+	</user0>
+	
+	<xbuttonb> <ref src="downloads_return_button" trait="clicked"/> </xbuttonb>
+	
+	<rect name="downloads_background">
+<include src="generic_background.xml"/>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+		<user0> 750 </user0>
+		<user1> 600 </user1>
+		
+<!--======================================== NEW CONTENT BUTTON =========================================-->
+
+		<rect name="downloads_newcontent_button">
+<include src="button_floating_2.xml"/>
+			<id> 2 </id>
+			<visible>&false;</visible>	<!-- Will get set to true when DoIdle sets the string property -->
+			<depth> 3 </depth>
+			<target>&false;</target>	<!-- defaults to false, set to true in code if new content is detected -->
+			<_center_x>
+				<copy src="parent()" trait="width"/>
+				<div>2</div>
+			</_center_x>
+			<string></string>			<!-- Will be set in code, depending on if there are downloads available -->
+			<y> 10 </y>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="downloads_up" trait="clicked"/> </xup>
+			<xdown> <ref src="downloads_down" trait="clicked"/> </xdown>
+		</rect>
+
+		<image name="downloads_new_icon">
+			<visible> <copy src="downloads_newcontent_button" trait="mouseover"/> <eq>1</eq> </visible>
+			<filename> Menus\Shared\all_xbox_buttons.dds </filename>
+			<cropx> 128 </cropx>
+			<depth>3</depth>
+			<height>64</height>
+			<width>64</width>
+			<x>
+				<copy src="downloads_content_rect" trait="x"/>
+				<sub> 8 </sub>
+			</x>
+			<y>
+				<copy src="downloads_new_text" trait="y"/>
+				<add>
+					<copy src="downloads_new_text" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</add>
+			</y>
+		</image>
+
+		<text name="downloads_new_text">
+			<visible> <copy src="downloads_new_icon" trait="visible"/> </visible>
+			<string> <copy src="strings()" trait="_view"/> </string>
+			<depth> 3 </depth>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="downloads_new_icon" trait="x"/>
+				<add src="downloads_new_icon" trait="width"/>
+			</x>
+			<y>
+				<copy src="downloads_return_button" trait="y"/>
+			</y>
+			<red>  117 </red>
+			<green>	59 </green>
+			<blue>	33 </blue>
+		</text>
+
+<!--===================================== CONTENT RECT LABEL ======================================-->
+
+		<text name="downloads_content_label">
+			<depth>3</depth>
+			<alpha>255</alpha>
+			<red>  117 </red>
+			<green>	59 </green>
+			<blue>	33 </blue>
+			<string> <copy src="strings()" trait="_downloaded_content"/> </string>
+			<x>
+				<copy src="downloads_content_rect" trait="x"/>
+			</x>
+			<y>
+				<copy src="downloads_newcontent_button" trait="y"/>
+				<add src="downloads_newcontent_button" trait="height"/>
+			</y>
+		</text>
+
+<!--======================================== CONTENT RECT =========================================-->
+
+		<rect name="downloads_content_rect">
+			<locus>&true;</locus>
+			<clipwindow>&true;</clipwindow>
+			<depth>3</depth>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div>2</div>
+			</x>
+			<y>
+				<copy src="downloads_content_label" trait="y"/>
+				<add src="downloads_content_label" trait="height"/>
+				<add>12</add>
+			</y>
+			<width>
+				<copy src="parent()" trait="width"/>
+				<mult>0.75</mult>
+			</width>
+			<height> 388 </height>
+			
+<!--======================================== BORDERS ===========================================-->
+
+			<image name="downloads_border_top">
+				<filename> Menus\Shared\shared_border_horizontal_1.dds </filename>
+				<x> -24 </x>
+				<y>
+					<copy>0</copy>
+					<sub src="me()" trait="height"/>
+				</y>
+				<width>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="x"/>
+					<sub>32</sub>
+				</width>
+				<height> 6 </height>
+			</image>
+
+			<image name="downloads_border_left">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<x>
+					<copy>0</copy>
+					<sub src="me()" trait="width"/>
+				</x>
+				<y> 0 </y>
+				<width> 4 </width>
+				<height> 
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="y"/>
+				</height>
+			</image>
+
+			<image name="downloads_border_right">
+				<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+				<x> <copy src="parent()" trait="width"/> </x>
+				<y> 0 </y>
+				<width> 4 </width>
+				<height> 
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="y"/>
+				</height>
+			</image>
+
+			<image name="downloads_border_bottom">
+				<filename> Menus\Shared\shared_border_horizontal_1.dds </filename>
+				<x> -24 </x>
+				<y> <copy src="parent()" trait="height"/> </y>
+				<width>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="x"/>
+					<sub>32</sub>
+				</width>
+				<height> 6 </height>
+			</image>
+			
+<!--========================================= SCROLL BAR ===========================================-->
+
+			<image name="downloads_vertical_scroll">
+<include src="vert_floating_scroll.xml"/>
+				<id> 3 </id>
+				<x> <copy src="parent()" trait="width"/> <add>40</add> </x>
+				<y> <copy src="child(vertical_scroll_top)" trait="height"/> </y>
+				<depth> 3 </depth>
+				<height>
+					<copy src="parent()" trait="height"/>
+					<sub src="child(vertical_scroll_top)" trait="height"/>
+					<sub src="child(vertical_scroll_bottom)" trait="height"/>
+				</height>
+				<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+				<user2>
+					<copy src="downloads_list_pane" trait="childcount" />
+					<sub src="me()" trait="user8"/>
+				</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+											items minus the number of items visible.  i.e. if your list has
+											8 items and you can see 2 at any one time, this should be 6 -->
+				<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+				<user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+				<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+				<user6> 4 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+				<!-- user7 = current value -->
+				<user8> 6 </user8>		<!-- How many items are visible at once -->
+				<user9>
+					<copy src="downloads_down" trait="clicked"/>
+					<sub src="downloads_up" trait="clicked"/>
+				</user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+			</image>
+
+			<rect name="downloads_up">
+				<target> &true; </target>
+				<xdefault> &true; </xdefault>
+				<xup> <ref src="downloads_up" trait="clicked"/> </xup>
+				<xdown> <ref src="downloads_down" trait="clicked"/> </xdown>
+			</rect>
+			<rect name="downloads_down">
+				<target> &true; </target>
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="downloads_up" trait="clicked"/> </xup>
+				<xdown> <ref src="downloads_down" trait="clicked"/> </xdown>
+			</rect>
+
+<!--======================================== TEMPLATE PANE =========================================-->
+
+			<rect name="downloads_list_pane">
+				<id> 5 </id>
+				<locus> &true; </locus>
+				<clips> &true; </clips>
+				<width>
+					<copy src="parent()" trait="width"/>
+				</width>
+				<height>
+					<copy src="me()" trait="childcount"/>
+					<mul src="DownloadsMenu" trait="user0"/>
+				</height>
+				<x> 0 </x>
+				<y>
+					<copy>0</copy>
+					<sub src="downloads_vertical_scroll" trait="user7"/> <!-- user7 = current value -->
+					<mul src="DownloadsMenu" trait="user0"/>
+				</y>
+				
+				<!-- list items are added here in code from the template -->
+
+			</rect>	<!-- downloads_list_pane -->
+		</rect>		<!-- downloads_content_rect -->
+
+<!--======================================== RETURN BUTTON =========================================-->
+
+		<image name="downloads_return_button">
+<include src="button_long.xml"/>
+			<id> 1 </id>
+			<depth> 3 </depth>
+			<x>
+				<copy src="downloads_content_rect" trait="x" />
+				<add src="downloads_border_right" trait="x" />
+				<sub src="child(cont_button_exit_text)" trait="x"/>
+				<sub src="child(cont_button_exit_text)" trait="width"/>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<clicksound>2</clicksound>
+			<user0> <copy src="strings()" trait="_return"/> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+		</image>
+
+	</rect>		<!-- downloads_background -->
+
+<!--========================================== TEMPLATE ============================================-->
+
+	<template name="downloads_template">
+		<rect name="downloads_template_item">
+			<x> 12 </x>
+			<y>
+				<copy src="me()" trait="listindex"/>
+				<mult src="me()" trait="height"/>
+			</y>
+			<depth>1</depth>
+			<width>
+				<copy src="parent()" trait="width"/>
+				<sub>24</sub>
+			</width>
+			<height></height>	<!-- set in code -->
+			<locus> &true; </locus>
+			<clips> &true; </clips>
+			<target> &false; </target>
+			<repeatvertical> &true; </repeatvertical>
+			
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+
+			<user0></user0>		<!-- list index -->
+			<user1></user1>		<!-- text -->
+			
+			<text name="downloads_template_item_text">
+				<depth>3</depth>
+				<clips> &true; </clips>
+				<string>
+					<copy src="parent()" trait="user1"/>
+				</string>
+				<x> 0 </x>
+				<y>
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</y>
+				<alpha>255</alpha>
+				<red>  117 </red>
+				<green>	59 </green>
+				<blue>	33 </blue>
+				<wraplines>2</wraplines>
+				<wrapwidth>
+					<copy src="parent()" trait="width"/>
+				</wrapwidth>
+			</text>
+		</rect>
+	</template>
+
+</menu>
+
+<!--================================================================================================-->
+<!--================================================================================================-->

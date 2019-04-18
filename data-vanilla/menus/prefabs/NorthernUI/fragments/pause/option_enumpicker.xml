@@ -1,0 +1,140 @@
+<!--<rect name="option_enumpicker">-->
+   <!-- args -->
+   <user0>&generic;</user0> <!-- enumpicker text ID -->
+   <user1>&generic;</user1> <!-- enumpicker left ID -->
+   <user2>&generic;</user2> <!-- enumpicker right ID -->
+   <user10>200</user10> <!-- label column width -->
+   <user11></user11> <!-- label -->
+   <string></string> <!-- enumpicker value -->
+
+   <id>&generic;</id>
+   <clips>&true;</clips>
+   <listindex>
+      <copy src="sibling()" trait="listindex" />
+      <add>1</add>
+   </listindex>
+   <locus>&true;</locus>
+   <x>0</x>
+   <y>
+      <copy src="sibling()" trait="height" />
+      <onlyifnot>
+         <copy src="sibling()" trait="visible" /><eq>&false;</eq>
+      </onlyifnot>
+      <add  src="sibling()" trait="y" />
+   </y>
+   <width><copy src="parent()" trait="width" /></width>
+   <height>
+      <copy src="child(label)" trait="height" />
+      <add>8</add>
+   </height>
+   
+   <target>&true;</target>
+   <xdefault>&true;</xdefault>
+   <xlist>&xitem;</xlist>
+   <xup>  &prev;</xup>
+   <xdown>&next;</xdown>
+   <xleft>    <ref src="child(button_left)"  trait="clicked" /></xleft>
+   <xright>   <ref src="child(button_right)" trait="clicked" /></xright>
+   <xbuttonlb><ref src="child(button_left)"  trait="clicked" /></xbuttonlb>
+   <xbuttonrb><ref src="child(button_right)" trait="clicked" /></xbuttonrb>
+   <xscroll>
+      <copy src="me()" trait="listindex" />
+      <sub>
+         <copy src="parent()" trait="user8" />
+         <div> 2</div>
+         <ceil>0</ceil>
+      </sub>
+      <add>1</add>
+   </xscroll>
+   
+   <_mouseover_any>
+      <copy src="me()" trait="mouseover" />
+      <add  src="child(enumpicker)" trait="_mouseover_any" />
+      <gt>0</gt>
+      <sub>1</sub>
+   </_mouseover_any>
+   
+   <depth>10</depth> <!-- The root element is what gets focus, so child elements need to be behind it. -->
+   
+   <text name="label">
+      <depth>-8</depth>
+      <clips>&true;</clips>
+      <font>1</font>
+      <string><copy src="parent()" trait="user11" /></string>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      <red>117</red>
+      <green>59</green>
+      <blue>33</blue>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <rect name="enumpicker">
+      <depth>-4</depth>
+      <clips>&true;</clips>
+      <include src="NorthernUI/enumpicker.xml" />
+      <user0><copy src="parent()" trait="user0" /></user0>  <!-- tile ID: value -->
+      <user1><copy src="parent()" trait="user1" /></user1>  <!-- tile ID: button, left -->
+      <user2><copy src="parent()" trait="user2" /></user2> <!-- tile ID: button, right -->
+      <user3>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </user3>
+      <string><copy src="parent()" trait="string" /></string> <!-- displayed value -->
+      
+      <x><copy src="parent()" trait="user10" /></x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="x" />
+      </width>
+   </rect>
+   
+   <image name="controls_template_floating">
+      <visible><copy src="parent()" trait="mouseover" /><gt>0</gt></visible>
+      <filename> Menus\Dialog\dialog_selection_full.dds </filename>
+      <width>
+         <copy src="parent()" trait="width" />
+         <add>16</add>
+      </width>
+      <height> 64 </height>
+      <depth>-9</depth>
+      <x>-8</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+         <add>4</add>
+      </y>
+      <locus>&true;</locus>
+      
+      <image name="effset_attribute_floating_end">
+         <depth>0</depth>
+         <filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+         <width> 104 </width>
+         <height> 64 </height>
+         <x>
+            <copy src="parent()" trait="width"/>
+            <add> 8 </add>
+            <sub src="me()" trait="width"/>
+         </x>
+         <y>0</y>
+      </image>
+   </image>
+<!--</rect>-->

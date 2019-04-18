@@ -1,0 +1,85 @@
+<!--<rect name="enumpicker">-->
+   <!-- This prefab shows the selected option as a string bordered 
+        by left/right buttons, which change the string. -->
+   
+   <locus>&true;</locus>
+   <height>
+      <copy src="child(value)" trait="height" />
+      <max  src="child(button_left)" trait="height" />
+      <max  src="child(button_right)" trait="height" />
+   </height>
+	<_mouseover_any>
+		<copy src="child(button_left)"  trait="mouseover" />
+		<add  src="child(button_right)" trait="mouseover" />
+		<add  src="me()" trait="mouseover" />
+		<gt> 0</gt>
+		<sub>1</sub>
+	</_mouseover_any>
+   
+   <!-- args -->
+   <user0>&generic;</user0> <!-- tile ID: value -->
+   <user1>&generic;</user1> <!-- tile ID: arrow left -->
+   <user2>&generic;</user2> <!-- tile ID: arrow right -->
+   <user3>255</user3> <!-- alpha -->
+   <user4>0</user4> <!-- OR'd with mouseover -->
+   <string></string> <!-- string to show for the value (if not set by executable) -->
+   
+   <text name="value">
+      <depth>6</depth>
+      <clips><copy src="parent()" trait="clips" /></clips>
+      <font>3</font>
+      <id><copy src="parent()" trait="user0" /></id>
+      <justify>&center;</justify>
+      <alpha><copy src="parent()" trait="user3" /></alpha>
+      <red>117</red>
+      <green>59</green>
+      <blue>33</blue>
+      <x>
+         <copy src="parent()" trait="width" />
+         <div>2</div>
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <string><copy src="parent()" trait="string" /></string>
+   </text>
+   <image name="button_left">
+      <clicksound>3</clicksound>
+      <depth>5</depth>
+      <clips><copy src="parent()" trait="clips" /></clips>
+      <id><copy src="parent()" trait="user1" /></id>
+      <target>&true;</target>
+      <filename> \Menus\Shared\shared_arrow_left.dds </filename>
+      <width> 124 </width>
+      <height> 36 </height>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <alpha><copy src="parent()" trait="user3" /></alpha>
+   </image>
+   <image name="button_right">
+      <clicksound>3</clicksound>
+      <depth>5</depth>
+      <clips><copy src="parent()" trait="clips" /></clips>
+      <id><copy src="parent()" trait="user2" /></id>
+      <target>&true;</target>
+      <filename> \Menus\Shared\shared_arrow_right.dds </filename>
+      <width> 121 </width>
+      <height> 36 </height>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <alpha><copy src="parent()" trait="user3" /></alpha>
+   </image>
+<!--</rect>-->

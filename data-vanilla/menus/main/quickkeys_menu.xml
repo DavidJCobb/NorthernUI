@@ -1,0 +1,329 @@
+<!-- quickkeys_menu.xml -->
+<menu name="QuickKeysMenu">
+	<class> &QuickKeysMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<alpha>	0 </alpha> 
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<_global_alpha> 255 </_global_alpha>
+
+	
+	<text name="quick_key_text">
+		<id> 6 </id>
+		<depth> 11 </depth>
+		<font>2</font>
+		<string> <copy src="strings()" trait="_quickkey"/> </string>
+		<justify> &center; </justify>
+		<red> 254 </red>
+		<green> 241 </green>
+		<blue> 188</blue>
+		<alpha> 255 </alpha>
+		<wrapwidth> 400 </wrapwidth>
+		<x> 
+			<copy src="Quick_key_selector" trait="x"/>
+			<add>
+				<copy src="background_selector_image2" trait="width"/>
+			</add>
+			<add>200</add>
+		</x>
+		<y>
+			<copy src="Quick_key_selector" trait="y"/>
+			<add>20</add>
+			<sub><copy src="me()" trait="height"/></sub>
+		</y>
+	</text>
+	
+	
+	<rect name="Quick_key_selector">
+		<id>7</id>
+		<target> &true; </target>
+		<locus> &true; </locus>
+		<alpha>0</alpha>
+		<visible> &true; </visible>
+		<width><copy src="screen()" trait="width"/></width>
+		<height><copy src="screen()" trait="height"/></height>
+		<x>800</x>
+		<y>275</y>
+		<user0>0</user0>
+		<user1>255</user1>
+		<user2> &false; </user2>
+		<user3> &true; </user3>
+		<image name="background_selector_image">
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="user2"/>
+			</visible>
+			<depth>1</depth>
+			<width>512</width>
+			<height>512</height>
+			<x>-58</x>
+			<y>-58</y>
+			<filename>Quick-Keys\background_paper.dds</filename>
+		</image>
+		<nif name="background_selector_image2">
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="user3"/>
+			</visible>
+			<depth>1</depth>
+			<x>200</x>
+			<y>200</y>
+			<filename>Quick-Keys\pc_background_paper_numbers.nif</filename>
+		</nif>
+		<image name="quick_key_1_image">
+			<id>8</id>
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="visible"/>
+			</visible>
+			<depth>2</depth>
+			<width>64</width>
+			<height>64</height>
+			<x>
+				<copy>202</copy>
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div>2</div>
+				</sub>
+			</x>	
+			<y>
+				<copy>102</copy>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<div>2</div>
+				</sub>
+			</y>
+			<filename>
+			</filename>
+		</image>
+		<image name="quick_key_2_image">
+			<id>9</id>
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="visible"/>
+			</visible>
+			<depth>2</depth>
+			<width>64</width>
+			<height>64</height>
+			<x>
+				<copy>274</copy>
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div>2</div>
+				</sub>
+			</x>	
+			<y>
+				<copy>132</copy>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<div>2</div>
+				</sub>
+			</y>
+			<filename>
+			</filename>
+		</image>
+		<image name="quick_key_3_image">
+			<id>10</id>
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="visible"/>
+			</visible>
+			<depth>2</depth>
+			<width>64</width>
+			<height>64</height>
+			<x>
+				<copy>302</copy>
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div>2</div>
+				</sub>
+			</x>	
+			<y>
+				<copy>205</copy>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<div>2</div>
+				</sub>
+			</y>
+			<filename>
+			</filename>
+		</image>
+		<image name="quick_key_4_image">
+			<id>11</id>
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="visible"/>
+			</visible>
+			<depth>2</depth>
+			<width>64</width>
+			<height>64</height>
+			<x>
+				<copy>272</copy>
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div>2</div>
+				</sub>
+			</x>	
+			<y>
+				<copy>275</copy>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<div>2</div>
+				</sub>
+			</y>
+			<filename>
+			</filename>
+		</image>
+		<image name="quick_key_5_image">
+			<id>12</id>
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="visible"/>
+			</visible>
+			<depth>2</depth>
+			<width>64</width>
+			<height>64</height>
+			<x>
+				<copy>200</copy>
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div>2</div>
+				</sub>
+			</x>	
+			<y>
+				<copy>303</copy>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<div>2</div>
+				</sub>
+			</y>
+			<filename>
+			</filename>
+		</image>
+		<image name="quick_key_6_image">
+			<id>13</id>
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="visible"/>
+			</visible>
+			<depth>2</depth>
+			<width>64</width>
+			<height>64</height>
+			<x>
+				<copy>130</copy>
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div>2</div>
+				</sub>
+			</x>	
+			<y>
+				<copy>273</copy>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<div>2</div>
+				</sub>
+			</y>
+			<filename>
+			</filename>
+		</image>
+		<image name="quick_key_7_image">
+			<id>14</id>
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="visible"/>
+			</visible>
+			<depth>2</depth>
+			<width>64</width>
+			<height>64</height>
+			<x>
+				<copy>102</copy>
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div>2</div>
+				</sub>
+			</x>	
+			<y>
+				<copy>202</copy>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<div>2</div>
+				</sub>
+			</y>
+			<filename>
+			</filename>
+		</image>
+		<image name="quick_key_8_image">
+			<id>15</id>
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="visible"/>
+			</visible>
+			<depth>2</depth>
+			<width>64</width>
+			<height>64</height>
+			<x>
+				<copy>132</copy>
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div>2</div>
+				</sub>
+			</x>	
+			<y>
+				<copy>130</copy>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<div>2</div>
+				</sub>
+			</y>
+			<filename>
+			</filename>
+		</image>
+		<nif name="selector_image">
+			<alpha>
+				255
+			</alpha>
+			<visible>
+				<copy src="parent()" trait="visible"/>
+			</visible>
+			<depth>3</depth>
+			<x>-235</x>
+			<y>-90</y>
+			<filename>Quick-Keys\quick keys.nif</filename>
+			<animation>
+				<copy src="parent()" trait="user0"/>
+				<copy src="me()" trait="_animation_"/>	
+			</animation>
+			<_animation_1> 0_ </_animation_1>
+			<_animation_2> 1_ </_animation_2>
+			<_animation_3> 2_ </_animation_3>
+			<_animation_4> 3_ </_animation_4>
+			<_animation_5> 4_ </_animation_5>
+			<_animation_6> 5_ </_animation_6>
+			<_animation_7> 6_ </_animation_7>
+			<_animation_8> 7_ </_animation_8>
+		</nif>
+	</rect>
+				
+</menu>

@@ -1,0 +1,21 @@
+<!--<rect name="scrollbar_wrap">-->
+   <user0>&false;</user0> <!-- is horizontal? -->
+   
+   <locus>&true;</locus>
+   <width>
+      <copy>400</copy> <!-- default length for horizontal scroll -->
+      <onlyif src="me()" trait="user0" />
+      <add> <!-- copy cross-axis size of scrollbar -->
+         <copy src="child()" trait="width" />
+         <onlyifnot src="me()" trait="user0" />
+      </add>
+   </width>
+   <height>
+      <copy>300</copy> <!-- default length for vertical scroll -->
+      <onlyifnot src="me()" trait="user0" />
+      <add> <!-- copy cross-axis size of scrollbar -->
+         <copy src="child()" trait="width" />
+         <onlyif src="me()" trait="user0" />
+      </add>
+   </height>
+<!--</rect>-->

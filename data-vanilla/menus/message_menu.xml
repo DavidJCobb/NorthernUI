@@ -1,0 +1,431 @@
+<!-- message_menu.xml -->
+<menu name="Messagemenu">
+	<class> &MessageMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+
+	<rect name="message_focus_box">
+<include src="focus_box.xml"/>
+		<id> 3 </id>
+		<depth> 1 </depth>
+		<visible> &false; </visible>
+	</rect>
+	
+	<rect name="background">
+<include src="generic_background.xml"/>
+		<visible> &true; </visible>
+		<target> &true; </target>
+		<depth> 3 </depth>
+		<id> 1 </id>
+		<user0> 700 </user0>
+		<user1>
+			<copy src="button_10" trait="height"/>
+			<onlyif src="button_10" trait="visible" />
+			<add src="button_10" trait="y"/>
+			<add> 15 </add>
+		</user1>
+		<locus> &true; </locus>
+
+		<_center_x>
+			<copy src="me()" trait="width" />
+			<div> 2 </div>
+			<add src="me()" trait="x" />
+		</_center_x>
+
+		<text name="message_text">
+			<target> &true; </target>
+			<id> 2 </id>
+			<depth> 5 </depth>
+			<string></string>
+			<justify> &left; </justify>
+			<wrapwidth>
+				<copy src="background" trait="user0"/>
+				<sub> 24 </sub>
+			</wrapwidth>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y> 15 </y>
+		</text>
+
+		<image name="button_1">
+			<target> &true; </target>
+			<id> 4 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &true; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="message_text" trait="height" />
+				<add> 30 </add>
+			</y>
+			<width> <copy src="child(button_1_text)" trait="width"/> </width>
+			<height> <copy src="child(button_1_text)" trait="height"/> </height>
+			
+			<xdefault> &true; </xdefault>
+			<xdown> <ref src="button_2" trait="mouseover"/> </xdown>
+			
+			<text name="button_1_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+			
+		<image name="button_2">
+			<target> &true; </target>
+			<id> 5 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &false; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="button_1" trait="height"/>
+				<add> 10 </add>
+				<onlyif src="button_1" trait="visible"/>
+				<add src="button_1" trait="y" />
+			</y>
+			<width> <copy src="child(button_2_text)" trait="width"/> </width>
+			<height> <copy src="child(button_2_text)" trait="height"/> </height>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="button_1" trait="mouseover"/> </xup>
+			<xdown> <ref src="button_3" trait="mouseover"/> </xdown>
+			
+			<text name="button_2_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+			
+		<image name="button_3">
+			<target> &true; </target>
+			<id> 6 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &false; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="button_2" trait="height"/>
+				<add> 10 </add>
+				<onlyif src="button_2" trait="visible"/>
+				<add src="button_2" trait="y" />
+			</y>
+			<width> <copy src="child(button_3_text)" trait="width"/> </width>
+			<height> <copy src="child(button_3_text)" trait="height"/> </height>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="button_2" trait="mouseover"/> </xup>
+			<xdown> <ref src="button_4" trait="mouseover"/> </xdown>
+			
+			<text name="button_3_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+			
+		<image name="button_4">
+			<target> &true; </target>
+			<id> 7 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &false; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="button_3" trait="height"/>
+				<add> 10 </add>
+				<onlyif src="button_3" trait="visible"/>
+				<add src="button_3" trait="y" />
+			</y>
+			<width> <copy src="child(button_4_text)" trait="width"/> </width>
+			<height> <copy src="child(button_4_text)" trait="height"/> </height>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="button_3" trait="mouseover"/> </xup>
+			<xdown> <ref src="button_5" trait="mouseover"/> </xdown>
+			
+			<text name="button_4_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+			
+		<image name="button_5">
+			<target> &true; </target>
+			<id> 8 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &false; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="button_4" trait="height"/>
+				<add> 10 </add>
+				<onlyif src="button_4" trait="visible"/>
+				<add src="button_4" trait="y" />
+			</y>
+			<width> <copy src="child(button_5_text)" trait="width"/> </width>
+			<height> <copy src="child(button_5_text)" trait="height"/> </height>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="button_4" trait="mouseover"/> </xup>
+			<xdown> <ref src="button_6" trait="mouseover"/> </xdown>
+			
+			<text name="button_5_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+			
+		<image name="button_6">
+			<target> &true; </target>
+			<id> 9 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &false; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="button_5" trait="height"/>
+				<add> 10 </add>
+				<onlyif src="button_5" trait="visible"/>
+				<add src="button_5" trait="y" />
+			</y>
+			<width> <copy src="child(button_6_text)" trait="width"/> </width>
+			<height> <copy src="child(button_6_text)" trait="height"/> </height>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="button_5" trait="mouseover"/> </xup>
+			<xdown> <ref src="button_7" trait="mouseover"/> </xdown>
+			
+			<text name="button_6_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+			
+		<image name="button_7">
+			<target> &true; </target>
+			<id> 10 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &false; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="button_6" trait="height"/>
+				<add> 10 </add>
+				<onlyif src="button_6" trait="visible"/>
+				<add src="button_6" trait="y" />
+			</y>
+			<width> <copy src="child(button_7_text)" trait="width"/> </width>
+			<height> <copy src="child(button_7_text)" trait="height"/> </height>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="button_6" trait="mouseover"/> </xup>
+			<xdown> <ref src="button_8" trait="mouseover"/> </xdown>
+			
+			<text name="button_7_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+			
+		<image name="button_8">
+			<target> &true; </target>
+			<id> 11 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &false; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="button_7" trait="height"/>
+				<add> 10 </add>
+				<onlyif src="button_7" trait="visible"/>
+				<add src="button_7" trait="y" />
+			</y>
+			<width> <copy src="child(button_8_text)" trait="width"/> </width>
+			<height> <copy src="child(button_8_text)" trait="height"/> </height>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="button_7" trait="mouseover"/> </xup>
+			<xdown> <ref src="button_9" trait="mouseover"/> </xdown>
+			
+			<text name="button_8_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+			
+		<image name="button_9">
+			<target> &true; </target>
+			<id> 12 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &false; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="button_8" trait="height"/>
+				<add> 10 </add>
+				<onlyif src="button_8" trait="visible"/>
+				<add src="button_8" trait="y" />
+			</y>
+			<width> <copy src="child(button_9_text)" trait="width"/> </width>
+			<height> <copy src="child(button_9_text)" trait="height"/> </height>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="button_8" trait="mouseover"/> </xup>
+			<xdown> <ref src="button_10" trait="mouseover"/> </xdown>
+			
+			<text name="button_9_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+			
+		<image name="button_10">
+			<target> &true; </target>
+			<id> 13 </id>
+			<filename> Menus\Shared\shared_empty.dds</filename>
+			<visible> &false; </visible>
+			<depth> 6 </depth>
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>
+				<copy src="parent()" trait="_center_x" />
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="button_9" trait="height"/>
+				<add> 10 </add>
+				<onlyif src="button_9" trait="visible"/>
+				<add src="button_9" trait="y" />
+			</y>
+			<width> <copy src="child(button_10_text)" trait="width"/> <add> 6 </add> </width>
+			<height> <copy src="child(button_10_text)" trait="height"/> </height>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="button_9" trait="mouseover"/> </xup>
+			
+			<text name="button_10_text">
+				<string> <copy src="parent()" trait="string"/> </string>
+				<wrapwidth> <copy src="message_text" trait="wrapwidth"/> </wrapwidth>
+				<x> 0 </x>
+				<y> 4 </y>
+			</text>
+		</image>
+	</rect>
+
+	<!-- This needs to go after the background so we get the proper
+	width and height -->
+	<x>
+		<copy src="screen()" trait="width"/>
+		<div> 2 </div>
+		<sub>
+			<copy src="background" trait="width" />
+			<div> 2 </div>
+		</sub>
+	</x>
+	<y>
+		<copy src="screen()" trait="height"/>
+		<div> 2 </div>
+		<sub>
+			<copy src="background" trait="height" />
+			<div> 2 </div>
+		</sub>
+	</y>
+
+</menu>

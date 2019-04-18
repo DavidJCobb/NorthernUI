@@ -1,0 +1,808 @@
+<!-- Enchantment.xml -->
+<menu name="EnchantmentMenu">
+	<class> &EnchantmentMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+			
+	<xup>   <ref src="ench_button_create" trait="mouseover"/> </xup>
+	<xdown> <ref src="ench_item_rect" trait="mouseover"/> </xdown>
+	
+	<xbuttonb> <ref src="ench_button_exit" trait="clicked"/> </xbuttonb>
+	<xbuttonx> <ref src="ench_button_create" trait="clicked"/> </xbuttonx>
+	
+	
+	<rect name="ench_focus_box">
+<include src="focus_box.xml"/>
+		<id> 8 </id>
+		<visible> &false; </visible>
+		<clips> &true; </clips>
+		<user15>
+			<copy src="parent()" trait="depth" />
+			<add> 0.5 </add>
+		</user15>
+	</rect>
+	
+	<image name="ench_background">
+		<filename> Menus\Enchanting\enchanting.dds </filename>
+		<depth> 1 </depth>
+		<width> 1064 </width>
+		<height> 812 </height>
+		<zoom> -1 </zoom>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		<target> &true; </target>
+		
+		
+		<!-- ENCHANTMENT NAME ==========================================================================-->
+		<rect name="ench_name_background">
+			<alpha> 0 </alpha>
+			<id> 24 </id>
+			<user10> &false; </user10>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<depth> 1 </depth>
+			<x> 190</x>
+			<y>
+				130
+			</y>
+			<height> 50 </height>
+			<width> 660 </width>
+			
+			<xdefault> &false; </xdefault>
+			<xright> <ref src="ench_soulgem_rect" trait="mouseover"/> </xright>
+			<xleft> <ref src="ench_item_rect" trait="mouseover"/> </xleft>
+			<xup> <ref src="ench_button_create" trait="mouseover"/> </xup>
+			<xdown> <ref src="ench_item_rect" trait="mouseover"/> </xdown>
+			
+			<text name="ench_name_text">
+				<id>2</id>
+				<depth> 1 </depth>
+				<string>
+					<copy src="strings()" trait="_nameenchantment"/>
+				</string>
+				<red> 33 </red>
+				<green> 59 </green>
+				<blue> 117 </blue>
+				<alpha> 255 </alpha>
+				<font> 1 </font>
+				<wrapwidth> 600 </wrapwidth>
+				<x> 30 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</text>
+		</rect>
+		
+		
+		<!-- SOUL COST INFO ==========================================================================-->
+		<image name="ench_soul_cost_icon">
+			<id> 4 </id>
+			<visible> &false; </visible>
+			<depth> 1 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 288 </cropx>
+			<alpha>
+				<copy>128</copy>		<onlyif src="me()" trait="user1"/>
+				<add>
+					<copy>255</copy>	<onlyifnot src="me()" trait="user1"/>
+				</add>
+			</alpha>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x> 240 </x>
+			<y> 90 </y>
+			<user0></user0>			<!-- ench_soul_cost_text string -->
+			<user1>&false;</user1>	<!-- exceeded max cost? -->
+		</image>
+		
+		<text name="ench_soul_cost_text">
+			<visible> <copy src="ench_soul_cost_icon" trait="visible"/> </visible>
+			<depth> 1 </depth>
+			<string> <copy src="ench_soul_cost_icon" trait="user0"/> </string>
+			<font>3</font>
+			<red>
+				<copy>128</copy>		<onlyif src="ench_soul_cost_icon" trait="user1"/>
+				<add>
+					<copy>117</copy>	<onlyifnot src="ench_soul_cost_icon" trait="user1"/>
+				</add>
+			</red>
+			<green>
+				<copy>128</copy>		<onlyif src="ench_soul_cost_icon" trait="user1"/>
+				<add>
+					<copy>59</copy>		<onlyifnot src="ench_soul_cost_icon" trait="user1"/>
+				</add>
+			</green>
+			<blue>
+				<copy>128</copy>		<onlyif src="ench_soul_cost_icon" trait="user1"/>
+				<add>
+					<copy>33</copy>		<onlyifnot src="ench_soul_cost_icon" trait="user1"/>
+				</add>
+			</blue>
+			<alpha>
+				<copy>128</copy>		<onlyif src="ench_soul_cost_icon" trait="user1"/>
+				<add>
+					<copy>255</copy>	<onlyifnot src="ench_soul_cost_icon" trait="user1"/>
+				</add>
+			</alpha>
+			<x>
+				<copy src="ench_soul_cost_icon" trait="x" />
+				<add src="ench_soul_cost_icon" trait="width" />
+				<add>15</add>
+			</x>
+			<y>
+				<copy src="ench_soul_cost_icon" trait="y" />
+			</y>
+		</text>
+		
+		<image name="ench_uses_icon">
+			<id> 3 </id>
+			<visible> &false; </visible>
+			<depth> 1 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 0 </cropx>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x> 400 </x>
+			<y> 90 </y>
+			<user0></user0>		<!-- ench_uses_text string -->
+		</image>
+		
+		<text name="ench_uses_text">
+			<visible> <copy src="ench_uses_icon" trait="visible"/> </visible>
+			<depth> 1 </depth>
+			<string> <copy src="ench_uses_icon" trait="user0"/> </string>
+			<font>3</font>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33  </blue>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="ench_uses_icon" trait="x" />
+				<add src="ench_uses_icon" trait="width" />
+				<add> 15 </add>
+			</x>
+			<y>
+				<copy src="ench_uses_icon" trait="y" />
+			</y>
+		</text>
+		
+		<!-- SOUL COST INFO ==========================================================================-->
+		<image name="ench_gold_cost_icon">
+			<depth> 1 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 224 </cropx>
+			<alpha>
+				<copy>128</copy>		<onlyif src="ench_gold_cost_text" trait="user0"/>
+				<add>
+					<copy>255</copy>	<onlyifnot src="ench_gold_cost_text" trait="user0"/>
+				</add>
+			</alpha>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x> 560 </x>
+			<y> <copy src="ench_soul_cost_icon" trait="y" /> </y>
+			<locus> &true; </locus>
+			
+			<image name="ench_gold_arrow_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 352 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 23 </x>
+				<y> 0 </y>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+			</image>
+		</image>
+		
+		<image name="ench_gold_cost_icon1">
+			<depth> 1 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 224 </cropx>
+			<alpha>
+				<copy>128</copy>		<onlyif src="ench_gold_cost_text" trait="user0"/>
+				<add>
+					<copy>255</copy>	<onlyifnot src="ench_gold_cost_text" trait="user0"/>
+				</add>
+			</alpha>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x>
+				<copy src="ench_gold_cost_text" trait="x" />
+				<add src="ench_gold_cost_text" trait="width" />
+				<add> 50 </add>
+			</x>
+			<y> <copy src="ench_soul_cost_icon" trait="y" /> </y>
+		</image>
+
+		<text name="ench_gold_cost_text">
+			<id> 5 </id>
+			<depth> 1 </depth>
+			<string> 1 </string>
+			<font>3</font>
+			<red>
+				<copy>128</copy>		<onlyif src="me()" trait="user0"/>
+				<add>
+					<copy>117</copy>	<onlyifnot src="me()" trait="user0"/>
+				</add>
+			</red>
+			<green>
+				<copy>128</copy>		<onlyif src="me()" trait="user0"/>
+				<add>
+					<copy>59</copy>		<onlyifnot src="me()" trait="user0"/>
+				</add>
+			</green>
+			<blue>
+				<copy>128</copy>		<onlyif src="me()" trait="user0"/>
+				<add>
+					<copy>33</copy>		<onlyifnot src="me()" trait="user0"/>
+				</add>
+			</blue>
+			<alpha>
+				<copy>128</copy>		<onlyif src="me()" trait="user0"/>
+				<add>
+					<copy>255</copy>	<onlyifnot src="me()" trait="user0"/>
+				</add>
+			</alpha>
+			<x>
+				<copy src="ench_gold_cost_icon" trait="x" />
+				<add src="ench_gold_cost_icon" trait="width" />
+				<add> 25 </add>
+			</x>
+			<y>
+				<copy src="ench_soul_cost_icon" trait="y" />
+				<add> 4 </add>
+			</y>
+			<user0>&false;</user0>	<!-- exceeded max? -->
+		</text>
+		<text name="ench_gold_cost_text2">
+			<id> 13 </id>
+			<depth> 1 </depth>
+			<string> 1 </string>
+			<font>3</font>
+			<red><copy src="ench_gold_cost_text" trait="red"/></red>
+			<green></green><copy src="ench_gold_cost_text" trait="green"/></green>
+			<blue><copy src="ench_gold_cost_text" trait="blue"/></blue>
+			<alpha><copy src="ench_gold_cost_text" trait="alpha"/></alpha>
+			<x>
+				<copy src="ench_gold_cost_icon1" trait="x" />
+				<add src="ench_gold_cost_icon1" trait="width" />
+				<add> 10 </add>
+			</x>
+			<y>
+				<copy src="ench_gold_cost_icon1" trait="y" />
+				<add> 4 </add>
+			</y>
+			<user0>&false;</user0>	<!-- exceeded max? -->
+		</text>
+		
+		
+		<!-- ITEM TO BE ENCHANTED ==========================================================================-->
+		<rect name="ench_item_rect">
+			<id> 20 </id>
+			<alpha> 0 </alpha>
+			<depth> 8 </depth>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<x> 153 </x>
+			<y> 205 </y>
+			<height> 70 </height>
+			<width>325</width>
+			<user0><copy src="strings()" trait="_additem"/></user0> <!-- effect description string -->
+			<user1></user1> <!-- icon pathname -->
+			
+			<xdefault> &false; </xdefault>
+			<xright> <ref src="ench_soulgem_rect" trait="mouseover"/> </xright>
+			<xleft> <ref src="ench_soulgem_rect" trait="mouseover"/> </xleft>
+			<xup> <ref src="ench_name_background" trait="mouseover"/> </xup>
+			<xdown> <ref src="ench_known_effect_pane" trait="mouseover"/> </xdown>
+			
+			<image name="ench_item_icon">
+				<id>25</id>
+				<visible> &false; </visible>
+				<filename></filename>
+				<width> 64 </width>
+				<height> 64 </height>
+				<x>0 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</image>
+			
+			<text name="ench_item_text">
+				<font>1</font>
+				<string>
+					<copy src="parent()" trait="user0" />
+				</string>
+				<wrapwidth> 220 </wrapwidth>
+				<x> 75 </x>
+				<y>
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div> 2 </div>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+			</text>
+		</rect>
+		
+		
+		<!-- SOULGEM TO ENCHANT WITH ==========================================================================-->
+		<rect name="ench_soulgem_rect">
+			<id> 22 </id>
+			<alpha> 0 </alpha>
+			<depth> 8 </depth>
+			<target> &true; </target>
+			<locus> &true; </locus>
+			<x> 515 </x>
+			<y> 205 </y>
+			<height> 70 </height>
+			<width> 390 </width>
+			<user0><copy src="strings()" trait="_addsoulgem"/></user0> <!-- effect description string -->
+			<user1>-1</user1>											<!-- soul in soul gem -->
+			
+			<xdefault> &false; </xdefault>
+			<xright> <ref src="ench_item_rect" trait="mouseover"/> </xright>
+			<xleft> <ref src="ench_item_rect" trait="mouseover"/> </xleft>
+			<xup> <ref src="ench_name_background" trait="mouseover"/> </xup>
+			<xdown> <ref src="ench_added_effect_pane" trait="mouseover"/> </xdown>
+			
+			<image name="ench_soulgem_icon">
+				<id>26</id>
+				<filename></filename>	<!-- set in code -->
+				<width> 64 </width>
+				<height> 64 </height>
+				<visible> &false; </visible>
+				<x> 2 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</image>
+			
+			<text name="ench_soulgem_text">
+				<string>
+					<copy src="parent()" trait="user0" />
+				</string>
+				<font> 1 </font>
+				<wrapwidth> 250 </wrapwidth>
+				<x> 75 </x>
+				<y>
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div> 2 </div>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+			</text>
+			
+			<image name="ench_charge_icon">
+				<visible>
+					<copy src="parent()" trait="user1"/>
+					<gte>0</gte>
+				</visible>
+				<depth> 1 </depth>
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 320 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 350 </x>
+				<y> 8 </y>
+			</image>
+			
+			<text name="ench_charge_text">
+				<visible> <copy src="ench_charge_icon" trait="visible"/> </visible>
+				<string>
+					<copy src="parent()" trait="user1" />
+				</string>
+				<justify>&center;</justify>
+				<font> 3 </font>
+				<x>
+					<copy src="ench_charge_icon" trait="x"/>
+					<add>
+						<copy src="ench_charge_icon" trait="width"/>
+						<div> 2 </div>
+					</add>
+				</x>
+				<y>
+					<copy src="ench_charge_icon" trait="y"/>
+					<add src="ench_charge_icon" trait="height"/>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+			</text>
+		</rect>
+		
+		
+		
+		<!-- KNOWN EFFECTS LIST ==========================================================================-->
+		<text name="ench_known_effect_text">
+			<id> 16</id>
+			<depth> 1 </depth>
+			<string> <copy src="strings()" trait="_applicableeffects"/> </string>
+			<font>3</font>
+			<red> 33 </red>
+			<green> 59 </green>
+			<blue> 117  </blue>
+			<alpha> 255 </alpha>
+			<x> 150 </x>
+			<y> 295 </y>
+		</text>
+		
+		<!-- SCROLL =======================================-->
+		<image name="ench_known_effects_scroll_bar">
+<include src="vertical_scroll.xml"/>
+			<id>9</id>
+			<target> &true; </target>
+			<x>460</x>
+			<y>
+				<copy src="ench_known_effect_window" trait="y" />
+				<add> 32 </add>
+			</y>
+			<height>
+				<copy src="ench_known_effect_window" trait="height" />
+				<sub> 64 </sub>
+			</height>
+			<depth> 20 </depth>
+			
+			
+			<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+			<user2>
+				<copy src="ench_known_effect_pane" trait="child_count" />	<!-- set by code - number of visible elements in list -->
+				<sub> 4 </sub>
+			</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+										 items minus the number of items visible.  i.e. if your list has
+										 8 items and you can see 2 at any one time, this should be 6 -->
+			<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+			<user4> 3 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+			<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+			<user6> 10 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+			<!-- user7 = current value -->
+			<user8> 4 </user8>		<!-- How many items are visible at once -->
+			<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+			<user10> 0 </user10>	<!-- reserved -->
+		</image>
+		
+		<rect name="ench_known_effect_window">
+			<clipwindow> &true; </clipwindow>
+			<height> 300 </height>
+			<width> 330 </width>
+			<locus> &true; </locus>
+			<x> 150 </x>
+			<y> 325 </y>
+			
+			<rect name="ench_known_effect_pane">
+				<id> 6 </id>
+				<alpha> 0 </alpha>
+				<depth> 8 </depth>
+				<locus> &true; </locus>
+				<clips> &true; </clips>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub>
+						<copy src="ench_known_effects_scroll_bar" trait="user7" />
+						<mult>76</mult>
+					</sub>	
+				</y>
+						
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &false; </xdefault>
+				<xlist> &xlist; </xlist>
+				<xleft> <ref src="ench_item_rect" trait="mouseover" /> </xleft>
+				<xright> <ref src="ench_added_effect_pane" trait="mouseover" /> </xright>
+				<xup> <ref src="ench_item_rect" trait="mouseover" /> </xup>
+				<xdown> <ref src="ench_button_create" trait="mouseover" /> </xdown>
+				<xscroll> <ref src="ench_known_effects_scroll_bar" trait="user5" /> </xscroll>
+				
+				<!-- template items are added here -->
+				
+			</rect>
+		</rect>
+		
+		
+		<!-- ADDED EFFECTS LIST ==========================================================================-->
+		<text name="ench_added_effect_text">
+			<id> 17</id>
+			<depth> 1 </depth>
+			<string> <copy src="strings()" trait="_addedeffects"/> </string>
+			<font>3</font>
+			<red> 33 </red>
+			<green> 59 </green>
+			<blue> 117  </blue>
+			<alpha> 255 </alpha>
+			<x> 525 </x>
+			<y> <copy src="ench_known_effect_text" trait="y" /> </y>
+		</text>
+		
+		<!-- SCROLL =======================================-->
+		<image name="ench_added_effects_scroll_bar">
+<include src="vertical_scroll.xml"/>
+			<id> 12</id>
+			<x> 893 </x>
+			<y>
+				<copy src="ench_added_effect_window" trait="y" />
+				<add> 32 </add>
+			</y>
+			<height>
+				<copy src="ench_added_effect_window" trait="height" />
+				<sub> 64 </sub>
+			</height>
+			<depth>20</depth>
+			<target> &true; </target>
+			<user1> 0 </user1> <!-- minimum range value -->
+			<user2>
+				<copy src="ench_added_effect_pane" trait="child_count" />
+				<sub> 4 </sub>
+			</user2> <!-- maximum range value - set by code -->
+			<user3> 1 </user3> <!-- step distance -->
+			<user4> 3 </user4> <!-- jump distance -->
+			<user5> 0 </user5> <!-- starting value -->
+			<user6> 11 </user6> <!-- marker's id - must change to enable dragging -->
+			<user8> 4 </user8> <!-- number of items visible -->
+		</image>
+		
+		<rect name="ench_added_effect_window">
+			<clipwindow> &true; </clipwindow>
+			<height> 300 </height>
+			<width> 370 </width>
+			<locus> &true; </locus>
+			<x> 510 </x>
+			<y> <copy src="ench_known_effect_window" trait="y"/> </y>
+			
+			<rect name="ench_added_effect_pane">
+				<id> 7 </id>
+				<alpha> 0 </alpha>
+				<depth> 8 </depth>
+				<height> 300 </height>
+				<width> 330</width>
+				<locus> &true; </locus>
+				<clips> &true; </clips>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub>
+						<copy src="ench_added_effects_scroll_bar" trait="user7" />
+						<mult>76</mult>
+					</sub>	
+				</y>
+						
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &false; </xdefault>
+				<xlist> &xlist; </xlist>
+				<xleft> <ref src="ench_known_effect_pane" trait="mouseover" /> </xleft>
+				<xright> <ref src="ench_soulgem_rect" trait="mouseover" /> </xright>
+				<xup> <ref src="ench_soulgem_rect" trait="mouseover" /> </xup>
+				<xdown> <ref src="ench_button_exit" trait="mouseover" /> </xdown>
+				<xscroll> <ref src="ench_added_effects_scroll_bar" trait="user5" /> </xscroll>
+				
+				<!-- template items are added here -->
+				
+			</rect>
+		</rect>
+		
+		
+		<!-- BUTTONS ==========================================================================-->
+		<image name="ench_button_create">
+<include src="button_long.xml"/>
+			<id> 14 </id>
+			<x> 270 </x>
+			<y> 650 </y>
+			<user0> <copy src="strings()" trait="_create"/> </user0>
+			
+			<user20><!--&xbuttonx;-->3 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xright> <ref src="ench_button_exit" trait="mouseover"/>   </xright>
+			<xleft>  <ref src="ench_button_exit" trait="mouseover"/>   </xleft>
+			<xup>    <ref src="ench_known_effect_pane" trait="mouseover"/> </xup>
+			<xdown>  <ref src="ench_name_background" trait="mouseover"/>   </xdown>
+		</image>
+		
+		
+		<image name="ench_button_exit">
+<include src="button_short.xml"/>
+			<id> 15 </id>
+			<target> &true; </target>
+			<x> 650 </x>
+			<y> <copy src="ench_button_create" trait="y" /> </y>
+			<user0> <copy src="strings()" trait="_exit"/> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xright> <ref src="ench_button_create" trait="mouseover"/>   </xright>
+			<xleft>  <ref src="ench_button_create" trait="mouseover"/>   </xleft>
+			<xup>    <ref src="ench_added_effect_pane" trait="mouseover"/> </xup>
+			<xdown>  <ref src="ench_name_background" trait="mouseover"/>   </xdown>
+		</image>
+	</image>
+	
+	
+	
+	
+	<!-- TEMPLATE 1 ==========================================================================-->
+	<template name="known_effect_template">
+		<rect name="ench_effects_known">
+			<id> 82 </id>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<alpha> 0 </alpha>
+			<depth> 1 </depth>
+			<width> 305 </width>
+			<focusinset>5</focusinset>
+			<height>
+				<copy src="ench_known_effect_window" trait="height"/>
+				<div src="ench_known_effects_scroll_bar" trait="user8"/>
+			</height>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult>76</mult>
+			</y>
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			<user0> 0 </user0>	<!-- position in list - set by code -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="ench_known_effects_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="known_effect_icon">
+				<filename>
+					<copy src="parent()" trait="user1" />
+				</filename>
+				<depth> 1 </depth>
+				<zoom>-1</zoom>
+				<width> 32 </width>
+				<height> 32 </height>
+				<clips> &true; </clips>
+				<x> 5 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</image>
+			
+			<text name="ench_known_effect_text">
+				<depth> 1 </depth>
+				<font> 3 </font>
+				<string>
+					<copy src="parent()" trait="user2" />
+				</string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 230 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 50 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</text>
+		</rect>
+	</template>
+	
+	
+	
+	<!-- TEMPLATE 2 ==========================================================================-->
+	<template name="added_effect_template">
+		<rect name="ench_effects_added">
+			<id> 83 </id>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<alpha> 0 </alpha>
+			<depth> 1 </depth>
+			<width> 350 </width> 
+			<height> 70 </height>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<focusinset>5</focusinset>
+			<x> 20 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult> 76 </mult>
+			</y>
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			<user0> 0 </user0>	<!-- position in list - set by code -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="ench_known_effects_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="ench_added_effect_icon">
+				<filename>
+					<copy src="parent()" trait="user1" />
+				</filename>
+				<depth> 1 </depth>
+				<zoom>-1</zoom>
+				<width> 32 </width>
+				<height> 32 </height>
+				<clips> &true; </clips>
+				<x> 5 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</image>
+			
+			<text name="ench_added_effect_text">
+				<depth> 1 </depth>
+				<font> 3 </font>
+				<string>
+					<copy src="parent()" trait="user2" />
+				</string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<width>310</width>
+				<wrapwidth> 300 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 50 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</text>
+		</rect>
+	</template>
+</menu>

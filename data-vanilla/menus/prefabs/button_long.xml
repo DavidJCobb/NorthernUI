@@ -1,0 +1,214 @@
+<!-- button_long.xml -->
+<!-- image name="button_long" -->
+	<visible>
+		<copy src="me()" trait="user3"/>
+	</visible>
+	<alpha>
+		<copy> 1 </copy>
+      <sub>
+         <copy src="me()" trait="mouseover"/><gt>0</gt>
+         <add  src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         <gt>2</gt>
+         <sub>1</sub>
+      </sub>
+		<mul> 256 </mul>
+		<sub>
+			<copy> 256 </copy>
+			<onlyifnot src="me()" trait="user1"/>
+		</sub>
+		<max> 0 </max>
+		<add>
+			<copy> 128 </copy>
+			<onlyifnot src="me()" trait="user1"/>
+		</add>
+		<sub>
+			<copy> 256 </copy>
+			<onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+		</sub>
+		<min> 256 </min>
+		<max> 0 </max>
+	</alpha>
+	<target> <copy src="me()" trait="user1"/> </target>
+	<filename>
+		<!-- <copy src="me()" trait="user20" />
+		<min>2</min> -->
+      <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+		<copy src="me()" trait="_filename_" />
+	</filename>
+	<width> 177 </width>
+	<height> 44 </height>
+	<depth> 1 </depth>
+	<locus> &true; </locus>
+	<user0>  </user0>				<!-- text of the button -->
+	<user1> &true; </user1>			<!-- enabled - true=enabled, false=disabled -->
+	<user2> 1 </user2>				<!-- font to use for button text -->
+	<user3> &true; </user3>			<!-- is visible -->
+	<user20> 0 </user20>			<!-- look of the button, 1=button, 2-7=Xbox button image+label -->
+
+	<!-- RGB values for text (button enabled, xbox only) -->
+	<user21>117</user21>
+	<user22>59</user22>
+	<user23>33</user23>
+
+	<_filename_1> Menus\Shared\shared_button_long_off.dds </_filename_1>
+	<_filename_2> Menus\Shared\shared_empty.dds </_filename_2>
+	<_is_xbox>
+		<!-- <copy src="me()" trait="user20" />
+		<gt>0</gt> -->
+      <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+	</_is_xbox>
+	
+	<image name="button_long_on">
+		<visible>
+			<copy src="parent()" trait="mouseover"/>
+			<eq> 1 </eq>
+			<and src="parent()" trait="user1"/>
+			<or  src="parent()" trait="_is_xbox"/>
+		</visible>
+		<alpha>
+			<copy> 128 </copy>
+			<add>
+				<copy> 127 </copy>
+				<onlyif>
+					<not src="NorthernUI()" trait="_xxnGamepadAvailable" />
+					<or src="parent()" trait="user1"/>
+				</onlyif>
+			</add>
+		</alpha>
+		<filename>
+			<copy> 1 </copy>
+			<onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+			<add> 1 </add>
+			<copy src="me()" trait="_filename_"/>
+		</filename>
+		<cropx>
+			<copy src="parent()" trait="user20"/>
+			<sub> <!--&xbuttona;-->1 </sub>
+			<add> 2 </add>
+			<onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+			<max> 1 </max>
+			<copy src="me()" trait="_cropx_"/>
+		</cropx>
+		<width>
+			<copy> 176 </copy>
+			<onlyifnot src="parent()" trait="_is_xbox"/>
+			<add>
+				<copy> 64 </copy>
+				<onlyif src="parent()" trait="_is_xbox"/>
+			</add>
+		</width>
+		<height>
+			<copy> 51 </copy>
+			<onlyifnot src="parent()" trait="_is_xbox"/>
+			<add>
+				<copy> 64 </copy>
+				<onlyif src="parent()" trait="_is_xbox"/>
+			</add>
+		</height>
+		<x> 0</x>
+		<y>
+			<copy src="sibling(cont_button_exit_text)" trait="y"/>
+			<add>
+				<copy src="sibling(cont_button_exit_text)" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<div>2</div>
+			</add>
+			<sub>	<!-- adjustment for floating font...doesn't look right for some reason -->
+				<copy>6</copy>
+				<onlyif>
+					<copy src="parent()" trait="user2"/>
+					<eq>2</eq>
+				</onlyif>
+			</sub>
+			<onlyif src="parent()" trait="_is_xbox"/>
+		</y>
+		<depth> 2 </depth>
+		<_filename_1> Menus\Shared\shared_button_long_on.dds </_filename_1>
+		<_filename_2> Menus\Shared\all_xbox_buttons.dds </_filename_2>
+		<_cropx_1> 0 </_cropx_1>
+		<_cropx_2> 128 </_cropx_2>
+		<_cropx_3> 192 </_cropx_3>
+		<_cropx_4> 0 </_cropx_4>
+		<_cropx_5> 64 </_cropx_5>
+		<_cropx_6> 320 </_cropx_6>
+		<_cropx_7> 256 </_cropx_7>
+		<_cropx_8> 384 </_cropx_8>
+		<_cropx_9> 448 </_cropx_9>
+	</image>
+	
+	<text name="cont_button_exit_text">
+		<string> <copy src="parent()" trait="user0"/> </string>
+      <_shouldBeCentered> <!-- the JUSTIFY trait can't be changed at run-time -->
+         <not src="parent()" trait="_is_xbox" />
+      </_shouldBeCentered>
+		<justify>&left;</justify>
+		<font> <copy src="parent()" trait="user2"/> </font>
+		<red>
+			<copy> 117 </copy>
+			<onlyif src="parent()" trait="user1"/>			<!-- enabled -->
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>	<!-- not enabled -->
+			</add>
+			<onlyifnot src="NorthernUI()" trait="_xxnGamepadAvailable" />
+			<add>
+				<copy src="parent()" trait="user21"/>		<!-- xbox override -->
+				<onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+			</add>
+			<min> 255 </min>
+		</red>
+		<green>
+			<copy> 59 </copy>
+			<onlyif src="parent()" trait="user1"/>			<!-- enabled -->
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>	<!-- not enabled -->
+			</add>
+			<onlyifnot src="NorthernUI()" trait="_xxnGamepadAvailable" />
+			<add>
+				<copy src="parent()" trait="user22"/>		<!-- xbox override -->
+				<onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+			</add>
+			<min> 255 </min>
+		</green>
+		<blue>
+			<copy> 33 </copy>
+			<onlyif src="parent()" trait="user1"/>			<!-- enabled -->
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>	<!-- not enabled -->
+			</add>
+			<onlyifnot src="NorthernUI()" trait="_xxnGamepadAvailable" />
+			<add>
+				<copy src="parent()" trait="user23"/>		<!-- xbox override -->
+				<onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
+			</add>
+			<min> 255 </min>
+		</blue>
+		<alpha>
+			<copy> 255 </copy>
+			<onlyif src="parent()" trait="user1"/>
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>
+			</add>
+		</alpha>
+		<depth> 3 </depth>
+		<x>
+			<copy>-4</copy> <!-- shadow makes right edge slightly thicker, adjust -->
+			<onlyifnot src="parent()" trait="_is_xbox"/>
+			<add>
+				<copy src="sibling(button_long_on)" trait="x"/>
+				<add src="sibling(button_long_on)" trait="width"/>
+				<onlyif src="parent()" trait="_is_xbox"/>
+			</add>
+         <add>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+            <onlyif src="me()" trait="_shouldBeCentered" />
+         </add>
+		</x>
+		<y> 0 </y>
+	</text>
+<!-- /image -->

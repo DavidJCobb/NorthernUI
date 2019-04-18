@@ -1,0 +1,187 @@
+<!-- button_no_background.xml -->
+<!-- rect name="button_no_background" -->
+	<target> &true; </target>
+	<width>
+		<copy src="child(button_no_background_text)" trait="width"/>
+		<add> 40 </add>
+	</width>
+	<height> 44 </height>
+	<depth> 1 </depth>
+	<locus> &true; </locus>
+	<user0>  </user0>				<!-- text of the button -->
+	<user1> &true; </user1>			<!-- enabled - true=enabled, false=disabled -->
+	<user2> 1 </user2>				<!-- font to use for button text -->
+	<user20>0</user20>			<!-- look of the button, 1=button, 2-7=Xbox button image+label -->
+	<user21> &false; </user21>		<!-- if true, use white text -->
+	<_is_xbox>
+		<copy src="me()" trait="user20"/>
+		<gt>0</gt>
+	</_is_xbox>
+	
+	<image name="button_no_background_icon">
+		<visible> <copy src="parent()" trait="_is_xbox"/> </visible>
+		<filename>
+			<copy> 1 </copy>
+			<onlyif>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </onlyif>
+			<add> 1 </add>
+			<copy src="me()" trait="_filename_"/>
+		</filename>
+		<cropx>
+			<copy src="parent()" trait="user20"/>
+			<sub><!--&xbuttona;-->1 </sub>
+			<add> 2 </add>
+			<onlyif>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </onlyif>
+			<max> 1 </max>
+			<copy src="me()" trait="_cropx_"/>
+		</cropx>
+		<width> 64 </width>
+		<height> 64 </height>
+		<x>
+			<copy src="sibling(button_no_background_text)" trait="x"/>
+			<sub> 72 </sub>
+		</x>
+		<y>
+			<copy src="button_no_background_text" trait="y"/>
+			<add>
+				<copy src="button_no_background_text" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<div>2</div>
+			</add>
+		</y>
+		
+		<_filename_1> Menus\Shared\empty.dds </_filename_1>
+		<_filename_2> Menus\Shared\all_xbox_buttons.dds </_filename_2>
+		<_cropx_1> 0 </_cropx_1>
+		<_cropx_2> 128 </_cropx_2>
+		<_cropx_3> 192 </_cropx_3>
+		<_cropx_4> 0 </_cropx_4>
+		<_cropx_5> 64 </_cropx_5>
+		<_cropx_6> 320 </_cropx_6>
+		<_cropx_7> 256 </_cropx_7>
+		<_cropx_8> 384 </_cropx_8>
+		<_cropx_9> 448 </_cropx_9>
+	</image>
+	
+	<text name="button_no_background_text">
+		<string> <copy src="parent()" trait="user0"/> </string>
+		<justify> &left; </justify>
+		<font> <copy src="parent()" trait="user2"/> </font>
+		<red>
+			<copy> 117 </copy>
+			<onlyif src="parent()" trait="user1"/>
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>
+				<add>
+					<copy> 255 </copy>
+					<onlyif src="parent()" trait="user21"/>
+					<onlyif>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </onlyif>
+				</add>
+			</add>
+			<min> 255 </min>
+		</red>
+		<green>
+			<copy> 59 </copy>
+			<onlyif src="parent()" trait="user1"/>
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>
+				<add>
+					<copy> 255 </copy>
+					<onlyif src="parent()" trait="user21"/>
+					<onlyif>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </onlyif>
+				</add>
+			</add>
+			<min> 255 </min>
+		</green>
+		<blue>
+			<copy> 33 </copy>
+			<onlyif src="parent()" trait="user1"/>
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>
+				<add>
+					<copy> 255 </copy>
+					<onlyif src="parent()" trait="user21"/>
+					<onlyif>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </onlyif>
+				</add>
+			</add>
+			<min> 255 </min>
+		</blue>
+		<alpha>
+			<copy> 255 </copy>
+			<onlyif src="parent()" trait="user1"/>
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>
+			</add>
+		</alpha>
+		<depth> 4 </depth>
+		<x>
+			<copy src="parent()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div> 2 </div>
+			<add>
+				<copy> 40 </copy>
+				<onlyif src="parent()" trait="_is_xbox"/>
+			</add>
+		</x>
+		<y> 0 </y>
+	</text>
+			
+	<image name="button_no_background_marker">
+		<filename> Menus\dialog\dialog_selection_full.dds </filename>
+		<alpha>
+			<copy> 255 </copy>
+			<mul src="parent()" trait="mouseover" />
+		</alpha>
+		<width>
+			<copy src="parent()" trait="width"/>
+			<add> 10 </add>
+		</width>
+		<height> 64 </height>
+		<x> -10 </x>
+		<y> -10 </y>
+		<depth> 1 </depth>
+      <visible>
+         <not>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </not>
+      </visible>
+	</image>
+	<image name="button_no_background_marker_end">
+		<filename> Menus\dialog\dialog_selection_cut.dds </filename>
+		<alpha> <copy src="sibling(button_no_background_marker)" trait="alpha" /> </alpha>
+		<width> 104 </width>
+		<height> 64 </height>
+		<x>
+			<copy src="parent()" trait="width"/>
+			<add> 15 </add>
+			<sub src="me()" trait="width"/>
+		</x>
+		<y> -10 </y>
+		<depth> 2 </depth>
+      <visible>
+         <not>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </not>
+      </visible>
+	</image>
+<!-- /image -->

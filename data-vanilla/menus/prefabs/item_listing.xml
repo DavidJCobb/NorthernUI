@@ -1,0 +1,626 @@
+<!-- rect name=item_listing_layout" -->
+	<user0> &true; </user0>	<!-- show labels -->
+	<user1> 11 </user1>		<!-- scroll bar ID -->
+	<user2> 12 </user2>		<!-- scroll marker ID -->
+		
+	<rect name=item_listing_parent">
+		<user0> <copy src="parent()" trait="user0"/> </user0>
+		<user1> <copy src="parent()" trait="user1"/> </user1>
+		<user2> <copy src="parent()" trait="user2"/> </user2>
+		<user3> <copy src="parent()" trait="user3"/> </user3>
+
+		<!-- SCROLL ============================================================== -->
+		<image name="item_listing_scroll_bar">
+<include src="vertical_scroll.xml"/>
+			<id> <copy src="parent()" trait="user1"/> </id>
+			<depth> 12 </depth>
+			<x> 690 </x>
+			<y> <copy src="item_listing_window" trait="y"/> </y>
+			<height> <copy src="item_listing_window" trait="height"/> </height>
+			
+			<user1> 0 </user1>			<!-- minimum range value -->
+			<user2>
+				<copy src="me()" trait="user9"/>
+				<sub> 5 </sub>
+			</user2>					<!-- maximum range value -->
+			<user3> 1 </user3>			<!-- step distance -->
+			<user4> 5 </user4>			<!-- jump distance -->
+			<user5> 0 </user5>			<!-- starting value -->
+			<user6> <copy src="parent()" trait="user2"/> </user6>	<!-- marker's id - must change to enable dragging -->
+			<!-- user7 = current value -->
+			<user8> &false; </user8>		<!-- is text value field visible -->
+			<user9> 5 </user9>			<!-- maximum range - set by code -->
+		</image>
+
+
+		<!-- TOP HEADERS ============================================================== -->
+		<rect name="item_listing_headers_top">
+			<x> 40 </x>
+			<y> -55 </y>
+			<locus> &true; </locus>
+			
+			<rect name="item_listing_weapon_header_top">
+				<visible>
+					<copy src="item_listing_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+					<gt src="InventoryMenu" trait="user1"/>		<!-- position of weapon header in list -->
+					<and>
+						<copy src="item_listing_scroll_bar" trait="user7"/>
+						<lte src="InventoryMenu" trait="user2"/>
+					</and>
+					<or>
+						<copy src="InventoryMenu" trait="user0"/>
+						<eq> 2 </eq>
+					</or>
+				</visible>
+				<x> 102 </x>
+				<y> 100 </y>
+				<depth> 7 </depth>
+				<locus> &true; </locus>
+				
+				<text name="item_listing_weapon_header_text">
+					<visible> <copy src="parent(item_listing_parent)" trait="user0"/> </visible>
+					<string> <copy src="strings()" trait="_weapons"/> </string>
+					<font> 3 </font>
+					<x> 130 </x>
+					<y> 5 </y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<justify> &center; </justify>
+				</text>
+		
+				<image name="item_listing_value_icon">
+					<filename> Menus\Inventory\inv_icon_small_value.dds </filename>
+					<x> 300 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+				
+				<image name="item_listing_weight_icon">
+					<filename> Menus\Inventory\inv_icon_small_weight.dds </filename>
+					<x>
+						<copy src="cont_value_icon" trait="x" />
+						<add> 74 </add>
+					</x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+				
+				<image name="item_listing_damage_icon">
+					<filename> Menus\Icons\icon_small_damage.dds </filename>
+					<x>
+						<copy src="cont_weight_icon" trait="x" />
+						<add> 64 </add>
+					</x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+				
+				<image name="item_listing_health_icon">
+					<filename> Menus\Inventory\inv_icon_small_health.dds </filename>
+					<x>
+						<copy src="cont_damage_icon" trait="x" />
+						<add> 64 </add>
+					</x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+			
+			</rect>
+			
+			
+			<rect name="item_listing_apparel_header_top">
+				<visible>
+					<copy src="item_listing_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+					<gt src="InventoryMenu" trait="user2"/>		<!-- position of apparel header in list -->
+					<and>
+						<copy src="item_listing_scroll_bar" trait="user7"/>
+						<lte src="InventoryMenu" trait="user3"/>
+					</and>
+					<or>
+						<copy src="InventoryMenu" trait="user0"/>
+						<eq> 3 </eq>
+					</or>
+				</visible>
+				<x> 102 </x>
+				<y> 100 </y>
+				<depth> 7 </depth>
+				<locus> &true; </locus>
+				
+				<text name="item_listing_apparel_header_text">
+					<visible> <copy src="parent(item_listing_parent)" trait="user0"/> </visible>
+					<string> <copy src="strings()" trait="_apparel"/> </string>
+					<font> 3 </font>
+					<x> 130 </x>
+					<y> 5 </y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<justify> &center; </justify>
+				</text>
+					
+				<image name="item_listing_value_icon">
+					<filename> Menus\Inventory\inv_icon_small_value.dds </filename>
+					<x> 300 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+				
+				<image name="item_listing_weight_icon">
+					<filename> Menus\Inventory\inv_icon_small_weight.dds </filename>
+					<x>
+						<copy src="item_listing_value_icon" trait="x" />
+						<add> 74 </add>
+					</x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+				
+				<image name="item_listing_damage_icon">
+					<filename> Menus\Icons\icon_small_damage.dds </filename>
+					<x>
+						<copy src="item_listing_weight_icon" trait="x" />
+						<add> 64 </add>
+					</x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+				
+				<image name="item_listing_health_icon">
+					<filename> Menus\Inventory\inv_icon_small_health.dds </filename>
+					<x>
+						<copy src="item_listing_damage_icon" trait="x" />
+						<add> 64 </add>
+					</x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+				
+			</rect>
+			
+			
+			<rect name="item_listing_alchemy_header_top">
+				<visible>
+					<copy src="item_listing_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+					<gt src="InventoryMenu" trait="user3"/>		<!-- position of alchemy header in list -->
+					<and>
+						<copy src="item_listing_scroll_bar" trait="user7"/>
+						<lte src="InventoryMenu" trait="user4"/>
+					</and>
+					<or>
+						<copy src="InventoryMenu" trait="user0"/>
+						<eq> 4 </eq>
+					</or>
+				</visible>
+				<x> 102 </x>
+				<y> 100 </y>
+				<depth> 7 </depth>
+				<locus> &true; </locus>
+				
+				<text name="item_listing_alchemy_header_text">
+					<visible> <copy src="parent(item_listing_parent)" trait="user0"/> </visible>
+					<string> <copy src="strings()" trait="_alchemy"/> </string>
+					<font> 3 </font>
+					<x> 130 </x>
+					<y> 5 </y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<justify> &center; </justify>
+				</text>
+					
+				<image name="item_listing_value_icon">
+					<filename> Menus\Inventory\inv_icon_small_value.dds </filename>
+					<x> 300 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+				
+				<image name="item_listing_weight_icon">
+					<filename> Menus\Inventory\inv_icon_small_weight.dds </filename>
+					<x>
+						<copy src="item_listing_value_icon" trait="x" />
+						<add> 74 </add>
+					</x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+				
+				<image name="item_listing_quality_icon">
+					<filename> Menus\Inventory\inv_icon_small_quality.dds </filename>
+					<x>
+						<copy src="item_listing_weight_icon" trait="x" />
+						<add> 64 </add>
+					</x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<clips> &true; </clips>
+				</image>
+			</rect>
+		
+			<rect name="item_listing_misc_header_top">
+				<visible>
+					<copy src="item_listing_scroll_bar" trait="user7"/>	<!-- scrollbar's current value -->
+					<gt src="InventoryMenu" trait="user4"/>		<!-- position of misc header in list -->
+					<or>
+						<copy src="InventoryMenu" trait="user0"/>
+						<eq> 5 </eq>
+					</or>
+				</visible>
+				<x> 102 </x>
+				<y> 100 </y>
+				<depth> 7 </depth>
+				<locus> &true; </locus>
+				
+				<text name="item_listing_misc_header_text">
+					<visible> <copy src="parent(item_listing_parent)" trait="user0"/> </visible>
+					<string> <copy src="strings()" trait="_misc"/> </string>
+					<font> 3 </font>
+					<x> 130 </x>
+					<y> 5 </y>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<justify> &center; </justify>
+				</text>
+					
+				<image name="item_listing_misc_header_value_icon">
+					<filename> Menus\Inventory\inv_icon_small_value.dds </filename>
+					<x> 300 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+				</image>
+				
+				<image name="item_listing_misc_header_weight_icon">
+					<filename> Menus\Inventory\inv_icon_small_weight.dds </filename>
+					<x>
+						<copy src="cont_value_icon" trait="x" />
+						<add> 74 </add>
+					</x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+				</image>
+				
+			</rect>
+		</rect> <!-- inv_headers_top -->
+
+		
+		<!-- WINDOW ============================================================== -->
+		<rect name="item_listing_window">
+			<depth> 10 </depth>
+			<locus> &true; </locus>
+			<width> 645 </width>
+			<height> 486 </height>
+			<x> 40 </x>
+			<y> 90 </y>
+			<clipwindow> &true; </clipwindow>
+			
+			<rect name="item_listing_pane">
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y>
+					<copy src="item_listing_scroll_bar" trait="user7"/>
+					<mul> -81 </mul>
+					<add> -8 </add>
+				</y>
+					
+					
+				<!-- LIST HEADERS ============================================================== -->
+					
+				<rect name="item_listing_weapon_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user1"/>
+						<neq src="InventoryMenu" trait="user2"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user1"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<text name="item_listing_weapon_header_text">
+						<string> <copy src="strings()" trait="_weapons"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33  </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="item_listing_value_icon">
+						<filename> Menus\Inventory\inv_icon_small_value.dds </filename>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					
+					<image name="item_listing_weight_icon">
+						<filename> Menus\Inventory\inv_icon_small_weight.dds </filename>
+						<x>
+							<copy src="item_listing_value_icon" trait="x" />
+							<add> 74 </add>
+						</x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					
+					<image name="item_listing_damage_icon">
+						<filename> Menus\Icons\icon_small_damage.dds </filename>
+						<x>
+							<copy src="item_listing_weight_icon" trait="x" />
+							<add> 64 </add>
+						</x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					
+					<image name="item_listing_health_icon">
+						<filename> Menus\Inventory\inv_icon_small_health.dds </filename>
+						<x>
+							<copy src="item_listing_damage_icon" trait="x" />
+							<add> 64 </add>
+						</x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+
+				</rect>
+				
+				
+				<rect name="item_listing_apparel_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user2"/>
+						<neq src="InventoryMenu" trait="user3"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user2"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<text name="item_listing_apparel_header_text">
+						<string> <copy src="strings()" trait="_apparel"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33  </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="item_listing_value_icon">
+						<filename> Menus\Inventory\inv_icon_small_value.dds </filename>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					
+					<image name="item_listing_weight_icon">
+						<filename> Menus\Inventory\inv_icon_small_weight.dds </filename>
+						<x>
+							<copy src="item_listing_value_icon" trait="x" />
+							<add> 74 </add>
+						</x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					
+					<image name="item_listing_armor_icon">
+						<filename> Menus\Inventory\inv_icon_small_armor.dds </filename>
+						<x>
+							<copy src="item_listing_weight_icon" trait="x" />
+							<add> 64 </add>
+						</x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					
+					<image name="item_listing_health_icon">
+						<filename> Menus\Inventory\inv_icon_small_health.dds </filename>
+						<x>
+							<copy src="item_listing_armor_icon" trait="x" />
+							<add> 64 </add>
+						</x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>				
+
+				</rect>
+				
+				
+				<rect name="item_listing_alchemy_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user3"/>
+						<neq src="InventoryMenu" trait="user4"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user3"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<text name="item_listing_alchemy_header_text">
+						<string> <copy src="strings()" trait="_alchemy"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33  </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="item_listing_value_icon">
+						<filename> Menus\Inventory\inv_icon_small_value.dds </filename>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					
+					<image name="item_listing_weight_icon">
+						<filename> Menus\Inventory\inv_icon_small_weight.dds </filename>
+						<x>
+							<copy src="item_listing_value_icon" trait="x" />
+							<add> 74 </add>
+						</x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					
+					<image name="item_listing_quality_icon">
+						<filename> Menus\Inventory\inv_icon_small_quality.dds </filename>
+						<x>
+							<copy src="item_listing_weight_icon" trait="x" />
+							<add> 64 </add>
+						</x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+				
+				
+				<rect name="item_listing_misc_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user4"/>
+						<neq src="InventoryMenu" trait="user5"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user4"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<text name="item_listing_misc_header_text">
+						<string> <copy src="strings()" trait="_misc"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33  </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="item_listing_misc_header_value_icon">
+						<filename> Menus\Inventory\inv_icon_small_value.dds </filename>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+					</image>
+					
+					<image name="item_listing_misc_header_weight_icon">
+						<filename> Menus\Inventory\inv_icon_small_weight.dds </filename>
+						<x>
+							<copy src="cont_value_icon" trait="x" />
+							<add> 74 </add>
+						</x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+					</image>
+				
+				</rect>
+				
+				
+				<!-- CONTENTNS ======================================================= -->
+				<rect name="item_listing_list_contents">
+					<id> 10 </id>
+					<!-- code created template items are inserted here -->
+				</rect>
+				
+				
+			</rect>	<!-- inv_pane -->
+		</rect>	<!-- inv_window -->
+		
+		
+		<rect name="item_listing_list_mouse_blocker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<depth> 50 </depth>
+			<width> 650 </width>
+			<height> 50 </height>
+			<x> 
+				<copy src="item_listing_window" trait="x"/> 
+			</x>
+			<y> 
+				<copy src="item_listing_window" trait="y"/> 
+				<add>
+					475
+				</add>				
+			</y>
+		</rect>
+	</image> <!-- item_listing_parent -->	
+<!-- /image -->

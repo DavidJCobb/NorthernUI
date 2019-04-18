@@ -1,0 +1,1108 @@
+<!-- enchantmentsetting_menu.xml -->
+<menu name="EffectSettingMenu"> 
+	<class> &EffectSettingMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<_buffer> 28 </_buffer>
+	
+	<user1> 0 </user1>			<!-- spell cost -->
+	<user2> 0 </user2>			<!-- gold cost -->
+	<user9> 0 </user9>			<!-- player gold -->
+	<user3> -1 </user3>			<!-- uses (enchantment only) -->
+	<user4> &false; </user4>	<!-- exceeded maximum? (enchantment only, non-constant effect) -->
+	<user5> &false; </user5>	<!-- exceeded gold amount? (enchantment only -->
+	
+	<xbuttonb> <ref src="effset_button_cancel" trait="clicked"/> </xbuttonb>
+	<xbuttonx> <ref src="effset_button_ok" trait="clicked"/> </xbuttonx>
+	<xbuttony> <ref src="effset_button_delete" trait="clicked"/> </xbuttony>
+	
+	
+	<!-- FOCUS BOX ==============================================================-->
+	<rect name="effset_focus_box">
+<include src="focus_box.xml"/>
+		<id> 1 </id>
+		<visible> &false; </visible>
+		<user15>
+			<copy src="parent()" trait="depth" />
+			<add> 0.5 </add>
+		</user15>
+	</rect>
+	
+	
+	<!-- BACKGROUND ==============================================================-->
+	<rect name="effset_background">
+<include src="generic_background.xml"/>
+		<target> &true; </target>
+		<depth> 1 </depth>
+		<user0> 800 </user0>
+		<user1> 580 </user1>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		
+		
+		<!-- EFFECT LABEL ==============================================================-->
+		<image name="effset_icon">
+			<id> 2 </id>
+			<depth> 3 </depth>
+			<filename></filename>
+			<width> 64 </width>
+			<height> 64 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="user0"/>
+				<sub src="effset_name" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y> 20 </y>
+			<locus> &true; </locus>
+			
+			<user0>
+				<copy src="me()" trait="width"/>
+				<add>16</add>
+			</user0>
+		</image>
+			
+		<text name="effset_name">
+			<id> 3 </id>
+			<depth> 3 </depth>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33  </blue>
+			<alpha> 255 </alpha>
+			<string> <copy src="strings()" trait="_effectname"/> </string>
+			<x>
+				<copy src="effset_icon" trait="x"/>
+				<add src="effset_icon" trait="user0"/>
+			</x>
+			<y>
+				<copy src="effset_icon" trait="y"/>
+				<add>
+					<copy src="effset_icon" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div> 2 </div>
+				</add>
+			</y>
+		</text>		
+
+
+		<!-- ITEMS =======================================================================-->
+		<rect name="effset_items_layout">
+			<locus> &true; </locus>
+			<x> 40 </x>
+			<y>
+				<copy src="effset_icon" trait="y"/>
+				<add src="effset_icon" trait="height"/>
+				<add> 30 </add>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			<width> 720 </width>
+			<height>
+				<copy src="me()" trait="_item_height"/>
+				<onlyif src="effset_duration_layout" trait="visible"/>
+				<add src="effset_duration_layout" trait="y"/>
+			</height>
+			<_item_height> 64 </_item_height>
+		
+
+			<!-- ATTRIBUTE =======================================================================-->
+			<rect name="effset_attribute_layout">
+				<id> 31 </id>
+				<visible> &true; </visible>
+				<target> &true; </target>
+				<depth> 3 </depth>
+				<x> 0 </x>
+				<y> 0 </y>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> <copy src="parent()" trait="_item_height"/> </height>
+				<locus> &true; </locus>
+				<user0> xxx </user0>
+				
+				<xdefault> 10 </xdefault>
+				<xup> <ref src="effset_button_cancel" trait="mouseover"/> </xup>
+				<xdown> <ref src="effset_skill_layout" trait="mouseover"/> </xdown>
+	
+				<image name="effset_attribute_floating">
+					<visible>
+						<copy src="parent()" trait="mouseover"/>
+						<gt> 0 </gt>
+					</visible>
+					<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+					<width>
+						<copy src="parent()" trait="width"/>
+						<sub> 10 </sub>
+					</width>
+					<height> 64 </height>
+					<depth> 1 </depth>
+					<x> -10 </x>
+					<y> 0 </y>
+					
+					<image name="effset_attribute_floating_end">
+						<depth> 2 </depth>
+						<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+						<width> 104 </width>
+						<height> 64 </height>
+						<x>
+							<copy src="parent()" trait="width"/>
+							<add> 8 </add>
+							<sub src="me()" trait="width"/>
+						</x>
+						<y> 0 </y>
+					</image>
+				</image>
+				
+				<text name="effset_attribute_button">
+					<string> <copy src="parent()" trait="user0"/> </string>
+					<justify> &center; </justify>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<x> 495 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+					
+				<text name="effset_attribute_label">
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<string> <copy src="strings()" trait="_attribute"/> </string>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+			</rect>
+
+			<!-- SKILL =======================================================================-->
+			<rect name="effset_skill_layout">
+				<id> 32 </id>
+				<visible> &true; </visible>
+				<target> &true; </target>
+				<depth> 3 </depth>
+				<x> 0 </x>
+				<y>
+					<copy src="parent()" trait="_item_height"/>
+					<onlyif src="effset_attribute_layout" trait="visible"/>
+					<add src="effset_attribute_layout" trait="y"/>
+				</y>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> <copy src="parent()" trait="_item_height"/> </height>
+				<locus> &true; </locus>
+				<user0> xxx </user0>
+				
+				<xdefault> 9 </xdefault>
+				<xup> <ref src="effset_attribute_layout" trait="mouseover"/> </xup>
+				<xdown> <ref src="effset_range_layout" trait="mouseover"/> </xdown>
+	
+				<image name="effset_skill_floating">
+					<visible>
+						<copy src="parent()" trait="mouseover"/>
+						<gt> 0 </gt>
+					</visible>
+					<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+					<width>
+						<copy src="parent()" trait="width"/>
+						<sub> 10 </sub>
+					</width>
+					<height> 64 </height>
+					<depth> 1 </depth>
+					<x> -10 </x>
+					<y> 0 </y>
+					
+					<image name="effset_skill_floating_end">
+						<depth> 2 </depth>
+						<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+						<width> 104 </width>
+						<height> 64 </height>
+						<x>
+							<copy src="parent()" trait="width"/>
+							<add> 8 </add>
+							<sub src="me()" trait="width"/>
+						</x>
+						<y> 0 </y>
+					</image>
+				</image>
+				
+				<text name="effset_skill_button">
+					<string> <copy src="parent()" trait="user0"/> </string>
+					<justify> &center; </justify>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<x> 495 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+					
+				<text name="effset_skill_label">
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<string> <copy src="strings()" trait="_skill"/> </string>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+			</rect>
+			
+
+			<!-- RANGE =======================================================================-->
+				
+			<rect name="effset_range_layout">
+				<id> 33 </id>
+				<visible> &true; </visible>
+				<target> &true; </target>
+				<depth> 3 </depth>
+				<x> 0 </x>
+				<y>
+					<copy src="parent()" trait="_item_height"/>
+					<onlyif src="effset_skill_layout" trait="visible"/>
+					<add src="effset_skill_layout" trait="y"/>
+				</y>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> <copy src="parent()" trait="_item_height"/> </height>
+				<locus> &true; </locus>
+				<user0> xxx </user0>
+				<clicksound> 3 </clicksound>
+				
+				<xdefault> 8 </xdefault>
+				<xup> <ref src="effset_skill_layout" trait="mouseover"/> </xup>
+				<xdown> <ref src="effset_magnitude_layout" trait="mouseover"/> </xdown>
+				<xleft> <ref src="child(effset_dummy)" trait="clicked"/> </xleft>
+				<xright> <ref src="me()" trait="clicked"/> </xright>
+				
+				<rect name="effset_dummy">
+					<!-- dummy tile to scroll range left -->
+					<id>39</id>
+					<alpha>0</alpha>
+					<target>&true;</target>
+				</rect>
+	
+				<image name="effset_range_floating">
+					<visible>
+						<copy src="parent()" trait="mouseover"/>
+						<gt> 0 </gt>
+					</visible>
+					<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+					<width>
+						<copy src="parent()" trait="width"/>
+						<sub> 10 </sub>
+					</width>
+					<clicksound> 3 </clicksound>
+					<height> 64 </height>
+					<depth> 1 </depth>
+					<x> -10 </x>
+					<y> 0 </y>
+					
+					<image name="effset_range_floating_end">
+						<depth> 2 </depth>
+						<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+						<width> 104 </width>
+						<height> 64 </height>
+						<x>
+							<copy src="parent()" trait="width"/>
+							<add> 8 </add>
+							<sub src="me()" trait="width"/>
+						</x>
+						<y> 0 </y>
+					</image>
+				</image>
+				
+				<image name="effset_range_left">
+					<visible>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </visible>
+					<filename> \Menus\Shared\shared_arrow_left.dds </filename>
+					<width> 121 </width>
+					<height> 36 </height>
+					<depth> 3 </depth>
+					<x>
+						<copy src="effset_magnitude_scroll" trait="x"/>
+						<sub>50</sub>
+					</x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</y>
+				</image>
+
+				<text name="effset_range_button">
+					<string> <copy src="parent()" trait="user0"/> </string>
+					<justify> &center; </justify>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<x> 495 </x>
+					<clicksound> 3 </clicksound>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+					
+				<image name="effset_range_right">
+					<visible>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </visible>
+					<filename> \Menus\Shared\shared_arrow_right.dds </filename>
+					<width> 121 </width>
+					<height> 36 </height>
+					<depth> 3 </depth>
+					<clicksound> 3 </clicksound>
+					<x>
+						<copy src="effset_magnitude_scroll" trait="x"/>
+						<add src="effset_magnitude_scroll" trait="width"/>
+						<add>50</add>
+						<sub src="me()" trait="width"/>
+					</x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</y>
+				</image>
+
+				<text name="effset_range_label">
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<string> <copy src="strings()" trait="_range"/> </string>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+			</rect>
+
+
+			<!-- MAGNITUDE =======================================================================-->
+			<rect name="effset_magnitude_layout">
+				<id> 34 </id>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 3 </depth>
+				<x> 0 </x>
+				<y>
+					<copy src="parent()" trait="_item_height"/>
+					<onlyif src="effset_range_layout" trait="visible"/>
+					<add src="effset_range_layout" trait="y"/>
+				</y>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> <copy src="parent()" trait="_item_height"/> </height>
+				<locus> &true; </locus>
+				
+				<xdefault> 7 </xdefault>
+				<xup> <ref src="effset_range_layout" trait="mouseover"/> </xup>
+				<xdown> <ref src="effset_area_layout" trait="mouseover"/> </xdown>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+				<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+				
+				<user0> &false; </user0>	<!-- false = normal (scroll bar), true = special for lock/open spell -->
+				<user1></user1>				<!-- lock level text -->
+				<user2></user2>				<!-- label text -->
+				<user3>-1</user3>			<!-- command/turn undead level text -->
+				
+				<image name="effset_magnitude_floating">
+					<visible>
+						<copy src="parent()" trait="mouseover"/>
+						<add src="effset_magnitude_scroll" trait="_mouseover_any"/>
+						<gt> 0 </gt>
+					</visible>
+					<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+					<width>
+						<copy src="parent()" trait="width"/>
+						<sub> 10 </sub>
+					</width>
+					<height> 64 </height>
+					<depth> 1 </depth>
+					<x> -10 </x>
+					<y> 0 </y>
+					
+					<image name="effset_magnitude_floating_end">
+						<depth> 2 </depth>
+						<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+						<width> 104 </width>
+						<height> 64 </height>
+						<x>
+							<copy src="parent()" trait="width"/>
+							<add> 8 </add>
+							<sub src="me()" trait="width"/>
+						</x>
+						<y> 0 </y>
+					</image>
+				</image>
+				
+				<image name="effset_magnitude_scroll">
+<include src="horiz_floating_scroll.xml"/>
+					<visible>
+						<copy src="parent()" trait="visible"/>
+						<and><not><copy src="effset_lock_level" trait="visible"/></not></and>
+					</visible>
+					<id> 14 </id>
+					<width> 300 </width>
+					<x> 350 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+					<user3> 1 </user3>
+					<user6> 15 </user6>			<!-- ID for marker/slider -->
+					<user8> &false; </user8>	<!-- show number -->
+				</image>
+					
+				<text name="effset_magnitude_number">
+					<visible>
+						<not><copy src="effset_lock_level" trait="visible"/></not>
+						<and><not src="effset_level_number" trait="visible"/></and>
+					</visible>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+					<string> <copy src="effset_magnitude_scroll" trait="user7"/> </string>
+					<x>
+						<copy src="effset_magnitude_scroll" trait="x"/>
+						<sub src="me()" trait="width"/>
+						<sub> 70 </sub>
+					</x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+				
+				<text name="effset_level_number">	<!-- Magnitude represented by "up-to" level for turn undead and command creature/hummanoid spells -->
+					<visible>
+						<not><copy src="effset_lock_level" trait="visible"/></not>
+						<and>
+							<copy src="parent()" trait="user3"/>
+							<gt> -1 </gt>
+						</and>
+					</visible>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+					<string> <copy src="parent()" trait="user3"/> </string>
+					<x>
+						<copy src="effset_magnitude_scroll" trait="x"/>
+						<sub src="me()" trait="width"/>
+						<sub> 70 </sub>
+					</x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+				
+				<text name="effset_lock_level">
+					<visible>
+						<copy src="parent()" trait="user0"/>
+					</visible>
+					<string>
+						<copy src="parent()" trait="user1"/>
+					</string>
+					<justify> &center; </justify>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<x> 495 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+				
+				<text name="effset_magnitude_label">
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+					<string>
+						<copy src="parent()" trait="user2"/>
+					</string>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+			</rect>
+			
+
+			<!-- AREA =======================================================================-->
+			<rect name="effset_area_layout">
+				<id> 36 </id>
+				<visible> <copy src="effset_area_scroll" trait="visible"/> </visible>
+				<listclip> <copy src="effset_area_scroll" trait="user19"/> <eq> &false; </eq> </listclip>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 3 </depth>
+				<x> 0 </x>
+				<y>
+					<copy src="parent()" trait="_item_height"/>
+					<onlyif src="effset_magnitude_layout" trait="visible"/>
+					<add src="effset_magnitude_layout" trait="y"/>
+				</y>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> <copy src="parent()" trait="_item_height"/> </height>
+				<locus> &true; </locus>
+				
+				<user0></user0>		<!-- Slider text.  Set in code -->
+				
+				<xdefault> 6 </xdefault>
+				<xup> <ref src="effset_magnitude_layout" trait="mouseover"/> </xup>
+				<xdown> <ref src="effset_duration_layout" trait="mouseover"/> </xdown>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> <copy> 1 </copy> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> <copy> 1 </copy> </xright>
+				<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+				<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+	
+				<image name="effset_area_floating">
+					<visible>
+						<copy src="parent()" trait="mouseover"/>
+						<add src="effset_area_scroll" trait="_mouseover_any"/>
+						<gt> 0 </gt>
+					</visible>
+					<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+					<width>
+						<copy src="parent()" trait="width"/>
+						<sub> 10 </sub>
+					</width>
+					<height> 64 </height>
+					<depth> 1 </depth>
+					<x> -10 </x>
+					<y> 0 </y>
+					
+					<image name="effset_area_floating_end">
+						<depth> 2 </depth>
+						<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+						<width> 104 </width>
+						<height> 64 </height>
+						<x>
+							<copy src="parent()" trait="width"/>
+							<add> 8 </add>
+							<sub src="me()" trait="width"/>
+						</x>
+						<y> 0 </y>
+					</image>
+				</image>
+				
+				<image name="effset_area_scroll">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 16 </id>
+					<width> 300 </width>
+					<x> 350 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+					<user3> 1 </user3>
+					<user6> 17 </user6>			<!-- ID for marker/slider -->
+					<user8> &false; </user8>	<!-- show number -->
+					<user19> &true; </user19>	<!-- visibility override - set by code -->
+				</image>
+				
+				<text name="effset_area_number">
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+					<string> <copy src="parent()" trait="user0"/> </string>
+					<x>
+						<copy src="effset_magnitude_scroll" trait="x"/>
+						<sub src="me()" trait="width"/>
+						<sub> 70 </sub>
+					</x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+				
+				<text name="effset_area_label">
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+					<string> <copy src="strings()" trait="_area"/> </string>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+			</rect>
+
+
+			<!-- DURATION =======================================================================-->
+			<rect name="effset_duration_layout">
+				<id> 38 </id>
+				<visible> <copy src="effset_duration_scroll" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 3 </depth>
+				<x> 0 </x>
+				<y>
+					<copy src="parent()" trait="_item_height"/>
+					<onlyif src="effset_area_layout" trait="visible"/>
+					<add src="effset_area_layout" trait="y"/>
+				</y>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> <copy src="parent()" trait="_item_height"/> </height>
+				<locus> &true; </locus>
+				
+				<xdefault> 5 </xdefault>
+				<xup> <ref src="effset_area_layout" trait="mouseover"/> </xup>
+				<xdown> <ref src="effset_button_ok" trait="mouseover"/> </xdown>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+				<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+	
+				<image name="effset_duration_floating">
+					<visible>
+						<copy src="parent()" trait="mouseover"/>
+						<add src="effset_duration_scroll" trait="_mouseover_any"/>
+						<gt> 0 </gt>
+					</visible>
+					<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+					<width>
+						<copy src="parent()" trait="width"/>
+						<sub> 10 </sub>
+					</width>
+					<height> 64 </height>
+					<depth> 1 </depth>
+					<x> -10 </x>
+					<y> 0 </y>
+					
+					<image name="effset_duration_floating_end">
+						<depth> 2 </depth>
+						<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+						<width> 104 </width>
+						<height> 64 </height>
+						<x>
+							<copy src="parent()" trait="width"/>
+							<add> 8 </add>
+							<sub src="me()" trait="width"/>
+						</x>
+						<y> 0 </y>
+					</image>
+				</image>
+				
+				<image name="effset_duration_scroll">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 18 </id>
+					<width> 300 </width>
+					<x> 350 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+					<user3> 1 </user3>
+					<user6> 19 </user6>			<!-- ID for marker/slider -->
+					<user8> &false; </user8>	<!-- show number -->
+				</image>
+				
+				<text name="effset_duration_number">
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+					<string> <copy src="effset_duration_scroll" trait="user7"/> </string>
+					<x>
+						<copy src="effset_duration_scroll" trait="x"/>
+						<sub src="me()" trait="width"/>
+						<sub> 70 </sub>
+					</x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+				
+				<text name="effset_duration_label">
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+					<string> <copy src="strings()" trait="_duration"/> </string>
+					<x> 0 </x>
+					<y>
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div> 2 </div>
+					</y>
+					<depth> 3 </depth>
+				</text>
+			</rect>
+
+		</rect>	<!-- items layout -->
+		
+		
+		<!-- COSTS LAYOUT ==============================================================-->
+		<rect name="effset_costs_layout">
+			<locus> &true; </locus>
+			<width> <copy src="parent()" trait="width"/> </width>
+			<height> <copy src="effset_casting_cost_icon" trait="height"/> </height>
+			<x> 0 </x>
+			<y>
+				<copy src="effset_button_layout" trait="y"/>
+				<sub src="me()" trait="height"/>
+				<sub> 20 </sub>
+			</y>
+			<depth> 3 </depth>
+			
+			
+			<image name="effset_casting_cost_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 288 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<alpha>
+					<copy> 128 </copy>
+					<onlyif src="EffectSettingMenu" trait="user4"/>
+					<add>
+						<copy> 255 </copy>
+						<onlyifnot src="EffectSettingMenu" trait="user4"/>
+					</add>
+				</alpha>
+				<x> 50 </x>
+				<y> 0 </y>
+				<locus> &true; </locus>
+				
+				<text name="effset_casting_cost_text">
+					<font> 3 </font>
+					<red>
+						<copy> 128 </copy>
+						<onlyif src="EffectSettingMenu" trait="user4"/>
+						<add>
+							<copy> 117 </copy>
+							<onlyifnot src="EffectSettingMenu" trait="user4"/>
+						</add>
+					</red>
+					<green>
+						<copy> 128 </copy>
+						<onlyif src="EffectSettingMenu" trait="user4"/>
+						<add>
+							<copy> 59 </copy>
+							<onlyifnot src="EffectSettingMenu" trait="user4"/>
+						</add>
+					</green>
+					<blue>
+						<copy> 128 </copy>
+						<onlyif src="EffectSettingMenu" trait="user4"/>
+						<add>
+							<copy> 33 </copy>
+							<onlyifnot src="EffectSettingMenu" trait="user4"/>
+						</add>
+					</blue>
+					<alpha>
+						<copy> 128 </copy>
+						<onlyif src="EffectSettingMenu" trait="user4"/>
+						<add>
+							<copy> 255 </copy>
+							<onlyifnot src="EffectSettingMenu" trait="user4"/>
+						</add>
+					</alpha>
+					<x>
+						<copy src="effset_casting_cost_icon" trait="width"/>
+						<add> 10 </add>
+					</x>
+					<y> 2 </y>
+					<string> <copy src="EffectSettingMenu" trait="user1"/> </string>
+				</text>
+			</image>
+			
+			
+			<image name="effset_uses_icon">
+				<visible>
+					<copy src="EffectSettingMenu" trait="user3"/>
+					<gte> 0 </gte>
+				</visible>
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 0 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 255 </x>
+				<y> 0 </y>
+				<locus> &true; </locus>
+				
+				<text name="effset_uses_text">
+					<font> 3 </font>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<x>
+						<copy src="effset_uses_icon" trait="width"/>
+						<add> 10 </add>
+					</x>
+					<y> 2 </y>
+					<string> <copy src="EffectSettingMenu" trait="user3"/> </string>
+				</text>
+			</image>
+					
+				
+			<image name="effset_gold_cost_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 224 </cropx>
+				<depth> 3 </depth>
+				<width> 32 </width>
+				<height> 32 </height>
+				<alpha>
+					<copy> 128 </copy>
+					<onlyif src="EffectSettingMenu" trait="user5"/>
+					<add>
+						<copy> 255 </copy>
+						<onlyifnot src="EffectSettingMenu" trait="user5"/>
+					</add>
+				</alpha>
+				<x>
+					<copy> 80 </copy>
+					<onlyif src="effset_uses_icon" trait="visible"/>
+					<add> 360 </add>
+				</x>
+				<y> 0 </y>
+				<locus> &true; </locus>
+					
+				<image name="effset_gold_cost_arrow">
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 352 </cropx>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 23 </x>
+					<y> 0 </y>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				</image>
+				
+				<text name="effset_gold_cost_text">
+					<font> 3 </font>
+					<red>
+						<copy> 128 </copy>
+						<onlyif src="EffectSettingMenu" trait="user5"/>
+						<add>
+							<copy> 117 </copy>
+							<onlyifnot src="EffectSettingMenu" trait="user5"/>
+						</add>
+					</red>
+					<green>
+						<copy> 128 </copy>
+						<onlyif src="EffectSettingMenu" trait="user5"/>
+						<add>
+							<copy> 59 </copy>
+							<onlyifnot src="EffectSettingMenu" trait="user5"/>
+						</add>
+					</green>
+					<blue>
+						<copy> 128 </copy>
+						<onlyif src="EffectSettingMenu" trait="user5"/>
+						<add>
+							<copy> 33 </copy>
+							<onlyifnot src="EffectSettingMenu" trait="user5"/>
+						</add>
+					</blue>
+					<alpha>
+						<copy> 128 </copy>
+						<onlyif src="EffectSettingMenu" trait="user5"/>
+						<add>
+							<copy> 255 </copy>
+							<onlyifnot src="EffectSettingMenu" trait="user5"/>
+						</add>
+					</alpha>
+					<x> 55 </x>
+					<y> 2 </y>
+					<string> <copy src="EffectSettingMenu" trait="user2"/> </string>
+				</text>
+			</image>
+			
+			
+			<image name="effset_player_gold_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 224 </cropx>
+				<depth> 3 </depth>
+				<width> 32 </width>
+				<height> 32 </height>
+				<alpha>
+					<copy> 128 </copy>
+					<onlyif src="EffectSettingMenu" trait="user5"/>
+					<add>
+						<copy> 255 </copy>
+						<onlyifnot src="EffectSettingMenu" trait="user5"/>
+					</add>
+				</alpha>
+				<x>
+					<copy src="effset_player_gold_text" trait="x"/>
+					<sub src="effset_player_gold_text" trait="width"/>
+					<sub> 42 </sub>
+				</x>
+				<y> <copy src="effset_gold_cost_text" trait="y"/> </y>
+				<locus> &true; </locus>
+			</image>
+			<text name="effset_player_gold_text">
+				<font> 3 </font>
+				<justify> &right; </justify>
+				<red> <copy src="effset_gold_cost_text" trait="red"/> </red>
+				<green> <copy src="effset_gold_cost_text" trait="green"/> </green>
+				<blue> <copy src="effset_gold_cost_text" trait="blue"/> </blue>
+				<alpha> <copy src="effset_gold_cost_text" trait="alpha"/> </alpha>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub> 50 </sub>
+				</x>
+				<y> 2 </y>
+				<string> <copy src="EffectSettingMenu" trait="user9"/> </string>
+			</text>
+			
+		</rect>
+		
+		
+		<!-- BUTTON LAYOUT ======================================================================-->
+		<rect name="effset_button_layout">
+			<locus> &true; </locus>
+			<depth> 3 </depth>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="child(effset_button_cancel)" trait="x"/>
+				<sub src="child(effset_button_cancel)" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<sub> 20 </sub>
+			</y>
+			
+			<height>
+				<copy src="child(effset_button_ok)" trait="height"/>
+				<max src="child(effset_button_delete)" trait="height"/>
+				<max src="child(effset_button_cancel)" trait="height"/>
+			</height>
+			
+			
+			<image name="effset_button_ok">
+<include src="button_short.xml"/>
+				<id> 21 </id>
+				<target> &true; </target>
+				<x> 0 </x>
+				<y> 0 </y>
+				<clicksound> 1 </clicksound>
+				<user0> <copy src="strings()" trait="_ok"/> </user0>
+				
+				<user20><!--&xbuttonx;-->3 </user20>
+				<xdefault> &xboxhint; </xdefault>
+				<xup> <ref src="effset_duration_layout" trait="mouseover"/> </xup>
+				<xdown> <ref src="effset_attribute_layout" trait="mouseover"/> </xdown>
+				<xleft> <ref src="effset_button_cancel" trait="mouseover"/> </xleft>
+				<xright> <ref src="effset_button_delete" trait="mouseover"/> </xright>
+			</image>
+			
+			
+			<image name="effset_button_delete">
+<include src="button_long.xml"/>
+				<id> 22 </id>
+				<x>
+					<copy src="effset_button_ok" trait="width"/>
+					<add> 20 </add>
+				</x>
+				<y> 0 </y>
+				<clicksound> 2 </clicksound>
+				<user0> <copy src="strings()" trait="_delete"/> </user0>
+				
+				<user20><!--&xbuttony;-->4 </user20>
+				<xdefault> &xboxhint; </xdefault>
+				<xup> <ref src="effset_duration_layout" trait="mouseover"/> </xup>
+				<xdown> <ref src="effset_attribute_layout" trait="mouseover"/> </xdown>
+				<xleft> <ref src="effset_button_ok" trait="mouseover"/> </xleft>
+				<xright> <ref src="effset_button_cancel" trait="mouseover"/> </xright>
+			</image>
+			
+			
+			<image name="effset_button_cancel">
+<include src="button_long.xml"/>
+				<id> 23 </id>
+				<x>
+					<copy src="effset_button_delete" trait="width"/>
+					<add> 20 </add>
+					<onlyif src="effset_button_delete" trait="visible"/>
+					<add src="effset_button_delete" trait="x"/>
+				</x>
+				<y> 0 </y>
+				<clicksound> 2 </clicksound>
+				<user0> <copy src="strings()" trait="_cancel"/> </user0>
+				
+				<user20><!--&xbuttonb;-->2 </user20>
+				<xdefault> &xboxhint; </xdefault>
+				<xup> <ref src="effset_duration_layout" trait="mouseover"/> </xup>
+				<xdown> <ref src="effset_attribute_layout" trait="mouseover"/> </xdown>
+				<xleft> <ref src="effset_button_delete" trait="mouseover"/> </xleft>
+				<xright> <ref src="effset_button_ok" trait="mouseover"/> </xright>
+			</image>
+		</rect>
+	</rect>
+</menu>

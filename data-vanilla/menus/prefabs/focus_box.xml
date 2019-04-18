@@ -1,0 +1,132 @@
+<!-- focus_box.xml -->
+<!-- rect name="FocusBox" -->
+	<locus> &true; </locus>
+	
+	<image name="focus_center">
+		<filename> Menus\Focus\focus_center_x4.dds </filename>
+		<zoom> -1 </zoom>
+		<x> -1 </x>
+		<y> -1 </y>
+		<width>
+			<copy src="parent()" trait="width"/>
+			<add> 2 </add>
+		</width>
+		<height>
+			<copy src="parent()" trait="height"/>
+			<add> 2 </add>
+		</height>
+	</image>
+
+	<image name="focus_top">
+		<filename> Menus\Focus\focus_top.dds </filename>
+		<x> -1 </x>
+		<y> -8 </y>
+		<tile> &true; </tile>
+		<width>
+			<copy src="parent()" trait="width"/>
+			<add> 2 </add>
+		</width>
+		<height> 9 </height>
+	</image>
+
+	<image name="focus_bottom">
+		<filename> Menus\Focus\focus_bottom.dds </filename>
+		<x> -1 </x>
+		<y> <copy src="parent()" trait="height"/> </y>
+		<tile> &true; </tile>
+		<width>
+			<copy src="parent()" trait="width"/>
+			<add> 2 </add>
+		</width>
+		<height> 14 </height>
+	</image>
+
+	<image name="focus_left">
+		<filename> Menus\Focus\focus_left.dds </filename>
+		<x> -8 </x>
+		<y> -1 </y>
+		<tile> &true; </tile>
+		<width> 8 </width>
+		<height>
+			<copy src="parent()" trait="height"/>
+			<add> 2 </add>
+		</height>
+	</image>
+
+	<image name="focus_right">
+		<filename> Menus\Focus\focus_right.dds </filename>
+		<x> <copy src="parent()" trait="width"/> </x>
+		<y> -1 </y>
+		<tile> &true; </tile>
+		<width> 12 </width>
+		<height>
+			<copy src="parent()" trait="height"/>
+			<add> 2 </add>
+		</height>
+	</image>
+
+
+	<image name="focus_top_left">
+		<filename> Menus\Focus\focus_top_left.dds </filename>
+		<x> -8 </x>
+		<y> -9 </y>
+		<width> 17 </width>
+		<height> 18 </height>
+		<depth> 1 </depth>
+	</image>
+
+	<image name="focus_top_right">
+		<filename> Menus\Focus\focus_top_right.dds </filename>
+		<x>
+			<copy src="parent()" trait="width"/>
+			<add> -8 </add>
+		</x>
+		<y> -8 </y>
+		<width> 22 </width>
+		<height> 21 </height>
+		<depth> 1 </depth>
+		<locus> &true; </locus>
+	</image>
+
+	<image name="focus_bottom_right">
+		<filename> Menus\Focus\focus_bottom_right.dds </filename>
+		<x> <copy src="parent()" trait="width"/> </x>
+		<y> <copy src="parent()" trait="height"/> </y>
+		<width> 12 </width>
+		<height> 14 </height>
+		<depth> 1 </depth>
+		<locus> &true; </locus>
+
+		<image name="focus_bottom_right_fade_right">
+			<filename> Menus\Focus\focus_bottom_right_fade_right.dds </filename>
+			<x> -2 </x>
+			<y> -8 </y>
+			<width> 8 </width>
+			<height> 8 </height>
+			<depth> 1 </depth>
+		</image>
+
+		<image name="focus_bottom_right_fade_bottom">
+			<filename> Menus\Focus\focus_bottom_right_fade_bottom.dds </filename>
+			<x> -8 </x>
+			<y> 0 </y>
+			<width> 8 </width>
+			<height> 8 </height>
+			<depth> 1 </depth>
+		</image>
+	</image>
+
+	<image name="focus_bottom_left">
+		<filename> Menus\Focus\focus_bottom_left.dds </filename>
+		<x> -8 </x>
+		<y>
+			<copy src="parent()" trait="height"/>
+			<add> -8 </add>
+		</y>
+		<width> 17 </width>
+		<height> 22 </height>
+		<depth> 1 </depth>
+		<locus> &true; </locus>
+	</image>
+
+<!-- /rect -->

@@ -1,0 +1,142 @@
+<menu name="BirthSignMenu">
+	<class> BirthSignMenu </class>
+	<stackingtype> no_click_past </stackingtype>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus>true</locus>
+	<menufade> 0.25 </menufade>
+	<button class="focus_box" name="inv_FocusBox">
+		<id> 38 </id>
+		<visible> false </visible>
+		<user15>
+			<copy src="parent()" trait="depth" />
+			<add> 0.5 </add>
+		</user15>
+	</button>
+	<image name="BirthSign_background">
+		<id> 1 </id>
+		<target> true </target>
+		<filename> Menus\Level_up\level_up_background.dds </filename>
+		<depth> 1 </depth>
+		<width>1037</width>
+		<height> 818 </height>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> true </locus>
+		<text name="apprentice_Text">
+			<id> 4 </id>
+			<depth> 5 </depth>
+			<target>true</target>
+			<string> The Apprentice  </string>
+			<justify> Left</justify>
+			<red> 120 </red>
+			<green> 34 </green>
+			<blue> 0 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x>30</x>
+			<y> 
+				30
+			 </y>
+		</text>
+		
+		<image name="BirthSign_Picture">
+			<id> 2</id>
+			<filename> Menus\\Menus\BirthSign\load_image_apprentice.dds </filename>
+			<depth> 10</depth>
+			<width> 600 </width>
+			<height> 700 </height>
+			<x>
+				350
+			</x>
+			<y>
+				100
+			</y>
+			<locus> true </locus>
+		</image>
+	
+		<text name="Birth_Text">
+			<id> 3 </id>
+			<depth> 5 </depth>
+			<string> BirthSign Description  </string>
+			<justify> Left </justify>
+			<red> 120 </red>
+			<green> 34 </green>
+			<blue> 0 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 250 </sub>
+			</wrapwidth>
+			<x>350 </x>
+			<y> <copy src="BirthSign_Picture" trait="y" />
+				<add>100</add>
+			</y>
+		</text>
+		<image name="done_button">
+			<id>17</id>
+			<alpha> 255 </alpha>
+			<depth> 31 </depth>
+			<filename> Menus\Container\cont_button_long_off.dds </filename>
+			<width> 177 </width>
+			<height> 43 </height>
+			<locus> true </locus>
+			<target> true </target>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<div> 2 </div>
+				<add>400</add>
+			</x>
+			<y>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<div> 2 </div>
+				<add>320</add>
+			</y>
+			<string>Done</string>
+			<image name="Done_button_on">
+				<alpha>
+					<copy> 256 </copy>
+					<onlyifnot src="parent()" trait="mouseover" />
+				</alpha>
+				<depth> 2 </depth>
+				<filename> Menus\Container\cont_button_long_on.dds </filename>
+				<width> 176 </width>
+				<height> 51 </height>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="Done_button_text">
+				<depth> 4 </depth>
+				<string>
+					<copy src="parent()" trait="string" />
+				</string>
+				<justify> left </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub src="me()" trait="width" />
+					<div> 2 </div>
+					<sub> 2 </sub>
+				</x>
+				<y> 3 </y>
+			</text>
+		</image>
+	</image>
+</menu>

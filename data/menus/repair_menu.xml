@@ -1,0 +1,898 @@
+<!-- repair_menu.xml -->
+<menu name="RepairMenu">
+	<class> &RepairMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade>0</menufade> <!-- Alchemy/etc. menus don't fade out when RepairMenu opens, so RepairMenu shouldn't fade in -->
+   
+	<!-- IMPORTANT NOTE:  If you are going to change the mapping of user0 to menu type at all, you MUST
+	do a search in this file for every tile that uses RepairMenu's user0 and make any necessary adjustments. -->
+	<user0> 0 </user0>				<!-- which type of activity we are doing:
+										1 - REPAIR
+										2 - REPAIR_BUY
+										3 - ALCHEMY_SELECT
+										4 - ENCHANTMENT_SELECT
+										5 - SOULGEM_SELECT
+										6 - SIGILSTONE_SELECT       -->
+										
+	<user2>
+		<copy src="me()" trait="x"/>
+		<add>
+			<copy src="child(rep_background_repair)" trait="x"/>
+			<add  src="child(rep_background_repair)" trait="width"/>
+			<onlyif>
+				<copy src="me()" trait="_repair"/>
+				<eq>1</eq>
+			</onlyif>
+		</add>
+		<add>
+			<copy src="child(rep_background_general)" trait="x"/>
+			<add  src="child(rep_background_general)" trait="width"/>
+			<sub> 20 </sub>
+			<onlyif>
+				<copy src="me()" trait="_other"/>
+				<eq>1</eq>
+			</onlyif>
+		</add>
+	</user2>				<!-- X-position of fully-exposed magic popup menu -->
+	<user12>						<!-- lowest possible drop for the pop-up menu -->
+		<copy src="screen()" trait="height"/>
+		<sub  src="screen()" trait="cropy"/>
+		<sub  src="screen()" trait="cropy"/>
+		<sub> 175 </sub>
+	</user12>
+	<_repair> <!-- 0/1 bool -->
+		<copy src="RepairMenu" trait="user0" /><lte>2</lte>
+		<sub>1</sub> <!-- convert to 0/1 bool -->
+	</_repair>
+	<_other> <!-- 0/1 bool -->
+		<copy src="RepairMenu" trait="user0" /><gt>2</gt>
+		<sub>1</sub> <!-- convert to 0/1 bool -->
+	</_other>
+	
+	<xleft> <ref src="rep_button_exit" trait="mouseover" /></xleft>
+	<xright><ref src="rep_button_exit" trait="mouseover" /></xright>
+	
+	<xbuttonb><ref src="button_close"      trait="clicked"/></xbuttonb>
+	<xbuttony><ref src="button_repair_all" trait="clicked"/></xbuttony>
+	<xbuttonx><ref src="button_remove"     trait="clicked"/></xbuttonx>
+   
+   <!-- Config for this menu. Some of this may get moved to prefabs. -->
+   <_itemInfoColumnWidth> 60 </_itemInfoColumnWidth>
+   <_equipMarkerOffset>    8 </_equipMarkerOffset> <!-- Distance between "equipped item" marker and menu outer edge -->
+   <_itemIconZoom>66</_itemIconZoom>
+   <_itemIconSize>
+      <copy>64</copy>
+      <mult src="me()" trait="_itemIconZoom" />
+      <div>100</div>
+   </_itemIconSize>
+   <_listRowHeight>
+      <copy src="me()" trait="_itemIconSize" />
+      <add>16</add>
+   </_listRowHeight>
+   
+   <!--
+      USER18: NorthernUI allows AlchemyMenu to copy this trait from RepairMenu's 
+      root tile on every frame, if RepairMenu is open. If RepairMenu is not open 
+      or available, the corresponding trait on AlchemyMenu's root tile is set to 
+      zero instead.
+      
+      Currently, we do not use this, but we keep it available for now.
+   -->
+   <user18>0</user18>
+   
+	<rect name="rep_FocusBox">
+		<id>7</id>
+		<depth>1</depth>
+		<visible>&false;</visible>
+      <include src="NorthernUI\focus_boxes\highlight.xml"/>
+		<user15> <!-- TODO: What did this do in the original prefab? -->
+			<copy src="parent()" trait="depth" />
+			<add> 0.5 </add>
+		</user15>
+	</rect>
+   
+   <rect name="rep_base">
+      <_paddingX>0</_paddingX> <!-- Left-side padding on the list. -->
+      <_paddingY>4</_paddingY> <!-- Vertical  padding on the list. -->
+      <_scrollbarMargin>8</_scrollbarMargin> <!-- Horizontal distance between the container and the scrollbar, and between the scrollbar and list content. -->
+      
+      <_title_0>RepairMenu</_title_0> <!-- untranslated; should only appear if something has gone wrong -->
+      <_title_1><copy src="xxnStrings()" trait="_repairMenuTitleRepair" /></_title_1>
+      <_title_2><copy src="xxnStrings()" trait="_repairMenuTitleRepair" /></_title_2>
+      <_title_3><copy src="xxnStrings()" trait="_repairMenuTitleAlchemy" /></_title_3>
+      <_title_4><copy src="xxnStrings()" trait="_repairMenuTitleEnchantTarget" /></_title_4>
+      <_title_5><copy src="xxnStrings()" trait="_repairMenuTitleEnchantGem" /></_title_5>
+      <_title_6><copy src="xxnStrings()" trait="_repairMenuTitleEnchantStone" /></_title_6>
+      
+      <include src="NorthernUI\fragments\main\base.xml" />
+      <_headerEnabled>&true;</_headerEnabled>
+      <_headerText>
+         <copy src="RepairMenu" trait="user0" />
+         <copy src="me()"       trait="_title_" />
+      </_headerText>
+      <_isMainMenu>&false;</_isMainMenu>
+      
+      <rect name="content">
+         <locus>&true;</locus>
+         <x>0</x>
+         <y>
+            <copy src="sibling()" trait="y" />
+            <add  src="sibling()" trait="height" />
+         </y>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub>
+               <copy src="rep_scroll_bar" trait="width" />
+               <add> <!-- scrollbar margin; also acts as list padding-right -->
+                  <copy src="parent()" trait="_scrollbarMargin" />
+                  <mult>2</mult>
+               </add>
+               <onlyif src="rep_scroll_bar" trait="visible" />
+            </sub>
+         </width>
+         <height> <!-- don't overlap with bottom bar -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="y" />
+         </height>
+         
+         <_outerwidth><copy src="parent()" trait="width" /></_outerwidth> <!-- used by anchored header borders -->
+         <_innerwidth><copy src="me()"     trait="width" /></_innerwidth>
+         
+         <rect name="header"> <!-- column headers -->
+            <locus>&true;</locus>
+            <x>0</x>
+            <y>0</y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="child(title)" trait="height" />
+               <add>6</add>
+            </height>
+            
+            <_innerX>    <copy src="parent()" trait="x" />          </_innerX>
+            <_outerwidth><copy src="parent()" trait="_outerwidth" /></_outerwidth> <!-- used by anchored header borders -->
+            <_innerwidth><copy src="parent()" trait="_innerwidth" /></_innerwidth>
+            
+            <image name="border_bottom">
+               <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
+               <tile>&true;</tile>
+               <width> <copy src="parent()" trait="_outerwidth"/></width>
+               <height><copy src="me()"     trait="fileheight"/></width>
+               <x>
+                  <copy src="parent()" trait="_innerX" />
+                  <mult>-1</mult>
+               </x>
+               <y> <!-- align with bottom of parent -->
+                  <copy src="parent()" trait="height"/>
+                  <sub  src="me()"     trait="height"/>
+               </y>
+            </image>
+            
+            <_title_0>RepairMenu</_title_0>
+            <_title_1><copy src="strings()" trait="_repair"/></_title_1>
+            <_title_2><copy src="strings()" trait="_repair"/></_title_2>
+            <_title_3><copy src="strings()" trait="_ingredients"/></_title_3>
+            <_title_4><copy src="xxnStrings()" trait="_repairMenuColEnchantTarget" /></_title_4>
+            <_title_5><copy src="xxnStrings()" trait="_repairMenuColEnchantGem" /></_title_5>
+            <_title_6><copy src="strings()" trait="_stones"/></_title_6>
+            
+            <text name="title">
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <string>
+                  <copy src="RepairMenu" trait="user0" />
+                  <copy src="parent()"   trait="_title_" />
+               </string>
+               <justify>&left;</justify>
+               <x>
+                  <copy src="RepairMenu" trait="_itemIconSize" />
+                  <add> 5</add> <!-- item icon x-offset in template -->
+                  <add>11</add> <!-- spacing between item icon and name in template -->
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+                  <div>2</div>
+               </y>
+               <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+            </text>
+            <text name="cost">
+               <visible>
+                  <copy src="RepairMenu" trait="user0" /><eq>2</eq> <!-- merchant-repair mode -->
+               </visible>
+               
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <string><copy src="xxnStrings()" trait="_labelCost" /></string>
+               <justify>&center;</justify>
+               <x> <!-- next column from right -->
+                  <copy src="parent()"   trait="width" />
+                  <sub  src="RepairMenu" trait="_itemInfoColumnWidth" />
+                  <sub> <!-- center -->
+                     <copy src="RepairMenu" trait="_itemInfoColumnWidth" />
+                     <div>2</div>
+                  </sub>
+               </x>
+               <y><copy src="sibling()" trait="y" /></y>
+               <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+            </text>
+            <text name="condition">
+               <visible>
+                  <copy src="RepairMenu" trait="user0" /><neq>3</neq> <!-- Alchemy Select -->
+                  <and>
+                     <copy src="RepairMenu" trait="user0" /><neq>5</neq> <!-- Soulgem Select -->
+                  </and>
+               </visible>
+               
+               <include src="NorthernUI\fonts\normal-shadowed.xml" />
+               <string><copy src="xxnStrings()" trait="_labelConditionAbbr" /></string>
+               <justify>&center;</justify>
+               <x> <!-- rightmost column -->
+                  <copy src="parent()" trait="width" />
+                  <sub> <!-- center -->
+                     <copy src="RepairMenu" trait="_itemInfoColumnWidth" />
+                     <div>2</div>
+                  </sub>
+               </x>
+               <y><copy src="sibling()" trait="y" /></y>
+               <red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+            </text>
+         </rect>
+         <rect name="rep_list_window">
+            <locus>&true;</locus>
+            <clipwindow>&true;</clipwindow>
+            <x>0</x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add  src="parent()"  trait="_paddingY" />
+            </y>
+            <width><copy src="parent()" trait="width" /></width>
+            <height>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="y" />
+               <sub>
+                  <copy src="parent()" trait="_paddingY" />
+                  <mult>2</mult>
+               </sub>
+            </height>
+            
+            <rect name="rep_list_pane">
+               <locus>&true;</locus>
+               <x>0</x>
+               <y> <!-- handle panel scrolling -->
+                  <copy src="rep_scroll_bar" trait="user7"/>
+                  <mult src="RepairMenu"     trait="_listRowHeight" />
+                  <mult>-1</mult>
+               </y>
+               <width>
+                  <copy src="parent()" trait="width" />
+                  <sub  src="me()"     trait="x" />
+               </width>
+               <height><copy src="parent()" trait="height" /></height>
+               
+               <rect name="rep_list_contents">
+                  <id>8</id>
+                  <width><copy src="parent()" trait="width"/></width>
+                  <height>
+                     <copy src="me()"       trait="childcount"/>
+                     <mult src="RepairMenu" trait="_listRowHeight" />
+                  </height>
+                  <x>0</x><y>0</y>
+                  
+                  <!-- code created template items are inserted here -->
+                     
+                  <!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+                     an input command, they defer to their parent. The following directions are for those times. -->
+                  <target>&false;</target>
+                  <xdefault>&true;</xdefault>
+                  <xlist>&xlist;</xlist>
+                  <!--xup>&last;</xup>
+                  <xdown>&first;</xdown-->
+                  <xscroll><ref src="rep_scroll_bar" trait="user5" /></xscroll>
+               </rect>
+            </rect>
+         </rect>
+      </rect>
+		<rect name="scrollbar_wrapper">
+         <include src="NorthernUI\scrollbars\wrapper.xml" />
+         <user0>&false;</user0> <!-- is horizontal? -->
+         <x> <!-- 8px from right edge -->
+            <copy src="parent()" trait="width"/>
+            <sub  src="me()"     trait="width"/>
+            <sub  src="parent()" trait="_scrollbarMargin" />
+         </x>
+         <y> <!-- align with rep_list_window -->
+            <copy src="sibling(content)" trait="y"/>
+            <add  src="rep_list_window"  trait="y"/>
+         </y>
+         <height><copy src="rep_list_window" trait="height"/></height>
+         
+         <rect name="rep_scroll_bar">
+            <include src="vertical_scroll.xml" />
+            <include src="NorthernUI\scrollbars\wrapped_v.xml" />
+            <id>5</id>
+            <depth>0</depth>
+         
+            <user1>0</user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+            <!--
+               User2 should be the maximum value that can be scrolled to -- generally, the 
+               number of items in the list minus the number of items visible at any one 
+               time. If your list has 8 items and you can see 2 at any one time, then user2 
+               should be 6.
+               
+               If you're allowing items to be partially scrolled into view, then you also 
+               need to add 1 to this value if-and-only-if the list is tall enough to fit a 
+               non-integer number of items. Ergo, for a dynamically-sized list pane, you 
+               want:
+               
+               (item count) - floor(list height / row height) + ((list height % row height) ? 1 : 0)
+            -->
+            <user2>
+               <copy src="rep_list_contents" trait="user0" />	<!-- list's visible element count -->
+               <sub>
+                  <copy src="rep_list_window" trait="height" />
+                  <div  src="RepairMenu" trait="_listRowHeight" />
+                  <floor>0</floor>
+               </sub>
+               <add>
+                  <copy>1</copy>
+                  <onlyif>
+                     <copy src="rep_list_window" trait="height" />
+                     <mod  src="RepairMenu" trait="_listRowHeight" />
+                     <neq>0</neq>
+                  </onlyif>
+               </add>
+            </user2>
+            
+            <user3>1</user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+            <user4>
+               <copy src="rep_list_window" trait="user8" />
+               <sub>1</sub>
+            </user4>				<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+            <user5>0</user5>		<!-- The starting position of the scroll bar (set this only once) -->
+            <user6>6</user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+            <!-- user7 = current value -->
+            
+            <!--
+               User8 should be the number of items visible at any one time. Though your clip-
+               window will hide any items scrolled out of view, the executable also prefers 
+               to manually set visibility on individual items based on this value. As such, 
+               if you want items that are partially scrolled out of view to be visible, you 
+               need to set this to ceil(pane height / row height).
+            -->
+            <user8> <!-- How many items are visible at once -->
+               <copy src="rep_list_window" trait="height" />
+               <div  src="RepairMenu" trait="_listRowHeight" />
+               <ceil>0</ceil>
+            </user8>
+            
+            <user9>0</user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+            <user10>0</user10>	<!-- reserved -->
+         </rect>
+      </rect>
+   </rect>
+   <rect name="rep_bottom_bar">
+		<include src="NorthernUI\bottom_bar.xml"/>
+      
+      <_labelValueSpacing>4</_labelValueSpacing>
+      <_entrySpacing>24</_entrySpacing>
+      
+      <rect name="controls">
+         <locus>&true;</locus>
+         <x>
+            <copy src="screen()"     trait="cropx" />
+            <add  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <rect name="button_repair_all">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>279</_dxScanCode>
+            <id>16</id>
+            <clicksound>2</clicksound>
+            <x>0</x>
+            <y>0</y>
+            
+            <user1>&false;</user1> <!-- enable state -->
+            <user3>&false;</user3> <!-- visible -->
+            
+            <visible><copy src="me()" trait="user3" /></visible>
+            <target> <copy src="me()" trait="user1" /></target>
+            
+            <string><copy src="strings()" trait="_repairall"/></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>0</listindex>
+            <xright>&next;</xright>
+            <xup><ref src="rep_list_pane" trait="mouseover" /> </xup>
+         </rect>
+         <image name="button_remove">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>278</_dxScanCode>
+            <id>15</id>
+            <visible>&false;</visible>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()" trait="width" />
+                  <add    src="rep_bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_remove"/></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>1</listindex>
+            <xup><ref src="rep_list_pane" trait="mouseover" /></xup>
+            <xleft> &prev;</xleft>
+            <xright>&next;</xright>
+         </image>
+         <rect name="button_close">
+            <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
+            <_dxScanCode>277</_dxScanCode>
+            <id>2</id>
+            <x> <!-- to right of previous; spacing 8px -->
+               <copy src="sibling()" trait="x" />
+               <add>
+                  <copy   src="sibling()" trait="width" />
+                  <add    src="rep_bottom_bar" trait="_entrySpacing" />
+                  <onlyif src="sibling()" trait="visible" />
+               </add>
+            </x>
+            <y>0</y>
+            <string><copy src="strings()" trait="_exit"/></string>
+            <_useHoverBehavior>&true;</_useHoverBehavior>
+            <_paddingX>16</_paddingX>
+            <_paddingY> 8</_paddingY>
+            
+            <listindex>2</listindex>
+            <xleft>&prev;</xleft>
+            <xup><ref src="rep_list_pane" trait="mouseover" /></xup>
+         </rect>
+      </rect>
+      <rect name="right_side_info">
+         <locus>&true;</locus>
+         <width> <!-- combined width of all children -->
+            <copy src="child(supply_count)" trait="x" />
+            <add  src="child(supply_count)" trait="width" />
+         </width>
+         <height> <!-- expected child height -->
+            <copy src="child(supply_count)" trait="y" />
+            <add  src="child(supply_count)" trait="height" />
+         </height>
+         <x> <!-- align on right -->
+            <copy src="parent()"     trait="width" />
+            <sub  src="me()"         trait="width" />
+            <sub  src="screen()"     trait="cropx" />
+            <sub  src="northernui()" trait="_xxnBottomBarPadX" />
+         </x>
+         <y> <!-- center within parent -->
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         
+         <rect name="supply_count">
+            <id>3</id>
+            <user0>0</user0> <!-- count -->
+            
+            <_label_1><copy src="xxnStrings()" trait="_repairHammers" /></_label_1>
+            <_label_2><copy src="xxnStrings()" trait="_gold" /></_label_2>
+            
+            <x>0</x>
+            <y>0</y>
+            <include src="NorthernUI\bottom_bar_field.xml"/>
+            <_label>
+               <copy src="RepairMenu" trait="user0"/>
+               <copy src="me()"       trait="_label_"/>
+            </_label>
+            <_value><copy src="me()" trait="user0"/></_value>
+            <_maximum>-1</_maximum>
+            
+            <!-- Show only in repair mode: -->
+            <visible><copy src="RepairMenu" trait="user0" /><lte>2</lte></visible>
+         </rect>
+      </rect>
+   </rect>
+	
+	<template name="rep_item_template">
+		<rect name="rep_item">
+			<clips>&true;</clips>
+			<locus>&true;</locus>
+			<visible><copy src="me()" trait="user8" /></visible>
+			<listclip>
+				<copy src="me()" trait="listindex"/>
+				<gte>
+					<copy src="rep_scroll_bar" trait="user7"/>
+					<add  src="rep_scroll_bar" trait="user8"/>
+				</gte>
+				<or>
+					<copy src="me()" trait="listindex"/>
+					<lt   src="rep_scroll_bar" trait="user7"/>
+				</or>
+			</listclip>
+			<target>&true;</target>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<depth>1</depth>
+			<alpha>0</alpha>
+			<width><copy src="parent()" trait="width" /></width>
+			<height><copy src="RepairMenu" trait="_listRowHeight" /></height>
+			
+			<listindex> 0 </listindex>
+			<user0> &false; </user0> <!-- true if enchanted item and user skill level is too low to repair -->
+			<user1> Item Name </user1>
+			<user5> Fourth Value </user5>
+			<user6> icon/pathname.dds </user6>
+			<user7> 1M </user7>
+			<user8> &true; </user8>
+			<user9> type </user9>
+			<user10> &false; </user10>
+			<user11> 0 </user11>
+			<user12> &false; </user12> <!-- true if should be greyed out for alchemy select -->
+			<user14> &true; </user14>
+						
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+				it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>10</xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="rep_scroll_bar" trait="user8"/>
+					<div> 2</div>
+					<ceil>0</ceil>
+				</sub>
+				<add>1</add>
+			</xscroll>
+         
+         <_disallowed>
+            <copy src="parent()" trait="user0" /> <!-- item enchanted or player too unskilled to repair -->
+            <or   src="parent()" trait="user12" /> <!-- alchemy: disallow selection -->
+         </_disallowed>
+         <_fontColor>
+            <copy>255</copy>
+            <onlyifnot src="me()" trait="_disallowed" />
+            <max>
+               <copy>128</copy>
+               <onlyif src="me()" trait="_disallowed" />
+            </max>
+         </_fontColor>
+			
+         <image name="inv_equipped_marker">
+				<visible>
+               <!-- Is Not Y-Axis-Clipped: -->
+               <copy src="parent()"        trait="y" />
+               <add  src="rep_list_pane"   trait="y" /> <!-- negative offset from scrolling -->
+               <add  src="parent()"        trait="height" />
+               <lt   src="rep_list_window" trait="height" />
+               <and> <!-- isn't above the window top edge -->
+                  <copy src="parent()"       trait="y" />
+                  <add  src="rep_list_pane" trait="y" />
+                  <gte>0</gte>
+               </and>
+               <!-- /Is Not Y-Axis-Clipped -->
+               <and  src="parent()" trait="user10" /> <!-- is equipped -->
+            </visible>
+				<depth>2</depth>
+            <zoom>33</zoom>
+				<filename>Menus\NorthernUI\Shared\hd_selection_indicator.dds</filename>
+				<alpha>192</alpha>
+				<width> <copy src="me()" trait="filewidth" /></width>
+				<height><copy src="me()" trait="fileheight" /></height>
+				<x>-40</x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+			</image>
+			<image name="rep_item_icon">
+            <zoom><copy src="menu()" trait="_itemIconZoom" /></zoom>
+				<clips>&true;</clips>
+            <locus>&true;</locus>
+				<depth>3</depth>
+				<filename><copy src="parent()" trait="user6" /></filename>
+				<width> <copy src="menu()" trait="_itemIconSize" /></width>
+				<height><copy src="menu()" trait="_itemIconSize" /></height>
+				<x>5</x>
+				<y>7</y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <user7>     <copy src="parent()" trait="user7" /></user7>
+            <_fontColor><copy src="parent()" trait="_fontColor" /></_fontColor>
+            
+            <text name="rep_item_count">
+               <clips>&true;</clips>
+               <depth>5</depth>
+               <justify>&right;</justify>
+               <include src="NorthernUI\fonts\small.xml" />
+               <red>  <copy src="parent()" trait="_fontColor" /></red>
+               <green><copy src="parent()" trait="_fontColor" /></green>
+               <blue> <copy src="parent()" trait="_fontColor" /></blue>
+               <alpha>255</alpha>
+               <wrapwidth>55</wrapwidth>
+               <wraplines> 1</wraplines>
+               <string><copy src="parent()" trait="user7" /></string>
+               <x>
+                  <copy src="parent()" trait="width" />
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+               </y>
+            </text>
+			</image>
+			<text name="rep_item_name">
+				<clips>&true;</clips>
+				<depth>3</depth>
+				<justify>&left;</justify>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <red>  <copy src="parent()" trait="_fontColor" /></red>
+            <green><copy src="parent()" trait="_fontColor" /></green>
+            <blue> <copy src="parent()" trait="_fontColor" /></blue>
+				<alpha>255</alpha>
+				<wrapwidth>280</wrapwidth>
+				<wraplines>  2</wraplines>
+				<string><copy src="parent()" trait="user1" /></string>
+            <x> <!-- 11px after sibling -->
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add>11</add>
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+					<div>2</div>
+				</y>
+			</text>
+			<text name="rep_item_health">
+				<clips>&true;</clips>
+				<depth>3</depth>
+				<justify>&center;</justify>
+            <include src="NorthernUI\fonts\normal.xml" />
+            <red>  <copy src="parent()" trait="_fontColor" /></red>
+            <green><copy src="parent()" trait="_fontColor" /></green>
+            <blue> <copy src="parent()" trait="_fontColor" /></blue>
+				<alpha>255</alpha>
+				<wrapwidth><copy src="RepairMenu" trait="_itemInfoColumnWidth" /></wrapwidth>
+				<string><copy src="parent()" trait="user5" /></string>
+				<x>
+               <copy src="parent()"   trait="width" />
+               <sub> <!-- center within column -->
+                  <copy src="RepairMenu" trait="_itemInfoColumnWidth" />
+                  <div>2</div>
+               </sub>
+				</x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+					<div>2</div>
+				</y>
+			</text>
+		</rect>
+	</template>
+	<template name="rep_buy_item_template">
+		<rect name="rep_item">
+			<clips>&true;</clips>
+			<locus>&true;</locus>
+			<target>&true;</target>
+			<visible><copy src="me()" trait="user8" /></visible>
+			<listclip>
+				<copy src="me()" trait="listindex"/>
+				<gte>
+					<copy src="rep_scroll_bar" trait="user7"/>
+					<add src="rep_scroll_bar" trait="user8"/>
+				</gte>
+				<or>
+					<copy src="me()" trait="listindex"/>
+					<lt src="rep_scroll_bar" trait="user7"/>
+				</or>
+			</listclip>
+			<clips>&true;</clips>
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<depth> 1 </depth>
+			<alpha> 0 </alpha>
+			<width><copy src="parent()" trait="width" /></width>
+			<height><copy src="RepairMenu" trait="_listRowHeight" /></height>
+			
+			<listindex> 0 </listindex>
+			<user1> Item Name </user1>
+			<user5> Fourth Value </user5>
+			<user6> icon/pathname.dds </user6>
+			<user7> 1M </user7>
+			<user8> &true; </user8>
+			<user9> type </user9>
+			<user10> &false; </user10>
+			<user11> 0 </user11>
+			<user14> &true; </user14>
+						
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+				it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault>&false;</xdefault>
+			<xlist>&xitem;</xlist>
+			<xup>  &prev;</xup>
+			<xdown>&next;</xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="rep_scroll_bar" trait="user8"/>
+					<div> 2</div>
+					<ceil>0</ceil>
+				</sub>
+			</xscroll>
+			
+         <!-- Preserve value for use by children: -->
+         <_computedEquipOffset><copy src="parent()" trait="_computedEquipOffset" /></_computedEquipOffset>
+         
+         <image name="inv_equipped_marker">
+				<visible>
+               <!-- Is Not Y-Axis-Clipped: -->
+               <copy src="parent()"        trait="y" />
+               <add  src="rep_list_pane"   trait="y" /> <!-- negative offset from scrolling -->
+               <add  src="parent()"        trait="height" />
+               <lt   src="rep_list_window" trait="height" />
+               <and> <!-- isn't above the window top edge -->
+                  <copy src="parent()"       trait="y" />
+                  <add  src="rep_list_pane" trait="y" />
+                  <gte>0</gte>
+               </and>
+               <!-- /Is Not Y-Axis-Clipped -->
+               <and  src="parent()" trait="user10" /> <!-- is equipped -->
+            </visible>
+				<depth>2</depth>
+            <zoom>33</zoom>
+				<filename>Menus\NorthernUI\Shared\hd_selection_indicator.dds</filename>
+				<alpha>192</alpha>
+				<width> <copy src="me()" trait="filewidth" /></width>
+				<height><copy src="me()" trait="fileheight" /></height>
+				<x>-40</x>
+				<y>
+               <copy src="parent()" trait="height" />
+               <sub  src="me()"     trait="height" />
+               <div>2</div>
+            </y>
+			</image>
+			<image name="rep_item_icon">
+            <zoom><copy src="menu()" trait="_itemIconZoom" /></zoom>
+				<clips>&true;</clips>
+            <locus>&true;</locus>
+				<depth>3</depth>
+				<filename><copy src="parent()" trait="user6" /></filename>
+				<width> <copy src="menu()" trait="_itemIconSize" /></width>
+				<height><copy src="menu()" trait="_itemIconSize" /></height>
+				<x>5</x>
+				<y>7</y>
+            
+            <!-- Copy values from parent for use by children. -->
+            <user7> <copy src="parent()" trait="user7" /></user7>
+            
+            <text name="rep_item_count">
+               <clips>&true;</clips>
+               <depth>5</depth>
+               <justify>&right;</justify>
+               <include src="NorthernUI\fonts\small.xml" />
+               <red>255</red><green>255</green><blue>255</blue>
+               <alpha>255</alpha>
+               <wrapwidth>55</wrapwidth>
+               <wraplines> 1</wraplines>
+               <string><copy src="parent()" trait="user7" /></string>
+               <x>
+                  <copy src="parent()" trait="width" />
+               </x>
+               <y>
+                  <copy src="parent()" trait="height" />
+                  <sub  src="me()"     trait="height" />
+               </y>
+            </text>
+			</image>
+			<text name="rep_item_name">
+				<clips>&true;</clips>
+				<depth>3</depth>
+				<justify>&left;</justify>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<red>255</red><green>255</green><blue>255</blue>
+				<alpha>255</alpha>
+				<wrapwidth>280</wrapwidth>
+				<wraplines>  2</wraplines>
+				<string><copy src="parent()" trait="user1" /></string>
+            <x> <!-- 11px after sibling -->
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add>11</add>
+            </x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+					<div>2</div>
+				</y>
+			</text>
+			<text name="rep_item_cost">
+				<clips>&true;</clips>
+				<depth>3</depth>
+				<justify>&center;</justify>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<red>255</red><green>255</green><blue>255</blue>
+				<alpha>255</alpha>
+				<wrapwidth><copy src="RepairMenu" trait="_itemInfoColumnWidth" /></wrapwidth>
+				<string><copy src="parent()" trait="user2" /></string>
+				<x>
+               <copy src="parent()"   trait="width" />
+               <sub  src="RepairMenu" trait="_itemInfoColumnWidth" />
+               <sub> <!-- center within column -->
+                  <copy src="RepairMenu" trait="_itemInfoColumnWidth" />
+                  <div>2</div>
+               </sub>
+				</x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+					<div>2</div>
+				</y>
+			</text>
+			<text name="rep_item_health">
+				<clips>&true;</clips>
+				<depth>3</depth>
+				<justify>&center;</justify>
+            <include src="NorthernUI\fonts\normal.xml" />
+				<red>255</red><green>255</green><blue>255</blue>
+				<alpha>255</alpha>
+				<wrapwidth><copy src="RepairMenu" trait="_itemInfoColumnWidth" /></wrapwidth>
+				<string><copy src="parent()" trait="user5" /></string>
+				<x>
+               <copy src="parent()"   trait="width" />
+               <sub> <!-- center within column -->
+                  <copy src="RepairMenu" trait="_itemInfoColumnWidth" />
+                  <div>2</div>
+               </sub>
+				</x>
+				<y> <!-- center within parent -->
+					<copy src="parent()" trait="height" />
+					<sub  src="me()" trait="height" />
+					<div>2</div>
+				</y>
+			</text>
+		</rect>
+	</template>
+
+	<!-- BUTTONS =====================================================================-->
+	<image name="rep_button_filter">
+<include src="button_long.xml"/>
+		<id> 17 </id>
+		<depth>
+			<copy src="rep_button_remove" trait="depth"/>
+		</depth>
+		<x>
+			<copy src="rep_button_exit" trait="x"/>
+			<sub>200</sub>
+		</x>
+		<y> <copy src="rep_button_exit" trait="y"/> </y>
+		<user0> <copy src="strings()" trait="_repairall"/> </user0>
+
+		<user3> &false; </user3>		<!-- used by prefab - visible -->
+		
+		<user20> &xbuttony; </user20>
+		<xdefault> &xboxhint; </xdefault>
+	</image>
+</menu>

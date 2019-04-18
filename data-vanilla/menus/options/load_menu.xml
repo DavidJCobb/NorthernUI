@@ -1,0 +1,407 @@
+<!-- load_menu.xml -->
+<menu name="LoadMenu">
+	<class> &LoadMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<explorefade> 0.25 </explorefade>
+	<locus> &true; </locus>
+	<menufade> 0.25 </menufade>
+	<_item_height> 82 </_item_height> <!-- height in pixels that a save game item text is -->
+			
+	<xbuttonb> <ref src="load_return_button" trait="clicked"/> </xbuttonb>
+
+	<rect name="save_FocusBox">
+<include src="focus_box.xml" />
+		<id> 2 </id>
+		<visible> &false; </visible>
+		<user15>
+			<copy src="parent()" trait="depth" />
+			<add> 0.5 </add>
+		</user15>
+	</rect>
+	
+	
+	<rect name="load_background">
+<include src="generic_background.xml" />
+		<target> &true; </target>
+		<filename> Menus\Level_up\level_up_background.dds </filename>
+		<depth> 1 </depth>
+		<user0>1020</user0>
+		<user1> 614 </user1>
+		<x>
+			<copy src="screen()" trait="width" />
+			<div> 2 </div>
+			<sub>
+				<copy src="load_background" trait="width" />
+				<div> 2 </div>
+			</sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<div> 2 </div>
+			<sub>
+				<copy src="load_background" trait="height" />
+				<div> 2 </div>
+			</sub>
+		</y>
+		<locus> &true; </locus>
+		
+		<text name="load_instructions">
+			<depth>12</depth>
+			<font>3</font>
+			<visible>
+            <not>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </not>
+         </visible>
+			<string> <copy src="strings()" trait="_loadmenuinstructions"/> </string>
+			<justify>&center;</justify>
+			<x> <copy src="parent()" trait="width"/> <div>2</div> </x>
+			<y> 10 </y>
+			<alpha>255</alpha>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+		</text>
+
+		<image name="load_lines">
+			<filename> Menus\Loading\loading_save_lines.dds </filename>
+			<depth> 4 </depth>
+			<width> 420 </width>
+			<height> 600 </height>
+			<!--cropy> 100</cropy-->
+			<zoom>124</zoom>
+			<x>
+				<copy src="LoadMenu" trait="x" />
+			</x>
+			<y>	 18 </y>
+		</image>
+		
+		<rect name="load_list">
+			<id> 5 </id>
+			<clipwindow> &true; </clipwindow>
+			<depth> 8 </depth>
+			<locus> &true; </locus>
+			<height>
+				<copy src="LoadMenu" trait="_item_height" />
+				<mul> 6 </mul>
+			</height>
+			<width>
+				<copy src="load_lines" trait="width" />
+			</width>
+			<x> 20 </x>
+			<y> 58 </y>
+			
+			<image name="load_scroll_bar">
+				<include src="vertical_scroll.xml" />
+				<id> 3 </id>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub>
+						<copy src="me()" trait="width" />
+						<div> 2 </div>
+					</sub>
+					<add> 10 </add>
+				</x>
+				<y> 20 </y>
+				<height>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="y"/>
+				</height>
+				<depth>20 </depth>
+				<target> &true; </target>
+				<user1> 0 </user1> <!-- Minimum value that can be scrolled to (should usually be zero) -->
+				<user2>
+					<copy src="load_list_pane" trait="child_count" />
+					<sub src="me()" trait="user8" />
+				</user2> <!-- Maximum value that can be scrolled to (should be the number of
+											 items minus the number of items visible.  i.e. if your list has
+											 8 items and you can see 2 at any one time, this should be 6 -->
+				<user3> 1 </user3> <!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+				<user4> 5 </user4> <!-- When the scroll bar is clicked on, this is how many items it will advance -->
+				<user5> 0 </user5> <!-- The starting position of the scroll bar (set this only once) -->
+				<user6> 4 </user6> <!-- A unique ID so that the scroll marker can be dragged around -->
+				<!-- user7 = the current scroll value - DO NOT SET -->
+				<user8> 6 </user8> <!-- How many items are visible at once -->
+				<user9> 0 </user9> <!-- Manual step value (multiplied by step distance and added to scroll value -->
+			</image>
+			
+			<rect name="load_list_pane">
+				<id> 9 </id>
+				<locus> &true; </locus>
+				<width>
+					<copy src="parent()" trait="width" />
+				</width>
+				<height>
+					<copy src="me()" trait="childcount" />
+					<mul>
+						<copy src="LoadMenu" trait="_item_height" />
+					</mul>
+				</height>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub src="load_scroll_bar" trait="user7" /> <!-- user7 = current value -->
+					<mul>
+						<copy src="LoadMenu" trait="_item_height" />
+					</mul>
+				</y>
+				<clips> &true; </clips>
+				
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+				     an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &true; </xdefault>
+				<xlist> &xlist; </xlist>
+				<!--xup> &last; </xup>
+				<xdown> &first; </xdown-->
+				<xleft> <ref src="load_return_button" trait="mouseover"/> </xleft>
+				<xright> <ref src="load_return_button" trait="mouseover"/> </xright>
+				<xscroll> <ref src="load_scroll_bar" trait="user5" /> </xscroll>
+			</rect>
+		</rect>
+		
+		<image name="load_center_line">
+			<filename> Menus\Loading\loading_save_center_fold.dds </filename>
+			<depth> 9</depth>
+			<width> 70 </width>
+			<height>
+				<copy src="parent()" trait="height" />
+			</height>
+			<!--cropy> 100</cropy-->
+			<zoom>124</zoom>
+			<x>
+				<copy src="parent()" trait="width" />
+				<div> 2 </div>
+				<sub>
+					<copy src="me()" trait="width" />
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>	 0 </y>
+		</image>
+		
+		<image name="load_Picture_background">
+			<id> 6 </id>
+			<filename> Menus\Loading\loading_save_wide_frame.dds </filename>
+			<depth> 10</depth>
+			<width> 458 </width>
+			<height> 262 </height>
+			<!--cropy> 100</cropy-->
+			<zoom>116</zoom>
+			<x>
+				<copy src="parent()" trait="width" />
+				<div> 2 </div>
+				<add> 30 </add>
+			</x>
+			<y>	 64 </y>
+			<locus> &true; </locus>
+		</image>
+		
+		<image name="load_Picture">
+			<id> 6 </id>
+			<filename> Menus\Shared\shared_empty_large.dds </filename>
+			<depth> 11</depth>
+			<width>
+				<copy src="me()" trait="filewidth"/>
+			</width>
+			<height>
+				<copy src="load_Picture_background" trait="height"/>
+				<sub> 10 </sub>
+			</height>
+			<cropy>
+				<copy> 0 </copy>
+				<sub>
+					<copy src="load_Picture_background" trait="height"/>
+					<sub>
+						<copy src="me()" trait="user0"/>
+						<div> 256 </div>
+						<mul src="load_Picture_background" trait="height"/>
+						<mul> 1.8 </mul>
+					</sub>
+					<div> 2 </div>
+				</sub>
+				<max> 0 </max>
+			</cropy>
+			<zoom> 176 </zoom>
+			<x>
+				<copy src="load_Picture_background" trait="x"/>
+				<add> 4 </add>
+			</x>
+			<y>
+				<copy src="load_Picture_background" trait="y"/>
+				<add> 5 </add>
+			</y>
+			<locus> &true; </locus>
+			<user0> 0 </user0>	<!-- height of active pixels in image - set by code -->
+		</image>
+		
+		<text name="load_Text">
+			<id> 7 </id>
+			<depth> 5 </depth>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<font>1</font>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 600 </sub>
+			</wrapwidth>
+			<x>
+				<copy src="load_Picture_background" trait="x" />
+			</x>
+			<y>
+				<copy src="load_Picture_background" trait="y" />
+				<add>
+					<copy src="load_Picture_background" trait="height" />
+				</add>
+				<add> 20 </add>
+			</y>
+		</text>
+		
+		<image name="load_delete_icon">
+			<visible>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </visible>
+			<depth>3</depth>
+			<filename> Menus\Icons\icon_xbox_x_large.dds </filename>
+			<x> 618 </x>
+			<y>
+				<copy src="load_delete_text" trait="y"/>
+				<add>
+					<copy src="load_delete_text" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</add>
+			</y>
+			<height>64</height>
+			<width>64</width>
+		</image>
+
+		<text name="load_delete_text">
+			<visible>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </visible>
+			<string> <copy src="strings()" trait="_delete"/> </string>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 255 </alpha>
+			<depth> 3 </depth>
+			<x>
+				<copy src="load_delete_icon" trait="x"/>
+				<add src="load_delete_icon" trait="width"/>
+			</x>
+			<y>
+				<!--copy src="load_delete_icon" trait="y"/>
+				<add>
+					<copy src="load_delete_icon" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</add-->
+				<copy src="load_return_button" trait="y"/>
+			</y>
+		</text>
+
+		<image name="load_return_button">
+<include src="button_long.xml"/>
+			<id> 1 </id>
+			<user0> <copy src="strings()" trait="_return"/> </user0>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<sub> 30 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<div> 2 </div>
+				<add> 270 </add>
+			</y>
+			<depth> 4 </depth>
+			<clicksound> 2 </clicksound>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xup> <ref src="load_list_pane" trait="mouseover"/> </xup>
+			<xdown> <ref src="load_list_pane" trait="mouseover"/> </xdown>
+			<xleft> <ref src="load_list_pane" trait="mouseover"/> </xleft>
+			<xright> <ref src="load_list_pane" trait="mouseover"/> </xright>
+		</image>
+		
+	</rect>			<!-- END GENERIC BACKGROUND DEFINITION -->
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<template name="load_game_template">
+		<rect name="LOADS">
+			<alpha> 0 </alpha>
+			<focusinset> 8 </focusinset>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="user0" />
+				<mult src="me()" trait="height" />
+			</y>
+			<height>
+				<copy src="LoadMenu" trait="_item_height" />
+			</height>
+			<width>
+				<copy src="parent()" trait="width" />
+				<sub> 15 </sub>
+			</width>
+			<clips> &true; </clips>
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			<user0> 0 </user0> <!-- list position index -->
+			<user1> Save Game Image File Name</user1>
+			<user2> Save Game Name</user2>
+			<user3> SaveGameName </user3> <!-- save form id -->
+			<user10> &false; </user10>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="user0" />
+				<sub>
+					<copy src="load_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<text name="save_game_name">
+				<depth> 1 </depth>
+				<string>
+					<copy src="parent()" trait="user3" />
+				</string>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 380 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 6 </x>
+				<y> 10 </y>
+			</text>
+		</rect>
+	</template>
+</menu>

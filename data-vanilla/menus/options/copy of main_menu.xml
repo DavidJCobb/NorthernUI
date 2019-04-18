@@ -1,0 +1,339 @@
+<menu name="MainMenu">
+	<class> MainMenu </class>
+	<stackingtype> no_click_past </stackingtype>
+	<visible> true </visible>
+	<alpha>	0 </alpha>
+	<depth> 510 </depth>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> true </locus>
+	<user0> 1 </user0>
+	<user1> 600 </user1>
+	<explorefade> 0.25 </explorefade>
+
+	<image name="backdrop">
+		<id> 8 </id>
+		<filename> Menus\Loading\MainMenuBackdrop.dds </filename>
+		<depth> 1 </depth>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<div> 2 </div>
+			<sub src="me()" trait="_center_width"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<div> 2 </div>
+			<sub src="me()" trait="_center_height"/>
+		</y>
+		<width> 1280 </width>
+		<height> 960 </height>
+		<zoom> -1 </zoom>
+		<locus> true </locus>
+		<_center_width>
+			<copy src="me()" trait="width"/>
+			<div> 2 </div>
+		</_center_width>
+		<_center_height>
+			<copy src="me()" trait="height"/>
+			<div> 2 </div>
+		</_center_height>
+	</image>
+	
+	
+	<image name="main_background">
+		<id> 1 </id>
+		<visible> 2 </visible>
+		<target> true </target>
+		<filename> Menus\Shared\main_page_5.dds </filename>
+		<depth> 2 </depth>
+		<width> 520 </width>
+		<height> 680 </height>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="main_background" trait="width" />
+				<div> 2 </div>
+			</sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="main_background" trait="height" />
+				<div> 2 </div>
+			</sub>
+		</y>
+		<text name="display_text">
+			<id> 2 </id>
+			<target> true </target>
+			<depth> 5 </depth>
+			<string></string>
+			<justify> Left </justify>
+			<red> 120 </red>
+			<green> 34 </green>
+			<blue> 0 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 0 </x>
+			<y> 0 </y>
+		</text>
+		
+		<image name="new_button">
+			<id> 3 </id>
+			<alpha>
+				<copy> 255 </copy>
+				<onlyifnot src="me()" trait="user0"/>
+			</alpha>
+			<depth> 31 </depth>
+			<filename> Menus\Container\cont_button_long_off.dds </filename>
+			<width> 177 </width>
+			<height> 43 </height>
+			<locus> true </locus>
+			<target> true </target>
+			<x>
+				<copy src="main_background" trait="x" />
+				<add>
+					<copy src="main_background" trait="width" />
+					<div> 2 </div>
+				</add>
+				<sub> 88 </sub>
+			</x>
+			<y> 250 </y>
+			<user0> false </user0>
+			<image name="load_button_on">
+				<visible>
+					<copy src="parent()" trait="alpha" />
+					<lt> 1 </lt>
+				</visible>
+				<depth> 1 </depth>
+				<filename> Menus\Container\cont_button_long_on.dds </filename>
+				<width> 176 </width>
+				<height> 51 </height>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="load_button_text">
+				<depth> 2 </depth>
+				<string> New </string>
+				<justify> left </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub src="me()" trait="width" />
+					<div> 2 </div>
+					<sub> 2 </sub>
+				</x>
+				<y> 3 </y>
+			</text>
+		</image>
+		
+		
+		<image name="load_button">
+			<id> 4 </id>
+			<alpha>
+				<copy> 255 </copy>
+				<onlyifnot src="me()" trait="user0"/>
+			</alpha>
+			<depth> 31 </depth>
+			<filename> Menus\Container\cont_button_long_off.dds </filename>
+			<width> 177 </width>
+			<height> 43 </height>
+			<locus> true </locus>
+			<target> true </target>
+			<x>
+				<copy src="new_button" trait="x" />
+			</x>
+			<y>
+				<copy src="new_button" trait="y" />
+				<add> 70 </add>
+			</y>
+			<user0> false </user0>
+			<image name="load_button_on">
+				<visible>
+					<copy src="parent()" trait="alpha" />
+					<lt> 1 </lt>
+				</visible>
+				<depth> 1 </depth>
+				<filename> Menus\Container\cont_button_long_on.dds </filename>
+				<width> 176 </width>
+				<height> 51 </height>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="load_button_text">
+				<depth> 2 </depth>
+				<string> Load </string>
+				<justify> left </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub src="me()" trait="width" />
+					<div> 2 </div>
+					<sub> 2 </sub>
+				</x>
+				<y> 3 </y>
+			</text>
+		</image>
+		
+		<image name="options_button">
+			<id> 5 </id>
+			<alpha>
+				<copy> 255 </copy>
+				<onlyifnot src="me()" trait="user0"/>
+			</alpha>
+			<depth> 31 </depth>
+			<filename> Menus\Container\cont_button_long_off.dds </filename>
+			<width> 177 </width>
+			<height> 43 </height>
+			<locus> true </locus>
+			<target> true </target>
+			<x>
+				<copy src="new_button" trait="x" />
+			</x>
+			<y>
+				<copy src="load_button" trait="y" />
+				<add> 70 </add>
+			</y>
+			<user0> false </user0>
+			<image name="options_button_on">
+				<visible>
+					<copy src="parent()" trait="alpha" />
+					<lt> 1 </lt>
+				</visible>
+				<depth> 1 </depth>
+				<filename> Menus\Container\cont_button_long_on.dds </filename>
+				<width> 176 </width>
+				<height> 51 </height>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="options_button_text">
+				<depth> 2 </depth>
+				<string> Options </string>
+				<justify> left </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub src="me()" trait="width" />
+					<div> 2 </div>
+					<sub> 2 </sub>
+				</x>
+				<y> 3 </y>
+			</text>
+		</image>
+		
+		<image name="credits_button">
+			<id> 6 </id>
+			<alpha>
+				<copy> 255 </copy>
+				<onlyifnot src="me()" trait="user0"/>
+			</alpha>
+			<depth> 31 </depth>
+			<filename> Menus\Container\cont_button_long_off.dds </filename>
+			<width> 177 </width>
+			<height> 43 </height>
+			<locus> true </locus>
+			<target> true </target>
+			<x>
+				<copy src="new_button" trait="x" />
+			</x>
+			<y>
+				<copy src="options_button" trait="y" />
+				<add> 70 </add>
+			</y>
+			<user0> false </user0>
+			<image name="load_button_on">
+				<visible>
+					<copy src="parent()" trait="alpha" />
+					<lt> 1 </lt>
+				</visible>
+				<depth> 1 </depth>
+				<filename> Menus\Container\cont_button_long_on.dds </filename>
+				<width> 176 </width>
+				<height> 51 </height>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="load_button_text">
+				<depth> 2 </depth>
+				<string> Credits </string>
+				<justify> left </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub src="me()" trait="width" />
+					<div> 2 </div>
+					<sub> 2 </sub>
+				</x>
+				<y> 3 </y>
+			</text>
+		</image>
+
+		
+		<image name="quit_button">
+			<id>  7 </id>
+			<alpha>
+				<copy> 255 </copy>
+				<onlyifnot src="me()" trait="user0"/>
+			</alpha>
+			<depth> 31 </depth>
+			<filename> Menus\Container\cont_button_long_off.dds </filename>
+			<width> 177 </width>
+			<height> 43 </height>
+			<locus> true </locus>
+			<target> true </target>
+			<x>
+				<copy src="new_button" trait="x" />
+			</x>
+			<y>
+				<copy src="credits_button" trait="y" />
+				<add>70 </add>
+			</y>
+			<user0> false </user0>
+			<image name="quit_button_on">
+				<visible>
+					<copy src="parent()" trait="alpha" />
+					<lt> 1 </lt>
+				</visible>
+				<depth> 1 </depth>
+				<filename> Menus\Container\cont_button_long_on.dds </filename>
+				<width> 176 </width>
+				<height> 51 </height>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="quit_button_text">
+				<depth> 2 </depth>
+				<string> Quit </string>
+				<justify> left </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub src="me()" trait="width" />
+					<div> 2 </div>
+					<sub> 2 </sub>
+				</x>
+				<y> 3 </y>
+			</text>
+		</image>
+	</image>
+</menu>

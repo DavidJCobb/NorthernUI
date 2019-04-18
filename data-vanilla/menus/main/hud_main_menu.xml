@@ -1,0 +1,889 @@
+<!-- hud_main_menu.xml -->
+<menu name="HUDMainMenu">
+	<class> &HUDMainMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<depth> -50 </depth>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<user1> 2 </user1>
+	<user2> 1 </user2>
+	<user3> 1 </user3>	<!-- 1 = explore mode / 0 = menu mode -->
+	<user4> 1 </user4>	<!-- current mode... 1=stats, 2=inventory, 3=magic, 4=map -->
+	<user5> 1 </user5>	<!-- last mode... 1=stats, 2=inventory, 3=magic, 4=map -->
+	<user6> 65 </user6>	<!-- player model first zoom percentage... 100=face, 0=full body -->
+	
+	<!-- Region text -->
+	<user7> 0 </user7>	<!-- alpha -->
+	<user8> Region name text </user8>
+	
+	<rect name="player_grab_zone">
+		<id> 91 </id>
+		<target> &true; </target>
+		<alpha> 128 </alpha>
+		<x> 0 </x>
+		<y> 0 </y>
+		<width> <copy src="screen()" trait="width"/> </width>
+		<height> <copy src="screen()" trait="height"/> </height>
+	</rect>
+	
+	<rect name="magic_icons">
+		<id> 16 </id>
+		
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub>
+				<copy src="screen()" trait="cropx"/>
+				<mult>2</mult>
+			</sub>
+			<sub> 24 </sub>
+		</x>
+		<y>
+			<copy> 0 </copy>
+			<add>
+				<copy src="screen()" trait="cropx"/>
+				<mult>2</mult>
+			</add>
+			<add> 18 </add>
+		</y>
+		
+		<_icon_width>		63 </_icon_width>
+		<_icon_height>		63 </_icon_height>
+		<_buffer>			12 </_buffer>
+		<_icons_per_row>	15 </_icons_per_row>
+	</rect>
+	
+	<template name="icon_template">
+		<image name="effect_icon">
+			<locus> &true; </locus>
+			<user0></user0>		<!-- index -->
+			<user1></user1>		<!-- time left -->
+			<width>
+				<copy src="magic_icons" trait="_icon_width"/>
+			</width>
+			<height>
+				<copy src="magic_icons" trait="_icon_height"/>
+			</height>
+			<x>
+				<copy src="magic_icons" trait="x"/>							<!-- starting x pos -->
+				<sub src="magic_icons" trait="_icon_width"/>				<!-- move left by width of one icon -->
+				<sub>
+					<copy src="magic_icons" trait="_icon_width"/>
+					<add src="magic_icons" trait="_buffer"/>				<!-- move left by icon width + buffer -->
+					<mult>													<!-- how many times = index % max-per-row -->
+						<copy src="me()" trait="user0"/>
+						<mod src="magic_icons" trait="_icons_per_row"/>
+					</mult>
+				</sub>
+			</x>
+			<y>
+				<copy src="magic_icons" trait="y"/>							<!-- starting y pos -->
+				<add>
+					<copy src="me()" trait="user0"/>						<!-- index/icons_per_row gives you -->
+					<div src="magic_icons" trait="_icons_per_row"/>			<!-- row num plus a fraction -->
+					<sub>
+						<copy src="me()" trait="user0"/>					<!-- subtract the fraction -->
+						<mod src="magic_icons" trait="_icons_per_row"/>
+						<div src="magic_icons" trait="_icons_per_row"/>
+					</sub>
+					<mult>													<!-- multiply row num by num pixels -->
+						<copy src="magic_icons" trait="_icon_height"/>
+						<add src="magic_icons" trait="_buffer"/>
+					</mult>
+				</add>
+			</y>
+			<nif name="icon_timer">
+				<id> 17 </id>
+				<depth> 1 </depth>
+				<filename> Enemy Health Bar\Health_Bar01.NIF </filename>
+				<visible>
+					<copy src="parent()" trait="alpha"/>
+					<eq> 255 </eq>
+					<and>
+						<copy src="parent()" trait="user1"/>	<!-- time left < 0 for constant effects -->
+						<gte>0</gte>
+					</and>
+				</visible>
+				<x> 30 </x>
+				<y> 0 </y>
+				<animation> Health_Bar </animation>
+			</nif>
+			<!--image name="effect_icon">
+				<depth> 2 </depth>
+				<filename> <copy src="parent()" trait="filename"/> </filename>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> <copy src="parent()" trait="height"/> </height>
+				<alpha> 128 </alpha>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="temp_countdown">
+				<depth> 3 </depth>
+				<alpha>
+					<copy src="parent()" trait="alpha"/>
+					<onlyif>
+						<copy src="parent()" trait="user1"/>	<!-- time left < 0 for constant effects --><!--
+						<gte>0</gte>
+					</onlyif>
+				</alpha>
+				<red> 255 </red>
+				<green> 255 </green>
+				<blue> 255 </blue>
+				<font> 3 </font>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<div>2</div>
+				</x>
+				<y> -40 </y>
+				<_integer>
+					<copy src="parent()" trait="user1"/>
+					<ceil> 0 </ceil>
+				</_integer>
+				<string>
+					<copy src="me()" trait="_integer"/>
+				</string>
+			</text-->
+		</image>
+	</template>
+	
+	<text name="hudmain_region">
+		<x>
+			<copy src="hudmain_background" trait="x"/>
+			<add src="hudmain_statusbars" trait="x"/>
+		</x>
+		<y>
+			<copy src="hudmain_background" trait="y"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		<string>
+			<copy src="HUDMainMenu" trait="user8"/>
+		</string>
+		<alpha>
+			<copy src="HUDMainMenu" trait="user7"/>
+		</alpha>
+		<font> 2 </font>
+		<red> 254 </red>
+		<green> 244 </green>
+		<blue> 183 </blue>
+	</text>
+	
+	<image name="hudmain_background">
+		<id> 1 </id>
+		<filename> Menus\HUD\hud_back.dds </filename>
+		<depth> 55 </depth>
+		<alpha>
+			<copy src="HUDMainMenu" trait="user3"/>
+			<eq> 0 </eq>
+			<sub> 1 </sub>
+			<mul> 255 </mul>
+		</alpha>
+		<width> 620 </width>
+		<height> 70 </height>
+		<locus> &true; </locus>
+		<x>
+			<copy src="screen()" trait="cropx"/>
+			<add src="screen()" trait="cropx"/>
+			<sub> 60 </sub>
+			<max src="screen()" trait="cropx"/>
+			<add> 67 </add>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		
+		
+		<image name="hudmain_frame">
+			<id> 8 </id>
+			<filename> Menus\HUD\hud_frame.dds </filename>
+			<depth> 18 </depth>
+			<visible> <copy src="HUDMainMenu" trait="user3"/> </visible>
+			<width> 761 </width>
+			<height> 90 </height>
+			<x> -70 </x>
+			<y> -5 </y>
+			<user0> 135 </user0>
+			<locus> &true; </locus>
+			
+			<image name="hudmain_frame_left">
+				<depth> 1 </depth>
+				<visible> &xenon; </visible>
+				<filename> Menus\HUD\hud_xbox_lt.dds </filename>
+				<width> 42 </width>
+				<height> 35 </height>
+				<x> 22 </x>
+				<y> 26 </y>
+			</image>
+			
+			<image name="hudmain_frame_right">
+				<depth> 1 </depth>
+				<visible> &xenon; </visible>
+				<filename> Menus\HUD\hud_xbox_rt.dds </filename>
+				<width> 45 </width>
+				<height> 35 </height>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<sub> 25 </sub>
+				</x>
+				<y> 26 </y>
+			</image>
+		</image>
+		
+		
+		
+		<rect name="hudmain_statusbars">
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<x>0</x>
+			<y> 12 </y>
+		
+			<image name="hudmain_health_empty">
+				<filename> Menus\HUD\hud_ribbon_health_empty.dds </filename>
+				<depth> 1 </depth>
+				<width> 189 </width>
+				<height> 16 </height>
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y> 0 </y>
+					
+				<image name="hudmain_health_full">
+					<ID> 2 </ID>
+					<filename> Menus\HUD\hud_ribbon_health_full.dds </filename>
+					<visible>
+						<copy src="me()" trait="user0"/>
+						<gt> 0 </gt>
+					</visible>
+					<depth> 1 </depth>
+					<width>
+						<copy src="me()" trait="user0"/>
+						<max> 0 </max>
+						<min> 1 </min>
+						<mul> 163 </mul>
+					</width>
+					<height> 11 </height>
+					<locus> &true; </locus>
+					<x> 11 </x>
+					<y> 2 </y>
+					<user0> 1.0 </user0>
+				</image>
+				<image name="hudmain_health_edge">
+					<filename> Menus\Shared\ribbon_slider.dds </filename>
+					<visible> &true; </visible>
+					<depth> 2 </depth>
+					<width> 12 </width>
+					<height> 14 </height>
+					<x>
+						<copy src="hudmain_health_full" trait="x"/>
+						<add src="hudmain_health_full" trait="width"/>
+					</x>
+					<y> 0 </y>
+				</image>
+			</image>
+			
+			<image name="hudmain_magic_empty">
+				<filename> Menus\HUD\hud_ribbon_magic_empty.dds </filename>
+				<depth> 1 </depth>
+				<width> 189 </width>
+				<height> 16 </height>
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y> 18 </y>
+					
+				<image name="hudmain_magic_full">
+					<ID> 3 </ID>
+					<filename> Menus\HUD\hud_ribbon_magic_full.dds </filename>
+					<visible>
+						<copy src="me()" trait="user0"/>
+						<gt> 0 </gt>
+					</visible>
+					<depth> 1 </depth>
+					<width>
+						<copy src="me()" trait="user0"/>
+						<max> 0 </max>
+						<min> 1 </min>
+						<mul> 163 </mul>
+					</width>
+					<height> 11 </height>
+					<locus> &true; </locus>
+					<x> 11 </x>
+					<y> 1 </y>
+					<user1> 1.0 </user1>
+				</image>
+				<image name="hudmain_magic_edge">
+					<filename> Menus\Shared\ribbon_slider.dds </filename>
+					<visible> &true; </visible>
+					<depth> 2 </depth>
+					<width> 12 </width>
+					<height> 14 </height>
+					<x>
+						<copy src="hudmain_magic_full" trait="x"/>
+						<add src="hudmain_magic_full" trait="width"/>
+					</x>
+					<y> -1 </y>
+				</image>
+			</image>
+			
+			<image name="hudmain_fatigue_empty">
+				<filename> Menus\HUD\hud_ribbon_fatigue_empty.dds </filename>
+				<depth> 1 </depth>
+				<width> 189 </width>
+				<height> 16 </height>
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y> 36 </y>
+					
+				<image name="hudmain_fatigue_full">
+					<ID> 4 </ID>
+					<filename> Menus\HUD\hud_ribbon_fatigue_full.dds </filename>
+					<visible>
+						<copy src="me()" trait="user0"/>
+						<gt> 0 </gt>
+					</visible>
+					<depth> 1 </depth>
+					<width>
+						<copy src="me()" trait="user0"/>
+						<max> 0 </max>
+						<min> 1 </min>
+						<mul> 163 </mul>
+					</width>
+					<height> 11 </height>
+					<locus> &true; </locus>
+					<x> 11 </x>
+					<y> 1 </y>
+					<user0> 1.0 </user0>
+				</image>
+				<image name="hudmain_fatigue_edge">
+					<filename> Menus\Shared\ribbon_slider.dds </filename>
+					<visible> &true; </visible>
+					<depth> 2 </depth>
+					<width> 12 </width>
+					<height> 14 </height>
+					<x>
+						<copy src="hudmain_fatigue_full" trait="x"/>
+						<add src="hudmain_fatigue_full" trait="width"/>
+					</x>
+					<y> 0 </y>
+				</image>
+			</image>
+			
+			<rect name="hudmain_bars_cover">
+				<ID> 9 </ID>
+				<depth> 5 </depth>
+				<target> &true; </target>
+				<alpha> 0 </alpha>
+				<width> 199 </width>
+				<height> 80 </height>
+				<x> 0 </x>
+				<y> -15 </y>
+			</rect>
+			
+		</rect>
+		
+		
+		
+		<image name="hudmain_Weapon_Icon">
+			<id> 5 </id>
+			<filename> Menus\Icons\icon_hud_default_weapon.dds </filename>
+			<locus> &true; </locus>
+			<depth> 1 </depth>
+			<width> 63 </width>
+			<height> 63 </height>
+			<x>
+				<copy src="hudmain_health_empty" trait="width"/>
+				<add>40</add>
+			</x>
+			<y> 5 </y>
+			<alpha>
+				<copy> 128 </copy>
+				<onlyif>
+					<copy src="me()" trait="user2"/>
+					<gte> 50 </gte>	<!-- weapon health minimum before weapon icon partially alphas out -->
+				</onlyif>
+				<add> 128 </add>
+			</alpha>
+			<!-- Possible item statuses are broken, stolen, enchanted, and poisoned -->
+			<user0> 0 </user0>		<!-- status combination -->
+			<user1></user1>			<!-- status icon filename -->
+			<user2> 1.0 </user2>	<!-- weapon health - 0-100 -->
+			<user3> 0 </user3>		<!-- ammo remaining -->
+			
+			<image name="hudmain_weapon_status">
+				<filename> <copy src="parent()" trait="user1"/> </filename>
+				<depth> 1 </depth>
+				<visible>
+					<copy src="parent()" trait="user0"/>
+					<gt> 0 </gt>
+				</visible>
+				<x> 0 </x>
+				<y>
+					<copy src="parent()" trait="y"/>
+					<add src="parent()" trait="height"/>
+					<sub src="me()" trait="height"/>
+				</y>
+				<height>
+					<copy>32</copy>		<onlyif src="me()" trait="_handonly"/>
+					<add>
+						<copy>24</copy>	<onlyifnot src="me()" trait="_handonly"/>
+					</add>
+				</height>
+				<width>
+					<copy>64</copy>
+					<sub>
+						<copy>32</copy>
+						<onlyif>
+							<!-- If any of these conditions is true, we are using an original icon,
+							     rather than a "combo" dds. -->
+							<!-- "Combo" dds's are 32x64, original icons are 32x32 -->
+							<copy src="me()" trait="_handonly"/>
+							<or> <copy src="parent()" trait="user0"/> <eq>2</eq> </or>
+							<or> <copy src="parent()" trait="user0"/> <eq>4</eq> </or>
+							<or> <copy src="parent()" trait="user0"/> <eq>8</eq> </or>
+						</onlyif>
+					</sub>
+				</width>
+				<red>
+					<copy> 47 </copy>
+					<onlyifnot src="me()" trait="_handonly"/>
+					<add> 208 </add>
+				</red>
+				<green>
+					<copy> 255 </copy>
+					<onlyifnot src="me()" trait="_handonly"/>
+				</green>
+				<blue>
+					<copy> 255 </copy>
+					<onlyifnot src="me()" trait="_handonly"/>
+				</blue>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<_handonly>
+					<copy src="parent()" trait="user0"/>
+					<eq> 1 </eq>
+				<_handonly>
+			</image>
+			
+			<text name="hudmain_weapon_ammo">
+				<visible>
+					<copy src="parent()" trait="user3"/>
+					<gt> 0 </gt>
+					<and>
+						<copy src="HUDMainMenu" trait="user3"/>
+						<eq> 1 </eq>
+					</and>
+				</visible>
+				<x> 65 </x>
+				<y> 44 </y>
+				<depth> 3 </depth>
+				<justify> &right; </justify>
+				<font> 3 </font>
+				<red> 254 </red>
+				<green> 244 </green>
+				<blue> 183 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 55 </wrapwidth>
+				<wraplines> 1 </wraplines>
+				<string>
+					<copy src="parent()" trait="user3" />
+				</string>
+			</text>
+			
+			<text name="hudmain_weapon_ammo_shadow">
+				<visible> <copy src="sibling(hudmain_weapon_ammo)" trait="visible"/> </visible>
+				<x> 67 </x>
+				<y> 46 </y>
+				<depth> 2 </depth>
+				<justify> &right; </justify>
+				<font> 3 </font>
+				<red> 0 </red>
+				<green> 0 </green>
+				<blue> 0  </blue>
+				<alpha> 192 </alpha>
+				<wrapwidth> 55 </wrapwidth>
+				<wraplines> 1 </wraplines>
+				<string>
+					<copy src="parent()" trait="user3" />
+				</string>
+			</text>
+
+			<rect name="hudmain_weapon_cover">
+				<id> 10 </id>
+				<target> &true; </target>
+				<depth> 5 </depth>
+				<alpha> 0 </alpha>
+				<width> 72 </width>
+				<height> 80 </height>
+				<x> -4 </x>
+				<y> -8 </y>
+			</rect>
+		</image>
+		
+		
+		
+		<image name="hudmain_Magic_Icon">
+			<id> 6 </id>
+			<filename> Menus\Icons\icon_hud_default_magic.dds </filename>
+			<depth> 1 </depth>
+			<locus> &true; </locus>
+			<width> 63 </width>
+			<height> 63 </height>
+			<x>
+				<copy src="hudmain_Weapon_Icon" trait="x"/>
+				<add src="hudmain_Weapon_Icon" trait="width"/>
+				<add>32</add>
+			</x>
+			<y> 5 </y>
+			<alpha>
+				<copy> 128 </copy>
+				<onlyif src="me()" trait="user2"/>
+				<add> 128 </add>
+			</alpha>
+			<user2> &true; </user2>		<!-- can cast -->
+		
+			<rect name="hudmain_magic_cover">
+				<id> 11 </id>
+				<target> &true; </target>
+				<depth> 5 </depth>
+				<alpha> 0 </alpha>
+				<width> 72 </width>
+				<height> 80 </height>
+				<x> -4 </x>
+				<y> -8 </y>
+			</rect>
+		</image>
+		
+		
+		<rect name="hudmain_compass_layout">
+			<width> 213 </width>
+			<height> 87 </height>
+			<x>
+				<copy src="hudmain_Magic_Icon" trait="x"/>
+				<add src="hudmain_Magic_Icon" trait="width"/>
+				<add> 20 </add>
+				<add>
+					<copy> 1 </copy>
+					<sub src="HUDMainMenu" trait="user3"/>
+					<mul> 20 </mul>
+				</add>
+			</x>
+			<y> 5 </y>
+			<locus> &true; </locus>
+			
+			<image name="hudmain_compass_frame">
+				<filename> Menus\HUD\hud_compass_frame.dds </filename>
+				<depth>
+					<copy src="hudmain_compass_heading" trait="user1"/>
+					<add> 5 </add>
+				</depth>
+				<width> 220 </width>
+				<height> 84 </height>
+				<alpha>
+					<copy src="HUDMainMenu" trait="user3"/>
+					<eq> 1 </eq>
+					<sub> 1 </sub>
+					<mul> 255 </mul>
+				</alpha>
+				<x> -14 </x>
+				<y> -10 </y>
+			</image>
+			
+			<image name="hudmain_compass_back">
+				<filename> Menus\HUD\hud_back.dds </filename>
+				<depth> 0 </depth>
+				<width> 200 </width>
+				<height> 68 </height>
+				<alpha> 70 </alpha> <!-- 35% -->
+				<x> -5 </x>
+				<y> -2 </y>
+			</image>
+			
+			<rect name="hudmain_compass_cover">
+				<id> 12 </id>
+				<target> &true; </target>
+				<depth> 25 </depth>
+				<alpha> 0 </alpha>
+				<red> 0 </red>
+				<width> 217 </width>
+				<height> 80 </height>
+				<x> -13 </x>
+				<y> -8 </y>
+			</rect>
+			
+			<rect name="hudmain_compass_window">
+				<id> 7 </id>
+				<alpha> 0 </alpha>
+				<depth> 1 </depth>
+				<locus> &true; </locus>
+				<width> 200 </width>
+				<height> 87 </height>
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y> 0 </y>
+				<clipwindow> &true; </clipwindow>
+				<user0> 0 </user0>		<!-- set by code - heading in degrees, N is 0/360 -->
+				<user3>					<!-- conversion of degrees to pixels -->
+					<copy> 768 </copy>
+					<div> 360 </div>
+				</user3>
+				<user4>					<!-- heading in pixels -->
+					<copy src="me()" trait="user0"/>	<!-- heading in degrees -->
+					<mul src="me()" trait="user3"/>		<!-- convert to pixels -->
+				</user4>
+				<user5>					<!-- offset heading in pixels -->
+					<copy src="me()" trait="user4"/>	<!-- heading in pixels -->
+					<add> 768 </add>
+				</user5>
+			
+				<image name="hudmain_compass_heading">
+					<id> 14 </id>
+					<filename> Menus\HUD\hud_compass_face.dds </filename>
+					<depth> 3 </depth>
+					<width> 2048 </width>
+					<height> 62 </height>
+					<clips> &true; </clips>
+					<locus> &true; </locus>
+					<x>
+						<copy src="parent()" trait="user5"/>	<!-- heading in pixels -->
+						<sub>
+							<copy src="parent()" trait="width"/>
+							<div> 2 </div>
+						</sub>
+						<mul> -1 </mul>
+					</x>
+					<y> 1 </y>
+					<user1> 0 </user1>	<!-- max icon depth -->
+					<user2> 0 </user2>	<!-- set by code - min reveal distance -->
+					<user3> 0 </user3>	<!-- set by code - max visible distance -->
+					
+					<_filename_1> Menus\Icons\Map\map_icons_all.dds </_filename_1>		<!-- all map markers -->
+					<_filename_2> Menus\HUD\hud_compass_goal.dds </_filename_2>			<!-- quest marker icon -->
+					<_filename_3> Menus\HUD\hud_compass_goal.dds </_filename_3>			<!-- marker icon -->
+					<_filename_4> Menus\Map\world_map_arrow_icon.dds </_filename_4>		<!-- you are here icon -->
+				
+				
+					<template name="hudmain_compass_icon">
+						<image name="hudmain_compass_icon">
+							<filename>
+								<copy src="me()" trait="user6"/>
+								<onlyif>
+									<copy src="me()" trait="user5"/>
+									<eq> 99 </eq>
+								</onlyif>
+								<add>
+									<copy> 3 </copy>
+									<onlyif>
+										<copy src="me()" trait="user5"/>
+										<eq> 98 </eq>
+									</onlyif>
+								</add>
+								<add> 1 </add>
+								<copy src="parent()" trait="_filename_"/>
+							</filename>
+							<cropx>
+								<copy src="me()" trait="user5"/>
+								<sub> 1 </sub>
+								<mul> 32 </mul>
+								<onlyif>
+									<copy src="me()" trait="user5"/>
+									<lt> 90 </lt>
+								</onlyif>
+							</cropx>
+							<cropy>
+								<copy src="me()" trait="user6"/>
+								<sub> 1 </sub>
+								<mul> 32 </mul>
+								<onlyif>
+									<copy src="me()" trait="user5"/>
+									<lt> 90 </lt>
+								</onlyif>
+							</cropy>
+							<depth> 1 </depth>
+							<alpha>
+								<copy> 255 </copy>
+								<mul src="me()" trait="_distance"/>
+								<onlyif src="me()" trait="user9"/>
+								<add>
+									<copy> 255 </copy>
+									<onlyifnot src="me()" trait="user9"/>
+								</add>
+							</alpha>
+							<clips> &true; </clips>
+							<width>
+								<copy> 28 </copy>
+								<add>
+									<copy> 4 </copy>
+									<onlyif src="me()" trait="user9"/>
+								</add>
+							</width>
+							<height>
+								<copy> 32 </copy>
+								<add>
+									<copy> 10 </copy>
+									<onlyifnot src="me()" trait="user9"/>
+								</add>
+							</height>
+							<red>
+								<copy> 0 </copy>
+								<add>
+									<add> 255 </add> 
+									<onlyif src="me()" trait="user11"/>
+									<onlyif src="me()" trait="user10"/>
+								</add>
+								<add>
+									<add> 255 </add>
+									<onlyifnot src="me()" trait="user11"/>
+									<onlyifnot src="me()" trait="user12"/>
+								</add>
+							</red>
+							<green>
+								<copy> 0 </copy>
+								<add>
+									<add> 255 </add> 
+									<onlyif src="me()" trait="user11"/>
+									<onlyifnot src="me()" trait="user10"/>
+								</add>
+								<add>
+									<add> 255 </add>
+									<onlyifnot src="me()" trait="user11"/>
+									<onlyifnot src="me()" trait="user12"/>
+								</add>
+							</green>
+							<blue>
+								<copy> 0 </copy>
+								<add>
+									<add> 255 </add>
+									<onlyifnot src="me()" trait="user11"/>
+								</add>
+							</blue>
+							<y>
+								<copy> 1 </copy>
+								<onlyifnot src="me()" trait="user9"/>
+							</y>
+							<x>
+								<copy src="me()" trait="_pos_raw"/>
+								<add>
+									<copy> 768 </copy>
+									<onlyif>
+										<copy src="me()" trait="_pos_raw"/>
+										<sub src="hudmain_compass_window" trait="user5"/>
+										<lt> -384 </lt>
+									</onlyif>
+								</add>
+								<add>
+									<copy> 768 </copy>
+									<onlyif>
+										<copy src="me()" trait="_pos_raw"/>
+										<sub src="hudmain_compass_window" trait="user5"/>
+										<lt> -1152 </lt>
+									</onlyif>
+								</add>
+								<min>
+									<copy src="hudmain_compass_window" trait="width"/>
+									<sub src="parent()" trait="x"/>
+									<sub> 6 </sub>
+									<add src="me()" trait="_icon_offset"/>
+								</min>
+								<max>
+									<copy> 4 </copy>
+									<sub src="parent()" trait="x"/>
+									<sub src="me()" trait="_icon_offset"/>
+								</max>
+								<sub>
+									<copy src="me()" trait="width"/>
+									<div> 2 </div>
+								</sub>
+							</x>
+							<_icon_offset>
+								<copy> 2000 </copy>
+								<onlyif>
+									<copy src="me()" trait="user5"/>
+									<lt> 90 </lt>
+								</onlyif>
+							</_icon_offset>
+							<_pos_raw>
+								<copy> 768 </copy>
+								<div> 360 </div>
+								<mul src="me()" trait="user0"/>
+							</_pos_raw>
+							<_distance>
+								<copy> 1 </copy>
+								<sub>
+									<copy src="me()" trait="user1"/>
+									<sub src="parent()" trait="user2"/>		<!-- min reveal distance -->
+									<div src="parent()" trait="user3"/>		<!-- max visible distance -->
+									<min> 1.0 </min>
+								</sub>
+							</_distance>
+							<user0> 0 </user0>			<!-- heading to icon (0-360) -->
+							<user1> 30 </user1>			<!-- distance to icon in feet -->
+							<user2> &true; </user2>		<!-- unused if true -->
+							<user5> 0 </user5>			<!-- location type -->
+							<user6> &false; </user6>		<!-- fast travel enabled -->
+							<user9> &true; </user9>
+							<user10> &false; </user10>	<!-- is through load door -->
+							<user11> &false; </user11>  <!-- is a quest target -->
+							<user12> &false; </user12>  <!-- is the player marker -->
+						</image>
+					</template>
+				</image>
+			</rect>
+		</rect>
+		
+		<image name="hudmain_Levelup_Icon">
+			<id> 18 </id>
+			<filename> Menus\Icons\icon_level_up.dds </filename>
+			<depth> 1 </depth>
+			<locus> &true; </locus>
+			<width> 63 </width>
+			<height> 63 </height>
+			<visible> &false; </visible>
+			<x>
+				<copy src="hudmain_compass_window" trait="x"/>
+				<add src="hudmain_compass_window" trait="width"/>
+				<add>424</add>
+			</x>
+			<y> 6 </y>
+		</image>
+		
+		<nif name="hudmain_brackets">
+			<id> 20 </id>
+			<filename> hud_brackets\A_B_C_D_seq.NIF </filename>
+			<depth> 37 </depth>
+			<locus> &true; </locus>
+			<alpha> 255 </alpha>
+			<x> -20 </x>
+			<y> -12 </y>
+			<user1> 1 </user1>
+			<user2>-1.0</user2>
+			<visible>
+				<copy src="HUDMainMenu" trait="user3"/>
+				<eq> 0 </eq>
+			</visible>
+			<animation>
+				<copy src="HUDMainMenu" trait="user5"/>		<!-- get the last mode -->
+				<mult> 10 </mult>						<!-- make it the tens digit -->
+				<add src="HUDMainMenu" trait="user4"/>			<!-- make the current mode the ones digit -->
+				<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+			</animation>
+			<_animation_12> A_B </_animation_12>
+			<_animation_13> A_C </_animation_13>
+			<_animation_14> A_D </_animation_14>
+			<_animation_21> B_A </_animation_21>
+			<_animation_23> B_C </_animation_23>
+			<_animation_24> B_D </_animation_24>
+			<_animation_31> C_A </_animation_31>
+			<_animation_32> C_B </_animation_32>
+			<_animation_34> C_D </_animation_34>
+			<_animation_41> D_A </_animation_41>
+			<_animation_42> D_B </_animation_42>
+			<_animation_43> D_C </_animation_43>
+		</nif>
+		
+		
+		
+	</image>
+</menu>

@@ -1,0 +1,119 @@
+<!-- button_floating_2.xml -->
+<!-- rect name="button_floating_2" -->
+	<target>
+		<copy src="me()" trait="user1"/>
+	</target>
+	<string> <copy src="strings()" trait="_button"/> </string>
+	<width>
+		<copy src="child(button_text)" trait="width"/>
+		<add> 40 </add>
+	</width>
+	<height> 64 </height>
+	<depth> 5 </depth>
+	<x>
+		<copy src="me()" trait="_center_x"/>
+		<sub>
+			<copy src="child(button_floating)" trait="width"/>
+			<div>2</div>
+		</sub>
+	</x>
+	<y>
+		<copy src="me()" trait="_top"/>
+	</y>
+	<locus> &true; </locus>
+	<clips> &false; </clips>
+	<user1> &true; </user1>		<!-- true=enabled, false=disabled -->
+	
+	<image name="button_floating">
+		<visible>
+			<copy src="parent()" trait="mouseover"/> <eq> 1 </eq>
+			<and>
+				<copy src="parent()" trait="target"/>
+			</and>
+		</visible>
+		<locus> &true; </locus>
+		<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+		<width>
+			<copy src="parent()" trait="width"/>
+			<max>
+				<copy src="child(button_end)" trait="width"/>
+				<sub> 0 </sub>
+			</max>
+		</width>
+		<height> 64 </height>
+		<depth> 1 </depth>
+		<x> 0 </x>
+		<y> 3 </y>
+		<clips>
+			<copy src="parent()" trait="clips"/>
+		</clips>
+		
+		<image name="button_end">
+			<depth> 2 </depth>
+			<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+			<width> 104 </width>
+			<height> 64 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 8 </add>
+				<sub src="me()" trait="width"/>
+			</x>
+			<y> 0 </y>
+			<clips>
+				<copy src="parent()" trait="clips"/>
+			</clips>
+		</image>
+	</image>
+	
+	<text name="button_text">
+		<depth> 7 </depth>
+		<string> <copy src="parent()" trait="string"/> </string>
+		<font> 1 </font>
+		<justify> &center; </justify>
+		<clips>
+			<copy src="parent()" trait="clips"/>
+		</clips>
+		<red>
+			<copy>117</copy>
+			<onlyif src="parent()" trait="target"/>
+			<add>
+				<copy>128</copy>
+				<onlyifnot src="parent()" trait="target"/>
+			</add>
+		</red>
+		<green>
+			<copy>59</copy>
+			<onlyif src="parent()" trait="target"/>
+			<add>
+				<copy>128</copy>
+				<onlyifnot src="parent()" trait="target"/>
+			</add>
+		</green>
+		<blue>
+			<copy>33</copy>
+			<onlyif src="parent()" trait="target"/>
+			<add>
+				<copy>128</copy>
+				<onlyifnot src="parent()" trait="target"/>
+			</add>
+		</blue>
+		<alpha>
+			<copy>255</copy>
+			<onlyif src="parent()" trait="target"/>
+			<add>
+				<copy>196</copy>
+				<onlyifnot src="parent()" trait="target"/>
+			</add>
+		</alpha>
+		<x>
+			<copy src="parent()" trait="width"/>
+			<max src="sibling(button_floating)" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="parent()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+	</text>
+<!-- /rect -->

@@ -1,0 +1,118 @@
+<!-- Data\Menus\NorthernUI\strings.xml -->
+<!-- This file defines the tile that will be accessible through src="xxnStrings()"
+
+   This is a stripped-down version of the NorthernUI file, with some minor changes 
+   made to ensure some text strings fit in the vanilla-style UI.
+-->
+<rect name="NorthernUIStringstore">
+   <!----- CONTROLSMENU ---------------------------------------------------->
+   <_controlsMenuEscToCancel>Press Esc to cancel.</_controlsMenuEscToCancel>
+
+   <!----- OPTIONSMENU ----------------------------------------------------->
+   <_optionsMenuNorthernUISubmenuLabel>NorthernUI</_optionsMenuNorthernUISubmenuLabel>
+   <_optionsMenuXInputSubmenuLabel>Gamepad</_optionsMenuXInputSubmenuLabel>
+   
+   <!----- XXNOPTIONSMENU -------------------------------------------------->
+   <_optionHintRequiresRestart>(requires restart)</_optionHintRequiresRestart>
+   
+   <_optionsSaveChanges>Save Changes</_optionsSaveChanges>
+   <_optionsCancel>Cancel</_optionsCancel>
+   <_optionsExit>Exit</_optionsExit>
+   
+   <_optionLocalMapRes>Local Map Resolution:</_optionLocalMapRes>
+   <_optionShowHUDClock>Show HUD Clock:</_optionShowHUDClock>
+   <_optionShowHUDInputViewer>Show HUD Input Viewer:</_optionShowHUDInputViewer>
+   <_optionStopDLCSpam>Suppress DLC Startup Spam:</_optionStopDLCSpam>
+   <_optionUseXXNAlchemyMenu>Enhanced Alchemy Menu:</_optionUseXXNAlchemyMenu>
+   <_optionUseXInputifPatched>Enable Xbox Gamepad Controls:</_optionUseXInputifPatched>
+   <_optionQuantityHandlerDefault>Quantity Menu Handler (Default):</_optionQuantityHandlerDefault>
+   <_optionQuantityHandlerAlt>Quantity Menu Handler (Alt):</_optionQuantityHandlerAlt>
+   <_optionQuantityHandlerCtrl>Quantity Menu Handler (Ctrl):</_optionQuantityHandlerCtrl>
+   <_optionBarterConfirmHandlerDefault>Barter Confirm Prompt (Default):</_optionBarterConfirmHandlerDefault>
+   <_optionBarterConfirmHandlerAlt>Barter Confirm Prompt (Alt):</_optionBarterConfirmHandlerAlt>
+   <_optionBarterConfirmHandlerCtrl>Barter Confirm Prompt (Ctrl):</_optionBarterConfirmHandlerCtrl>
+   
+   <_optEnumBarterConfirmHandlerDefault>Always (Default)</_optEnumBarterConfirmHandlerDefault>
+   <_optEnumBarterConfirmHandlerTakeOne>When Not Free</_optEnumBarterConfirmHandlerTakeOne>
+   <_optEnumBarterConfirmHandlerTakeAll>Never</_optEnumBarterConfirmHandlerTakeAll>
+   
+   <_optEnumQuantityHandlerDefault>Ask</_optEnumQuantityHandlerDefault>
+   <_optEnumQuantityHandlerTakeOne>Transfer One</_optEnumQuantityHandlerTakeOne>
+   <_optEnumQuantityHandlerTakeAll>Transfer All</_optEnumQuantityHandlerTakeAll>
+   
+   <_optDescLocalMapRes>Adjust the render resolution of the Local Map. Oblivion's world is divided into grid cells, and this option is measured in pixels per grid cell.</_optDescLocalMapRes>
+   <_optDescShowHUDClock>Control whether the in-game time of day is displayed on the HUD.</_optDescShowHUDClock>
+   <_optDescShowHUDInputViewer>Control whether your gamepad button presses and joystick input are displayed on the HUD.</_optDescShowHUDInputViewer>
+   <_optDescStopDLCSpam>Prevent DLCs from showing their quest-start notifications, most notably during Oblivion's introduction.</_optDescStopDLCSpam>
+   <_optDescUseXXNAlchemyMenu>Control whether Oblivion uses a NorthernUI-provided alchemy menu or a reskinned version of the vanilla menu. Changes will not take effect until you restart the game.</_optDescUseXXNAlchemyMenu>
+   <_optDescUseXinputIfPatched>Enable or disable NorthernUI's gamepad support. Turning this option off causes NorthernUI to pretend that no gamepads are connected or in use -- useful if you want to use something like Xpadder.</_optDescUseXinputIfPatched>
+   <_optDescQuantityHandlerDefault>Control whether the game asks you how many items to transfer to or from your inventory.</_optDescQuantityHandlerDefault>
+   <_optDescQuantityHandlerAlt>Control whether the game asks you how many items to transfer to or from your inventory, when you're holding the Alt key.</_optDescQuantityHandlerAlt>
+   <_optDescQuantityHandlerCtrl>Control whether the game asks you how many items to transfer to or from your inventory, when you're holding the Ctrl key.</_optDescQuantityHandlerCtrl>
+   <_optDescBarterConfirmHandlerDefault>Control when the game asks you to confirm a sale or purchase.</_optDescBarterConfirmHandlerDefault>
+   <_optDescBarterConfirmHandlerAlt>Control when the game asks you to confirm a sale or purchase, when you're holding the Alt key.</_optDescBarterConfirmHandlerAlt>
+   <_optDescBarterConfirmHandlerCtrl>Control when the game asks you to confirm a sale or purchase, when you're holding the Ctrl key.</_optDescBarterConfirmHandlerCtrl>
+   
+   <!----- XXNCONTROLSMENU ------------------------------------------------->
+   <_optCtrlGStick>Gameplay Sticks:</_optCtrlGStick>
+   <_optCtrlGStickNormal>LS = Move, RS = Look</_optCtrlGStickNormal>
+   <_optCtrlGStickSwapped>RS = Move, LS = Look</_optCtrlGStickSwapped>
+   
+   <_optCtrlMStick>Menu Sticks:</_optCtrlMStick>
+   <_optCtrlMStickNormal>LS for Navigation</_optCtrlMStickNormal>
+   <_optCtrlMStickSwapped>RS for Navigation</_optCtrlMStickSwapped>
+   
+   <_optCtrlSensX>Look Sens. (X):</_optCtrlSensX>
+   <_optCtrlSensY>Look Sens. (Y):</_optCtrlSensY>
+   <_optCtrlSensRun>Run Sensitivity:</_optCtrlSensRun>
+   
+   <_optCtrlSelectedScheme>Control Scheme:</_optCtrlSelectedScheme>
+   
+   <_optCtrlSaveScheme>Save Changes to Scheme</_optCtrlSaveScheme>
+   <_optCtrlCreateScheme>Create Scheme</_optCtrlCreateScheme>
+   <_optCtrlRenameScheme>Rename</_optCtrlRenameScheme>
+   <_optCtrlDeleteScheme>Delete</_optCtrlDeleteScheme>
+   
+   <_optCtrlHowToAssign>Press the gamepad button you want to map to this control, or press Start to unmap the control.</_optCtrlHowToAssign>
+   <_optCtrlAlreadyAssigned>This control is currently mapped to:</_optCtrlAlreadyAssigned>
+   
+   <_optCtrlButtonDU>D-Pad Up</_optCtrlButtonDU>
+   <_optCtrlButtonDD>D-Pad Down</_optCtrlButtonDD>
+   <_optCtrlButtonDL>D-Pad Left</_optCtrlButtonDL>
+   <_optCtrlButtonDR>D-Pad Right</_optCtrlButtonDR>
+   <_optCtrlStickStart>Start</_optCtrlStickStart>
+   <_optCtrlStickBack>Back</_optCtrlStickBack>
+   <_optCtrlStickLS>Left Stick</_optCtrlStickLS>
+   <_optCtrlStickRS>Right Stick</_optCtrlStickRS>
+   <_optCtrlButtonA>A</_optCtrlButtonA>
+   <_optCtrlButtonB>B</_optCtrlButtonB>
+   <_optCtrlButtonX>X</_optCtrlButtonX>
+   <_optCtrlButtonY>Y</_optCtrlButtonY>
+   <_optCtrlButtonLB>Left Bumper</_optCtrlButtonLB>
+   <_optCtrlButtonRB>Right Bumper</_optCtrlButtonRB>
+   <_optCtrlButtonLS>LS Click</_optCtrlButtonLS>
+   <_optCtrlButtonRS>RS Click</_optCtrlButtonRS>
+   <_optCtrlButtonLT>Left Trigger</_optCtrlButtonLT>
+   <_optCtrlButtonRT>Right Trigger</_optCtrlButtonRT>
+   
+   <_optCtrlDescNone>Mouse over an option to view information on it.</_optCtrlDescNone>
+   
+   <_optCtrlDescSwapSticksG>The left and right joysticks are used to look around and move around in the world. Set which joystick handles which function.</_optCtrlDescSwapSticksG>
+   <_optCtrlDescSwapSticksM>The left or right joystick can be used to operate the menus. Set which joystick handles that function.</_optCtrlDescSwapSticksM>
+   <_optCtrlDescLookSens>Control how quickly you turn and aim.</_optCtrlDescLookSens>
+   <_optCtrlDescRunSens>Control how far the joystick must be pushed for you to switch from walking to running. If your gamepad has hardware variations or issues, you may need to lower this setting from its default (95).</_optCtrlDescRunSens>
+   
+   <_optCtrlDescSchemeName>Choose a control scheme to use. You can create, keep, and delete multiple custom control schemes freely.</_optCtrlDescSchemeName>
+   
+   <_optCtrlDescActivate>This key is used to interact with objects, items, and people in the world.</_optCtrlDescActivate>
+   <_optCtrlDescAttack>This key is used to attack with your currently-equipped weapon.</_optCtrlDescAttack>
+   <_optCtrlDescBlock>This key is used to block incoming attacks. You can also use this key to yield to an enemy: if you hold this key and activate someone who is attacking you, they may stop fighting you.</_optCtrlDescBlock>
+   <_optCtrlDescCast>This key is used to cast your currently-equipped spell.</_optCtrlDescCast>
+   <_optCtrlDescDrawSheathe>This key is used to draw or sheathe your currently-equipped weapon.</_optCtrlDescDrawSheathe>
+   <_optCtrlDescGrab>This key is used to grab loose objects in the world and move them around.</_optCtrlDescGrab>
+   <_optCtrlDescJump>This key is used to jump.</_optCtrlDescJump>
+   <_optCtrlDescMenuMode>This key is used to open the "Big Four" menus and view your Stats, Items, Magic, and Journal.</_optCtrlDescMenuMode>
+   <_optCtrlDescSneak>This key is used to crouch down and sneak around. While sneaking, you can steal items unnoticed, pickpocket other people, and launch surprise attacks on enemies.</_optCtrlDescSneak>
+   <_optCtrlDescTogglePOV>This key is used to switch between first- and third-person mode.</_optCtrlDescTogglePOV>
+   <_optCtrlDescWait>This key is used to skip in-game time while in a bed.</_optCtrlDescWait>
+</rect>

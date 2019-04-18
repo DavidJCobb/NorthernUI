@@ -1,0 +1,703 @@
+<!-- persuasion_menu.xml -->
+<menu name="PersuasionMenu">
+	<class> &PersuasionMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<visible> &true; </visible>
+	<alpha>	0 </alpha>
+	<depth>0</depth>
+	<x> 0 </x>
+	<y> 100 </y>
+	<locus> &true; </locus>
+	<user0> 1 </user0>
+	<user1> 2 </user1>
+	<user2> 0.75 </user2>
+	<user3> 0.50 </user3>
+	<user4> 100 </user4>
+	<menufade> 0.75 </menufade>
+	<_line_height> 48 </_line_height>
+	<_number_of_lines> 5 </_number_of_lines>
+	
+	<xbuttona> <ref src="persuasion_start_button" trait="clicked"/> </xbuttona>
+	<xbuttonb> <ref src="persuasion_exit_button" trait="clicked"/> </xbuttonb>
+	<xbuttonx> <ref src="persuasion_rotate_button" trait="clicked"/> </xbuttonx>
+	<xbuttony> <ref src="persuasion_bribe_button" trait="clicked"/> </xbuttony>
+	
+   <!--
+      USER24: If true, NorthernUI overrides for keyboard navigation will be 
+      enabled when the minigame is active. The A button will route to a click 
+      on the minigame, and the directional navigation keys will be forcibly 
+      routed to highlight a minigame quadrant (by snapping the in-game cursor 
+      to that quadrant's centerpoint).
+   -->
+   <user24>&true;</user24>
+	
+	
+	
+	<nif name="Gradient_25">
+		<id>16</id>
+		<target> &true; </target>
+		<filename>Persuasion\New Persuasion\25.nif </filename>
+		<visible> &true; </visible>
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+		</y>
+		<user0>1</user0>
+		<animation>
+			<copy src="me()" trait="user0"/>
+			<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+		</animation>
+		<_animation_1> boast_to_admire </_animation_1>
+		<_animation_2> admire_to_joke </_animation_2>
+		<_animation_3> joke_to_bully </_animation_3>
+		<_animation_4> bully_to_boast </_animation_4>
+	</nif>
+	<nif name="Gradient_50">
+		<id>17</id>
+		<target> &true; </target>
+		<filename>Persuasion\New Persuasion\50.nif </filename>
+		<visible> &true; </visible>
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+		</y>
+		<user0>1</user0>
+		<animation>
+			<copy src="me()" trait="user0"/>
+			<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+		</animation>
+		<_animation_1> boast_to_admire </_animation_1>
+		<_animation_2> admire_to_joke </_animation_2>
+		<_animation_3> joke_to_bully </_animation_3>
+		<_animation_4> bully_to_boast </_animation_4>
+	</nif>
+	<nif name="Gradient_75">
+		<id>18</id>
+		<target> &true; </target>
+		<filename>Persuasion\New Persuasion\75.nif </filename>
+		<visible> &true; </visible>
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+		</y>
+		<user0>1</user0>
+		<animation>
+			<copy src="me()" trait="user0"/>
+			<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+		</animation>
+		<_animation_1> boast_to_admire </_animation_1>
+		<_animation_2> admire_to_joke </_animation_2>
+		<_animation_3> joke_to_bully </_animation_3>
+		<_animation_4> bully_to_boast </_animation_4>
+	</nif>
+	<nif name="Gradient_100">
+		<id>19</id>
+		<target> &true; </target>
+		<filename>Persuasion\New Persuasion\100.nif </filename>
+		<visible> &true; </visible>
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+		</y>
+		<user0>1</user0>
+		<animation>
+			<copy src="me()" trait="user0"/>
+			<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+		</animation>
+		<_animation_1> boast_to_admire </_animation_1>
+		<_animation_2> admire_to_joke </_animation_2>
+		<_animation_3> joke_to_bully </_animation_3>
+		<_animation_4> bully_to_boast </_animation_4>
+	</nif>
+	<nif name="Dimmer_1">
+		<id>20</id>
+		<target> &true; </target>
+		<filename>Persuasion\New Persuasion\New_dimer.nif </filename>
+		<visible> &true; </visible>
+		<alpha> 0 </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+		</y>
+		<user0>1</user0>
+		<animation>
+			<copy src="me()" trait="user0"/>
+			<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+		</animation>
+		<_animation_1> dimer_admire </_animation_1>
+		<_animation_2> dimer_joke </_animation_2>
+		<_animation_3> dimer_coerce </_animation_3>
+		<_animation_4> dimer_boast </_animation_4>
+	</nif>
+	<nif name="Dimmer_2">
+		<id>21</id>
+		<target> &true; </target>
+		<filename>Persuasion\New Persuasion\New_dimer.nif </filename>
+		<visible> &true; </visible>
+		<alpha> 0 </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+		</y>
+		<user0>2</user0>
+		<animation>
+			<copy src="me()" trait="user0"/>
+			<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+		</animation>
+		<_animation_1> dimer_admire </_animation_1>
+		<_animation_2> dimer_joke </_animation_2>
+		<_animation_3> dimer_coerce </_animation_3>
+		<_animation_4> dimer_boast </_animation_4>
+	</nif>
+	<nif name="Dimmer_3">
+		<id>22</id>
+		<target> &true; </target>
+		<filename>Persuasion\New Persuasion\New_dimer.nif </filename>
+		<visible> &true; </visible>
+		<alpha> 0 </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+		</y>
+		<user0>3</user0>
+		<animation>
+			<copy src="me()" trait="user0"/>
+			<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+		</animation>
+		<_animation_1> dimer_admire </_animation_1>
+		<_animation_2> dimer_joke </_animation_2>
+		<_animation_3> dimer_coerce </_animation_3>
+		<_animation_4> dimer_boast </_animation_4>
+	</nif>
+	<nif name="Dimmer_4">
+		<id>23</id>
+		<target> &true; </target>
+		<filename>Persuasion\New Persuasion\New_dimer.nif </filename>
+		<visible> &true; </visible>
+		<alpha> 0 </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+		</y>
+		<user0>4</user0>
+		<animation>
+			<copy src="me()" trait="user0"/>
+			<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+		</animation>
+		<_animation_1> dimer_admire </_animation_1>
+		<_animation_2> dimer_joke </_animation_2>
+		<_animation_3> dimer_coerce </_animation_3>
+		<_animation_4> dimer_boast </_animation_4>
+	</nif>
+	<nif name="Gradient_image">
+		<id>1</id>
+		<target> &true; </target>
+		<filename>Persuasion\New Persuasion\New_frme_glass_pop_selector.nif </filename>
+		<visible> &true; </visible>
+		<locus> &true; </locus>
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="screen()" trait="x" />
+			<add>
+				<copy src="screen()" trait="cropx" />
+				<mul>2</mul>
+			</add>
+			<sub>125</sub>		
+		</x>
+		<y>
+			<copy src="screen()" trait="y" />
+			<add>
+				<copy src="screen()" trait="cropy" />
+				<mul>2</mul>
+			</add>	
+			<sub>50</sub>	
+		</y>
+		<user0>9</user0>
+		<user1> 1 </user1>
+		<user2>0.0</user2>
+		<animation>
+			<copy src="me()" trait="user0"/>
+			<copy src="me()" trait="_animation_"/>	<!-- use animation trait that ends in that number -->
+		</animation>
+		<_animation_1> admire </_animation_1>
+		<_animation_2> joke </_animation_2>
+		<_animation_3> coerce </_animation_3>
+		<_animation_4> boast </_animation_4>
+		<user6>28</user6>
+		<user7>128</user7>
+		<user8>
+			<copy src="me()" trait="x"/>
+			<add>
+				300
+			</add>
+			<!--copy src="screen()" trait="x" />
+			<add>
+				<copy src="screen()" trait="cropx" />
+				<mul>2</mul>
+			</add>	
+			<add>288</add-->	
+		</user8>
+		<user9>
+			<copy src="me()" trait="y"/>
+			<add>
+				250
+			</add>
+			<!--copy src="screen()" trait="y" />
+			<add>
+				<copy src="screen()" trait="cropy" />
+				<mul>2</mul>
+			</add>
+			<add>180</add>		
+			<add>
+				<copy src="PersuasionMenu" trait="y"/>
+			</add-->
+		</user9>
+		<user10>66</user10>
+		<user11>32</user11>
+	</nif>
+	<text name="persuasion_disposition_text">
+		<depth>20 </depth>
+		<id> 10 </id>
+		<string>100</string>
+		<font> 2 </font>
+		<justify> &center; </justify>
+		<red> 254 </red> <!-- inherited by child, set by code -->
+		<green> 244 </green> <!-- inherited by child, set by code -->
+		<blue> 183 </blue> <!-- inherited by child, set by code -->
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+			<add>295</add>
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+			<add>160</add>
+		</y>
+	</text>
+	<text name="persuasion_no_play_text">
+		<id>27</id>
+		<visible> &true; </visible>
+		<string> <copy src="strings()" trait="_cannotpersuade"/> </string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha>0</alpha>
+		<x>
+			<copy src="persuasion_maxaward_words" trait="x" />
+		</x>
+		<y>
+			<copy src="persuasion_maxaward_words" trait="y" />
+		</y>
+	</text>
+	
+	<text name="persuasion_maxaward_words">
+		<string> <copy src="strings()" trait="_maxpersuasion"/> </string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> <copy src="persuasion_maxaward_text" trait="alpha"/> </alpha>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+			<add>120</add>
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+			<add>470</add>
+		</y>
+	</text>
+	<text name="persuasion_maxaward_text">
+		<depth>20 </depth>
+		<id> 15 </id>
+		<string>100</string>
+		<font> 2 </font>
+		<justify> &center; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="persuasion_maxaward_words" trait="x" />
+			<add>
+				<copy src="persuasion_maxaward_text" trait="width" />
+				<div>2</div>
+			</add>
+			<add><copy src="persuasion_maxaward_words" trait="width" /></add>
+			<add>10</add>
+		</x>
+		<y>
+			<copy src="persuasion_maxaward_words" trait="y" />
+		</y>
+		<locus> &true; </locus>
+	</text>
+	<text name="persuasion_bribe_words">
+		<string> <copy src="strings()" trait="_bribe"/> </string>
+		<id>5</id>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<user0>0</user0>  <!-- amount of septims for bribe -->
+		<user1>0</user1>  <!-- total disposition bribe will buy -->
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="persuasion_maxaward_words" trait="x" />
+		</x>
+		<y>
+			<copy src="persuasion_maxaward_text" trait="y"/>
+			<!--add> <copy src="persuasion_maxaward_text" trait="height"/> </add>
+			<add> 10 </add>
+			<mul>
+				<copy src="persuasion_maxaward_text" trait="alpha"/>
+				<gt>0</gt>
+				<sub>1</sub>
+			</mul-->
+			<add>
+				<copy src="persuasion_no_play_text" trait="height"/>
+				<add> 10 </add>
+				<mul>
+					<copy src="persuasion_no_play_text" trait="alpha"/>
+					<gt>0</gt>
+					<sub>1</sub>
+				</mul>
+			</add>
+		</y>
+	</text>
+	<text name="persuasion_bribe_colon">
+		<string>:</string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> <copy src="persuasion_bribe_words" trait="alpha"/> </alpha>
+		<x>
+			<copy src="persuasion_bribe_words" trait="x"/>
+			<add>
+				<copy src="persuasion_bribe_words" trait="width"/>
+			</add>
+		</x>
+		<y>
+			<copy src="persuasion_bribe_words" trait="y"/>
+		</y>
+	</text>
+	<text name="persuasion_bribe_amount">
+		<string><copy src="persuasion_bribe_words" trait="user0"/></string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> <copy src="persuasion_bribe_words" trait="alpha"/> </alpha>
+		<x>
+			<copy src="persuasion_bribe_colon" trait="x"/>
+			<add>
+				<copy src="persuasion_bribe_colon" trait="width"/>
+				<add>15</add>
+			</add>
+		</x>
+		<y>
+			<copy src="persuasion_bribe_words" trait="y"/>
+		</y>
+	</text>
+	<text name="persuasion_bribe_septims">
+		<string><copy src="strings()" trait="_septimsfor"/></string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> <copy src="persuasion_bribe_words" trait="alpha"/> </alpha>
+		<x>
+			<copy src="persuasion_bribe_amount" trait="x"/>
+			<add>
+				<copy src="persuasion_bribe_amount" trait="width"/>
+				<add>0</add>
+			</add>
+		</x>
+		<y>
+			<copy src="persuasion_bribe_words" trait="y"/>
+		</y>
+	</text>
+	<text name="persuasion_bribe_disposition_amount">
+		<string><copy src="persuasion_bribe_words" trait="user1"/></string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> <copy src="persuasion_bribe_words" trait="alpha"/> </alpha>
+		<x>
+			<copy src="persuasion_bribe_septims" trait="x"/>
+			<add>
+				<copy src="persuasion_bribe_septims" trait="width"/>
+				<add>15</add>
+			</add>
+		</x>
+		<y>
+			<copy src="persuasion_bribe_words" trait="y"/>
+		</y>
+	</text>
+	<text name="persuasion_bribe_disposition_words">
+		<string><copy src="strings()" trait="_dispositionbonus"/></string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> <copy src="persuasion_bribe_words" trait="alpha"/> </alpha>
+		<x>
+			<copy src="persuasion_bribe_disposition_amount" trait="x"/>
+			<add>
+				<copy src="persuasion_bribe_disposition_amount" trait="width"/>
+				<add>15</add>
+			</add>
+		</x>
+		<y>
+			<copy src="persuasion_bribe_disposition_amount" trait="y"/>
+		</y>
+	</text>
+	<text name="persuasion_NPC_name">
+		<string>  </string>
+		<id>28</id>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> 255 </alpha>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub>
+				<copy src="screen()" trait="cropx"/>
+				<mul>2</mul>
+			</sub>
+			<sub><copy src="me()" trait="width"/></sub>
+			<sub><copy src="PersuasionMenu" trait="x"/></sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub>
+				<copy src="screen()" trait="cropy"/>
+				<mul>2</mul>
+			</sub>
+			<sub><copy src="me()" trait="height"/></sub>
+			<sub><copy src="PersuasionMenu" trait="y"/></sub>
+		</y>
+	</text>
+	
+	
+	
+	<!-- BUTTON BRIBE ========================================================================-->
+	<image name="persuasion_bribe_button">
+<include src="button_long.xml"/>
+		<id> 8 </id>
+		<x>
+			<copy src="Gradient_image" trait="x" />
+			<add> 112 </add>
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+			<add> 370 </add>
+		</y>
+		<clicksound> 1 </clicksound>
+		<user0> <copy src="strings()" trait="_bribe"/> </user0>
+		<user2>
+			<copy> 1 </copy>
+			<onlyif>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </onlyif>
+			<add> 1 </add>
+		</user2>
+		<user20><!--&xbuttony;-->4 </user20>
+
+		<!-- RGB for button text (xbox only) -->
+		<user21> 255 </user21>
+		<user22> 255 </user22>
+		<user23> 255 </user23>
+	</image>
+	
+
+	<!-- BUTTON ROTATE ========================================================================-->
+	<image name="persuasion_rotate_button">
+<include src="button_long.xml"/>
+		<id> 24 </id>
+		<x>
+			<copy src="persuasion_bribe_button" trait="x" />
+			<add> 200 </add>
+		</x>
+		<y>
+			<copy src="persuasion_bribe_button" trait="y" />
+		</y>
+		<clicksound> 1 </clicksound>
+		<user0> <copy src="strings()" trait="_rotate"/> </user0>
+		<user2>
+			<copy> 1 </copy>
+			<onlyif>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </onlyif>
+			<add> 1 </add>
+		</user2>
+		<user20><!--&xbuttonx;-->3 </user20>
+
+		<!-- RGB for button text (xbox only) -->
+		<user21> 255 </user21>
+		<user22> 255 </user22>
+		<user23> 255 </user23>
+	</image>
+	
+	
+	<!--image name="persuasion_rotate_button">
+		<id> 24 </id>
+		<alpha> 255 </alpha>
+		<filename> Menus\Container\cont_button_long_off.dds </filename>
+		<width> 177 </width>
+		<height> 43 </height>
+		<locus> &true; </locus>
+		<target> &true; </target>
+		<visible> &true; </visible>
+		<x>
+			<copy src="persuasion_bribe_button" trait="x" />
+			<sub> 65 </sub>
+		</x>
+		<y>
+			<copy src="Gradient_image" trait="y" />
+			<add> 345 </add>
+		</y>
+		<image name="persuasion_rotate_button_on">
+			<alpha>
+				<copy> 256 </copy>
+				<onlyifnot src="parent()" trait="mouseover"/>
+			</alpha>
+			<depth> 1 </depth>
+			<filename> Menus\Container\cont_button_long_on.dds </filename>
+			<width> 176 </width>
+			<height> 51 </height>
+			<x> 0 </x>
+			<y> 0 </y>
+		</image>
+		<text name="persuasion_rotate_text">
+			<depth> 2 </depth>
+			<id>25</id>
+			<string> <copy src="strings()" trait="_rotate"/> </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33  </blue>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<div> 2 </div>
+				<sub> 2 </sub>
+			</x>
+			<y> 3 </y>
+		</text>
+	</image-->
+
+
+	<!-- BUTTON START ========================================================================-->
+	<image name="persuasion_start_button">
+<include src="button_long.xml"/>
+		<id> 26 </id>
+		<x>
+			<copy src="persuasion_bribe_button" trait="x" />
+		</x>
+		<y>
+			<copy src="persuasion_bribe_button" trait="y" />
+			<add> 50 </add>
+		</y>
+		<clicksound> 2 </clicksound>
+		<user0> <copy src="strings()" trait="_start"/> </user0>
+		<user2>
+			<copy> 1 </copy>
+			<onlyif>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </onlyif>
+			<add> 1 </add>
+		</user2>
+		<user20><!--&xbuttona;-->1 </user20>
+
+		<!-- RGB for button text (xbox only) -->
+		<user21> 255 </user21>
+		<user22> 255 </user22>
+		<user23> 255 </user23>
+	</image>
+	
+				
+	<!-- BUTTON EXIT ========================================================================-->								
+	<image name="persuasion_exit_button">
+<include src="button_long.xml"/>
+		<id> 9 </id>
+		<x>
+			<copy src="persuasion_rotate_button" trait="x" />
+		</x>
+		<y>
+			<copy src="persuasion_bribe_button" trait="y" />
+			<add> 50 </add>
+		</y>
+		<clicksound> 1 </clicksound>
+		<user0> <copy src="strings()" trait="_done"/> </user0>
+		<user2>
+			<copy> 1 </copy>
+			<onlyif>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </onlyif>
+			<add> 1 </add>
+		</user2>
+		<user20><!--&xbuttonb;-->2 </user20>
+
+		<!-- RGB for button text (xbox only) -->
+		<user21> 255 </user21>
+		<user22> 255 </user22>
+		<user23> 255 </user23>
+	</image>
+
+	<text name="persuasion_reaction_text">
+		<id>11</id>
+		<depth> 1 </depth>
+		<string></string>
+		<font> 2 </font>
+		<justify> &left; </justify>
+		<red> 254 </red> 
+		<green> 244 </green> 
+		<blue> 183 </blue> 
+		<alpha> 0 </alpha>
+		<x>
+			<copy src="screen()" trait="cropx" />
+			<add src="screen()" trait="cropx" />
+		</x>
+		<y>
+			<copy src="screen()" trait="cropy" />
+			<add src="screen()" trait="cropy" />
+		</y>
+	</text>
+</menu>

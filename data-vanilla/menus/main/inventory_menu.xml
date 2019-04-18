@@ -1,0 +1,2311 @@
+<!-- inventory_menu.xml -->
+<menu name="InventoryMenu">
+	<class> &InventoryMenu; </class>
+	<alpha>	0 </alpha> 
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<user0> 1 </user0>				<!-- current tab -->
+	<user1> -1 </user1>			<!-- position of weapons header in list -->
+	<user2> -1 </user2>			<!-- position of apparel header in list -->
+	<user3> -1 </user3>			<!-- position of alchemy header in list -->
+	<user4> -1 </user4>			<!-- position of misc header in list -->
+	<user5> 0 </user5>				<!-- number of items in list -->
+	<user6> 0 </user6>				<!-- encumberace -->
+	<user7> 0 </user7>				<!-- encumberace max -->
+	<user8> 0 </user8>				<!-- armor -->
+	<user9> 0 </user9>				<!-- gold -->
+	<user10>						<!-- X-position of fully-exposed magic popup menu -->
+		<copy src="me()" trait="x"/>
+		<add src="child(inv_background)" trait="x"/>
+		<add src="child(inv_background)" trait="width"/>
+		<sub> 20 </sub>
+	</user10>
+	<user11>Use/Equip</user11>				<!-- used for xbox hints - what should the A button do, TEXT -->
+	<user12>						<!-- lowest possible drop for the pop-up menu -->
+		<copy src="screen()" trait="height"/>
+		<sub src="screen()" trait="cropy"/>
+		<sub src="screen()" trait="cropy"/>
+		<sub> 175 </sub>
+		<min>
+			<copy> 9999 </copy>
+			<onlyifnot>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </onlyifnot>
+			<add src="inv_xbox_hints" trait="y"/>
+		</min>
+	</user12>
+	<!-- user13 through user17 used for additional header positioning -->
+	<user18> &true; </user18>		<!-- is A button hint visible? xbox only -->
+	
+	<xleft> <ref src="inv_tabs_prev" trait="clicked" /> </xleft>
+	<xright> <ref src="inv_tabs_next" trait="clicked" /> </xright>
+	
+	
+	<!-- XBOX (ONLY) HINTS ==================================================================-->
+	<rect name="inv_xbox_hints">
+		<visible>
+         <copy>&true;</copy>
+         <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+      </visible>
+		<width> 100 </width>
+		<height> 100 </height>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub>
+				<copy src="child(inv_hint_equip)" trait="width"/>
+				<max src="child(inv_hint_drop)" trait="width"/>
+				<max src="child(inv_hint_quickkey)" trait="width"/>
+				<max src="child(inv_hint_left_stick)" trait="width"/>
+			</sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="child(inv_hint_left_stick)" trait="y"/>
+			<sub src="child(inv_hint_left_stick)" trait="height"/>
+			<add> 15 </add>
+		</y>
+		<depth> 1 </depth>
+		<locus> &true; </locus>
+		<_is_widescreen>
+			<copy src="screen()" trait="height"/>
+			<div src="screen()" trait="width"/>
+			<lt> 0.75 </lt>
+		</_is_widescreen>
+		
+	
+		<rect name="inv_hint_equip">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<visible> <copy src="InventoryMenu" trait="user18"/> </visible>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y> 0 </y>
+			<user0> <copy src="InventoryMenu" trait="user11"/> </user0>
+			<user20><!--&xbuttona;-->1 </user20>
+		</rect>
+	
+		<rect name="inv_hint_drop">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="height"/>
+				<onlyif src="inv_hint_equip" trait="visible"/>
+			</y>
+			<user0> <copy src="strings()" trait="_drop"/> </user0>
+			<user20><!--&xbuttonx;-->3 </user20>
+		</rect>
+	
+		<rect name="inv_hint_quickkey">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="inv_hint_drop" trait="y"/>
+				<add src="me()" trait="height"/>
+			</y>
+			<user0> <copy src="strings()" trait="_quickkey"/> </user0>
+			<user20><!--&xbuttony;-->4 </user20>
+		</rect>
+	
+		<rect name="inv_hint_left_stick">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="inv_hint_quickkey" trait="y"/>
+				<add src="me()" trait="height"/>
+			</y>
+			<user0> <copy src="strings()" trait="_move_tab"/> </user0>
+			<user20><!--&xbuttonls;-->9 </user20>
+		</rect>
+	</rect>
+		
+	
+	
+	<!-- FOCUS BOX ==================================================================-->
+	<rect name="inv_FocusBox">
+<include src="focus_box.xml"/>
+		<id> 9 </id>
+		<visible> &false; </visible>
+	</rect>
+	
+	
+	
+	<!-- BACKGROUND ==================================================================-->
+	<image name="inv_background">
+		<id> &generic; </id>
+		<target> &true; </target>
+		<filename> Menus\Shared\shared_main_background_1.dds </filename>
+		<depth> 1 </depth>
+		<width> 745 </width>
+		<height> 792 </height>
+		<x>
+			<copy src="screen()" trait="cropx"/>
+			<add src="screen()" trait="cropx"/>
+			<sub> 60 </sub>
+			<max src="screen()" trait="cropx"/>
+			<add> 7 </add>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+			<add> 3 </add>
+		</y>
+		<locus> &true; </locus>
+		
+		<image name="inv_background_2">
+			<filename> Menus\Shared\shared_main_background_2.dds </filename>
+			<depth> -15 </depth>
+			<width> 54 </width>
+			<height> 792 </height>
+			<x> 700 </x>
+			<y> 0 </y>
+		</image>
+		
+		
+		<!-- PAGES ============================================================== -->
+		<image name="inv_p1">
+			<visible> <copy src="InventoryMenu" trait="user0"/> <eq> 1 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_01_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 2 </depth>
+		</image>
+		
+		<image name="inv_p2">
+			<visible> <copy src="InventoryMenu" trait="user0"/> <eq> 2 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_02_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 2 </depth>
+		</image>
+		
+		<image name="inv_p3">
+			<visible> <copy src="InventoryMenu" trait="user0"/> <eq> 3 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_03_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 2 </depth>
+		</image>
+		
+		<image name="inv_p4">
+			<visible> <copy src="InventoryMenu" trait="user0"/> <eq> 4 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_04_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 2 </depth>
+		</image>
+		
+		<image name="inv_p5">
+			<visible> <copy src="InventoryMenu" trait="user0"/> <eq> 5 </eq> </visible>	<!-- current visible tab page = me -->
+			<filename> Menus\Shared\shared_05_tab.dds </filename>
+			<width> 791 </width>
+			<height> 176 </height>
+			<x> 23 </x>
+			<y> 542 </y>
+			<depth> 2 </depth>
+		</image>
+			
+
+		<!-- LINES ============================================================== -->
+		<image name="inv_border_top">
+			<filename> Menus\Inventory\inv_border_top.dds </filename>
+			<width> 596 </width>
+			<height> 160 </height>
+			<x> 110 </x>
+			<y> 65 </y>
+			<depth> 6 </depth>
+			<locus> &true; </locus>
+			<image name="inv_border_middle">
+				<filename> Menus\Inventory\inv_border_middle.dds </filename>
+				<width> 576 </width>
+				<height> 249 </height>
+				<x> 0 </x>
+				<y> 157 </y>
+			</image>
+			<image name="inv_border_bottom">
+				<filename> Menus\Inventory\inv_border_bottom.dds </filename>
+				<width> 628 </width>
+				<height> 160 </height>
+				<x> -57 </x>
+				<y> 393 </y>
+			</image>
+		</image>
+		
+
+		<!-- EXTRAS ============================================================== -->
+		<rect name="inv_extra_data">
+			<depth> 6 </depth>
+			<x>
+				<copy src="me()" trait="width"/>
+				<sub>
+					<copy src="child(inv_money_text)" trait="x"/>
+					<add src="child(inv_money_text)" trait="width"/>
+				</sub>
+				<div> 2 </div>
+				<add> 40 </add>
+			</x>
+			<y> 580 </y>
+			<width> 640 </width>
+			<height> 32 </height>
+			<locus> &true; </locus>
+			
+			<image name="inv_encumberance_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 32 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="inv_encumberance_text">
+				<string>
+					<copy src="InventoryMenu" trait="user6"/> 
+				</string>	<!-- Encumberance - 6 -->
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x> 40 </x>
+				<y>
+					<copy src="inv_encumberance_icon" trait="y"/>
+					<add>
+						<copy src="inv_encumberance_icon" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+			</text>
+			<text name="inv_encumberance_slash">
+				<red><copy src="inv_encumberance_text" trait="red"/></red>
+				<green><copy src="inv_encumberance_text" trait="green"/></green>
+				<blue><copy src="inv_encumberance_text" trait="blue"/></blue>
+				<alpha><copy src="inv_encumberance_text" trait="alpha"/></alpha>
+				<x>
+					<copy src="inv_encumberance_text" trait="x"/>
+					<add src="inv_encumberance_text" trait="width"/>
+					<add>1</add>
+				</x>
+				<y><copy src="inv_encumberance_text" trait="y"/></y>
+				<string>/</string>
+			</text>
+			<text name="inv_encumberance_max">
+				<red><copy src="inv_encumberance_text" trait="red"/></red>
+				<green><copy src="inv_encumberance_text" trait="green"/></green>
+				<blue><copy src="inv_encumberance_text" trait="blue"/></blue>
+				<alpha><copy src="inv_encumberance_text" trait="alpha"/></alpha>
+				<x>
+					<copy src="inv_encumberance_slash" trait="x"/>
+					<add src="inv_encumberance_slash" trait="width"/>
+					<add>1</add>
+				</x>
+				<y><copy src="inv_encumberance_text" trait="y"/></y>
+				<string>
+					<copy src="InventoryMenu" trait="user7"/> 
+				</string>	<!-- Encumberance - 7 -->
+			</text>
+			
+			<image name="inv_armor_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 128 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 210 </x>
+				<y> 0 </y>
+			</image>
+			<text name="inv_armor_text">
+				<string> <copy src="InventoryMenu" trait="user8"/> </string>	<!-- Armor - 8 -->
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x> 250 </x>
+				<y>
+					<copy src="inv_armor_icon" trait="y"/>
+					<add>
+						<copy src="inv_armor_icon" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+			</text>
+			
+			<image name="inv_money_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 224 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<depth> 1 </depth>
+				<x> 420 </x>
+				<y> 0 </y>
+			</image>
+			<text name="inv_money_text">
+				<string> <copy src="InventoryMenu" trait="user9"/> </string>	<!-- Gold - 9 -->
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x> 460 </x>
+				<y>
+					<copy src="inv_money_icon" trait="y"/>
+					<add>
+						<copy src="inv_money_icon" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+			</text>
+		</rect>
+
+
+		<!-- TABS ============================================================== -->
+		<rect name="inv_tabs">
+			<locus> &true; </locus>
+			<depth> 1 </depth>
+			<width> 730 </width>
+			<height> 128 </height>
+			<x> 0 </x>
+			<y> 594 </y>
+				
+			<rect name="inv_tabs_prev">
+				<id> 7 </id>
+				<target> &true; </target>
+				<width> 1 </width>
+				<height> 1 </height>
+				<x> -1 </x>
+				<y> -1 </y>
+				<clicksound>5</clicksound>
+			</rect>
+			
+			<rect name="inv_tabs_next">
+				<id> 8 </id>
+				<target> &true; </target>
+				<width> 1 </width>
+				<height> 1 </height>
+				<x> -1 </x>
+				<y> -1 </y>
+				<clicksound>5</clicksound>
+			</rect>
+			
+			<rect name="inv_tabs_p1">
+				<id> 1 </id>
+				<target> <copy src="inv_p1" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 28 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="inv_tabs_p1_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 0 </cropx>
+					<cropy> 0 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="inv_tabs_p1_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="inv_tabs_p1_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="inv_tabs_p2">
+				<id> 2 </id>
+				<target> <copy src="inv_p2" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 165 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="inv_tabs_p2_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 64 </cropx>
+					<cropy> 0 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="inv_tabs_p2_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="inv_tabs_p2_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="inv_tabs_p3">
+				<id> 3 </id>
+				<target> <copy src="inv_p3" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 134 </width>
+				<height> 85 </height>
+				<x> 304 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="inv_tabs_p3_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 128 </cropx>
+					<cropy> 0 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="inv_tabs_p3_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="inv_tabs_p3_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="inv_tabs_p4">
+				<id> 4 </id>
+				<target> <copy src="inv_p4" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 443 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="inv_tabs_p4_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 192 </cropx>
+					<cropy> 0 </cropy>
+					<depth> -1 </depth>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="inv_tabs_p4_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<depth> -3 </depth>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="inv_tabs_p4_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="inv_tabs_p5">
+				<id> 5 </id>
+				<target> <copy src="inv_p5" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 578 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="inv_tabs_p5_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 256 </cropx>
+					<cropy> 0 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="inv_tabs_p5_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="inv_tabs_p5_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+		</rect>
+	
+	
+		<!-- TOP HEADERS ============================================================== -->
+		<rect name="inv_headers_top">
+			<x> 40 </x>
+			<y> -50 </y>
+			<locus> &true; </locus>
+
+			<rect name="inv_p123_header_top">
+				<visible>
+					<copy src="InventoryMenu" trait="user0"/>
+					<lte>3</lte>
+				</visible>
+				<x> 102 </x>
+				<y> 100 </y>
+				<depth> 7 </depth>
+				<locus> &true; </locus>
+				
+				<_header_1>	<copy src="strings()" trait="_weapons"/>	</_header_1>
+				<_header_2> <copy src="strings()" trait="_apparel"/>	</_header_2>
+				<_header_3> <copy src="strings()" trait="_apparatuses"/></_header_3>
+				<_header_4> <copy src="strings()" trait="_potions"/>	</_header_4>
+				<_header_5>	<copy src="strings()" trait="_ingredients"/></_header_5>
+				<_header_6>	<copy src="strings()" trait="_books"/>		</_header_6>
+				<_header_7>	<copy src="strings()" trait="_keys"/>		</_header_7>
+				<_header_8>	<copy src="strings()" trait="_stones"/>		</_header_8>
+				<_header_9>	<copy src="strings()" trait="_misc"/>		</_header_9>
+				
+				<_headernum>
+					<copy src="InventoryMenu" trait="user0"/>
+					<sub>1</sub>
+					<onlyif>
+						<copy src="InventoryMenu" trait="user0"/>
+						<gte>1</gte>
+					</onlyif>
+					<add>
+						<copy>1</copy>
+						<onlyif>
+							<copy src="inv_scroll_bar" trait="user7"/>
+							<gt src="InventoryMenu" trait="user1"/>
+						</onlyif>
+						<add>
+							<copy>1</copy>
+							<onlyif>
+								<copy src="inv_scroll_bar" trait="user7"/>
+								<gt src="InventoryMenu" trait="user2"/>
+							</onlyif>
+						</add>
+						<add>
+							<copy>1</copy>
+							<onlyif>
+								<copy src="inv_scroll_bar" trait="user7"/>
+								<gt src="InventoryMenu" trait="user3"/>
+							</onlyif>
+						</add>
+						<add>
+							<copy>1</copy>
+							<onlyif>
+								<copy src="inv_scroll_bar" trait="user7"/>
+								<gt src="InventoryMenu" trait="user4"/>
+							</onlyif>
+						</add>
+						<add>
+							<copy>1</copy>
+							<onlyif>
+								<copy src="inv_scroll_bar" trait="user7"/>
+								<gt src="InventoryMenu" trait="user13"/>
+							</onlyif>
+						</add>
+						<add>
+							<copy>1</copy>
+							<onlyif>
+								<copy src="inv_scroll_bar" trait="user7"/>
+								<gt src="InventoryMenu" trait="user14"/>
+							</onlyif>
+						</add>
+						<add>
+							<copy>1</copy>
+							<onlyif>
+								<copy src="inv_scroll_bar" trait="user7"/>
+								<gt src="InventoryMenu" trait="user15"/>
+							</onlyif>
+						</add>
+						<add>
+							<copy>1</copy>
+							<onlyif>
+								<copy src="inv_scroll_bar" trait="user7"/>
+								<gt src="InventoryMenu" trait="user16"/>
+							</onlyif>
+						</add>
+						<add>
+							<copy>1</copy>
+							<onlyif>
+								<copy src="inv_scroll_bar" trait="user7"/>
+								<gt src="InventoryMenu" trait="user17"/>
+							</onlyif>
+						</add>
+						<onlyif>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>1</eq>
+						</onlyif>
+					</add>
+				</_headernum>
+				
+				<image name="inv_p123_header_left">
+					<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<x>
+						<copy src="inv_p123_header_text" trait="x"/>
+						<sub>
+							<copy src="inv_p123_header_text" trait="width" />
+							<div> 2 </div>
+						</sub>
+						<sub>55</sub>
+					</x>
+					<y>
+						<copy src="inv_p123_header_text" trait="y"/>
+						<add>6</add>
+					</y>
+				</image>
+				<image name="inv_p123_header_right">
+					<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<x>
+						<copy src="inv_p123_header_text" trait="x"/>
+						<add>
+							<copy src="inv_p123_header_text" trait="width" />
+							<div> 2 </div>
+						</add>
+						<add>20</add>
+					</x>
+					<y>
+						<copy src="inv_p123_header_left" trait="y"/>
+					</y>
+				</image>
+				<text name="inv_p123_header_text">
+					<id> 14 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<string>
+						<copy src="parent()" trait="_headernum"/>
+						<copy src="parent()" trait="_header_"/> 
+					</string>
+					<font> 3 </font>
+					<x> 130 </x>
+					<y> 5 </y>
+					<red> 51 </red>
+					<green> 79 </green>
+					<blue> 142 </blue>
+					<alpha> 255 </alpha>
+					<justify> &center; </justify>
+					<xright> <ref src="inv_p123_header_img1" trait="mouseover"/> </xright>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</text>
+
+				<image name="inv_p123_header_img1">
+					<id> 15 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 224 </cropx>
+					<x> 300 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<xleft> <ref src="inv_p123_header_text" trait="mouseover"/> </xleft>
+					<xright> <ref src="inv_p123_header_img2" trait="mouseover"/> </xright>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</image>
+				<image name="inv_p123_header_img2">
+					<id> 16 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 32 </cropx>
+					<x> 375 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<xleft> <ref src="inv_p123_header_img1" trait="mouseover"/> </xleft>
+					<xright> <ref src="inv_p123_header_img3a" trait="mouseover"/> </xright>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</image>
+				<image name="inv_p123_header_img3a">
+					<id> 17 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<visible>
+						<copy src="parent()" trait="_headernum"/>
+						<eq>1</eq>
+					</visible>
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 160 </cropx>
+					<x> 435 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<xleft> <ref src="inv_p123_header_img2" trait="mouseover"/> </xleft>
+					<xright> <ref src="inv_p123_header_img3b" trait="mouseover"/> </xright>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</image>
+				<image name="inv_p123_header_img3b">
+					<id> 17 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<visible>
+						<copy src="parent()" trait="_headernum"/>
+						<eq>2</eq>
+					</visible>
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 128 </cropx>
+					<x> 435 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<xleft> <ref src="inv_p123_header_img3a" trait="mouseover"/> </xleft>
+					<xright> <ref src="inv_p123_header_img3c" trait="mouseover"/> </xright>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</image>
+				<image name="inv_p123_header_img3c">
+					<id> 17 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<visible>
+						<copy src="parent()" trait="_headernum"/>
+						<eq>3</eq>
+					</visible>
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 96 </cropx>
+					<x> 435 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<xleft> <ref src="inv_p123_header_img3b" trait="mouseover"/> </xleft>
+					<xright> <ref src="inv_p123_header_img4" trait="mouseover"/> </xright>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</image>
+				<image name="inv_p123_header_img4">
+					<id> 18 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<visible>
+						<copy src="parent()" trait="_headernum"/>
+						<lte>2</lte>
+					</visible>
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 256 </cropx>
+					<x> 495 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<xleft> <ref src="inv_p123_header_img3c" trait="mouseover"/> </xleft>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</image>
+			</rect>
+
+			<rect name="inv_p4p5_header_top">
+				<id>13</id>
+				<visible>
+					<copy src="InventoryMenu" trait="user0"/>
+					<gte>4</gte>
+				</visible>
+				<x> 102 </x>
+				<y> 100 </y>
+				<depth> 7 </depth>
+				<locus> &true; </locus>
+				
+				<user1> -1 </user1>	<!-- position of header 1 in list -->
+				<user2> -1 </user2>	<!-- position of header 2 in list -->
+				<user3> -1 </user3>	<!-- position of header 3 in list -->
+				<user4> -1 </user4>	<!-- position of header 4 in list -->
+				
+				<!-- Alchemy tab -->
+				<_header_1>	<copy src="strings()" trait="_alchemy"/>	</_header_1>
+				<_header_2> <copy src="strings()" trait="_apparatuses"/></_header_2>
+				<_header_3> <copy src="strings()" trait="_potions"/>	</_header_3>
+				<_header_4>	<copy src="strings()" trait="_ingredients"/></_header_4>
+				
+				<!-- Misc tab -->
+				<_header_5>	<copy src="strings()" trait="_misc"/>		</_header_5>
+				<_header_6>	<copy src="strings()" trait="_books"/>		</_header_6>
+				<_header_7>	<copy src="strings()" trait="_keys"/>		</_header_7>
+				<_header_8>	<copy src="strings()" trait="_stones"/>		</_header_8>
+				<_header_9>	<copy src="strings()" trait="_misc"/>		</_header_9>
+				
+				<_headernum>
+					<copy>1</copy>
+					<add>
+						<copy>4</copy>
+						<onlyif>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>5</eq>
+						</onlyif>
+					</add>
+					<add>
+						<copy>1</copy>
+						<onlyif>
+							<copy src="inv_scroll_bar" trait="user7"/>
+							<gt src="me()" trait="user1"/>
+						</onlyif>
+					</add>
+					<add>
+						<copy>1</copy>
+						<onlyif>
+							<copy src="inv_scroll_bar" trait="user7"/>
+							<gt src="me()" trait="user2"/>
+						</onlyif>
+					</add>
+					<add>
+						<copy>1</copy>
+						<onlyif>
+							<copy src="inv_scroll_bar" trait="user7"/>
+							<gt src="me()" trait="user3"/>
+						</onlyif>
+					</add>
+					<add>
+						<copy>1</copy>
+						<onlyif>
+							<copy src="inv_scroll_bar" trait="user7"/>
+							<gt src="me()" trait="user4"/>
+						</onlyif>
+					</add>
+				</_headernum>
+				
+				<image name="inv_p4p5_header_left">
+					<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<x>
+						<copy src="inv_p4p5_header_text" trait="x"/>
+						<sub>
+							<copy src="inv_p4p5_header_text" trait="width" />
+							<div> 2 </div>
+						</sub>
+						<sub>55</sub>
+					</x>
+					<y>
+						<copy src="inv_p4p5_header_text" trait="y"/>
+						<add>6</add>
+					</y>
+				</image>
+				<image name="inv_p4p5_header_right">
+					<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<x>
+						<copy src="inv_p4p5_header_text" trait="x"/>
+						<add>
+							<copy src="inv_p4p5_header_text" trait="width" />
+							<div> 2 </div>
+						</add>
+						<add>20</add>
+					</x>
+					<y>
+						<copy src="inv_p4p5_header_left" trait="y"/>
+					</y>
+				</image>
+				<text name="inv_p4p5_header_text">
+					<id> 14 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<string>
+						<copy src="parent()" trait="_headernum"/>
+						<copy src="parent()" trait="_header_"/> 
+					</string>
+					<font> 3 </font>
+					<x> 130 </x>
+					<y> 5 </y>
+					<red> 51 </red>
+					<green> 79 </green>
+					<blue> 142 </blue>
+					<alpha> 255 </alpha>
+					<justify> &center; </justify>
+					<xright> <ref src="inv_p4p5_header_img1" trait="mouseover"/> </xright>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</text>
+
+				<image name="inv_p4p5_header_img1">
+					<id> 15 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 224 </cropx>
+					<x> 300 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<xleft> <ref src="inv_p4p5_header_text" trait="mouseover"/> </xleft>
+					<xright> <ref src="inv_p4p5_header_img2" trait="mouseover"/> </xright>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</image>
+				<image name="inv_p4p5_header_img2">
+					<id> 16 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 32 </cropx>
+					<x> 375 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<xleft> <ref src="inv_p4p5_header_img1" trait="mouseover"/> </xleft>
+					<xright> <ref src="inv_p4p5_header_img3" trait="mouseover"/> </xright>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</image>
+				<image name="inv_p4p5_header_img3">
+					<id> 17 </id>
+					<target>&true;</target>
+					<clicksound>3</clicksound>
+					<visible>
+						<copy src="parent()" trait="_headernum"/>
+						<eq>2</eq>	<!-- only show for apparatus -->
+					</visible>
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 96 </cropx>
+					<x> 435 </x>
+					<y> 0 </y>
+					<width> 32 </width>
+					<height> 32 </height>
+					<xleft> <ref src="inv_p4p5_header_img2" trait="mouseover"/> </xleft>
+					<xdown> <ref src="inv_list_contents" trait="mouseover"/> </xdown>
+				</image>
+			</rect>
+		</rect> <!-- inv_headers_top -->
+
+		
+		<!-- SCROLL ============================================================== -->
+		<image name="inv_scroll_bar">
+<include src="vertical_scroll.xml"/>
+			<id> 11 </id>
+			<depth> 12 </depth>
+			<x> 690 </x>
+			<y> <copy src="inv_window" trait="y"/> </y>
+			<height> <copy src="inv_window" trait="height"/> </height>
+			
+			<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+			<user2>
+				<copy src="inv_list_contents" trait="user0" />	<!-- set by code - number of visible elements in list -->
+				<sub> 5 </sub>
+			</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+										 items minus the number of items visible.  i.e. if your list has
+										 8 items and you can see 2 at any one time, this should be 6 -->
+			<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+			<user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+			<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+			<user6> 12 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+			<!-- user7 = current value -->
+			<user8> 6 </user8>		<!-- How many items are visible at once -->
+			<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+			<user10> 0 </user10>	<!-- reserved -->
+		</image>
+		
+		
+		<!-- WINDOW ============================================================== -->
+		<rect name="inv_window">
+			<depth> 10 </depth>
+			<locus> &true; </locus>
+			<width> 645 </width>
+			<height> 486 </height>
+			<x> 40 </x>
+			<y> 90 </y>
+			<clipwindow> &true; </clipwindow>
+					
+					
+			<rect name="inv_pane">
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y>
+					<copy src="inv_scroll_bar" trait="user7"/>
+					<mul> -81 </mul>
+					<add> -8 </add>
+				</y>
+					
+					
+				<!-- LIST HEADERS ============================================================== -->
+					
+				<rect name="inv_weapon_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user1"/>
+						<neq src="InventoryMenu" trait="user2"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user1"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="inv_weapon_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_weapon_header_text" trait="x" />
+							<sub>
+								<copy src="inv_weapon_header_text" trait="width" />
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="inv_weapon_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<image name="inv_weapon_header_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_weapon_header_text" trait="width" />
+							<div> 2 </div>
+							<add src="inv_weapon_header_text" trait="x" />
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="inv_weapon_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<text name="inv_weapon_header_text">
+						<string> <copy src="strings()" trait="_weapons"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="inv_weapon_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 224 </cropx>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_weapon_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 32 </cropx>
+						<x> 375 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_weapon_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 160 </cropx>
+						<x> 435 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_weapon_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 256 </cropx>
+						<x> 495 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+				
+				
+				<rect name="inv_apparel_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user2"/>
+						<neq src="InventoryMenu" trait="user3"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user2"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="inv_apparel_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_apparel_header_text" trait="x" />
+							<sub>
+								<copy src="inv_apparel_header_text" trait="width" />
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="inv_apparel_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<image name="inv_apparel_header_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_apparel_header_text" trait="width" />
+							<div> 2 </div>
+							<add src="inv_apparel_header_text" trait="x" />
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="inv_apparel_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<text name="inv_apparel_header_text">
+						<string> <copy src="strings()" trait="_apparel"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="inv_apparel_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 224 </cropx>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_apparel_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 32 </cropx>
+						<x> 375 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_apparel_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 128 </cropx>
+						<x> 435 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_apparel_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 256 </cropx>
+						<x> 495 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+				
+				
+				<rect name="inv_apparatus_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user3"/>
+						<neq src="InventoryMenu" trait="user4"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user3"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="inv_apparatus_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_apparatus_header_text" trait="x" />
+							<sub>
+								<copy src="inv_apparatus_header_text" trait="width" />
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="inv_apparatus_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<image name="inv_apparatus_header_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_apparatus_header_text" trait="width" />
+							<div> 2 </div>
+							<add src="inv_apparatus_header_text" trait="x" />
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="inv_apparatus_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<text name="inv_apparatus_header_text">
+						<string> <copy src="strings()" trait="_apparatuses"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="inv_apparatus_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 224 </cropx>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_apparatus_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 32 </cropx>
+						<x> 375 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_apparatus_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 96 </cropx>
+						<x> 435 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+
+				<rect name="inv_potions_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user0"/>
+						<eq>1</eq>
+						<and>
+							<copy src="InventoryMenu" trait="user4"/>
+							<neq src="InventoryMenu" trait="user13"/>
+						</and>
+						<or>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>4</eq>
+							<and>
+								<copy src="inv_p4p5_header_top" trait="user2"/>
+								<neq src="inv_p4p5_header_top" trait="user3"/>
+							</and>
+						</or>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user4"/>
+						<onlyif>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>1</eq>
+						</onlyif>
+						<add>
+							<copy src="inv_p4p5_header_top" trait="user2"/>
+							<onlyif>
+								<copy src="InventoryMenu" trait="user0"/>
+								<eq>4</eq>
+							</onlyif>
+						</add>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="inv_potions_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_potions_header_text" trait="x" />
+							<sub>
+								<copy src="inv_potions_header_text" trait="width" />
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="inv_potions_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<image name="inv_potions_header_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_potions_header_text" trait="width" />
+							<div> 2 </div>
+							<add src="inv_potions_header_text" trait="x" />
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="inv_potions_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<text name="inv_potions_header_text">
+						<string> <copy src="strings()" trait="_potions"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="inv_potions_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 224 </cropx>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_potions_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 32 </cropx>
+						<x> 375 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+
+				
+				<rect name="inv_ingr_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user0"/>
+						<eq>1</eq>
+						<and>
+							<copy src="InventoryMenu" trait="user13"/>
+							<neq src="InventoryMenu" trait="user14"/>
+						</and>
+						<or>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>4</eq>
+							<and>
+								<copy src="inv_p4p5_header_top" trait="user3"/>
+								<neq src="inv_p4p5_header_top" trait="user4"/>
+							</and>
+						</or>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user13"/>
+						<onlyif>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>1</eq>
+						</onlyif>
+						<add>
+							<copy src="inv_p4p5_header_top" trait="user3"/>
+							<onlyif>
+								<copy src="InventoryMenu" trait="user0"/>
+								<eq>4</eq>
+							</onlyif>
+						</add>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="inv_ingr_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_ingr_header_text" trait="x" />
+							<sub>
+								<copy src="inv_ingr_header_text" trait="width" />
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="inv_ingr_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<image name="inv_ingr_header_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_ingr_header_text" trait="width" />
+							<div> 2 </div>
+							<add src="inv_ingr_header_text" trait="x" />
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="inv_ingr_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<text name="inv_ingr_header_text">
+						<string> <copy src="strings()" trait="_ingredients"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="inv_ingr_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 224 </cropx>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_ingr_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 32 </cropx>
+						<x> 375 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+				
+				<rect name="inv_book_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user14"/>
+						<neq src="InventoryMenu" trait="user15"/>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user14"/>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="inv_book_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_book_header_text" trait="x" />
+							<sub>
+								<copy src="inv_book_header_text" trait="width" />
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="inv_book_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<image name="inv_book_header_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_book_header_text" trait="width" />
+							<div> 2 </div>
+							<add src="inv_book_header_text" trait="x" />
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="inv_book_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<text name="inv_book_header_text">
+						<string> <copy src="strings()" trait="_books"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="inv_book_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 224 </cropx>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_book_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 32 </cropx>
+						<x> 375 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+
+				
+				<rect name="inv_keys_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user0"/>
+						<eq>1</eq>
+						<and>
+							<copy src="InventoryMenu" trait="user15"/>
+							<neq src="InventoryMenu" trait="user16"/>
+						</and>
+						<or>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>5</eq>
+							<and>
+								<copy src="inv_p4p5_header_top" trait="user2"/>
+								<neq src="inv_p4p5_header_top" trait="user3"/>
+							</and>
+						</or>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user15"/>
+						<onlyif>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>1</eq>
+						</onlyif>
+						<add>
+							<copy src="inv_p4p5_header_top" trait="user2"/>
+							<onlyif>
+								<copy src="InventoryMenu" trait="user0"/>
+								<eq>5</eq>
+							</onlyif>
+						</add>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="inv_keys_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_keys_header_text" trait="x" />
+							<sub>
+								<copy src="inv_keys_header_text" trait="width" />
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="inv_keys_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<image name="inv_keys_header_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_keys_header_text" trait="width" />
+							<div> 2 </div>
+							<add src="inv_keys_header_text" trait="x" />
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="inv_keys_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<text name="inv_keys_header_text">
+						<string> <copy src="strings()" trait="_keys"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="inv_keys_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 224 </cropx>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_keys_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 32 </cropx>
+						<x> 375 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+				
+				<rect name="inv_stones_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user0"/>
+						<eq>1</eq>
+						<and>
+							<copy src="InventoryMenu" trait="user16"/>
+							<neq src="InventoryMenu" trait="user17"/>
+						</and>
+						<or>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>5</eq>
+							<and>
+								<copy src="inv_p4p5_header_top" trait="user3"/>
+								<neq src="inv_p4p5_header_top" trait="user4"/>
+							</and>
+						</or>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user16"/>
+						<onlyif>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>1</eq>
+						</onlyif>
+						<add>
+							<copy src="inv_p4p5_header_top" trait="user3"/>
+							<onlyif>
+								<copy src="InventoryMenu" trait="user0"/>
+								<eq>5</eq>
+							</onlyif>
+						</add>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="inv_stones_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_stones_header_text" trait="x" />
+							<sub>
+								<copy src="inv_stones_header_text" trait="width" />
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="inv_stones_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<image name="inv_stones_header_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_stones_header_text" trait="width" />
+							<div> 2 </div>
+							<add src="inv_stones_header_text" trait="x" />
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="inv_stones_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<text name="inv_stones_header_text">
+						<string> <copy src="strings()" trait="_stones"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="inv_stones_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 224 </cropx>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_stones_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 32 </cropx>
+						<x> 375 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+				
+				<rect name="inv_misc_header">
+					<visible>
+						<copy src="InventoryMenu" trait="user0"/>
+						<eq>1</eq>
+						<and>
+							<copy src="InventoryMenu" trait="user17"/>
+							<neq src="InventoryMenu" trait="user5"/>
+						</and>
+						<or>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>5</eq>
+							<and>
+								<copy src="inv_p4p5_header_top" trait="user4"/>
+								<neq src="InventoryMenu" trait="user5"/>
+							</and>
+						</or>
+					</visible>
+					<x> 102 </x>
+					<y>
+						<copy src="InventoryMenu" trait="user17"/>
+						<onlyif>
+							<copy src="InventoryMenu" trait="user0"/>
+							<eq>1</eq>
+						</onlyif>
+						<add>
+							<copy src="inv_p4p5_header_top" trait="user4"/>
+							<onlyif>
+								<copy src="InventoryMenu" trait="user0"/>
+								<eq>5</eq>
+							</onlyif>
+						</add>
+						<mult> 81 </mult>
+					</y>
+					<depth> 3 </depth>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					
+					<image name="inv_misc_header_left">
+						<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_misc_header_text" trait="x" />
+							<sub>
+								<copy src="inv_misc_header_text" trait="width" />
+								<div> 2 </div>
+							</sub>
+							<sub> 55 </sub>
+						</x>
+						<y>
+							<copy src="inv_misc_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<image name="inv_misc_header_right">
+						<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+						<depth> 7 </depth>
+						<width> 35 </width>
+						<height> 17 </height>
+						<clips> &true; </clips>
+						<x>
+							<copy src="inv_misc_header_text" trait="width" />
+							<div> 2 </div>
+							<add src="inv_misc_header_text" trait="x" />
+							<add> 20 </add>
+						</x>
+						<y>
+							<copy src="inv_misc_header_text" trait="y" />
+							<add> 5 </add>
+						</y>
+					</image>
+					<text name="inv_misc_header_text">
+						<string> <copy src="strings()" trait="_misc"/> </string>
+						<font> 3 </font>
+						<x> 130 </x>
+						<y> 35 </y>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<justify> &center; </justify>
+						<clips> &true; </clips>
+					</text>
+						
+					<image name="inv_misc_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 224 </cropx>
+						<x> 300 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+					<image name="inv_misc_header_img">
+						<filename> Menus\Shared\all_small_icons.dds </filename>
+						<cropx> 32 </cropx>
+						<x> 375 </x>
+						<y> 30 </y>
+						<width> 32 </width>
+						<height> 32 </height>
+						<clips> &true; </clips>
+					</image>
+				</rect>
+				
+				<!-- CONTENTNS ======================================================= -->
+				<rect name="inv_list_contents">
+					<id> 10 </id>
+					<user0> 0 </user0>	<!-- set by code - number of visible elements in list -->
+					
+					<!-- code created template items are inserted here -->
+						
+					<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+						an input command, they defer to their parent. The following directions are for those times. -->
+					<target> &false; </target>
+					<xdefault> &true; </xdefault>
+					<xlist> &xlist; </xlist>
+					<xup> <ref src="inv_p123_header_text" trait="mouseover"/> </xup>
+					<!--xdown> &first; </xdown-->
+					<xscroll> <ref src="inv_scroll_bar" trait="user5" /> </xscroll>
+				</rect>
+				
+				
+			</rect>	<!-- inv_pane -->
+		</rect>	<!-- inv_window -->
+		
+		
+		<rect name="inv_list_mouse_blocker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<depth> 50 </depth>
+			<width> 650 </width>
+			<height> 50 </height>
+			<x> 
+				<copy src="inv_window" trait="x"/> 
+			</x>
+			<y> 
+				<copy src="inv_window" trait="y"/> 
+				<add>
+					475
+				</add>				
+			</y>
+		</rect>
+		
+	</image> <!-- inv_background -->
+	
+	
+	
+	<!-- TEMPLATES ======================================================= -->
+	
+	<template name="inv_item_template">
+		<rect name="inv_item">
+			<visible> <copy src="me" trait="user8"/> </visible>
+			<listclip>
+				<copy src="me()" trait="listindex"/>
+				<gte>
+					<copy src="inv_scroll_bar" trait="user7"/>
+					<add src="inv_scroll_bar" trait="user8"/>
+				</gte>
+				<or>
+					<copy src="me()" trait="listindex"/>
+					<lt src="inv_scroll_bar" trait="user7"/>
+				</or>
+			</listclip>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<clips> &true; </clips>
+			<focusinset> 8 </focusinset>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex"/>
+				<mult src="me()" trait="height"/>
+			</y>
+			<depth> 1 </depth>
+			<locus> &true; </locus>
+			<alpha> 0 </alpha>
+			<width> 650 </width>
+			<height> 81 </height>
+			<listindex> 0 </listindex>			<!-- list position index -->
+			<user1> Item Name </user1>			<!-- item name -->
+			<user2> First Value </user2>		<!-- 1st column value -->
+			<user3> Second Value </user3>		<!-- 2nd column value -->
+			<user4> Third Value </user4>		<!-- 3rd column value -->
+			<user5> Fourth Value </user5>		<!-- 4th column value -->
+			<user6> icon/pathname.dds </user6>	<!-- icon pathname -->
+			<user7> 1M </user7>					<!-- string version of column 4 (value) -->
+			<user8> &true; </user8>				<!-- visible -->
+			<user9> type </user9>				<!-- type (weapon,armor,alchemy,misc) -->
+			<user10> &false; </user10>			<!-- is equiped -->
+			<user11> 0 </user11>				<!-- inventory system index -->
+			<!-- Possible item statuses are broken, stolen, enchanted, and poisoned -->
+			<user12> 0 </user12>				<!-- status combination -->
+			<user13></user13>					<!-- status icon filename -->
+						
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="inv_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<xbuttonx> <ref src="me()" trait="shiftclicked"/> </xbuttonx>
+			
+			<image name="inv_equiped_marker">
+				<visible> <copy src="parent()" trait="user10" /> </visible>
+				<depth> 2 </depth>
+				<filename> Menus\Inventory\inv_equiped_marker_1.dds </filename>
+				<alpha> 160 </alpha>
+				<width> 635 </width>
+				<height> 64 </height>
+				<x> 7 </x>
+				<y> 7 </y>
+				<clips> &true; </clips>
+			</image>
+			
+			<image name="inv_item_icon">
+				<depth> 3 </depth>
+				<filename>
+					<copy src="parent()" trait="user6" />
+				</filename>
+				<width> 64 </width>
+				<height> 64 </height>
+				<x> 5 </x>
+				<y> 7 </y>
+				<clips> &true; </clips>
+			</image>
+			
+			<text name="inv_item_count">
+				<depth> 5 </depth>
+				<justify> &right; </justify>
+				<font> 3 </font>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 55 </wrapwidth>
+				<wraplines> 1 </wraplines>
+				<string>
+					<copy src="parent()" trait="user7" />
+				</string>
+				<x> 70 </x>
+				<y> 56 </y>
+				<clips> &true; </clips>
+			</text>
+			
+			<image name="inv_item_status">
+				<visible>
+					<copy src="parent()" trait="user12"/>
+					<gt>0</gt>
+				</visible>
+				<filename> <copy src="parent()" trait="user13"/> </filename>
+				<depth>
+					<copy src="inv_item_icon" trait="depth"/>
+					<add>1</add>
+				</depth>
+				<x>
+					<copy src="inv_item_icon" trait="x"/>
+				</x>
+				<y>
+					<copy src="inv_item_icon" trait="y"/>
+					<add src="inv_item_icon" trait="height"/>
+					<sub src="me()" trait="height"/>
+				</y>
+				<height>
+					<copy>32</copy>		<onlyif src="me()" trait="_handonly"/>
+					<add>
+						<copy>25</copy>	<onlyifnot src="me()" trait="_handonly"/>
+					</add>
+				</height>
+				<width>
+					<copy>64</copy>
+					<sub>
+						<copy>32</copy>
+						<onlyif>
+							<!-- If any of these conditions is true, we are using an original icon,
+							     rather than a "combo" dds. -->
+							<!-- "Combo" dds's are 32x64, original icons are 32x32 -->
+							<copy src="me()" trait="_handonly"/>
+							<or> <copy src="parent()" trait="user12"/> <eq>2</eq> </or>
+							<or> <copy src="parent()" trait="user12"/> <eq>4</eq> </or>
+							<or> <copy src="parent()" trait="user12"/> <eq>8</eq> </or>
+						</onlyif>
+					</sub>
+				</width>
+				<clips> &true; </clips>
+				<red>
+					<copy>208</copy>	<onlyif src="me()" trait="_handonly"/>
+					<add>
+						<copy>255</copy><onlyifnot src="me()" trait="_handonly"/>
+					</add>
+				</red>
+				<green>
+					<copy>0</copy>		<onlyif src="me()" trait="_handonly"/>
+					<add>
+						<copy>255</copy><onlyifnot src="me()" trait="_handonly"/>
+					</add>
+				</green>
+				<blue>
+					<copy>0</copy>		<onlyif src="me()" trait="_handonly"/>
+					<add>
+						<copy>255</copy><onlyifnot src="me()" trait="_handonly"/>
+					</add>
+				</blue>
+				
+				<_handonly>
+					<copy src="parent()" trait="user12"/>
+					<eq> 1 </eq>
+				</_handonly>
+			</image>
+			
+			<text name="inv_item_name">
+				<depth> 3 </depth>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 280 </wrapwidth>
+				<wraplines> 2 </wraplines>
+				<string>
+					<copy src="parent()" trait="user1" />
+				</string>
+				<x> 80 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<clips> &true; </clips>
+			</text>
+			
+			<text name="inv_item_cost">
+				<depth> 3 </depth>
+				<justify> &center; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 90 </wrapwidth>
+				<string>
+					<copy src="parent()" trait="user2" />
+				</string>
+				<x> 418 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<clips> &true; </clips>
+			</text>
+			
+			<text name="inv_item_weight">
+				<depth> 3 </depth>
+				<justify> &center; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 64 </wrapwidth>
+				<string>
+					<copy src="parent()" trait="user3" />
+				</string>
+				<x> 491 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<clips> &true; </clips>
+			</text>
+			
+			<text name="inv_item_damage">
+				<depth> 3 </depth>
+				<justify> &center; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 70 </wrapwidth>
+				<string>
+					<copy src="parent()" trait="user4" />
+				</string>
+				<x> 551 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<clips> &true; </clips>
+			</text>
+			
+			<text name="inv_item_health">
+				<depth> 3 </depth>
+				<justify> &center; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 50 </wrapwidth>
+				<string>
+					<copy src="parent()" trait="user5" />
+				</string>
+				<x> 612 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<clips> &true; </clips>
+			</text>
+		</rect>
+	</template>
+	
+</menu>

@@ -1,0 +1,319 @@
+<!-- sleep_wait_menu.xml -->
+<menu name="SleepWaitMenu">
+	<class> &SleepWaitMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<explorefade> 0.25 </explorefade>
+	<locus> &true; </locus>
+	
+	<user0> &false; </user0>	<!-- true if sleeping, false if waiting -->
+	
+	<xbuttonb> <ref src="sleep_button_cancel" trait="clicked"/> </xbuttonb>
+	<xbuttona> <ref src="sleep_button_sleep_wait" trait="clicked"/> </xbuttona>
+	
+
+	<!-- BACKGROUND ============================================================================-->
+	<rect name="sleep_background">
+<include src="generic_background.xml"/>
+		<id> 1 </id>
+		<target> &true; </target>
+		<depth> 1 </depth>
+		<user0>720</user0>
+		<user1> 380 </user1>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="sleep_background" trait="width" />
+				<div> 2 </div>
+			</sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="sleep_background" trait="height" />
+				<div> 2 </div>
+			</sub>
+		</y>
+		
+		
+		<!-- PROMPT ============================================================================-->
+		<text name="sleep_display_text">
+			<id> 2 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string>
+				<copy src="SleepWaitMenu" trait="user0"/>
+				<copy src="me()" trait="_question_"/>
+			</string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<!--<y>
+				<copy src="parent()" trait="height"/>
+				<sub src="sleep_scroll" trait="y"/>
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+			</y>-->
+			<y> 34 </y>
+			<_question_1> <copy src="strings()" trait="_waitquestion"/> </_question_1>
+			<_question_2> <copy src="strings()" trait="_restquestion"/> </_question_2>
+			<xdefault>&false;</xdefault>
+		</text>
+		
+		
+		<!-- SCROLL BAR ============================================================================-->
+		<image name="sleep_scroll">
+<include src="horiz_floating_scroll.xml"/>
+			<id> 3 </id>
+			<user6> 4 </user6>	<!-- ID for marker/slider -->
+			<user8> &false; </user8>
+			<width> 350 </width>
+			<x> 180 </x>
+			<y> 110 </y>
+			<depth> 6 </depth>
+			<user3> 1 </user3>
+		</rect>
+		
+		<image name="sleep_scroll_marker">
+			<!--<id> &generic; </id>-->
+			<id> 11 </id>
+			<target> <copy src="sleep_scroll_disable" trait="target"/> <eq> &false; </eq> </target>
+			<repeathorizontal> &true; </repeathorizontal>
+			<depth> 1 </depth>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="sleep_scroll" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="sleep_scroll" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x>
+				<copy src="sleep_scroll" trait="x"/>
+				<sub> 60 </sub>
+			</x>
+			<y>
+				<copy src="sleep_scroll" trait="y"/>
+				<sub> 20 </sub>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &true; </xdefault>
+			<xleft> <ref src="horizontal_scroll_left" trait="clicked"/> </xleft>
+			<xright> <ref src="horizontal_scroll_right" trait="clicked"/> </xright>
+			<xdown> <ref src="sleep_button_sleep_wait" trait="mouseover"/> </xdown>
+			<xbuttonlb> <ref src="horizontal_scroll_leftside" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="horizontal_scroll_rightside" trait="clicked"/> </xbuttonrb>
+			
+			<image name="sleep_scroll_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+		</image>
+		
+		<rect name="sleep_scroll_disable">
+			<id>10</id>
+			<depth>
+				<copy src="sleep_scroll" trait="depth"/>
+				<add>7</add>	<!-- this is the magic number if you want something completely on top of your scroll bar and all its components -->
+			</depth>
+			<target> &false; </target>	<!-- target becomes true when player clicks "Wait" -->
+			<x>
+				<copy src="sleep_scroll" trait="x"/>
+				<sub>32</sub>
+			</x>
+			<y>
+				<copy src="sleep_scroll" trait="y"/>
+			</y>
+			<width>
+				<copy src="sleep_scroll" trait="width"/>
+				<add>64</add>
+			</width>
+			<height>24</height>
+		</rect>
+		
+		
+		<!-- TEXT ============================================================================-->
+		<text name="rest_time_text">
+			<string> <copy src="sleep_scroll" trait="user7"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<x>
+				<copy src="sleep_scroll" trait="x"/>
+				<add>
+					<copy src="sleep_scroll" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<sub src="rest_time_text2" trait="width"/>
+					<sub src="rest_time_text3" trait="width"/>
+					<div> 2 </div>
+				</add>
+			</x>
+			<y> 150 </y>
+			<depth> 4 </depth>
+		</text>
+
+		<text name="rest_time_text2">
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha>200</alpha>
+			<visible> &true; </visible>
+			<x>
+				<copy src="rest_time_text" trait="x"/>
+				<add src="rest_time_text" trait="width"/>
+				<add>10</add>
+			</x>
+			<y>
+				<copy src="rest_time_text" trait="y"/>
+			</y>
+			<depth> 4 </depth>
+			<string> <copy src="strings()" trait="_hour"/> </string>
+		</text>
+		
+		<text name="rest_time_text3">
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha>
+				<copy>200</copy>
+				<onlyif>
+					<copy src="sleep_scroll" trait="user7"/>
+					<neq>1</neq>
+				</onlyif>
+			</alpha>
+			<visible> &true; </visible>
+			<x>
+				<copy src="rest_time_text2" trait="x"/>
+				<add src="rest_time_text2" trait="width"/>
+				<add>0</add>
+			</x>
+			<y>
+				<copy src="rest_time_text2" trait="y"/>
+			</y>
+			<depth> 4 </depth>
+			<string> <copy src="strings()" trait="_s"/> </string>
+		</text>
+
+		
+		
+		<!-- BUTTONS ==================================================================-->
+		<image name="sleep_button_sleep_wait">
+<include src="button_long.xml" />
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<x>
+				<copy src="sleep_button_cancel" trait="x" />
+				<sub src="me()" trait="width" />
+				<sub> 20 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<user0> <copy src="strings()" trait="_rest" /> </user0>
+			
+			<user20><!--&xbuttona;-->1 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="sleep_button_cancel" trait="mouseover"/> </xleft>
+			<xright> <ref src="sleep_button_cancel" trait="mouseover"/> </xright>
+			<xup> <ref src="sleep_scroll_marker" trait="mouseover"/> </xup>
+		</image>
+		
+		
+		<image name="sleep_button_cancel">
+<include src="button_long.xml" />
+			<id> 6 </id>
+			<depth> 5 </depth>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 30 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<user0> <copy src="strings()" trait="_cancel" /> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="sleep_button_sleep_wait" trait="mouseover"/> </xleft>
+			<xright> <ref src="sleep_button_sleep_wait" trait="mouseover"/> </xright>
+			<xup> <ref src="sleep_scroll_marker" trait="mouseover"/> </xup>
+		</image>
+		
+		
+		
+		
+		<!-- INFO ==================================================================-->
+		<text name="game_info_1">
+			<id> 8 </id>
+			<depth> 4 </depth>
+			<string> <copy src="strings()" trait="_dayoftheweek"/> </string>
+			<font> 1 </font>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 360 </x>
+			<y> 200 </y>
+		</text>
+		
+		<text name="game_info_2">
+			<id> 9 </id>
+			<depth> 4 </depth>
+			<string> <copy src="strings()" trait="_monthdayyear"/> </string>
+			<font> 1 </font>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 360 </x>
+			<y> 240 </y>
+		</text>
+		
+	</rect>
+</menu>

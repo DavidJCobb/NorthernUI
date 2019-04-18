@@ -1,0 +1,311 @@
+<!-- negotiate_menu.xml -->
+<menu name="NegotiateMenu">
+	<class> &NegotiateMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	
+	<xbuttonb> <ref src="negotiate_button_cancel" trait="clicked"/> </xbuttonb>
+	<xbuttona> <ref src="negotiate_button_okay" trait="clicked"/> </xbuttona>
+	<xbuttonlb> <ref src="horizontal_scroll_leftside" trait="clicked"/> </xbuttonlb>
+	<xbuttonrb> <ref src="horizontal_scroll_rightside" trait="clicked"/> </xbuttonrb>
+	
+	
+	<!-- BACKGROUND ============================================================================-->
+	<rect name="negotiate_background">
+<include src="generic_background.xml"/>
+		<id>1</id>
+		<visible> 2 </visible>
+		<target> &true; </target>
+		<filename> Menus\Shared\main_page_5.dds </filename>
+		<depth> 5 </depth>
+		<user0> 720</user0>
+		<user1> 340 </user1>
+		<locus> &true; </locus>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="negotiate_background" trait="width" />
+				<div> 2 </div>
+			</sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="negotiate_background" trait="height" />
+				<div> 2 </div>
+			</sub>
+		</y>
+		
+		
+		<!-- PROMPT ============================================================================-->
+		<text name="negotiate_display_text">
+			<id> 2 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_haggle"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 330 </x>
+			<y> 10 </y>
+		</text>
+		
+		<!-- SKILL DISPLAY ============================================================================-->
+		<text name="negotiate_mercantile_text">
+			<id> 11 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_mercantile"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x>350 </x>
+			<y> 40 </y>
+		</text>
+		
+		<!-- DISPOSITION DISPLAY ============================================================================-->
+		<text name="negotiate_disposition_text">
+			<id> 12 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_disposition"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x>350 </x>
+			<y> 70 </y>
+		</text>
+		
+		<!-- SCROLL ============================================================================-->
+		<image name="negotiate_scroll">
+<include src="horiz_floating_scroll.xml"/>
+			<id> 3 </id>
+			<user6> 4 </user6>	<!-- ID for marker/slider -->
+			<user8> &false; </user8>
+			<width> 350 </width>
+			<x> 180 </x>
+			<y> 130 </y>
+			<depth> 6 </depth>
+			<user3> 1 </user3>
+		</rect>
+		
+		<image name="negotiate_scroll_marker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<repeathorizontal> &true; </repeathorizontal>
+			<depth> 3 </depth>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="negotiate_scroll" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="negotiate_scroll" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x>
+				<copy src="negotiate_scroll" trait="x"/>
+				<sub> 60 </sub>
+			</x>
+			<y>
+				<copy src="negotiate_scroll" trait="y"/>
+				<sub> 21 </sub>
+			</y>
+			<locus> &true; </locus>
+			
+			<xdefault> &true; </xdefault>
+			<xleft> <ref src="horizontal_scroll_left" trait="clicked"/> </xleft>
+			<xright> <ref src="horizontal_scroll_right" trait="clicked"/> </xright>
+			<xdown> <ref src="negotiate_button_okay" trait="mouseover"/> </xdown>
+			<xup> <ref src="negotiate_button_cancel" trait="mouseover"/> </xup>
+			
+			<image name="negotiate_scroll_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+		</image>
+		
+		
+		<!-- EASY LABEL =====================================================================-->
+		<text name="negotiate_easy_text">
+		
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_easy"/> </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x>
+				<copy src="negotiate_scroll" trait="x"/>
+				<sub src="me()" trait="width"/>
+				<sub> 70 </sub>
+			</x>
+			<y>
+				<copy src="negotiate_scroll" trait="y"/>
+				<sub> 10 </sub>
+			</y>
+		</text>
+		
+		<!-- HARD LABEL =====================================================================-->
+		<text name="negotiate_hard_text">
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_hard"/> </string>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x>
+				<copy src="negotiate_scroll" trait="x"/>
+				<add src="negotiate_scroll" trait="width"/>
+				<add> 70 </add>
+			</x>
+			<y>
+				<copy src="negotiate_scroll" trait="y"/>
+				<sub> 10 </sub>
+			</y>
+		</text>
+		
+		
+		<!-- BUY DISPLAY =====================================================================-->
+		<text name="negotiate_buy_text">
+			<id> 9</id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_buyingitemsat"/> </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<user1>Buying Items at </user1>
+			<user2> % of value</user2>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 110 </x>
+			<y> 180 </y>
+		</text>
+		
+		<!-- SELL DISPLAY =====================================================================-->
+		<text name="negotiate_sell_text">
+			<id> 10 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_sellingitemsat"/> </string>
+			<justify> &left; </justify>
+			<user1>Selling Items at </user1>
+			<user2> % of value</user2>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 110 </x>
+			<y> 220 </y>
+		</text>
+				
+				
+		<!-- BUTTON OKAY =====================================================================-->
+		<image name="negotiate_button_okay">
+<include src="button_short.xml" />
+			<id> 6 </id>
+			<target> &true; </target>
+			<x>
+				<copy src="negotiate_button_cancel" trait="x" />
+				<sub src="me()" trait="width" />
+				<sub> 20 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<depth> 3 </depth>
+			<user0> <copy src="strings()" trait="_ok"/> </user0>
+			
+			<user20><!--&xbuttona;-->1 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="negotiate_button_cancel" trait="mouseover"/> </xleft>
+			<xright> <ref src="negotiate_button_cancel" trait="mouseover"/> </xright>
+			<xdown> <ref src="negotiate_scroll_marker" trait="mouseover"/> </xdown>
+			<xup> <ref src="negotiate_scroll_marker" trait="mouseover"/> </xup>
+		</image>
+		
+		
+		<!-- BUTTON CANCEL =====================================================================-->
+		<image name="negotiate_button_cancel">
+<include src="button_long.xml" />
+			<id> 7 </id>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 30 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<depth> 3 </depth>
+			<user0> <copy src="strings()" trait="_cancel"/> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="negotiate_button_okay" trait="mouseover"/> </xleft>
+			<xright> <ref src="negotiate_button_okay" trait="mouseover"/> </xright>
+			<xdown> <ref src="negotiate_scroll_marker" trait="mouseover"/> </xdown>
+			<xup> <ref src="negotiate_scroll_marker" trait="mouseover"/> </xup>
+		</image>
+		
+	</rect>
+</menu>

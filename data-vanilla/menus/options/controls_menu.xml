@@ -1,0 +1,847 @@
+<!-- controls_menu.xml -->
+<menu name="ControlsMenu">
+	<class> &ControlsMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+
+	<user0> 1 </user0>			<!-- Page number -->
+
+	<user1>						<!-- height of single menu item plus buffer zone -->
+		<copy src="controls_main_rect" trait="height"/>	<!-- parent rect height -->
+		<div src="controls_vertical_scroll" trait="user8"/>	<!-- num items visible -->
+	</user1>
+	
+	<user2> <copy src="strings()" trait="_move"/> </user2>		<!-- Left stick setting -->
+	<user3> <copy src="strings()" trait="_look"/> </user3>		<!-- Right stick setting -->
+	
+	<user4> &true; </user4>		<!-- true = "normal" mode, false = "selected" mode -->
+	
+	<user5></user5>				<!-- Device string -->
+
+	<!-- Text colors -->
+	<red>  117 </red>
+	<green>	59 </green>
+	<blue>	33 </blue>
+	
+	<_button_buffer> 50 </_button_buffer>
+   
+   <xbuttonb><ref src="controls_return_button"   trait="clicked" /></xbuttonb>
+   <xbuttonx><ref src="controls_more_button"     trait="clicked" /></xbuttonx>
+   <xbuttony><ref src="controls_defaults_button" trait="clicked" /></xbuttony>
+	
+	<rect name="controls_background">
+<include src="generic_background.xml"/>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+		<user0>666</user0>	<!-- width -->
+		<user1>580</user1>	<!-- height -->
+
+
+<!--================================================================================================-->
+<!--============================================ PAGE 1 ============================================-->
+<!--================================================================================================-->
+
+
+		<!-- PAGE ONE ========================================================================-->
+		<rect name="controls_page_1">
+			<width> <copy src="parent()" trait="width"/> </width>
+			<height> <copy src="parent()" trait="height"/> </height>
+			<x> 0 </x>
+			<y> 0 </y>
+			<locus> &true; </locus>
+
+			<!--====================================== MOUSE SENSITIVITY =======================================-->
+			<text name="controls_sensitivity_label">
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 1 </eq>
+				</visible>
+				<string> <copy src="strings()" trait="_mousesensitivity"/> </string>
+				<depth> 3 </depth>
+				<alpha>255</alpha>
+				<red>
+					<copy src="ControlsMenu" trait="red"/>
+				</red>
+				<green>
+					<copy src="ControlsMenu" trait="green"/>
+				</green>
+				<blue>
+					<copy src="ControlsMenu" trait="blue"/>
+				</blue>
+				<x>
+					<copy src="controls_sensitivity_slider" trait="x"/>
+					<add>
+						<copy src="controls_sensitivity_slider" trait="width"/>
+						<sub src="me()" trait="width"/>
+						<div>2</div>
+					</add>
+				</x>
+				<y> 96 </y>
+				<depth> 7 </depth>
+			</text>
+
+			<image name="controls_sensitivity_slider">
+<include src="horiz_floating_scroll.xml"/>
+				<id> 5 </id>
+				<visible>
+					<copy src="controls_sensitivity_label" trait="visible"/>
+				</visible>
+				<x>
+					<copy src="child(horizontal_scroll_left)" trait="width"/>
+					<add>
+						<copy src="parent()" trait="width"/>
+						<sub src="me()" trait="width"/>
+						<sub src="child(horizontal_scroll_left)" trait="width"/>
+						<sub src="child(horizontal_scroll_right)" trait="width"/>
+						<div>2</div>
+					</add>
+				</x>
+				<y>
+					<copy src="controls_sensitivity_label" trait="y"/>
+					<add src="controls_sensitivity_label" trait="height"/>
+					<add>12</add>
+				</y>
+				<depth> 5 </depth>
+				
+				<user6> 6 </user6>		<!-- scroll marker id -->
+				<user8> &false; </user8>	<!-- text visibility -->
+			</image>
+			
+			<image name="controls_sensitivity_slider_marker">
+				<id> &generic; </id>
+				<visible>
+					<copy src="controls_sensitivity_label" trait="visible"/>
+				</visible>
+				<target> &true; </target>
+				<depth> 3 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="controls_sensitivity_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="controls_sensitivity_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="controls_sensitivity_slider" trait="x"/>
+					<sub> 60 </sub>
+				</x>
+				<y>
+					<copy src="controls_sensitivity_slider" trait="y"/>
+					<sub> 18 </sub>
+				</y>
+				<locus> &true; </locus>
+            
+            <xdefault>99</xdefault>
+				
+				<image name="controls_sensitivity_slider_marker_2">
+					<depth> 1 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+			</image>
+
+
+			<!--=========================================== INVERT Y ===========================================-->
+			<text name="controls_invert_y_label">
+				<depth> 3 </depth>
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 1 </eq>
+				</visible>
+				<string> <copy src="strings()" trait="_inverty"/> </string>
+				<depth> 3 </depth>
+				<alpha>255</alpha>
+				<red>
+					<copy src="ControlsMenu" trait="red"/>
+				</red>
+				<green>
+					<copy src="ControlsMenu" trait="green"/>
+				</green>
+				<blue>
+					<copy src="ControlsMenu" trait="blue"/>
+				</blue>
+				<x>
+					<copy src="controls_sensitivity_label" trait="x"/>
+				</x>
+				<y>
+					<copy src="controls_sensitivity_label" trait="y"/>
+					<add src="controls_sensitivity_label" trait="height"/>
+					<add> 96 </add>
+				</y>
+			</text>
+		
+			<rect name="controls_invert_y_button">
+<include src="button_floating_2.xml"/>
+				<id> 7 </id>
+				<depth> 3 </depth>
+				<visible>
+					<copy src="controls_invert_y_label" trait="visible"/>
+				</visible>
+				<_center_x>
+					<copy src="controls_invert_y_label" trait="x"/>
+					<add src="controls_sensitivity_label" trait="width"/>
+					<sub>32</sub>
+				</_center_x>
+				<_top>
+					<copy src="controls_invert_y_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+			</rect>
+		
+		
+			<!--========================================== SWAP AXES ===========================================-->
+			<rect name="controls_swap_button">
+<include src="button_floating_2.xml"/>
+				<id> 8 </id>
+				<depth> 3 </depth>
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 1 </eq>
+				</visible>
+				<_center_x>
+					<copy src="parent()" trait="width"/>
+					<div>2</div>
+				</_center_x>
+				<_top>
+					<copy src="controls_left_stick_label" trait="y"/>
+					<sub src="me()" trait="height"/>
+				</_top>
+				<string> <copy src="strings()" trait="_swapstickcontrols"/> </string>
+				
+				<red>
+					<copy src="child(button_text)" trait="red"/>
+				</red>
+				<green>
+					<copy src="child(button_text)" trait="green"/>
+				</green>
+				<blue>
+					<copy src="child(button_text)" trait="blue"/>
+				</blue>
+			</rect>
+
+			<text name="controls_left_stick_label">
+				<depth> 3 </depth>
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 1 </eq>
+				</visible>
+				<locus> &true; </locus>
+				<string> <copy src="strings()" trait="_leftstick"/> </string>
+				<alpha>255</alpha>
+				<x>
+					<copy src="controls_invert_y_label" trait="x"/>
+				</x>
+				<y>
+					<copy src="controls_invert_y_label" trait="y"/>
+					<add src="controls_invert_y_label" trait="height"/>
+					<add> 96 </add>
+				</y>
+				<red>
+					<copy src="controls_swap_button" trait="red"/>
+				</red>
+				<green>
+					<copy src="controls_swap_button" trait="green"/>
+				</green>
+				<blue>
+					<copy src="controls_swap_button" trait="blue"/>
+				</blue>
+			</text>
+			<text name="controls_left_stick_setting">
+				<depth> 3 </depth>
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 1 </eq>
+				</visible>
+				<alpha>255</alpha>
+				<string>
+					<copy src="ControlsMenu" trait="user2"/>
+				</string>
+				<x>
+					<copy src="controls_invert_y_button" trait="_center_x"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="controls_left_stick_label" trait="y"/>
+				</y>
+				<red>
+					<copy src="controls_swap_button" trait="red"/>
+				</red>
+				<green>
+					<copy src="controls_swap_button" trait="green"/>
+				</green>
+				<blue>
+					<copy src="controls_swap_button" trait="blue"/>
+				</blue>
+			</text>
+
+			<text name="controls_right_stick_label">
+				<depth> 3 </depth>
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 1 </eq>
+				</visible>
+				<locus> &true; </locus>
+				<string> <copy src="strings()" trait="_rightstick"/> </string>
+				<alpha>255</alpha>
+				<x>
+					<copy src="controls_left_stick_label" trait="x"/>
+				</x>
+				<y>
+					<copy src="controls_left_stick_label" trait="y"/>
+					<add src="controls_left_stick_label" trait="height"/>
+				</y>
+				<red>
+					<copy src="controls_swap_button" trait="red"/>
+				</red>
+				<green>
+					<copy src="controls_swap_button" trait="green"/>
+				</green>
+				<blue>
+					<copy src="controls_swap_button" trait="blue"/>
+				</blue>
+			</text>
+			<text name="controls_right_stick_setting">
+				<depth> 3 </depth>
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 1 </eq>
+				</visible>
+				<alpha>255</alpha>
+				<string>
+					<copy src="ControlsMenu" trait="user3"/>
+				</string>
+				<x>
+					<copy src="controls_invert_y_button" trait="_center_x"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="controls_right_stick_label" trait="y"/>
+				</y>
+				<red>
+					<copy src="controls_swap_button" trait="red"/>
+				</red>
+				<green>
+					<copy src="controls_swap_button" trait="green"/>
+				</green>
+				<blue>
+					<copy src="controls_swap_button" trait="blue"/>
+				</blue>
+			</text>
+		
+		</rect>		<!-- end page one -->
+
+
+<!--================================================================================================-->
+<!--============================================ PAGE 2 ============================================-->
+<!--================================================================================================-->
+
+
+		<!-- PAGE TWO -- CONTROL MAPPING ========================================================================-->
+		<rect name="controls_page_2">
+			<width> <copy src="parent()" trait="width"/> </width>
+			<height> <copy src="parent()" trait="height"/> </height>
+			<x> 0 </x>
+			<y> 0 </y>
+			<locus> &true; </locus>
+         
+			
+			<!--============================================ DEVICE ==============================================-->
+			<rect name="controls_device_activate_highlight">
+				<id>&generic;</id>
+				<target>&true;</target>
+				<x> <copy src="controls_device_toggle_floating" trait="x"/> </x>
+				<y> <copy src="controls_device_toggle_floating" trait="y"/> </y>
+				<height> <copy src="controls_device_toggle_floating" trait="height"/> </height>
+				<width> <copy src="controls_device_toggle_floating" trait="width"/> </width>
+				<depth> 2 </depth>
+			</rect>
+			<image name="controls_device_toggle_floating">
+				<visible>
+					<copy src="controls_device_toggle_left" trait="mouseover"/>
+					<gt> 0 </gt>
+					<or>
+						<copy src="controls_device_toggle_right" trait="mouseover"/>
+						<gt> 0 </gt>
+					</or>
+					<or>
+						<copy src="controls_device_activate_highlight" trait="mouseover"/>
+						<gt> 0 </gt>
+					</or>
+				</visible>
+				<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+				<width>
+					<copy src="me()" trait="_buffer"/>
+					<add src="controls_device_toggle_right" trait="x"/>
+					<add src="controls_device_toggle_right" trait="width"/>
+					<sub src="me()" trait="x"/>
+				</width>
+				<height> 64 </height>
+				<depth> 3 </depth>
+				<x>
+					<copy src="controls_device_toggle_left" trait="x"/>
+					<sub src="me()" trait="_buffer"/>
+				</x>
+				<y> 10 </y>
+				<locus>&true;</locus>
+				
+				<_buffer> 10 </_buffer>
+				
+				<image name="effset_attribute_floating_end">
+					<depth> 1 </depth>
+					<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width"/>
+						<sub src="me()" trait="width"/>
+						<add>8</add>
+					</x>
+				</image>
+			</image>
+			<image name="controls_device_toggle_left">
+				<id> 12 </id>
+				<visible> <copy src="controls_device_text" trait="visible"/> </visible>
+				<depth> 5 </depth>
+				<target> &true; </target>
+				<filename> \Menus\Shared\shared_arrow_left.dds </filename>
+				<width> 124 </width>
+				<height> 36 </height>
+				<x>
+					<copy src="controls_main_rect" trait="x"/>
+					<add src="controls_border_left" trait="x"/>
+					<add src="controls_device_toggle_floating" trait="_buffer"/>
+				</x>
+				<y>
+					<copy src="controls_device_text" trait="y"/>
+					<add>
+						<copy src="controls_device_text" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+			</image>
+			<text name="controls_device_text">
+				<depth> 3 </depth>
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 2 </eq>
+				</visible>
+				<justify>&center;</justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="controls_device_toggle_left" trait="x"/>
+					<add>
+						<copy src="controls_device_toggle_right" trait="x"/>
+						<add src="controls_device_toggle_right" trait="width"/>
+						<sub src="controls_device_toggle_left" trait="x"/>
+						<div>2</div>
+					</add>
+				</x>
+				<string> <copy src="ControlsMenu" trait="user5"/> </string>
+				<y> 20 </y>
+			</text>
+			<image name="controls_device_toggle_right">
+				<id> 13 </id>
+				<visible> <copy src="controls_device_text" trait="visible"/> </visible>
+				<depth> 5 </depth>
+				<target> &true; </target>
+				<filename> \Menus\Shared\shared_arrow_right.dds </filename>
+				<width> 121 </width>
+				<height> 36 </height>
+				<x>
+					<copy src="controls_main_rect" trait="x"/>
+					<add src="controls_border_right" trait="x"/>
+					<sub src="me()" trait="width"/>
+					<sub src="controls_device_toggle_floating" trait="_buffer"/>
+				</x>
+				<y>
+					<copy src="controls_device_toggle_left" trait="y"/>
+				</y>
+			</image>
+
+
+			<!--=========================================== MAIN RECT ============================================-->
+			<rect name="controls_main_rect">
+				<target> &true; </target>		<!-- for mouse wheel -->
+				<depth> 3 </depth>
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 2 </eq>
+				</visible>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<div>2</div>
+				</x>
+				<y> 75 </y>
+				<width> 538 </width>
+				<height> 400 </height>
+				<alpha> 0 </alpha>
+				<locus> &true; </locus>
+				<clipwindow> &true; </clipwindow>
+				
+				<!--======================================== BORDERS ===========================================-->
+				<image name="controls_border_top">
+					<filename> Menus\Shared\shared_border_horizontal_1.dds </filename>
+					<x> -24 </x>
+					<y>
+						<copy>0</copy>
+						<sub src="me()" trait="height"/>
+					</y>
+					<width>
+						<copy src="parent()" trait="width"/>
+						<sub src="me()" trait="x"/>
+						<sub>32</sub>
+					</width>
+					<height> 6 </height>
+				</image>
+
+				<image name="controls_border_left">
+					<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+					<x>
+						<copy>0</copy>
+						<sub src="me()" trait="width"/>
+					</x>
+					<y> 0 </y>
+					<width> 4 </width>
+					<height> 
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="y"/>
+					</height>
+				</image>
+
+				<image name="controls_border_middle">
+					<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+					<x> 300 </x>
+					<y> 0 </y>
+					<width> 4 </width>
+					<height> 
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="y"/>
+					</height>
+				</image>
+
+				<image name="controls_border_right">
+					<filename> Menus\Shared\shared_border_vertical_2.dds </filename>
+					<x> <copy src="parent()" trait="width"/> <sub>32</sub> </x>
+					<y> 0 </y>
+					<width> 4 </width>
+					<height> 
+						<copy src="parent()" trait="height"/>
+						<sub src="me()" trait="y"/>
+					</height>
+				</image>
+
+				<image name="controls_border_bottom">
+					<filename> Menus\Shared\shared_border_horizontal_1.dds </filename>
+					<x> -24 </x>
+					<y> <copy src="parent()" trait="height"/> </y>
+					<width>
+						<copy src="parent()" trait="width"/>
+						<sub src="me()" trait="x"/>
+						<sub>32</sub>
+					</width>
+					<height> 6 </height>
+				</image>
+				
+				<!--========================================= SCROLL BAR ===========================================-->
+				<image name="controls_vertical_scroll">
+<include src="vert_floating_scroll.xml"/>
+					<id> 2 </id>
+					<x> <copy src="parent()" trait="width"/> </x>
+					<y> <copy src="child(vertical_scroll_top)" trait="height"/> </y>
+					<depth> 3 </depth>
+					<height>
+						<copy src="parent()" trait="height"/>
+						<sub src="child(vertical_scroll_top)" trait="height"/>
+						<sub src="child(vertical_scroll_bottom)" trait="height"/>
+					</height>
+					<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+					<user2>
+						<copy src="controls_list_pane" trait="childcount" />
+						<sub src="me()" trait="user8"/>
+					</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+												items minus the number of items visible.  i.e. if your list has
+												8 items and you can see 2 at any one time, this should be 6 -->
+					<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+					<user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+					<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+					<user6> 3 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+					<!-- user7 = current value -->
+					<user8> 6 </user8>		<!-- How many items are visible at once -->
+				</image>
+
+
+				<!--======================================== TEMPLATE PANE =========================================-->
+				<rect name="controls_list_pane">
+					<id> 4 </id>
+					<alpha>0</alpha>
+					<locus> &true; </locus>
+					<clips> &true; </clips>
+					<width>
+						<copy src="parent()" trait="width"/>
+					</width>
+					<height>
+						<copy src="me()" trait="childcount"/>
+						<mul src="ControlsMenu" trait="user1"/>
+					</height>
+					<x> 0 </x>
+					<y>
+						<copy>0</copy>
+						<sub src="controls_vertical_scroll" trait="user7"/> <!-- user7 = current value -->
+						<mul src="ControlsMenu" trait="user1"/>
+					</y>
+					
+					<_left_edge_buffer> 10 </_left_edge_buffer>
+							
+					<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+						an input command, they defer to their parent. The following directions are for those times. -->
+					<target> &false; </target>
+					
+					<!-- list items are added here in code from the template -->
+					
+				</rect>	<!-- controls_list_pane -->
+			</rect>  <!-- controls_main_rect -->
+		
+			<!--========================================= INSTRUCTIONS ===========================================-->
+			<text name="controls_instructions">
+				<id> 11 </id>
+				<visible>
+					<copy src="ControlsMenu" trait="user0"/>
+					<eq> 2 </eq>
+					<and><not src="ControlsMenu" trait="user4"/></and>
+				</visible>
+				<depth> 3 </depth>
+				<justify>&center;</justify>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<div>2</div>
+				</x>
+				<y>
+					<copy src="controls_defaults_button" trait="y"/>
+					<add>
+						<copy src="controls_defaults_button" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+				<alpha> 255 </alpha>
+				<red>
+					<copy src="ControlsMenu" trait="red"/>
+				</red>
+				<green>
+					<copy src="ControlsMenu" trait="green"/>
+				</green>
+				<blue>
+					<copy src="ControlsMenu" trait="blue"/>
+				</blue>
+				<wrapwidth>
+					<copy src="parent()" trait="width"/>
+					<sub>32</sub>
+				</wrapwidth>
+			</text>
+
+		</rect>	<!-- end page two -->
+	
+      <image name="controls_return_button">
+<include src="button_long.xml"/>
+         <id> 1 </id>
+         <visible>
+            <copy src="ControlsMenu" trait="user0"/><eq>1</eq>
+            <or>
+               <copy src="ControlsMenu" trait="user0"/><eq>2</eq>
+               <and  src="ControlsMenu" trait="user4"/>
+            </or>
+         </visible>
+         <depth> 3 </depth>
+         <x>
+            <copy src="parent()" trait="width"/>
+            <sub src="me()" trait="width"/>
+            <sub src="ControlsMenu" trait="_button_buffer"/>
+         </x>
+         <y>
+            <copy src="parent()" trait="height"/>
+            <sub src="me()" trait="height"/>
+            <sub> 25 </sub>
+         </y>
+         <clicksound>2</clicksound>
+         <user0> <copy src="strings()" trait="_return"/> </user0>
+         <user20>2</user20>
+      </image>
+      <image name="controls_more_button"> <!-- move from sensitivity to controls -->
+	<include src="button_long.xml"/>
+         <id> 9 </id>
+         <depth> 3 </depth>
+         <visible>
+            <copy src="ControlsMenu" trait="user0"/><eq>1</eq>
+         </visible>
+         <x>
+            <copy src="controls_defaults_button" trait="x"/>
+         </x>
+         <y> <copy src="controls_return_button" trait="y"/> </y>
+         <user0> <copy src="strings()" trait="_controls"/> </user0>
+         <user20>3</user20>
+      </image>
+      <image name="controls_defaults_button">
+<include src="button_long.xml"/>
+         <id> 10 </id>
+         <depth> 3 </depth>
+         <visible>
+            <copy src="ControlsMenu" trait="user0"/><eq>2</eq>
+            <and  src="ControlsMenu" trait="user4"/>
+         </visible>
+         <x> <copy src="ControlsMenu" trait="_button_buffer"/> </x>
+         <y> <copy src="controls_return_button" trait="y"/> </y>
+         <user0> <copy src="strings()" trait="_defaults"/> </user0>
+         <user20>4</user20>
+      </image>
+	</rect> <!-- end controls_background -->
+	
+<!--========================================== TEMPLATE ============================================-->
+
+	<template name="controls_template">
+		<rect name="controls_template_item">
+			<x>0</x>
+			<y>
+				<copy src="me()" trait="listindex"/>
+				<mult src="me()" trait="height"/>
+			</y>
+			<depth>1</depth>
+			<width>
+				<copy src="parent()" trait="width"/>
+			</width>
+			<locus> &true; </locus>
+			<clips> &true; </clips>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			
+			<red></red>			<!-- text color - red component -->
+			<green></green>		<!-- text color - green component -->
+			<blue></blue>		<!-- text color - blue component -->
+
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			<user0></user0>		<!-- index -->
+			<user1></user1>		<!-- label string -->
+			<user2>				<!-- x-position around which to center button -->
+				<copy src="parent()" trait="width"/>
+				<sub> 128 </sub>
+			</user2>
+			<user3>key</user3>	<!-- button string (PC only) -->
+			
+			<_left_edge_buffer> <copy src="parent()" trait="_left_edge_buffer"/> </_left_edge_buffer>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<image name="controls_template_floating">
+				<visible>
+					<copy src="parent()" trait="mouseover"/>
+					<gt> 0 </gt>
+				</visible>
+				<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+				<width>
+					<copy src="parent()" trait="width"/>
+					<sub> 32 </sub>
+				</width>
+				<height> 64 </height>
+				<depth> 1 </depth>
+				<x> 0 </x>
+				<y> 0 </y>
+				
+				<image name="effset_attribute_floating_end">
+					<depth> 2 </depth>
+					<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width"/>
+						<add> 8 </add>
+						<sub src="me()" trait="width"/>
+					</x>
+					<y> 0 </y>
+				</image>
+			</image>
+
+			<text name="controls_template_label">
+				<depth>3</depth>
+				<alpha>255</alpha>
+				<clips> &true; </clips>
+				<string>
+					<copy src="parent()" trait="user1"/>
+				</string>
+				<red>
+					<copy src="parent()" trait="red"/>
+				</red>
+				<green>
+					<copy src="parent()" trait="green"/>
+				</green>
+				<blue>
+					<copy src="parent()" trait="blue"/>
+				</blue>
+				<x>
+					<copy src="parent()" trait="_left_edge_buffer"/>
+				</x>
+				<y> 12 </y>
+			</text>
+			
+			<text name="controls_template_button">
+				<clips> &true; </clips>
+				<depth>3</depth>
+				<red>
+					<copy src="parent()" trait="red"/>
+				</red>
+				<green>
+					<copy src="parent()" trait="green"/>
+				</green>
+				<blue>
+					<copy src="parent()" trait="blue"/>
+				</blue>
+				<x>
+					<copy src="parent()" trait="user2"/>
+				</x>
+				<y> 12 </y>
+				<string>
+					<copy src="parent()" trait="user3"/>
+				</string>
+				<justify>&center;</justify>
+			</text>
+		</rect>
+	</template>
+	
+</menu>
+
+<!--====================================================================================================-->
+<!--====================================================================================================-->

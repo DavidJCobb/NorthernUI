@@ -1,0 +1,2120 @@
+<!-- video_menu.xml -->
+<menu name="VideoMenu">
+	<class> &VideoMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+
+	<user0>
+		<copy>27</copy>		<onlyifnot>&xbox;</onlyifnot>
+		<add>
+			<copy>1</copy>	<onlyif>&xbox;</onlyif>
+		</add>
+	</user0>					<!-- Total number of items on this menu -->
+	<user1> 7 </user1>			<!-- Number of items visible on screen at once -->
+	<user2>						<!-- height of single menu item plus buffer zone -->
+		<copy src="video_main_rect" trait="height"/>	<!-- parent rect height -->
+		<div src="me()" trait="user1"/>					<!-- num items visible -->
+	</user2>
+	<user3> &false; </user3>	<!-- Resolution footnote visibility -->
+	<user4></user4>				<!-- Resolution text:  Set in code -->
+	<user5></user5>				<!-- Anti-aliasing text:  Set in code -->
+	
+	<!-- Text colors -->
+	<red>  117 </red>
+	<green>	59 </green>
+	<blue>	33 </blue>
+
+	<xbuttonb> <ref src="video_return_button" trait="clicked"/> </xbuttonb>
+	<xbuttony> <ref src="video_defaults_button" trait="clicked"/> </xbuttony>
+	
+	<rect name="video_background">
+<include src="generic_background.xml"/>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+		<user0> 900 </user0>
+		<user1> 600 </user1>
+		
+		<_x_buffer>
+			<copy src="vertical_scroll_top" trait="width"/>
+		</_x_buffer>
+		
+		<_y_buffer>
+			<copy src="video_return_button" trait="height"/>
+			<add> 20 </add>
+		</_y_buffer>
+
+		<rect name="video_main_rect">
+			<id> 7 </id>
+			<target> &true; </target>		<!-- For wheel move -->
+			<width>
+				<copy src="parent()" trait="width"/>
+				<sub>
+					<copy src="parent()" trait="_x_buffer"/>
+					<mult>2</mult>
+				</sub>
+			</width>
+			<height>
+				<copy src="parent()" trait="height"/>
+				<sub>
+					<copy src="parent" trait="_y_buffer"/>
+					<mult>2</mult>
+				</sub>
+			</height>
+			<x>
+				<copy src="parent()" trait="_x_buffer"/>
+			</x>
+			<y> 50 </y>
+			<alpha>0</alpha>
+			<depth>3</depth>
+			<locus> &true; </locus>
+			
+			<!-- This will be the x-position around which to center all buttons/sliders in the 2nd column -->
+			<user0>
+				<copy src="me()" trait="width"/>
+				<mult>0.65</mult>
+			</user0>
+		
+<!------------------------------------------- SCROLL BAR --------------------------------------------->
+
+			<image name="video_vertical_scroll">
+<include src="vert_floating_scroll.xml"/>
+				<id> 2 </id>
+				<x>
+					<copy src="parent()" trait="width"/>
+				</x>
+				<y>
+					<copy src="child(vertical_scroll_top)" trait="height"/>
+				</y>
+				<height>
+					<copy src="parent()" trait="height"/>
+					<sub src="child(vertical_scroll_top)" trait="height"/>
+					<sub src="child(vertical_scroll_bottom)" trait="height"/>
+				</height>
+				<user1> 0 </user1>					<!-- min -->
+				<user2>
+					<copy src="VideoMenu" trait="user0"/>
+					<sub src="me()" trait="user8"/>
+				</user2>							<!-- max -->
+				<user4>
+					<copy src="me()" trait="user8"/>
+					<sub>1</sub>
+				</user4>							<!-- jump distance -->
+				<user5> 0 </user5>					<!-- starting pos -->
+				<user6> 3 </user6>					<!-- marker id -->
+				<user8>								<!-- num visible -->
+					<copy src="VideoMenu" trait="user1"/>
+				</user8>
+			</image>
+
+<!------------------------------------------- RESOLUTION --------------------------------------------->
+
+			<text name="video_resolution_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_resolution"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+			
+			<rect name="video_resolution_rect">
+				<id> 27 </id>
+				<target> <copy src="video_resolution_label" trait="visible"/> </target>
+				<depth>3</depth>
+				<alpha>0</alpha>
+				<x> <copy src="video_resolution_floating" trait="x"/> </x>
+				<y> <copy src="video_resolution_floating" trait="y"/> </y>
+				<width> <copy src="video_resolution_floating" trait="width"/> </width>
+				<height> <copy src="video_resolution_floating" trait="height"/> </height>
+				
+				<xdefault>&true;</xdefault>
+				<xup> <ref src="vertical_scroll_top" trait="clicked"/> </xup>
+				<xdown> <ref src="video_gamma_slider_marker" trait="mouseover"/> </xdown>
+				<xleft> <ref src="video_resolution_left" trait="clicked"/> </xleft>
+				<xright> <ref src="video_resolution_right" trait="clicked"/> </xright>
+			</rect>
+
+			<image name="video_resolution_floating">
+				<locus>&true;</locus>
+				<visible> &true; </visible>
+				<alpha>
+					<copy>255</copy>
+					<onlyif>
+						<copy src="video_resolution_rect" trait="mouseover"/>
+						<eq>1</eq>
+						<or>
+							<copy src="video_resolution_left" trait="mouseover"/>
+							<eq>1</eq>
+						</or>
+						<or>
+							<copy src="video_resolution_right" trait="mouseover"/>
+							<eq>1</eq>
+						</or>
+					</onlyif>
+				</alpha>
+				<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+				<width> 512 </width>
+				<clicksound> 3 </clicksound>
+				<height> 64 </height>
+				<x>
+					<copy src="video_resolution_left" trait="x"/>
+					<sub>10</sub>
+				</x>
+				<y>
+					<copy src="video_resolution_left" trait="y"/>
+					<add>
+						<copy src="video_resolution_left" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+				
+				<image name="effset_range_floating_end">
+					<depth> 2 </depth>
+					<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width"/>
+						<add> 8 </add>
+						<sub src="me()" trait="width"/>
+					</x>
+					<y> 0 </y>
+				</image>
+			</image>
+			
+			<image name="video_resolution_left">
+				<id> 8 </id>
+				<target>&true;</target>
+				<visible> <copy src="video_resolution_label" trait="visible"/> </visible>
+				<filename> \Menus\Shared\shared_arrow_left.dds </filename>
+				<width> 121 </width>
+				<height> 36 </height>
+				<depth> 5 </depth>
+				<x> 288 </x>
+				<y>
+					<copy src="video_resolution_text" trait="y"/>
+					<add>
+						<copy src="video_resolution_text" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+			</image>
+
+			<text name="video_resolution_text">
+				<visible> <copy src="video_resolution_label" trait="visible"/> </visible>
+				<justify>&center;</justify>
+				<depth>1</depth>
+				<x> <copy src="parent()" trait="user0"/> </x>
+				<y> <copy src="video_resolution_label" trait="y"/> <y>
+				<string> <copy src="VideoMenu" trait="user4"/> </string>
+				<clicksound>3</clicksound>
+
+				<xdefault> &true; </xdefault>
+				<xup> <ref src="video_return_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_LOD_button" trait="mouseover"/> </xdown>
+			</text>
+			
+			<image name="video_resolution_right">
+				<id> 26 </id>
+				<target>&true;</target>
+				<visible> <copy src="video_resolution_label" trait="visible"/> </visible>
+				<filename> \Menus\Shared\shared_arrow_right.dds </filename>
+				<width> 121 </width>
+				<height> 36 </height>
+				<depth> 5 </depth>
+				<x>
+					<copy src="video_resolution_text" trait="x"/>
+					<add>
+						<copy src="video_resolution_text" trait="x"/>
+						<sub src="video_resolution_left" trait="x"/>
+					</add>
+					<sub src="me()" trait="width"/>
+				</x>
+				<y>
+					<copy src="video_resolution_left" trait="y"/>
+				</y>
+			</image>
+
+<!------------------------------------------- GAMMA --------------------------------------------->
+
+			<text name="video_gamma_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+				</visible>
+				<depth> 2 </depth>
+				<string> <copy src="strings()" trait="_gamma"/> </string>
+				<alpha> <copy src="video_gamma_slider" trait="alpha"/> </alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 1 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<onlyifnot>&xbox;</onlyifnot>	<!-- Index is 0 on xbox -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<image name="video_gamma_slider_marker">
+				<id> &generic; </id>
+				<visible> <copy src="video_gamma_label" trait="visible"/> </visible>
+				<target> <copy src="child(video_gamma_slider)" trait="user13"/> </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_gamma_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_gamma_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_gamma_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_resolution_rect" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_texsize_button" trait="mouseover"/> </xdown>
+				<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+				<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+				
+				<image name="video_gamma_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_gamma_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 5 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+					
+					<user4> 25 </user4>			<!-- jump distance -->
+					<user6> 6 </user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!----------------------------------------- TEXTURE SIZE ------------------------------------------->
+
+			<text name="video_texsize_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_texturesize"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 2 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_texsize_button">
+<include src="button_floating_2.xml"/>
+				<id> 20 </id>
+				<visible> <copy src="video_texsize_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_texsize_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string>&nothing;</string>	<!-- This should never show up...don't put this in strings.xml -->
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_gamma_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_tree_lod_slider_marker" trait="mouseover"/> </xdown>
+			</rect>
+
+<!-------------------------------------------- TREE LOD ---------------------------------------------->
+
+			<text name="video_tree_lod_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_treelod"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 3 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+			
+			<image name="video_tree_lod_slider_marker">
+				<id> &generic; </id>
+				<visible> <copy src="video_tree_lod_label" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_tree_lod_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_tree_lod_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_tree_lod_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_texsize_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_actor_lod_slider_marker" trait="mouseover"/> </xdown>
+				
+				<image name="video_tree_lod_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_tree_lod_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 12 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+
+					<user4> 25 </user4>			<!-- jump distance -->
+					<user6> 13 </user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!-------------------------------------------- ACTOR LOD --------------------------------------------->
+
+			<text name="video_actor_lod_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_actorlod"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 4 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+			
+			<image name="video_actor_lod_slider_marker">
+				<id> &generic; </id>
+				<visible> <copy src="video_actor_lod_label" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_actor_lod_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_actor_lod_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_actor_lod_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_tree_lod_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_item_lod_slider_marker" trait="mouseover"/> </xdown>
+				
+				<image name="video_actor_lod_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_actor_lod_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 14 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+					
+					<user4> 25 </user4>			<!-- jump distance -->
+					<user6> 15 </user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!-------------------------------------------- ITEM LOD ---------------------------------------------->
+
+			<text name="video_item_lod_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_itemlod"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 5 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<image name="video_item_lod_slider_marker">
+				<id> 24 </id>
+				<visible> <copy src="video_item_lod_label" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_item_lod_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_item_lod_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_item_lod_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_actor_lod_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_object_lod_slider_marker" trait="mouseover"/> </xdown>
+				
+				<image name="video_item_lod_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_item_lod_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 16 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+					
+					<user4> 25 </user4>			<!-- jump distance -->
+					<user6> 17 </user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!------------------------------------------- OBJECT LOD --------------------------------------------->
+
+			<text name="video_object_lod_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_objectlod"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 6 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<image name="video_object_lod_slider_marker">
+				<id> 25 </id>
+				<visible> <copy src="video_object_lod_label" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_object_lod_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_object_lod_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_object_lod_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_item_lod_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_grass_slider_marker" trait="mouseover"/> </xdown>
+				
+				<image name="video_object_lod_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_object_lod_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 18 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+					
+					<user4> 25 </user4>			<!-- jump distance -->
+					<user6> 19 </user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!------------------------------------------- GRASS --------------------------------------------->
+
+			<text name="video_grass_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_grass"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 7 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<image name="video_grass_slider_marker">
+				<id> &generic; </id>
+				<visible> <copy src="video_grass_label" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_grass_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_grass_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_grass_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_object_lod_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_viewdist_slider_marker" trait="mouseover"/> </xdown>
+				
+				<image name="video_grass_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_grass_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 22 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+					
+					<user4> 25 </user4>			<!-- jump distance -->
+					<user6> 23 </user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!------------------------------------------- VIEW DISTANCE --------------------------------------------->
+
+			<text name="video_viewdist_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_viewdist"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 8 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<image name="video_viewdist_slider_marker">
+				<id> &generic; </id>
+				<visible> <copy src="video_viewdist_label" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_viewdist_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_viewdist_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_viewdist_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_grass_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_LOD_button" trait="mouseover"/> </xdown>
+				
+				<image name="video_viewdist_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_viewdist_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 28 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+					
+					<user4> 25 </user4>			<!-- jump distance -->
+					<user6> 29</user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!------------------------------------------- DISTANT LOD -------------------------------------------->
+
+			<text name="video_LOD_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_distantlod"/> </string>
+				<alpha> 255 </alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>	</red>
+				<green> <copy src="VideoMenu" trait="green"/></green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>	</blue>
+				<x> 0 </x>
+				<y>
+					<copy> 9 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<rect name="video_LOD_button">
+<include src="button_floating_2.xml"/>
+				<id> 9 </id>
+				<visible> <copy src="video_LOD_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_LOD_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_viewdist_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_distbuild_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!------------------------------------------- DISTANT BUILDINGS -------------------------------------------->
+
+			<text name="video_distbuild_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_distbuild"/> </string>
+				<alpha> <copy src="video_distbuild_button" trait="_alpha"/> </alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>	</red>
+				<green> <copy src="VideoMenu" trait="green"/></green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>	</blue>
+				<x> 0 </x>
+				<y>
+					<copy> 10 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<rect name="video_distbuild_button">
+<include src="button_floating_2.xml"/>
+				<id> 30 </id>
+				<visible> <copy src="video_distbuild_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_distbuild_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+				<_alpha> <copy src="child(button_text)" trait="alpha"/> </_alpha>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_LOD_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_disttrees_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!------------------------------------------- DISTANT TREES -------------------------------------------->
+
+			<text name="video_disttrees_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_disttrees"/> </string>
+				<alpha> <copy src="video_disttrees_button" trait="_alpha"/> </alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>	</red>
+				<green> <copy src="VideoMenu" trait="green"/></green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>	</blue>
+				<x> 0 </x>
+				<y>
+					<copy> 11 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<rect name="video_disttrees_button">
+<include src="button_floating_2.xml"/>
+				<id> 31 </id>
+				<visible> <copy src="video_disttrees_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_disttrees_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+				<_alpha> <copy src="child(button_text)" trait="alpha"/> </_alpha>
+				
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_distbuild_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_intshad_slider_marker" trait="mouseover"/> </xdown>
+			</rect>
+
+<!------------------------------------------- INTERIOR SHADOWS --------------------------------------------->
+
+			<text name="video_intshad_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_intshad"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 12 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<image name="video_intshad_slider_marker">
+				<id> &generic; </id>
+				<visible> <copy src="video_intshad_label" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_intshad_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_intshad_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_intshad_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_disttrees_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_extshad_slider_marker" trait="mouseover"/> </xdown>
+				
+				<image name="video_intshad_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_intshad_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 32 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+					
+					<user6> 33 </user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!------------------------------------------- EXTERIOR SHADOWS --------------------------------------------->
+
+			<text name="video_extshad_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_extshad"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 13 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<image name="video_extshad_slider_marker">
+				<id> &generic; </id>
+				<visible> <copy src="video_extshad_label" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_extshad_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_extshad_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_extshad_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_intshad_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_self_shadows_button" trait="mouseover"/> </xdown>
+				
+				<image name="video_extshad_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_extshad_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 34 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+					
+					<user6> 35 </user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!---------------------------------------------- SELF SHADOWS --------------------------------------------->
+
+			<text name="video_self_shadows_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_self_shadows"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 14 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_self_shadows_button">
+				<include src="button_floating_2.xml"/>
+				<id> 10 </id>
+				<visible> <copy src="video_self_shadows_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_self_shadows_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_extshad_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_grass_shadows_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!---------------------------------------------- GRASS SHADOWS --------------------------------------------->
+
+			<text name="video_grass_shadows_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_grass_shadows"/> </string>
+				<alpha> <copy src="video_grass_shadows_button" trait="_alpha"/> </alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 15 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_grass_shadows_button">
+				<include src="button_floating_2.xml"/>
+				<id> 21 </id>
+				<visible> <copy src="video_grass_shadows_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_grass_shadows_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+				<_alpha>
+					<copy>128</copy>
+					<add>
+						<copy>127</copy>
+						<onlyif>
+							<copy src="child(button_text)" trait="alpha"/>
+							<eq>255</eq>
+						</onlyif>
+					</add>
+				</_alpha>
+
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_self_shadows_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_canopy_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!----------------------------------------- CANOPY SHADOWS ------------------------------------------->
+
+			<text name="video_canopy_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_canopyshadows"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 16 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_canopy_button">
+				<include src="button_floating_2.xml"/>
+				<id> 11 </id>
+				<visible> <copy src="video_canopy_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_canopy_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_grass_shadows_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_shadow_filter_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!----------------------------------------- SHADOW FILTERING ------------------------------------------->
+
+			<text name="video_shadow_filter_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_shadowfiltering"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 17 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_shadow_filter_button">
+				<include src="button_floating_2.xml"/>
+				<id> 48 </id>
+				<visible> <copy src="video_shadow_filter_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_shadow_filter_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_canopy_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_speclight_slider_marker" trait="mouseover"/> </xdown>
+			</rect>
+
+<!------------------------------------------- SPECULAR LIGHTING  --------------------------------------------->
+
+			<text name="video_speclight_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_speclight"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 18 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+
+			<image name="video_speclight_slider_marker">
+				<id> &generic; </id>
+				<visible> <copy src="video_speclight_label" trait="visible"/> </visible>
+				<target> &true; </target>
+				<repeathorizontal> &true; </repeathorizontal>
+				<depth> 1 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul>
+						<copy src="me()" trait="mouseover" />
+						<add src="video_speclight_slider" trait="_mouseover_any" />
+						<min> 1 </min>
+					</mul>
+				</alpha>
+				<width>
+					<copy src="video_speclight_slider" trait="width"/>
+					<add> 120 </add>
+				</width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="user0"/>
+					<sub>
+						<copy src="me()" trait="width"/>
+						<div>2</div>
+					</sub>
+				</x>
+				<y>
+					<copy src="video_speclight_label" trait="y"/>
+					<add> -15 </add>
+				</y>
+				<depth> 3 </depth>
+				<locus> &true; </locus>
+				
+				<xdefault> &true; </xdefault>
+				<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+				<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+				<xup> <ref src="video_shadow_filter_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_hdr_button" trait="mouseover"/> </xdown>
+				
+				<image name="video_speclight_slider_marker_2">
+					<depth> 2 </depth>
+					<filename> dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width" />
+						<sub> 100 </sub>
+					</x>
+					<y> 0 </y>
+				</image>
+		
+				<image name="video_speclight_slider">
+<include src="horiz_floating_scroll.xml"/>
+					<id> 36 </id>
+					<x> 60 </x>
+					<y> 22 </y>
+					<depth> 3 </depth>
+					
+					<user4> 25 </user4>			<!-- jump distance -->
+					<user6> 37 </user6>			<!-- scroll marker id -->
+					<user8> &false; </user8>	<!-- visibility of slider value -->
+				</image>
+			</image>
+
+<!----------------------------------------- HIGH DYNAMIC RANGE ------------------------------------------->
+
+			<text name="video_hdr_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_hdr"/> </string>
+				<alpha> <copy src="video_hdr_button" trait="_alpha"/> </alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 19 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_hdr_button">
+				<include src="button_floating_2.xml"/>
+				<id> 38 </id>
+				<visible> <copy src="video_hdr_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_hdr_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+				<_alpha>
+					<copy>128</copy>
+					<add>
+						<copy>127</copy>
+						<onlyif>
+							<copy src="child(button_text)" trait="alpha"/>
+							<eq>255</eq>
+						</onlyif>
+					</add>
+				</_alpha>
+
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_speclight_slider_marker" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_bloom_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!----------------------------------------- BLOOM ------------------------------------------->
+
+			<text name="video_bloom_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_bloom"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 20 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_bloom_button">
+				<include src="button_floating_2.xml"/>
+				<id> 47 </id>
+				<visible> <copy src="video_bloom_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_bloom_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_hdr_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_water_detail_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!----------------------------------------- WATER DETAIL ------------------------------------------->
+
+			<text name="video_water_detail_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_water_detail"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 21 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_water_detail_button">
+				<include src="button_floating_2.xml"/>
+				<id> 39 </id>
+				<visible> <copy src="video_water_detail_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_water_detail_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_bloom_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_water_reflections_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!----------------------------------------- WATER REFLECTIONS ------------------------------------------->
+
+			<text name="video_water_reflections_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_water_reflections"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 22 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_water_reflections_button">
+				<include src="button_floating_2.xml"/>
+				<id> 40 </id>
+				<visible> <copy src="video_water_reflections_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_water_reflections_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_water_detail_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_water_displacement_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!----------------------------------------- WATER DISPLACEMENT ------------------------------------------->
+
+			<text name="video_water_displacement_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_water_displacement"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 23 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_water_displacement_button">
+				<include src="button_floating_2.xml"/>
+				<id> 41 </id>
+				<visible> <copy src="video_water_displacement_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_water_displacement_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_water_reflections_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_window_reflections_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!----------------------------------------- WINDOW REFLECTIONS ------------------------------------------->
+
+			<text name="video_window_reflections_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_window_reflections"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 24 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_window_reflections_button">
+				<include src="button_floating_2.xml"/>
+				<id> 42 </id>
+				<visible> <copy src="video_window_reflections_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_window_reflections_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_water_displacement_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_blood_button" trait="mouseover"/> </xdown>
+			</rect>
+
+<!----------------------------------------- HAIR DETAIL ------------------------------------------->
+
+			<!--text name="video_hair_detail_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_hair_detail"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> ?? </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) --><!--
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_hair_detail_button">
+				<include src="button_floating_2.xml"/>
+				<id> ?? </id>
+				<visible> <copy src="video_hair_detail_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_hair_detail_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_window_reflections_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_blood_button" trait="mouseover"/> </xdown>
+			</rect-->
+
+<!----------------------------------------- BLOOD DECALS ------------------------------------------->
+
+			<text name="video_blood_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_blood"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 25 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+		
+			<rect name="video_blood_button">
+				<include src="button_floating_2.xml"/>
+				<id> 43 </id>
+				<visible> <copy src="video_blood_label" trait="visible"/> </visible>
+				<_center_x> <copy src="parent()" trait="user0"/> </_center_x>
+				<_top>
+					<copy src="video_blood_label" trait="y"/>
+					<sub>12</sub>
+				</_top>
+				<string> <copy src="strings()" trait="_onoff"/> </string>
+				<clicksound>3</clicksound>
+			
+				<xdefault> &false; </xdefault>
+				<xup> <ref src="video_window_reflections_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="video_antialias_rect" trait="mouseover"/> </xdown>
+			</rect>
+
+<!------------------------------------------- ANTI-ALIASING --------------------------------------------->
+
+			<text name="video_antialias_label">
+				<visible>
+					<copy src="me()" trait="y"/>
+					<gte>0</gte>
+					<and>
+						<copy src="me()" trait="y"/>
+						<add src="me()" trait="height"/>
+						<lte src="parent()" trait="height"/>
+					</and>
+					<and><not>&xbox;</not></and>
+				</visible>
+				<string> <copy src="strings()" trait="_antialiasing"/> </string>
+				<alpha>255</alpha>
+				<red>	<copy src="VideoMenu" trait="red"/>   </red>
+				<green> <copy src="VideoMenu" trait="green"/> </green>
+				<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+				<x> 0 </x>
+				<y>
+					<copy> 26 </copy>		<!-- Index on list goes here (0=first, 1=second, etc...) -->
+					<sub src="video_vertical_scroll" trait="user7"/>
+					<mult src="VideoMenu" trait="user2"/>
+				</y>
+			</text>
+			
+			<rect name="video_antialias_rect">
+				<id> 44 </id>
+				<target> <copy src="video_antialias_label" trait="visible"/> </target>
+				<depth>3</depth>
+				<alpha>0</alpha>
+				<x> <copy src="video_antialias_floating" trait="x"/> </x>
+				<y> <copy src="video_antialias_floating" trait="y"/> </y>
+				<width> <copy src="video_antialias_floating" trait="width"/> </width>
+				<height> <copy src="video_antialias_floating" trait="height"/> </height>
+				
+				<xdefault>&false;</xdefault>
+				<xup> <ref src="video_blood_button" trait="mouseover"/> </xup>
+				<xdown> <ref src="vertical_scroll_bottom" trait="clicked"/> </xdown>
+				<xleft> <ref src="video_antialias_left" trait="clicked"/> </xleft>
+				<xright> <ref src="video_antialias_right" trait="clicked"/> </xright>
+			</rect>
+
+			<image name="video_antialias_floating">
+				<locus>&true;</locus>
+				<visible> &true; </visible>
+				<alpha>
+					<copy>255</copy>
+					<onlyif>
+						<copy src="video_antialias_rect" trait="mouseover"/>
+						<eq>1</eq>
+						<or>
+							<copy src="video_antialias_left" trait="mouseover"/>
+							<eq>1</eq>
+						</or>
+						<or>
+							<copy src="video_antialias_right" trait="mouseover"/>
+							<eq>1</eq>
+						</or>
+					</onlyif>
+				</alpha>
+				<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+				<width> 512 </width>
+				<clicksound> 3 </clicksound>
+				<height> 64 </height>
+				<x>
+					<copy src="video_antialias_left" trait="x"/>
+					<sub>10</sub>
+				</x>
+				<y>
+					<copy src="video_antialias_left" trait="y"/>
+					<add>
+						<copy src="video_antialias_left" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+				
+				<image name="effset_range_floating_end">
+					<depth> 2 </depth>
+					<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+					<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+					<width> 104 </width>
+					<height> 64 </height>
+					<x>
+						<copy src="parent()" trait="width"/>
+						<add> 8 </add>
+						<sub src="me()" trait="width"/>
+					</x>
+					<y> 0 </y>
+				</image>
+			</image>
+			
+			<image name="video_antialias_left">
+				<id> 45 </id>
+				<target>&true;</target>
+				<visible> <copy src="video_antialias_label" trait="visible"/> </visible>
+				<filename> \Menus\Shared\shared_arrow_left.dds </filename>
+				<width> 121 </width>
+				<height> 36 </height>
+				<depth> 5 </depth>
+				<x> 288 </x>
+				<y>
+					<copy src="video_antialias_text" trait="y"/>
+					<add>
+						<copy src="video_antialias_text" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+			</image>
+
+			<text name="video_antialias_text">
+				<visible> <copy src="video_antialias_label" trait="visible"/> </visible>
+				<justify>&center;</justify>
+				<depth>1</depth>
+				<x> <copy src="parent()" trait="user0"/> </x>
+				<y> <copy src="video_antialias_label" trait="y"/> <y>
+				<string> <copy src="VideoMenu" trait="user5"/> </string>
+				<clicksound>3</clicksound>
+			</text>
+			
+			<image name="video_antialias_right">
+				<id> 46 </id>
+				<target>&true;</target>
+				<visible> <copy src="video_antialias_label" trait="visible"/> </visible>
+				<filename> \Menus\Shared\shared_arrow_right.dds </filename>
+				<width> 121 </width>
+				<height> 36 </height>
+				<depth> 5 </depth>
+				<x>
+					<copy src="video_antialias_text" trait="x"/>
+					<add>
+						<copy src="video_antialias_text" trait="x"/>
+						<sub src="video_antialias_left" trait="x"/>
+					</add>
+					<sub src="me()" trait="width"/>
+				</x>
+				<y>
+					<copy src="video_antialias_left" trait="y"/>
+				</y>
+			</image>
+
+<!---------------------------------------------------------------------------------------------------->
+
+		</rect>  <!-- video_main_rect -->
+
+<!--------------------------------------- RESOLUTION FOOTNOTE ---------------------------------------->
+
+		<text name="video_resolution_footnote">
+			<font>3</font>
+			<visible> <copy src="VideoMenu" trait="user3"/> </visible>
+			<depth>3</depth>
+			<x> 20 </x>
+			<y> <copy src="parent()" trait="height"/> <sub>40</sub> </y>
+			<alpha>255</alpha>
+			<string> <copy src="strings()" trait="_widescreen"/> </string>
+			<red>	<copy src="VideoMenu" trait="red"/>   </red>
+			<green> <copy src="VideoMenu" trait="green"/> </green>
+			<blue>	<copy src="VideoMenu" trait="blue"/>  </blue>
+		</text>
+
+<!------------------------------------------ DEFAULTS BUTTON ------------------------------------------->
+
+		<image name="video_defaults_button">
+			<include src="button_long.xml"/>
+			<id> 4 </id>
+			<depth> 3 </depth>
+			<x>
+				<copy src="video_return_button" trait="x" />
+				<sub src="me()" trait="width" />
+				<sub>
+					<copy>10</copy>
+					<add>
+						<copy> 30 </copy>
+						<onlyif> &xenon; </onlyif>
+					</add>
+				</sub>
+			</x>
+			<y>
+				<copy src="video_return_button" trait="y" />
+			</y>
+			<clicksound>2</clicksound>
+			<user0> <copy src="strings()" trait="_defaults"/> </user0>
+			
+			<user20><!--&xbuttony;-->4 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="video_return_button" trait="mouseover"/> </xleft>
+			<xright> <ref src="video_return_button" trait="mouseover"/> </xright>
+			<xup> <ref src="video_blood_button" trait="mouseover"/> </xup>
+		</image>
+
+<!------------------------------------------ RETURN BUTTON ------------------------------------------->
+
+		<image name="video_return_button">
+			<include src="button_long.xml"/>
+			<id> 1 </id>
+			<depth> 3 </depth>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 30 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<clicksound>2</clicksound>
+			<user0> <copy src="strings()" trait="_return"/> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="video_defaults_button" trait="mouseover"/> </xleft>
+			<xright> <ref src="video_defaults_button" trait="mouseover"/> </xright>
+			<xup> <ref src="video_blood_button" trait="mouseover"/> </xup>
+		</image>
+
+	</rect>		<!-- video_background -->
+
+</menu>
+
+<!-------------------------------------------------------------------------------------------------------->
+<!-------------------------------------------------------------------------------------------------------->

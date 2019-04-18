@@ -1,0 +1,348 @@
+<menu name="GenericTestMenu">
+	<class> GenericMenu </class>
+	<alpha>	0 </alpha>
+	<locus> true </locus>
+	<x>
+		<copy> 1280 </copy>
+		<div> 2 </div>
+		<sub>
+			<copy src="background" trait="width" />
+			<div> 2 </div>
+		</sub>
+	</x>
+	<y>
+		<copy> 960 </copy>
+		<div> 2 </div>
+		<sub>
+			<copy src="background" trait="height" />
+			<div> 2 </div>
+		</sub>
+	</y>
+	<explorefade> 0.25 </explorefade>
+	
+
+	<image name="background">
+		<visible> 2 </visible>
+		<target> true </target>
+		<depth> 200 </depth>
+		<locus> true </locus>
+		<filename> Menus\Message\msg_background.dds </filename>
+		<width> 716 </width>
+		<height>
+			<copy src="box_bottom" trait="y" />
+			<sub src="me()" trait="y" />
+			<add src="box_bottom" trait="height" />
+		</height>
+		<x> 0 </x>
+		<y> 0 </y>
+
+
+		<text name="display_text">
+			<id> 1 </id>
+			<target> true </target>
+			<depth> 5 </depth>
+			<string> TEXT </string>
+			<justify> left </justify>
+			<red> 120 </red>
+			<green> 34 </green>
+			<blue> 0 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 25 </x>
+			<y> 50 </y>
+		</text>
+
+
+		<image name="box_top">
+			<filename> Menus\Message\msg_frame_top.dds </filename>
+			<depth> 2 </depth>
+			<width> 675 </width>
+			<height> 114 </height>
+			<x>
+				<copy src="background" trait="x" />
+				<add> 28 </add>
+			</x>
+			<y>
+				<copy src="text" trait="y" />
+				<add src="display_text" trait="height" />
+				<add> 2 </add>
+			</y>
+		</image>
+		
+		
+		
+		
+		<rect name="first">
+			<depth> 5 </depth>
+			<locus> true </locus>
+			<alpha> 0 </alpha>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="box_top" trait="y"/>
+				<add> 35 </add>
+			</y>
+
+
+			<text name="first_text">
+				<depth> 1 </depth>
+				<string>
+					<copy src="me()" trait="_final_value"/>
+				</string>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<alpha> 200 </alpha>
+				<justify> center </justify>
+				<x> 0 </x>
+				<y> 0 </y>
+				<_final_value>
+					<add src="first_plus" trait="clicked"/>
+					<sub src="first_minus" trait="clicked"/>
+					<min> 100 </min>
+					<max> 0 </max>
+				</_final_value>
+			</text>
+			
+			<text name="first_minus">
+				<id> 100 </id>
+				<target> true </target>
+				<depth> 1 </depth>
+				<string> Less </string>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<alpha> 200 </alpha>
+				<x>
+					<copy> 0 </copy>
+					<sub src="me()" trait="width"/>
+					<sub> 70 </sub>
+				</x>
+				<y> -12 </y>
+				<repeatdelay> 1.0 </repeatdelay>
+				<repeattimer> 0.1 </repeattimer>
+				<repeatincrease> 0.025 </repeatincrease>
+			</text>
+			
+			
+			<text name="first_plus">
+				<id> 2 </id>
+				<target> true </target>
+				<depth> 1 </depth>
+				<string> More </string>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<alpha> 200 </alpha>
+				<x>
+					<copy src="first_text" trait="x"/>
+					<add> 70 </add>
+				</x>
+				<y> 0 </y>
+				<repeatdelay> 1.0 </repeatdelay>
+				<repeattimer> 0.1 </repeattimer>
+				<repeatincrease> 0.025 </repeatincrease>
+				<returnvalue> <copy src="first_text" trait="_final_value"/> </returnvalue>
+			</text>
+
+		</rect>
+		
+		
+		
+		
+		
+		
+		<rect name="second">
+			<depth> 5 </depth>
+			<locus> true </locus>
+			<alpha> 0 </alpha>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="first" trait="y"/>
+				<add> 70 </add>
+			</y>
+
+
+			<text name="second_text">
+				<depth> 1 </depth>
+				<string>
+					<copy src="me()" trait="_final_value"/>
+				</string>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<alpha> 200 </alpha>
+				<justify> center </justify>
+				<x> 0 </x>
+				<y> 0 </y>
+				<_final_value>
+					<add src="second_plus" trait="clicked"/>
+					<sub src="second_minus" trait="clicked"/>
+					<min> 100 </min>
+					<max> 0 </max>
+				</_final_value>
+			</text>
+			
+			<text name="second_minus">
+				<id> 100 </id>
+				<target> true </target>
+				<depth> 1 </depth>
+				<string> Less </string>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<alpha> 200 </alpha>
+				<x>
+					<copy> 0 </copy>
+					<sub src="me()" trait="width"/>
+					<sub> 70 </sub>
+				</x>
+				<y> -12 </y>
+				<!-- Start of GenericMenu-specific data -->
+				<repeatdelay> 1.0 </repeatdelay>
+				<repeattimer> 0.1 </repeattimer>
+				<repeatincrease> 0.025 </repeatincrease>
+			</text>
+			
+			
+			<text name="second_plus">
+				<id> 3 </id>
+				<target> true </target>
+				<depth> 1 </depth>
+				<string> More </string>
+				<red> 120 </red>
+				<green> 34 </green>
+				<blue> 0 </blue>
+				<alpha> 200 </alpha>
+				<x>
+					<copy src="second_text" trait="x"/>
+					<add> 70 </add>
+				</x>
+				<y> 0 </y>
+				<repeatdelay> 1.0 </repeatdelay>
+				<repeattimer> 0.1 </repeattimer>
+				<repeatincrease> 0.025 </repeatincrease>
+				<returnvalue> <copy src="second_text" trait="_final_value"/> </returnvalue>
+			</text>
+
+		</rect>
+
+
+		<text name="okay">
+			<id> 99 </id>
+			<target> true </target>
+			<depth> 5 </depth>
+			<string> Okay </string>
+			<red> 120 </red>
+			<green> 34 </green>
+			<blue> 0 </blue>
+			<alpha> 200 </alpha>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<sub> 40 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<sub> 40 </sub>
+			</y>
+		</text>
+		
+
+		<image name="box_bottom">
+			<filename> Menus\Message\msg_frame_bottom.dds </filename>
+			<depth> 2 </depth>
+			<width> 673 </width>
+			<height> 109 </height>
+			<x>
+				<copy src="parent()" trait="x"/>
+				<add> 6 </add>
+			</x>
+			<y>
+				<copy src="first" trait="y"/>
+				<add> 100 </add>
+			</y>
+		</image>
+		
+
+		<image name="clutter">
+			<depth> 1 </depth>
+			<visible>
+				<rand> 2 </rand>
+			</visible>
+			<alpha> 200 </alpha>
+			<filename>
+				<copy src="me()" trait="_RandImage" />
+				<copy src="me()" trait="_Filename_" />
+			</filename>
+			<width> 
+				<copy src="me()" trait="_RandImage" />
+				<copy src="me()" trait="_Width_" />
+			</width>
+			<height> 
+				<copy src="me()" trait="_RandImage" />
+				<copy src="me()" trait="_Height_" />
+			</height>
+			<x>
+				<rand>
+					<copy src="parent()" trait="width" />
+					<sub src="me()" trait="width" />
+					<sub> 20 </sub>
+				</rand>
+				<add src="parent()" trait="x" />
+				<add> 10 </add>
+			</x>
+			<y>
+				<rand>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<sub> 20 </sub>
+				</rand> 
+				<add src="parent()" trait="y" />
+				<add> 10 </add>
+			</y>
+
+			<_RandImage>
+				<rand> 4 </rand>
+			</_RandImage>
+			<_Filename_1> Menus\Clutter\clutter_fingerprints.dds </_Filename_1>
+			<_Filename_4> Menus\Clutter\clutter_leaves.dds </_Filename_4>
+			<_Filename_2> Menus\Clutter\clutter_rings.dds </_Filename_2>
+			<_Filename_3> Menus\Clutter\clutter_sketch.dds </_Filename_3>
+			<_Width_1> 185 </_Width_1>
+			<_Width_2> 232 </_Width_2>
+			<_Width_3> 148 </_Width_3>
+			<_Width_4> 232 </_Width_4>
+			<_Height_1> 233 </_Height_1>
+			<_Height_2> 183 </_Height_2>
+			<_Height_3> 130 </_Height_3>
+			<_Height_4> 217 </_Height_4>
+		</image>
+
+
+		<image name="background_bottom">
+			<filename> Menus\Message\msg_background_bottom.dds </filename>
+			<depth> 1 </depth>
+			<width> 711 </width>
+			<height> 192 </height>
+			<x>
+				<copy src="parent()" trait="x" />
+			</x>
+			<y>
+				<copy src="parent()" trait="y" />
+				<add src="parent()" trait="height" />
+				<sub> 180 </sub>
+			</y>
+		</image>
+
+	</image>
+</menu>

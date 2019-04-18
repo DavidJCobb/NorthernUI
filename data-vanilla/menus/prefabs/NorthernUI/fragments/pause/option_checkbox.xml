@@ -1,0 +1,114 @@
+<!--<rect name="option_button">-->
+   <!-- args -->
+   <user0>&generic;</user0> <!-- button ID -->
+   <user1>&true;</user1> <!-- enabled -->
+   <user10>200</user10> <!-- label column width -->
+   <user11></user11> <!-- label -->
+
+   <clips>&true;</clips>
+   <listindex>
+      <copy src="sibling()" trait="listindex" />
+      <add>1</add>
+   </listindex>
+   <locus>&true;</locus>
+   <x>0</x>
+   <y>
+      <copy   src="sibling()" trait="height" />
+      <onlyifnot>
+         <copy src="sibling()" trait="visible" /><eq>&false;</eq>
+      </onlyifnot>
+      <add    src="sibling()" trait="y" />
+   </y>
+   <depth>3</depth>
+   <width><copy src="parent()" trait="width" /></width>
+   <height>
+      <copy src="child(label)"      trait="height" />
+      <add>8</add>
+   </height>
+   
+   <_mouseover_any>
+      <copy src="child(checkbox)" trait="mouseover" />
+      <add  src="me()" trait="mouseover" />
+      <gt>0</gt>
+      <sub>1</sub>
+   </_mouseover_any>
+   
+   <id><copy src="me()" trait="user0" /></id>
+   <user20>&false;</user20> <!-- button state, set by executable -->
+   
+   <target><copy src="me()" trait="user1" /></target>
+   <clicksound>3</clicksound>
+   <xdefault>&true;</xdefault>
+   <xlist>&xitem;</xlist>
+   <xup>  &prev;</xup>
+   <xdown>&next;</xdown>
+   <xscroll>
+      <copy src="me()" trait="listindex" />
+      <sub>
+         <copy src="parent()" trait="user8" />
+         <div> 2</div>
+         <ceil>0</ceil>
+      </sub>
+      <add>1</add>
+   </xscroll>
+   
+   <_mouseover_any>
+      <copy src="me()" trait="mouseover" />
+   </_mouseover_any>
+   
+   <text name="label">
+      <depth>-3</depth>
+      <clips>&true;</clips>
+      <font>1</font>
+      <string><copy src="parent()" trait="user11" /></string>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      <red>
+         <copy>140</copy>
+         <max>
+            <copy>255</copy>
+            <mult src="parent()" trait="_mouseover_any" />
+         </max>
+      </red>
+      <green><copy src="me()" trait="red" /></green>
+      <blue> <copy src="me()" trait="red" /></blue>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <image name="checkbox">
+      <depth>-1</depth>
+      <clips>&true;</clips>
+      <zoom>40</zoom>
+      <_filename_1>NorthernUI\checkbox\checkbox_cleared.dds</_filename_1>
+      <_filename_2>NorthernUI\checkbox\checkbox_checked.dds</_filename_2>
+      <filename>
+         <copy src="parent()" trait="user20" />
+         <copy src="me()"     trait="_filename_" />
+      </filename>
+      <x>
+         <copy src="parent()" trait="user10" />
+         <add>
+            <copy src="parent()" trait="width" />
+            <sub  src="parent()" trait="user10" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </add>
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <width> <copy src="me()" trait="filewidth" /></width>
+      <height><copy src="me()" trait="fileheight" /></height>
+   </image>
+<!--</rect>-->

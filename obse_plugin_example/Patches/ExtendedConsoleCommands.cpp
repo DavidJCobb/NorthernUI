@@ -104,17 +104,10 @@ namespace CobbPatches {
          }
          void genericTestCommand() { // modify this to test whatever we need to test
             _MESSAGE("genericTestCommand: Running...");
-            //_MESSAGE("No test has been written for the generic test command.");
-            TESQuest* quest = nullptr;
-            quest = (*g_dataHandler)->GetQuestByEditorName("migTrainingQ", strlen("migTrainingQ"));
-            if (quest) {
-               _MESSAGE("Got quest! Pointer is %08X.", quest);
-               double out;
-               if (RE::GetScriptVariableValue(quest, "bDisplayTrainAdjust", out)) {
-                  _MESSAGE("Got variable! Value is %f.", out);
-               }
-            }
-            _MESSAGE("genericTestCommand: Done...");
+            //
+            _MESSAGE("No test has been written for the generic test command.");
+            //
+            _MESSAGE("genericTestCommand: Done.");
          }
          void refreshINI() {
             NorthernUI::INI::INISettingManager::GetInstance().Load();

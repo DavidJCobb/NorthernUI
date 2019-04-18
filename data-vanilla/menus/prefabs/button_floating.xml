@@ -1,0 +1,52 @@
+<!-- button_floating.xml -->
+<!-- rect name="button_floating" -->
+	<target> &true; </target>
+	<string> </string>
+	<width>
+		<copy src="child(button_text)" trait="width"/>
+		<add> 40 </add>
+	</width>
+	<height> 64 </height>
+	<depth> 5 </depth>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	
+	<image name="button_floating">
+		<visible> <copy src="parent()" trait="mouseover"/> <eq> 1 </eq> </visible>
+		<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+		<width>
+			<copy src="parent()" trait="width"/>
+			<sub> 10 </sub>
+		</width>
+		<height> 64 </height>
+		<depth> 1 </depth>
+		<x> -10 </x>
+		<y> 3 </y>
+		
+		<image name="button_end">
+			<depth> 2 </depth>
+			<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+			<width> 104 </width>
+			<height> 64 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 8 </add>
+				<sub src="me()" trait="width"/>
+			</x>
+			<y> <copy src="parent()" trait="y"/> </y>
+		</image>
+	</image>
+	
+	<text name="button_text">
+		<depth> 7 </depth>
+		<string> <copy src="parent()" trait="string"/> </string>
+		<justify> &left; </justify>
+		<red> 117 </red>
+		<green> 59 </green>
+		<blue> 33  </blue>
+		<alpha> 255 </alpha>
+		<x> 10 </x>
+		<y> 13 </y>
+	</text>
+<!-- /rect -->

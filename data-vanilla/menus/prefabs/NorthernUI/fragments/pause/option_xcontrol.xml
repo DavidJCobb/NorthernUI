@@ -1,0 +1,134 @@
+<!--<rect name="option_button">-->
+   <!-- args -->
+   <id>&generic;</id>
+   <user0>0</user0> <!-- set by executable: index of control -->
+   <user1>256</user1> <!-- set by executable: keycode (proprietary) -->
+   <user10>200</user10> <!-- label column width -->
+   <user12>
+      <copy src="me()" trait="user1" />
+      <add>1</add>
+      <copy src="menu()" trait="_keynames_" />
+   </user12> <!-- displayed value -->
+   <string></string> <!-- label; set by executable for XXNControlsMenu -->
+
+   <clips>&true;</clips>
+   <listindex>
+      <copy src="sibling()" trait="listindex" />
+      <add>1</add>
+   </listindex>
+   <locus>&true;</locus>
+   <x>0</x>
+   <y>
+      <copy   src="sibling()" trait="height" />
+      <onlyifnot>
+         <copy src="sibling()" trait="visible" /><eq>&false;</eq>
+      </onlyifnot>
+      <add    src="sibling()" trait="y" />
+   </y>
+   <width><copy src="parent()" trait="width" /></width>
+   <height>
+      <copy src="child(label)" trait="height" />
+      <add>8</add>
+   </height>
+   
+   <target>&true;</target>
+   <clicksound>3</clicksound>
+   <xdefault>&true;</xdefault>
+   <xlist>&xitem;</xlist>
+   <xup>  &prev;</xup>
+   <xdown>&next;</xdown>
+   <xscroll>
+      <copy src="me()" trait="listindex" />
+      <sub>
+         <copy src="parent()" trait="user8" />
+         <div> 2</div>
+         <ceil>0</ceil>
+      </sub>
+      <add>1</add>
+   </xscroll>
+   
+   <_mouseover_any>
+      <copy src="me()" trait="mouseover" />
+   </_mouseover_any>
+   
+   <depth>10</depth> <!-- The root element is what gets focus, so child elements need to be behind it. -->
+   
+   <text name="label">
+      <depth>-8</depth>
+      <clips>&true;</clips>
+      <font>1</font>
+      <string><copy src="parent()" trait="string" /></string>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      <red>117</red>
+      <green>59</green>
+      <blue>33</blue>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <text name="value">
+      <depth>-8</depth>
+      <clips>&true;</clips>
+      <font>1</font>
+      <string><copy src="parent()" trait="user12" /></string>
+      <x><copy src="parent()" trait="width" /></x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <string><copy src="parent()" trait="user12" /></string>
+      <justify>&right;</justify>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      <red>117</red>
+      <green>59</green>
+      <blue>33</blue>
+   </text>
+   
+   <image name="controls_template_floating">
+      <visible><copy src="parent()" trait="mouseover" /><gt>0</gt></visible>
+      <filename> Menus\Dialog\dialog_selection_full.dds </filename>
+      <width>
+         <copy src="parent()" trait="width" />
+         <add>16</add>
+      </width>
+      <height> 64 </height>
+      <depth>-9</depth>
+      <x>-8</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+         <add>4</add>
+      </y>
+      <locus>&true;</locus>
+      
+      <image name="effset_attribute_floating_end">
+         <depth>0</depth>
+         <filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+         <width> 104 </width>
+         <height> 64 </height>
+         <x>
+            <copy src="parent()" trait="width"/>
+            <add> 8 </add>
+            <sub src="me()" trait="width"/>
+         </x>
+         <y>0</y>
+      </image>
+   </image>
+<!--</rect>-->

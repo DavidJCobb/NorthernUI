@@ -1,0 +1,592 @@
+<!-- hud_info_menu.xml -->
+<menu name="HUDInfoMenu">
+	<class> &HUDInfoMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<visible> &false; </visible>
+	<locus> &true; </locus>
+	<depth> 20 </depth>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.15 </menufade>
+	<user0></user0>	<!-- Action text (set in code) -->
+	<user1> 128 </user1>
+	<user2> &false; </user2> <!-- Visibility of A-button action text (xbox only) -->
+	<user3> 20 </user3>
+	<user4> &false; </user4> <!-- true if telekenisis is active -->
+	<user5></user5>	<!-- Action button icon index (set in code, xbox only) -->
+	<red>
+		<copy> 254 </copy> <!-- red level for telekenisis -->
+		<onlyif src="me()" trait="user4" /> <!-- if telekenisis, else -->
+		<add>
+			<copy> 254 </copy> <!-- normal red level -->
+			<onlynotif src="me()" trait="user4" /> <!-- if NOT telekenisis -->
+		</add>
+	</red>
+	<green>
+		<copy> 100 </copy> <!-- green level for telekenisis -->
+		<onlyif src="me()" trait="user4" /> <!-- if telekenisis, else -->
+		<add>
+			<copy> 244 </copy> <!-- normal green level -->
+			<onlynotif src="me()" trait="user4" /> <!-- if NOT telekenisis -->
+		</add>
+	</green>
+	<blue>
+		<copy> 100 </copy> <!-- blue level for telekenisis -->
+		<onlyif src="me()" trait="user4" /> <!-- if telekenisis, else -->
+		<add>
+			<copy> 183 </copy> <!-- normal blue level -->
+			<onlynotif src="me()" trait="user4" /> <!-- if NOT telekenisis -->
+		</add>
+	</blue>
+
+
+	<!-- XBOX ACTION INFO ================================================================-->
+	<image name="hudinfo_action_icon">
+		<id> 11 </id>
+		<visible> <copy src="HUDInfoMenu" trait="user2"/> </visible>
+		<filename> Menus\Shared\all_xbox_buttons.dds </filename>
+		<cropx>
+			<copy src="HUDInfoMenu" trait="user5"/>
+			<copy src="me()" trait="_crop_"/>
+		</cropx>
+		<width> 64 </width>
+		<height> 64 </height>
+		<x>
+			<copy src="hudinfo_action_text" trait="x"/>
+			<sub src="hudinfo_action_text" trait="width"/>
+			<sub src="me()" trait="width"/>
+		</x>
+		<y>
+			<copy src="hudinfo_name" trait="y"/>
+			<sub src="me()" trait="height"/>
+			<add>8</add>
+		</y>
+		<_crop_0> 704 </_crop_0>	<!-- start -->
+		<_crop_1> 640 </_crop_1>	<!-- back -->
+		<_crop_2> 512 </_crop_2>	<!-- left thumb button -->
+		<_crop_3> 576 </_crop_3>	<!-- right thumb button -->
+		<_crop_4> 128 </_crop_4>	<!-- A -->
+		<_crop_5> 192 </_crop_5>	<!-- B -->
+		<_crop_6> 0 </_crop_6>		<!-- X -->
+		<_crop_7> 64 </_crop_7>		<!-- Y -->
+		<_crop_8> 448 </_crop_8>	<!-- right bumper -->
+		<_crop_9> 384 </_crop_9>	<!-- left bumper -->
+		<_crop_10> 320 </_crop_10>	<!-- left trigger -->
+		<_crop_11> 256 </_crop_11>	<!-- right trigger -->
+	</image>
+
+	<text name="hudinfo_action_text">
+		<visible> <copy src="HUDInfoMenu" trait="user2"/> </visible>
+		<string> <copy src="parent()" trait="user0"/> </string>
+		<justify> &right; </justify>
+		<font> 2 </font>
+		<red> <copy src="parent()" trait="red"/> </red>
+		<green> <copy src="parent()" trait="green"/> </green>
+		<blue> <copy src="parent()" trait="blue"/> </blue>
+		<alpha> 255 </alpha>
+		<x> <copy src="hudinfo_name" trait="x"/> </x>
+		<y>
+			<copy src="hudinfo_action_icon" trait="y"/>
+			<add>
+				<copy src="hudinfo_action_icon" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+			</add>
+			<add>6</add>
+		</y>
+	</text>
+
+
+	<!-- NAME ============================================================================-->
+	<text name="hudinfo_name">
+		<id> 1 </id>
+		<string></string>
+		<font> 2 </font>
+		<justify> &right; </justify>
+		<red>
+			<copy src="HUDInfoMenu" trait="red" />
+		</red> <!-- red w/ telekenisis alteration -->
+		<green>
+			<copy src="HUDInfoMenu" trait="green" />
+		</green> <!-- green w/ telekenisis alteration -->
+		<blue>
+			<copy src="HUDInfoMenu" trait="blue" />
+		</blue> <!-- blue w/ telekenisis alteration -->
+		<wrapwidth>
+			<copy src="screen()" trait="width"/>
+			<sub>
+				<copy src="screen()" trait="cropx"/>
+				<mul> 4 </mul>
+			</sub>
+			<sub> 720 </sub>	<!-- effective width of hudemainmenu -->
+		</wrapwidth>
+		<justify> &right; </justify>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="screen()" trait="cropx" />
+			<sub src="screen()" trait="cropx" />
+		</x>
+		<y>
+			<copy src="hudinfo_dest" trait="y" />
+			<sub src="me()" trait="height" />
+			<add> -12 </add>
+			<add> 20 </add>
+		</y>
+		<user15> -46 </user15>
+	</text>
+	<text name="hudinfo_dest">
+		<id> 9 </id>
+		<visible> &false; </visible>
+		<font> 2 </font>
+		<red>
+			<copy src="HUDInfoMenu" trait="red" />
+		</red> <!-- red w/ telekenisis alteration -->
+		<green>
+			<copy src="HUDInfoMenu" trait="green" />
+		</green> <!-- green w/ telekenisis alteration -->
+		<blue>
+			<copy src="HUDInfoMenu" trait="blue" />
+		</blue> <!-- blue w/ telekenisis alteration -->
+		<wrapwidth>
+			<copy src="screen()" trait="width"/>
+			<sub>
+				<copy src="screen()" trait="cropx"/>
+				<mul> 4 </mul>
+			</sub>
+			<sub> 720 </sub>	<!-- effective width of hudemainmenu -->
+		</wrapwidth>
+		<justify> &right; </justify>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="screen()" trait="cropx" />
+			<sub src="screen()" trait="cropx" />
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="screen()" trait="cropy" />
+			<sub src="screen()" trait="cropy" />
+			<sub>
+				<copy src="hudinfo_quality_icon" trait="visible" />
+				<add src="hudinfo_uses_icon" trait="visible" />
+				<add src="hudinfo_health_icon" trait="visible" />
+				<add src="hudinfo_armor_icon" trait="visible" />
+				<add src="hudinfo_damage_icon" trait="visible" />
+				<add src="hudinfo_weight_icon" trait="visible" />
+				<add src="hudinfo_value_icon" trait="visible" />
+				<add src="hudinfo_lock_icon" trait="visible" />
+				<gt> 8 </gt> <!-- at least one is true (2) -->
+				<sub> 1 </sub> <!-- turn true(2)/false(1) into true(1)/false(0) -->
+				<mul src="hudinfo_quality_icon" trait="height" />
+				<add>
+					<copy src="me()" trait="height" />
+					<onlyif src="me()" trait="visible" />
+				</add>
+			</sub>
+		</y>
+	</text>
+	
+	
+	
+	<!-- LOCKED =========================================================================-->
+	<image name="hudinfo_lock_icon">
+		<visible>
+			<copy src="hudinfo_lock_text" trait="visible" />
+		</visible>
+		<filename> Menus\Shared\all_small_icons.dds </filename>
+		<cropx> 192 </cropx>
+		<width> 32 </width>
+		<height> 32 </height>
+		<x>
+			<copy> 0 </copy>
+			<sub src="hudinfo_lock_text" trait="width"/>
+			<sub> 4 </sub>
+			<sub src="me()" trait="width"/>
+			<sub> 15 </sub>
+			<onlyif src="me()" trait="visible"/>
+			<add src="hudinfo_value_icon" trait="x"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		<locus> &true; </locus>
+		
+		<text name="hudinfo_lock_text">
+			<id> 10 </id>
+			<visible> <copy src="me()" trait="user1" /> <gte> 0 </gte> </visible>
+			<string></string>
+			<font> 2 </font>
+			<red> <copy src="HUDInfoMenu" trait="red" /> </red> <!-- red w/ telekenisis alteration -->
+			<green> <copy src="HUDInfoMenu" trait="green" /> </green> <!-- green w/ telekenisis alteration -->
+			<blue> <copy src="HUDInfoMenu" trait="blue" /> </blue> <!-- blue w/ telekenisis alteration -->
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 4 </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+				<add> 6 </add>
+			</y>
+			<user1> -1 </user1>
+		</text>
+	</image>
+	
+	
+	
+	<!-- VALUE =================================================================================-->
+	<image name="hudinfo_value_icon">
+		<visible>
+			<copy src="hudinfo_value_text" trait="visible" />
+		</visible>
+		<filename> Menus\Shared\all_small_icons.dds </filename>
+		<cropx> 224 </cropx>
+		<width> 32 </width>
+		<height> 32 </height>
+		<x>
+			<copy> 0 </copy>
+			<sub src="hudinfo_value_text" trait="width"/>
+			<sub> 4 </sub>
+			<sub src="me()" trait="width"/>
+			<sub> 15 </sub>
+			<onlyif src="me()" trait="visible"/>
+			<add src="hudinfo_weight_icon" trait="x"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		<locus> &true; </locus>
+		
+		<text name="hudinfo_value_text">
+			<id> 2 </id>
+			<visible> <copy src="me()" trait="user1" /> <gte> 0 </gte> </visible>
+			<string></string>
+			<font> 2 </font>
+			<red> <copy src="HUDInfoMenu" trait="red" /> </red> <!-- red w/ telekenisis alteration -->
+			<green> <copy src="HUDInfoMenu" trait="green" /> </green> <!-- green w/ telekenisis alteration -->
+			<blue> <copy src="HUDInfoMenu" trait="blue" /> </blue> <!-- blue w/ telekenisis alteration -->
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 4 </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+				<add> 6 </add>
+			</y>
+			<user1> -1 </user1>
+		</text>
+	</image>
+	
+	
+	
+	<!-- WEIGHT =================================================================================-->
+	<image name="hudinfo_weight_icon">
+		<visible>
+			<copy src="hudinfo_weight_text" trait="visible" />
+		</visible>
+		<filename> Menus\Shared\all_small_icons.dds </filename>
+		<cropx> 32 </cropx>
+		<width> 32 </width>
+		<height> 32 </height>
+		<x>
+			<copy> 0 </copy>
+			<sub src="hudinfo_weight_text" trait="width"/>
+			<sub> 4 </sub>
+			<sub src="me()" trait="width"/>
+			<sub> 15 </sub>
+			<onlyif src="me()" trait="visible"/>
+			<add src="hudinfo_damage_icon" trait="x"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		<locus> &true; </locus>
+		
+		<text name="hudinfo_weight_text">
+			<id> 3 </id>
+			<visible> <copy src="me()" trait="user1" /> <gte> 0 </gte> </visible>
+			<string></string>
+			<font> 2 </font>
+			<red> <copy src="HUDInfoMenu" trait="red" /> </red> <!-- red w/ telekenisis alteration -->
+			<green> <copy src="HUDInfoMenu" trait="green" /> </green> <!-- green w/ telekenisis alteration -->
+			<blue> <copy src="HUDInfoMenu" trait="blue" /> </blue> <!-- blue w/ telekenisis alteration -->
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 4 </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+				<add> 6 </add>
+			</y>
+			<user1> -1 </user1>
+		</text>
+	</image>
+	
+	
+	
+	<!-- DAMAGE =================================================================================-->
+	<image name="hudinfo_damage_icon">
+		<visible>
+			<copy src="hudinfo_damage_text" trait="visible" />
+		</visible>
+		<filename> Menus\Shared\all_small_icons.dds </filename>
+		<cropx> 160 </cropx>
+		<width> 32 </width>
+		<height> 32 </height>
+		<x>
+			<copy> 0 </copy>
+			<sub src="hudinfo_damage_text" trait="width"/>
+			<sub> 4 </sub>
+			<sub src="me()" trait="width"/>
+			<sub> 15 </sub>
+			<onlyif src="me()" trait="visible"/>
+			<add src="hudinfo_armor_icon" trait="x"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		<locus> &true; </locus>
+		
+		<text name="hudinfo_damage_text">
+			<id> 4 </id>
+			<visible> <copy src="me()" trait="user1" /> <gte> 0 </gte> </visible>
+			<string></string>
+			<font> 2 </font>
+			<red> <copy src="HUDInfoMenu" trait="red" /> </red> <!-- red w/ telekenisis alteration -->
+			<green> <copy src="HUDInfoMenu" trait="green" /> </green> <!-- green w/ telekenisis alteration -->
+			<blue> <copy src="HUDInfoMenu" trait="blue" /> </blue> <!-- blue w/ telekenisis alteration -->
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 4 </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+				<add> 6 </add>
+			</y>
+			<user1> -1 </user1>
+		</text>
+	</image>
+	
+	
+	
+	<!-- ARMOR =================================================================================-->
+	<image name="hudinfo_armor_icon">
+		<visible>
+			<copy src="hudinfo_armor_text" trait="visible" />
+		</visible>
+		<filename> Menus\Shared\all_small_icons.dds </filename>
+		<cropx> 128 </cropx>
+		<width> 32 </width>
+		<height> 32 </height>
+		<x>
+			<copy> 0 </copy>
+			<sub src="hudinfo_armor_text" trait="width"/>
+			<sub> 4 </sub>
+			<sub src="me()" trait="width"/>
+			<sub> 15 </sub>
+			<onlyif src="me()" trait="visible"/>
+			<add src="hudinfo_health_icon" trait="x"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		<locus> &true; </locus>
+		
+		<text name="hudinfo_armor_text">
+			<id> 5 </id>
+			<visible> <copy src="me()" trait="user1" /> <gte> 0 </gte> </visible>
+			<string></string>
+			<font> 2 </font>
+			<red> <copy src="HUDInfoMenu" trait="red" /> </red> <!-- red w/ telekenisis alteration -->
+			<green> <copy src="HUDInfoMenu" trait="green" /> </green> <!-- green w/ telekenisis alteration -->
+			<blue> <copy src="HUDInfoMenu" trait="blue" /> </blue> <!-- blue w/ telekenisis alteration -->
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 4 </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+				<add> 6 </add>
+			</y>
+			<user1> -1 </user1>
+		</text>
+	</image>
+	
+	
+	
+	<!-- HEALTH =================================================================================-->
+	<image name="hudinfo_health_icon">
+		<visible>
+			<copy src="hudinfo_health_text" trait="visible" />
+		</visible>
+		<filename> Menus\Shared\all_small_icons.dds </filename>
+		<cropx> 256 </cropx>
+		<width> 32 </width>
+		<height> 32 </height>
+		<x>
+			<copy> 0 </copy>
+			<sub src="hudinfo_health_text" trait="width"/>
+			<sub> 4 </sub>
+			<sub src="me()" trait="width"/>
+			<sub> 15 </sub>
+			<onlyif src="me()" trait="visible"/>
+			<add src="hudinfo_uses_icon" trait="x"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		<locus> &true; </locus>
+		
+		<text name="hudinfo_health_text">
+			<id> 7 </id>
+			<visible> <copy src="me()" trait="user1" /> <gte> 0 </gte> </visible>
+			<string></string>
+			<font> 2 </font>
+			<red> <copy src="HUDInfoMenu" trait="red" /> </red> <!-- red w/ telekenisis alteration -->
+			<green> <copy src="HUDInfoMenu" trait="green" /> </green> <!-- green w/ telekenisis alteration -->
+			<blue> <copy src="HUDInfoMenu" trait="blue" /> </blue> <!-- blue w/ telekenisis alteration -->
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 4 </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+				<add> 6 </add>
+			</y>
+			<user1> -1 </user1>
+		</text>
+	</image>
+		
+	
+	
+	<!-- USES =================================================================================-->
+	<image name="hudinfo_uses_icon">
+		<visible>
+			<copy src="hudinfo_uses_text" trait="visible" />
+		</visible>
+		<filename> Menus\Shared\all_small_icons.dds </filename>
+		<cropx> 0 </cropx>
+		<width> 32 </width>
+		<height> 32 </height>
+		<x>
+			<copy> 0 </copy>
+			<sub src="hudinfo_uses_text" trait="width"/>
+			<sub> 4 </sub>
+			<sub src="me()" trait="width"/>
+			<sub> 15 </sub>
+			<onlyif src="me()" trait="visible"/>
+			<add src="hudinfo_quality_icon" trait="x"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		<locus> &true; </locus>
+		
+		<text name="hudinfo_uses_text">
+			<id> 8 </id>
+			<visible> <copy src="me()" trait="user1" /> <gte> 0 </gte> </visible>
+			<string></string>
+			<font> 2 </font>
+			<red> <copy src="HUDInfoMenu" trait="red" /> </red> <!-- red w/ telekenisis alteration -->
+			<green> <copy src="HUDInfoMenu" trait="green" /> </green> <!-- green w/ telekenisis alteration -->
+			<blue> <copy src="HUDInfoMenu" trait="blue" /> </blue> <!-- blue w/ telekenisis alteration -->
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 4 </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+				<add> 6 </add>
+			</y>
+			<user1> -1 </user1>
+		</text>
+	</image>
+	
+	
+	
+	<!-- QUALITY =================================================================================-->
+	<image name="hudinfo_quality_icon">
+		<visible>
+			<copy src="hudinfo_quality_text" trait="visible" />
+		</visible>
+		<filename> Menus\Shared\all_small_icons.dds </filename>
+		<cropx> 96 </cropx>
+		<width> 32 </width>
+		<height> 32 </height>
+		<x>
+			<copy> 0 </copy>
+			<sub src="hudinfo_quality_text" trait="width"/>
+			<sub> 4 </sub>
+			<sub src="me()" trait="width"/>
+			<onlyif src="me()" trait="visible"/>
+			<add>
+				<add> 15 </add>
+				<onlyifnot src="me()" trait="visible"/>
+			</add>
+			<add src="screen()" trait="width"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub src="screen()" trait="cropx"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+		</y>
+		<locus> &true; </locus>
+		
+		<text name="hudinfo_quality_text">
+			<id> 6 </id>
+			<visible> <copy src="me()" trait="user1" /> <gte> 0 </gte> </visible>
+			<string></string>
+			<font> 2 </font>
+			<red> <copy src="HUDInfoMenu" trait="red" /> </red> <!-- red w/ telekenisis alteration -->
+			<green> <copy src="HUDInfoMenu" trait="green" /> </green> <!-- green w/ telekenisis alteration -->
+			<blue> <copy src="HUDInfoMenu" trait="blue" /> </blue> <!-- blue w/ telekenisis alteration -->
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 4 </add>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height"/>
+				<div> 2 </div>
+				<add> 6 </add>
+			</y>
+			<user1> -1 </user1>
+		</text>
+	</image>
+</menu>

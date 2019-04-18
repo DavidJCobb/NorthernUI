@@ -1,0 +1,72 @@
+<!-- fill_bar.xml -->
+<!-- image name="FillBar" -->
+	<filename> Menus\Shared\all_fill_bars.dds </filename>
+	<cropx>
+		<copy> 256 </copy>
+		<onlyif>
+			<copy src="me()" trait="_rand"/>
+			<gte> 4 </gte>
+		</onlyif>
+	</cropx>
+	<cropy>
+		<copy src="me()" trait="_rand"/>
+		<mul> 64 </mul>
+		<onlyif>
+			<copy src="me()" trait="_rand"/>
+			<lt> 4 </lt>
+		</onlyif>
+	</cropy>
+	<locus> &true; </locus>
+	<depth> 7 </depth>
+	<width> 181 </width>
+	<height> 34 </height>
+	<user0> 0.5 </user0>
+	<_rand>
+		<rand> 4 </rand>
+	</_rand>
+	
+	<image name="fillbar_full">
+		<filename> Menus\Shared\all_fill_bars.dds </filename>
+		<cropx> 256 </cropx>
+		<cropy>
+			<copy> 3 </copy>
+			<onlyif>
+				<copy src="parent()" trait="user1"/>
+				<eq> 1 </eq>
+			</onlyif>
+			<add src="parent()" trait="user1"/>
+			<mul> 32 </mul>
+		</cropy>
+		<locus> &true; </locus>
+		<alpha>
+			<copy src="parent()" trait="user0"/>
+			<gt> 0 </gt>
+			<mul> 255 </mul>
+		</alpha>
+		<depth> 8 </depth>
+		<width>
+			<copy src="parent()" trait="user0"/>
+			<max> 0 </max>
+			<min> 1 </min>
+			<mul> 156 </mul>
+		</width>
+		<height> 14 </height>
+		<locus> &true; </locus>
+		<x> 23 </x>
+		<y> 9 </y>
+		
+		<image name="fillbar_edge">
+			<filename> Menus\Shared\all_fill_bars.dds </filename>
+			<cropx> 256 </cropx>
+			<cropy> 160 </cropy>
+			<depth> 1 </depth>
+			<width> 12 </width>
+			<height> 14 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub> 6 </sub>
+			</x>
+			<y> -1 </y>
+		</image>
+	</image>
+<!-- /image -->

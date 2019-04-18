@@ -1,0 +1,269 @@
+<!-- options_menu.xml -->
+<menu name="OptionsMenu">
+	<class> &OptionsMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	
+	<user0></user0>	<!-- True if from pause menu, false otherwise -->
+	
+	<_top_button_y>
+		<copy src="options_background" trait="height"/>
+		<sub>
+			<copy src="options_return_button" trait="height"/>	<!-- All buttons should be the same height -->
+			<mult>
+				<copy>6</copy>
+				<add>
+					<copy>1</copy>
+					<onlyif>&xbox;</onlyif>
+				</add>
+			</mult>	<!-- This should be the number of visible items on this menu -->
+		</sub>
+		<add>
+			<copy src="options_pause_indication" trait="y"/>
+			<add src="options_pause_indication" trait="height"/>
+			<onlyif src="me()" trait="user0"/>
+		</add>
+		<div> 2 </div>
+	</_top_button_y>
+	<_button_rect_height>
+		<copy src="options_return_button" trait="height"/>
+	</_button_rect_height>
+	
+	<xbuttonb> <ref src="options_return_button" trait="clicked"/> </xbuttonb>
+	
+	<rect name="options_background">
+<include src="generic_background.xml"/>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+		<user0>240</user0>
+		<user1>
+			<copy>420</copy>
+			<add>
+				<copy>40</copy>
+				<onlyif src="OptionsMenu" trait="user0"/>
+			</add>
+			<add>
+				<copy>60</copy>
+				<onlyif>&xbox;</onlyif>
+			</add>
+		</user1>
+		
+		<image name="options_pause_indication_border_left">
+			<visible> <copy src="OptionsMenu" trait="user0"/> </visible>
+			<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+			<depth> 3 </depth>
+			<width> 35 </width>
+			<height> 17 </height>
+			<x> 30 </x>
+			<y> 26 </y>
+		</image>
+		<image name="options_pause_indication_border_right">
+			<visible> <copy src="OptionsMenu" trait="user0"/> </visible>
+			<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+			<depth> 3 </depth>
+			<width> 35 </width>
+			<height> 17 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="options_pause_indication_border_left" trait="x"/>
+				<sub src="me()" trait="width"/>
+			</x>
+			<y> 26 </y>
+		</image>
+		<text name="options_pause_indication">
+			<visible> <copy src="OptionsMenu" trait="user0"/> </visible>
+			<string> <copy src="strings()" trait="_paused"/> </string>
+			<font> 3 </font>
+			<alpha> 255 </alpha>
+			<depth> 3 </depth>
+			<red> 51 </red>
+			<green> 79 </green>
+			<blue> 142 </blue>
+			<justify>&center;</justify>
+			<x> <copy src="parent()" trait="width"/> <div>2</div> </x>
+			<y> 20 </y>
+		</text>
+		
+<!-------------------------- RETURN ----------------------------->
+
+		<rect name="options_return_button">
+<include src="button_floating_2.xml"/>
+			<id> 2 </id>
+			<listindex> 0 </listindex>
+			<_center_x>
+				<copy src="parent()" trait="width"/>
+				<div>2</div>
+			</_center_x>
+			<_top>
+				<copy src="OptionsMenu" trait="_top_button_y"/>
+				<add>
+					<copy src="Optionsmenu" trait="_button_rect_height"/>
+					<mult src="me()" trait="listindex"/>
+				</add>
+			</_top>
+			<string> <copy src="strings()" trait="_return"/> </string>
+			<clicksound> 2 </clicksound>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			
+			<xdefault> 3 </xdefault>
+			<xdown> <ref src="options_gameplay_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!------------------------------ GAMEPLAY --------------------------------->
+
+		<rect name="options_gameplay_button">
+<include src="button_floating_2.xml"/>
+			<id> 5 </id>
+			<listindex> 1 </listindex>
+			<_center_x>
+				<copy src="options_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="OptionsMenu" trait="_top_button_y"/>
+				<add>
+					<copy src="Optionsmenu" trait="_button_rect_height"/>
+					<mult src="me()" trait="listindex"/>
+				</add>
+			</_top>
+			<string> <copy src="strings()" trait="_gameplay"/> </string>
+			<clicksound>1</clicksound>
+			
+			<xdefault> 2 </xdefault>
+			<xup>   <ref src="options_return_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="options_video_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!----------------------------- VIDEO -------------------------------->
+
+		<rect name="options_video_button">
+<include src="button_floating_2.xml"/>
+			<id> 6 </id>
+			<listindex>2</listindex>
+			<_center_x>
+				<copy src="options_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="OptionsMenu" trait="_top_button_y"/>
+				<add>
+					<copy src="Optionsmenu" trait="_button_rect_height"/>
+					<mult src="me()" trait="listindex"/>
+				</add>
+			</_top>
+			<string> <copy src="strings()" trait="_video"/> </string>
+			<clicksound>1</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="options_gameplay_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="options_audio_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!------------------------------ AUDIO --------------------------------->
+
+		<rect name="options_audio_button">
+<include src="button_floating_2.xml"/>
+			<id> 7 </id>
+			<listindex>3</listindex>
+			<_center_x>
+				<copy src="options_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="OptionsMenu" trait="_top_button_y"/>
+				<add>
+					<copy src="Optionsmenu" trait="_button_rect_height"/>
+					<mult src="me()" trait="listindex"/>
+				</add>
+			</_top>
+			<string> <copy src="strings()" trait="_audio"/> </string>
+			<clicksound>1</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="options_video_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="options_controls_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!------------------------------ CONTROLS -------------------------------->
+
+		<rect name="options_controls_button">
+<include src="button_floating_2.xml"/>
+			<id> 8 </id>
+			<listindex>4</listindex>
+			<_center_x>
+				<copy src="options_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="OptionsMenu" trait="_top_button_y"/>
+				<add>
+					<copy src="Optionsmenu" trait="_button_rect_height"/>
+					<mult src="me()" trait="listindex"/>
+				</add>
+			</_top>
+			<string> <copy src="strings()" trait="_controls"/> </string>
+			<clicksound>1</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="options_audio_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="options_xinput_button" trait="mouseover"/> </xdown>
+		</rect>
+      
+		<rect name="options_xinput_button">
+<include src="button_floating_2.xml"/>
+			<id>9002</id>
+			<listindex>5</listindex>
+			<_center_x>
+				<copy src="options_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="OptionsMenu" trait="_top_button_y"/>
+				<add>
+					<copy src="Optionsmenu" trait="_button_rect_height"/>
+					<mult src="me()" trait="listindex"/>
+				</add>
+			</_top>
+			<string> <copy src="xxnStrings()" trait="_optionsMenuXInputSubmenuLabel"/> </string>
+			<clicksound>1</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="options_controls_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="options_downloads_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!----------------------------- DOWNLOADS -------------------------------->
+
+		<rect name="options_downloads_button">
+<include src="button_floating_2.xml"/>
+			<visible>&xbox;</visible>
+			<id> 9 </id>
+			<listindex>5</listindex>
+			<_center_x>
+				<copy src="options_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="OptionsMenu" trait="_top_button_y"/>
+				<add>
+					<copy src="Optionsmenu" trait="_button_rect_height"/>
+					<mult src="me()" trait="listindex"/>
+				</add>
+			</_top>
+			<string></string>	<!-- Set in code.  Will be "Downloads" for XBox -->
+			<clicksound>1</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="options_controls_button" trait="mouseover"/> </xup>
+		</rect>
+	
+<!--------------------------------------------------------------->
+
+	</rect>	<!-- end generic background -->
+
+</menu>

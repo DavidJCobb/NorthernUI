@@ -1,0 +1,3481 @@
+<!-- stats_menu.xml -->
+<menu name="StatsMenu">
+	<class> &StatsMenu; </class>
+	<alpha>	0 </alpha>
+	<menufade> 0.25 </menufade>
+	<x> 0 </x>
+	<y> 0 </y>
+	<user0> 1 </user0>		<!-- current visible tab page -->
+
+
+<!--	These are the colors that the attributes should appear based
+	on whether the value is over, under, or even with base value	-->
+	<_red_under>   208 </_red_under>
+	<_green_under>   0 </_green_under>
+	<_blue_under>    0 </_blue_under>
+
+	<_red_even>     51 </_red_even>
+	<_green_even>   79 </_green_even>
+	<_blue_even>   142 </_blue_even>
+
+	<_red_over>      0 </_red_over>
+	<_green_over>  128 </_green_over>
+	<_blue_over>     0 </_blue_over>
+	
+	<xleft> <ref src="stat_tabs_prev" trait="clicked" /> </xleft>
+	<xright> <ref src="stat_tabs_next" trait="clicked" /> </xright>
+
+
+	<rect name="stat_focus_box">
+<include src="focus_box.xml"/>
+		<id> 60 </id>
+		<visible> &false; </visible>
+	</rect>
+	
+	<!-- XBOX (ONLY) HINTS ==================================================================-->
+	<rect name="stats_xbox_hints">
+		<visible>
+         <copy>&true;</copy>
+         <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+      </visible>
+		<width> 100 </width>
+		<height> 100 </height>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub src="child(stats_hint_left_stick)" trait="width"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="child(stats_hint_left_stick)" trait="height"/>
+			<add> 15 </add>
+		</y>
+		<depth> 1 </depth>
+		<locus> &true; </locus>
+		<_is_widescreen>
+			<copy src="screen()" trait="height"/>
+			<div src="screen()" trait="width"/>
+			<lt> 0.75 </lt>
+		</_is_widescreen>
+	
+		<rect name="stats_hint_left_stick">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y> 0 </y>
+			<user0> <copy src="strings()" trait="_move_tab"/> </user0>
+			<user20><!--&xbuttonls;-->9 </user20>
+		</rect>
+	</rect>
+	
+	
+	
+	<!-- MAIN LAYOUT ==============================================================-->
+	<rect name="stat_layout">
+		<x>
+			<copy src="screen()" trait="cropx"/>
+			<add src="screen()" trait="cropx"/>
+			<sub> 60 </sub>
+			<max src="screen()" trait="cropx"/>
+			<add> 7 </add>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="stat_background" trait="height"/>
+			<add> 3 </add>
+		</y>
+		<locus> &true; </locus>
+		
+		
+		<image name="stat_background">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<filename> Menus\Shared\shared_main_background_1.dds </filename>
+			<depth> 4 </depth>
+			<width> 745 </width>
+			<height> 792 </height>
+			<x> 0 </x>
+			<y> 0 </y>
+			<locus> &true; </locus>
+			
+			<image name="stat_background_2">
+				<filename> Menus\Shared\shared_main_background_2.dds </filename>
+				<depth> -15 </depth>
+				<width> 54 </width>
+				<height> 792 </height>
+				<x> 700 </x>
+				<y> 0 </y>
+			</image>
+			
+			<rect name="stat_p1">
+				<id> 10 </id>
+				<visible>
+					<copy src="StatsMenu" trait="user0" />
+					<eq> 1 </eq>
+				</visible> <!-- current visible tab page = me -->
+				<locus> &true; </locus>
+				<depth> 8 </depth>
+				<width> 730 </width>
+				<height> 730 </height>
+				<x> 0 </x>
+				<y> 3 </y>
+				<user1> Nine-Fingered Frodo </user1> <!-- player name -->
+				<user2> Dark Elf </user2>		<!-- player race -->
+				<user3> Thief </user3>			<!-- player birthsign -->
+				<user4> Battlemage </user4>		<!-- player class -->
+				<user5> 2 </user5>				<!-- player level -->
+				<user6> 67 </user6>				<!-- player health current -->
+				<user7> 101 </user7>			<!-- player health max -->
+				<user8> 14 </user8>				<!-- player magica current -->
+				<user9> 75 </user9>				<!-- player magica max -->
+				<user10> 145 </user10>			<!-- player fatigue current -->
+				<user11> 200 </user11>			<!-- player fatigue max -->
+
+												<!-- For values below:
+												     <0 = Affected negatively by magic
+												      0 = Not affected by magic
+												     >0 = Affected positively by magic -->
+				<user12> 0 </user12>			<!-- player health modification -->
+				<user13> 0 </user13>			<!-- player magicka modification -->
+				<user14> 0 </user14>			<!-- player fatigue modification -->
+				
+				<image name="stats_page_1_tabs">
+					<filename> Menus\Shared\shared_01_tab.dds </filename>
+					<width> 791 </width>
+					<height> 176 </height>
+					<x> 23 </x>
+					<y> 539 </y>
+					<depth> 0 </depth>
+				</image>
+				
+				<rect name="stat_p1_race_layout">
+					<id> 14 </id>
+					<target> &true; </target>
+					<repeatvertical> &true; </repeatvertical>
+					<depth> 5 </depth>
+					<alpha> 0 </alpha>
+					<green> 0 </green>
+					<width> 545 </width>
+					<height> 70 </height>
+					<locus> &true; </locus>
+					<x> 110 </x>
+					<y>
+						<copy src="me()" trait="user0" />
+						<mul> 76 </mul>
+						<add> 104 </add>
+					</y>
+					<user0> 0 </user0>			<!-- index value -->
+					
+					<xdefault> &true; </xdefault>
+					<xdown> <ref src="stat_p1_birthsign_layout" trait="mouseover" /> </xdown>
+					
+					<text name="stat_p1_race">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user2" />
+						</string>
+						<justify> &center; </justify>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x> 400 </x>
+						<y>
+							<copy> 37 </copy>
+							<sub>
+								<copy src="me()" trait="height" />
+								<div> 2 </div>
+							</sub>
+						</y>
+					</text>
+					
+					<text name="stat_p1_race_label">
+						<depth> 3 </depth>
+						<string> <copy src="strings()" trait="_race"/> </string>
+						<justify> &left; </justify>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 300 </wrapwidth>
+						<x> 85 </x>
+						<y> 21 </y>
+					</text>
+				</rect>
+				
+				<rect name="stat_p1_birthsign_layout">
+					<id> 14 </id>
+					<target> &true; </target>
+					<repeatvertical> &true; </repeatvertical>
+					<depth> 5 </depth>
+					<alpha> 0 </alpha>
+					<blue> 0 </blue>
+					<width> 545 </width>
+					<height> 70 </height>
+					<locus> &true; </locus>
+					<x> 110 </x>
+					<y>
+						<copy src="me()" trait="user0" />
+						<mul> 76 </mul>
+						<add> 104 </add>
+					</y>
+					<user0> 1 </user0>			<!-- index value -->
+					
+					<xdefault> &false; </xdefault>
+					<xup>   <ref src="stat_p1_race_layout" trait="mouseover" />  </xup>
+					<xdown> <ref src="stat_p1_class_layout" trait="mouseover" /> </xdown>
+					
+					<text name="stat_p1_birthsign">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user3" />
+						</string>
+						<justify> &center; </justify>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 260 </wrapwidth>
+						<x> 406 </x>
+						<y>
+							<copy> 37 </copy>
+							<sub>
+								<copy src="me()" trait="height" />
+								<div> 2 </div>
+							</sub>
+						</y>
+					</text>
+					<text name="stat_p1_birthsign_label">
+						<depth> 3 </depth>
+						<string> <copy src="strings()" trait="_birthsign"/> </string>
+						<justify> &left; </justify>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 300 </wrapwidth>
+						<x> 85 </x>
+						<y> 21 </y>
+					</text>
+				</rect>
+				
+				<rect name="stat_p1_class_layout">
+					<id> 14 </id>
+					<target> &true; </target>
+					<repeatvertical> &true; </repeatvertical>
+					<user0> 2 </user0>			<!-- index value -->
+					<depth> 5 </depth>
+					<alpha> 0 </alpha>
+					<red> 0 </red>
+					<width> 545 </width>
+					<height> 70 </height>
+					<locus> &true; </locus>
+					<x> 110 </x>
+					<y>
+						<copy src="me()" trait="user0" />
+						<mul> 76 </mul>
+						<add> 104 </add>
+					</y>
+					
+					<xdefault> &false; </xdefault>
+					<xup>   <ref src="stat_p1_birthsign_layout" trait="mouseover" /> </xup>
+					<xdown> <ref src="stat_p1_level_layout" trait="mouseover" />	 </xdown>
+					
+					<text name="stat_p1_class">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user4" />
+						</string>
+						<justify> &center; </justify>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x> 400 </x>
+						<y>
+							<copy> 37 </copy>
+							<sub>
+								<copy src="me()" trait="height" />
+								<div> 2 </div>
+							</sub>
+						</y>
+					</text>
+					<text name="stat_p1_class_label">
+						<depth> 3 </depth>
+						<string> <copy src="strings()" trait="_class"/> </string>
+						<justify> &left; </justify>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 300 </wrapwidth>
+						<x> 85 </x>
+						<y> 21 </y>
+					</text>
+				</rect>
+				
+				<rect name="stat_p1_level_layout">
+					<id> 14 </id>
+					<target> &true; </target>
+					<repeatvertical> &true; </repeatvertical>
+					<user0> 3 </user0>			<!-- index value -->
+					<depth> 5 </depth>
+					<alpha> 0 </alpha>
+					<blue> 0 </blue>
+					<width> 545 </width>
+					<height> 70 </height>
+					<locus> &true; </locus>
+					<x> 110 </x>
+					<y>
+						<copy src="me()" trait="user0" />
+						<mul> 76 </mul>
+						<add> 104 </add>
+					</y>
+					
+					<xdefault> &false; </xdefault>
+					<xup>   <ref src="stat_p1_class_layout" trait="mouseover" />  </xup>
+					<xdown> <ref src="stat_p1_health_layout" trait="mouseover" /> </xdown>
+					
+					<text name="stat_p1_level">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user5" />
+						</string>
+						<justify> &center; </justify>
+						<red> 51 </red>
+						<green> 79 </green>
+						<blue> 142 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x> 400 </x>
+						<y>
+							<copy> 37 </copy>
+							<sub>
+								<copy src="me()" trait="height" />
+								<div> 2 </div>
+							</sub>
+						</y>
+					</text>
+					<text name="stat_p1_level_label">
+						<depth> 3 </depth>
+						<string> <copy src="strings()" trait="_level"/> </string>
+						<justify> &left; </justify>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 300 </wrapwidth>
+						<x> 85 </x>
+						<y> 21 </y>
+					</text>
+				</rect>
+				
+				<image name="stat_p1_title_left">
+					<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<x>
+						<copy src="stat_p1_name" trait="x" />
+						<sub>
+							<copy src="stat_p1_name" trait="width" />
+							<div> 2 </div>
+						</sub>
+						<sub> 10 </sub>
+						<sub src="me()" trait="width" />
+					</x>
+					<y> 60 </y>
+				</image>
+				<image name="stat_p1_title_right">
+					<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<x>
+						<copy src="stat_p1_name" trait="width" />
+						<div> 2 </div>
+						<add src="stat_p1_name" trait="x" />
+						<add> 10 </add>
+					</x>
+					<y> 60 </y>
+				</image>
+				<text name="stat_p1_name">
+					<depth> 7 </depth>
+					<string>
+						<copy src="parent()" trait="user1" />
+					</string>
+					<justify> &center; </justify>
+					<red> 51 </red>
+					<green> 79 </green>
+					<blue> 142 </blue>
+					<alpha> 255 </alpha>
+					<wrapwidth> 500 </wrapwidth>
+					<x> 380 </x>
+					<y> 51 </y>
+				</text>
+				
+				<rect name="stat_p1_health_layout">
+					<id> 14 </id>
+					<target> &true; </target>
+					<repeatvertical> &true; </repeatvertical>
+					<user0> 4 </user0>			<!-- index value -->
+					<depth> 5 </depth>
+					<alpha> 0 </alpha>
+					<green> 0 </green>
+					<width> 618 </width>
+					<height> 67 </height>
+					<locus> &true; </locus>
+					<x> 65 </x>
+					<y>
+						<copy src="me()" trait="user0" />
+						<mul> 74 </mul>
+						<add> 117 </add>
+					</y>
+					
+					<xdefault> &false; </xdefault>
+					<xup>   <ref src="stat_p1_level_layout" trait="mouseover" />  </xup>
+					<xdown> <ref src="stat_p1_magica_layout" trait="mouseover" /> </xdown>
+					
+					<text name="stat_p1_health_label">
+						<depth> 3 </depth>
+						<string> <copy src="strings()" trait="_health"/> </string>
+						<justify> &left; </justify>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 300 </wrapwidth>
+						<x> 24 </x>
+						<y> 18 </y>
+					</text>
+					
+					<image name="stat_p1_health_bar">
+<include src="fill_bar.xml"/>
+						<x> 222 </x>
+						<y> 20 </y>
+						<user0>
+							<copy src="stat_p1" trait="user6" />
+							<max> 0 </max>
+							<div>
+								<copy src="stat_p1" trait="user7" />
+								<max> 0 </max>
+							</div>
+						</user0>
+						<user1> 1 </user1>
+					</image>
+					
+					<text name="stat_p1_health_max">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user7" />
+						</string>
+						<justify> &right; </justify>
+						<red>
+							<copy src="stat_p1_health_current" trait="red"/>
+						</red>
+						<green>
+							<copy src="stat_p1_health_current" trait="green"/>
+						</green>
+						<blue>
+							<copy src="stat_p1_health_current" trait="blue"/>
+						</blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x> 595 </x>
+						<y> 18 </y>
+					</text>
+					<text name="stat_p1_health_div">
+						<depth> 3 </depth>
+						<string> / </string>
+						<justify> &right; </justify>
+						<red>
+							<copy src="stat_p1_health_current" trait="red"/>
+						</red>
+						<green>
+							<copy src="stat_p1_health_current" trait="green"/>
+						</green>
+						<blue>
+							<copy src="stat_p1_health_current" trait="blue"/>
+						</blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x>
+							<copy src="stat_p1_health_max" trait="x" />
+							<sub src="stat_p1_health_max" trait="width" />
+						</x>
+						<y> 18 </y>
+					</text>
+					<text name="stat_p1_health_current">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user6" />
+						</string>
+						<justify> &right; </justify>
+						<red>
+							<copy src="StatsMenu" trait="_red_under" />
+							<onlyif>
+								<copy src="stat_p1" trait="user12" />
+								<lt> 0 </lt>
+							</onlyif>
+							<add>
+								<copy src="StatsMenu" trait="_red_even" />
+								<onlyif>
+									<copy src="stat_p1" trait="user12" />
+									<eq> 0 </eq>
+								</onlyif>
+							</add>
+							<add>
+								<copy src="StatsMenu" trait="_red_over" />
+								<onlyif>
+									<copy src="stat_p1" trait="user12" />
+									<gt> 0 </gt>
+								</onlyif>
+							</add>
+						</red>
+						<green>
+							<copy src="StatsMenu" trait="_green_under" />
+							<onlyif>
+								<copy src="stat_p1" trait="user12" />
+								<lt> 0 </lt>
+							</onlyif>
+							<add>
+								<copy src="StatsMenu" trait="_green_even" />
+								<onlyif>
+									<copy src="stat_p1" trait="user12" />
+									<eq> 0 </eq>
+								</onlyif>
+							</add>
+							<add>
+								<copy src="StatsMenu" trait="_green_over" />
+								<onlyif>
+									<copy src="stat_p1" trait="user12" />
+									<gt> 0 </gt>
+								</onlyif>
+							</add>
+						</green>
+						<blue>
+							<copy src="StatsMenu" trait="_blue_under" />
+							<onlyif>
+								<copy src="stat_p1" trait="user12" />
+								<lt> 0 </lt>
+							</onlyif>
+							<add>
+								<copy src="StatsMenu" trait="_blue_even" />
+								<onlyif>
+									<copy src="stat_p1" trait="user12" />
+									<eq> 0 </eq>
+								</onlyif>
+							</add>
+							<add>
+								<copy src="StatsMenu" trait="_blue_over" />
+								<onlyif>
+									<copy src="stat_p1" trait="user12" />
+									<gt> 0 </gt>
+								</onlyif>
+							</add>
+						</blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x>
+							<copy src="stat_p1_health_max" trait="x" />
+							<sub src="stat_p1_health_max" trait="width" />
+							<sub src="stat_p1_health_div" trait="width" />
+						</x>
+						<y> 18 </y>
+					</text>
+				</rect>
+				
+				<rect name="stat_p1_magica_layout">
+					<id> 14 </id>
+					<target> &true; </target>
+					<repeatvertical> &true; </repeatvertical>
+					<user0> 5 </user0>			<!-- index value -->
+					<depth> 5 </depth>
+					<alpha> 0 </alpha>
+					<blue> 0 </blue>
+					<width> 618 </width>
+					<height> 67 </height>
+					<locus> &true; </locus>
+					<x> 65 </x>
+					<y>
+						<copy src="me()" trait="user0" />
+						<mul> 74 </mul>
+						<add> 110 </add>
+					</y>
+					
+					<xdefault> &false; </xdefault>
+					<xup>   <ref src="stat_p1_health_layout" trait="mouseover" />  </xup>
+					<xdown> <ref src="stat_p1_fatigue_layout" trait="mouseover" /> </xdown>
+					
+					<text name="stat_p1_magica_label">
+						<depth> 3 </depth>
+						<string> <copy src="strings()" trait="_magicka"/> </string>
+						<justify> &left; </justify>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 300 </wrapwidth>
+						<x> 24 </x>
+						<y> 18 </y>
+					</text>
+					
+					<image name="stat_p1_magica_bar">
+<include src="fill_bar.xml"/>
+						<x> 222 </x>
+						<y> 20 </y>
+						<user0>
+							<copy src="stat_p1" trait="user8" />
+							<max> 0 </max>
+							<div>
+								<copy src="stat_p1" trait="user9" />
+								<max> 0 </max>
+							</div>
+						</user0>
+						<user1> 3 </user1>
+					</image>
+					
+					<text name="stat_p1_magica_max">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user9" />
+						</string>
+						<justify> &right; </justify>
+						<red>
+							<copy src="stat_p1_magica_current" trait="red"/>
+						</red>
+						<green>
+							<copy src="stat_p1_magica_current" trait="green"/>
+						</green>
+						<blue>
+							<copy src="stat_p1_magica_current" trait="blue"/>
+						</blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x> 595 </x>
+						<y> 18 </y>
+					</text>
+					<text name="stat_p1_magica_div">
+						<depth> 3 </depth>
+						<string> / </string>
+						<justify> &right; </justify>
+						<red>
+							<copy src="stat_p1_magica_current" trait="red"/>
+						</red>
+						<green>
+							<copy src="stat_p1_magica_current" trait="green"/>
+						</green>
+						<blue>
+							<copy src="stat_p1_magica_current" trait="blue"/>
+						</blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x>
+							<copy src="stat_p1_magica_max" trait="x" />
+							<sub src="stat_p1_magica_max" trait="width" />
+						</x>
+						<y> 18 </y>
+					</text>
+					<text name="stat_p1_magica_current">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user8" />
+						</string>
+						<justify> &right; </justify>
+						<red>
+							<copy src="StatsMenu" trait="_red_under" />
+							<onlyif>
+								<copy src="stat_p1" trait="user13" />
+								<lt> 0 </lt>
+							</onlyif>
+							<add>
+								<copy src="StatsMenu" trait="_red_even" />
+								<onlyif>
+									<copy src="stat_p1" trait="user13" />
+									<eq> 0 </eq>
+								</onlyif>
+							</add>
+							<add>
+								<copy src="StatsMenu" trait="_red_over" />
+								<onlyif>
+									<copy src="stat_p1" trait="user13" />
+									<gt> 0 </gt>
+								</onlyif>
+							</add>
+						</red>
+						<green>
+							<copy src="StatsMenu" trait="_green_under" />
+							<onlyif>
+								<copy src="stat_p1" trait="user13" />
+								<lt> 0 </lt>
+							</onlyif>
+							<add>
+								<copy src="StatsMenu" trait="_green_even" />
+								<onlyif>
+									<copy src="stat_p1" trait="user13" />
+									<eq> 0 </eq>
+								</onlyif>
+							</add>
+							<add>
+								<copy src="StatsMenu" trait="_green_over" />
+								<onlyif>
+									<copy src="stat_p1" trait="user13" />
+									<gt> 0 </gt>
+								</onlyif>
+							</add>
+						</green>
+						<blue>
+							<copy src="StatsMenu" trait="_blue_under" />
+							<onlyif>
+								<copy src="stat_p1" trait="user13" />
+								<lt> 0 </lt>
+							</onlyif>
+							<add>
+								<copy src="StatsMenu" trait="_blue_even" />
+								<onlyif>
+									<copy src="stat_p1" trait="user13" />
+									<eq> 0 </eq>
+								</onlyif>
+							</add>
+							<add>
+								<copy src="StatsMenu" trait="_blue_over" />
+								<onlyif>
+									<copy src="stat_p1" trait="user13" />
+									<gt> 0 </gt>
+								</onlyif>
+							</add>
+						</blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x>
+							<copy src="stat_p1_magica_max" trait="x" />
+							<sub src="stat_p1_magica_max" trait="width" />
+							<sub src="stat_p1_magica_div" trait="width" />
+						</x>
+						<y> 18 </y>
+					</text>
+				</rect>
+				
+				<rect name="stat_p1_fatigue_layout">
+					<id> 14 </id>
+					<target> &true; </target>
+					<repeatvertical> &true; </repeatvertical>
+					<user0> 6 </user0>			<!-- index value -->
+					<depth> 5 </depth>
+					<alpha> 0 </alpha>
+					<red> 0 </red>
+					<width> 618 </width>
+					<height> 67 </height>
+					<locus> &true; </locus>
+					<x> 65 </x>
+					<y>
+						<copy src="me()" trait="user0" />
+						<mul> 74 </mul>
+						<add> 107 </add>
+					</y>
+					
+					<xdefault> &false; </xdefault>
+					<xup> <ref src="stat_p1_magica_layout" trait="mouseover"/> </xup>
+					
+					<text name="stat_p1_fatigue_label">
+						<depth> 3 </depth>
+						<string> <copy src="strings()" trait="_fatigue"/> </string>
+						<justify> &left; </justify>
+						<red> 117 </red>
+						<green> 59 </green>
+						<blue> 33 </blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 300 </wrapwidth>
+						<x> 24 </x>
+						<y> 18 </y>
+					</text>
+					<image name="stat_p1_fatigue_bar">
+<include src="fill_bar.xml"/>
+						<x> 222 </x>
+						<y> 20 </y>
+						<user0>
+							<copy src="stat_p1" trait="user10" />
+							<max> 0 </max>
+							<div>
+								<copy src="stat_p1" trait="user11" />
+								<max> 0 </max>
+							</div>
+						</user0>
+						<user1> 2 </user1>
+					</image>
+					<text name="stat_p1_fatigue_max">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user11" />
+						</string>
+						<justify> &right; </justify>
+						<red>
+							<copy src="stat_p1_fatigue_current" trait="red"/>
+						</red>
+						<green>
+							<copy src="stat_p1_fatigue_current" trait="green"/>
+						</green>
+						<blue>
+							<copy src="stat_p1_fatigue_current" trait="blue"/>
+						</blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x> 595 </x>
+						<y> 18 </y>
+					</text>
+					<text name="stat_p1_fatigue_div">
+						<depth> 3 </depth>
+						<string> / </string>
+						<justify> &right; </justify>
+						<red>
+							<copy src="stat_p1_fatigue_current" trait="red"/>
+						</red>
+						<green>
+							<copy src="stat_p1_fatigue_current" trait="green"/>
+						</green>
+						<blue>
+							<copy src="stat_p1_fatigue_current" trait="blue"/>
+						</blue>
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x>
+							<copy src="stat_p1_fatigue_max" trait="x" />
+							<sub src="stat_p1_fatigue_max" trait="width" />
+						</x>
+						<y> 18 </y>
+					</text>
+					<text name="stat_p1_fatigue_current">
+						<depth> 3 </depth>
+						<string>
+							<copy src="stat_p1" trait="user10" />
+						</string>
+						<justify> &right; </justify>
+
+						<red>
+							<copy src="StatsMenu" trait="_red_under"/>
+							<onlyif>
+								<copy src="stat_p1" trait="user14"/>
+								<lt> 0 </lt>
+							</onlyif>
+
+							<add>
+								<copy src="StatsMenu" trait="_red_even"/>
+								<onlyif>
+									<copy src="stat_p1" trait="user14"/>
+									<eq> 0 </eq>
+								</onlyif>
+							</add>
+
+							<add>
+								<copy src="StatsMenu" trait="_red_over"/>
+								<onlyif>
+									<copy src="stat_p1" trait="user14"/>
+									<gt> 0 </gt>
+								</onlyif>
+							</add>
+						</red>
+
+						<green>
+							<copy src="StatsMenu" trait="_green_under"/>
+							<onlyif>
+								<copy src="stat_p1" trait="user14"/>
+								<lt> 0 </lt>
+							</onlyif>
+
+							<add>
+								<copy src="StatsMenu" trait="_green_even"/>
+								<onlyif>
+									<copy src="stat_p1" trait="user14"/>
+									<eq> 0 </eq>
+								</onlyif>
+							</add>
+
+							<add>
+								<copy src="StatsMenu" trait="_green_over"/>
+								<onlyif>
+									<copy src="stat_p1" trait="user14"/>
+									<gt> 0 </gt>
+								</onlyif>
+							</add>
+						</green>
+
+						<blue>
+							<copy src="StatsMenu" trait="_blue_under"/>
+							<onlyif>
+								<copy src="stat_p1" trait="user14"/>
+								<lt> 0 </lt>
+							</onlyif>
+
+							<add>
+								<copy src="StatsMenu" trait="_blue_even"/>
+								<onlyif>
+									<copy src="stat_p1" trait="user14"/>
+									<eq> 0 </eq>
+								</onlyif>
+							</add>
+
+							<add>
+								<copy src="StatsMenu" trait="_blue_over"/>
+								<onlyif>
+									<copy src="stat_p1" trait="user14"/>
+									<gt> 0 </gt>
+								</onlyif>
+							</add>
+						</blue>
+
+						<alpha> 255 </alpha>
+						<wrapwidth> 250 </wrapwidth>
+						<x>
+							<copy src="stat_p1_fatigue_max" trait="x" />
+							<sub src="stat_p1_fatigue_max" trait="width" />
+							<sub src="stat_p1_fatigue_div" trait="width" />
+						</x>
+						<y> 18 </y>
+					</text>
+				</rect>
+				<image name="stat_p1_lines">
+					<filename> Menus\Stats\stat_player_lines.dds </filename>
+					<depth> 2 </depth>
+					<zoom> -1 </zoom>
+					<width> 659 </width>
+					<height> 539 </height>
+					<x> 45 </x>
+					<y> 85 </y>
+				</image>
+				<image name="stat_p1_icons">
+					<filename> Menus\Stats\stat_player_icons.dds </filename>
+					<depth> 7 </depth>
+					<width> 64 </width>
+					<height> 292 </height>
+					<x> 121 </x>
+					<y> 107 </y>
+				</image>
+			</rect>
+			
+			
+			
+			<!--***********************************************************************************************-->
+			<rect name="stat_p2">
+				<id> 20 </id>
+				<visible>
+					<copy src="StatsMenu" trait="user0" />
+					<eq> 2 </eq>
+				</visible> <!-- current visible tab page = me -->
+				<locus> &true; </locus>
+				<depth> 8 </depth>
+				<width> 730 </width>
+				<height> 730 </height>
+				<x> 0 </x>
+				<y> 3 </y>
+				<user1> 50 </user1> <!-- attribute strength -->
+				<user2> 40 </user2> <!-- attribute intelligence -->
+				<user3> 30 </user3> <!-- attribute willpower -->
+				<user4> 30 </user4> <!-- attribute agility -->
+				<user5> 99 </user5> <!-- attribute speed -->
+				<user6> 20 </user6> <!-- attribute endurance -->
+				<user7> 45 </user7> <!-- attribute personality -->
+				<user8> 60 </user8> <!-- attribute luck -->
+				<user9>  50 </user9> <!-- base attribute strength -->
+				<user10> 40 </user10> <!-- base attribute intelligence -->
+				<user11> 30 </user11> <!-- base attribute willpower -->
+				<user12> 30 </user12> <!-- base attribute agility -->
+				<user13> 99 </user13> <!-- base attribute speed -->
+				<user14> 20 </user14> <!-- base attribute endurance -->
+				<user15> 45 </user15> <!-- base attribute personality -->
+				<user16> 60 </user16> <!-- base attribute luck -->
+				
+				<image name="stats_page_2_tabs">
+					<filename> Menus\Shared\shared_02_tab.dds </filename>
+					<width> 791 </width>
+					<height> 176 </height>
+					<x> 23 </x>
+					<y> 539 </y>
+					<depth> 0 </depth>
+				</image>
+				
+				<rect name="stat_p2_layout">
+					<alpha> 0 </alpha>
+					<locus> &true; </locus>
+					<y> -20 </y>
+					<image name="stat_p2_lines">
+						<filename> Menus\Stats\stat_attr_lines.dds </filename>
+						<depth> 2 </depth>
+						<zoom> -1 </zoom>
+						<width> 625 </width>
+						<height> 562 </height>
+						<x> 50 </x>
+						<y> 62 </y>
+					</image>
+					<image name="stat_p2_icons">
+						<filename> Menus\Stats\stat_attr_icons.dds </filename>
+						<depth> 6 </depth>
+						<width> 64 </width>
+						<height> 533 </height>
+						<x> 81 </x>
+						<y> 87 </y>
+					</image>
+					
+					<rect name="stat_p2_strength_layout">
+						<id> 24 </id>
+						<target> &true; </target>
+						<repeatvertical> &true; </repeatvertical>
+						<user0> 0 </user0>
+						<depth> 5 </depth>
+						<blue> 0 </blue>
+						<width> 592 </width>
+						<height> 64 </height>
+						<locus> &true; </locus>
+						<x> 75 </x>
+						<y>
+							<copy src="me()" trait="user0" />
+							<mul> 67 </mul>
+							<add> 87 </add>
+						</y>
+						
+						<xdefault> &true; </xdefault>
+						<xdown>  <ref src="stat_p2_intelligence_layout" trait="mouseover" /> </xdown>
+						
+						<text name="stat_p2_strength">
+							<depth> 3 </depth>
+							<string>
+								<copy src="stat_p2" trait="user1" />
+							</string>
+							<justify> &center; </justify>
+							<red>
+								<copy src="StatsMenu" trait="_red_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user1" />
+									<lt src="stat_p2" trait="user9" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_red_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user1" />
+										<eq src="stat_p2" trait="user9" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_red_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user1" />
+										<gt src="stat_p2" trait="user9" />
+									</onlyif>
+								</add>
+							</red>
+							<green>
+								<copy src="StatsMenu" trait="_green_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user1" />
+									<lt src="stat_p2" trait="user9" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_green_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user1" />
+										<eq src="stat_p2" trait="user9" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_green_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user1" />
+										<gt src="stat_p2" trait="user9" />
+									</onlyif>
+								</add>
+							</green>
+							<blue>
+								<copy src="StatsMenu" trait="_blue_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user1" />
+									<lt src="stat_p2" trait="user9" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_blue_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user1" />
+										<eq src="stat_p2" trait="user9" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_blue_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user1" />
+										<gt src="stat_p2" trait="user9" />
+									</onlyif>
+								</add>
+							</blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 250 </wrapwidth>
+							<x> 467 </x>
+							<y> 16 </y>
+						</text>
+						<text name="stat_p2_strength_label">
+							<depth> 3 </depth>
+							<string> <copy src="strings()" trait="_strength"/> </string>
+							<justify> &left; </justify>
+							<red>117</red>
+							<green> 59 </green>
+							<blue> 33 </blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 300 </wrapwidth>
+							<x> 100 </x>
+							<y> 16 </y>
+						</text>
+					</rect>
+					
+					<rect name="stat_p2_intelligence_layout">
+						<id> 24 </id>
+						<target> &true; </target>
+						<repeatvertical> &true; </repeatvertical>
+						<user0> 1 </user0>
+						<depth> 5 </depth>
+						<red> 0 </red>
+						<width> 592 </width>
+						<height> 64 </height>
+						<locus> &true; </locus>
+						<x> 75 </x>
+						<y>
+							<copy src="me()" trait="user0" />
+							<mul> 67 </mul>
+							<add> 87 </add>
+						</y>
+						
+						<xdefault> &false; </xdefault>
+						<xup>    <ref src="stat_p2_strength_layout" trait="mouseover" /> </xup>
+						<xdown>  <ref src="stat_p2_willpower_layout" trait="mouseover" /> </xdown>
+						
+						<text name="stat_p2_intelligence">
+							<depth> 3 </depth>
+							<string>
+								<copy src="stat_p2" trait="user2" />
+							</string>
+							<justify> &center; </justify>
+							<red>
+								<copy src="StatsMenu" trait="_red_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user2" />
+									<lt src="stat_p2" trait="user10" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_red_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user2" />
+										<eq src="stat_p2" trait="user10" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_red_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user2" />
+										<gt src="stat_p2" trait="user10" />
+									</onlyif>
+								</add>
+							</red>
+							<green>
+								<copy src="StatsMenu" trait="_green_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user2" />
+									<lt src="stat_p2" trait="user10" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_green_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user2" />
+										<eq src="stat_p2" trait="user10" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_green_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user2" />
+										<gt src="stat_p2" trait="user10" />
+									</onlyif>
+								</add>
+							</green>
+							<blue>
+								<copy src="StatsMenu" trait="_blue_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user2" />
+									<lt src="stat_p2" trait="user10" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_blue_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user2" />
+										<eq src="stat_p2" trait="user10" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_blue_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user2" />
+										<gt src="stat_p2" trait="user10" />
+									</onlyif>
+								</add>
+							</blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 250 </wrapwidth>
+							<x> 467 </x>
+							<y> 16 </y>
+						</text>
+						<text name="stat_p2_intelligence_label">
+							<depth> 3 </depth>
+							<string> <copy src="strings()" trait="_intelligence"/> </string>
+							<justify> &left; </justify>
+							<red> 117 </red>
+							<green> 59 </green>
+							<blue> 33 </blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 300 </wrapwidth>
+							<x> 100 </x>
+							<y> 16 </y>
+						</text>
+					</rect>
+					
+					<rect name="stat_p2_willpower_layout">
+						<id> 24 </id>
+						<target> &true; </target>
+						<repeatvertical> &true; </repeatvertical>
+						<user0> 2 </user0>
+						<depth> 5 </depth>
+						<green> 0 </green>
+						<width> 592 </width>
+						<height> 64 </height>
+						<locus> &true; </locus>
+						<x> 75 </x>
+						<y>
+							<copy src="me()" trait="user0" />
+							<mul> 67 </mul>
+							<add> 87 </add>
+						</y>
+						
+						<xdefault> &false; </xdefault>
+						<xup>    <ref src="stat_p2_intelligence_layout" trait="mouseover" /> </xup>
+						<xdown>  <ref src="stat_p2_agility_layout" trait="mouseover" /> </xdown>
+						
+						<text name="stat_p2_willpower">
+							<depth> 3 </depth>
+							<string>
+								<copy src="stat_p2" trait="user3" />
+							</string>
+							<justify> &center; </justify>
+							<red>
+								<copy src="StatsMenu" trait="_red_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user3" />
+									<lt src="stat_p2" trait="user11" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_red_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user3" />
+										<eq src="stat_p2" trait="user11" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_red_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user3" />
+										<gt src="stat_p2" trait="user11" />
+									</onlyif>
+								</add>
+							</red>
+							<green>
+								<copy src="StatsMenu" trait="_green_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user3" />
+									<lt src="stat_p2" trait="user11" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_green_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user3" />
+										<eq src="stat_p2" trait="user11" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_green_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user3" />
+										<gt src="stat_p2" trait="user11" />
+									</onlyif>
+								</add>
+							</green>
+							<blue>
+								<copy src="StatsMenu" trait="_blue_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user3" />
+									<lt src="stat_p2" trait="user11" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_blue_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user3" />
+										<eq src="stat_p2" trait="user11" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_blue_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user3" />
+										<gt src="stat_p2" trait="user11" />
+									</onlyif>
+								</add>
+							</blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 250 </wrapwidth>
+							<x> 467 </x>
+							<y> 16 </y>
+						</text>
+						<text name="stat_p2_willpower_label">
+							<depth> 3 </depth>
+							<string> <copy src="strings()" trait="_willpower"/> </string>
+							<justify> &left; </justify>
+							<red> 117 </red>
+							<green> 59 </green>
+							<blue> 33 </blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 300 </wrapwidth>
+							<x> 100 </x>
+							<y> 16 </y>
+						</text>
+					</rect>
+					
+					<rect name="stat_p2_agility_layout">
+						<id> 24 </id>
+						<target> &true; </target>
+						<repeatvertical> &true; </repeatvertical>
+						<user0> 3 </user0>
+						<depth> 5 </depth>
+						<blue> 0 </blue>
+						<width> 592 </width>
+						<height> 64 </height>
+						<locus> &true; </locus>
+						<x> 75 </x>
+						<y>
+							<copy src="me()" trait="user0" />
+							<mul> 67 </mul>
+							<add> 87 </add>
+						</y>
+						
+						<xdefault> &false; </xdefault>
+						<xup>    <ref src="stat_p2_willpower_layout" trait="mouseover" /> </xup>
+						<xdown>  <ref src="stat_p2_speed_layout" trait="mouseover" /> </xdown>
+						
+						<text name="stat_p2_agility">
+							<depth> 3 </depth>
+							<string>
+								<copy src="stat_p2" trait="user4" />
+							</string>
+							<justify> &center; </justify>
+							<red>
+								<copy src="StatsMenu" trait="_red_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user4" />
+									<lt src="stat_p2" trait="user12" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_red_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user4" />
+										<eq src="stat_p2" trait="user12" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_red_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user4" />
+										<gt src="stat_p2" trait="user12" />
+									</onlyif>
+								</add>
+							</red>
+							<green>
+								<copy src="StatsMenu" trait="_green_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user4" />
+									<lt src="stat_p2" trait="user12" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_green_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user4" />
+										<eq src="stat_p2" trait="user12" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_green_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user4" />
+										<gt src="stat_p2" trait="user12" />
+									</onlyif>
+								</add>
+							</green>
+							<blue>
+								<copy src="StatsMenu" trait="_blue_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user4" />
+									<lt src="stat_p2" trait="user12" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_blue_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user4" />
+										<eq src="stat_p2" trait="user12" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_blue_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user4" />
+										<gt src="stat_p2" trait="user12" />
+									</onlyif>
+								</add>
+							</blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 250 </wrapwidth>
+							<x> 467 </x>
+							<y> 16 </y>
+						</text>
+						<text name="stat_p2_agility_label">
+							<depth> 3 </depth>
+							<string> <copy src="strings()" trait="_agility"/> </string>
+							<justify> &left; </justify>
+							<red> 117 </red>
+							<green> 59 </green>
+							<blue> 33 </blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 300 </wrapwidth>
+							<x> 100 </x>
+							<y> 16 </y>
+						</text>
+					</rect>
+					
+					<rect name="stat_p2_speed_layout">
+						<id> 24 </id>
+						<target> &true; </target>
+						<repeatvertical> &true; </repeatvertical>
+						<user0> 4 </user0>
+						<depth> 5 </depth>
+						<red> 0 </red>
+						<width> 592 </width>
+						<height> 64 </height>
+						<locus> &true; </locus>
+						<x> 75 </x>
+						<y>
+							<copy src="me()" trait="user0" />
+							<mul> 67 </mul>
+							<add> 87 </add>
+						</y>
+						
+						<xdefault> &false; </xdefault>
+						<xup>    <ref src="stat_p2_agility_layout" trait="mouseover" /> </xup>
+						<xdown>  <ref src="stat_p2_endurance_layout" trait="mouseover" /> </xdown>
+						
+						<text name="stat_p2_speed">
+							<depth> 3 </depth>
+							<string>
+								<copy src="stat_p2" trait="user5" />
+							</string>
+							<justify> &center; </justify>
+							<red>
+								<copy src="StatsMenu" trait="_red_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user5" />
+									<lt src="stat_p2" trait="user13" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_red_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user5" />
+										<eq src="stat_p2" trait="user13" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_red_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user5" />
+										<gt src="stat_p2" trait="user13" />
+									</onlyif>
+								</add>
+							</red>
+							<green>
+								<copy src="StatsMenu" trait="_green_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user5" />
+									<lt src="stat_p2" trait="user13" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_green_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user5" />
+										<eq src="stat_p2" trait="user13" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_green_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user5" />
+										<gt src="stat_p2" trait="user13" />
+									</onlyif>
+								</add>
+							</green>
+							<blue>
+								<copy src="StatsMenu" trait="_blue_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user5" />
+									<lt src="stat_p2" trait="user13" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_blue_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user5" />
+										<eq src="stat_p2" trait="user13" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_blue_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user5" />
+										<gt src="stat_p2" trait="user13" />
+									</onlyif>
+								</add>
+							</blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 250 </wrapwidth>
+							<x> 467 </x>
+							<y> 16 </y>
+						</text>
+						<text name="stat_p2_speed_label">
+							<depth> 3 </depth>
+							<string> <copy src="strings()" trait="_speed"/> </string>
+							<justify> &left; </justify>
+							<red> 117 </red>
+							<green> 59 </green>
+							<blue> 33 </blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 300 </wrapwidth>
+							<x> 100 </x>
+							<y> 16 </y>
+						</text>
+					</rect>
+					
+					<rect name="stat_p2_endurance_layout">
+						<id> 24 </id>
+						<target> &true; </target>
+						<repeatvertical> &true; </repeatvertical>
+						<user0> 5 </user0>
+						<depth> 5 </depth>
+						<green> 0 </green>
+						<width> 592 </width>
+						<height> 64 </height>
+						<locus> &true; </locus>
+						<x> 75 </x>
+						<y>
+							<copy src="me()" trait="user0" />
+							<mul> 67 </mul>
+							<add> 87 </add>
+						</y>
+						
+						<xdefault> &false; </xdefault>
+						<xup>    <ref src="stat_p2_speed_layout" trait="mouseover" /> </xup>
+						<xdown>  <ref src="stat_p2_personality_layout" trait="mouseover" /> </xdown>
+						
+						<text name="stat_p2_endurance">
+							<depth> 3 </depth>
+							<string>
+								<copy src="stat_p2" trait="user6" />
+							</string>
+							<justify> &center; </justify>
+							<red>
+								<copy src="StatsMenu" trait="_red_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user6" />
+									<lt src="stat_p2" trait="user14" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_red_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user6" />
+										<eq src="stat_p2" trait="user14" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_red_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user6" />
+										<gt src="stat_p2" trait="user14" />
+									</onlyif>
+								</add>
+							</red>
+							<green>
+								<copy src="StatsMenu" trait="_green_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user6" />
+									<lt src="stat_p2" trait="user14" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_green_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user6" />
+										<eq src="stat_p2" trait="user14" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_green_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user6" />
+										<gt src="stat_p2" trait="user14" />
+									</onlyif>
+								</add>
+							</green>
+							<blue>
+								<copy src="StatsMenu" trait="_blue_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user6" />
+									<lt src="stat_p2" trait="user14" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_blue_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user6" />
+										<eq src="stat_p2" trait="user14" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_blue_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user6" />
+										<gt src="stat_p2" trait="user14" />
+									</onlyif>
+								</add>
+							</blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 250 </wrapwidth>
+							<x> 467 </x>
+							<y> 16 </y>
+						</text>
+						<text name="stat_p2_endurance_label">
+							<depth> 3 </depth>
+							<string> <copy src="strings()" trait="_endurance"/> </string>
+							<justify> &left; </justify>
+							<red> 117 </red>
+							<green> 59 </green>
+							<blue> 33 </blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 300 </wrapwidth>
+							<x> 100 </x>
+							<y> 16 </y>
+						</text>
+					</rect>
+					
+					<rect name="stat_p2_personality_layout">
+						<id> 24 </id>
+						<target> &true; </target>
+						<repeatvertical> &true; </repeatvertical>
+						<user0> 6 </user0>
+						<depth> 5 </depth>
+						<blue> 0 </blue>
+						<width> 592 </width>
+						<height> 64 </height>
+						<locus> &true; </locus>
+						<x> 75 </x>
+						<y>
+							<copy src="me()" trait="user0" />
+							<mul> 67 </mul>
+							<add> 87 </add>
+						</y>
+						
+						<xdefault> &false; </xdefault>
+						<xup>    <ref src="stat_p2_endurance_layout" trait="mouseover" /> </xup>
+						<xdown>  <ref src="stat_p2_luck_layout" trait="mouseover" /> </xdown>
+						
+						<text name="stat_p2_personality">
+							<depth> 3 </depth>
+							<string>
+								<copy src="stat_p2" trait="user7" />
+							</string>
+							<justify> &center; </justify>
+							<red>
+								<copy src="StatsMenu" trait="_red_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user7" />
+									<lt src="stat_p2" trait="user15" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_red_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user7" />
+										<eq src="stat_p2" trait="user15" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_red_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user7" />
+										<gt src="stat_p2" trait="user15" />
+									</onlyif>
+								</add>
+							</red>
+							<green>
+								<copy src="StatsMenu" trait="_green_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user7" />
+									<lt src="stat_p2" trait="user15" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_green_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user7" />
+										<eq src="stat_p2" trait="user15" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_green_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user7" />
+										<gt src="stat_p2" trait="user15" />
+									</onlyif>
+								</add>
+							</green>
+							<blue>
+								<copy src="StatsMenu" trait="_blue_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user7" />
+									<lt src="stat_p2" trait="user15" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_blue_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user7" />
+										<eq src="stat_p2" trait="user15" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_blue_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user7" />
+										<gt src="stat_p2" trait="user15" />
+									</onlyif>
+								</add>
+							</blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 250 </wrapwidth>
+							<x> 467 </x>
+							<y> 16 </y>
+						</text>
+						<text name="stat_p2_personality_label">
+							<depth> 3 </depth>
+							<string> <copy src="strings()" trait="_personality"/> </string>
+							<justify> &left; </justify>
+							<red> 117 </red>
+							<green> 59 </green>
+							<blue> 33 </blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 300 </wrapwidth>
+							<x> 100 </x>
+							<y> 16 </y>
+						</text>
+					</rect>
+					
+					<rect name="stat_p2_luck_layout">
+						<id> 24 </id>
+						<target> &true; </target>
+						<repeatvertical> &true; </repeatvertical>
+						<user0> 7 </user0>
+						<depth> 5 </depth>
+						<red> 0 </red>
+						<width> 592 </width>
+						<height> 64 </height>
+						<locus> &true; </locus>
+						<x> 75 </x>
+						<y>
+							<copy src="me()" trait="user0" />
+							<mul> 67 </mul>
+							<add> 87 </add>
+						</y>
+						
+						<xdefault> &false; </xdefault>
+						<xup>    <ref src="stat_p2_personality_layout" trait="mouseover" /> </xup>
+						
+						<text name="stat_p2_luck">
+							<depth> 3 </depth>
+							<string>
+								<copy src="stat_p2" trait="user8" />
+							</string>
+							<justify> &center; </justify>
+							<red>
+								<copy src="StatsMenu" trait="_red_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user8" />
+									<lt src="stat_p2" trait="user16" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_red_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user8" />
+										<eq src="stat_p2" trait="user16" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_red_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user8" />
+										<gt src="stat_p2" trait="user16" />
+									</onlyif>
+								</add>
+							</red>
+							<green>
+								<copy src="StatsMenu" trait="_green_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user8" />
+									<lt src="stat_p2" trait="user16" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_green_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user8" />
+										<eq src="stat_p2" trait="user16" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_green_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user8" />
+										<gt src="stat_p2" trait="user16" />
+									</onlyif>
+								</add>
+							</green>
+							<blue>
+								<copy src="StatsMenu" trait="_blue_under" />
+								<onlyif>
+									<copy src="stat_p2" trait="user8" />
+									<lt src="stat_p2" trait="user16" />
+								</onlyif>
+								<add>
+									<copy src="StatsMenu" trait="_blue_even" />
+									<onlyif>
+										<copy src="stat_p2" trait="user8" />
+										<eq src="stat_p2" trait="user16" />
+									</onlyif>
+								</add>
+								<add>
+									<copy src="StatsMenu" trait="_blue_over" />
+									<onlyif>
+										<copy src="stat_p2" trait="user8" />
+										<gt src="stat_p2" trait="user16" />
+									</onlyif>
+								</add>
+							</blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 250 </wrapwidth>
+							<x> 467 </x>
+							<y> 16 </y>
+						</text>
+						<text name="stat_p2_luck_label">
+							<depth> 3 </depth>
+							<string> <copy src="strings()" trait="_luck"/> </string>
+							<justify> &left; </justify>
+							<red> 117 </red>
+							<green> 59 </green>
+							<blue> 33 </blue>
+							<alpha> 255 </alpha>
+							<wrapwidth> 300 </wrapwidth>
+							<x> 100 </x>
+							<y> 16 </y>
+						</text>
+					</rect>
+				</rect>
+			</rect>
+			
+			
+			
+			<!--***********************************************************************************************-->
+			<rect name="stat_p3">
+				<id> 30 </id>
+				<visible>
+					<copy src="StatsMenu" trait="user0" />
+					<eq> 3 </eq>
+				</visible> <!-- current visible tab page = me -->
+				<locus> &true; </locus>
+				<depth> 8 </depth>
+				<width> 730 </width>
+				<height> 730 </height>
+				<x> 0 </x>
+				<y> 3 </y>
+				<user1> 10 </user1> <!-- level progress max -->
+				<user2> 7 </user2> <!-- level progress current -->
+				<user3> 0 </user3> <!-- minor skills lable position -->
+				<user4> &false; </user4> <!-- true if there is no major/minor distinction (chargen) -->
+				
+				<image name="stats_page_3_tabs">
+					<filename> Menus\Shared\shared_03_tab.dds </filename>
+					<width> 791 </width>
+					<height> 176 </height>
+					<x> 23 </x>
+					<y> 539 </y>
+					<depth> 0 </depth>
+				</image>
+				
+				<image name="stat_p3_line_hor_1">
+					<filename> Menus\Stats\stat_border_horizontal_1.dds </filename>
+					<depth> 1 </depth>
+					<width> 636 </width>
+					<height> 3 </height>
+					<x> 46 </x>
+					<y> 73 </y>
+				</image>
+				<image name="stat_p3_line_left">
+					<filename> Menus\Stats\stat_border_vertical_2.dds </filename>
+					<depth> 1 </depth>
+					<width> 3 </width>
+					<height> 511 </height>
+					<x> 66 </x>
+					<y> 65 </y>
+				</image>
+				<image name="stat_p3_line_right">
+					<filename> Menus\Stats\stat_border_vertical_2.dds </filename>
+					<depth> 1 </depth>
+					<width> 3 </width>
+					<height> 511 </height>
+					<x> 660 </x>
+					<y> 65 </y>
+				</image>
+				<image name="stat_p3_scroll_bar">
+<include src="vertical_scroll.xml"/>
+					<id> 32 </id>
+					<x>
+						<copy src="stat_p3_window" trait="x" />
+						<add src="stat_p3_window" trait="width" />
+						<add> 10 </add>
+					</x>
+					<y>
+						<copy src="stat_p3_window" trait="y" />
+						<add> 32 </add>
+					</y>
+					<height>
+						<copy src="stat_p3_window" trait="height" />
+						<sub> 64 </sub>
+					</height>
+					<depth> 5 </depth>
+					<user1> 0 </user1> <!-- code set - minimum range value -->
+					<user2>
+						<copy src="stat_p3_window_pane" trait="child_count" />
+						<sub>
+							<copy src="stat_p3" trait="user3" />
+							<eq> 0 </eq>
+							<sub> 1 </sub>
+						</sub>
+						<sub src="me()" trait="user8" />
+					</user2> <!-- maximum range value -->
+					<user3> 1 </user3> <!-- step distance -->
+					<user4> 6 </user4> <!-- jump distance -->
+					<user5> 0 </user5> <!-- code set - force value (must be 0 here) -->
+					<user6> 33 </user6> <!-- marker's id - must change to enable dragging -->
+					<!-- user7 --> <!-- current value -->
+					<user8> 7 </user8> <!-- number of items visible -->
+				</image>
+				<image name="stat_p3_title_left">
+					<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<clips> &true; </clips>
+					<x>
+						<copy src="stat_p3_title_text" trait="x" />
+						<sub>
+							<copy src="stat_p3_title_text" trait="width" />
+							<div> 2 </div>
+						</sub>
+						<sub> 55 </sub>
+					</x>
+					<y> 50 </y>
+				</image>
+				<image name="stat_p3_title_right">
+					<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<clips> &true; </clips>
+					<x>
+						<copy src="stat_p3_title_text" trait="width" />
+						<div> 2 </div>
+						<add src="stat_p3_title_text" trait="x" />
+						<add> 20 </add>
+					</x>
+					<y> 50 </y>
+				</image>
+				<text name="stat_p3_title_text">
+					<depth> 3 </depth>
+					<justify> &center; </justify>
+					<font> 3 </font>
+					<red> 51 </red>
+					<green> 79 </green>
+					<blue> 142 </blue>
+					<alpha> 255 </alpha>
+					<wrapwidth> 500 </wrapwidth>
+					<clips> &true; </clips>
+					<x> 370 </x>
+					<y> 45 </y>
+					<_title_1> <copy src="strings()" trait="_majorskills"/> </_title_1>
+					<_title_2> <copy src="strings()" trait="_minorskills"/> </_title_2>
+					<_title_3> <copy src="strings()" trait="_skills"/> </_title_3>
+					<string> <!-- this trait needs to be after the _title_# traits for its last line to work first time -->
+						<copy src="stat_p3_scroll_bar" trait="user7" />
+						<gt src="stat_p3" trait="user3" />
+						<add>
+							<copy> 3 </copy>
+							<onlyif>
+								<copy src="stat_p3" trait="user3" />
+								<lt> 1 </lt>
+							</onlyif>
+						</add>
+						<min> 3 </min>
+						<copy src="me()" trait="_title_" />
+					</string>
+				</text>
+				<rect name="stat_p3_window">
+					<alpha> 0 </alpha>
+					<depth> 3 </depth>
+					<width> 600 </width>
+					<height> 490 </height>
+					<locus> &true; </locus>
+					<clipwindow> &true; </clipwindow>
+					<x> 70 </x>
+					<y> 75 </y>
+					<rect name="stat_p3_window_pane">
+						<id> 31 </id>
+						<alpha> 0 </alpha>
+						<depth> 2 </depth>
+						<locus> &true; </locus>
+						<y>
+							<copy> 0 </copy>
+							<sub src="stat_p3_scroll_bar" trait="user7" />
+							<mul> 70 </mul>
+						</y>
+						
+						<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+							an input command, they defer to their parent. The following directions are for those times. -->
+						<target> &false; </target>
+						<xdefault> &true; </xdefault>
+						<xlist> &xlist; </xlist>
+						<!--xup> &last; </xup>
+						<xdown> &first; </xdown-->
+						<xscroll> <ref src="stat_p3_scroll_bar" trait="user5" /> </xscroll>
+			
+						<rect name="stat_p3_minor_label">
+							<alpha> 0 </alpha>
+							<depth> 3 </depth>
+							<width> 600 </width>
+							<height> 70 </height>
+							<clips> &true; </clips>
+							<locus> &true; </locus>
+							<x> 0 </x>
+							<y>
+								<copy> 70 </copy>
+								<mul src="stat_p3" trait="user3" />
+								<add>
+									<copy> -70 </copy>
+									<onlyif>
+										<copy src="stat_p3" trait="user3" />
+										<lt> 1 </lt>
+									</onlyif>
+								</add>
+							</y>
+							<image name="stat_p3_minor_label_left">
+								<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+								<depth> 7 </depth>
+								<width> 35 </width>
+								<height> 17 </height>
+								<clips> &true; </clips>
+								<x>
+									<copy src="stat_p3_minor_label_text" trait="x" />
+									<sub>
+										<copy src="stat_p3_minor_label_text" trait="width" />
+										<div> 2 </div>
+									</sub>
+									<sub> 55 </sub>
+								</x>
+								<y> 35 </y>
+							</image>
+							<image name="stat_p3_minor_label_right">
+								<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+								<depth> 7 </depth>
+								<width> 35 </width>
+								<height> 17 </height>
+								<clips> &true; </clips>
+								<x>
+									<copy src="stat_p3_minor_label_text" trait="width" />
+									<div> 2 </div>
+									<add src="stat_p3_minor_label_text" trait="x" />
+									<add> 20 </add>
+								</x>
+								<y> 35 </y>
+							</image>
+							<text name="stat_p3_minor_label_text">
+								<depth> 3 </depth>
+								<string> <copy src="strings()" trait="_minorskills"/> </string>
+								<justify> &center; </justify>
+								<font> 3 </font>
+								<red> 51 </red>
+								<green> 79 </green>
+								<blue> 142 </blue>
+								<alpha> 255 </alpha>
+								<wrapwidth> 500 </wrapwidth>
+								<clips> &true; </clips>
+								<x> 300 </x>
+								<y> 30 </y>
+							</text>
+						</rect>
+						<!-- skill items are inserted here in the code from template at the bottom of this file -->
+					</rect>
+				</rect>
+				<text name="stat_p3_progress_label">
+					<depth> 3 </depth>
+					<string> <copy src="strings()" trait="_levelprogress"/> </string>
+					<justify> &left; </justify>
+					<font> 3 </font>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33 </blue>
+					<alpha> 255 </alpha>
+					<wrapwidth> 500 </wrapwidth>
+					<x> 100 </x>
+					<y> 580 </y>
+				</text>
+				<image name="stat_p3_progress">
+					<locus> &true; </locus>
+					<filename> Menus\Stats\stat_skill_level_ribbon_empty.dds </filename>
+					<depth> 7 </depth>
+					<width> 218 </width>
+					<height> 43 </height>
+					<locus> &true; </locus>
+					<x> 390 </x>
+					<y> 575 </y>
+					<image name="stat_p3_progress_ribbon">
+						<id> 55 </id>
+						<filename> Menus\Stats\stat_skill_level_ribbon_full.dds </filename>
+						<depth> 8 </depth>
+						<width>
+							<copy src="stat_p3" trait="user2" />
+							<div src="stat_p3" trait="user1" />
+							<mul> 193 </mul>
+						</width>
+						<height> 20 </height>
+						<locus> &true; </locus>
+						<x> 26 </x>
+						<y> 6 </y>
+						<image name="stat_p3_progress_slider">
+							<filename> Menus\Stats\stat_skill_level_ribbon_slider.dds </filename>
+							<depth> 1 </depth>
+							<width> 12 </width>
+							<height> 23 </height>
+							<x>
+								<copy src="parent()" trait="width" />
+								<sub> 10 </sub>
+							</x>
+							<y> -1 </y>
+						</image>
+					</image>
+				</image>
+			</rect>
+			
+			
+			
+			<!--***********************************************************************************************-->
+			<rect name="stat_p4">
+				<id> 40 </id>
+				<visible>
+					<copy src="StatsMenu" trait="user0" />
+					<eq> 4 </eq>
+				</visible> <!-- current visible tab page = me -->
+				<locus> &true; </locus>
+				<depth> 8 </depth>
+				<width> 730 </width>
+				<height> 730 </height>
+				<x> 0 </x>
+				<y> 3 </y>
+				
+				<image name="stats_page_4_tabs">
+					<filename> Menus\Shared\shared_04_tab.dds </filename>
+					<width> 791 </width>
+					<height> 176 </height>
+					<x> 23 </x>
+					<y> 539 </y>
+					<depth> 0 </depth>
+				</image>
+				
+				<image name="stat_p4_title_left">
+					<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<clips> &true; </clips>
+					<x>
+						<copy src="stat_p4_title_text" trait="x" />
+						<sub>
+							<copy src="stat_p4_title_text" trait="width" />
+							<div> 2 </div>
+						</sub>
+						<sub> 55 </sub>
+					</x>
+					<y> 50 </y>
+				</image>
+				<image name="stat_p4_title_right">
+					<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+					<depth> 7 </depth>
+					<width> 35 </width>
+					<height> 17 </height>
+					<clips> &true; </clips>
+					<x>
+						<copy src="stat_p4_title_text" trait="width" />
+						<div> 2 </div>
+						<add src="stat_p4_title_text" trait="x" />
+						<add> 20 </add>
+					</x>
+					<y> 50 </y>
+				</image>
+				<text name="stat_p4_title_text">
+					<depth> 3 </depth>
+					<justify> &center; </justify>
+					<font> 3 </font>
+					<red> 51 </red>
+					<green> 79 </green>
+					<blue> 142 </blue>
+					<alpha> 255 </alpha>
+					<wrapwidth> 500 </wrapwidth>
+					<clips> &true; </clips>
+					<x> 370 </x>
+					<y> 45 </y>
+					<string> <copy src="strings()" trait="_factions"/> </string>
+				</text>
+				
+				<image name="stat_p4_line_hor_1">
+					<filename> Menus\Stats\stat_border_horizontal_1.dds </filename>
+					<depth> 9 </depth>
+					<width> 636 </width>
+					<height> 3 </height>
+					<x> 46 </x>
+					<y> 88 </y>
+				</image>
+				<image name="stat_p4_line_left">
+					<filename> Menus\Stats\stat_border_vertical_2.dds </filename>
+					<depth> 1 </depth>
+					<width> 3 </width>
+					<height> 460 </height>
+					<x> 66 </x>
+					<y> 100 </y>
+				</image>
+				<image name="stat_p4_line_right">
+					<filename> Menus\Stats\stat_border_vertical_2.dds </filename>
+					<depth> 1 </depth>
+					<width> 3 </width>
+					<height> 460 </height>
+					<x> 660 </x>
+					<y> 100 </y>
+				</image>
+				<image name="stat_p4_scroll_bar">
+<include src="vertical_scroll.xml"/>
+					<id> 42 </id>
+					<x>
+						<copy src="stat_p4_window" trait="x" />
+						<add src="stat_p4_window" trait="width" />
+						<add> 10 </add>
+					</x>
+					<y>
+						<copy src="stat_p4_window" trait="y" />
+						<add> 32 </add>
+					</y>
+					<height>
+						<copy src="stat_p4_window" trait="height" />
+						<sub> 64 </sub>
+					</height>
+					<depth> 5 </depth>
+					<user1> 0 </user1> <!-- code set - minimum range value -->
+					<user2>
+						<copy src="stat_p4_window_pane" trait="child_count" />
+						<sub src="me()" trait="user8" />
+					</user2> 		<!-- maximum range value -->
+					<user3> 1 </user3> 	<!-- step distance -->
+					<user4> 5 </user4> 	<!-- jump distance -->
+					<user5> 0 </user5> 	<!-- starting value - must be 0 here, change by code -->
+					<user6> 43 </user6> 	<!-- marker's id - must change to enable dragging -->
+					<!-- user7 --> 		<!-- current value -->
+					<user8> 3 </user8> 	<!-- number of items visible -->
+					<user9>
+						<copy src="stat_p4_down" trait="clicked"/>
+						<sub src="stat_p4_up" trait="clicked"/>
+					</user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+					<user10></user10>		<!-- reserved -->
+				</image>
+				
+				<rect name="stat_p4_up">
+					<target> &true; </target>
+					<xdefault> &true; </xdefault>
+					<repeatvertical> &true; </repeatvertical>
+					<width> 5 </width>
+					<height> 5 </height>
+					<x> 60 </x>
+					<y> 60 </y>
+					<xup> <ref src="stat_p4_up" trait="clicked"/> </xup>
+					<xdown> <ref src="stat_p4_down" trait="clicked"/> </xdown>
+				</rect>
+				<rect name="stat_p4_down">
+					<target> &true; </target>
+					<xdefault> &false; </xdefault>
+					<repeatvertical> &true; </repeatvertical>
+					<width> 5 </width>
+					<height> 5 </height>
+					<x> 60 </x>
+					<y> 60 </y>
+					<xup> <ref src="stat_p4_up" trait="clicked"/> </xup>
+					<xdown> <ref src="stat_p4_down" trait="clicked"/> </xdown>
+				</rect>
+				
+				<rect name="stat_p4_window">
+					<alpha> 0 </alpha>
+					<depth> 3 </depth>
+					<width> 600 </width>
+					<height> 465 </height>
+					<locus> &true; </locus>
+					<clipwindow> &true; </clipwindow>
+					<x> 70 </x>
+					<y> 100 </y>
+					<rect name="stat_p4_window_pane">
+						<id> 41 </id>
+						<alpha> 0 </alpha>
+						<locus> &true; </locus>
+						<y>
+							<copy> 0 </copy>
+							<sub src="stat_p4_scroll_bar" trait="user7" />
+							<mul> 155 </mul>
+						</y>
+						
+						<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+							an input command, they defer to their parent. The following directions are for those times. -->
+						<target> &false; </target>
+						<xdefault> &true; </xdefault>
+						<xlist> &xlist; </xlist>
+						<!--xup> &last; </xup>
+						<xdown> &first; </xdown-->
+						<xscroll> <ref src="stat_p4_scroll_bar" trait="user5" /> </xscroll>
+						
+						<!-- faction items are inserted here in the code from template at the bottom of this file -->
+					</rect>
+				</rect>
+			</rect>
+			
+			
+			
+			<!--***********************************************************************************************-->
+			<rect name="stat_p5">
+				<id> 50 </id>
+				<visible>
+					<copy src="StatsMenu" trait="user0" />
+					<eq> 5 </eq>
+				</visible> <!-- current visible tab page = me -->
+				<locus> &true; </locus>
+				<depth> 8 </depth>
+				<width> 730 </width>
+				<height> 730 </height>
+				<x> 0 </x>
+				<y> 3 </y>
+				
+				<image name="stats_page_5_tabs">
+					<filename> Menus\Shared\shared_05_tab.dds </filename>
+					<width> 791 </width>
+					<height> 176 </height>
+					<x> 23 </x>
+					<y> 539 </y>
+					<depth> 0 </depth>
+				</image>
+				
+				<image name="stat_p5_line_to">
+					<filename> Menus\Stats\stat_border_horizontal_1.dds </filename>
+					<depth> 9 </depth>
+					<width> 636 </width>
+					<height> 3 </height>
+					<x> 46 </x>
+					<y> 68 </y>
+				</image>
+				<image name="stat_p5_line_left">
+					<filename> Menus\Stats\stat_border_vertical_2.dds </filename>
+					<depth> 1 </depth>
+					<width> 3 </width>
+					<height> 511 </height>
+					<x> 66 </x>
+					<y> 62 </y>
+				</image>
+				<image name="stat_p5_line_right">
+					<filename> Menus\Stats\stat_border_vertical_2.dds </filename>
+					<depth> 1 </depth>
+					<width> 3 </width>
+					<height> 511 </height>
+					<x> 660 </x>
+					<y> 62 </y>
+				</image>
+				<image name="stat_p5_line_bottom">
+					<filename> Menus\Stats\stat_border_horizontal_2.dds </filename>
+					<depth> 9 </depth>
+					<width> 636 </width>
+					<height> 3 </height>
+					<x> 46 </x>
+					<y> 600 </y>
+				</image>
+				<image name="stat_p5_scroll_bar">
+<include src="vertical_scroll.xml"/>
+					<id> 52 </id>
+					<x>
+						<copy src="stat_p5_window" trait="x" />
+						<add src="stat_p5_window" trait="width" />
+						<add> 10 </add>
+					</x>
+					<y>
+						<copy src="stat_p5_window" trait="y" />
+						<add> 34 </add>
+					</y>
+					<height>
+						<copy src="stat_p5_window" trait="height" />
+						<sub> 64 </sub>
+					</height>
+					<depth> 5 </depth>
+					<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+					<user2>
+						<copy src="stat_p5_window_pane" trait="child_count" />
+						<sub src="me()" trait="user8" />
+					</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+												items minus the number of items visible.  i.e. if your list has
+												8 items and you can see 2 at any one time, this should be 6 -->
+					<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+					<user4> 3 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+					<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+					<user6> 53 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+					<!-- user7 --> <!-- current value -->
+					<user8> 3 </user8>		<!-- How many items are visible at once -->
+					<user9>
+						<copy src="stat_p5_down" trait="clicked"/>
+						<sub src="stat_p5_up" trait="clicked"/>
+					</user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+					<user10></user10>		<!-- reserved -->
+				</image>
+				
+				<rect name="stat_p5_up">
+					<target> &true; </target>
+					<xdefault> &true; </xdefault>
+					<repeatvertical> &true; </repeatvertical>
+					<width> 5 </width>
+					<height> 5 </height>
+					<x> 60 </x>
+					<y> 60 </y>
+					<xup> <ref src="stat_p5_up" trait="clicked"/> </xup>
+					<xdown> <ref src="stat_p5_down" trait="clicked"/> </xdown>
+				</rect>
+				<rect name="stat_p5_down">
+					<target> &true; </target>
+					<xdefault> &false; </xdefault>
+					<repeatvertical> &true; </repeatvertical>
+					<width> 5 </width>
+					<height> 5 </height>
+					<x> 60 </x>
+					<y> 60 </y>
+					<xup> <ref src="stat_p5_up" trait="clicked"/> </xup>
+					<xdown> <ref src="stat_p5_down" trait="clicked"/> </xdown>
+				</rect>
+				
+				<rect name="stat_p5_window">
+					<alpha> 0 </alpha>
+					<depth> 3 </depth>
+					<width> 600 </width>
+					<height> 494 </height>
+					<locus> &true; </locus>
+					<target> &true; </target>
+					<clipwindow> &true; </clipwindow>
+					<x> 70 </x>
+					<y> 70 </y>
+					<rect name="stat_p5_window_pane">
+						<id> 51 </id>
+						<alpha> 0 </alpha>
+						<locus> &true; </locus>
+						<y>
+							<copy> 0 </copy>
+							<sub src="stat_p5_scroll_bar" trait="user7" />
+							<mul> 35 </mul>
+						</y>
+						
+						<!-- misc items are inserted here in the code from template at the bottom of this file -->
+					</rect>
+				</rect>
+			</rect>
+			
+			
+			
+			
+			
+			<!--***********************************************************************************************-->
+			<!--***********************************************************************************************-->
+			<!--***********************************************************************************************-->
+			<rect name="stat_tabs">
+				<locus> &true; </locus>
+				<depth> 5 </depth>
+				<width> 730 </width>
+				<height> 128 </height>
+				<x> 0 </x>
+				<y> 594 </y>
+				
+				<rect name="stat_tabs_prev">
+					<id> 8 </id>
+					<target> &true; </target>
+					<width> 1 </width>
+					<height> 1 </height>
+					<x> -1 </x>
+					<y> -1 </y>
+					<clicksound>5</clicksound>
+				</rect>
+				
+				<rect name="stat_tabs_next">
+					<id> 9 </id>
+					<target> &true; </target>
+					<width> 1 </width>
+					<height> 1 </height>
+					<x> -1 </x>
+					<y> -1 </y>
+					<clicksound>5</clicksound>
+				</rect>
+				
+				<rect name="stat_tabs_p1">
+					<id> 1 </id>
+					<target> <copy src="stat_p1" trait="visible"/> <eq> &false; </eq> </target>
+					<depth> 5 </depth>
+					<width> 135 </width>
+					<height> 85 </height>
+					<x> 28 </x>
+					<y> 37 </y>
+					<locus> &true; </locus>
+					<clicksound>5</clicksound>
+					<user1>
+						<copy src="stat_p1" trait="visible" />
+						<eq> &false; </eq>
+					</user1>
+						
+					<image name="stat_tabs_p1_icon">
+						<filename> Menus\Shared\all_tabs_icons.dds </filename>
+						<cropx> 0 </cropx>
+						<cropy> 128 </cropy>
+						<width> 64 </width>
+						<height> 64 </height>
+						<x> 37 </x>
+						<y> 8 </y>
+					</image>
+					<image name="stat_tabs_p1_selection_off">
+						<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &true; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+					<image name="stat_tabs_p1_selection_on">
+						<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &false; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+				</rect>
+				
+				
+				<rect name="stat_tabs_p2">
+					<id> 2 </id>
+					<target> <copy src="stat_p2" trait="visible"/> <eq> &false; </eq> </target>
+					<depth> 5 </depth>
+					<width> 135 </width>
+					<height> 85 </height>
+					<x> 165 </x>
+					<y> 37 </y>
+					<locus> &true; </locus>
+					<user1>
+						<copy src="stat_p2" trait="visible" />
+						<eq> &false; </eq>
+					</user1>
+						
+					<clicksound>5</clicksound>
+					<image name="stat_tabs_p2_icon">
+						<filename> Menus\Shared\all_tabs_icons.dds </filename>
+						<cropx> 64 </cropx>
+						<cropy> 128 </cropy>
+						<width> 64 </width>
+						<height> 64 </height>
+						<x> 37 </x>
+						<y> 8 </y>
+					</image>
+					<image name="stat_tabs_p2_selection_off">
+						<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &true; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+					<image name="stat_tabs_p2_selection_on">
+						<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &false; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+				</rect>
+				
+				
+				<rect name="stat_tabs_p3">
+					<id> 3 </id>
+					<target> <copy src="stat_p3" trait="visible"/> <eq> &false; </eq> </target>
+					<depth> 5 </depth>
+					<width> 135 </width>
+					<height> 85 </height>
+					<x> 304 </x>
+					<y> 37 </y>
+					<locus> &true; </locus>
+					<user1>
+						<copy src="stat_p3" trait="visible" />
+						<eq> &false; </eq>
+					</user1>
+					<clicksound>5</clicksound>
+						
+					<image name="stat_tabs_p3_icon">
+						<filename> Menus\Shared\all_tabs_icons.dds </filename>
+						<cropx> 128 </cropx>
+						<cropy> 128 </cropy>
+						<width> 64 </width>
+						<height> 64 </height>
+						<x> 37 </x>
+						<y> 8 </y>
+					</image>
+					<image name="stat_tabs_p3_selection_off">
+						<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &true; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+					<image name="stat_tabs_p3_selection_on">
+						<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &false; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+				</rect>
+				
+				
+				<rect name="stat_tabs_p4">
+					<id> 4 </id>
+					<target> <copy src="stat_p4" trait="visible"/> <eq> &false; </eq> </target>
+					<depth> 5 </depth>
+					<width> 135 </width>
+					<height> 85 </height>
+					<x> 443 </x>
+					<y> 37 </y>
+					<locus> &true; </locus>
+					<user1>
+						<copy src="stat_p4" trait="visible" />
+						<eq> &false; </eq>
+					</user1>
+					<clicksound>5</clicksound>
+						
+					<image name="stat_tabs_p4_icon">
+						<filename> Menus\Shared\all_tabs_icons.dds </filename>
+						<cropx> 192 </cropx>
+						<cropy> 128 </cropy>
+						<depth> -1 </depth>
+						<width> 64 </width>
+						<height> 64 </height>
+						<x> 37 </x>
+						<y> 8 </y>
+					</image>
+					<image name="stat_tabs_p4_selection_off">
+						<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+						<depth> -3 </depth>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &true; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+					<image name="stat_tabs_p4_selection_on">
+						<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &false; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+				</rect>
+				
+				
+				<rect name="stat_tabs_p5">
+					<id> 5 </id>
+					<target> <copy src="stat_p5" trait="visible"/> <eq> &false; </eq> </target>
+					<depth> 5 </depth>
+					<width> 135 </width>
+					<height> 85 </height>
+					<x> 578 </x>
+					<y> 37 </y>
+					<locus> &true; </locus>
+					<user1>
+						<copy src="stat_p5" trait="visible" />
+						<eq> &false; </eq>
+					</user1>
+					<clicksound>5</clicksound>
+						
+					<image name="stat_tabs_p5_icon">
+						<filename> Menus\Shared\all_tabs_icons.dds </filename>
+						<cropx> 256 </cropx>
+						<cropy> 128 </cropy>
+						<width> 64 </width>
+						<height> 64 </height>
+						<x> 37 </x>
+						<y> 8 </y>
+					</image>
+					<image name="stat_tabs_p5_selection_off">
+						<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &true; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+					<image name="stat_tabs_p5_selection_on">
+						<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+						<visible>
+							<copy src="parent()" trait="user1" />
+							<eq> &false; </eq>
+						</visible>
+						<width> 136 </width>
+						<height> 36 </height>
+						<x> 0 </x>
+						<y> 24 </y>
+					</image>
+				</rect>
+			</rect>
+		</image>
+	</rect>	<!-- stat layout -->
+	
+	<!--************************************************************-->
+	<!--************************************************************-->
+	<!--************************************************************-->
+	<!--************************************************************-->
+	
+	<image name="stat_pop_background">
+		<id> 61 </id>
+		<target> &true; </target>
+		<filename> Menus\Magic\magic_popup_background.dds </filename>
+		<depth> -9 </depth>
+		<zoom> -1 </zoom>
+		<alpha>
+			<copy>255</copy>
+			<onlyif>
+				<copy src="me()" trait="user0"/>
+				<gt>0</gt>
+			</onlyif>
+		</alpha>
+		<width> 419 </width>
+		<height>
+			<copy src="stat_pop_text" trait="y" />
+			<add src="stat_pop_text" trait="height" />
+			<add> 25 </add>
+		</height>
+		<x>
+			<copy src="stat_layout" trait="x"/>
+			<add src="stat_background" trait="x"/>
+			<add src="stat_background" trait="width"/>
+			<sub>
+				<copy src="me()" trait="width"/>
+				<mul>
+					<copy>1</copy>
+					<sub src="me()" trait="user0"/>
+				</mul>
+			</sub>
+			<sub> 20 </sub>
+		</x>
+		<y> 170 </y>
+		<locus> &true; </locus>
+		<user0> 0.0 </user0> <!-- animation step (0.0 - 1.0) -->
+		<user1> 0.24 </user1> <!-- animation speed in seconds -->
+		<user2>	Menus\Stats\stat_pop_icon_agility.dds </user2> <!-- icon -->
+		<user3>	Cast spells to inflict magical, fire, frost, shock, and poison damage or to reduce resistances to magical attacks. </user3> <!-- text -->
+		<user4> &true; </user4> <!-- visibility of image -->
+		<user5> -1 </user5>		<!-- Hand to hand damage (icon and text are visible when > -1) -->
+		
+		<!-- POPUP BORDER -->
+		<image name="magicpop_border_ULcorner">
+			<depth> 3 </depth>
+			<filename>Menus\Magic\magic_popup_border_corner.dds</filename>
+			<x>0</x>
+			<y>0</y>
+			<width>10</width>
+			<height>10</height>
+			<alpha>
+				<copy src="parent()" trait="alpha"/>
+			</alpha>
+		</image>
+		<image name="magicpop_border_top">
+			<depth> 3 </depth>
+			<filename>Menus\Magic\magic_popup_border_edge_horizontal.dds</filename>
+			<x>
+				<copy src="magicpop_border_ULcorner" trait="x"/>
+				<add src="magicpop_border_ULcorner" trait="width"/>
+			</x>
+			<y>
+				<copy src="magicpop_border_ULcorner" trait="y"/>
+			</y>
+			<width>
+				<copy src="magicpop_border_URcorner" trait="x"/>
+				<sub src="magicpop_border_ULcorner" trait="x"/>
+				<sub src="magicpop_border_ULcorner" trait="width"/>
+			</width>
+			<height>11</height>
+			<alpha>
+				<copy src="parent()" trait="alpha"/>
+			</alpha>
+		</image>
+		<image name="magicpop_border_URcorner">
+			<depth> 3 </depth>
+			<filename>Menus\Magic\magic_popup_border_corner.dds</filename>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<add>2</add>
+			</x>
+			<y>0</y>
+			<width>
+				<copy src="magicpop_border_ULcorner" trait="width"/>
+			</width>
+			<height>
+				<copy src="magicpop_border_ULcorner" trait="height"/>
+			</height>
+			<alpha>
+				<copy src="parent()" trait="alpha"/>
+			</alpha>
+		</image>
+		<image name="magicpop_border_left">
+			<depth> 3 </depth>
+			<filename>Menus\Magic\magic_popup_border_edge_vertical.dds</filename>
+			<x>
+				<copy src="magicpop_border_ULcorner" trait="x"/>
+			</x>
+			<y>
+				<copy src="magicpop_border_ULcorner" trait="y"/>
+				<add src="magicpop_border_ULcorner" trait="height"/>
+			</y>
+			<width>11</width>
+			<height>
+				<copy src="magicpop_border_LLcorner" trait="y"/>
+				<sub src="magicpop_border_ULcorner" trait="y"/>
+				<sub src="magicpop_border_ULcorner" trait="height"/>
+			</height>
+			<alpha>
+				<copy src="parent()" trait="alpha"/>
+			</alpha>
+		</image>
+		<image name="magicpop_border_LLcorner">
+			<depth> 3 </depth>
+			<filename>Menus\Magic\magic_popup_border_corner.dds</filename>
+			<x>0</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height"/>
+			</y>
+			<width>10</width>
+			<height>10</height>
+			<alpha>
+				<copy src="parent()" trait="alpha"/>
+			</alpha>
+		</image>
+		<image name="magicpop_border_bottom">
+			<depth> 3 </depth>
+			<filename>Menus\Magic\magic_popup_border_edge_horizontal.dds</filename>
+			<x>
+				<copy src="magicpop_border_LLcorner" trait="x"/>
+				<add src="magicpop_border_LLcorner" trait="width"/>
+			</x>
+			<y>
+				<copy src="magicpop_border_LLcorner" trait="y"/>
+			</y>
+			<width>
+				<copy src="magicpop_border_LRcorner" trait="x"/>
+				<sub src="magicpop_border_LLcorner" trait="x"/>
+				<sub src="magicpop_border_LLcorner" trait="width"/>
+			</width>
+			<height>11</height>
+			<alpha>
+				<copy src="parent()" trait="alpha"/>
+			</alpha>
+		</image>
+		<image name="magicpop_border_LRcorner">
+			<depth> 3 </depth>
+			<filename>Menus\Magic\magic_popup_border_corner.dds</filename>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<add>2</add>
+			</x>
+			<y>
+				<copy src="magicpop_border_LLcorner" trait="y"/>
+			</y>
+			<width>
+				<copy src="magicpop_border_ULcorner" trait="width"/>
+			</width>
+			<height>
+				<copy src="magicpop_border_ULcorner" trait="height"/>
+			</height>
+			<alpha>
+				<copy src="parent()" trait="alpha"/>
+			</alpha>
+		</image>
+		<image name="magicpop_border_right">
+			<depth> 3 </depth>
+			<filename>Menus\Magic\magic_popup_border_edge_vertical.dds</filename>
+			<x>
+				<copy src="magicpop_border_URcorner" trait="x"/>
+			</x>
+			<y>
+				<copy src="magicpop_border_URcorner" trait="y"/>
+				<add src="magicpop_border_URcorner" trait="height"/>
+			</y>
+			<width>11</width>
+			<height>
+				<copy src="magicpop_border_LRcorner" trait="y"/>
+				<sub src="magicpop_border_URcorner" trait="y"/>
+				<sub src="magicpop_border_URcorner" trait="height"/>
+			</height>
+			<alpha>
+				<copy src="parent()" trait="alpha"/>
+			</alpha>
+		</image>
+		
+		<!-- POPUP CONTENTS -->
+		<image name="stat_pop_image">
+			<depth> 1 </depth>
+			<visible>
+				<copy src="parent()" trait="user4" />
+			</visible>
+			<filename>
+				<copy src="parent()" trait="user2" />
+			</filename>
+			<alpha>
+				<copy src="parent()" trait="alpha" />
+			</alpha>
+			<width> 256 </width>
+			<height> 256 </height>
+			<zoom>
+				<copy> -28 </copy>
+				<onlyif src="me()" trait="_page_3_test"/>
+				<add> 100 </add>
+			</zoom>
+			<x>
+				<copy> 41 </copy>
+				<onlyif src="me()" trait="_page_3_test"/>
+				<add> 85 </add>
+			</x>
+			<y> 30 </y>
+			<_page_3_test>
+				<copy src="StatsMenu" trait="user0"/>
+				<eq> 3 </eq>
+			</_page_3_test>
+		</image>
+		<text name="stat_pop_text">
+			<depth> 7 </depth>
+			<string>
+				<copy src="parent()" trait="user3" />
+			</string>
+			<justify> &left; </justify>
+			<font> 3 </font>
+			<alpha>
+				<copy src="parent()" trait="alpha" />
+			</alpha>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<wrapwidth> 360 </wrapwidth>
+			<x> 30 </x>
+			<y>
+				<copy src="stat_pop_image" trait="height" />
+				<add src="stat_pop_image" trait="y" />
+				<onlyif src="stat_pop_image" trait="visible" />
+				<add> 15 </add>
+			</y>
+		</text>
+		<image name="stat_pop_hand2hand_icon">
+			<visible>
+				<copy src="StatsMenu" trait="user0"/>
+				<eq>3</eq>
+				<and>
+					<copy src="parent()" trait="user5"/>
+					<gte>0</gte>
+				</and>
+			</visible>
+			<depth>7</depth>
+			<filename> Icons\Weapons\HandToHand.dds </filename>
+			<zoom>-1</zoom>
+			<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+			<height>32</height>
+			<width>32</width>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub>128</sub>
+			</x>
+			<y>
+				<copy src="stat_pop_text" trait="y"/>
+				<add src="stat_pop_text" trait="height"/>
+				<sub>24</sub>
+			</y>
+		</image>
+		<text name="stat_pop_hand2hand_damage">
+			<visible>
+				<copy src="stat_pop_hand2hand_icon" trait="visible"/>
+			</visible>
+			<depth> 7 </depth>
+			<string>
+				<copy src="parent()" trait="user5" />
+			</string>
+			<font> 3 </font>
+			<alpha>
+				<copy src="parent()" trait="alpha" />
+			</alpha>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<x>
+				<copy src="stat_pop_hand2hand_icon" trait="x"/>
+				<add src="stat_pop_hand2hand_icon" trait="width"/>
+				<add>10</add>
+			</x>
+			<y>
+				<copy src="stat_pop_hand2hand_icon" trait="y"/>
+			</y>
+		</text>
+	</image>
+	
+	<!--************************************************************-->
+	<!--************************************************************-->
+	<!--************************************************************-->
+	<!--************************************************************-->
+	
+	<template name="stat_skill_template">
+		<rect name="stat_item">
+			<id> 34 </id>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<alpha> 0 </alpha>
+			<depth> 3 </depth>
+			<width> 600 </width>
+			<height> 69 </height>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<x> 0 </x>
+			<y>
+				<copy> 70 </copy>
+				<mul src="me()" trait="listindex" />
+			</y>
+			<listclip>
+				<copy src="me()" trait="listindex"/>
+				<gte>
+					<copy src="stat_p3_scroll_bar" trait="user7"/>
+					<add src="stat_p3_scroll_bar" trait="user8"/>
+				</gte>
+				<or>
+					<copy src="me()" trait="listindex"/>
+					<lt src="stat_p3_scroll_bar" trait="user7"/>
+				</or>
+			</listclip>
+			<listindex> 0 </listindex> <!-- position in list (0 is first) -->
+			<user1> 100 </user1> <!-- skill progression max -->
+			<user2> 50 </user2> <!-- skill progression current -->
+			<user3> 10 </user3> <!-- skill current -->
+			<user4> Destruction </user4> <!-- skill name -->
+			<user5> Menus\Icons\Skills\test_skill_icon.dds </user5> <!-- skill icon -->
+			<user6> 0 </user6> <!-- internal use only -->
+			<user7> 0 </user7> <!-- skill base -->
+						
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="stat_p3_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+						
+			<image name="stat_item_icon">
+				<filename>
+					<copy src="parent()" trait="user5" />
+				</filename>
+				<depth> 1 </depth>
+				<width> 64 </width>
+				<height> 64 </height>
+				<clips> &true; </clips>
+				<x> 3 </x>
+				<y> 3 </y>
+			</image>
+			<text name="stat_item_label">
+				<depth> 1 </depth>
+				<string>
+					<copy src="parent()" trait="user4" />
+				</string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 300 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 75 </x>
+				<y>
+					<copy> 38 </copy>
+					<sub>
+						<copy src="me()" trait="height" />
+						<div> 2 </div>
+					</sub>
+				</y>
+			</text>
+			
+			<image name="temp_fill_bar">
+<include src="fill_bar.xml"/>
+				<x> 330 </x>
+				<y> 22 </y>
+				<depth> 1 </depth>
+				<clips> &true; </clips>
+				<user0>
+					<copy src="parent()" trait="user2" />
+					<div src="parent()" trait="user1" />
+					<max> 0 </max>
+					<min> 1 </min>
+				</user0>
+				<user1> 1 </user1>
+			</image>
+			
+			
+			<text name="stat_item_value">
+				<depth> 1 </depth>
+				<string>
+					<copy src="parent()" trait="user3" />
+				</string>
+				<justify> &center; </justify>
+				<red>
+					<copy src="StatsMenu" trait="_red_under" />
+					<onlyif>
+						<copy src="stat_item" trait="user3" />
+						<lt src="stat_item" trait="user7" />
+					</onlyif>
+					<add>
+						<copy src="StatsMenu" trait="_red_even" />
+						<onlyif>
+							<copy src="stat_item" trait="user3" />
+							<eq src="stat_item" trait="user7" />
+						</onlyif>
+					</add>
+					<add>
+						<copy src="StatsMenu" trait="_red_over" />
+						<onlyif>
+							<copy src="stat_item" trait="user3" />
+							<gt src="stat_item" trait="user7" />
+						</onlyif>
+					</add>
+				</red>
+				<green>
+					<copy src="StatsMenu" trait="_green_under" />
+					<onlyif>
+						<copy src="stat_item" trait="user3" />
+						<lt src="stat_item" trait="user7" />
+					</onlyif>
+					<add>
+						<copy src="StatsMenu" trait="_green_even" />
+						<onlyif>
+							<copy src="stat_item" trait="user3" />
+							<eq src="stat_item" trait="user7" />
+						</onlyif>
+					</add>
+					<add>
+						<copy src="StatsMenu" trait="_green_over" />
+						<onlyif>
+							<copy src="stat_item" trait="user3" />
+							<gt src="stat_item" trait="user7" />
+						</onlyif>
+					</add>
+				</green>
+				<blue>
+					<copy src="StatsMenu" trait="_blue_under" />
+					<onlyif>
+						<copy src="stat_item" trait="user3" />
+						<lt src="stat_item" trait="user7" />
+					</onlyif>
+					<add>
+						<copy src="StatsMenu" trait="_blue_even" />
+						<onlyif>
+							<copy src="stat_item" trait="user3" />
+							<eq src="stat_item" trait="user7" />
+						</onlyif>
+					</add>
+					<add>
+						<copy src="StatsMenu" trait="_blue_over" />
+						<onlyif>
+							<copy src="stat_item" trait="user3" />
+							<gt src="stat_item" trait="user7" />
+						</onlyif>
+					</add>
+				</blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 250 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 555 </x>
+				<y> 20 </y>
+			</text>
+			<image name="stat_item_line">
+				<filename>
+					<copy src="parent()" trait="listindex" />
+					<mod> 3 </mod>
+					<add> 1 </add>
+					<copy src="me()" trait="_file_" />
+				</filename>
+				<depth> -2 </depth>
+				<width> 636 </width>
+				<height> 3 </height>
+				<clips> &true; </clips>
+				<x> -30 </x>
+				<y> 68 </y>
+				<_file_1> Menus\Stats\stat_border_horizontal_3.dds </_file_1>
+				<_file_2> Menus\Stats\stat_border_horizontal_2.dds </_file_2>
+				<_file_3> Menus\Stats\stat_border_horizontal_1.dds </_file_3>
+			</image>
+		</rect>
+	</template>
+	
+	<!--***********************************************************************************************-->
+		
+	<template name="stat_faction_template">
+		<rect name="stat_faction_item">
+			<id> 44 </id>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<alpha> 0 </alpha>
+			<depth> 3 </depth>
+			<width> 600 </width>
+			<height> 155 </height>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="height" />
+				<mul src="me()" trait="listindex" />
+			</y>
+			<listindex> 1 </listindex> <!-- position in list -->
+			<user1> Mages Guild </user1> <!-- faction name -->
+			<user2> Apprentice </user2> <!-- faction rank -->
+			<user3> Wizard </user3> <!-- faction next rank -->
+			<user4> Menus\Stats\stat_fact_icon_mages_guild_1.dds </user4> <!-- faction icon -->
+			<user5> &false; </user5> <!-- is faction active/visible -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="stat_p4_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="stat_faction_item_icon">
+				<filename> <copy src="parent()" trait="user4"/> </filename>
+				<width> 128 </width>
+				<height> 128 </height>
+				<x> 15 </x>
+				<y> 5 </y>
+				<depth> 1 </depth>
+				<clips> &true; </clips>
+			</image>
+			<text name="stat_faction_item_name">
+				<string> <copy src="parent()" trait="user1" /> </string>
+				<red> 51 </red>
+				<green> 79 </green>
+				<blue> 142 </blue>
+				<wrapwidth> 430 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 155 </x>
+				<y>
+					<copy> 80 </copy>
+					<sub src="me()" trait="height"/>
+					<div> 2 </div>
+					<add> 5 </add>
+				</y>
+				<depth> 1 </depth>
+			</text>
+			<text name="stat_faction_item_rank">
+				<string> <copy src="parent()" trait="user2" /> </string>
+				<wrapwidth> 600 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 155 </x>
+				<y>
+					<copy src="sibling(stat_faction_item_name)" trait="y" />
+					<add src="sibling(stat_faction_item_name)" trait="height" />
+					<add> 8 </add>
+				</y>
+				<depth> 1 </depth>
+			</text>
+			<!--text name="stat_faction_item_next_label">
+				<depth> 1 </depth>
+				<string> <copy src="strings()" trait="_nextrank"/> </string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 300 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 155 </x>
+				<y> 105 </y>
+			</text>
+			<text name="stat_faction_item_next">
+				<depth> 1 </depth>
+				<string> <copy src="parent()" trait="user2"/> </string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 300 </wrapwidth>
+				<clips> &true; </clips>
+				<x>
+					<copy src="stat_faction_item_next_label" trait="x"/>
+					<add src="stat_faction_item_next_label" trait="width"/>
+					<add> 10 </add>
+				</x>
+				<y> 105 </y>
+			</text-->
+			<image name="stat_faction_line">
+				<filename>
+					<copy src="parent()" trait="listindex" />
+					<mod> 3 </mod>
+					<add> 1 </add>
+					<copy src="me()" trait="_file_" />
+				</filename>
+				<depth> -2 </depth>
+				<width> 636 </width>
+				<height> 3 </height>
+				<clips> &true; </clips>
+				<x> -30 </x>
+				<y> 143 </y>
+				<_file_1> Menus\Stats\stat_border_horizontal_3.dds </_file_1>
+				<_file_2> Menus\Stats\stat_border_horizontal_2.dds </_file_2>
+				<_file_3> Menus\Stats\stat_border_horizontal_1.dds </_file_3>
+			</image>
+		</rect>
+	</template>
+	
+	<!--***********************************************************************************************-->
+		
+	<template name="stat_misc_template">
+		<rect name="stat_misc_item">
+			<id> 44 </id>
+			<target> &false; </target>
+			<alpha> 0 </alpha>
+			<depth> 3 </depth>
+			<width> 600 </width>
+			<height> 32 </height>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="height" />
+				<mul src="me()" trait="listindex" />
+			</y>
+			<listindex> 0 </listindex> <!-- position in list -->
+			<user1> Label </user1> <!-- label text -->
+			<user2> 0 </user2> <!-- value text -->
+			
+			<text name="stat_misc_label">
+				<depth> 1 </depth>
+				<string>
+					<copy src="parent()" trait="user1" />
+				</string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<font> 3 </font>
+				<wrapwidth> 450 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 30 </x>
+				<y> 16 </y>
+			</text>
+			<text name="stat_misc_value">
+				<depth> 1 </depth>
+				<string>
+					<copy src="parent()" trait="user2" />
+				</string>
+				<justify> &right; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<font> 3 </font>
+				<wrapwidth> 150 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 550 </x>
+				<y> 16 </y>
+			</text>
+		</rect>
+	</template>
+</menu>

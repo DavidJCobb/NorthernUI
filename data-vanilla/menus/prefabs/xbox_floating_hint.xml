@@ -1,0 +1,67 @@
+<!-- xbox_floating_hint.xml -->
+<!-- rect name="xbox_floating_hint" -->
+	<visible> &xbox; </visible>
+	<width>
+		<copy src="child(xbox_floating_hint_text)" trait="x"/>
+		<add src="child(xbox_floating_hint_text)" trait="width"/>
+	</width>
+	<height> 44 </height>
+	<depth> 1 </depth>
+	<locus> &true; </locus>
+	<user0>  </user0>				<!-- text of the button -->
+	<user1> &true; </user1>			<!-- enabled - true=enabled, false=disabled *NOT USED* -->
+	<user20><!--&xbuttona;-->1 </user20>	<!-- look of the button -->
+	<user21> &false; </user21>		<!-- if true, use floating format -->
+	
+	<red> 240 </red>
+	<green> 240 </green>
+	<blue> 240 </blue>
+
+	<image name="xbox_floating_hint_icon">
+		<filename> Menus\Shared\all_xbox_buttons.dds </filename>
+		<cropx>
+			<copy src="parent()" trait="user20"/>
+			<sub><!--&xbuttona;-->1 </sub>
+			<add> 1 </add>
+			<max> 1 </max>
+			<min> 10 </min>
+			<copy src="me()" trait="_cropx_"/>
+		</cropx>
+		<width> 64 </width>
+		<height> 64 </height>
+		<x> -32 </x>
+		<y>
+			<copy src="xbox_floating_hint_text" trait="y"/>
+			<sub>6</sub>
+			<add>
+				<copy src="xbox_floating_hint_text" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<div>2</div>
+			</add>
+		</y>
+		
+		<_cropx_1> 128 </_cropx_1>
+		<_cropx_2> 192 </_cropx_2>
+		<_cropx_3> 0 </_cropx_3>
+		<_cropx_4> 64 </_cropx_4>
+		<_cropx_5> 320 </_cropx_5>
+		<_cropx_6> 256 </_cropx_6>
+		<_cropx_7> 384 </_cropx_7>
+		<_cropx_8> 448 </_cropx_8>
+		<_cropx_9> 512 </_cropx_9>
+		<_cropx_10> 576 </_cropx_10>
+	</image>
+	
+	<text name="xbox_floating_hint_text">
+		<string> <copy src="parent()" trait="user0"/> </string>
+		<justify> &left; </justify>
+		<font> 2 </font>
+		<red> <copy src="parent()" trait="red"/> </red>
+		<green> <copy src="parent()" trait="green"/> </green>
+		<blue> <copy src="parent()" trait="blue"/> </blue>
+		<alpha> 255 </alpha>
+		<depth> 1 </depth>
+		<x> 40 </x>
+		<y> 0 </y>
+	</text>
+<!-- /image -->

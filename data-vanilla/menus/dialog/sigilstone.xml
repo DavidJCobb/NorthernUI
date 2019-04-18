@@ -1,0 +1,629 @@
+<!-- SigilStone.xml -->
+<menu name="SigilStoneMenu">
+	<class> &SigilStoneMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	
+	<user0>-1</user0>		<!-- soul cost per use -->
+	<user1>-1</user1>		<!-- num uses -->
+	
+	<xbuttonb> <ref src="sigil_button_exit" trait="clicked"/> </xbuttonb>
+	<xbuttonx> <ref src="sigil_button_create" trait="clicked"/> </xbuttonx>
+	
+	
+	<rect name="sigil_focus_box">
+<include src="focus_box.xml"/>
+		<id> 8 </id>
+		<visible> &false; </visible>
+		<clips> &true; </clips>
+		<user15>
+			<copy src="parent()" trait="depth" />
+			<add> 0.5 </add>
+		</user15>
+	</rect>
+	
+	
+	<!-- BACKGROUND ============================================================-->
+	<image name="sigil_background">
+		<id> 1 </id>
+		<filename> Menus\Enchanting\enchanting.dds </filename>
+		<depth> 1 </depth>
+		<width> 1064 </width>
+		<height> 812 </height>
+		<zoom> -1 </zoom>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		<target> &true; </target>
+		
+		
+		<!-- NAME ============================================================-->
+		<rect name="sigil_name_background">
+			<alpha> 0 </alpha>
+			<id>24</id>
+			<user10> &false; </user10>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<depth> 1 </depth>
+			<x> 190</x>
+			<y>
+				130
+			</y>
+			<height> 50 </height>
+			<width> 660 </width>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="sigil_button_create" trait="mouseover"/> </xup>
+			<xdown> <ref src="sigil_item_enchant_rect" trait="mouseover"/> </xdown>
+			
+			<text name="sigil_name_text">
+				<id>2</id>
+				<depth> 1 </depth>
+				<string> <copy src="strings()" trait="_enchanteditem"/> </string>
+				<red> 33 </red>
+				<green> 59 </green>
+				<blue> 117 </blue>
+				<alpha> 255 </alpha>
+				<font> 1 </font>
+				<wrapwidth> 600 </wrapwidth>
+				<wraplines> 1 </wraplines>
+				<x> 30 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</text>
+		</rect>
+		
+		<image name="sigil_effect_icon">
+			<id> 3 </id>
+			<visible> &false; </visible>
+			<depth> 1 </depth>
+			<filename>   </filename>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x> 550 </x>
+			<y> 90 </y>
+		</image>
+		
+		
+		<!-- INFO DISPLAYS ============================================================-->
+		<image name="sigil_soul_cost_icon">
+			<visible> <copy src="SigilStoneMenu" trait="user0"/> <gte>0</gte> </visible>
+			<depth> 1 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 288 </cropx>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x> 240 </x>
+			<y> 90 </y>
+		</image>
+		
+		<text name="sigil_soul_cost_text">
+			<visible> <copy src="SigilStoneMenu" trait="user0"/> <gt>0</gt> </visible>
+			<depth> 1 </depth>
+			<string> <copy src="SigilStoneMenu" trait="user0"/> </string>
+			<font>3</font>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha>255</alpha>
+			<x>
+				<copy src="sigil_soul_cost_icon" trait="x" />
+				<add src="sigil_soul_cost_icon" trait="width" />
+				<add>15</add>
+			</x>
+			<y>
+				<copy src="sigil_soul_cost_icon" trait="y" />
+			</y>
+		</text>
+		
+		<text name="sigil_constant_text">
+			<visible> <copy src="SigilStoneMenu" trait="user0"/> <eq>0</eq> </visible>
+			<depth> 1 </depth>
+			<string> <copy src="strings()" trait="_constant_effect"/> </string>
+			<font>3</font>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha>255</alpha>
+			<x> <copy src="sigil_soul_cost_text" trait="x" /> </x>
+			<y> <copy src="sigil_soul_cost_icon" trait="y" /> </y>
+		</text>
+		
+		<image name="sigil_uses_icon">
+			<visible> <copy src="SigilStoneMenu" trait="user1"/> <gt>0</gt> </visible>
+			<depth> 1 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 0 </cropx>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x> 400 </x>
+			<y> 90 </y>
+		</image>
+		
+		<text name="sigil_uses_text">
+			<visible> <copy src="sigil_uses_icon" trait="visible"/> </visible>
+			<depth> 1 </depth>
+			<string> <copy src="SigilStoneMenu" trait="user1"/> </string>
+			<font> 3 </font>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33  </blue>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="sigil_uses_icon" trait="x" />
+				<add src="sigil_uses_icon" trait="width" />
+				<add> 15 </add>
+			</x>
+			<y>
+				<copy src="sigil_uses_icon" trait="y" />
+			</y>
+		</text>
+		
+		<!-- ITEM ============================================================-->
+		<rect name="sigil_item_enchant_rect">
+			<id> 20 </id>
+			<alpha> 0 </alpha>
+			<depth> 8 </depth>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<x> 153 </x>
+			<y> 205 </y>
+			<width>325</width>
+			<height> 70 </height>
+			<user0> <copy src="strings()" trait="_additem"/> </user0> <!-- effect description string -->
+			<user1></user1> <!-- icon pathname -->
+			
+			<xdefault> &true; </xdefault>
+			<xup> <ref src="sigil_name_background" trait="mouseover"/> </xup>
+			<xdown> <ref src="sigil_button_create" trait="mouseover"/> </xdown>
+			
+			<image name="sigil_item_icon">
+				<id>25</id>
+				<visible> &false; </visible>
+				<filename></filename>
+				<width> 64 </width>
+				<height> 64 </height>
+				<x>0 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</image>
+			
+			<text name="sigil_item_text">
+				<font>1</font>
+				<string>
+					<copy src="parent()" trait="user0" />
+				</string>
+				<wrapwidth> 220 </wrapwidth>
+				<wraplines> 2 </wraplines>
+				<x> 75 </x>
+				<y>
+					<copy>37</copy>
+					<sub>
+						<copy src="me()" trait="height"/>
+						<div>2</div>
+					</sub>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+			</text>
+		</rect>
+		
+		
+		<!-- SIGIL STONE ============================================================-->
+		<rect name="sigil_stone_rect">
+			<id> 22 </id>
+			<alpha> 0 </alpha>
+			<depth> 8 </depth>
+			<!--target> &true; </target-->
+			<locus> &true; </locus>
+			<x> 515 </x>
+			<y> 203</y>
+			<width> 390 </width>
+			<height> 70 </height>
+			<user0></user0> 
+			<user1></user1> 
+			<image name="soulgem_icon">
+				<id>26</id>
+				<filename></filename>
+				<width> 64 </width>
+				<height> 64 </height>
+				<visible> &true; </visible>
+				<x> 2 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</image>
+			
+			<text name="sigil_stone_text">
+				<string>
+					<copy src="parent()" trait="user0" />
+				</string>
+				<font> 1 </font>
+				<wrapwidth> 250 </wrapwidth>
+				<x>
+					<copy src="soulgem_icon" trait="x"/>
+					<add>
+						<copy src="soulgem_icon" trait="width"/>
+						<add>5</add>
+					</add>
+				</x>
+				<y>
+					<copy>37</copy>
+					<sub>
+						<copy src="me()" trait="height"/>
+						<div>2</div>
+					</sub>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+			</text>
+		</rect>
+		
+		<text name="sigil_known_effect_text">
+			<id> 16</id>
+			<depth> 1 </depth>
+			<string> <copy src="strings()" trait="_sigilstoneeffects"/> </string>
+			<font>3</font>
+			<red> 33 </red>
+			<green> 59 </green>
+			<blue> 117  </blue>
+			<alpha> 255 </alpha>
+			<x> 150 </x>
+			<y> 295 </y>
+		</text>
+		
+		
+		<!-- SCROLL - KNOWN =====================================================================-->
+		<image name="sigil_known_effect_list_scroll_bar">
+<include src="vertical_scroll.xml"/>
+			<id>9</id>
+			<target> &true; </target>
+			<x>460</x>
+			<y>
+				<copy src="sigil_known_effect_window" trait="y" />
+				<add> 32 </add>
+			</y>
+			<height>
+				<copy src="sigil_known_effect_window" trait="height" />
+				<sub> 64 </sub>
+			</height>
+			<depth> 20 </depth>
+			<user1> 0 </user1> <!-- minimum range value -->
+			<user2>
+				<copy src="sigil_known_effect_list" trait="child_count" />
+				<sub> 4 </sub>
+			</user2> <!-- maximum range value - set by code -->
+			<user3> 1 </user3> <!-- step distance -->
+			<user4> 3 </user4> <!-- jump distance -->
+			<user5> 0 </user5> <!-- starting value -->
+			<user6> 10 </user6> <!-- marker's id - must change to enable dragging -->
+			<user8> 4 </user8> <!-- number of items visible -->
+		</image>
+		
+		
+		<!-- WINDOW - KNOWN =====================================================================-->
+		<rect name="sigil_known_effect_window">
+			<clipwindow> &true; </clipwindow>
+			<height> 300 </height>
+			<width> 330 </width>
+			<locus> &true; </locus>
+			<x> 140 </x>
+			<y> 325 </y>
+			
+			<rect name="sigil_known_effect_list">
+				<id> 6 </id>
+				<alpha> 0 </alpha>
+				<depth> 8 </depth>
+				<locus> &true; </locus>
+				<clips> &true; </clips>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub>
+						<copy src="sigil_known_effect_list_scroll_bar" trait="user7" />
+						<mult>75</mult>
+					</sub>	
+				</y>
+			</rect>
+		</rect>
+		
+		<text name="sigil_known_effect_list_label">
+			<id> 17</id>
+			<depth> 1 </depth>
+			<string> <copy src="strings()" trait="_effectsapplied"/> </string>
+			<font>3</font>
+			<red> 33 </red>
+			<green> 59 </green>
+			<blue> 117  </blue>
+			<alpha> 255 </alpha>
+			<x> 525 </x>
+			<y>
+				<copy src="sigil_known_effect_text" trait="y" />
+			</y>
+		</text>
+		
+		
+		<!-- SCROLL - ADDED =====================================================================-->
+		<rect name="sigil_added_effect_list_scroll_bar">
+vertical_scroll.xml
+			<id> 12</id>
+			<x> 893 </x>
+			<y>
+				<copy src="sigil_added_effect_window" trait="y" />
+				<add> 32 </add>
+			</y>
+			<height>
+				<copy src="sigil_added_effect_window" trait="height" />
+				<sub> 64 </sub>
+			</height>
+			<depth>20</depth>
+			<target> &true; </target>
+			<user1> 0 </user1> 
+			<user2>
+				<copy src="sigil_added_effect_list" trait="child_count" />
+				<sub> 4 </sub>
+			</user2> 
+			<user3> 1 </user3> 
+			<user4> 3 </user4> 
+			<user5> 0 </user5> 
+			<user6> 11 </user6> 
+			<user8> 4 </user8> 
+		</rect>
+		
+		
+		<!-- WINDOW - ADDED =====================================================================-->
+		<rect name="sigil_added_effect_window">
+			<clipwindow> &true; </clipwindow>
+			<height> 300 </height>
+			<width> 370 </width>
+			<locus> &true; </locus>
+			<x> 510 </x>
+			<y> 
+				<copy src="sigil_known_effect_window" trait="y" />
+			</y>
+			
+			<rect name="sigil_added_effect_list">
+				<id> 7 </id>
+				<alpha> 0 </alpha>
+				<depth> 8 </depth>
+				<height> 300 </height>
+				<width> 330</width>
+				<locus> &true; </locus>
+				<clips> &true; </clips>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub>
+						<copy src="sigil_added_effect_list_scroll_bar" trait="user7" />
+						<mult>75</mult>
+					</sub>	
+				</y>
+			</rect>
+		</rect>
+		
+		
+		
+		<!-- BUTTON CREATE =====================================================================-->
+		<image name="sigil_button_create">
+<include src="button_long.xml"/>
+			<id> 14 </id>
+			<depth> 5 </depth>
+			<x> 290 </x>
+			<y> 665 </y>
+			<clicksound>2</clicksound>
+			<user0> <copy src="strings()" trait="_create"/> </user0>
+			
+			<user20><!--&xbuttonx;-->3 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="sigil_button_exit" trait="mouseover"/> </xleft>
+			<xright> <ref src="sigil_button_exit" trait="mouseover"/> </xright>
+			<xup> <ref src="sigil_item_enchant_rect" trait="mouseover"/> </xup>
+			<xdown> <ref src="sigil_name_background" trait="mouseover"/> </xdown>
+		</image>
+			
+			
+		<!-- BUTTON EXIT =====================================================================-->
+		<image name="sigil_button_exit">
+<include src="button_short.xml"/>
+			<id> 15 </id>
+			<depth> 5 </depth>
+			<target> &true; </target>
+			<x> 630 </x>
+			<y> <copy src="sigil_button_create" trait="y" /> </y>
+			<clicksound>2</clicksound>
+			<user0> <copy src="strings()" trait="_exit"/> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="sigil_button_create" trait="mouseover"/> </xleft>
+			<xright> <ref src="sigil_button_create" trait="mouseover"/> </xright>
+			<xup> <ref src="sigil_item_enchant_rect" trait="mouseover"/> </xup>
+			<xdown> <ref src="sigil_name_background" trait="mouseover"/> </xdown>
+		</image>
+	</image>
+	
+	
+	
+	<!-- TEMPLATE - KNOWN =====================================================================-->
+	<template name="known_effect_template">
+		<rect name="sigil_known_effect">
+			<id> 82 </id>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<alpha> 0 </alpha>
+			<depth> 1 </depth>
+			<width> 305 </width>
+			<focusinset>5</focusinset>
+			<height>
+				<copy src="sigil_known_effect_window" trait="height"/>
+				<div src="sigil_known_effect_list_scroll_bar" trait="user8"/>
+			</height>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<x> 10 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult>75</mult>
+			</y>
+			<listindex> 0 </listindex>	<!-- position in list - set by code -->
+			<user0> 0 </user0>			<!-- position in list - set by code -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="sigil_known_effect_list_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="sigil_known_effect_icon">
+				<filename>
+					<copy src="parent()" trait="user1" />
+				</filename>
+				<depth> 1 </depth>
+				<zoom>-1</zoom>
+				<width> 32 </width>
+				<height> 32 </height>
+				<clips> &true; </clips>
+				<x> 5 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</image>
+			
+			<text name="sigil_known_effect_text">
+				<depth> 1 </depth>
+				<font> 3 </font>
+				<string>
+					<copy src="parent()" trait="user2" />
+				</string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 230 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 50 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</text>
+		</rect>
+	</template>
+	
+	
+	<!-- TEMPLATE - ADDED =====================================================================-->
+	<template name="added_effect_template">
+		<rect name="sigil_added_effect">
+			<id> 83 </id>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<alpha> 0 </alpha>
+			<depth> 1 </depth>
+			<width> 350 </width> 
+			<height> 70 </height>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<focusinset>5</focusinset>
+			<x> 20 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult>75</mult>
+			</y>
+			<listindex> 0 </listindex>	<!-- position in list - set by code -->
+			<user0> 0 </user0>			<!-- position in list - set by code -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="sigil_added_effect_list_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="sigil_added_effect_icon">
+				<filename>
+					<copy src="parent()" trait="user1" />
+				</filename>
+				<depth> 1 </depth>
+				<zoom>-1</zoom>
+				<width> 32 </width>
+				<height> 32 </height>
+				<clips> &true; </clips>
+				<x> 5 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</image>
+			
+			<text name="sigil_known_effect_text">
+				<depth> 1 </depth>
+				<font> 3 </font>
+				<string>
+					<copy src="parent()" trait="user2" />
+				</string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<width>310</width>
+				<wrapwidth> 300 </wrapwidth>
+				<clips> &true; </clips>
+				<x> 50 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</text>
+		</rect>
+	</template>
+</menu>

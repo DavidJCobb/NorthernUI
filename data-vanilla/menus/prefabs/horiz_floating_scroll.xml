@@ -1,0 +1,206 @@
+<!-- horiz_floating_scroll.xml -->
+<!-- image name="horiz_floating_scroll" -->
+	<id> &generic; </id>		<!-- MUST change -->
+	<locus> &true; </locus>
+	<repeathorizontal> &true; </repeathorizontal>
+	<depth> 1 </depth>
+	<filename> \Menus\Shared\horizontal_scrollbar_line.dds </filename>
+	<height> 16 </height>
+	<width> 400 </width>		<!-- default, may change -- marks the distance between the two arrows, not including them -->
+	<x> 0 </x>					<!-- default, may change -- marks the position of the right edge of the left arrow -->
+	<y> 0 </y>					<!-- default, may change -->
+	<alpha>
+		<copy> 128 </copy>
+		<onlyif src="me()" trait="user13"/>
+		<add> 127 </add>
+	</alpha>
+	<clips> &false; </clips>
+	<user1> 0 </user1>			<!-- minimum range value -->
+	<user2> 100 </user2>		<!-- maximum range value -->
+	<user3>						<!-- step distance -->
+		<copy> 4 </copy>
+		<onlyif> &xbox; </onlyif>
+		<add> 1 </add>
+	</user3>
+	<user4> 10 </user4>			<!-- jump distance -->
+	<user5> 0 </user5>			<!-- starting value -->
+	<user6> -1 </user6>			<!-- marker's id -- must change to enable dragging -->
+	<user7>						<!-- current value as ineger between min and max -->
+		<copy src="child(horizontal_scroll_marker)" trait="_value_scrolled_to"/>
+	</user7>
+	<user8> &true; </user8>		<!-- is text value field visible -->
+	<user9>						<!-- current value as percentage -->
+		<copy src="child(horizontal_scroll_marker)" trait="_value_scrolled_to"/>
+		<sub src="me()" trait="user1"/>
+		<div src="me()" trait="user2"/>
+	</user9>
+	<user10> 120 </user10>		<!-- red component of quantity text color -->
+	<user11> 34 </user11>		<!-- green component of quantity text color -->
+	<user12> 0 </user12>		<!-- blue component of quantity text color -->
+	<user13> &true; </user13>	<!-- true if enabled, false if disabled -->
+	<_scrollable_range>
+		<copy src="me()" trait="user2"/>
+		<sub src="me()" trait="user1"/>
+	</_scrollable_range>
+	<_mouseover_any>
+		<copy src="child(horizontal_scroll_leftside)" trait="mouseover"/>
+		<add src="child(horizontal_scroll_rightside)" trait="mouseover"/>
+		<add src="child(horizontal_scroll_left)" trait="mouseover"/>
+		<add src="child(horizontal_scroll_right)" trait="mouseover"/>
+		<add src="child(horizontal_scroll_marker)" trait="mouseover"/>
+		<gt> 0 </gt>
+		<sub> 1 </sub>
+	</_mouseover_any>
+	
+	
+	<text name="quantity_display_text">
+		<visible> <copy src="parent()" trait="user8"/> </visible>
+		<depth> 1 </depth>
+		<string> <copy src="sibling(horizontal_scroll_marker)" trait="_value_scrolled_to"/> </string>
+		<justify> &right; </justify>
+		<red>
+			<copy src="parent()" trait="user10"/>
+		</red>
+		<green>
+			<copy src="parent()" trait="user11"/>
+		</green>
+		<blue>
+			<copy src="parent()" trait="user12"/>
+		</blue>
+		<alpha> 200 </alpha>
+		<x> -48 </x>
+		<y> 8 </y>
+		<clips> <copy src="parent()" trait="clips"/> </clips>
+	</text>
+	
+
+	<rect name="horizontal_scroll_leftside">
+		<id> &generic; </id>
+		<target> <copy src="parent()" trait="user13"/> </target>
+		<depth> 3 </depth>
+		<alpha> 0 </alpha>
+		<width> <!-- make it long enough to stretch from the left arrow to the marker -->
+			<copy src="sibling(horizontal_scroll_marker)" trait="x"/>
+		</width>
+		<height> 37 </height>
+		<x> 0 </x>
+		<y> -11 </y>
+		<clips> <copy src="parent()" trait="clips"/> </clips>
+		<clicksound> 3 </clicksound>
+	</rect>
+	<rect name="horizontal_scroll_rightside">
+		<id> &generic; </id>
+		<target> <copy src="parent()" trait="user13"/> </target>
+		<depth> 2 </depth>
+		<alpha> 0 </alpha>
+		<width>
+			<copy src="parent()" trait="width"/>
+			<sub src="sibling(horizontal_scroll_leftside)" trait="width"/>
+			<sub src="sibling(horizontal_scroll_marker)" trait="width"/>
+		</width>
+		<height> 37 </height>
+		<x>
+			<copy src="sibling(horizontal_scroll_leftside)" trait="width"/>
+			<add src="sibling(horizontal_scroll_marker)" trait="width"/>
+		</x>
+		<y> -11 </y>
+		<clips> <copy src="parent()" trait="clips"/> </clips>
+		<clicksound> 3 </clicksound>
+	</rect>
+	<image name="horizontal_scroll_left">
+		<id> &generic; </id>
+		<target> <copy src="parent()" trait="user13"/> </target>
+		<depth> 4 </depth>
+		<filename> \Menus\Shared\horizontal_scrollbar_parts.dds </filename>
+		<cropx> 0 </cropx>
+		<cropy> 0 </cropy>
+		<width> 50 </width>
+		<height> 37 </height>
+		<x> -49 </x>
+		<y> -11 </y>
+		<alpha>
+			<copy> 128 </copy>
+			<onlyif src="parent()" trait="user13"/>
+			<add> 128 </add>
+		</alpha>
+		<clips> <copy src="parent()" trait="clips"/> </clips>
+		<clicksound>
+			<copy> 3 </copy>
+			<onlyifnot> &xbox; </onlyifnot>
+		</clicksound>
+	</image>
+	<image name="horizontal_scroll_right">
+		<id> &generic; </id>
+		<target> <copy src="parent()" trait="user13"/> </target>
+		<depth> 4 </depth>
+		<filename> \Menus\Shared\horizontal_scrollbar_parts.dds </filename>
+		<cropx> 128 </cropx>
+		<cropy> 0 </cropy>
+		<width> 51 </width>
+		<height> 42 </height>
+		<x>
+			<copy src="parent()" trait="width"/>
+			<sub> 1 </sub>
+		</x>
+		<y> -11 </y>
+		<alpha>
+			<copy> 128 </copy>
+			<onlyif src="parent()" trait="user13"/>
+			<add> 128 </add>
+		</alpha>
+		<clips> <copy src="parent()" trait="clips"/> </clips>
+		<clicksound>
+			<copy> 3 </copy>
+			<onlyifnot> &xbox; </onlyifnot>
+		</clicksound>
+	</image>
+	<image name="horizontal_scroll_marker">
+		<id> <copy src="parent()" trait="user6"/> </id>
+		<visible> <copy src="parent()" trait="user13"/> </visible>
+		<target> <copy src="parent()" trait="user13"/> </target>
+		<depth> 6 </depth>
+		<filename> \Menus\Shared\horizontal_scrollbar_parts.dds </filename>
+		<cropx> 64 </cropx>
+		<cropy> 0 </cropy>
+		<width> 39 </width>
+		<height> 34 </height>
+		<x> <!-- set my position relative to the current scroll -->
+			<copy src="parent()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<mul>
+				<copy src="me()" trait="_value_scrolled_to"/>
+				<sub src="parent()" trait="user1"/>
+				<div src="parent()" trait="_scrollable_range"/>
+			</mul>
+		</x>
+		<y> -10 </y>
+		<clips> <copy src="parent()" trait="clips"/> </clips>
+		<_value_scrolled_to>
+			<!-- copy old value -->
+			<sub>
+				<copy src="sibling(horizontal_scroll_left)" trait="clicked"/>
+				<mul src="parent()" trait="user3"/>
+			</sub>
+			<add>
+				<copy src="sibling(horizontal_scroll_right)" trait="clicked"/>
+				<mul src="parent()" trait="user3"/>
+			</add>
+			<add>
+				<copy src="sibling(horizontal_scroll_rightside)" trait="clicked"/>
+				<sub src="sibling(horizontal_scroll_leftside)" trait="clicked"/>
+				<mul src="parent()" trait="user4"/>	<!-- jump distance -->
+			</add>
+			<add src="me()" trait="user9"/>
+			<add src="parent()" trait="user5"/>
+			<max src="parent()" trait="user1"/>
+			<min src="parent()" trait="user2"/>
+		</_value_scrolled_to>
+		<user8>	<!-- for dragging - drag interval -->
+			<copy src="parent()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div src="parent()" trait="_scrollable_range"/>
+		</user8>
+		<user9> 0 </user9>	<!-- for dragging - lines dragged -->
+		<clicksound> 3 </clicksound>
+	</image>
+<!-- /image -->

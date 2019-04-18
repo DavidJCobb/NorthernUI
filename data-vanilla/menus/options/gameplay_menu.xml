@@ -1,0 +1,490 @@
+<!-- gameplay_menu.xml -->
+<menu name="GameplayMenu">
+	<class> &GameplayMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	
+	<_y_buffer> 24 </_y_buffer>		<!-- Num pixels vertically between each menu item -->
+	
+	<_label_to_scrollbar_buffer> 64 </_label_to_scrollbar_buffer>
+	
+	<!-- Text colors -->
+	<red>  117 </red>
+	<green>	59 </green>
+	<blue>	33 </blue>
+	
+	<xbuttonb> <ref src="gameplay_return_button" trait="clicked"/> </xbuttonb>
+	<xbuttony> <ref src="gameplay_defaults_button" trait="clicked"/> </xbuttony>
+	
+	<rect name="gameplay_background">
+		<include src="generic_background.xml"/>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+		<user0> 790 </user0>
+		<user1> 528 </user1>
+
+<!--------------------------------------- DIFFICULTY SLIDER ------------------------------------------>
+
+		<text name="gameplay_difficulty_label">
+			<string> <copy src="strings()" trait="_difficulty"/> </string>
+			<depth>3</depth>
+			<alpha>255</alpha>
+			<red>
+				<copy src="GameplayMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="GameplayMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="GameplayMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<sub src="GameplayMenu" trait="_label_to_scrollbar_buffer"/>
+				<sub src="gameplay_difficulty_slider" trait="_full_width"/>
+				<div>2</div>
+			</x>
+			<y> 32 </y>
+		</text>
+	
+		<image name="gameplay_difficulty_slider">
+<include src="horiz_floating_scroll.xml"/>
+			<id>1</id>
+			<depth> 8 </depth>
+			<repeathorizontal>&true;</repeathorizontal>
+			<_full_width>
+				<copy src="me()" trait="width"/>
+				<add src="child(horizontal_scroll_left)" trait="width"/>
+				<add src="child(horizontal_scroll_right)" trait="width"/>
+			</_full_width>
+			
+			<x>
+				<copy src="gameplay_difficulty_label" trait="x"/>
+				<add src="gameplay_difficulty_label" trait="width"/>
+				<add src="GameplayMenu" trait="_label_to_scrollbar_buffer"/>
+				<add src="child(horizontal_scroll_left)" trait="width"/>
+			</x>
+			<y>
+				<copy src="gameplay_difficulty_label" trait="y"/>
+				<add>12</add>
+			</y>
+			
+			<user3> 1 </user3>
+			<user6> 2 </user6>			<!-- scroll marker id -->
+			<user8> &false; </user8>	<!-- text visibility -->
+		</image>
+		
+		<image name="gameplay_difficulty_slider_marker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<depth> 1 </depth>
+			<repeathorizontal>&true;</repeathorizontal>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="gameplay_difficulty_slider" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="gameplay_difficulty_slider" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x>
+				<copy src="gameplay_difficulty_slider" trait="x"/>
+				<sub> 60 </sub>
+			</x>
+			<y>
+				<copy src="gameplay_difficulty_slider" trait="y"/>
+				<sub> 18 </sub>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &true; </xdefault>
+			<xleft> <ref src="horizontal_scroll_left" trait="clicked"/> </xleft>
+			<xright> <ref src="horizontal_scroll_right" trait="clicked"/> </xright>
+			<xup> <ref src="gameplay_return_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="gameplay_general_subtitles_button" trait="mouseover"/> </xdown>
+			<xbuttonlb> <ref src="horizontal_scroll_leftside" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="horizontal_scroll_rightside" trait="clicked"/> </xbuttonrb>
+			
+			<image name="gameplay_difficulty_slider_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+		</image>
+		
+		
+
+<!--------------------------------------- GENERAL SUBTITLES ------------------------------------------>
+
+		<text name="gameplay_general_subtitles_label">
+			<depth>3</depth>
+			<string> <copy src="strings()" trait="_generalsubtitles"/> </string>
+			<alpha>255</alpha>
+			<red>
+				<copy src="GameplayMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="GameplayMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="GameplayMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="gameplay_difficulty_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="gameplay_difficulty_label" trait="y"/>
+				<add>
+					<copy src="gameplay_difficulty_label" trait="height"/>
+					<add src="GameplayMenu" trait="_y_buffer"/>
+				</add>
+			</y>
+		</text>
+	
+		<rect name="gameplay_general_subtitles_button">
+			<include src="button_floating_2.xml"/>
+			<id> 3 </id>
+			<depth>3</depth>
+			<_center_x>
+				<copy src="gameplay_difficulty_slider" trait="x"/>
+				<add>
+					<copy src="gameplay_difficulty_slider" trait="width"/>
+					<div>2</div>
+				</add>
+			</_center_x>
+			<_top>
+				<copy src="gameplay_general_subtitles_label" trait="y"/>
+				<sub>12</sub>
+			</_top>
+			<string> <copy src="strings()" trait="_onoff"/> </string>
+			<clicksound>3</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="gameplay_difficulty_slider_marker" trait="mouseover"/> </xup>
+			<xdown> <ref src="gameplay_dialogue_subtitles_button" trait="mouseover"/> </xdown>
+		</rect>
+
+<!--------------------------------------- DIALOGUE SUBTITLES ------------------------------------------>
+
+		<text name="gameplay_dialogue_subtitles_label">
+			<depth>3</depth>
+			<string> <copy src="strings()" trait="_dialoguesubtitles"/> </string>
+			<alpha>255</alpha>
+			<red>
+				<copy src="GameplayMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="GameplayMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="GameplayMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="gameplay_difficulty_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="gameplay_difficulty_label" trait="y"/>
+				<add>
+					<copy src="gameplay_difficulty_label" trait="height"/>
+					<add src="GameplayMenu" trait="_y_buffer"/>
+					<mult> 2 </mult>
+				</add>
+			</y>
+		</text>
+	
+		<rect name="gameplay_dialogue_subtitles_button">
+			<include src="button_floating_2.xml"/>
+			<id> 4 </id>
+			<depth>3</depth>
+			<_center_x>
+				<copy src="gameplay_general_subtitles_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="gameplay_dialogue_subtitles_label" trait="y"/>
+				<sub>12</sub>
+			</_top>
+			<string> <copy src="strings()" trait="_onoff"/> </string>
+			<clicksound>3</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="gameplay_general_subtitles_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="gameplay_crosshair_button" trait="mouseover"/> </xdown>
+		</rect>
+
+<!-------------------------------------------- CROSSHAIR ---------------------------------------------->
+
+		<text name="gameplay_crosshair_label">
+			<depth>3</depth>
+			<string> <copy src="strings()" trait="_crosshair"/> </string>
+			<alpha>255</alpha>
+			<red>
+				<copy src="GameplayMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="GameplayMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="GameplayMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="gameplay_difficulty_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="gameplay_difficulty_label" trait="y"/>
+				<add>
+					<copy src="gameplay_difficulty_label" trait="height"/>
+					<add src="GameplayMenu" trait="_y_buffer"/>
+					<mult> 3 </mult>
+				</add>
+			</y>
+		</text>
+	
+		<rect name="gameplay_crosshair_button">
+			<include src="button_floating_2.xml"/>
+			<id> 5 </id>
+			<depth>3</depth>
+			<_center_x>
+				<copy src="gameplay_general_subtitles_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="gameplay_crosshair_label" trait="y"/>
+				<sub>12</sub>
+			</_top>
+			<string> <copy src="strings()" trait="_onoff"/> </string>
+			<clicksound>3</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="gameplay_dialogue_subtitles_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="gameplay_rest_save_button" trait="mouseover"/> </xdown>
+		</rect>
+
+<!-------------------------------------------- REST SAVE ---------------------------------------------->
+
+		<text name="gameplay_rest_save_label">
+			<depth>3</depth>
+			<string> <copy src="strings()" trait="_saveonrest"/> </string>
+			<alpha>255</alpha>
+			<red>
+				<copy src="GameplayMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="GameplayMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="GameplayMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="gameplay_difficulty_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="gameplay_difficulty_label" trait="y"/>
+				<add>
+					<copy src="gameplay_difficulty_label" trait="height"/>
+					<add src="GameplayMenu" trait="_y_buffer"/>
+					<mult> 4 </mult>
+				</add>
+			</y>
+		</text>
+	
+		<rect name="gameplay_rest_save_button">
+			<include src="button_floating_2.xml"/>
+			<id> 6 </id>
+			<depth>3</depth>
+			<_center_x>
+				<copy src="gameplay_general_subtitles_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="gameplay_rest_save_label" trait="y"/>
+				<sub>12</sub>
+			</_top>
+			<string> <copy src="strings()" trait="_onoff"/> </string>
+			<clicksound>3</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="gameplay_crosshair_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="gameplay_wait_save_button" trait="mouseover"/> </xdown>
+		</rect>
+
+<!-------------------------------------------- WAIT SAVE ---------------------------------------------->
+
+		<text name="gameplay_wait_save_label">
+			<depth>3</depth>
+			<string> <copy src="strings()" trait="_saveonwait"/> </string>
+			<alpha>255</alpha>
+			<red>
+				<copy src="GameplayMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="GameplayMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="GameplayMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="gameplay_difficulty_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="gameplay_difficulty_label" trait="y"/>
+				<add>
+					<copy src="gameplay_difficulty_label" trait="height"/>
+					<add src="GameplayMenu" trait="_y_buffer"/>
+					<mult> 5 </mult>
+				</add>
+			</y>
+		</text>
+	
+		<rect name="gameplay_wait_save_button">
+			<include src="button_floating_2.xml"/>
+			<id> 7 </id>
+			<depth>3</depth>
+			<_center_x>
+				<copy src="gameplay_general_subtitles_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="gameplay_wait_save_label" trait="y"/>
+				<sub>12</sub>
+			</_top>
+			<string> <copy src="strings()" trait="_onoff"/> </string>
+			<clicksound>3</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="gameplay_rest_save_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="gameplay_travel_save_button" trait="mouseover"/> </xdown>
+		</rect>
+
+<!------------------------------------------- TRAVEL SAVE --------------------------------------------->
+
+		<text name="gameplay_travel_save_label">
+			<depth>3</depth>
+			<string> <copy src="strings()" trait="_saveontravel"/> </string>
+			<alpha>255</alpha>
+			<red>
+				<copy src="GameplayMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="GameplayMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="GameplayMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="gameplay_difficulty_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="gameplay_difficulty_label" trait="y"/>
+				<add>
+					<copy src="gameplay_difficulty_label" trait="height"/>
+					<add src="GameplayMenu" trait="_y_buffer"/>
+					<mult> 6 </mult>
+				</add>
+			</y>
+		</text>
+	
+		<rect name="gameplay_travel_save_button">
+			<include src="button_floating_2.xml"/>
+			<id> 8 </id>
+			<depth>3</depth>
+			<_center_x>
+				<copy src="gameplay_general_subtitles_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="gameplay_travel_save_label" trait="y"/>
+				<sub>12</sub>
+			</_top>
+			<string> <copy src="strings()" trait="_onoff"/> </string>
+			<clicksound>3</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup> <ref src="gameplay_wait_save_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="gameplay_defaults_button" trait="mouseover"/> </xdown>
+		</rect>
+
+<!----------------------------------------- DEFAULTS BUTTON -------------------------------------------->
+
+		<image name="gameplay_defaults_button">
+<include src="button_long.xml"/>
+			<id> 9 </id>
+			<depth>3</depth>
+			<x>
+				<copy src="gameplay_return_button" trait="x"/>
+				<sub src="me()" trait="width"/>
+				<sub>
+					<copy>10</copy>
+					<add>
+						<copy> 30 </copy>
+						<onlyif> &xenon; </onlyif>
+					</add>
+				</sub>
+			</x>
+			<y>
+				<copy src="gameplay_return_button" trait="y" />
+			</y>
+			<clicksound>2</clicksound>
+			<user0> <copy src="strings()" trait="_defaults"/> </user0>
+			
+			<user20><!--&xbuttony;-->4 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="gameplay_return_button" trait="mouseover"/> </xleft>
+			<xright> <ref src="gameplay_return_button" trait="mouseover"/> </xright>
+			<xup> <ref src="gameplay_travel_save_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="gameplay_return_button" trait="mouseover"/> </xdown>
+		</image>
+
+<!----------------------------------------- RETURN BUTTON -------------------------------------------->
+
+		<image name="gameplay_return_button">
+<include src="button_long.xml"/>
+			<id> 10 </id>
+			<depth>3</depth>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 30 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<clicksound>2</clicksound>
+			<user0> <copy src="strings()" trait="_return"/> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="gameplay_defaults_button" trait="mouseover"/> </xleft>
+			<xright> <ref src="gameplay_defaults_button" trait="mouseover"/> </xright>
+			<xup> <ref src="gameplay_defaults_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="gameplay_difficulty_slider_marker" trait="mouseover"/> </xdown>
+		</image>
+
+<!---------------------------------------------------------------------------------------------------->
+<!---------------------------------------------------------------------------------------------------->
+
+	</rect>	<!-- end generic background -->
+	
+</menu>

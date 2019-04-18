@@ -1,0 +1,1885 @@
+<!-- map_menu.xml -->
+<menu name="MapMenu">
+	<class> &MapMenu; </class>
+	<alpha>	0 </alpha> 
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<_global_alpha> 255 </_global_alpha>
+	<user1> <copy src="strings()" trait="_missing"/> </user1>		<!-- Location Name -->
+	<user2> <copy src="strings()" trait="_missing"/> </user2>		<!-- Date -->
+	<user3> <copy src="strings()" trait="_missing"/> </user3>		<!-- Quest List Title -->
+	<user4> 1090 </user4>
+	<user5> 460 </user5>
+	
+	<xleft> <ref src="map_tabs_prev" trait="clicked" /> </xleft>
+	<xright> <ref src="map_tabs_next" trait="clicked" /> </xright>
+	
+	<xbuttonb> <ref src="map_log_back" trait="clicked"/> </xbuttonb>
+	<xbuttona> <ref src="map_log_mapit" trait="clicked"/> </xbuttona>
+   
+   <user21>3</user21> <!-- NorthernUI -->
+   <user22>1</user22> <!-- NorthernUI -->
+	
+	
+	<!-- PRE-LOAD MAP ICONS ==========================================================================-->
+	<image name="map_preload_map_icons_1">
+		<filename> Menus\Icons\Map\map_icons_all.dds </filename>
+		<width> 1 </width>
+		<height> 1 </height>
+		<x> -100 </x>
+	</image>
+	<image name="map_preload_map_icons_2">
+		<filename> Menus\HUD\hud_compass_goal.dds </filename>
+		<width> 1 </width>
+		<height> 1 </height>
+		<x> -100 </x>
+	</image>
+	<image name="map_preload_map_icons_3">
+		<filename> Menus\Map\world_map_arrow_icon.dds </filename>
+		<width> 1 </width>
+		<height> 1 </height>
+		<x> -100 </x>
+	</image>
+	
+	
+	<!-- XBOX (ONLY) HINTS ==================================================================-->
+	<rect name="map_xbox_hints">
+		<visible><copy src="NorthernUI()" trait="_xxnGamepadAvailable" /></visible>
+		<width> 100 </width>
+		<height> 100 </height>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub>
+				<copy src="child(map_hint_a)" trait="width"/>
+				<max src="child(map_hint_x)" trait="width"/>
+				<max src="child(magic_hint_right_stick)" trait="width"/>
+				<max src="child(magic_hint_left_stick)" trait="width"/>
+			</sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="child(magic_hint_left_stick)" trait="y"/>
+			<sub src="child(magic_hint_left_stick)" trait="height"/>
+			<add> 15 </add>
+		</y>
+		<depth> 10 </depth>
+		<locus> &true; </locus>
+		<_is_widescreen>
+			<copy src="screen()" trait="height"/>
+			<div src="screen()" trait="width"/>
+			<lt> 0.75 </lt>
+		</_is_widescreen>
+	
+		<rect name="map_hint_a">
+<include src="xbox_floating_hint.xml" />
+			<id> &generic; </id>
+			<visible>
+				<copy src="map_world_icon_paper" trait="visible"/>
+				<and src="map_world_icon_paper" trait="user6"/>
+				<and>
+					<copy src="map_background" trait="user0"/>
+					<eq> 2 </eq>
+				</and>
+				<or>
+					<copy src="map_background" trait="user0"/>
+					<gte> 4 </gte>
+					<and src="map_focusBox" trait="visible"/>
+				</or>
+			</visible>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y> 0 </y>
+			<user0>
+				<copy src="map_background" trait="user0"/>
+				<copy src="me()" trait="_text_"/>
+			</user0>
+			<user20> <!--&xbuttona;-->1 </user20>
+			<_text_2> <copy src="strings()" trait="_travel"/> </_text_2>
+			<_text_4> <copy src="strings()" trait="_activate"/> </_text_4>
+			<_text_5> <copy src="strings()" trait="_history"/> </_text_5>
+		</rect>
+	
+		<rect name="map_hint_x">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<visible>
+				<copy src="map_background" trait="user0"/>
+				<lte> 2 </lte>
+			</visible>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="map_hint_a" trait="height"/>
+				<onlyif src="me()" trait="visible"/>
+			</y>
+			<user0> <copy src="strings()" trait="_setmarker"/> </user0>
+			<user20> <!--&xbuttonx;-->3 </user20>
+		</rect>
+	
+		<rect name="magic_hint_right_stick">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<visible>
+				<copy src="map_background" trait="user0"/>
+				<lte> 2 </lte>
+			</visible>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="map_hint_x" trait="height"/>
+				<onlyif src="me()" trait="visible"/>
+				<add src="map_hint_x" trait="y"/>
+			</y>
+			<user0> <copy src="strings()" trait="_scroll_map"/> </user0>
+			<user20> <!--&xbuttonrs;-->10 </user20>
+		</rect>
+	
+		<rect name="magic_hint_left_stick">
+<include src="xbox_floating_hint.xml" />
+			<id> 5 </id>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="magic_hint_right_stick" trait="y"/>
+				<add src="magic_hint_right_stick" trait="height"/>
+			</y>
+			<user0> <copy src="strings()" trait="_move_tab"/> </user0>
+			<user20> <!--&xbuttonls;-->9 </user20>
+		</rect>
+	</rect>
+	
+	
+	<!-- FOCUS BOX ==========================================================================-->
+	<rect name="map_focusBox">
+<include src="focus_box.xml"/>
+		<id> 23 </id>
+		<depth> 1 </depth>
+		<visible> &false; </visible>
+	</rect>
+	
+	
+	<!-- MAP POP-UP ==========================================================================-->
+	<image name="map_world_icon_paper">
+		<id> 42 </id>
+		<visible> &false; </visible>
+		<depth>
+			<copy src="me()" trait="user0"/>
+			<add> -2 </add>
+		</depth>
+		<filename> Menus\Map\world\world_map_paper.dds </filename>
+		<width>
+			<copy src="child(map_world_icon_text)" trait="width"/>
+			<add> 30 </add>
+		</width>
+		<height> 45 </height>
+		<x>
+			<copy src="me()" trait="user1"/>
+			<add> -4 </add>
+			<onlyifnot src="me()" trait="_right_side"/>
+			<add>
+				<copy src="me()" trait="user1"/>
+				<sub src="child(map_world_icon_text)" trait="width"/>
+				<add> -12 </add>
+				<onlyif src="me()" trait="_right_side"/>
+			</add>
+		</x>
+		<y>
+			<copy src="me()" trait="user2"/>
+			<add> -3 </add>
+		</y>
+		<locus> &true; </locus>
+		<user0> 0 </user0>			<!-- set by code - depth of target -->
+		<user1> 0 </user1>			<!-- set by code - x position of target -->
+		<user2> 0 </user2>			<!-- set by code - y position of target -->
+		<user6> &false; </user6>	<!-- true if marker is fast-travel enabled -->
+		<_right_side>
+			<copy src="me()" trait="user1"/>
+			<gt>
+				<copy src="map_world_map_window" trait="width"/>
+				<add src="map_world_map_window" trait="x"/>
+				<add src="map_world_map_window" trait="x"/>
+				<add src="map_page_2" trait="x"/>
+				<add src="map_background" trait="x"/>
+				<div> 2 </div>
+			</gt>
+		</_right_side>
+		
+		<image name="map_world_icon_paper_end">
+			<depth> 1 </depth>
+			<filename> Menus\Map\world\world_map_paper_end.dds </filename>
+			<width> 40 </width>
+			<height> 45 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub> 19 </sub>
+			</x>
+			<y> 0 </y>
+		</image>
+	
+		<text name="map_world_icon_text">
+			<depth> 2 </depth>
+			<string> <copy src="parent()" trait="string"/> </string>
+			<justify> &left; </justify>
+			<x>
+				<copy> 32 </copy>
+				<onlyifnot src="parent()" trait="_right_side"/>
+				<add> 8 </add>
+			</x>
+			<y> 6 </y>
+			<font> 3 </font>
+			<red> 105 </red>
+			<green> 31 </green>
+			<blue> 4 </blue>
+			<alpha> 255 </alpha>
+		</text>
+	</image>
+	
+	
+	
+	
+	<!-- MAIN ==========================================================================-->
+	<image name="map_background">
+		<id> 9 </id>
+		<target> &true; </target>
+		<filename> Menus\Shared\shared_main_background_1.dds </filename>
+		<depth> 1 </depth>
+		<width> 745 </width>
+		<height> 792 </height>
+		<x>
+			<copy src="screen()" trait="cropx"/>
+			<add src="screen()" trait="cropx"/>
+			<sub> 60 </sub>
+			<max src="screen()" trait="cropx"/>
+			<add> 7 </add>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+			<add> 3 </add>
+		</y>
+		<locus> &true; </locus>
+		<user0> 1 </user0>		<!-- page number that is in front... set by code -->
+		
+		<image name="map_background_2">
+			<filename> Menus\Shared\shared_main_background_2.dds </filename>
+			<depth> -15 </depth>
+			<width> 54 </width>
+			<height> 792 </height>
+			<x> 700 </x>
+			<y> 0 </y>
+		</image>
+		
+
+		<!-- TABS ============================================================== -->
+		<image name="map_tabs">
+			<filename> Menus\Shared\shared_page_tabs.dds </filename>
+			<locus> &true; </locus>
+			<depth> 1 </depth>
+			<width> 730 </width>
+			<height> 128 </height>
+			<x> 0 </x>
+			<y> 594 </y>
+				
+			<rect name="map_tabs_prev">
+				<id> 7 </id>
+				<target> &true; </target>
+				<width> 1 </width>
+				<height> 1 </height>
+				<x> -1 </x>
+				<y> -1 </y>
+				<clicksound>5</clicksound>
+			</rect>
+			
+			<rect name="map_tabs_next">
+				<id> 8 </id>
+				<target> &true; </target>
+				<width> 1 </width>
+				<height> 1 </height>
+				<x> -1 </x>
+				<y> -1 </y>
+				<clicksound>5</clicksound>
+			</rect>
+			
+			<rect name="map_tabs_p1">
+				<id> 1 </id>
+				<target> <copy src="map_page_1" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 28 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="map_tabs_p1_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 0 </cropx>
+					<cropy> 192 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="map_tabs_p1_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="map_tabs_p1_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="map_tabs_p2">
+				<id> 2 </id>
+				<target> <copy src="map_page_2" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 165 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="map_tabs_p2_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 64 </cropx>
+					<cropy> 192 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="map_tabs_p2_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="map_tabs_p2_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="map_tabs_p3">
+				<id> 3 </id>
+				<target> <copy src="map_page_3" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 304 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="map_tabs_p3_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 256 </cropx>
+					<cropy> 192 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="map_tabs_p3_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="map_tabs_p3_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="map_tabs_p4">
+				<id> 4 </id>
+				<target> <copy src="map_page_4" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 443 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="map_tabs_p4_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 192 </cropx>
+					<cropy> 192 </cropy>
+					<depth> -1 </depth>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="map_tabs_p4_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<depth> -3 </depth>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="map_tabs_p4_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+			
+			<rect name="map_tabs_p5">
+				<id> 5 </id>
+				<target> <copy src="map_page_5" trait="visible"/> <eq> &false; </eq> </target>
+				<depth> 7 </depth>
+				<width> 135 </width>
+				<height> 85 </height>
+				<x> 578 </x>
+				<y> 37 </y>
+				<locus> &true; </locus>
+				<clicksound>5</clicksound>
+				<image name="map_tabs_p5_icon">
+					<filename> Menus\Shared\all_tabs_icons.dds </filename>
+					<cropx> 128 </cropx>
+					<cropy> 192 </cropy>
+					<width> 64 </width>
+					<height> 64 </height>
+					<x> 37 </x>
+					<y> 8 </y>
+				</image>
+				<image name="map_tabs_p5_selection_off">
+					<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+				<image name="map_tabs_p5_selection_on">
+					<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+					<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+					<width> 136 </width>
+					<height> 36 </height>
+					<x> 0 </x>
+					<y> 24 </y>
+				</image>
+			</rect>
+		</image>
+		
+		
+		<!-- TAB BUTTONS *******************************************************************************-->
+		<rect name="map_tab_layout">
+			<x> 26 </x>
+			<y> 20 </y>
+			<locus> &true; </locus>
+				
+			<rect name="map_tabs_prev">
+				<id> 7 </id>
+				<target> &true; </target>
+				<width> 1 </width>
+				<height> 1 </height>
+				<x> -1 </x>
+				<y> -1 </y>
+				<clicksound>5</clicksound>
+			</rect>
+			
+			<rect name="map_tabs_next">
+				<id> 8 </id>
+				<target> &true; </target>
+				<width> 1 </width>
+				<height> 1 </height>
+				<x> -1 </x>
+				<y> -1 </y>
+				<clicksound>5</clicksound>
+			</rect>
+			
+			<rect name="map_tab_page_5_target">
+				<id> 5 </id>
+				<target> <copy src="map_page_5" trait="_is_topmost"/> <eq> &false; </eq> </target>
+				<depth> 2 </depth>
+				<width> 132 </width>
+				<height> 85 </height>
+				<x> 555 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 5 </user0>
+			</rect>
+			<rect name="map_tab_page_4_target">
+				<id> 4 </id>
+				<target> <copy src="map_page_4" trait="_is_topmost"/> <eq> &false; </eq> </target>
+				<depth> 2 </depth>
+				<alpha> 0 </alpha>
+				<width> 132 </width>
+				<height> 85 </height>
+				<x> 415 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 4 </user0>
+			</rect>
+			<rect name="map_tab_page_3_target">
+				<id> 3 </id>
+				<target> <copy src="map_page_3" trait="_is_topmost"/> <eq> &false; </eq> </target>
+				<depth> 2 </depth>
+				<alpha> 0 </alpha>
+				<width> 132 </width>
+				<height> 85 </height>
+				<x> 279 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 3 </user0>
+			</rect>
+			<rect name="map_tab_page_2_target">
+				<id> 2 </id>
+				<target> <copy src="map_page_2" trait="_is_topmost"/> <eq> &false; </eq> </target>
+				<depth> 2 </depth>
+				<alpha> 0 </alpha>
+				<width> 132 </width>
+				<height> 85 </height>
+				<x> 144 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 2 </user0>
+			</rect>
+			<rect name="map_tab_page_1_target">
+				<id> 1 </id>
+				<target> <copy src="map_page_1" trait="_is_topmost"/> <eq> &false; </eq> </target>
+				<depth> 2 </depth>
+				<alpha> 0 </alpha>
+				<width> 140 </width>
+				<height> 85 </height>
+				<x> 0 </x>
+				<y> 603 </y>
+				<clicksound>5</clicksound>
+				<user0> 2 </user0>
+			</rect>
+		</rect>
+			
+
+		<!-- PAGE 5 *******************************************************************************-->
+		<rect name="map_page_5">
+			<visible> <copy src="me()" trait="_is_topmost"/> </visible>
+			<width> 690 </width>
+			<height> 691 </height>
+			<x> 26 </x>
+			<y> 20 </y>
+			<depth> 2 </depth>
+			<locus> &true; </locus>
+			<_is_topmost>
+				<copy src="parent()" trait="user0"/>
+				<eq> 5 </eq>
+			</_is_topmost>
+			
+			<image name="map_p5">
+				<filename> Menus\Shared\shared_05_tab.dds </filename>
+				<width> 791 </width>
+				<height> 176 </height>
+				<x> -3 </x>
+				<y> 522 </y>
+				<depth> 2 </depth>
+			</image>
+			
+			<image name="map_page_5_extension">
+				<filename> Menus\Shared\page_extention.dds </filename>
+				<target> &true; </target>
+				<width> 567 </width>
+				<height> 613 </height>
+				<x> 585 </x>
+				<y> 0 </y>
+				<depth> 4 </depth>
+				<locus> &true; </locus>
+			</image>
+		</rect>
+
+
+		<!-- PAGE 4 *******************************************************************************-->
+		<rect name="map_page_4">
+			<visible> <copy src="me()" trait="_is_topmost"/> </visible>
+			<width> 690 </width>
+			<height> 688 </height>
+			<x> 26 </x>
+			<y> 20 </y>
+			<depth> 2 </depth>
+			<locus> &true; </locus>
+			<_is_topmost>
+				<copy src="parent()" trait="user0"/>
+				<eq> 4 </eq>
+			</_is_topmost>
+			
+			<image name="map_p4">
+				<filename> Menus\Shared\shared_04_tab.dds </filename>
+				<width> 791 </width>
+				<height> 176 </height>
+				<x> -3 </x>
+				<y> 522 </y>
+				<depth> 2 </depth>
+			</image>
+			
+			<image name="map_page_4_extension">
+				<filename> Menus\Shared\page_extention.dds </filename>
+				<target> &true; </target>
+				<width> 567 </width>
+				<height> 613 </height>
+				<x> 585 </x>
+				<y> 0 </y>
+				<depth> 4 </depth>
+				<locus> &true; </locus>
+			</image>
+		</rect>
+
+
+
+			
+		<!-- ############### LOG PAGE 4 ############### -->
+		
+		<rect name="map_contents_3_4_5">
+			<locus> &true; </locus>
+			<visible>
+				<copy src="map_page_3" trait="_is_topmost"/>
+				<or src="map_page_4" trait="_is_topmost"/>
+				<or src="map_page_5" trait="_is_topmost"/>
+			</visible>
+			<depth> 30 </depth>
+			<alpha> 0 </alpha>
+			<x> 8 </x>
+			<y> -40 </y>
+			
+			<image name="map_log_lines_top">
+				<filename> Menus\Stats\stat_border_horizontal_1.dds </filename>
+				<depth> 1 </depth>
+				<width> 636 </width>
+				<height> 3 </height>
+				<x> 40 </x>
+				<y> 162 </y>
+			</image>
+			<image name="map_log_lines_top2">
+				<filename> Menus\Stats\stat_border_horizontal_2.dds </filename>
+				<depth> 1 </depth>
+				<width> 436 </width>
+				<height> 3 </height>
+				<x> 650 </x>
+				<y> 162 </y>
+			</image>
+			
+			<image name="map_log_lines_bottom">
+				<filename> Menus\Stats\stat_border_horizontal_2.dds </filename>
+				<depth> 1 </depth>
+				<width> 636 </width>
+				<height> 3 </height>
+				<x> 40 </x>
+				<y> 622 </y>
+			</image>
+			<image name="map_log_lines_bottom2">
+				<filename> Menus\Stats\stat_border_horizontal_2.dds </filename>
+				<depth> 1 </depth>
+				<width> 436 </width>
+				<height> 3 </height>
+				<x> 650 </x>
+				<y> 622 </y>
+			</image>
+			
+			<image name="map_log_scroll_bar">
+<include src="vertical_scroll.xml"/>
+				<id> 11 </id>
+				<x>
+					<copy src="map_log_window" trait="x" />
+					<add src="map_log_window" trait="width" />
+					<add> 25 </add>
+				</x>
+				<y>
+					<copy src="map_log_window" trait="y" />
+					<add> 32 </add>
+				</y>
+				<height>
+					<copy src="map_log_window" trait="height" />
+					<sub> 64 </sub>
+				</height>
+				<depth> 5 </depth>
+				<user1> 0 </user1>		<!-- code set - minimum range value -->
+				<user2>
+					<copy src="map_log_window_pane" trait="height" />
+					<sub src="me()" trait="user8"/>
+				</user2>				<!-- maximum range value -->
+				<user3> 40 </user3>		<!-- step distance -->
+				<user4>
+					<copy src="map_log_window" trait="height"/>
+					<sub> 35 </sub>
+				</user4>		<!-- jump distance -->
+				<user5> 0 </user5>		<!-- code set - force value (must be 0 here) -->
+				<user6> 12 </user6>		<!-- marker's id - must change to enable dragging -->
+				<!-- user7 -->			<!-- current value -->
+				<user8> <copy src="map_log_window" trait="height"/> </user8>		<!-- number of items visible -->
+			</image>
+			
+			
+			<!-- WINDOW ================================================================-->
+			<rect name="map_log_window">
+				<alpha> 0 </alpha>
+				<depth> 4 </depth>
+				<width> 1060 </width>
+				<height> 460 </height>
+				<locus> &true; </locus>
+				<clipwindow> &true; </clipwindow>
+				<x> 25 </x>
+				<y> 165 </y>
+				
+				<rect name="map_log_window_pane">
+					<id> 13 </id>
+					<alpha> 0 </alpha>
+					<locus> &true; </locus>
+					<height> 0 </height>		<!-- gets set by code -->
+					<y>
+						<copy> 0 </copy>
+						<sub src="map_log_scroll_bar" trait="user7"/>
+					</y>
+					<user0> 0 </user0>	<!-- number of items in list -->
+						
+					<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+						an input command, they defer to their parent. The following directions are for those times. -->
+					<target> &false; </target>
+					<xdefault> &true; </xdefault>
+					<xlist> &xlist; </xlist>
+					<xscroll> <ref src="map_log_scroll_bar" trait="user5" /> </xscroll>
+					
+					<template name="map_item_template">
+						<rect name="map_item">
+							<id> 51 </id>
+							<target> &true; </target>
+							<repeatvertical> &true; </repeatvertical>
+							<focusinset> 5 </focusinset>
+							<x> 0 </x>
+							<y>
+								<copy src="me()" trait="user5"/>
+							</y>
+							<depth> 4 </depth>
+							<locus> &true; </locus>
+							<alpha> 0 </alpha>
+							<width> 1068 </width>
+							<height>
+								<copy> 100 </copy>
+								<add src="child(map_item_body)" trait="height"/>
+							</height>
+							<wrapwidth> 1000 </wrapwidth>	<!-- this is used instead of the one on map_item_text, change it both places only -->
+							<clips> &true; </clips>
+							<listindex> 0 </listindex>		<!-- list position index... set by code -->
+							<user1> xxx </user1>			<!-- entry's name -->
+							<user2> xxx </user2>			<!-- entry's date -->
+							<user3> xxx </user3>			<!-- entry's body -->
+							<user4> Icons\icon_inv_armor_1.dds </user4>	<!-- icon for this entry -->
+							<user5> 0 </user5>				<!-- entry's y position in the list -->
+							<user6> &false; </user6>		<!-- is this the active quest -->
+							<user7> 0 </user7>				<!-- auction id -->
+						
+							<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+								it will defer the command to its parent. The xlist trait set to true triggers this. -->
+							<xdefault> &false; </xdefault>
+							<xlist> &xitem; </xlist>
+							<xup> &prev; </xup>
+							<xdown> &next; </xdown>
+							<xscroll>
+								<copy src="me()" trait="y" />
+								<sub>
+									<copy src="map_log_scroll_bar" trait="height"/>
+									<sub src="me()" trait="height"/>
+									<div> 2 </div>
+									<ceil> 0 </ceil>
+									<onlyif>
+										<copy src="map_log_scroll_bar" trait="height"/>
+										<gt src="me()" trait="height"/>
+									</onlyif>
+								</sub>
+							</xscroll>
+							
+							<image name="map_log_item_active">
+								<depth> 1 </depth>
+								<visible> <copy src="parent()" trait="user6"/> </visible>
+								<filename> Menus\Inventory\inv_equiped_marker_1.dds </filename>
+								<width>
+									<copy src="sibling(map_item_name)" trait="width"/>
+									<max src="sibling(map_item_date)" trait="width"/>
+									<add src="sibling(map_log_item_icon)" trait="width"/>
+									<add> 15 </add>
+								</width>
+								<height> 64 </height>
+								<x> 10 </x>
+								<y> 5 </y>
+								<clips> &true; </clips>
+							</image>
+						
+							<text name="map_item_name">
+								<visible>
+									<copy src="map_log_back" trait="visible"/>
+									<eq> &false; </eq>
+								</visible>
+								<depth> 2 </depth>
+								<justify> &left; </justify>
+								<red> 41 </red>
+								<green> 43 </green>
+								<blue> 92 </blue>
+								<font> 1 </font>
+								<alpha> 255 </alpha>
+								<wrapwidth> 1050 </wrapwidth>
+								<string> <copy src="parent()" trait="user1" /> </string>
+								<x> 80 </x>
+								<y> 7 </y>
+								<clips> &true; </clips>
+							</text>
+							<text name="map_item_date">
+								<depth> 2 </depth>
+								<justify> &left; </justify>
+								<red> 182 </red>
+								<green> 40 </green>
+								<blue> 28 </blue>
+								<font> 3 </font>
+								<alpha> 255 </alpha>
+								<wrapwidth> 1050 </wrapwidth>
+								<string> <copy src="parent()" trait="user2" /> </string>
+								<x> 80 </x>
+								<y>
+									<copy> -16 </copy>
+									<onlyif src="map_log_back" trait="visible"/>
+									<add> 40 </add>
+								</y>
+								<clips> &true; </clips>
+							</text>
+							<text name="map_item_body">
+								<depth> 2 </depth>
+								<justify> &left; </justify>
+								<red> 117 </red>
+								<green> 59 </green>
+								<blue> 33 </blue>
+								<font> 1 </font>
+								<alpha> 255 </alpha>
+								<wrapwidth> 1050 </wrapwidth>
+								<!--highlines> &true; </highlines-->	<!-- don't compress paragraphs, use full line height -->
+								<string> <copy src="parent()" trait="user3" /> </string>
+								<x> 10 </x>
+								<y> 76 </y>
+								<clips> &true; </clips>
+							</text>
+							
+							<image name="map_log_item_icon">
+								<depth> 2 </depth>
+								<filename> <copy src="parent()" trait="user4"/> </filename>
+								<width> 64 </width>
+								<height> 64 </height>
+								<x> 10 </x>
+								<y> 5 </y>
+								<clips> &true; </clips>
+							</image>
+						</rect>
+					</template>
+				
+				</rect>
+		
+		
+				<!-- BUTTON - MAP ================================================================-->
+				<image name="map_log_mapit">
+<include src="button_short.xml" />
+					<id> 31 </id>
+					<x> 860 </x>
+					<y> -70 </y>
+					<depth> 10 </depth>
+					<user0> <copy src="strings()" trait="_map" /> </user0>
+					
+					<user20><!--&xbuttona;-->1 </user20>
+				</image>
+				
+				
+				<!-- BUTTON - BACK ================================================================-->
+				<image name="map_log_back">
+<include src="button_short.xml" />
+					<id> 32 </id>
+					<x> 860 </x>
+					<y> -70 </y>
+					<depth> 10 </depth>
+					<user0> <copy src="strings()" trait="_back" /> </user0>
+					
+					<user20><!--&xbuttonb;-->2 </user20>
+				</image>
+				
+			</rect>
+		</rect>	<!-- window -->
+		
+		
+		
+
+		<!--******************************************************************************-->
+		<rect name="map_page_3">
+			<visible> <copy src="me()" trait="_is_topmost"/> </visible>
+			<width> 690 </width>
+			<height> 688 </height>
+			<x> 26 </x>
+			<y> 20 </y>
+			<depth> 2 </depth>
+			<locus> &true; </locus>
+			<_is_topmost>
+				<copy src="parent()" trait="user0"/>
+				<eq> 3 </eq>
+			</_is_topmost>
+			
+			<image name="map_p3">
+				<filename> Menus\Shared\shared_03_tab.dds </filename>
+				<width> 791 </width>
+				<height> 176 </height>
+				<x> -3 </x>
+				<y> 522 </y>
+				<depth> 2 </depth>
+			</image>
+			
+			<image name="map_page_3_extension">
+				<filename> Menus\Shared\page_extention.dds </filename>
+				<target> &true; </target>
+				<width> 567 </width>
+				<height> 613 </height>
+				<x> 585 </x>
+				<y> 0 </y>
+				<depth> 4 </depth>
+				<locus> &true; </locus>
+			</image>
+		</rect>
+		
+		
+
+		<!--******************************************************************************-->
+		<rect name="map_page_2">
+			<visible> <copy src="me()" trait="_is_topmost"/> </visible>
+			<width> 690 </width>
+			<height> 688 </height>
+			<x> 26 </x>
+			<y> 20 </y>
+			<depth> 2 </depth>
+			<locus> &true; </locus>
+			<_is_topmost>
+				<copy src="parent()" trait="user0"/>
+				<eq> 2 </eq>
+			</_is_topmost>
+			
+			<image name="map_p2">
+				<filename> Menus\Shared\shared_02_tab.dds </filename>
+				<width> 791 </width>
+				<height> 176 </height>
+				<x> -3 </x>
+				<y> 522 </y>
+				<depth> 2 </depth>
+			</image>
+			
+			<image name="map_page_2_extension">
+				<filename> Menus\Shared\page_extention.dds </filename>
+				<target> &true; </target>
+				<width> 567 </width>
+				<height> 613 </height>
+				<x> 585 </x>
+				<y> 0 </y>
+				<depth> 4 </depth>
+				<locus> &true; </locus>
+			</image>
+			
+			
+			<!-- ############### WORLD MAP PAGE 3 (2nd ACTIVE TAB) ############### -->
+			
+			<rect name="map_world_layout">
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y> 0 </y>
+	
+				<rect name="map_default_world_focus">
+					<id> 21 </id>
+					<width> 3 </width>
+					<height> 3 </height>
+					<x> 10 </x>
+					<y> 10 </y>
+					<target> &true; </target>
+					<xdefault> -1 </xdefault>
+				</rect>
+			
+				<image name="map_world_map_frame_top">
+					<filename> Menus\Map\map_border_top.dds </filename>
+					<depth> 100 </depth>
+					<width> 1003 </width>
+					<height> 36 </height>
+					<x> 75 </x>
+					<y> 100 </y>
+				</image>
+			
+				<image name="map_world_map_frame_bottom">
+					<filename> Menus\Map\map_border_bottom.dds </filename>
+					<depth> 100 </depth>
+					<width> 1003 </width>
+					<height> 36 </height>
+					<x> 75 </x>
+					<y> 544 </y>
+				</image>
+			
+				<image name="map_world_map_frame_left">
+					<filename> Menus\Map\map_border_left.dds </filename>
+					<depth> 99 </depth>
+					<width> 52 </width>
+					<height> 481 </height>
+					<x> 26 </x>
+					<y> 100 </y>
+				</image>
+			
+				<image name="map_world_map_frame_right">
+					<filename> Menus\Map\map_border_right.dds </filename>
+					<depth> 99 </depth>
+					<width> 52 </width>
+					<height> 481 </height>
+					<x> 1078 </x>
+					<y> 100 </y>
+				</image>
+				
+				<text name="map_world_no_map">
+					<visible> <copy src="map_world_map" trait="visible"/> <eq> &false; </eq> </visible>
+					<string> <copy src="strings()" trait="_nomap"/> </string>
+					<justify> &center; </justify>
+					<x> 580 </x>
+					<y> 300 </y>
+					<depth> 8 </depth>
+					<wrapwidth> 400 </wrapwidth>
+					<red> 0 </red>
+					<green> 0 </green>
+					<blue> 0 </blue>
+					<alpha> 255 </alpha>
+				</text>
+					
+				
+					
+				<rect name="map_world_map_window">
+					<id> 63 </id>
+					<depth> 2 </depth>
+					<alpha> 0 </alpha>
+					<width> <copy src="MapMenu" trait="user4"/> </width>
+					<height> <copy src="MapMenu" trait="user5"/> </height>
+					<x> 30 </x>
+					<y> 110 </y>
+					<locus> &true; </locus>
+					<clipwindow> &true; </clipwindow>
+					<_half_width>
+						<copy src="me()" trait="width"/>
+						<div> 2 </div>
+					</_half_width>
+					<_half_height>
+						<copy src="me()" trait="height"/>
+						<div> 2 </div>
+					</_half_height>
+					
+					
+					<image name="map_world_map_cursor">
+						<id> 61 </id>
+						<visible>
+                     <copy>&true;</copy>
+                     <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+                  </visible>
+						<filename> Menus\Misc\cursor.dds </filename>
+						<width> 42 </width>
+						<height> 42 </height>
+						<x>
+							<copy src="me()" trait="user0"/>
+							<max src="me()" trait="user2"/>
+							<min src="me()" trait="user4"/>
+						</x>
+						<y>
+							<copy src="me()" trait="user1"/>
+							<max src="me()" trait="user3"/>
+							<min src="me()" trait="user5"/>
+						</y>
+						<depth> 50 </depth>
+						<user0> 545 </user0>	<!-- x position -->
+						<user1> 230 </user1>	<!-- y position -->
+						<user2> 0 </user2>	<!-- cursor min x range -->
+						<user3> 0 </user3>	<!-- cursor min y range -->
+						<user4>				<!-- cursor max x range -->
+							<copy src="parent()" trait="width"/>
+							<sub> 32 </sub>
+						</user4>
+						<user5>				<!-- cursor max y range -->
+							<copy src="parent()" trait="height"/>
+							<sub> 32 </sub>
+						</user5>
+					</image>
+					
+					
+					<image name="map_world_map">
+						<id> 41 </id>
+						<visible> &true; </visible>
+						<target> &true; </target>
+						<filename>  </filename>
+						<depth> 4 </depth>
+						<width> 0 </width>
+						<height> 0 </height>
+						
+						<x>
+							<copy> 0 </copy>
+							<sub src="me()" trait="user12"/>
+							<add src="parent()" trait="_half_width"/>
+						</x>
+						<y>
+							<copy> 0 </copy>
+							<sub src="me()" trait="user13"/>
+							<add src="parent()" trait="_half_height"/>
+						</y>
+						<user10> 0 </user10>	<!-- center x position -->
+						<user11> 0 </user11>	<!-- center y position -->
+						<user12>
+							<copy src="me()" trait="user10"/>
+							<min>
+								<copy src="me()" trait="width"/>
+								<sub src="parent()" trait="_half_width"/>
+							</min>
+							<max src="parent()" trait="_half_width"/>
+						</user12>
+						<user13>
+							<copy src="me()" trait="user11"/>
+							<min>
+								<copy src="me()" trait="height"/>
+								<sub src="parent()" trait="_half_width"/>
+							</min>
+							<max src="parent()" trait="_half_height"/>
+						</user13>
+						
+						<locus> &true; </locus>
+						<clips> &true; </clips>
+						<zoom> 200 </zoom>
+						<user1> inactive </user1>	<!-- icon filename ending for non-travel markers -->
+						<user2> 0 </user2>
+						<_filename_1> Menus\Icons\Map\map_icons_all.dds </_filename_1>			<!-- all map markers -->
+						<_filename_2> Menus\HUD\hud_compass_goal.dds </_filename_2>			<!-- quest marker icon -->
+						<_filename_3> Menus\HUD\hud_compass_goal.dds </_filename_3>			<!-- marker icon -->
+						<_filename_4> Menus\Map\world_map_arrow_icon.dds </_filename_4>		<!-- you are here icon -->
+						<_large_icon_width_adj> -4 </_large_icon_width_adj>
+						<_large_icon_height_adj> 10 </_large_icon_height_adj>
+						
+						<!-- icon templates are attached here -->
+						
+					</image>
+				</rect>
+			</rect>
+		</rect>
+
+
+
+		<!--********************************************************************************8-->
+		<rect name="map_page_1">
+			<visible> <copy src="me()" trait="_is_topmost"/> </visible>
+			<width> 690 </width>
+			<height> 688 </height>
+			<x> 26 </x>
+			<y> 20 </y>
+			<depth> 2 </depth>
+			<locus> &true; </locus>
+			<_is_topmost>
+				<copy src="parent()" trait="user0"/>
+				<eq> 1 </eq>
+			</_is_topmost>
+			
+			<image name="map_p1">
+				<filename> Menus\Shared\shared_01_tab.dds </filename>
+				<width> 791 </width>
+				<height> 176 </height>
+				<x> -3 </x>
+				<y> 522 </y>
+				<depth> 2 </depth>
+			</image>
+			
+			<image name="map_page_1_extension">
+				<filename> Menus\Shared\page_extention.dds </filename>
+				<target> &true; </target>
+				<width> 567 </width>
+				<height> 613 </height>
+				<x> 585 </x>
+				<y> 0 </y>
+				<depth> 4 </depth>
+				<locus> &true; </locus>
+			</image>
+			
+			
+			<!-- ############### WORLD MAP PAGE 1 (1st ACTIVE TAB) ############### -->
+			
+			<rect name="map_local_layout">
+				<visible> <copy src="map_page_1" trait="_is_topmost"/> <eq> &true; </eq> </visible>
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y> 0 </y>
+	
+				<rect name="map_default_local_focus">
+					<id> 22 </id>
+					<width> 3 </width>
+					<height> 3 </height>
+					<x> 10 </x>
+					<y> 10 </y>
+					<target> &true; </target>
+					<xdefault> -1 </xdefault>
+				</rect>
+			
+				<image name="map_local_map_frame_top">
+					<filename> Menus\Map\map_border_top.dds </filename>
+					<depth> 100 </depth>
+					<width> 1003 </width>
+					<height> 36 </height>
+					<x> 75 </x>
+					<y> 100 </y>
+				</image>
+			
+				<image name="map_local_map_frame_bottom">
+					<filename> Menus\Map\map_border_bottom.dds </filename>
+					<depth> 100 </depth>
+					<width> 1003 </width>
+					<height> 36 </height>
+					<x> 75 </x>
+					<y> 544 </y>
+				</image>
+			
+				<image name="map_local_map_frame_left">
+					<filename> Menus\Map\map_border_left.dds </filename>
+					<depth> 99 </depth>
+					<width> 52 </width>
+					<height> 481 </height>
+					<x> 26 </x>
+					<y> 100 </y>
+				</image>
+			
+				<image name="map_local_map_frame_right">
+					<filename> Menus\Map\map_border_right.dds </filename>
+					<depth> 99 </depth>
+					<width> 52 </width>
+					<height> 481 </height>
+					<x> 1078 </x>
+					<y> 100 </y>
+				</image>
+				
+				<text name="map_local_no_map">
+					<visible> <copy src="map_local_map" trait="visible"/> <eq> &false; </eq> </visible>
+					<justify> &center; </justify>
+					<x> 560 </x>
+					<y> 300 </y>
+					<depth> 8 </depth>
+					<wrapwidth> 400 </wrapwidth>
+					<red> 0 </red>
+					<green> 0 </green>
+					<blue> 0 </blue>
+					<alpha> 255 </alpha>
+				</text>
+				<rect name="map_local_map_grab">
+					<id> 45 </id>
+					<target> &true; </target>
+					<visible> &true; </visible>
+					<alpha> 0 </alpha>
+					<width> <copy src="MapMenu" trait="user4"/> </width>
+					<height> <copy src="MapMenu" trait="user5"/> </height>
+					<x> 20 </x>
+					<y> 100 </y>
+					<depth> 6 </depth>
+				</rect>
+					
+				<rect name="map_local_map_window">
+					<depth> 2 </depth>
+					<alpha> 0 </alpha>
+					<width> <copy src="MapMenu" trait="user4"/> </width>
+					<height> <copy src="MapMenu" trait="user5"/> </height>
+					<x> 30 </x>
+					<y> 110 </y>
+					<locus> &true; </locus>
+					<clipwindow> &true; </clipwindow>
+					<_half_width>
+						<copy src="me()" trait="width"/>
+						<div> 2 </div>
+					</_half_width>
+					<_half_height>
+						<copy src="me()" trait="height"/>
+						<div> 2 </div>
+					</_half_height>
+					
+					<image name="map_local_map_cursor">
+						<id> 62 </id>
+						<visible>
+                     <copy>&true;</copy>
+                     <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+                  </visible>
+						<filename> Menus\Misc\cursor.dds </filename>
+						<width> 42 </width>
+						<height> 42 </height>
+						<x>
+							<copy src="me()" trait="user0"/>
+							<max src="me()" trait="user2"/>
+							<min src="me()" trait="user4"/>
+						</x>
+						<y>
+							<copy src="me()" trait="user1"/>
+							<max src="me()" trait="user3"/>
+							<min src="me()" trait="user5"/>
+						</y>
+						<depth> 40 </depth>
+						<user0> 0 </user0>	<!-- x position -->
+						<user1> 0 </user1>	<!-- y position -->
+						<user2> 0 </user2>	<!-- cursor min x range -->
+						<user3> 0 </user3>	<!-- cursor min y range -->
+						<user4>				<!-- cursor max x range -->
+							<copy src="parent()" trait="width"/>
+							<sub> 32 </sub>
+						</user4>
+						<user5>				<!-- cursor max y range -->
+							<copy src="parent()" trait="height"/>
+							<sub> 32 </sub>
+						</user5>
+					</image>
+					
+					<rect name="map_local_map_layout">
+						<id> 46 </id>
+						<width> <copy src="child(map_local_map)" trait="user0"/> </width>
+						<height> <copy src="child(map_local_map)" trait="user1"/> </height>
+						<x>
+							<copy src="me()" trait="user12"/>
+							<sub src="me()" trait="width"/>
+							<add src="parent()" trait="_half_width"/>
+							<sub> 14 </sub>
+						</x>
+						<y>
+							<copy src="me()" trait="user13"/>
+							<sub src="me()" trait="height"/>
+							<add src="parent()" trait="_half_height"/>
+							<sub> 21 </sub>
+						</y>
+						<user10> 0 </user10>	<!-- center x position -->
+						<user11> 0 </user11>	<!-- center y position -->
+						<user12>
+							<copy src="me()" trait="user10"/>
+							<min>
+								<copy src="me()" trait="width"/>
+								<sub src="parent()" trait="_half_width"/>
+							</min>
+							<max src="parent()" trait="_half_width"/>
+						</user12>
+						<user13>
+							<copy src="me()" trait="user11"/>
+							<min>
+								<copy src="me()" trait="height"/>
+								<sub src="parent()" trait="_half_height"/>
+							</min>
+							<max src="parent()" trait="_half_height"/>
+						</user13>
+						<locus> &true; </locus>
+						
+						<rect name="map_local_map">
+							<id> 47 </id>
+							<depth> 4 </depth>
+							<locus> &true; </locus>
+							<alpha> 0 </alpha>
+							<clips> &true; </clips>
+							<disablefade> &true; </disablefade>
+							<user0> 0 </user0>	<!-- width, set by code -->
+							<user1> 0 </user1>	<!-- height, set by code -->
+						</rect>
+						
+						<rect name="map_local_icons">
+							<id> 48 </id>
+							<depth> 6 </depth>
+							<alpha> 0 </alpha>
+							<width> 680 </width>
+							<height> 550 </height>
+							<locus> &true; </locus>
+							<_filename_1> Menus\Icons\Map\map_icons_all.dds </_filename_1>			<!-- all map markers -->
+							<_filename_2> Menus\HUD\hud_compass_goal.dds </_filename_2>			<!-- quest marker icon -->
+							<_filename_3> Menus\HUD\hud_compass_goal.dds </_filename_3>			<!-- marker icon -->
+							<_filename_4> Menus\Map\world_map_arrow_icon.dds </_filename_4>		<!-- you are here icon -->
+							<_large_icon_width_adj> -4 </_large_icon_width_adj>
+							<_large_icon_height_adj> 10 </_large_icon_height_adj>
+						</rect>
+					</rect>
+				</rect>
+			</rect>
+		</rect>
+		
+		
+		<!-- MISC IMAGES ===================================================================================-->
+		<rect name="map_top_title_layout">
+			<locus> &true; </locus>
+			<visible>
+				<copy src="map_log_back" trait="visible"/>
+				<eq> &false; </eq>
+				<or>
+					<copy src="parent()" trait="user0"/>
+					<neq> 4 </neq>
+					<and>
+						<copy src="parent()" trait="user0"/>
+						<neq> 5 </neq>
+					</and>
+				</or>
+			</visible>
+			<image name="map_log_border_left">
+				<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+				<depth> 110 </depth>
+				<width> 35 </width>
+				<height> 17 </height>
+				<x>
+					<copy src="map_log_name" trait="x" />
+					<sub>
+						<copy src="map_log_name" trait="width" />
+						<div> 2 </div>
+					</sub>
+					<sub> 55 </sub>
+				</x>
+				<y> 57 </y>
+			</image>
+			<image name="map_log_border_right">
+				<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+				<depth> 130 </depth>
+				<width> 35 </width>
+				<height> 17 </height>
+				<x>
+					<copy src="map_log_name" trait="width" />
+					<div> 2 </div>
+					<add src="map_log_name" trait="x" />
+					<add> 20 </add>
+				</x>
+				<y> 58 </y>
+			</image>
+				
+			<text name="map_log_date">
+				<depth> 140 </depth>
+				<string> <copy src="MapMenu" trait="user2" /> </string>
+				<justify> &center; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 690 </wrapwidth>
+				<x>
+					<copy src="map_log_name" trait="x"/>
+				</x>
+				<y> 80 </y>
+			</text>
+			
+			<text name="map_log_name">
+				<depth> 120 </depth>
+				<string> <copy src="MapMenu" trait="user1" /> </string>
+				<justify> &center; </justify>
+				<red> 51 </red>
+				<green> 79 </green>
+				<blue> 142 </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy> 230 </copy>
+					<onlyif>
+						<copy src="me()" trait="width"/>
+						<gt> 700 </gt>
+					</onlyif>
+					<add> 370 </add>
+				</x>
+				<y> 47 </y>
+			</text>
+		</rect>
+		<text name="map_item_name">
+			<visible>
+				<copy src="map_log_back" trait="visible"/>
+				<and>
+					<copy src="parent()" trait="user0"/>
+					<eq> 4 </eq>
+					<or>
+						<copy src="parent()" trait="user0"/>
+						<eq> 5 </eq>
+					</or>
+				</and>
+			</visible>
+			<depth> 140 </depth>
+			<justify> &center; </justify>
+			<red> 41 </red>
+			<green> 43 </green>
+			<blue> 92 </blue>
+			<font> 1 </font>
+			<alpha> 255 </alpha>
+			<wrapwidth> 1000 </wrapwidth>
+			<string> <copy src="MapMenu" trait="user3" /> </string>
+			<x> 370 </x>
+			<y> 63 </y>
+		</text>
+	</image>	<!-- map_background -->
+	
+	
+	<!-- template for map icons -->
+	<template name="map_world_icon">
+		<image name="map_world_icon">
+			<id> 43 </id>
+			<target>
+				<copy src="me()" trait="user5"/>
+				<lt> 90 </lt>
+				<and src="me()" trait="user8"/>
+			</target>
+			<filename>
+				<copy src="me()" trait="user6"/>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<eq> 99 </eq>
+				</onlyif>
+				<add>
+					<copy> 3 </copy>
+					<onlyif>
+						<copy src="me()" trait="user5"/>
+						<eq> 98 </eq>
+					</onlyif>
+				</add>
+				<add> 1 </add>
+				<copy src="parent()" trait="_filename_"/>
+			</filename>
+			<cropx>
+				<copy src="me()" trait="user5"/>
+				<sub> 1 </sub>
+				<mul> 32 </mul>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<lt> 90 </lt>
+				</onlyif>
+			</cropx>
+			<cropy>
+				<copy src="me()" trait="user6"/>
+				<sub> 1 </sub>
+				<mul> 32 </mul>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<lt> 90 </lt>
+				</onlyif>
+			</cropy>
+			<red>
+				<copy> 0 </copy>
+				<add>
+					<add> 255 </add> 
+					<onlyif src="me()" trait="user11"/>
+					<onlyif src="me()" trait="user10"/>
+				</add>
+				<add>
+					<add> 255 </add>
+					<onlyifnot src="me()" trait="user11"/>
+					<onlyifnot src="me()" trait="user12"/>
+				</add>
+			</red>
+			<green>
+				<copy> 0 </copy>
+				<add>
+					<add> 255 </add> 
+					<onlyif src="me()" trait="user11"/>
+					<onlyifnot src="me()" trait="user10"/>
+				</add>
+				<add>
+					<add> 255 </add>
+					<onlyifnot src="me()" trait="user11"/>
+					<onlyifnot src="me()" trait="user12"/>
+				</add>
+			</green>
+			<blue>
+				<copy> 0 </copy>
+				<add>
+					<add> 255 </add>
+					<onlyifnot src="me()" trait="user11"/>
+				</add>
+			</blue>
+			<depth>
+				<copy src="me()" trait="_random_depth"/>
+				<max>
+					<copy> 90 </copy>
+					<onlyif>
+						<copy src="me()" trait="user5"/>
+						<gt> 90 </gt>
+					</onlyif>
+				</max>
+				<max src="me()" trait="user7"/>
+				<add> 1 </add>
+			</depth>
+			<width>
+				<copy src="parent()" trait="_large_icon_width_adj"/>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<gt> 90 </gt>
+				</onlyif>
+				<add> 32 </add>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<neq> 98 </neq>
+				</onlyif>
+				<add>
+					<copy> 64 </copy>
+					<onlyif>
+						<copy src="me()" trait="user5"/>
+						<eq> 98 </eq>
+					</onlyif>
+				</add>
+			</width>
+			<height>
+				<copy src="parent()" trait="_large_icon_height_adj"/>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<gt> 90 </gt>
+				</onlyif>
+				<add> 32 </add>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<neq> 98 </neq>
+				</onlyif>
+				<add>
+					<copy> 64 </copy>
+					<onlyif>
+						<copy src="me()" trait="user5"/>
+						<eq> 98 </eq>
+					</onlyif>
+				</add>
+			</height>
+			<x>
+				<copy src="me()" trait="user1"/>
+				<sub> 17 </sub>
+			</x>
+			<y>
+				<copy src="me()" trait="user2"/>
+				<sub> 17 </sub>
+				<sub>
+					<copy> 17 </copy>
+					<onlyif>
+						<copy src="me()" trait="user5"/>
+						<gt> 90 </gt>
+					</onlyif>
+				</sub>
+			</y>
+			<clips> &true; </clips>
+			<locus> &true; </locus>		<!-- needs to be a locus in case it needs to be rotated -->
+			
+			<user0> &true; </user0>		<!-- set by code - is visible -->
+			<user1> 0 </user1>			<!-- set by code - x position on map -->
+			<user2> 0 </user2>			<!-- set by code - y position on map -->
+			<user4>  </user4>			<!-- set by code - location name -->
+			<user5> 0 </user5>			<!-- set by code - location type -->
+			<user6> &false; </user6>	<!-- set by code - fast travel enabled -->
+			<user7> 0 </user7>			<!-- set by code - depth adjustment -->
+			<user8> &false; </user8>	<!-- set by code - is targetable? -->
+			
+			<_random_depth> <rand> 80 </rand> </_random_depth>
+		</image>
+	</template>
+	
+	
+	<!-- template for local map icons -->
+	<template name="map_local_icon">
+		<image name="map_local_icon">
+			<id> 49 </id>
+			<visible> &true; </visible>
+			<target>
+				<copy src="me()" trait="user5"/>
+				<lt> 90 </lt>
+				<and src="me()" trait="user8"/>
+			</target>
+			<filename>
+				<copy src="me()" trait="user6"/>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<eq> 99 </eq>
+				</onlyif>
+				<add>
+					<copy> 3 </copy>
+					<onlyif>
+						<copy src="me()" trait="user5"/>
+						<eq> 98 </eq>
+					</onlyif>
+				</add>
+				<add> 1 </add>
+				<copy src="parent()" trait="_filename_"/>
+			</filename>
+			<cropx>
+				<copy src="me()" trait="user5"/>
+				<sub> 1 </sub>
+				<mul> 32 </mul>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<lt> 90 </lt>
+				</onlyif>
+			</cropx>
+			<cropy>
+				<copy src="me()" trait="user6"/>
+				<sub> 1 </sub>
+				<mul> 32 </mul>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<lt> 90 </lt>
+				</onlyif>
+			</cropy>
+			<depth>
+				<copy src="me()" trait="_random_depth"/>
+				<max>
+					<copy> 90 </copy>
+					<onlyif>
+						<copy src="me()" trait="user5"/>
+						<gt> 90 </gt>
+					</onlyif>
+				</max>
+				<max src="me()" trait="user7"/>
+				<add> 1 </add>
+			</depth>
+			<red>
+				<copy> 0 </copy>
+				<add>
+					<add> 255 </add> 
+					<onlyif src="me()" trait="user11"/>
+					<onlyif src="me()" trait="user10"/>
+				</add>
+				<add>
+					<add> 255 </add>
+					<onlyifnot src="me()" trait="user11"/>
+					<onlyifnot src="me()" trait="user12"/>
+				</add>
+			</red>
+			<green>
+				<copy> 0 </copy>
+				<add>
+					<add> 255 </add> 
+					<onlyif src="me()" trait="user11"/>
+					<onlyifnot src="me()" trait="user10"/>
+				</add>
+				<add>
+					<add> 255 </add>
+					<onlyifnot src="me()" trait="user11"/>
+					<onlyifnot src="me()" trait="user12"/>
+				</add>
+			</green>
+			<blue>
+				<copy> 0 </copy>
+				<add>
+					<add> 255 </add>
+					<onlyifnot src="me()" trait="user11"/>
+				</add>
+			</blue>
+			<width>
+				<copy src="parent()" trait="_large_icon_width_adj"/>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<gt> 90 </gt>
+				</onlyif>
+				<add> 32 </add>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<neq> 98 </neq>
+				</onlyif>
+				<add>
+					<copy> 64 </copy>
+					<onlyif>
+						<copy src="me()" trait="user5"/>
+						<eq> 98 </eq>
+					</onlyif>
+				</add>
+			</width>
+			<height>
+				<copy src="parent()" trait="_large_icon_height_adj"/>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<gt> 90 </gt>
+				</onlyif>
+				<add> 32 </add>
+				<onlyif>
+					<copy src="me()" trait="user5"/>
+					<neq> 98 </neq>
+				</onlyif>
+				<add>
+					<copy> 64 </copy>
+					<onlyif>
+						<copy src="me()" trait="user5"/>
+						<eq> 98 </eq>
+					</onlyif>
+				</add>
+			</height>
+			<x>
+				<copy src="me()" trait="user1"/>
+				<sub>
+					<copy src="me()" trait="width"/>
+					<div> 2 </div>
+				</sub>
+			</x>
+			<y>
+				<copy src="me()" trait="user2"/>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<div> 2 </div>
+				</sub>
+			</y>
+			<clips> &true; </clips>
+			
+			<user0> &true; </user0>		<!-- set by code - is visible -->
+			<user1> 0 </user1>			<!-- set by code - x position on map -->
+			<user2> 0 </user2>			<!-- set by code - y position on map -->
+			<user4> xxxx </user4>		<!-- set by code - location name -->
+			<user5> 99 </user5>			<!-- set by code - location type -->
+			<user6> &true; </user6>		<!-- set by code - fast travel enabled -->
+			<user7> 0 </user7>			<!-- set by code - depth adjustment -->
+			<user8> &false; </user8>	<!-- set by code - is targetable? -->
+			<locus> &true; </locus>		<!-- needs to be a locus in case it needs to be rotated -->
+			
+			<_random_depth> <rand> 80 </rand> </_random_depth>
+		</image>
+	</template>
+				
+	<template name="dynamic_map_overlay">
+		<rect name="dynamic_map_overlay">
+         <!--
+            Shim for NorthernUI; kept just to make sure the DLL's compatibility 
+            code for Dynamic Map doesn't crash with NorthernUIAway or anything.
+         -->
+			<user0> </user0> <!-- texture filename -->
+			<user1> -999 </user1> <!-- x-position on map -->
+			<user2> -999 </user2> <!-- y-position on map -->
+			<user3> 0 </user3> <!-- width -->
+			<user4> 0 </user4> <!-- height -->
+			<user5> 100 </user5> <!-- zoom -->
+			<user6> 0 </user6> <!-- depth -->
+		</rect>
+	</template>
+   
+	<!-- preload quest icons -->
+	<rect name="preload">
+		<y> -1000 </y>
+		<x> 10 </x>
+		<image name="pre01"><filename>Icons\Quest\icon_amulet_of_king.dds</filename></image>
+		<image name="pre02"><filename>Icons\Quest\icon_arena.dds</filename></image>
+		<image name="pre03"><filename>Icons\Quest\icon_bruma.dds</filename></image>
+		<image name="pre04"><filename>Icons\Quest\icon_daedra.dds</filename></image>
+		<image name="pre05"><filename>Icons\Quest\icon_dark_brotherhood.dds</filename></image>
+		<image name="pre06"><filename>Icons\Quest\icon_dragonfires.dds</filename></image>
+		<image name="pre07"><filename>Icons\Quest\icon_fighters_guild.dds</filename></image>
+		<image name="pre08"><filename>Icons\Quest\icon_imperial_city.dds</filename></image>
+		<image name="pre09"><filename>Icons\Quest\icon_kvatch.dds</filename></image>
+		<image name="pre10"><filename>Icons\Quest\icon_leyawiin.dds</filename></image>
+		<image name="pre11"><filename>Icons\Quest\icon_mages_guild.dds</filename></image>
+		<image name="pre12"><filename>Icons\Quest\icon_master_trainer.dds</filename></image>
+		<image name="pre13"><filename>Icons\Quest\icon_miscarcand.dds</filename></image>
+		<image name="pre14"><filename>Icons\Quest\icon_miscellaneous.dds</filename></image>
+		<image name="pre15"><filename>Icons\Quest\icon_mythic_dawn.dds</filename></image>
+		<image name="pre16"><filename>Icons\Quest\icon_oblivion_gate.dds</filename></image>
+		<image name="pre17"><filename>Icons\Quest\icon_paradise.dds</filename></image>
+		<image name="pre18"><filename>Icons\Quest\icon_settlements_quest_icon.dds</filename></image>
+		<image name="pre19"><filename>Icons\Quest\icon_thieves_guild.dds</filename></image>
+		<image name="pre20"><filename>Icons\Quest\icon_tiber_septim's_armor.dds</filename></image>
+		<image name="pre21"><filename>Icons\Quest\icon_weynon_priory.dds</filename></image>
+	</rect>
+</menu>

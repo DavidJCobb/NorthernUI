@@ -1,0 +1,9 @@
+<!--<rect name="scrollbar_wrapped">-->
+   <x>0</x>
+   <y><copy src="child(vertical_scroll_top)" trait="height" /></y>
+	<height>
+      <copy src="parent()" trait="height" />
+      <sub  src="child(vertical_scroll_top)"    trait="height" />
+      <sub  src="child(vertical_scroll_bottom)" trait="height" />
+   </height>
+<!--</rect>-->

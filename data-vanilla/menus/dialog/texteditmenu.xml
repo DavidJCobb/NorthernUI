@@ -1,0 +1,111 @@
+<!-- TextEditMenu.xml -->
+<menu name="TextEditMenu">
+	<class> &TextEditMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	
+	<user0></user0>	<!-- Prompt string -->
+   
+	<xbuttonb><ref src="textedit_button_back" trait="clicked" /></xbuttonb>
+	<xbuttonx><ref src="textedit_button_ok" trait="clicked" /></xbuttonx>
+	
+	<rect name="textedit_background">
+<include src="generic_background.xml"/>
+		<locus>&true;</locus>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+		<depth> 3 </depth>
+		<user0>720</user0>	<!-- width -->
+		<user1>180</user1>	<!-- height -->
+		
+		<text name="textedit_prompt">
+			<string> <copy src="TextEditMenu" trait="user0"/> </string>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<depth>3</depth>
+			<alpha>255</alpha>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div>2</div>
+			</x>
+			<y> 8 </y>
+		</text>
+		
+		<text name="textedit_text">
+			<id> 1 </id>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<depth>3</depth>
+			<alpha>255</alpha>
+			<string></string>
+			<wrapwidth> 250 </wrapwidth>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub>185</sub>
+				<div>2</div>
+			</x>
+			<y>
+				<copy src="textedit_prompt" trait="y"/>
+				<add src="textedit_prompt" trait="height"/>
+				<add>16</add>
+			</y>
+		</text>
+
+		<image name="textedit_button_back">
+<include src="button_short.xml"/>
+			<id> 3 </id>
+			<depth>3</depth>
+			<target> &true; </target>
+			<x>
+				<copy src="textedit_button_ok" trait="x"/>
+				<sub src="me()" trait="width"/>
+				<sub>16</sub>
+			</x>
+			<y>
+				<copy src="textedit_button_ok" trait="y"/>
+			</y>
+			<user0> <copy src="strings()" trait="_back"/> </user0>
+			<user20><!--&xbuttonb;-->2 </user20>
+			
+			<xdefault> &false; </xdefault>
+			<xright> <ref src="textedit_button_ok" trait="mouseover"/> </xright>
+		</image>
+
+		<image name="textedit_button_ok">
+<include src="button_short.xml"/>
+			<id> 2 </id>
+			<depth>3</depth>
+			<target> &true; </target>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<sub>16</sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<sub>16</sub>
+			</y>
+			<user0> <copy src="strings()" trait="_ok"/> </user0>
+			<user20><!--&xbuttonx;-->3 </user20>
+			
+			<xdefault> &true; </xdefault>
+			<xleft> <ref src="textedit_button_back" trait="mouseover"/> </xleft>
+		</image>
+
+	</rect> <!-- end generic background -->
+	
+</menu>

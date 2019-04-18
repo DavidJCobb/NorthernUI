@@ -1,0 +1,4 @@
+All of these files have to be here, even if we don't change them. Blame 
+Oblivion's terribad BSA system: it "invalidates" the entire directory if 
+enough of these files are here, and for our purposes we need "enough" of 
+them to be here.

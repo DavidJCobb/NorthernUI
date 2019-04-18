@@ -1,0 +1,447 @@
+<!-- recharge_menu.xml -->
+<menu name="RechargeMenu">
+	<class> &RechargeMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	
+	<user0> 1 </user0>									<!-- 0 = Recharging with soul gem
+															 1 = Buying recharge from NPC. -->
+	<user1> 0 </user1>									<!-- Icon index 0=uses, 1=weight, etc) -->
+	<user2></user2>										<!-- Soul gem name / Player gold -->
+	<user3> 
+		<copy src="recharge_contents" trait="height"/>
+		<div src="recharge_scroll_bar" trait="user8"/>
+	</user3>											<!-- Template item height -->
+	<user4></user4>										<!-- Soul gem pts / Cost to recharge -->
+	<user6> 0 </user6>									<!-- Soul gem count -->
+	
+	<xbuttonb> <ref src="recharge_button_exit" trait="clicked"/> </xbuttonb>
+	
+	
+	<rect name="recharge_FocusBox">
+<include src="focus_box.xml"/>
+		<id> 1 </id>
+		<visible> &false; </visible>
+		<user15>
+			<copy src="parent()" trait="depth" />
+			<add> 0.5 </add>
+		</user15>
+	</rect>
+	
+	<image name="recharge_background">
+		<target> &true; </target>
+		<filename> Menus\Recharge\recharge_background.dds </filename>
+		<depth> 1 </depth>
+		<width> 956 </width>
+		<height> 837 </height>
+		<zoom> -1 </zoom>
+		<locus> &true; </locus>
+		<x> 
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y> 
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+
+		<image name="recharge_info_icon">
+			<locus> &true; </locus>
+			<depth> 2 </depth>
+			<filename>
+				<copy src="RechargeMenu" trait="user0"/>
+				<eq> 0 </eq>
+				<copy src="me()" trait="_filename_"/>
+			</filename>
+			<_filename_1> Menus\Shared\all_small_icons.dds </_filename_1>
+			<_filename_2> <copy src="RechargeMenu" trait="user1"/> </_filename_2>
+			<cropx>
+				<copy> 224 </copy>
+				<onlyifnot>
+					<copy src="RechargeMenu" trait="user0"/>
+					<eq> 0 </eq>
+				</onlyifnot>
+			</cropx>
+			<width>
+				<copy> 32 </copy>
+				<onlyif>
+					<copy src="RechargeMenu" trait="user0"/>
+					<eq> 0 </eq>
+				</onlyif>
+				<add> 32 </add>
+			</width>
+			<height> <copy src="me()" trait="width"/> </height>
+			<x>
+				<copy> 214 </copy>
+				<add>
+					<copy src="RechargeMenu" trait="user0"/>
+					<mult> 16 </mult>
+				</add>
+			</x>
+			<y>
+				<copy> 108 </copy>
+				<add>
+					<copy src="RechargeMenu" trait="user0"/>
+					<mult> 16 </mult>
+				</add>
+			</y>
+			
+			<text name="recharge_info_count">
+				<depth> 2 </depth>
+				<string> <copy src="RechargeMenu" trait="user6"/> </string>
+				<visible>
+					<copy src="RechargeMenu" trait="user6"/>
+					<gt> 1 </gt>
+				</visible>
+				<justify> &right; </justify>
+				<font> 3 </font>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<x> 65 </x>
+				<y> 42 </y>
+			</text>
+
+			<text name="recharge_info_text">
+				<depth> 2 </depth>
+				<string> <copy src="RechargeMenu" trait="user2"/> </string>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<add> 10 </add>
+				</x>
+				<y>
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div> 2 </div>
+				</y>
+				<wrapwidth> 300 </wrapwidth>
+				<wraplines> 2 </wraplines>
+			</text>
+		</image>
+		
+		<rect name="recharge_soulgem_soul_layout">
+			<visible>
+				<copy src="RechargeMenu" trait="user0"/>
+				<eq> 0 </eq>
+			</visible>
+			<width> 175 </width>
+			<x> 600 </x>
+			<y> 104 </y>
+			<locus> &true; </locus>
+		
+			<text name="recharge_soulgem_soul_label">
+				<depth> 2 </depth>
+				<string> <copy src="strings()" trait="_soul"/> </string>
+				<red> 117 </red>
+				<green> 59 </green>	
+				<blue> 33  </blue>
+				<alpha>255</alpha>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<div> 2 </div>
+				</x>
+				<y> 0 </y>	
+			</text>
+		
+			<text name="recharge_cost">
+				<depth> 2 </depth>
+				<string> <copy src="RechargeMenu" trait="user4"/> </string>
+				<red> 117 </red>
+				<green> 59 </green>	
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<div> 2 </div>
+				</x>
+				<y> 30 </y>
+			</text>
+		</rect>
+
+		<image name="spell_gold_money_icon">
+			<depth> 2 </depth>
+			<visible>
+				<copy src="RechargeMenu" trait="user0"/>
+				<eq> 1 </eq>
+			</visible>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 224 </cropx>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x> 600 </x>
+			<y>	<copy src="recharge_info_icon" trait="y"/> </y>
+			<locus> &true; </locus>
+			
+			<image name="spell_gold_arrow_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 352 </cropx>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 23 </x>
+				<y> 0 </y>
+				<depth> 2 </depth>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+			</image>
+		
+			<text name="recharge_cost">
+				<depth> 2 </depth>
+				<string> <copy src="RechargeMenu" trait="user4"/> </string>
+				<red> 117 </red>
+				<green> 59 </green>	
+				<blue> 33 </blue>
+				<x> 55 </x>
+				<y> -3 </y>
+			</text>
+		</image>
+
+		<image name="recharge_health_icon">
+			<depth> 2 </depth>
+			<filename> Menus\Shared\all_small_icons.dds </filename>
+			<cropx> 320 </cropx>
+			<width> 32 </width>
+			<height> 32 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<mult>0.7</mult>
+			</x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<mult>0.22</mult>
+			</y>
+		</image>
+		
+		<rect name="recharge_contents">
+			<locus> &true; </locus>
+			<clipwindow> &true; </clipwindow>
+			<depth> 2 </depth>
+			<x> 138 </x>
+			<y> 226 </y>
+			<width> 640 </width>
+			<height> 475 </height>
+			
+			<rect name="recharge_list_pane">
+				<id> 6 </id>
+				<clips> &true; </clips>
+				<locus> &true; </locus>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub>
+						<copy src="recharge_scroll_bar" trait="user7"/> <!-- user7 = current value -->
+						<mult src="RechargeMenu" trait="user3"/>
+					</sub>
+				</y>
+				<width>
+					<copy src="parent()" trait="width"/>
+				</width>
+				<height>
+					<copy src="me()" trait="childcount"/>
+					<mult src="RechargeMenu" trait="user3"/>
+				</height>
+						
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &false; </xdefault>
+				<xlist> &xlist; </xlist>
+				<xleft> <ref src="recharge_button_exit" trait="mouseover" /> </xleft>
+				<xright> <ref src="recharge_button_exit" trait="mouseover" /> </xright>
+				<!--xup> &last; </xup>
+				<xdown> &first; </xdown-->
+				<xscroll> <ref src="recharge_scroll_bar" trait="user5" /> </xscroll>
+				
+				<!-- template items go here from code -->
+				
+			</rect>
+
+			<image name="recharge_scroll_bar">
+<include src="vertical_scroll.xml"/>
+				<id> 4 </id>
+				<depth> 0 </depth>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<add> 20 </add>
+				</x>
+				<y> 32 </y>
+				<height>
+					<copy src="parent()" trait="height" />
+					<sub> 64 </sub>
+				</height>
+				
+				<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+				<user2>
+					<copy src="recharge_list_pane" trait="child_count" />
+					<sub src="me()" trait="user8" />
+				</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+											 items minus the number of items visible.  i.e. if your list has
+											 8 items and you can see 2 at any one time, this should be 6 -->
+				<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+				<user4> 5 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+				<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+				<user6> 5 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+				<!-- user7: current value -->
+				<user8> 6 </user8>		<!-- How many items are visible at once -->
+				<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+				<user10></user10>		<!-- reserved -->
+			</image>
+		</rect>
+		
+		
+		<!-- BUTTON EXIT =====================================================================-->
+		<image name="recharge_button_exit">
+<include src="button_short.xml"/>
+			<id> 3 </id>
+			<depth> 2 </depth>
+			<target> &true; </target>
+			<user0> <copy src="strings()" trait="_exit"/> </user0>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<mult>0.7</mult>
+				<sub>
+					<copy>50</copy>
+					<onlyif>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </onlyif>
+				</sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<mult>0.85</mult>
+			</y>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xdown> <ref src="recharge_list_pane" trait="mouseover"/> </xdown>
+			<xup> <ref src="recharge_list_pane" trait="mouseover"/> </xup>
+		</image>
+	</image>
+	
+	
+		
+		
+	
+	<!-- TEMPLATE =====================================================================-->
+	<template name="recharge_item_template">
+		<rect name="recharge_item">
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<clips> &true; </clips>
+			<locus> &true; </locus>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<height>
+				<copy src="RechargeMenu" trait="user3"/>
+			</height>
+			<width>
+				<copy src="recharge_contents" trait="width"/>
+			</width>
+			
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			<user0> 0 </user0>	<!-- Item Index -->
+			<user1> Item name </user1>
+			<user2> Charge Text </user2>
+			<user3> Icon filename </user3>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="recharge_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+
+			<image name="item_icon">
+				<clips> &true; </clips>
+				<height> 64 </height>
+				<width> 64 </width>
+				<filename>
+					<copy src="parent()" trait="user3"/>
+				</filename>
+				<x> 0 </x>
+				<y>
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</y>
+			</image>
+			
+			<text name="item_name">
+				<clips> &true; </clips>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 380 </wrapwidth>
+				<wraplines> 2 </wraplines>
+				<string>
+					<copy src="parent()" trait="user1"/>
+				</string>
+				<x>
+					<copy src="sibling(item_icon)" trait="x"/>
+					<add src="sibling(item_icon)" trait="width"/>
+					<add>20</add>
+				</x>
+				<y>
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</y>
+			</text>
+			
+			<text name="item_charge">
+				<clips> &true; </clips>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="sibling(item_name)" trait="x"/>
+					<add src="sibling(item_name)" trait="wrapwidth"/>			<!-- This should give the left edge of the charge column -->
+					<add>
+						<copy src="parent()" trait="width"/>			<!-- Center the text in the column	-->
+						<sub>											<!-- by adding half the difference	-->
+							<copy src="sibling(item_name)" trait="x"/>			<!-- between the width of the column-->
+							<add src="sibling(item_name)" trait="wrapwidth"/>	<!-- and the text itself.			-->
+						</sub>
+						<sub src="me()" trait="width"/>
+						<div>2</div>									
+					</add>
+				</x>
+				<y>
+					<copy src="parent()" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</y>
+				<string>
+					<copy src="parent()" trait="user2"/>
+				</string>
+			</text>
+		</rect>
+	</template>
+</menu>
+

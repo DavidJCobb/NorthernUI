@@ -1,0 +1,108 @@
+<!-- hud_subtitle_menu.xml -->
+<menu name="HUDSubtitleMenu">
+	<class> &HUDSubtitleMenu; </class>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<visible> &false; </visible>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<depth> 0 </depth>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.15 </menufade>
+	
+	<rect name="hudsubtitle_text_layout">
+		<alpha> 0 </alpha>
+		<depth> 2 </depth>
+		<x> 0 </x>
+		<y> 0 </y>
+		<locus> &true; </locus>
+		
+		
+		
+		<!-- SUBTITLES =============================================================================-->
+		<text name="hudsubtitle_text">
+			<id> 1 </id>
+			<string> </string>
+			<visible> &false; </visible>
+			<font> 2 </font>
+			<red> 254 </red>
+			<green> 244 </green>
+			<blue> 183 </blue>
+			<alpha> 255 </alpha>
+			<justify> &center; </justify>
+			<wrapwidth> 1000 </wrapwidth>
+			<x>
+				<copy src="screen()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="screen()" trait="height"/>
+				<sub>
+					 <copy src="screen()" trait="cropy"/>
+					 <mul>2</mul>
+				</sub>
+				<sub> 115 </sub>
+				<sub src="me()" trait="height"/>
+				<min>
+					<copy src="me()" trait="user1"/>
+					<sub src="me()" trait="height"/>
+				</min>
+			</y>
+			<user1> 0 </user1>	<!-- set by code - y value of top of topmost HUDInfoMenu item -->
+		</text>
+		
+		
+		<!-- NOTICE =============================================================================-->
+		<image name="hudsubtitle_icon">
+			<visible> <copy src="hudsubtitle_notice" trait="user2"/> </visible>
+			<filename> <copy src="hudsubtitle_notice" trait="user1"/> </filename>
+			<width> 63 </width>
+			<height> 63 </height>
+			<x>
+				<copy src="screen()" trait="cropx"/>
+				<mul> 2 </mul>
+			</x>
+			<y>
+				<copy src="screen()" trait="cropy"/>
+				<mul> 2 </mul>
+			</y>
+		</image>
+		
+		<text name="hudsubtitle_notice">
+			<id> 2 </id>
+			<string> <copy src="strings()" trait="_dummynotice"/> </string>
+			<visible> &false; </visible>
+			<font> 2 </font>
+			<red> 254 </red>
+			<green> 244 </green>
+			<blue> 183 </blue>
+			<alpha> 255 </alpha>
+			<wrapwidth>
+				<copy src="screen()" trait="width"/>
+				<sub>
+					<copy src="screen()" trait="cropx"/>
+					<mul> 4 </mul>
+				</sub>
+				<sub src="hudsubtitle_icon" trait="x"/>
+				<sub src="hudsubtitle_icon" trait="width"/>
+				<sub> 8 </sub>
+			</wrapwidth>
+			<x>
+				<copy src="hudsubtitle_icon" trait="x"/>
+				<add> 
+					<copy src="hudsubtitle_icon" trait="width"/>
+					<onlyif src="me()" trait="user2"/>
+				</add>
+				<add> 8 </add>
+			</x>
+			<y>
+				<copy src="hudsubtitle_icon" trait="y"/>
+			</y>
+			<user1> </user1>				<!-- icon pathname -->
+			<user2> &false; </user2>		<!-- is there an icon, true/false -->
+		</text>
+		
+	</rect>
+</menu>
+
+

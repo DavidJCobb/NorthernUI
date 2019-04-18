@@ -1,0 +1,172 @@
+<!-- hud_reticle.xml -->
+<rect name="HUDReticle">
+	<visible> &false; </visible>
+	<stackingtype> &does_not_stack; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<depth> -10 </depth>
+	<x>
+		<copy src="screen()" trait="width"/>
+		<div> 2 </div>
+	</x>
+	<y>
+		<copy src="screen()" trait="height"/>
+		<div> 2 </div>
+	</y>
+	<menufade> 0.25 </menufade>
+
+	
+	<rect name="hudreticle_reticle">
+		<id> 1 </id>
+		<locus> &true; </locus>
+		<user1> &false; </user1>	<!-- true if crime to take action -->
+		<user2> 128 </user2>		<!-- code set - alpha -->
+		<user3> 0.5 </user3>		<!-- fade speed -->
+		<user4> &false; </user4>	<!-- true = larger icon -->
+		<user5> 0 </user5>			<!-- icon type -->
+
+		<!-- These are the colors that the reticle should appear based
+			 on whether the player is stealing mousedover item	-->
+		<_red_stealing>   208 </_red_stealing>
+		<_green_stealing>   0 </_green_stealing>
+		<_blue_stealing>    0 </_blue_stealing>
+		
+		<!-- default crosshair image -->
+		<image name="hudreticle_reticle_crosshair">
+			<visible>
+				<copy src="parent()" trait="user5"/>
+				<eq> 0 </eq>
+			</visible>
+			<filename> Menus\Misc\hud_reticle.dds </filename>
+			<alpha>
+				<copy src="hudreticle_reticle_activate" trait="alpha"/>
+			</alpha>
+			<width> 37 </width>
+			<height> 37 </height>
+			<x> -18 </x>
+			<y> -18 </y>
+		</image>
+
+		<!-- image to show when crosshairs is indicating a particular type of object -->
+		<image name="hudreticle_reticle_activate">
+			<visible>
+				<copy src="parent()" trait="user5"/>
+				<gt> 0 </gt>
+			</visible>
+			<filename>
+				<copy> 1 </copy>
+				<onlyif>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </onlyif>
+				<add> 1 </add>
+				<copy src="me()" trait="_filename_"/>
+			</filename>
+			<_filename_1> Menus\Shared\all_small_activate_icons.dds </_filename_1>
+			<_filename_2> Menus\Shared\all_activate_icons.dds </_filename_2>
+			<cropx>
+				<copy> 30 </copy>
+				<onlyif>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </onlyif>
+				<add> 34 </add>
+				<mul>
+					<copy src="parent()" trait="user5"/>
+					<sub> 1 </sub>
+				</mul>
+			</cropx>
+			<red>
+				<copy src="parent()" trait="_red_stealing" />
+				<onlyif src="parent()" trait="user1"/>
+				<add>
+					<copy>255</copy>
+					<onlyifnot src="parent()" trait="user1"/>
+				</add>
+			</red>
+			<green>
+				<copy src="parent()" trait="_green_stealing" />
+				<onlyif src="parent()" trait="user1"/>
+				<add>
+					<copy>255</copy>
+					<onlyifnot src="parent()" trait="user1"/>
+				</add>
+			</green>
+			<blue>
+				<copy src="parent()" trait="_blue_stealing" />
+				<onlyif src="parent()" trait="user1"/>
+				<add>
+					<copy>255</copy>
+					<onlyifnot src="parent()" trait="user1"/>
+				</add>
+			</blue>
+			<alpha>
+				<copy src="parent()" trait="user2"/>
+			</alpha>
+			<width>
+				<copy> 30 </copy>
+				<onlyif>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </onlyif>
+				<add> 34 </add>
+			</width>
+			<height>
+				<copy> 32 </copy>
+				<onlyif>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </onlyif>
+				<add> 32 </add>
+			</height>
+			<x>
+				<copy> -16 </copy>
+				<onlyif>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </onlyif>
+				<add> -16 </add>
+			</x>
+			<y>
+				<copy> -16 </copy>
+				<onlyif>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </onlyif>
+				<add> -16 </add>
+			</y>
+		</image>
+	</rect>
+
+	<nif name="hudreticle_enemy_health">
+		<id> 2 </id>
+		<filename>Enemy Health Bar\Health_Bar01.NIF </filename>
+		<visible> &true; </visible>
+		<locus> &true; </locus>
+		<alpha> <copy src="me()" trait="user8"/> </alpha>
+		<x> -1 </x>
+		<y> -20 </y>
+		<user1> 1 </user1>
+		<user2> 0.0 </user2>
+		<user8> 0 </user8>	<!-- code set - alpha -->
+		<user9> 0.5 </user9>	<!-- fade speed -->
+		<animation> Health_Bar </animation>
+	</nif>
+		
+	<image name="hudreticle_sneak">
+		<id> 3 </id>
+		<visible> &true; </visible>
+		<filename> Menus\Icons\icon_small_eye.dds </filename>
+		<red> 255 </red>
+		<green> 255 </green>
+		<blue> 255 </blue>
+		<alpha> <copy src="me()" trait="user8"/> </alpha>
+		<width> 64 </width>
+		<height> 64 </height>
+		<x> -30 </x>
+		<y> -25</y>
+		<user8> 0 </user8>	<!-- code set - alpha -->
+		<user9> 0.5 </user9>	<!-- fade speed -->
+	</image>
+	
+</rect>

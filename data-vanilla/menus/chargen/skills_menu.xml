@@ -1,0 +1,585 @@
+<!-- skills_menu.xml -->
+<menu name="SkillsMenu">
+	<class> &SkillsMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	<menufade> 0.25 </menufade>
+	
+	<!-- the following text strings are set by code - do not translate here -->
+	<user1> skill_description </user1>
+	<user2>  </user2>						<!-- picture pathname -->
+	<user3> 0 </user3>						<!-- mode of menu: 0=skills, 1=attributes, 2=specialization -->
+	<user4> &true; </user4>					<!-- Visibility of information text -->
+	<user5></user5>							<!-- The text itself -->
+	<user6></user6>							<!-- Not currently used  -->
+	<user7></user7>							<!-- Instructional text -->
+	<user8> &false; </user8>				<!-- From class menu? -->
+	<user9> &false; </user9>				<!-- visibility of continue button (xbox only) -->
+	
+	<xbuttonb> <ref src="skills_button_back" trait="clicked"/> </xbuttonb>
+	<xbuttonx> <ref src="skills_button_done" trait="clicked"/> </xbuttonx>
+	
+	
+	<!-- BACKGROUND ===================================================================-->
+	<rect name="skills_background">
+<include src="generic_background.xml" />
+		<depth> 1 </depth>
+		<user0> 900 </user0>
+		<user1> 700 </user1>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		
+		<!-- INFORMATIONAL TEXT =======================================================-->
+		<text name="skills_information_text">
+			<depth>3</depth>
+			<justify>&center;</justify>
+			<visible> <copy src="SkillsMenu" trait="user4"/> </visible>
+			<font>3</font>
+			<alpha>255</alpha>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<div>2</div>
+			</x>
+			<y>10</y>
+			<string> <copy src="SkillsMenu" trait="user5"/> </string>
+		</text>
+
+		<!-- SCROLL ===================================================================-->
+		<image name="skills_list_scroll_bar">
+<include src="vertical_scroll.xml" />
+			<id> 2 </id>
+			<visible>
+				<copy src="skills_list_pane" trait="childcount"/>
+				<gt src="me()" trait="user8"/>
+			</visible>
+			<target> &true; </target>
+			<x>
+				<copy src="skills_list_window" trait="x"/>
+				<add src="skills_list_window" trait="width"/>
+				<add> 10 </add>
+			</x>
+			<y>
+				<copy src="skills_list_window" trait="y" />
+				<add> 32 </add>
+			</y>
+			<height>
+				<copy src="skills_list_window" trait="height" />
+				<sub> 50 </sub>
+			</height>
+			<depth> 20 </depth>
+			<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+			<user2>
+				<copy src="skills_list_pane" trait="childcount" />
+				<sub src="me()" trait="user8"/>
+			</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+										 items minus the number of items visible.  i.e. if your list has
+										 8 items and you can see 2 at any one time, this should be 6 -->
+			<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+			<user4> 10 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+			<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+			<user6> 3 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+			<!-- user7 = current value -->
+			<user8> 10 </user8>		<!-- How many items are visible at once -->
+			<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+			<user10> 0 </user10>	<!-- reserved -->
+		</image>
+		
+		
+		<!-- WINDOW ===================================================================-->
+		<rect name="skills_list_window">
+			<clipwindow> &true; </clipwindow>
+			<locus> &true; </locus>
+			<height> 550 </height>
+			<width> 270 </width>
+			<x> 10 </x>
+			<y> 75 </y>
+			
+			<rect name="skills_list_pane">
+				<depth> 8 </depth>
+				<id> 1 </id>
+				<clips> &true; </clips>
+				<locus> &true; </locus>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height> 10 </height>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub>
+						<copy src="skills_list_scroll_bar" trait="user7" />
+						<mult> 55 </mult>
+					</sub>
+				</y>
+						
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &true; </xdefault>
+				<xlist> &xlist; </xlist>
+				<xright> <ref src="skills_button_done" trait="mouseover" /> </xright>
+				<!--xup> &last; </xup>
+				<xdown> &first; </xdown-->
+				<xscroll> <ref src="skills_list_scroll_bar" trait="user5" /> </xscroll>
+				
+				<!-- list items are added here in code from the template -->
+				
+			</rect>
+		</rect>
+		
+		
+		<!-- PICTURE ===================================================================-->
+		<image name="skills_picture">
+			<filename> <copy src="SkillsMenu" trait="user2"/> </filename>
+			<depth> 10 </depth>
+			<width>
+				<copy> 305 </copy>
+				<onlyif>
+					<copy src="SkillsMenu" trait="user3"/>
+					<eq> 0 </eq>
+				</onlyif>
+				<add>
+					<copy> 256 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 1 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 368 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 2 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 512 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 3 </eq>
+					</onlyif>
+				</add>
+			</width>
+			<height>
+				<copy> 437 </copy>
+				<onlyif>
+					<copy src="SkillsMenu" trait="user3"/>
+					<eq> 0 </eq>
+				</onlyif>
+				<add>
+					<copy> 256 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 1 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 507 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 2 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 512 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 3 </eq>
+					</onlyif>
+				</add>
+			</height>
+			<x>
+				<copy> 484 </copy>
+				<onlyif>
+					<copy src="SkillsMenu" trait="user3"/>
+					<eq> 0 </eq>
+				</onlyif>
+				<add>
+					<copy> 436 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 1 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 350 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 2 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 350 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 3 </eq>
+					</onlyif>
+				</add>
+			</x>
+			<y>
+				<copy> 120 </copy>
+				<onlyif>
+					<copy src="SkillsMenu" trait="user3"/>
+					<eq> 0 </eq>
+				</onlyif>
+				<add>
+					<copy> 141 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 1 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 20 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 2 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 40 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 3 </eq>
+					</onlyif>
+				</add>
+			</y>
+			<locus> &true; </locus>
+		</image>
+			
+		<text name="skill_text">
+			<depth> 5 </depth>
+			<string> <copy src="SkillsMenu" trait="user1" /> </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<font>3</font>
+			<alpha> 200 </alpha>
+			<wrapwidth> 505 </wrapwidth>
+			<x>
+				<copy src="skills_picture" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+				<add src="skills_picture" trait="x"/>
+				<sub>
+					<copy>30</copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq>0</eq>
+					</onlyif>
+				</sub>
+			</x>
+			<y> 
+				<copy> 500 </copy>
+				<onlyif>
+					<copy src="SkillsMenu" trait="user3"/>
+					<eq> 0 </eq>
+				</onlyif>
+				<add>
+					<copy> 420 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 1 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 500 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 2 </eq>
+					</onlyif>
+				</add>
+				<add>
+					<copy> 470 </copy>
+					<onlyif>
+						<copy src="SkillsMenu" trait="user3"/>
+						<eq> 3 </eq>
+					</onlyif>
+				</add>
+			</y>
+			<depth> 4 </depth>
+		</text>
+		
+		
+		<!-- TEXT =======================================================-->
+		<!--text name="skills_description_text">
+			<string> <copy src="strings()" trait="_skilldescription"/> </string>
+			<justify> &left; </justify>
+			<red> 0 </red>
+			<green> 34 </green>
+			<blue> 120 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth> 300 </wrapwidth>
+			<x> 300 </x>
+			<y> 500 </y>
+			<depth> 4 </depth>
+		</text-->
+
+
+		<!-- XBOX B-BUTTON (DONE/BACK) ================================================-->
+		<rect name="skills_xbutton_done_back">
+			<id> 6 </id>
+			<target> &true; </target>
+			<visible>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </visible>
+			<x> -1000 </x>
+			<y> -1000 </y>
+			<clicksound> 2 </clicksound>
+		</rect>
+		
+		<!-- XBOX X-BUTTON (DONE/BACK) ================================================-->
+		<rect name="skills_xbutton_continue">
+			<id> 7 </id>
+			<target> &true; </target>
+			<visible>
+				<copy>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </copy>
+				<and src="SkillsMenu" trait="user8"/>	<!-- from class menu -->
+			</visible>
+			<x> -1000 </x>
+			<y> -1000 </y>
+			<clicksound> 2 </clicksound>
+		</rect>
+		
+
+		<!-- BACK BUTTON ==============================================================-->
+		<image name="skills_button_back">
+<include src="button_short.xml" />
+			<id> 5 </id>
+			<visible>
+				<copy src="SkillsMenu" trait="user8"/>	<!-- from class menu -->
+			</visible>
+			<depth> 5 </depth>
+			<target> &true; </target>
+			<clicksound>2</clicksound>
+			<x>
+				<copy src="skills_button_done" trait="x"/>
+				<sub src="me()" trait="width"/>
+				<sub> 10 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<user0> <copy src="strings()" trait="_back"/> </user0>		<!-- Button text...set in code. -->
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xup> <ref src="skills_list_pane" trait="mouseover"/> </xup>
+			<xleft> <ref src="skills_list_pane" trait="mouseover"/> </xleft>
+			<xright> <ref src="skills_button_done" trait="mouseover"/> </xright>
+		</image>
+
+		<!-- OK/DONE BUTTON ==============================================================-->
+		<image name="skills_button_done">
+<include src="button_short.xml" />
+			<id> 4 </id>
+			<visible>&true;</visible>
+			<depth> 5 </depth>
+			<target> &true; </target>
+			<clicksound>2</clicksound>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<sub> 10 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<user0><copy src="strings()" trait="_continue"/></user0>		<!-- Button text...set in code. -->
+			<user20><!--&xbuttonx;-->3 </user20>
+			
+			<xdefault> &xboxhint; </xdefault>
+			<xup> <ref src="skills_list_pane" trait="mouseover"/> </xup>
+			<xleft> <ref src="skills_button_back" trait="mouseover"/> </xdown>
+		</image>
+
+		<!-- <image name="skills_button_b_icon">
+			<visible>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </visible>
+			<filename> Menus\Icons\icon_xbox_b_large.dds </filename>
+			<depth> 5 </depth>
+			<x>
+				<copy>498</copy>
+				<onlyif src="SkillsMenu" trait="user8"/>
+				<add>
+					<copy>688</copy>
+					<onlyifnot src="SkillsMenu" trait="user8"/>
+				</add>
+			</x>
+			<y> <copy src="skills_button_back" trait="y"/> </y>
+			<width>64</width>
+			<height>64</height>
+		</image>
+
+		<text name="skills_back_text">
+			<visible>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+				<and  src="SkillsMenu" trait="user8"/>
+			</visible>
+			<string> <copy src="strings()" trait="_back"/> </string>
+			<x>
+				<copy src="skills_button_b_icon" trait="x"/>
+				<add src="skills_button_b_icon" trait="width"/>
+			</x>
+			<y>
+				<copy src="skills_button_b_icon" trait="y"/>
+				<add>
+					<copy src="skills_button_b_icon" trait="height"/>
+					<sub src="me()" trait="height"/>
+					<div>2</div>
+				</add>
+			</y>
+			<alpha>255</alpha>
+			<depth>5</depth>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+		</text> -->
+	</rect>
+	
+	
+	
+	
+	<!-- TEMPLATE ==============================================================-->
+	<template name="skills_template">
+		<rect name="skills_template">
+			<id> 99 </id>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<locus> &true; </locus>
+			<clips> &true; </clips>
+			<width> <copy src="parent()" trait="width"/> </width>
+			<height> 55 </height>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult> 55 </mult>
+			</y>
+			<depth> 1 </depth>
+			<listindex> 0 </listindex>
+			<clicksound>3</clicksound>
+			<wrapwidth> <copy src="child(skills_template_name)" trait="wrapwidth"/> </wrapwidth>
+			<user0> 0 </user0>			<!-- list position index -->
+			<user1> xxx </user1>		<!-- name -->
+			<user2> 0 </user2>			<!-- ActorValue -->
+			<user3> &false; </user3>	<!-- selected -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &true; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="skills_list_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<text name="skills_template_name">
+				<clips> &true; </clips>
+				<depth> 8 </depth>
+				<font> 1 </font>
+				<string>
+					<copy src="parent()" trait="user1" />
+				</string>
+				<red> 0 </red>
+				<green> 34 </green>
+				<blue> 120</blue>
+				<alpha> 200 </alpha>
+				<wrapwidth>
+					<copy src="parent()" trait="width"/>
+					<sub> 10 </sub>
+				</wrapwidth>
+				<x> 10 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+			</text>
+			
+			<image name="skills_selected">
+				<clips> &true; </clips>
+				<visible> <copy src="parent()" trait="user3" /> </visible>
+				<depth>
+					<copy> 5 </copy>
+					<mul src="parent()" trait="mouseover" />
+					<add> 1 </add>
+				</depth>
+				<filename> Menus\Inventory\inv_equiped_marker_1.dds </filename>
+				<width>
+					<copy src="sibling(skills_template_name)" trait="width" />
+					<max> 85 </max>
+					<add> 8 </add>
+				</width>
+				<height> 54 </height>
+				<x> 7 </x>
+				<y> -3 </y>
+			</image>
+			
+			<image name="skills_mouseover_marker">
+				<depth> 3 </depth>
+				<filename> Menus\dialog\dialog_selection_full.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul src="parent()" trait="mouseover" />
+				</alpha>
+				<width>
+					<copy src="sibling(skills_template_name)" trait="width"/>
+					<max> 85 </max>
+				</width>
+				<height> 64 </height>
+				<x> 5 </x>
+				<y> -2 </y>
+			</image>
+			
+			<image name="skills_mouseover_marker_2">
+				<depth> 4 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha>
+					<copy> 255 </copy>
+					<mul src="parent()" trait="mouseover" />
+				</alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="sibling(skills_template_name)" trait="width" />
+					<max> 85 </max>
+					<add> 24 </add>
+					<sub src="me()" trait="width" />
+				</x>
+				<y> -2 </y>
+			</image>
+		</rect>
+	</template>
+</menu>

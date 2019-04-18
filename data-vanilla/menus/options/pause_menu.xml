@@ -1,0 +1,183 @@
+<!-- pause_menu.xml -->
+<menu name="PauseMenu">
+	<class> &PauseMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	
+	<_y_buffer> 0 </_y_buffer>
+	
+	<xbuttonb> <ref src="pause_return_button" trait="clicked"/> </xbuttonb>
+	
+	<rect name="pause_background">
+<include src="generic_background.xml"/>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+		<depth> 1 </depth>
+		<user0>240</user0>
+		<user1>400</user1>
+		
+		<image name="pause_indication_border_left">
+			<filename> Menus\Shared\shared_decor_blue_left.dds </filename>
+			<depth> 3 </depth>
+			<width> 35 </width>
+			<height> 17 </height>
+			<x> 30 </x>
+			<y> 26 </y>
+		</image>
+		<image name="pause_indication_border_right">
+			<filename> Menus\Shared\shared_decor_blue_right.dds </filename>
+			<depth> 3 </depth>
+			<width> 35 </width>
+			<height> 17 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="pause_indication_border_left" trait="x"/>
+				<sub src="me()" trait="width"/>
+			</x>
+			<y> 26 </y>
+		</image>
+		<text name="pause_indication">
+			<string> <copy src="strings()" trait="_paused"/> </string>
+			<font> 3 </font>
+			<alpha> 255 </alpha>
+			<depth> 3 </depth>
+			<red> 51 </red>
+			<green> 79 </green>
+			<blue> 142 </blue>
+			<justify>&center;</justify>
+			<x> <copy src="parent()" trait="width"/> <div>2</div> </x>
+			<y> 20 </y>
+		</text>
+		
+<!--------------------------------------------------------------->
+
+		<rect name="pause_return_button">
+<include src="button_floating_2.xml"/>
+			<id> 3 </id>
+			<string> <copy src="strings()" trait="_return"/> </string>
+			<clicksound> 2 </clicksound>
+			<_center_x>
+				<copy src="parent()" trait="width"/>
+				<div>2</div>
+			</_center_x>
+			<_top>
+				<copy src="parent()" trait="height"/>
+				<sub>
+					<copy src="me()" trait="height"/>
+					<mult>5</mult>
+					<add>
+						<copy src="PauseMenu" trait="_y_buffer"/>
+						<mult>4</mult>
+					</add>
+				</sub>
+				<add src="pause_indication" trait="y"/>
+				<add src="pause_indication" trait="height"/>
+				<div> 2 </div>
+			</_top>
+			<!-- set user1 to false to disable -->
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			
+			<xdefault> 3 </xdefault>
+			<xup>   <ref src="pause_quit_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="pause_save_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!--------------------------------------------------------------->
+
+		<rect name="pause_save_button">
+<include src="button_floating_2.xml"/>
+			<id> 4 </id>
+			<_center_x>
+				<copy src="pause_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="pause_return_button" trait="_top"/>
+				<add src="pause_return_button" trait="height"/>
+				<add src="PauseMenu" trait="_y_buffer"/>
+			</_top>
+			<string> <copy src="strings()" trait="_save"/> </string>
+			<clicksound>1</clicksound>
+			
+			<xdefault> 2 </xdefault>
+			<xup>   <ref src="pause_return_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="pause_load_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!--------------------------------------------------------------->
+
+		<rect name="pause_load_button">
+<include src="button_floating_2.xml"/>
+			<id> 5 </id>
+			<_center_x>
+				<copy src="pause_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="pause_save_button" trait="_top"/>
+				<add src="pause_save_button" trait="height"/>
+				<add src="PauseMenu" trait="_y_buffer"/>
+			</_top>
+			<string> <copy src="strings()" trait="_load"/> </string>
+			<clicksound>1</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="pause_save_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="pause_options_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!--------------------------------------------------------------->
+
+		<rect name="pause_options_button">
+<include src="button_floating_2.xml"/>
+			<id> 7 </id>
+			<_center_x>
+				<copy src="pause_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="pause_load_button" trait="_top"/>
+				<add src="pause_load_button" trait="height"/>
+				<add src="PauseMenu" trait="_y_buffer"/>
+			</_top>
+			<string> <copy src="strings()" trait="_options"/> </string>
+			<clicksound>1</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="pause_load_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="pause_quit_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!--------------------------------------------------------------->
+
+		<rect name="pause_quit_button">
+<include src="button_floating_2.xml"/>
+			<id> 8 </id>
+			<_center_x>
+				<copy src="pause_return_button" trait="_center_x"/>
+			</_center_x>
+			<_top>
+				<copy src="pause_options_button" trait="_top"/>
+				<add src="pause_options_button" trait="height"/>
+				<add src="PauseMenu" trait="_y_buffer"/>
+			</_top>
+			<string> <copy src="strings()" trait="_quit"/> </string>
+			<clicksound>2</clicksound>
+			
+			<xdefault> &false; </xdefault>
+			<xup>   <ref src="pause_options_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="pause_return_button" trait="mouseover"/> </xdown>
+		</rect>
+	
+<!--------------------------------------------------------------->
+
+	</rect> <!-- end generic background -->
+</menu>

@@ -1,0 +1,208 @@
+<!-- video_display_menu.xml -->
+<menu name="VideoDisplayMenu">
+	<class> &VideoDisplayMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x>
+		<copy src="screen()" trait="width"/>
+		<div> 2 </div>
+		<sub>
+			<copy src="video_display_background" trait="width" />
+			<div> 2 </div>
+		</sub>
+	</x>
+	<y>
+		<copy src="screen()" trait="height"/>
+		<div> 2 </div>
+		<sub>
+			<copy src="video_display_background" trait="height" />
+			<div> 2 </div>
+		</sub>
+	</y>
+	<explorefade> 0.25 </explorefade>
+	<image name="video_display_background">
+		<id>1</id>
+		<visible> 2 </visible>
+		<target> &true; </target>
+		<filename> Menus\Shared\main_page_5.dds </filename>
+		<depth> 1 </depth>
+		<width> 520</width>
+		<height> 680 </height>
+		<x>0</x>
+		<y> 0 </y>
+		<text name="video_display_text">
+			<id> 2 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_resolutionlist"/> </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 40
+			 </x>
+			<y> 60 </y>
+		</text>
+		<text name="video_first_text">
+			<id> 4 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> - 800 x 600 </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 40
+			 </x>
+			<y>
+				<copy src="video_display_text" trait="y" />
+				<add>60</add>
+			</y>
+		</text>
+		<text name="video_second_text">
+			<id> 5 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> - 1080 x 607 </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 40
+			 </x>
+			<y>
+				<copy src="video_first_text" trait="y" />
+				<add>40</add>
+			</y>
+		</text>
+		<text name="video_third_text">
+			<id> 6 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> - 1024 x 768 </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 40
+			 </x>
+			<y>
+				<copy src="video_second_text" trait="y" />
+				<add>40</add>
+			</y>
+		</text>
+		<text name="video_fourth_text">
+			<id> 7 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> - 1280 x 720 </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x>40
+			 </x>
+			<y>
+				<copy src="video_third_text" trait="y" />
+				<add>40</add>
+			</y>
+		</text>
+		
+		<text name="video_fifth_text">
+			<id> 8 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> - 1280 x 960 </string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 40
+			 </x>
+			<y>
+				<copy src="video_fourth_text" trait="y" />
+				<add>40</add>
+			</y>
+		</text>
+		<image name="video_display_return_button">
+			<id> 3</id>
+			<alpha> 255 </alpha>
+			<depth> 31 </depth>
+			<filename> Menus\Container\cont_button_long_off.dds </filename>
+			<width> 190 </width>
+			<height> 50 </height>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<clicksound>2</clicksound>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<div> 2 </div>
+				<add>150</add>
+			</x>
+			<y> <copy src="video_fourth_text" trait="y" />
+					<add>280</add></y>
+			<image name="return_button_on">
+				<visible>
+					<copy src="parent()" trait="alpha" />
+					<lt> 1 </lt>
+				</visible>
+				<depth> 1 </depth>
+				<filename> Menus\Container\cont_button_long_on.dds </filename>
+				<width> 176 </width>
+				<height> 51 </height>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="return_button_text">
+				<depth> 2 </depth>
+				<string> <copy src="strings()" trait="_return"/> </string>
+				<justify> &left; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub src="me()" trait="width" />
+					<div> 2 </div>
+					<sub> 2 </sub>
+				</x>
+				<y>
+					3
+				</y>
+			</text>
+		</image>
+	</image>
+</menu>

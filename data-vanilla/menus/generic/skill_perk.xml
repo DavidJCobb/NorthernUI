@@ -1,0 +1,95 @@
+<!-- skill_perk.xml -->
+<menu name="SkillPerkMenu">
+	<class> &GenericMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+
+	<user0></user0>		<!-- Icon filename -->
+	<user1></user1>		<!-- Perk description -->
+	<user2></user2>		<!-- "OK" -->
+	
+	<xbuttona> <ref src="skillperk_ok_button" trait="clicked"/> </xbuttona>
+
+	<rect name="skillperk_background">
+<include src="generic_background.xml"/>
+		<visible> &true; </visible>
+		<depth> 50 </depth>
+		<locus> &true; </locus>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+
+		<image name="skill_icon">
+			<filename>
+				<copy src="SkillPerkMenu" trait="user0"/>
+			</filename>
+			<depth>3</depth>
+			<width>320</width>
+			<height>430</height>
+			<x> 40 </x>
+			<y>
+				<copy src="parent()" trait="height"/>
+				<sub src="me()" trait="height"/>
+				<div>2</div>
+			</y>
+		</image>
+
+		<text name="skillperk_description">
+			<string>
+				<copy src="SkillPerkMenu" trait="user1"/>
+			</string>
+			<depth>3</depth>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha>255</alpha>
+			<visible> &true; </visible>
+			<x>
+				<copy src="skill_icon" trait="x"/>
+				<add src="skill_icon" trait="width"/>
+				<sub>24</sub>
+			</x>
+			<y>
+				<copy src="skill_icon" trait="y"/>
+			</y>
+			<wrapwidth>
+				<copy src="parent()" trait="width"/>
+				<sub src="skill_icon" trait="width"/>
+				<sub> 60 </sub>
+			</wrapwidth>
+		</text>
+
+		<image name="skillperk_ok_button">
+<include src="button_short.xml"/>
+			<id>1</id>
+			<user0>
+				<copy src="SkillPerkMenu" trait="user2"/>
+			</user0>
+			<depth>3</depth>
+			<x>
+				<copy src="skillperk_description" trait="x"/>
+				<add>
+					<copy src="skillperk_description" trait="wrapwidth"/>
+					<sub src="me()" trait="width"/>
+					<div>2</div>
+				</add>
+			</x>
+			<y>
+				<copy src="skill_icon" trait="y"/>
+				<add src="skill_icon" trait="height"/>
+				<sub src="me()" trait="height"/>
+			</y>
+			
+			<user20><!--&xbuttona;-->1 </user20>
+			<xdefault> &xboxhint; </xdefault>
+		</image>
+	</rect>
+</menu>

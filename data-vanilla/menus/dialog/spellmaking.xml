@@ -1,0 +1,604 @@
+<!-- Spellmaking.xml -->
+<menu name="SpellMakingMenu">
+	<class> &SpellMakingMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<menufade> 0.25 </menufade>
+	<user3>  </user3>							<!-- required effect text -->
+	<user4> 0 </user4>							<!-- cost to cast the spell that is being created -->
+	<user5> 0 </user5>							<!-- cost of the spell that is being created -->
+	<user6> &false; </user6>					<!-- visibility of "requires skill level" text -->
+	<user7> 0 </user7>							<!-- Player gold -->
+	
+	<xbuttonb> <ref src="spell_button_exit" trait="clicked"/> </xbuttonb>
+	<xbuttonx> <ref src="spell_button_create" trait="clicked"/> </xbuttonx>
+	
+	
+	<rect name="spell_focus_box">
+<include src="focus_box.xml"/>
+		<id> 8 </id>
+		<visible> &false; </visible>
+		<user15>
+			<copy src="parent()" trait="depth" />
+			<add> 0.5 </add>
+		</user15>
+	</rect>
+	
+	
+	<image name="spell_background">
+		<filename> Menus\Spellmaking\Spellmaking.dds </filename>
+		<depth> 1 </depth>
+		<width> 1033 </width>
+		<height> 788 </height>
+		<zoom> -1 </zoom>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		<target> &true; </target>
+		
+<!--******************* BEGIN ROW 1 *******************-->
+
+		<rect name="spell_name_background">
+			<id> 2 </id>
+			<target> &true; </target>
+			<locus> &true; </locus>
+			<depth> 1 </depth>
+			<x> 180 </x>
+			<y> 153 </y>
+			<height> 42 </height>
+			<width> 655 </width>
+			
+			<xdefault> &false; </xdefault>
+			<xdown> <ref src="spell_known_effects_pane" trait="mouseover"/> </xdown>
+			<xright> <ref src="spell_known_effects_pane" trait="mouseover"/> </xright>
+
+			<text name="spell_name_text">
+				<id> 20 </id>
+				<depth> 1 </depth>
+				<font> 1 </font>
+				<string> <copy src="strings()" trait="_spellnameenter"/> </string>
+				<red> 41 </red>
+				<green> 43 </green>
+				<blue> 92 </blue>
+				<alpha> 255 </alpha>
+				<wrapwidth> 630 </wrapwidth>
+				<wraplines>1</wraplines>
+				<x> 15 </x>
+				<y> 5 </y>
+			</text>
+		</rect>
+		
+<!--******************* BEGIN ROW 2 *******************-->
+
+		<rect name="spell_icon_layout">
+			<width> <copy src="child(spell_player_gold_text)" trait="x"/> </width>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+				<sub> 17 </sub>
+			</x>
+			<y> 203 </y>
+			<locus> &true; </locus>
+		
+			<image name="spell_cast_cost_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 288 </cropx>
+				<depth> 1 </depth>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 0 </x>
+				<y> 0 </y>
+			</image>
+			<text name="spell_cast_text">
+				<string>
+					<copy src="SpellmakingMenu" trait="user4"/>		<!-- cost to cast the spell that is being created -->
+				</string>
+				<depth> 1 </depth>
+				<font> 3 </font>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x>
+					<copy src="spell_cast_cost_icon" trait="x"/>
+					<add src="spell_cast_cost_icon" trait="width"/>
+					<add> 10 </add>
+				</x>
+				<y> 2 </y>
+			</text>
+			
+			
+			<image name="gold_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 224 </cropx>
+				<depth> 1 </depth>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub>
+						<copy> 87 </copy>
+						<add src="child(spell_gold_cost_text)" trait="width"/>
+					</sub>
+					<div> 2 </div>
+				</x>
+				<y> 0 </y>
+				<locus> &true; </locus>
+				
+				<image name="gold_icon_arrow">
+					<filename> Menus\Shared\all_small_icons.dds </filename>
+					<cropx> 352 </cropx>
+					<width> 32 </width>
+					<height> 32 </height>
+					<x> 23 </x>
+					<y> 0 </y>
+				</image>
+				
+				<text name="spell_gold_cost_text">
+					<depth> 1 </depth>
+					<string>
+						<copy src="SpellmakingMenu" trait="user5"/>		<!-- cost of the spell that is being created -->
+					</string>
+					<font> 3 </font>
+					<red> 117 </red>
+					<green> 59 </green>
+					<blue> 33  </blue>
+					<alpha> 255 </alpha>
+					<x> 55 </x>
+					<y> 2 </y>
+				</text>
+			</image>
+			
+			
+			<image name="player_gold_icon">
+				<filename> Menus\Shared\all_small_icons.dds </filename>
+				<cropx> 224 </cropx>
+				<depth> 1 </depth>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x>
+					<copy src="spell_player_gold_text" trait="x" />
+					<sub src="spell_player_gold_text" trait="width" />
+					<sub src="me()" trait="width" />
+					<sub> 10 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+			<text name="spell_player_gold_text">
+				<depth> 1 </depth>
+				<string> <copy src="SpellMakingMenu" trait="user7"/> </string>
+				<font> 3 </font>
+				<justify> &right; </justify>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33  </blue>
+				<alpha> 255 </alpha>
+				<x> 608 </x>
+				<y> 2 </y>
+			</text>
+		</rect>
+		
+		
+		
+<!--******************* BEGIN KNOWN EFFECTS *******************-->
+
+		<text name="known_effect_text">
+			<depth> 1 </depth>
+			<string> <copy src="strings()" trait="_knowneffects"/> </string>
+			<font>3</font>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33  </blue>
+			<alpha> 255 </alpha>
+			<x>	130	</x>
+			<y> 250	</y>
+		</text>
+		
+		<rect name="spell_known_effect_window">
+			<depth> 8 </depth>
+			<locus> &true; </locus>
+			<width> 330</width>
+			<height>
+				<copy src="spell_added_effects_window" trait="height"/>
+			</height>
+			<x>130</x>
+			<y>
+				<copy src="spell_added_effects_window" trait="y"/>
+			</y>
+			<clipwindow> &true; </clipwindow>
+		
+			<image name="spell_known_effects_scroll_bar">
+<include src="vertical_scroll.xml"/>
+				<id> 9</id>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<add> 10 </add>
+				</x>
+				<y> 32 </y>
+				<height>
+					<copy src="parent()" trait="height"/>
+					<sub> 64 </sub>
+				</height>
+				<depth>20</depth>
+				<target> &true; </target>
+				<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+				<user2>
+					<copy src="spell_known_effects_pane" trait="child_count" />	<!-- set by code - number of visible elements in list -->
+					<sub src="me()" trait="user8"/>
+				</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+											items minus the number of items visible.  i.e. if your list has
+											8 items and you can see 2 at any one time, this should be 6 -->
+				<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+				<user4> 4 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+				<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+				<user6> 10 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+				<!-- user7 = current value -->
+				<user8> 5 </user8>		<!-- How many items are visible at once -->
+				<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+				<user10> 0 </user10>	<!-- reserved -->
+			</image>
+		
+			<rect name="spell_known_effects_pane">
+				<id> 6 </id>
+				<locus> &true; </locus>
+				<width>
+					<copy src="parent()" trait="width"/>
+				</width>
+				<height>
+					<copy src="me()" trait="childcount"/>
+					<mul> 60 </mul>
+				</height>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub src="spell_known_effects_scroll_bar" trait="user7"/> <!-- user7 = current value -->
+					<mul> 60 </mul>
+				</y>
+				<clips> &true; </clips>
+						
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &false; </xdefault>
+				<xlist> &xlist; </xlist>
+				<xleft> <ref src="spell_name_background" trait="mouseover" /> </xleft>
+				<xright> <ref src="spell_added_effects_pane" trait="mouseover" /> </xright>
+				<xup> <ref src="spell_name_background" trait="mouseover" /> </xup>
+				<xdown> <ref src="spell_button_create" trait="mouseover" /> </xdown>
+				<xscroll> <ref src="spell_known_effects_scroll_bar" trait="user5" /> </xscroll>
+				
+				<!-- added effect items are attached here - in code -->
+				
+			</rect>
+		</rect>
+		
+<!--******************* BEGIN ADDED EFFECTS *******************-->
+
+		<text name="spell_added_effects_text">
+			<depth> 1 </depth>
+			<string> <copy src="strings()" trait="_addedeffects"/> </string>
+			<font>3</font>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33  </blue>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="known_effect_text" trait="x"/>
+				<add>367</add>
+			</x>
+			<y>
+				<copy src="known_effect_text" trait="y"/>
+			</y>
+		</text>
+		
+		<rect name="spell_added_effects_window">
+			<depth> 8 </depth>
+			<locus> &true; </locus>
+			<width> 400 </width>
+			<height> 300 </height>
+			<x> 492 </x>
+			<y> 290 </y>
+			<clipwindow> &true; </clipwindow>
+			
+			<image name="spell_added_effects_scroll_bar">
+<include src="vertical_scroll.xml"/>
+				<id> 11 </id>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub src="me()" trait="width"/>
+					<add> 10 </add>
+				</x>
+				<y> 32 </y>
+				<height>
+					<copy src="parent()" trait="height"/>
+					<sub> 64 </sub>
+				</height>
+				<depth> 20 </depth>
+				<target> &true; </target>
+				<user1> 0 </user1>		<!-- Minimum value that can be scrolled to (should usually be zero) -->
+				<user2>
+					<copy src="spell_added_effects_pane" trait="child_count" />	<!-- set by code - number of visible elements in list -->
+					<sub> 5 </sub>
+				</user2>				<!-- Maximum value that can be scrolled to (should be the number of
+											items minus the number of items visible.  i.e. if your list has
+											8 items and you can see 2 at any one time, this should be 6 -->
+				<user3> 1 </user3>		<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+				<user4> 4 </user4>		<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+				<user5> 0 </user5>		<!-- The starting position of the scroll bar (set this only once) -->
+				<user6> 12 </user6>		<!-- A unique ID so that the scroll marker can be dragged around -->
+				<!-- user7 = current value -->
+				<user8> 5 </user8>		<!-- How many items are visible at once -->
+				<user9> 0 </user9>		<!-- Manual step value (multiplied by step distance and added to scroll value -->
+				<user10> 0 </user10>	<!-- reserved -->
+			</image>
+		
+			<rect name="spell_added_effects_pane">
+				<id> 7 </id>
+				<locus> &true; </locus>
+				<width>
+					<copy src="parent()" trait="width"/>
+				</width>
+				<height>
+					<copy src="me()" trait="childcount"/>
+					<mul> 60 </mul>
+				</height>
+				<x> 0 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub src="spell_added_effects_scroll_bar" trait="user7"/> <!-- user7 = current value -->
+					<mul> 60 </mul>
+				</y>
+				<clips> &true; </clips>
+						
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> &false; </xdefault>
+				<xlist> &xlist; </xlist>
+				<xleft> <ref src="spell_known_effects_pane" trait="mouseover" /> </xleft>
+				<xup> <ref src="spell_name_background" trait="mouseover" /> </xup>
+				<xdown> <ref src="spell_button_create" trait="mouseover" /> </xdown>
+				<xscroll> <ref src="spell_added_effects_scroll_bar" trait="user5" /> </xscroll>
+				
+				<!-- added effect items are attached here - in code -->
+				
+			</rect>
+		</rect>
+		
+<!-- ******************** BEGIN REQUIRED SKILLS ******************** -->
+
+		<text name="spell_require_effect_text">
+			<visible>
+				<copy src="SpellmakingMenu" trait="user6"/>
+			</visible>
+			<string> <copy src="SpellmakingMenu" trait="user3"/> </string>
+			<depth> 1 </depth>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="known_effect_text" trait="x"/>
+			</x>
+			<y> 600 </y>
+		</text>
+		
+<!-- ************************* BEGIN BUTTONS ************************* -->
+		<image name="spell_button_create">
+<include src="button_long.xml"/>
+			<id> 14 </id>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<sub src="spell_button_exit" trait="width"/>
+				<sub> 20 </sub>
+				<div> 2 </div>
+			</x>
+			<y> 650 </y>
+			<user0> <copy src="strings()" trait="_create"/> </user0>
+			
+			<user20><!--&xbuttonx;-->3 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xright> <ref src="spell_button_exit" trait="mouseover"/>   </xright>
+			<xup>    <ref src="spell_added_effects_pane" trait="mouseover"/> </xup>
+		</image>
+		
+		<image name="spell_button_exit">
+<include src="button_short.xml"/>
+			<id> 15 </id>
+			<target> &true; </target>
+			<x>
+				<copy src="spell_button_create" trait="x" />
+				<add src="spell_button_create" trait="width" />
+				<add> 20 </add>
+			</x>
+			<y> <copy src="spell_button_create" trait="y" /> </y>
+			<user0> <copy src="strings()" trait="_exit"/> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft>  <ref src="spell_button_create" trait="mouseover"/>   </xleft>
+			<xup>    <ref src="spell_added_effects_pane" trait="mouseover"/> </xup>
+		</image>
+		
+	</image> <!--END SPELLMAKING BACKGROUND-->
+	
+<!-- ****************************** BEGIN TEMPLATES ****************************** -->
+	
+	<template name="known_effect_template">
+		<rect name="Effects_known">
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<depth> 1 </depth>
+			<visible>
+				<copy src="me()" trait="y" />
+				<gte> 0 </gte>
+				<and>
+					<copy src="me()" trait="y" />
+					<add> 20 </add>
+					<lt src="parent()" trait="height" />
+				</and>
+			</visible>
+			<x> 8 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<height> 60 </height>
+			<width>300</width>
+			<clips> &true; </clips>
+			<clicksound> 2 </clicksound>
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="spell_known_effects_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="spell_cast_cost_icon">
+				<filename>
+					<copy src="parent()" trait="user1" />
+				</filename>
+				<zoom>-1</zoom>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 5 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub> 32 </sub>
+					<div> 2 </div>
+					<add> 2 </add>
+				</y>
+				<clips> &true; </clips>
+			</image>
+			
+			<text name="effect_text">
+				<font> 3 </font>
+				<string>
+					<copy src="parent()" trait="user3" />
+				</string>
+				<wrapwidth> 250 </wrapwidth>
+				<x> 50 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<clips> &true; </clips>
+			</text>
+		</rect>
+	</template>
+	
+
+
+	<template name="added_effect_template">
+		<rect name="Effects_added">
+			<alpha> 0 </alpha>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<depth> 1 </depth>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mult src="me()" trait="height" />
+			</y>
+			<clicksound> 2 </clicksound>
+			<height> 60 </height>
+			<width> <copy src="parent()" trait="width"/> </width>
+			<clips> &true; </clips>
+			<listindex> <copy src="me()" trait="user0"/> </listindex>
+			<user0> 0 </user0>			<!-- index of item on list -->
+			<user1> xxx </user1>		<!-- icon pathname -->
+			<user2> xxx </user2>		<!-- effect description string -->
+			<user3> 0 </user3>			<!-- index of the item in the magic effects list -->
+			
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> &false; </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="spell_added_effects_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<image name="spell_cast_cost_icon">
+				<filename>
+					<copy src="parent()" trait="user1" />
+				</filename>
+				<depth> 1 </depth>
+				<zoom>-1</zoom>
+				<width> 32 </width>
+				<height> 32 </height>
+				<x> 13 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub> 32 </sub>
+					<div> 2 </div>
+					<add> 2 </add>
+				</y>
+				<clips> &true; </clips>
+			</image>
+			<text name="effect_text">
+				<font> 3 </font>
+				<string>
+					<copy src="parent()" trait="user2" />
+				</string>
+				<depth> 1 </depth>
+				<wrapwidth>
+					<copy src="parent()" trait="width" />
+					<sub src="me()" trait="x"/>
+				</wrapwidth>
+				<wraplines>2</wraplines>
+				<x> 50 </x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<sub src="me()" trait="height" />
+					<div> 2 </div>
+				</y>
+				<red> 117 </red>
+				<green> 59 </green>
+				<blue> 33 </blue>
+				<alpha> 255 </alpha>
+				<clips> &true; </clips>
+			</text>
+		</rect>
+	</template>
+</menu>

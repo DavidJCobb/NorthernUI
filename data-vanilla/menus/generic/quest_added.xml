@@ -1,0 +1,188 @@
+<!-- quest_added.xml -->
+<menu name="QuestAddedMenu">
+	<class> &GenericMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	<user0> </user0>			<!-- Title -->
+	<user1> </user1>			<!-- Name -->
+	<user2> </user2>			<!-- Date -->
+	<user3> </user3>			<!-- Text -->
+	<user4> </user4>			<!-- Icon -->
+	<user5> </user5>			<!-- First Button -->
+	<user6> &false; </user6>	<!-- is there a second button? -->
+	<user7> . </user7>			<!-- Second Button -->
+	<clicksound> 9 </clicksound>
+	
+	<xbuttona> <ref src="qadd_button" trait="clicked"/> </xbuttona>
+	<xbuttonx> <ref src="qadd_button_2" trait="clicked"/> </xbuttonx>
+
+	
+	<rect name="qadd_background">
+<include src="generic_background.xml"/>
+		<id> &generic; </id>
+		<target> &true; </target>
+		<depth> 1 </depth>
+		<user0> 800 </user0>	<!-- width -->
+		<user1>
+			<copy src="qadd_button_2" trait="y"/>
+			<add src="qadd_button" trait="height"/>
+			<add> 20 </add>
+		</user1>				<!-- height -->
+		<x>
+			<copy src="screen()" trait="width"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="me()" trait="width" />
+				<div> 2 </div>
+			</sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="me()" trait="height" />
+				<div> 2 </div>
+			</sub>
+		</y>
+		<locus> &true; </locus>
+		<xdefault> &true; </xdefault>
+		
+		<text name="qadd_quest_message">
+			<depth> 3 </depth>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<font> 1 </font>
+			<alpha> 255 </alpha>
+			<wrapwidth> 795 </wrapwidth>
+			<string> <copy src="QuestAddedMenu" trait="user0" /> </string>
+			<x>
+				<copy src="parent()" trait="width" />
+				<div> 2 </div>
+			</x>
+			<y> 10 </y>
+		</text>
+		
+		<image name="qadd_divider">
+			<filename> Menus\Stats\stat_border_horizontal_1.dds </filename>
+			<depth> 3 </depth>
+			<width> 636 </width>
+			<height> 3 </height>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y> 55 </y>
+		</image>
+				
+		<text name="qadd_quest_name">
+			<depth> 3 </depth>
+			<justify> &left; </justify>
+			<red> 41 </red>
+			<green> 43 </green>
+			<blue> 92 </blue>
+			<font> 1 </font>
+			<alpha> 255 </alpha>
+			<wrapwidth> 795 </wrapwidth>
+			<string> <copy src="QuestAddedMenu" trait="user1" /> </string>
+			<x> 80 </x>
+			<y> 72 </y>
+		</text>
+		<text name="qadd_quest_date">
+			<depth> 3 </depth>
+			<justify> &left; </justify>
+			<red> 182 </red>
+			<green> 40 </green>
+			<blue> 28 </blue>
+			<font> 3 </font>
+			<alpha> 255 </alpha>
+			<wrapwidth> 795 </wrapwidth>
+			<string> <copy src="QuestAddedMenu" trait="user2" /> </string>
+			<x> 80 </x>
+			<y> 105 </y>
+		</text>
+		<text name="map_item_body">
+			<depth> 3 </depth>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<font> 1 </font>
+			<alpha> 255 </alpha>
+			<wrapwidth> 785 </wrapwidth>
+			<string> <copy src="QuestAddedMenu" trait="user3" /> </string>
+			<x> 10 </x>
+			<y> 145 </y>
+			<clips> &true; </clips>
+		</text>
+		
+		<image name="map_log_item_icon">
+			<depth> 3 </depth>
+			<filename> <copy src="QuestAddedMenu" trait="user4"/> </filename>
+			<width> 64 </width>
+			<height> 64 </height>
+			<x> 10 </x>
+			<y> 70 </y>
+			<clips> &true; </clips>
+			<target> &true; </target>
+			<!-- <xdefault>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+				<mul>5</mul>
+			</xdefault> -->
+		</image>
+
+
+		<rect name="qadd_button">
+<include src="button_no_background.xml"/>
+			<id> 1 </id>
+			<target> &true; </target>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="map_item_body" trait="y" />
+				<add src="map_item_body" trait="height" />
+				<add> 35 </add>
+			</y>
+			<depth> 6 </depth>
+			<clicksound> 2 </clicksound>
+			<user0> <copy src="QuestAddedMenu" trait="user5"/> </user0>
+			
+			<user20><!--&xbuttona;-->1 </user20>
+			<xdefault>3</xdefault> <!-- FIX: xdefault on the button must be greater than the xdefault on the background -->
+		</rect>
+
+
+		<rect name="qadd_button_2">
+<include src="button_no_background.xml"/>
+			<id> 2 </id>
+			<target> &true; </target>
+			<visible> <copy src="QuestAddedMenu" trait="user6"/> </visible>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="qadd_button" trait="height" />
+				<add> 20 </add>
+				<onlyif src="me()" trait="visible"/>
+				<add src="qadd_button" trait="y" />
+			</y>
+			<depth> 6 </depth>
+			<clicksound> 2 </clicksound>
+			<user0> <copy src="QuestAddedMenu" trait="user7"/> </user0>
+			
+			<user20><!--&xbuttonx;-->3 </user20>
+			<xdefault> &false; </xdefault>
+		</rect>
+		
+	</rect>
+
+</menu>

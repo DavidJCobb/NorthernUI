@@ -1,0 +1,124 @@
+<!--<rect name="option_button">-->
+   <!-- args -->
+   <user0>&generic;</user0> <!-- button ID -->
+   <user1>&true;</user1> <!-- enabled -->
+   <user10>200</user10> <!-- label column width -->
+   <user11></user11> <!-- label -->
+   <user12>&nbsp;</user12> <!-- label suffix -->
+
+   <clips>&true;</clips>
+   <listindex>
+      <copy src="sibling()" trait="listindex" />
+      <add>1</add>
+   </listindex>
+   <locus>&true;</locus>
+   <x>0</x>
+   <y>
+      <copy   src="sibling()" trait="height" />
+      <onlyifnot>
+         <copy src="sibling()" trait="visible" /><eq>&false;</eq>
+      </onlyifnot>
+      <add    src="sibling()" trait="y" />
+   </y>
+   <width><copy src="parent()" trait="width" /></width>
+   <height>
+      <copy src="child(label)"      trait="height" />
+      <add>8</add>
+   </height>
+   
+   <id><copy src="me()" trait="user0" /></id>
+   <target><copy src="me()" trait="user1" /></target>
+   <clicksound>3</clicksound>
+   <xdefault>&true;</xdefault>
+   <xlist>&xitem;</xlist>
+   <xup>  &prev;</xup>
+   <xdown>&next;</xdown>
+   <xscroll>
+      <copy src="me()" trait="listindex" />
+      <sub>
+         <copy src="parent()" trait="user8" />
+         <div> 2</div>
+         <ceil>0</ceil>
+      </sub>
+      <add>1</add>
+   </xscroll>
+   
+   <_mouseover_any>
+      <copy src="me()" trait="mouseover" />
+   </_mouseover_any>
+   
+   <depth>10</depth> <!-- The root element is what gets focus, so child elements need to be behind it. -->
+   
+   <text name="label">
+      <depth>-8</depth>
+      <clips>&true;</clips>
+      <font>1</font>
+      <string><copy src="parent()" trait="user11" /></string>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      <red>
+         <copy>140</copy>
+         <max>
+            <copy>255</copy>
+            <mult src="parent()" trait="mouseover" />
+         </max>
+      </red>
+      <green><copy src="me()" trait="red" /></green>
+      <blue> <copy src="me()" trait="red" /></blue>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <text name="labelsuffix">
+      <depth>-8</depth>
+      <clips>&true;</clips>
+      <font>1</font>
+      <string><copy src="parent()" trait="user12" /></string>
+      <alpha><copy src="sibling()" trait="alpha" /></alpha>
+      <red>  <copy src="sibling()" trait="red" /></red>
+      <green><copy src="sibling()" trait="green" /></green>
+      <blue> <copy src="sibling()" trait="blue" /></blue>
+      <x>
+         <copy src="sibling()" trait="x" />
+         <add  src="sibling()" trait="width" />
+      </x>
+      <y><copy src="sibling()" trait="y" /></y>
+   </text>
+   <text name="value">
+      <depth>-8</depth>
+      <clips>&true;</clips>
+      <font>1</font>
+      <x><copy src="parent()" trait="width" /></x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <string><copy src="parent()" trait="string" /></string>
+      <justify>&right;</justify>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      <red>
+         <copy>140</copy>
+         <max>
+            <copy>255</copy>
+            <mult src="parent()" trait="mouseover" />
+         </max>
+      </red>
+      <green><copy src="me()" trait="red" /></green>
+      <blue> <copy src="me()" trait="red" /></blue>
+   </text>
+<!--</rect>-->

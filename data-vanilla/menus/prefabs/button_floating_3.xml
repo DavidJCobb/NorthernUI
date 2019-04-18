@@ -1,0 +1,150 @@
+<!-- rect name="button_floating_3" -->
+	<target>
+		<not> &xbox; </not>
+		<and src="me()" trait="user1"/>
+	</target>
+	<string> <copy src="strings()" trait="_button"/> </string>
+	<width>
+		<copy src="child(button_text)" trait="width"/>
+		<add src="child(button_icon)" trait="width"/>
+		<add> 50 </add>
+	</width>
+	<height> 64 </height>
+	<depth> 5 </depth>
+	<x>
+		<copy src="me()" trait="_center_x"/>
+		<sub>
+			<copy src="child(button_floating)" trait="width"/>
+			<div>2</div>
+		</sub>
+	</x>
+	<y>
+		<copy src="me()" trait="_top"/>
+	</y>
+	<locus> &true; </locus>
+	<clips> &false; </clips>
+	<user1> &true; </user1>	<!-- true = enabled, false = disabled -->
+	
+	<image name="button_floating">
+		<visible>
+			<copy src="parent()" trait="mouseover"/>
+			<eq> 1 </eq>
+			<and src="parent()" trait="target"/>
+		</visible>
+		<locus> &true; </locus>
+		<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+		<width> <copy src="parent()" trait="width"/> </width>
+		<height> 64 </height>
+		<depth> 1 </depth>
+		<x> 0 </x>
+		<y> 3 </y>
+		<clips>
+			<copy src="parent()" trait="clips"/>
+		</clips>
+		
+		<image name="button_end">
+			<depth> 2 </depth>
+			<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+			<width> 104 </width>
+			<height> 64 </height>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<add> 8 </add>
+				<sub src="me()" trait="width"/>
+			</x>
+			<y> 0 </y>
+			<clips>
+				<copy src="parent()" trait="clips"/>
+			</clips>
+		</image>
+	</image>
+		
+	<image name="button_icon">
+		<depth> 7 </depth>
+		<filename>
+			<copy src="parent()" trait="user20"/>
+			<sub><!--&xbuttona;-->1 </sub>
+			<add> 2 </add>
+			<onlyif> &true; </onlyif>
+			<max> 1 </max>
+			<copy src="me()" trait="_filename_"/>
+		</filename>
+		<width>
+			<copy> 32 </copy>
+			<onlyif>
+				<copy src="parent()" trait="user20"/>
+				<gt> 1 </gt>
+			</onlyif>
+		</width>
+		<height> 32 </height>
+		<x>
+			<add> 15 </add>
+		</x>
+		<y> 15 </y>
+		<clips>
+			<copy src="parent()" trait="clips"/>
+		</clips>
+		<_filename_1> Menus\Shared\shared_empty.dds </_filename_1>
+		<_filename_2> Menus\Icons\icon_xbox_a.dds </_filename_2>
+		<_filename_3> Menus\Icons\icon_xbox_b.dds </_filename_3>
+		<_filename_4> Menus\Icons\icon_xbox_x.dds </_filename_4>
+		<_filename_5> Menus\Icons\icon_xbox_y.dds </_filename_5>
+		<_filename_6> Menus\Icons\icon_xbox_lt.dds </_filename_6>
+		<_filename_7> Menus\Icons\icon_xbox_rt.dds </_filename_7>
+		<_filename_8> Menus\Icons\icon_xbox_lb.dds </_filename_8>
+		<_filename_9> Menus\Icons\icon_xbox_rb.dds </_filename_9>
+	</image>
+	
+	<text name="button_text">
+		<depth> 7 </depth>
+		<string> <copy src="parent()" trait="string"/> </string>
+		<font> 1 </font>
+		<justify> &center; </justify>
+		<clips>
+			<copy src="parent()" trait="clips"/>
+		</clips>
+		<red>
+			<copy> 117 </copy>
+			<onlyif src="parent()" trait="user1"/>
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>
+			</add>
+		</red>
+		<green>
+			<copy> 59 </copy>
+			<onlyif src="parent()" trait="user1"/>
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>
+			</add>
+		</green>
+		<blue>
+			<copy> 33 </copy>
+			<onlyif src="parent()" trait="user1"/>
+			<add>
+				<copy> 128 </copy>
+				<onlyifnot src="parent()" trait="user1"/>
+			</add>
+		</blue>
+		<alpha>
+			<copy> 255 </copy>
+			<onlyif src="parent()" trait="user1"/>
+			<add>
+				<copy> 196 </copy>
+				<onlyifnot src="parent()" trait="user1"/>
+			</add>
+		</alpha>
+		<x>
+			<copy src="parent()" trait="width"/>
+			<max src="sibling(button_floating)" trait="width"/>
+			<add src="sibling(button_icon)" trait="width"/>
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="parent()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div> 2 </div>
+		</y>
+	</text>
+<!-- /rect -->

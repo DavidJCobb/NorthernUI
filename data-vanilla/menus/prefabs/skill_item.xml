@@ -1,0 +1,145 @@
+<!-- rect name="stat_item" -->
+	<alpha> 0 </alpha>
+	<depth> 3 </depth>
+	<width> 600 </width>
+	<height> 70 </height>
+	<clips> &true; </clips>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y>
+		<copy> 70 </copy>
+		<mul src="me()" trait="user0"/>
+	</y>
+	<user0> 0 </user0>				<!-- position in list (0 is first) -->
+	<user1> 100 </user1>			<!-- skill progression max -->
+	<user2> 50 </user2>				<!-- skill progression current -->
+	<user3> 10 </user3>				<!-- skill current -->
+	<string> <copy src="strings()" trait="_destruction"/> </string> <!-- skill name -->
+	<user5> Menus\Icons\Skills\test_skill_icon.dds </user5>		<!-- skill icon -->
+	
+	<image name="stat_item_icon">
+		<filename> <copy src="parent()" trait="user5"/> </filename>
+		<depth> 1 </depth>
+		<width> 64 </width>
+		<height> 64 </height>
+		<clips> &true; </clips>
+		<x> 3 </x>
+		<y> 3 </y>
+	</image>
+	<text name="stat_item_label">
+		<depth> 1 </depth>
+		<string> <copy src="parent()" trait="user4"/> </string>
+		<justify> &left; </justify>
+		<red> 117 </red>
+		<green> 59 </green>
+		<blue> 33 </blue>
+		<alpha> 255 </alpha>
+		<wrapwidth> 300 </wrapwidth>
+		<clips> &true; </clips>
+		<x> 84 </x>
+		<y>
+			<copy> 38 </copy>
+			<sub>
+				<copy src="me()" trait="height"/>
+				<div> 2 </div>
+			</sub>
+		</y>
+	</text>
+	<image name="FillBar">
+		<filename>
+			<copy src="me()" trait="_rand"/>
+			<copy src="me()" trait="_filename_"/>
+		</filename>
+		<locus> &true; </locus>
+		<depth> 1 </depth>
+		<clips> &true; </clips>
+		<width> 181 </width>
+		<height> 34 </height>
+		<x> 315 </x>
+		<y> 22 </y>
+		<user0>
+			<copy src="parent()" trait="user2" />
+			<div src="parent()" trait="user1" />
+		</user0>
+		<user1> 1 </user1>
+		<_rand>
+			<rand> 4 </rand>
+		</_rand>
+		<_filename_1> Menus\Shared\ribbon_empty_1.dds </_filename_1>
+		<_filename_2> Menus\Shared\ribbon_empty_2.dds </_filename_2>
+		<_filename_3> Menus\Shared\ribbon_empty_3.dds </_filename_3>
+		<_filename_4> Menus\Shared\ribbon_empty_4.dds </_filename_4>
+		<_filename_5> Menus\Shared\ribbon_empty_5.dds </_filename_5>
+		
+		<image name="fillbar_full">
+			<filename>
+				<copy src="parent()" trait="user1"/>
+				<copy src="me()" trait="_filename_"/>
+			</filename>
+			<locus> &true; </locus>
+			<alpha>
+				<copy src="parent()" trait="user0"/>
+				<gt> 0 </gt>
+				<mul> 255 </mul>
+			</alpha>
+			<depth> 8 </depth>
+			<width>
+				<copy src="parent()" trait="user0"/>
+				<max> 0 </max>
+				<min> 1 </min>
+				<mul> 156 </mul>
+			</width>
+			<height> 14 </height>
+			<locus> &true; </locus>
+			<clips> &true; </clips>
+			<x> 23 </x>
+			<y> 9 </y>
+			<_filename_1> Menus\Shared\ribbon_full_red.dds </_filename_1>
+			<_filename_2> Menus\Shared\ribbon_full_green.dds </_filename_2>
+			<_filename_3> Menus\Shared\ribbon_full_blue.dds </_filename_3>
+			
+			<image name="fillbar_edge">
+				<filename> Menus\Shared\ribbon_slider.dds </filename>
+				<depth> 1 </depth>
+				<width> 12 </width>
+				<height> 14 </height>
+				<clips> &true; </clips>
+				<x>
+					<copy src="parent()" trait="width"/>
+					<sub> 6 </sub>
+				</x>
+				<y> -1 </y>
+			</image>
+		</image>
+	</image>
+	<text name="stat_item_value">
+		<depth> 1 </depth>
+		<string> <copy src="parent()" trait="user3"/> </string>
+		<justify> &center; </justify>
+		<red> 51 </red>
+		<green> 79 </green>
+		<blue> 142 </blue>
+		<alpha> 255 </alpha>
+		<wrapwidth> 250 </wrapwidth>
+		<clips> &true; </clips>
+		<x> 547 </x>
+		<y> 20 </y>
+	</text>
+	<image name="stat_item_line">
+		<filename>
+			<copy src="parent()" trait="user0"/>
+			<mod> 3 </mod>
+			<add> 1 </add>
+			<copy src="me()" trait="_file_"/>
+		</filename>
+		<depth> 9 </depth>
+		<width> 636 </width>
+		<height> 3 </height>
+		<clips> &true; </clips>
+		<x> -30 </x>
+		<y> 68 </y>
+		<_file_1> Menus\Stats\stat_border_horizontal_3.dds </_file_1>
+		<_file_2> Menus\Stats\stat_border_horizontal_2.dds </_file_2>
+		<_file_3> Menus\Stats\stat_border_horizontal_1.dds </_file_3>
+	</image>
+<!-- /rect -->

@@ -1,0 +1,167 @@
+<!-- quantity_menu.xml -->
+<menu name="QuantityMenu">
+	<class> &QuantityMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<explorefade> 0.25 </explorefade>
+	
+	<xleft> <ref src="horizontal_scroll_left"  trait="clicked" /></xleft>
+	<xright><ref src="horizontal_scroll_right" trait="clicked" /></xright>
+	<xbuttonlb><ref src="horizontal_scroll_leftside"  trait="clicked" /></xbuttonlb>
+	<xbuttonrb><ref src="horizontal_scroll_rightside" trait="clicked" /></xbuttonrb>
+	<xbuttonlt><ref src="horizontal_scroll_leftside"  trait="clicked" /></xbuttonlt>
+	<xbuttonrt><ref src="horizontal_scroll_rightside" trait="clicked" /></xbuttonrt>
+	<xbuttona><ref src="quantity_button_okay"   trait="clicked" /></xbuttona>
+	<xbuttonb><ref src="quantity_button_cancel" trait="clicked" /></xbuttonb>
+   
+   <rect name="sleep_background">
+		<id>1</id>
+		<target>&true;</target>
+      <xdefault>10</xdefault> <!-- something needs to have focus for most keynav stuff to work -->
+		<depth>1</depth>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub  src="me()"     trait="width" />
+         <div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub  src="me()"     trait="height" />
+         <div> 2 </div>
+		</y>
+      
+      <include src="NorthernUI\cards\border_box_ornate.xml" />
+		<user20>600</user20>
+		<user21>
+         <copy src="buttons" trait="y" />
+         <add  src="buttons" trait="height" />
+      </user21>
+      <user22>&true;</user22> <!-- box-sizing:content-box -->
+      
+      <rect name="content_box">
+         <include src="NorthernUI\cards\content_box.xml" />
+         
+         <text name="message_text">
+            <include src="NorthernUI\fonts\normal.xml" />
+            <id>2</id>
+            <depth>5</depth>
+            <string><copy src="strings()" trait="_howmany" /></string>
+            <justify>&center;</justify>
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+            <wrapwidth>
+               <copy src="parent()" trait="width" />
+               <sub>50</sub>
+            </wrapwidth>
+            <x>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </x>
+            <y>0</y>
+         </text>
+         <rect name="scrollbar_wrapper">
+            <include src="NorthernUI\scrollbars\wrapper.xml" />
+            <user0>&true;</user0> <!-- is horizontal? -->
+            <width>350</width>
+            <x>
+               <copy src="parent()" trait="width"/>
+               <sub  src="me()"     trait="width"/>
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add>24</add>
+            </y>
+            
+            <rect name="quantity_scroll">
+               <include src="horiz_floating_scroll.xml" />
+               <include src="NorthernUI\scrollbars\wrapped_h.xml" />
+               <zoom>33</zoom>
+               <id>3</id>
+               <depth>5</depth>
+               <user3>1</user3>
+               <user6>4</user6>	<!-- ID for marker/slider -->
+               <user8>&true;</user8> <!-- show value as text? -->
+               <user15>1</user15>
+            </rect>
+         </rect>
+         <!-- <text name="quantity_count_text">
+            <string><copy src="quantity_scroll" trait="user7"/></string>
+            <justify> &center; </justify>
+            <red> 117 </red>
+            <green> 59 </green>
+            <blue> 33 </blue>
+            <alpha> 255 </alpha>
+            <x>
+               <copy src="parent()" trait="width"/>
+               <div> 2 </div>
+            </x>
+            <y>
+               <copy src="quantity_scroll" trait="y"/>
+               <add src="quantity_scroll" trait="height"/>
+               <add> 20 </add>
+            </y>
+            <depth> 4 </depth>
+         </text> -->
+         <rect name="buttons">
+            <locus>&true;</locus>
+            <x>
+               <copy src="parent()" trait="width"/>
+               <sub  src="me()"     trait="width"/>
+               <div>2</div>
+            </x>
+            <y>
+               <copy src="sibling()" trait="y" />
+               <add  src="quantity_scroll" trait="height" />
+               <add>24</add>
+            </y>
+            <width>
+               <copy src="child(quantity_button_cancel)" trait="x" />
+               <add  src="child(quantity_button_cancel)" trait="width" />
+            </width>
+            <height>
+               <copy src="child(quantity_button_okay)"   trait="height" />
+               <max  src="child(quantity_button_cancel)" trait="height" />
+            </height>
+            
+            <rect name="quantity_button_okay">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml" />
+               <_dxScanCode>276</_dxScanCode>
+               <id>6</id>
+               <x>0</x>
+               <y>0</y>
+               <depth>3</depth>
+               <string><copy src="strings()" trait="_ok" /></string>
+               
+               <xleft> <ref src="quantity_button_cancel" trait="mouseover"/></xleft>
+               <xright><ref src="quantity_button_cancel" trait="mouseover"/></xright>
+               <xdown> <ref src="horizontal_scroll_marker" trait="mouseover"/></xdown>
+               <xup>   <ref src="horizontal_scroll_marker" trait="mouseover"/></xup>
+            </rect>
+            <rect name="quantity_button_cancel">
+               <include src="NorthernUI\buttons\gamepad_control_or_button.xml" />
+               <_dxScanCode>277</_dxScanCode>
+               <id>7</id>
+               <x>
+                  <copy src="sibling()" trait="x" />
+                  <add  src="sibling()" trait="width" />
+                  <add>24</add>
+               </x>
+               <y>0</y>
+               <depth>3</depth>
+               <string><copy src="strings()" trait="_cancel" /></string>
+               
+               <xleft> <ref src="quantity_button_okay" trait="mouseover"/></xleft>
+               <xright><ref src="quantity_button_okay" trait="mouseover"/></xright>
+               <xdown> <ref src="horizontal_scroll_marker" trait="mouseover"/></xdown>
+               <xup>   <ref src="horizontal_scroll_marker" trait="mouseover"/></xup>
+            </rect>
+         </rect>
+      </rect>
+   </rect>
+</menu>

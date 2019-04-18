@@ -1,0 +1,180 @@
+<!--<rect name="option_slider">-->
+   <!-- args -->
+   <user0>&generic;</user0> <!-- slider ID -->
+   <user1>&generic;</user1> <!-- slider thumb ID -->
+   <user2>10</user2> <!-- slider jump distance -->
+   <user3>1</user3> <!-- slider step distance -->
+   <user4>0</user4> <!-- slider min -->
+   <user5>100</user5> <!-- slider max -->
+   <user8>&false;</user8> <!-- slider shows numeric value? -->
+   <user10>200</user10> <!-- label column width -->
+   <user11></user11> <!-- label -->
+
+   <id>&generic;</id>
+   <clips>&true;</clips>
+   <listindex>
+      <copy src="sibling()" trait="listindex" />
+      <add>1</add>
+   </listindex>
+   <locus>&true;</locus>
+   <x>0</x>
+   <y>
+      <copy   src="sibling()" trait="height" />
+      <onlyifnot>
+         <copy src="sibling()" trait="visible" /><eq>&false;</eq>
+      </onlyifnot>
+      <add    src="sibling()" trait="y" />
+   </y>
+   <width><copy src="parent()" trait="width" /></width>
+   <height>
+      <copy src="child(label)"  trait="height" />
+      <add>8</add>
+   </height>
+   
+   <target>&true;</target>
+   <xdefault>&true;</xdefault>
+   <xlist>&xitem;</xlist>
+   <xup>  &prev;</xup>
+   <xdown>&next;</xdown>
+   <xleft>    <ref src="child(horizontal_scroll_left)"  trait="clicked" /></xleft>
+   <xright>   <ref src="child(horizontal_scroll_right)" trait="clicked" /></xright>
+   <xbuttonlb><ref src="child(horizontal_scroll_leftside)"  trait="clicked" /></xbuttonlb>
+   <xbuttonrb><ref src="child(horizontal_scroll_rightside)" trait="clicked" /></xbuttonrb>
+   <xscroll>
+      <copy src="me()" trait="listindex" />
+      <sub>
+         <copy src="parent()" trait="user8" />
+         <div> 2</div>
+         <ceil>0</ceil>
+      </sub>
+      <add>1</add>
+   </xscroll>
+   
+   <_mouseover_any>
+      <copy src="me()" trait="mouseover" />
+      <add  src="child(slider)" trait="_mouseover_any" />
+      <gt>0</gt>
+      <sub>1</sub>
+   </_mouseover_any>
+   
+   <depth>10</depth> <!-- The root element is what gets focus, so child elements need to be behind it. -->
+   
+   <text name="label">
+      <depth>-8</depth>
+      <clips>&true;</clips>
+      <font>1</font>
+      <string><copy src="parent()" trait="user11" /></string>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      <red>117</red>
+      <green>59</green>
+      <blue>33</blue>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+	<text name="quantity_display_text">
+		<visible><copy src="parent()" trait="user8" /></visible>
+		<depth> 1 </depth>
+		<string><copy src="sibling(slider)" trait="user7" /></string>
+		<justify>&right;</justify>
+		<red>  <copy src="sibling(slider)" trait="user10" /></red>
+		<green><copy src="sibling(slider)" trait="user11" /></green>
+		<blue> <copy src="sibling(slider)" trait="user12" /></blue>
+		<alpha> 200 </alpha>
+		<x>
+         <copy src="sibling(slider)" trait="x" />
+         <sub>64</sub>
+      </x>
+		<y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+		<clips> <copy src="parent()" trait="clips"/> </clips>
+	</text>
+   <image name="slider">
+      <!--
+         we can't use our usual wrapper/wrapped prefabs here. doing so causes memory 
+         corruption, because Oblivion is a stable program that has withstood the test 
+         of time a full decade after its initial release.
+      -->
+      <include src="horiz_floating_scroll.xml" />
+      <clips>&true;</clips>
+      <id><copy src="parent()" trait="user0" /></id>
+      <x>
+         <copy src="parent()" trait="user10" />
+         <add  src="child(horizontal_scroll_left)" trait="width" />
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="x" />
+         <sub  src="child(horizontal_scroll_right)" trait="width" />
+      </width>
+      <depth>3</depth>
+      
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      
+      <user1><copy src="parent()" trait="user4" /></user1> <!-- minimum range value -->
+      <user2><copy src="parent()" trait="user5" /></user2> <!-- maximum range value -->
+      <user3><copy src="parent()" trait="user3" /></user3> <!-- step distance -->
+      <user4><copy src="parent()" trait="user2" /></user4> <!-- jump distance -->
+      <user6><copy src="parent()" trait="user1" /></user6> <!-- scroll marker id -->
+      <user8>&false;</user8> <!-- visibility of slider value -->
+      <user15>1</user15> <!-- thumb style; 1 == slider -->
+      <user16>
+         <copy src="parent()" trait="mouseover" />
+      </user16>
+   </image>
+   
+   <image name="controls_template_floating">
+      <visible><copy src="parent()" trait="mouseover" /><gt>0</gt></visible>
+      <filename> Menus\Dialog\dialog_selection_full.dds </filename>
+      <width>
+         <copy src="parent()" trait="width" />
+         <add>16</add>
+      </width>
+      <height> 64 </height>
+      <depth>-9</depth>
+      <x>-8</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+         <add>4</add>
+      </y>
+      <locus>&true;</locus>
+      
+      <image name="effset_attribute_floating_end">
+         <depth>0</depth>
+         <filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+         <width> 104 </width>
+         <height> 64 </height>
+         <x>
+            <copy src="parent()" trait="width"/>
+            <add> 8 </add>
+            <sub src="me()" trait="width"/>
+         </x>
+         <y>0</y>
+      </image>
+   </image>
+<!--</rect>-->

@@ -1,0 +1,39 @@
+<!-- credits_menu.xml -->
+<menu name="CreditsMenu">
+	<class> &CreditsMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<visible> &true; </visible>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+
+	<image name="background">
+		<filename> Menus\Shared\shared_empty.dds </filename>
+		<zoom> -1 </zoom>
+		<depth> 1 </depth>
+		<red> 8 </red>
+		<green> 8 </green>
+		<blue> 20 </blue>
+		<alpha> 255 </alpha>
+		<width> <copy src="screen()" trait="width"/> </width>
+		<height> <copy src="screen()" trait="height"/> </height>
+		<x> 0 </x>
+		<y> 0 </y>
+	</image>
+
+	<image name="credits_rect">
+		<filename> Menus\Shared\shared_empty.dds </filename>
+		<zoom> -1 </zoom>
+		<id> 1 </id>
+		<alpha> 255 </alpha>
+		<depth> 2 </depth>
+		<width> 0 </width>
+		<height> 0 </height>
+		<locus> &true; </locus>
+		<clipwindow> &true; </clipwindow>
+		<x> 640 </x>
+		<y> 0 </y>
+	</image>
+
+</menu>

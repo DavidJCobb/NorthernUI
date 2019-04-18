@@ -1,0 +1,33 @@
+<!-- page_tab.xml -->
+<!-- rect name="page_tab" -->
+	<depth> 1 </depth>
+	<target> &true; </target>
+	<width> 135 </width>
+	<height> 85 </height>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	<image name="page_tab_icon">
+		<filename> <copy src="parent()" trait="filename"/> </filename>
+		<width> 64 </width>
+		<height> 64 </height>
+		<x> 37 </x>
+		<y> 8 </y>
+	</image>
+	<image name="page_tab_selection_off">
+		<filename> Menus\Shared\general_tab_selection_off.dds </filename>
+		<visible> <copy src="parent()" trait="target"/> <eq> &true; </eq> </visible>
+		<width> 136 </width>
+		<height> 36 </height>
+		<x> 0 </x>
+		<y> 24 </y>
+	</image>
+	<image name="page_tab_selection_on">
+		<filename> Menus\Shared\general_tab_selection_on.dds </filename>
+		<visible> <copy src="parent()" trait="target"/> <eq> &false; </eq> </visible>
+		<width> 136 </width>
+		<height> 36 </height>
+		<x> 0 </x>
+		<y> 24 </y>
+	</image>
+<!-- /rect -->

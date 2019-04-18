@@ -1,0 +1,214 @@
+<!-- quantity_menu.xml -->
+<menu name="QuantityMenu">
+	<class> &QuantityMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<x> 0 </x>
+	<y> 0 </y>
+	<explorefade> 0.25 </explorefade>
+	
+	<xbuttona> <ref src="quantity_button_okay" trait="clicked"/> </xbuttona>
+	<xbuttonb> <ref src="quantity_button_cancel" trait="clicked"/> </xbuttonb>
+	
+	
+	<!-- BACKGROUND ============================================================================-->
+	<rect name="quantity_background">
+<include src="generic_background.xml"/>
+		<id> 1 </id>
+		<target> &true; </target>
+		<user0> 600 </user0>
+		<user1> 260 </user1>
+		<locus> &true; </locus>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="me()" trait="width" />
+				<div> 2 </div>
+			</sub>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<div> 2 </div>
+			<sub>
+				<copy src="me()" trait="height" />
+				<div> 2 </div>
+			</sub>
+		</y>
+		<depth> 1 </depth>
+		
+		
+		
+		<!-- TEXT ============================================================================-->
+		<text name="quantity_display_text">
+			<id> 2 </id>
+			<target> &true; </target>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_howmany"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 255 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y> 20 </y>
+		</text>
+		
+		
+		<!-- SCROLL ============================================================================-->
+		<image name="quantity_scroll">
+<include src="horiz_floating_scroll.xml"/>
+			<id> 3 </id>
+			<user6> 4 </user6>	<!-- ID for marker/slider -->
+			<!--<user4> 10 </user4>-->
+			<width> 350 </width>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<sub src="me()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="quantity_display_text" trait="y"/>
+				<add src="quantity_display_text" trait="height"/>
+				<add> 60 </add>
+			</y>
+			<depth> 5 </depth>
+			<user3> 1 </user3>
+			<user8> &false; </user8>
+		</rect>
+		
+		<image name="quantity_scroll_marker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<repeathorizontal> &true; </repeathorizontal>
+			<depth> 1 </depth>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="quantity_scroll" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="quantity_scroll" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x>
+				<copy src="quantity_scroll" trait="x"/>
+				<sub> 60 </sub>
+			</x>
+			<y>
+				<copy src="quantity_scroll" trait="y"/>
+				<sub> 21 </sub>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &true; </xdefault>
+			<xleft> <ref src="horizontal_scroll_left" trait="clicked"/> </xleft>
+			<xright> <ref src="horizontal_scroll_right" trait="clicked"/> </xright>
+			<xdown> <ref src="quantity_button_okay" trait="mouseover"/> </xdown>
+			<xup> <ref src="quantity_button_cancel" trait="mouseover"/> </xup>
+			
+			<image name="quantity_scroll_marker_2">
+				<depth> 1 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+		</image>
+		
+		
+		<!-- NUMBER DISPLAY =====================================================================-->
+		<text name="quantity_count_text">
+			<string> <copy src="quantity_scroll" trait="user7"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 255 </alpha>
+			<x>
+				<copy src="parent()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="quantity_scroll" trait="y"/>
+				<add src="quantity_scroll" trait="height"/>
+				<add> 20 </add>
+			</y>
+			<depth> 4 </depth>
+		</text>
+		
+				
+				
+		<!-- BUTTON OKAY =====================================================================-->
+		<image name="quantity_button_okay">
+<include src="button_short.xml" />
+			<id> 6 </id>
+			<target> &true; </target>
+			<x>
+				<copy src="quantity_button_cancel" trait="x" />
+				<sub src="me()" trait="width" />
+				<sub> 20 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<depth> 3 </depth>
+			<user0> <copy src="strings()" trait="_ok"/> </user0>
+			
+			<user20><!--&xbuttona;-->1 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="quantity_button_cancel" trait="mouseover"/> </xleft>
+			<xright> <ref src="quantity_button_cancel" trait="mouseover"/> </xright>
+			<xdown> <ref src="quantity_scroll_marker" trait="mouseover"/> </xdown>
+			<xup> <ref src="quantity_scroll_marker" trait="mouseover"/> </xup>
+		</image>
+		
+		
+		<!-- BUTTON CANCEL =====================================================================-->
+		<image name="quantity_button_cancel">
+<include src="button_long.xml" />
+			<id> 7 </id>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 30 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<depth> 3 </depth>
+			<user0> <copy src="strings()" trait="_cancel"/> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="quantity_button_okay" trait="mouseover"/> </xleft>
+			<xright> <ref src="quantity_button_okay" trait="mouseover"/> </xright>
+			<xdown> <ref src="quantity_scroll_marker" trait="mouseover"/> </xdown>
+			<xup> <ref src="quantity_scroll_marker" trait="mouseover"/> </xup>
+		</image>
+		
+	</image>
+</menu>

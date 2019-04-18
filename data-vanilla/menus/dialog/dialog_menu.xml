@@ -1,0 +1,806 @@
+<!-- dialog_menu.xml -->
+<menu name="DialogMenu">
+	<class> &DialogMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<visible> &true; </visible>
+	<alpha>	0 </alpha>
+	<depth> 1 </depth>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	<user0> 1 </user0>
+	<user1> 2 </user1>
+	<user2> 0.75 </user2>
+	<user3> 0.50 </user3>
+	<menufade> 0.75 </menufade>
+	<_line_height> 48 </_line_height>
+	<_number_of_lines> 5 </_number_of_lines>
+	<user4>  </user4>
+	
+	<xbuttonb> <ref src="dialog_xbox_goodbye" trait="clicked"/> </xbuttonb>
+	
+	
+	
+	<!-- XBOX (ONLY) HINTS ==================================================================-->
+		<rect name="dialog_hint_a">
+			<visible>
+				<copy src="me()" trait="_value"/>
+				<gt> 0 </gt>
+				<and>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </and>
+			</visible>
+			<x>
+				<copy src="screen()" trait="width"/>
+				<sub src="screen()" trait="cropx"/>
+				<sub src="screen()" trait="cropx"/>
+			</x>
+			<y>
+				<copy src="dialog_name" trait="y"/>
+				<sub src="child(dialog_hint_a_icon)" trait="height"/>
+				<add> 20 </add>
+			</y>
+			<depth> 5 </depth>
+			<locus> &true; </locus>
+			<_value>
+				<copy src="dialog_persuade" trait="mouseover"/>
+				<add> <copy src="dialog_barter" trait="mouseover"/> <mul> 2 </mul> </add>
+				<add> <copy src="dialog_spell_buy" trait="mouseover"/> <mul> 3 </mul> </add>
+				<add> <copy src="dialog_repair" trait="mouseover"/> <mul> 4 </mul> </add>
+				<add> <copy src="dialog_training" trait="mouseover"/> <mul> 5 </mul> </add>
+				<add> <copy src="dialog_recharge" trait="mouseover"/> <mul> 6 </mul> </add>
+			</_value>
+		
+			<image name="dialog_hint_a_icon">
+				<filename> Menus\Shared\all_xbox_buttons.dds </filename>
+				<cropx> 128 </cropx>
+				<cropy> 0 </cropy>
+				<width> 64 </width>
+				<height> 64 </height>
+				<x>
+					<copy> 0 </copy>
+					<sub src="sibling(dialog_hint_a_text)" trait="width"/>
+					<sub> 60 </sub>
+				</x>
+				<y>
+					<copy src="dialog_hint_a_text" trait="y"/>
+					<sub> 6 </sub>
+					<add>
+						<copy src="dialog_hint_a_text" trait="height"/>
+						<sub src="me()" trait="height"/>
+						<div>2</div>
+					</add>
+				</y>
+			</image>
+		
+			<text name="dialog_hint_a_text">
+				<string>
+					<copy src="parent()" trait="_value"/>
+					<copy src="me()" trait="_text_"/>
+				</string>
+				<justify> &right; </justify>
+				<font> 2 </font>
+				<red> <copy src="parent()" trait="red"/> </red>
+				<green> <copy src="parent()" trait="green"/> </green>
+				<blue> <copy src="parent()" trait="blue"/> </blue>
+				<alpha> 255 </alpha>
+				<depth> 1 </depth>
+				<x> 0 </x>
+				<y> 0 </y>
+				<user20><!--&xbuttona;-->1 </user20>
+				<_text_1> <copy src="strings()" trait="_persuade"/> </_text_1>
+				<_text_2> <copy src="strings()" trait="_barter"/> </_text_2>
+				<_text_3> <copy src="strings()" trait="_buy_spell"/> </_text_3>
+				<_text_4> <copy src="strings()" trait="_repair"/> </_text_4>
+				<_text_5> <copy src="strings()" trait="_train"/> </_text_5>
+				<_text_6> <copy src="strings()" trait="_recharge"/> </_text_6>
+			</text>
+		</rect>
+	
+		<!--rect name="dialog_hint_a">
+<include src="xbox_floating_hint.xml" />
+			<id> &generic; </id>
+			<visible>
+				<copy src="me()" trait="_value"/>
+				<gt> 0 </gt>
+			</visible>
+			<depth> 5 </depth>
+			<x> 0 </x>
+			<y> 0 </y>
+			<user0>
+				<copy src="me()" trait="_value"/>
+				<copy src="me()" trait="_text_"/>
+			</user0>
+			<_value>
+				<copy src="dialog_persuade" trait="mouseover"/>
+				<add> <copy src="dialog_barter" trait="mouseover"/> <mul> 2 </mul> </add>
+				<add> <copy src="dialog_spell_buy" trait="mouseover"/> <mul> 3 </mul> </add>
+				<add> <copy src="dialog_repair" trait="mouseover"/> <mul> 4 </mul> </add>
+				<add> <copy src="dialog_training" trait="mouseover"/> <mul> 5 </mul> </add>
+				<add> <copy src="dialog_recharge" trait="mouseover"/> <mul> 6 </mul> </add>
+			</_value>
+			<user20><!--&xbuttona;-->1 </user20>
+			<_text_1> <copy src="strings()" trait="_persuade"/> </_text_1>
+			<_text_2> <copy src="strings()" trait="_barter"/> </_text_2>
+			<_text_3> <copy src="strings()" trait="_buy_spell"/> </_text_3>
+			<_text_4> <copy src="strings()" trait="_repair"/> </_text_4>
+			<_text_5> <copy src="strings()" trait="_train"/> </_text_5>
+			<_text_6> <copy src="strings()" trait="_recharge"/> </_text_6>
+		</rect-->
+	
+
+
+	<!-- NPC NAME ============================================================== -->
+	<text name="dialog_name">
+		<string> <copy src="DialogMenu" trait="user4"/> </string>
+		<font> 2 </font>
+		<red> 254 </red>
+		<green> 244 </green>
+		<blue> 183 </blue>
+		<alpha> 255 </alpha>
+		<wrapwidth> 900 </wrapwidth>
+		<justify> &right; </justify>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="screen()" trait="cropx"/>
+			<sub src="screen()" trait="cropx"/>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="screen()" trait="cropy"/>
+			<sub src="me()" trait="height"/>
+			<add> 5 </add>
+		</y>
+	</text>
+	
+	
+	
+	<!-- BACKGROUND ============================================================== -->
+	<rect name="dialog_background">
+		<id> -1 </id>
+		<target> &true; </target>
+		<alpha> 0 </alpha>
+		<width>
+			<copy src="screen()" trait="width" />
+		</width>
+		<height>
+			<copy src="screen()" trait="height" />
+		</height>
+	</rect>
+			
+			
+	<rect name="dialog_topics">
+		<id> 6 </id>
+		<depth> 1 </depth>
+		<height>
+			<copy src="DialogMenu" trait="_line_height" />
+			<mul> 5 </mul>
+		</height>
+		<width> <!-- width of the safe portion of the screen -->
+			<copy src="screen()" trait="width" />
+			<sub src="screen()" trait="cropx" />
+			<sub src="screen()" trait="cropx" />
+			<sub> 80 </sub>
+		</width>
+		<x>
+			<copy src="screen()" trait="cropx" />
+			<copy src="screen()" trait="cropx" />
+			<add> 50 </add>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="screen()" trait="cropy" />
+			<sub src="screen()" trait="cropy" />
+			<sub src="DialogMenu" trait="_line_height" /> <!-- to get bottom of topic list above actor's name -->
+			<sub src="me()" trait="height" />
+		</y>
+		<locus> &true; </locus>
+		<visible> &false; </visible>
+		<user8> 0 </user8> <!-- mousewheel will "click" this value like the generic "clicked" -->
+		
+		
+		<!-- BUTTONS ============================================================== -->
+		<rect name="dialog_button_layout">
+			<locus> &true; </locus>
+			<x> 35 </x>
+			<y> 2 </y>
+			<height> <copy src="parent()" trait="height" /> </height>
+						
+			<xdefault> &false; </xdefault>
+			<xlist> &xlist; </xlist>
+			<xup> <ref src="dialog_topics_scroll_pane" trait="mouseover"/> </xup>
+			<!--xleft> &last; </xleft>
+			<xright> &first; </xright-->
+			
+			<image name="dialog_persuade">
+				<id> 7 </id>
+				<target> &true; </target>
+				<depth> 1 </depth>
+				<filename> Menus\Dialog\dialog_button_persuasion.dds </filename>
+				<x> <!-- to the right of the topics scrollbar -->
+					<copy src="dialog_scrollbar" trait="width" />
+					<add> 15 </add>
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<add> 4 </add>
+				</y>
+				<height> 50 </height>
+				<width> 50 </width>
+				<locus> &true; </locus>
+				<alpha> <!-- visible (255) if mouse is not over it, hidden (0) if mouse is over it -->
+					<copy> 1 </copy>
+					<sub src="me()" trait="mouseover" />
+					<mul> 255 </mul>
+				</alpha>
+				<listindex> 0 </listindex>
+						
+				<xdefault> &false; </xdefault>
+				<xlist> &xitem; </xlist>
+				<xleft> &prev; </xleft>
+				<xright> &next; </xright>
+				
+				<image name="dialog_persuade_over">
+					<filename>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+						<copy src="me()" trait="_filename_"/>
+					</filename>
+					<alpha> <!-- visibility opposite of parent -->
+						<copy> 255 </copy>
+						<sub src="parent()" trait="alpha" />
+					</alpha>
+					<height> 56 </height>
+					<width> 55 </width>
+					<_filename_1> Menus\Dialog\dialog_button_persuasion_hit.dds </_filename_1>
+					<_filename_2> Menus\Dialog\xbox_dialog_buttons\xbox_dialog_button_persuasion_hit.dds </_filename_2>
+				</image>
+			</image>
+		
+			<image name="dialog_barter">
+				<id> 8 </id>
+				<visible> &false; </visible>
+				<target> &true; </target>
+				<depth> 1 </depth>
+				<filename> Menus\Dialog\dialog_button_barter.dds </filename>
+				<x> <!-- to the right of the persuade button -->
+					<copy src="dialog_persuade" trait="width" />
+					<add> 25 </add>
+					<onlyif src="dialog_persuade" trait="visible"/>
+					<add src="dialog_persuade" trait="x" />
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<add> 4 </add>
+				</y>
+				<height> 50 </height>
+				<width> 50 </width>
+				<locus> &true; </locus>
+				<alpha> <!-- visible (255) if mouse is not over it, hidden (0) if mouse is over it -->
+					<copy> 1 </copy>
+					<sub src="me()" trait="mouseover" />
+					<mul> 255 </mul>
+				</alpha>
+				<listindex> 1 </listindex>
+						
+				<xdefault> &false; </xdefault>
+				<xlist> &xitem; </xlist>
+				<xleft> &prev; </xleft>
+				<xright> &next; </xright>
+				
+				<image name="dialog_barter_over">
+					<filename>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+						<copy src="me()" trait="_filename_"/>
+					</filename>
+					<alpha> <!-- visibility opposite of parent -->
+						<copy> 255 </copy>
+						<sub src="parent()" trait="alpha" />
+					</alpha>
+					<height> 56 </height>
+					<width> 55 </width>
+					<_filename_1> Menus\Dialog\dialog_button_barter_hit.dds </_filename_1>
+					<_filename_2> Menus\Dialog\xbox_dialog_buttons\xbox_dialog_button_barter_hit.dds </_filename_2>
+				</image>
+			</image>
+			
+			<image name="dialog_spell_buy">
+				<id> 16 </id>
+				<visible> &false; </visible>
+				<target> &true; </target>
+				<depth> 1 </depth>
+				<filename> Menus\Dialog\dialog_button_spell_bartering.dds </filename>
+				<x> <!-- to the right of the persuade button -->
+					<copy src="dialog_barter" trait="width" />
+					<add> 25 </add>
+					<onlyif src="dialog_barter" trait="visible"/>
+					<add src="dialog_barter" trait="x" />
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<add> 4 </add>
+				</y>
+				<height> 50 </height>
+				<width> 50 </width>
+				<locus> &true; </locus>
+				<alpha> <!-- visible (255) if mouse is not over it, hidden (0) if mouse is over it -->
+					<copy> 1 </copy>
+					<sub src="me()" trait="mouseover" />
+					<mul> 255 </mul>
+				</alpha>
+				<listindex> 2 </listindex>
+						
+				<xdefault> &false; </xdefault>
+				<xlist> &xitem; </xlist>
+				<xleft> &prev; </xleft>
+				<xright> &next; </xright>
+				
+				<image name="dialog_spell_buy_over">
+					<filename>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+						<copy src="me()" trait="_filename_"/>
+					</filename>
+					<alpha> <!-- visibility opposite of parent -->
+						<copy> 255 </copy>
+						<sub src="parent()" trait="alpha" />
+					</alpha>
+					<height> 56 </height>
+					<width> 55 </width>
+					<_filename_1> Menus\Dialog\dialog_button_spell_bartering_hit.dds </_filename_1>
+					<_filename_2> Menus\Dialog\xbox_dialog_buttons\xbox_dialog_button_spell_bartering_hit.dds </_filename_2>
+				</image>
+			</image>
+			
+			<image name="dialog_repair">
+				<id> 12 </id>
+				<visible> &false; </visible>
+				<target> &true; </target>
+				<depth> 1 </depth>
+				<filename> Menus\Dialog\dialog_button_repairing.dds </filename>
+				<x> <!-- to the right of the persuade button -->
+					<copy src="dialog_spell_buy" trait="width" />
+					<add> 25 </add>
+					<onlyif src="dialog_spell_buy" trait="visible"/>
+					<add src="dialog_spell_buy" trait="x" />
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<add> 4 </add>
+				</y>
+				<height> 50 </height>
+				<width> 50 </width>
+				<locus> &true; </locus>
+				<alpha> <!-- visible (255) if mouse is not over it, hidden (0) if mouse is over it -->
+					<copy> 1 </copy>
+					<sub src="me()" trait="mouseover" />
+					<mul> 255 </mul>
+				</alpha>
+				<listindex> 3 </listindex>
+						
+				<xdefault> &false; </xdefault>
+				<xlist> &xitem; </xlist>
+				<xleft> &prev; </xleft>
+				<xright> &next; </xright>
+				
+				<image name="dialog_repair_over">
+					<filename>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+						<copy src="me()" trait="_filename_"/>
+					</filename>
+					<alpha> <!-- visibility opposite of parent -->
+						<copy> 255 </copy>
+						<sub src="parent()" trait="alpha" />
+					</alpha>
+					<height> 56 </height>
+					<width> 55 </width>
+					<_filename_1> Menus\Dialog\dialog_button_repairing_hit.dds </_filename_1>
+					<_filename_2> Menus\Dialog\xbox_dialog_buttons\xbox_dialog_button_repairing_hit.dds </_filename_2>
+				</image>
+			</image>
+			
+			<image name="dialog_training">
+				<id> 9 </id>
+				<visible> &false; </visible>
+				<target> &true; </target>
+				<depth> 1 </depth>
+				<filename> Menus\Dialog\dialog_button_training.dds </filename>
+				<x> <!-- to the right of the persuade button -->
+					<copy src="dialog_repair" trait="width" />
+					<add> 25 </add>
+					<onlyif src="dialog_repair" trait="visible"/>
+					<add src="dialog_repair" trait="x" />
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<add> 4 </add>
+				</y>
+				<height> 50 </height>
+				<width> 50 </width>
+				<locus> &true; </locus>
+				<alpha> <!-- visible (255) if mouse is not over it, hidden (0) if mouse is over it -->
+					<copy> 1 </copy>
+					<sub src="me()" trait="mouseover" />
+					<mul> 255 </mul>
+				</alpha>
+				<listindex> 4 </listindex>
+						
+				<xdefault> &false; </xdefault>
+				<xlist> &xitem; </xlist>
+				<xleft> &prev; </xleft>
+				<xright> &next; </xright>
+				
+				<image name="dialog_training_over">
+					<filename>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+						<copy src="me()" trait="_filename_"/>
+					</filename>
+					<alpha> <!-- visibility opposite of parent -->
+						<copy> 255 </copy>
+						<sub src="parent()" trait="alpha" />
+					</alpha>
+					<height> 56 </height>
+					<width> 55 </width>
+					<_filename_1> Menus\Dialog\dialog_button_training_hit.dds </_filename_1>
+					<_filename_2> Menus\Dialog\xbox_dialog_buttons\xbox_dialog_button_training_hit.dds </_filename_2>
+				</image>
+			</image>
+			
+			<image name="dialog_recharge">
+				<id> 13</id>
+				<visible> &false; </visible>
+				<target> &true; </target>
+				<depth> 1 </depth>
+				<filename> Menus\Dialog\dialog_button_recharging.dds </filename>
+				<x> <!-- to the right of the persuade button -->
+					<copy src="dialog_training" trait="width" />
+					<add> 25 </add>
+					<onlyif src="dialog_training" trait="visible"/>
+					<add src="dialog_training" trait="x" />
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<add> 4 </add>
+				</y>
+				<height> 50 </height>
+				<width> 50 </width>
+				<locus> &true; </locus>
+				<alpha> <!-- visible (255) if mouse is not over it, hidden (0) if mouse is over it -->
+					<copy> 1 </copy>
+					<sub src="me()" trait="mouseover" />
+					<mul> 255 </mul>
+				</alpha>
+				<listindex> 5 </listindex>
+						
+				<xdefault> &false; </xdefault>
+				<xlist> &xitem; </xlist>
+				<xleft> &prev; </xleft>
+				<xright> &next; </xright>
+				
+				<image name="dialog_recharge_image">
+					<filename>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+						<copy src="me()" trait="_filename_"/>
+					</filename>
+					<alpha> <!-- visibility opposite of parent -->
+						<copy> 255 </copy>
+						<sub src="parent()" trait="alpha" />
+					</alpha>
+					<height> 56 </height>
+					<width> 55 </width>
+					<_filename_1> Menus\Dialog\dialog_button_recharging_hit.dds </_filename_1>
+					<_filename_2> Menus\Dialog\xbox_dialog_buttons\xbox_dialog_button_recharging_hit.dds </_filename_2>
+				</image>
+			</image>
+			
+			<image name="dialog_goodbye">
+				<id> 3 </id>
+				<target>
+               <not>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </not>
+            </target>
+				<depth> 1 </depth>
+				<filename>
+               <copy>&true;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+					<copy src="me()" trait="_filename_"/>
+				</filename>
+				<x> <!-- to the right of the persuade button -->
+					<copy src="dialog_recharge" trait="width" />
+					<add> 25 </add>
+					<onlyif src="dialog_recharge" trait="visible"/>
+					<add src="dialog_recharge" trait="x" />
+				</x>
+				<y>
+					<copy src="parent()" trait="height" />
+					<add> 4 </add>
+				</y>
+				<height> 56 </height>
+				<width> 55 </width>
+				<locus> &true; </locus>
+				<alpha> <!-- visible (255) if mouse is not over it, hidden (0) if mouse is over it -->
+					<copy> 1 </copy>
+					<sub src="me()" trait="mouseover" />
+					<mul> 255 </mul>
+				</alpha>
+				<listindex> 6 </listindex>
+				<_filename_1> Menus\Dialog\dialog_button_goodbye.dds </_filename_1>
+				<_filename_2> Menus\Dialog\xbox_dialog_buttons\xbox_dialog_button_goodbye.dds </_filename_2>
+						
+				<xdefault>
+               <copy> 1 </copy>
+               <onlyifnot>
+                  <copy>&true;</copy>
+                  <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+               </onlyifnot>
+            </xdefault>
+				<xlist> &xitem; </xlist>
+				<xleft> &prev; </xleft>
+				<xright> &next; </xright>
+				
+				<image name="dialog_goodbye_over">
+					<filename> Menus\Dialog\dialog_button_goodbye_hit.dds </filename>
+					<alpha> <!-- visibility opposite of parent -->
+						<copy> 255 </copy>
+						<sub src="parent()" trait="alpha" />
+					</alpha>
+					<height> 50 </height>
+					<width> 50 </width>
+				</image>
+			</image>
+		</rect> <!-- buton_layout -->
+			
+			
+		<!-- xbox-focusable goodbye button -->
+		<rect name="dialog_xbox_goodbye">
+			<visible> <copy src="dialog_goodbye" trait="visible"/> </visible>
+			<id> 10 </id>
+			<target>
+            <copy>&true;</copy>
+            <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+         </target>
+		</rect>
+		
+		
+		<!-- SCROLL ============================================================== -->
+		<image name="dialog_scroll_bar">
+<include src="vert_floating_scroll.xml"/>
+			<id> 14 </id>
+			<height>
+				<copy src="parent()" trait="height" />
+			</height>
+			<width> 16 </width>
+			<x> 0 </x>
+			<y> 0 </y>
+			
+			<user1> 0 </user1>			<!-- Minimum value that can be scrolled to (should usually be zero) -->
+			<user2>
+				<copy src="dialog_topics_scroll_pane" trait="child_count"/>
+				<sub> 5 </sub>
+			</user2>					<!-- Maximum value that can be scrolled to (should be the number of
+											 items minus the number of items visible.  i.e. if your list has
+											 8 items and you can see 2 at any one time, this should be 6 -->
+			<user3> 1 </user3>			<!-- When the scroll arrow is clicked on, this is how many items it will advance -->
+			<user4> 4 </user4>			<!-- When the scroll bar is clicked on, this is how many items it will advance -->
+			<user5> 0 </user5>			<!-- The starting position of the scroll bar (set this only once) -->
+			<user6> 15 </user6>			<!-- A unique ID so that the scroll marker can be dragged around -->
+			<!-- user7 = current value -->
+			<user8> 5 </user8>			<!-- How many items are visible at once -->
+			<user9> 0 </user9>			<!-- Manual step value (multiplied by step distance and added to scroll value -->
+			<user10></user10>			<!-- reserved -->
+			<user10> &false; </user10>	<!-- Should an empty list hide the scroll bar? -->
+		</image>
+		
+		
+		
+		<!-- WINDOW ============================================================== -->
+		<rect name="dialog_topics_layout">
+			<width> <copy src="parent()" trait="width" /> </width>
+			<height> <copy src="parent()" trait="height" /> </height>
+			<x>
+				<copy src="dialog_scroll_bar" trait="width" />
+				<add> 30 </add>
+			</x>
+			<y> 0 </y>
+			<clipwindow> &true; </clipwindow>
+			<locus> &true; </locus>
+					
+			<rect name="dialog_topics_scroll_pane">
+				<id> 1 </id>
+				<locus> &true; </locus>
+				<width> <copy src="parent()" trait="width"/> </width>
+				<height>
+					<copy src="me()" trait="childcount"/>
+					<mul src="DialogMenu" trait="_line_height" />
+				</height>
+				<x> 5 </x>
+				<y>
+					<copy> 0 </copy>
+					<sub src="dialog_scroll_bar" trait="user7"/>
+					<mul src="DialogMenu" trait="_line_height" />
+				</y>
+				<user7> 128 </user7> <!-- viewed topic red -->
+				<user8> 128 </user8> <!-- viewed topic green -->
+				<user9> 128 </user9> <!-- viewed topic blue -->
+				
+				<!-- This is a list pane, and is not a focus itself, but when the child elements don't know how to handle
+					 an input command, they defer to their parent. The following directions are for those times. -->
+				<target> &false; </target>
+				<xdefault> 2 </xdefault>
+				<xlist> &xlist; </xlist>
+				<xup> <ref src="dialog_goodbye" trait="mouseover"/> </xup>
+				<xdown> <ref src="dialog_persuade" trait="mouseover"/> </xdown>
+				<xleft> <ref src="dialog_button_layout" trait="mouseover"/> </xleft>
+				<xright> <ref src="dialog_button_layout" trait="mouseover"/> </xright>
+				<xscroll> <ref src="dialog_scroll_bar" trait="user5"/> </xscroll>
+				
+				<!-- template items are inserted here -->
+				
+			</rect>
+		</rect>
+		
+	</rect>
+
+
+	<!-- TEMPLATE ============================================================== -->
+	<template name="topic_template">
+		<rect name="topic_text_layout">
+			<id> 99 </id>
+			<string> <copy src="strings()" trait="_topic"/> </string>
+			<target> &true; </target>
+			<repeatvertical> &true; </repeatvertical>
+			<alpha> 0 </alpha>
+			<height>
+				<copy src="DialogMenu" trait="_line_height" />
+			</height>
+			<width>
+				<copy src="child(topic_text)" trait="width" />
+			</width>
+			<locus> &true; </locus>
+			<clips> &true; </clips>
+			<x> 0 </x>
+			<y>
+				<copy src="me()" trait="listindex" />
+				<mul src="DialogMenu" trait="_line_height" />
+			</y>
+			<red> 254 </red>			<!-- inherited by child, set by code -->
+			<green> 244 </green>		<!-- inherited by child, set by code -->
+			<blue> 183 </blue>			<!-- inherited by child, set by code -->
+			<listindex> 0 </listindex>	<!-- position in list -->
+			<user5> &false; </user5>	<!-- "is this a service" -->
+			<user6></user6>				<!-- internal use -->
+						
+			<!-- This element is a list item. If it gets an input command it doesn't know how to handle
+			     it will defer the command to its parent. The xlist trait set to true triggers this. -->
+			<xdefault> 3 </xdefault>
+			<xlist> &xitem; </xlist>
+			<xup> &prev; </xup>
+			<xdown> &next; </xdown>
+			<xscroll>
+				<copy src="me()" trait="listindex" />
+				<sub>
+					<copy src="dialog_scroll_bar" trait="user8"/>
+					<div> 2 </div>
+					<ceil> 0 </ceil>
+				</sub>
+				<add> 1 </add>
+			</xscroll>
+			
+			<text name="topic_text">
+				<string>
+					<copy src="parent()" trait="string" />
+				</string>
+				<depth> 4 </depth>
+				<font> 2 </font>
+				<red>
+					<copy src="parent()" trait="red" />
+				</red>
+				<green>
+					<copy src="parent()" trait="green" />
+				</green>
+				<blue>
+					<copy src="parent()" trait="blue" />
+				</blue>
+				<alpha> 255 </alpha>
+				<clips> &true; </clips>
+				<wrapwidth> 900 </wrapwidth>
+				<wraplines> 1 </wraplines>
+				<x> 0 </x>
+				<y> 2 </y>
+			</text>
+		</rect>
+	</template>
+	
+	
+	<!-- DIALOG TEXT ============================================================== -->
+	<rect name="dialog_text_layout">
+		<id> 4 </id>
+		<target> &true; </target>
+		<alpha> 0 </alpha>
+		<depth> 20 </depth>
+		<x> 0 </x>
+		<y> 0 </y>
+		<width>
+			<copy src="screen()" trait="width" />
+		</width>
+		<height>
+			<copy src="screen()" trait="height" />
+		</height>
+		<locus> &true; </locus>
+		<visible>
+			<copy src="dialog_topics" trait="visible" />
+			<eq> &false; </eq>
+		</visible>
+		
+		<xdefault> &true; </xdefault>
+		
+		<text name="dialog_text">
+			<id> 2 </id>
+			<depth> -2 </depth>
+			<string> <copy src="strings()" trait="_havenogreeting"/> </string>
+			<font> 2 </font>
+			<red> 220 </red>
+			<green> 218 </green>
+			<blue> 205 </blue>
+			<alpha> 255 </alpha>
+			<justify> &center; </justify>
+			<wrapwidth> 1000 </wrapwidth>
+			<x>
+				<copy src="screen()" trait="width"/>
+				<div> 2 </div>
+			</x>
+			<y>
+				<copy src="screen()" trait="height"/>
+				<sub>
+					 <copy src="screen()" trait="cropy"/>
+					 <mul>2</mul>
+				</sub>
+				<sub> 60 </sub>
+				<sub src="me()" trait="height"/>
+			</y>
+		</text>
+	</rect>
+	
+	
+	<!-- FOCUS BOX ============================================================== -->
+	<rect name="dialog_focus_box">
+		<id> 5 </id>
+		<alpha> 0 </alpha>
+		<width> 1053 </width>
+		<locus> &true; </locus>
+		<user1> -8 </user1> <!-- position offset x -->
+		<user2> -12 </user2> <!-- position offset y -->
+		<image name="dialog_focus_left">
+			<filename> Menus\Dialog\dialog_selection_full.dds </filename>
+			<depth> -1 </depth>
+			<width>
+				<copy src="parent()" trait="width" />
+				<sub> 42 </sub>
+				<max> 85 </max>
+			</width>
+			<height> 64 </height>
+			<x> -6 </x>
+			<y> -8 </y>
+		</image>
+		<image name="dialog_focus_right">
+			<filename> Menus\Dialog\dialog_selection_cut.dds </filename>
+			<depth> 0 </depth>
+			<width> 192 </width>
+			<height> 64 </height>
+			<x>
+				<copy src="dialog_focus_left" trait="width" />
+				<sub> 44 </sub>
+			</x>
+			<y> -8 </y>
+		</image>
+	</rect>
+	
+</menu>

@@ -1,0 +1,25 @@
+<!-- image name="Button" -->
+	<filename> Menus\buttons\button.dds </filename>
+	<width> 203 </width>
+	<height> 52 </height>
+
+	<text name="button_text">
+		<string> <copy src="parent" trait="string" /> </string>
+		<font value="2" />
+		<justify> &center; </justify>
+		<wrapwidth> <copy src="parent" trait="width" /> </wrapwidth>
+		<x>
+			<copy src="parent" trait="width" />
+			<div> 2 </div>
+			<add src="parent" trait="x" />
+		</x>
+		<y>
+			<copy src="parent" trait="y" />
+			<add> 2 </add>
+		</y>
+		<red>   255 </red>
+		<green> 255 </green>
+		<blue>  255 </blue>
+	</text>
+
+<!-- /image -->

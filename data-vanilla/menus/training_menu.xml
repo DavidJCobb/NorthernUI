@@ -1,0 +1,258 @@
+<!-- training_menu.xml -->
+<menu name="TrainingMenu">
+	<class> &TrainingMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<x> 0 </x>
+	<y> 0 </y>
+	<locus> &true; </locus>
+	<menufade> 0.25 </menufade>
+	
+	<user0></user0>		<!-- Player gold text -->
+
+	<xbuttonb> <ref src="train_button_exit" trait="clicked"/> </xbuttonb>
+	<xbuttona> <ref src="train_button_train" trait="clicked"/> </xbuttona>
+
+	<rect name="Training_background">
+<include src="generic_background.xml"/>
+		<id> 1 </id>
+		<target> &true; </target>
+		<depth> 1 </depth>
+		<user0>716</user0>
+		<user1> 800 </user1>
+		<x>
+			<copy src="screen()" trait="width" />
+			<sub src="me()" trait="width" />
+			<div> 2 </div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height" />
+			<sub src="me()" trait="height" />
+			<div> 2 </div>
+		</y>
+		<locus> &true; </locus>
+		<image name="Skill_Picture">
+			<id> 3 </id>
+			<filename>  </filename>
+			<depth> 10</depth>
+			<width>300 </width>
+			<height>600 </height>
+			<x> 40 </x>
+			<y> 30 </y>
+			<locus> &true; </locus>
+			<target> &true; </target>
+			<xdefault> &true; </xdefault>		<!-- because there has to be one focus, doesn't have to DO anything though -->
+		</image>
+		<text name="skill_name_Text">
+		<id> 2 </id>
+			<depth> 5 </depth>
+			<string></string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 350 </x>
+			<y> <copy src="Skill_Picture" trait="y"/> </y>
+		</text>
+		<image name="training_divider">
+			<depth> 3 </depth>
+			<filename>Menus\Shared\shared_border_horizontal_1.dds</filename>
+			<x> 334 </x>
+			<y>
+				<copy src="skill_name_text" trait="y"/>
+				<add src="skill_name_text" trait="height"/>
+				<add> 40 </add>
+			</y>
+			<width>
+				<copy src="skill_Text" trait="wrapwidth"/>
+			</width>
+			<height> 4 </height>
+		</image>
+		<text name="skill_Text">
+			<id> 4 </id>
+			<depth> 5 </depth>
+			<string></string>
+			<justify> &left; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 390</sub>
+			</wrapwidth>
+			<x> 350 </x>
+			<y>
+				<copy src="training_divider" trait="y" />
+				<add src="training_divider" trait="height" />
+				<add>40</add>
+			</y>
+		</text>
+		<text name="Trainer_Level_Text">
+			<id> 9 </id>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_trainerskill"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 350 </x>
+			<y>440</y>
+		</text>
+		<text name="Player_Level_Text">
+			<id> 11 </id>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_playerskill"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 350 </x>
+			<y>
+				<copy src="Trainer_Level_Text" trait="y" />
+				<add src="Trainer_Level_Text" trait="height"/> 
+			</y>
+		</text>
+		<text name="Times_Trained_Text">
+			<id> 12 </id>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_timestrained"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 350 </x>
+			<y>
+				<copy src="Player_Level_Text" trait="y" />
+				<add src="Player_Level_Text" trait="height"/> 
+			</y>
+		</text>
+		<text name="cost_text">
+			<id> 8 </id>
+			<depth> 5 </depth>
+			<string> <copy src="strings()" trait="_cost"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 350</x>
+			<y>  
+				<copy src="Times_Trained_Text" trait="y" />
+				<add src="Times_Trained_Text" trait="height"/> 
+			 </y>
+		</text>
+		<text name="gold_text">
+			<depth> 5 </depth>
+			<string> <copy src="TrainingMenu" trait="user0"/> </string>
+			<justify> &center; </justify>
+			<red> 117 </red>
+			<green> 59 </green>
+			<blue> 33 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x> 350</x>
+			<y>  
+				<copy src="cost_text" trait="y" />
+				<add src="cost_text" trait="height"/> 
+			 </y>
+		</text>
+		<text name="skill_warning_Text">
+			<id> 10 </id>
+			<depth> 5 </depth>
+			<visible> &false; </visible>
+			<string> <copy src="strings()" trait="_warning"/> </string>
+			<justify> &center; </justify>
+			<red> 200 </red>
+			<green> 0 </green>
+			<blue> 0 </blue>
+			<alpha> 200 </alpha>
+			<wrapwidth>
+				<copy src="parent()" trait="width" />
+				<sub> 50 </sub>
+			</wrapwidth>
+			<x>350 </x>
+			<y> 
+				<copy src="gold_text" trait="y" />
+				<add src="gold_text" trait="height"/> 
+				<add>10</add>
+			 </y>
+		</text>
+		
+		
+		<!-- BUTTONS ==================================================================-->
+		<image name="train_button_train">
+<include src="button_long.xml" />
+			<id> 6 </id>
+			<depth> 5 </depth>
+			<x>
+				<copy src="train_button_exit" trait="x" />
+				<sub src="me()" trait="width" />
+				<sub> 50 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<user0> <copy src="strings()" trait="_train" /> </user0>
+			<user1></user1>		<!-- set in code...true=enabled, false=disabled -->
+			
+			<user20><!--&xbuttona;-->1 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="train_button_exit" trait="mouseover"/> </xleft>
+			<xright> <ref src="train_button_exit" trait="mouseover"/> </xright>
+		</image>
+		
+		
+		<image name="train_button_exit">
+<include src="button_long.xml" />
+			<id> 7 </id>
+			<depth> 5 </depth>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 30 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<user0> <copy src="strings()" trait="_exit" /> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="train_button_train" trait="mouseover"/> </xleft>
+			<xright> <ref src="train_button_train" trait="mouseover"/> </xright>
+		</image>
+		
+	</rect>
+</menu>

@@ -1,0 +1,539 @@
+<!-- audio_menu.xml -->
+<menu name="AudioMenu">
+	<class> &AudioMenu; </class>
+	<stackingtype> &no_click_past; </stackingtype>
+	<alpha>	0 </alpha>
+	<locus> &true; </locus>
+	<explorefade> 0.25 </explorefade>
+	
+	<_y_buffer> 40 </_y_buffer>		<!-- Num pixels vertically between each menu item -->
+	
+	<_long_label_width>
+		<copy src="audio_master_label" trait="width"/>
+		<max src="audio_voice_label" trait="width"/>
+		<max src="audio_effect_label" trait="width"/>
+		<max src="audio_foot_label" trait="width"/>
+		<max src="audio_music_label" trait="width"/>
+	</_long_label_width>
+	
+	<_label_to_scrollbar_buffer> 64 </_label_to_scrollbar_buffer>
+	
+	<!-- Text colors -->
+	<red>  117 </red>
+	<green>	59 </green>
+	<blue>	33 </blue>
+	
+	<xbuttonb> <ref src="audio_return_button" trait="clicked"/> </xbuttonb>
+	<xbuttony> <ref src="audio_defaults_button" trait="clicked"/> </xbuttony>
+	
+	<!-- BACKGROUND ========================================================================-->
+	<rect name="audio_background">
+		<include src="generic_background.xml"/>
+		<x>
+			<copy src="screen()" trait="width"/>
+			<sub src="me()" trait="width"/>
+			<div>2</div>
+		</x>
+		<y>
+			<copy src="screen()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div>2</div>
+		</y>
+		<user0> 900 </user0>
+		<user1> 500 </user1>
+	
+	
+		<!-- MASTER VOLUME =============================================================================-->
+		<text name="audio_master_label">
+			<string> <copy src="strings()" trait="_mastervolume"/> </string>
+			<depth> 3 </depth>
+			<alpha>255</alpha>
+			<red>
+				<copy src="AudioMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="AudioMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="AudioMenu" trait="blue"/>
+			</blue>
+			<x> 30 </x>
+			<y> 50 </y>
+		</text>
+		
+		<image name="audio_master_slider_marker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<repeathorizontal> &true; </repeathorizontal>
+			<depth> 1 </depth>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="audio_master_slider" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="audio_master_slider" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x>
+				<copy src="AudioMenu" trait="_long_label_width"/>
+				<add> 60 </add>
+			</x>
+			<y>
+				<copy src="audio_master_label" trait="y"/>
+				<add> -10 </add>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &true; </xdefault>
+			<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+			<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+			<xup> <ref src="audio_return_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="audio_voice_slider_marker" trait="mouseover"/> </xdown>
+			<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+			
+			<image name="audio_master_slider_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+	
+			<image name="audio_master_slider">
+<include src="horiz_floating_scroll.xml"/>
+				<depth> 3 </depth>
+				<id> 1 </id>
+				<x> 60 </x>
+				<y> 22 </y>
+				
+				<user6> 2 </user6>			<!-- scroll marker id -->
+				<user8> &false; </user8>	<!-- text visibility -->
+			</image>
+		</image>
+
+
+		<!-- VOICE VOLUME ===========================================================================-->
+		<text name="audio_voice_label">
+			<string> <copy src="strings()" trait="_voicevolume"/> </string>
+			<depth> 3 </depth>
+			<alpha>255</alpha>
+			<red>
+				<copy src="AudioMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="AudioMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="AudioMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="audio_master_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="audio_master_label" trait="y"/>
+				<add>
+					<copy src="audio_master_label" trait="height"/>
+					<add src="AudioMenu" trait="_y_buffer"/>
+				</add>
+			</y>
+		</text>
+		
+		<image name="audio_voice_slider_marker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<repeathorizontal> &true; </repeathorizontal>
+			<depth> 1 </depth>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="audio_voice_slider" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="audio_voice_slider" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x> <copy src="audio_master_slider_marker" trait="x"/> </x>
+			<y>
+				<copy src="audio_voice_label" trait="y"/>
+				<add> -10 </add>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &false; </xdefault>
+			<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+			<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+			<xup> <ref src="audio_master_slider_marker" trait="mouseover"/> </xup>
+			<xdown> <ref src="audio_effect_slider_marker" trait="mouseover"/> </xdown>
+			<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+			
+			<image name="audio_voice_slider_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+	
+			<image name="audio_voice_slider">
+<include src="horiz_floating_scroll.xml"/>
+				<depth> 3 </depth>
+				<id> 3 </id>
+				<x> 60 </x>
+				<y> 22 </y>
+				
+				<user6> 4 </user6>			<!-- scroll marker id -->
+				<user8> &false; </user8>	<!-- text visibility -->
+			</image>
+		</image>
+
+
+		<!-- EFFECT VOLUME ===========================================================================-->
+		<text name="audio_effect_label">
+			<string> <copy src="strings()" trait="_effectvolume"/> </string>
+			<depth> 3 </depth>
+			<alpha>255</alpha>
+			<red>
+				<copy src="AudioMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="AudioMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="AudioMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="audio_master_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="audio_master_label" trait="y"/>
+				<add>
+					<copy src="audio_master_label" trait="height"/>
+					<add src="AudioMenu" trait="_y_buffer"/>
+					<mult>2</mult>
+				</add>
+			</y>
+		</text>
+		
+		<image name="audio_effect_slider_marker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<repeathorizontal> &true; </repeathorizontal>
+			<depth> 1 </depth>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="audio_effect_slider" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="audio_effect_slider" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x> <copy src="audio_master_slider_marker" trait="x"/> </x>
+			<y>
+				<copy src="audio_effect_label" trait="y"/>
+				<add> -10 </add>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &false; </xdefault>
+			<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+			<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+			<xup> <ref src="audio_voice_slider_marker" trait="mouseover"/> </xup>
+			<xdown> <ref src="audio_foot_slider_marker" trait="mouseover"/> </xdown>
+			<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+			
+			<image name="audio_effect_slider_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+	
+			<image name="audio_effect_slider">
+<include src="horiz_floating_scroll.xml"/>
+				<depth> 3 </depth>
+				<id> 5 </id>
+				<x> 60 </x>
+				<y> 22 </y>
+				
+				<user6> 6 </user6>			<!-- scroll marker id -->
+				<user8> &false; </user8>	<!-- text visibility -->
+			</image>
+		</image>
+
+
+		<!-- FOOTSTEP VOLUME ===========================================================================-->
+		<text name="audio_foot_label">
+			<string> <copy src="strings()" trait="_footstepvolume"/> </string>
+			<depth> 3 </depth>
+			<alpha>255</alpha>
+			<red>
+				<copy src="AudioMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="AudioMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="AudioMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="audio_master_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="audio_master_label" trait="y"/>
+				<add>
+					<copy src="audio_master_label" trait="height"/>
+					<add src="AudioMenu" trait="_y_buffer"/>
+					<mult>3</mult>
+				</add>
+			</y>
+		</text>
+		
+		<image name="audio_foot_slider_marker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<repeathorizontal> &true; </repeathorizontal>
+			<depth> 1 </depth>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="audio_foot_slider" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="audio_foot_slider" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x> <copy src="audio_master_slider_marker" trait="x"/> </x>
+			<y>
+				<copy src="audio_foot_label" trait="y"/>
+				<add> -10 </add>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &false; </xdefault>
+			<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+			<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+			<xup> <ref src="audio_effect_slider_marker" trait="mouseover"/> </xup>
+			<xdown> <ref src="audio_music_slider_marker" trait="mouseover"/> </xdown>
+			<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+			
+			<image name="audio_foot_slider_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+	
+			<image name="audio_foot_slider">
+<include src="horiz_floating_scroll.xml"/>
+				<depth> 3 </depth>
+				<id> 7 </id>
+				<x> 60 </x>
+				<y> 22 </y>
+				
+				<user6> 8 </user6>			<!-- scroll marker id -->
+				<user8> &false; </user8>	<!-- text visibility -->
+			</image>
+		</image>
+
+
+		<!-- MUSIC VOLUME ===========================================================================-->
+		<text name="audio_music_label">
+			<string> <copy src="strings()" trait="_musicvolume"/> </string>
+			<depth> 3 </depth>
+			<alpha>255</alpha>
+			<red>
+				<copy src="AudioMenu" trait="red"/>
+			</red>
+			<green>
+				<copy src="AudioMenu" trait="green"/>
+			</green>
+			<blue>
+				<copy src="AudioMenu" trait="blue"/>
+			</blue>
+			<x>
+				<copy src="audio_master_label" trait="x"/>
+			</x>
+			<y>
+				<copy src="audio_master_label" trait="y"/>
+				<add>
+					<copy src="audio_master_label" trait="height"/>
+					<add src="AudioMenu" trait="_y_buffer"/>
+					<mult>4</mult>
+				</add>
+			</y>
+		</text>
+		
+		<image name="audio_music_slider_marker">
+			<id> &generic; </id>
+			<target> &true; </target>
+			<repeathorizontal> &true; </repeathorizontal>
+			<depth> 1 </depth>
+			<filename> Menus\dialog\dialog_selection_full.dds </filename>
+			<alpha>
+				<copy> 255 </copy>
+				<mul>
+					<copy src="me()" trait="mouseover" />
+					<add src="audio_music_slider" trait="_mouseover_any" />
+					<min> 1 </min>
+				</mul>
+			</alpha>
+			<width>
+				<copy src="audio_music_slider" trait="width"/>
+				<add> 120 </add>
+			</width>
+			<height> 64 </height>
+			<x> <copy src="audio_master_slider_marker" trait="x"/> </x>
+			<y>
+				<copy src="audio_music_label" trait="y"/>
+				<add> -10 </add>
+			</y>
+			<depth> 3 </depth>
+			<locus> &true; </locus>
+			
+			<xdefault> &false; </xdefault>
+			<xleft> <ref src="child(horizontal_scroll_left)" trait="clicked"/> </xleft>
+			<xright> <ref src="child(horizontal_scroll_right)" trait="clicked"/> </xright>
+			<xup> <ref src="audio_foot_slider_marker" trait="mouseover"/> </xup>
+			<xdown> <ref src="audio_defaults_button" trait="mouseover"/> </xdown>
+			<xbuttonlb> <ref src="child(horizontal_scroll_leftside)" trait="clicked"/> </xbuttonlb>
+			<xbuttonrb> <ref src="child(horizontal_scroll_rightside)" trait="clicked"/> </xbuttonrb>
+			
+			<image name="audio_music_slider_marker_2">
+				<depth> 2 </depth>
+				<filename> dialog\dialog_selection_cut.dds </filename>
+				<alpha> <copy src="parent()" trait="alpha"/> </alpha>
+				<width> 104 </width>
+				<height> 64 </height>
+				<x>
+					<copy src="parent()" trait="width" />
+					<sub> 100 </sub>
+				</x>
+				<y> 0 </y>
+			</image>
+	
+			<image name="audio_music_slider">
+<include src="horiz_floating_scroll.xml"/>
+				<depth> 3 </depth>
+				<id> 9 </id>
+				<x> 60 </x>
+				<y> 22 </y>
+				
+				<user6> 10 </user6>			<!-- scroll marker id -->
+				<user8> &false; </user8>	<!-- text visibility -->
+			</image>
+		</image>
+
+
+
+
+		<!-- DEFAULTS BUTTON ===========================================================================-->
+		<image name="audio_defaults_button">
+<include src="button_long.xml"/>
+			<id> 11 </id>
+			<x>
+				<copy src="audio_return_button" trait="x" />
+				<sub src="me()" trait="width" />
+				<sub>
+					<copy>10</copy>
+					<add>
+						<copy> 30 </copy>
+						<onlyif> &xenon; </onlyif>
+					</add>
+				</sub>
+			</x>
+			<y>
+				<copy src="audio_return_button" trait="y" />
+			</y>
+			<depth> 3 </depth>
+			<clicksound>2</clicksound>
+			<user0> <copy src="strings()" trait="_defaults"/> </user0>
+			
+			<user20><!--&xbuttony;-->4 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="audio_return_button" trait="mouseover"/> </xleft>
+			<xright> <ref src="audio_return_button" trait="mouseover"/> </xright>
+			<xup> <ref src="audio_music_slider_marker" trait="mouseover"/> </xup>
+			<xdown> <ref src="audio_return_button" trait="mouseover"/> </xdown>
+		</image>
+
+		<!-- RETURN BUTTON ===========================================================================-->
+		<image name="audio_return_button">
+<include src="button_long.xml"/>
+			<id> 12 </id>
+			<x>
+				<copy src="parent()" trait="width" />
+				<sub src="me()" trait="width" />
+				<sub> 30 </sub>
+			</x>
+			<y>
+				<copy src="parent()" trait="height" />
+				<sub src="me()" trait="height" />
+				<sub> 20 </sub>
+			</y>
+			<depth> 3 </depth>
+			<clicksound>2</clicksound>
+			<user0> <copy src="strings()" trait="_return"/> </user0>
+			
+			<user20><!--&xbuttonb;-->2 </user20>
+			<xdefault> &xboxhint; </xdefault>
+			<xleft> <ref src="audio_defaults_button" trait="mouseover"/> </xleft>
+			<xright> <ref src="audio_defaults_button" trait="mouseover"/> </xright>
+			<xup> <ref src="audio_defaults_button" trait="mouseover"/> </xup>
+			<xdown> <ref src="audio_master_slider_marker" trait="mouseover"/> </xdown>
+		</image>
+
+	</rect> <!-- end audio_background -->
+
+</menu>

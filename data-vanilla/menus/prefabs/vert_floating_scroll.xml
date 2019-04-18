@@ -1,0 +1,140 @@
+<!-- vert_floating_scroll.xml -->
+<!-- image name="vert_floating_scroll" -->
+	<id> &generic; </id>		<!-- MUST change -->
+	<locus> &true; </locus>
+	<depth> 1 </depth>
+	<filename> \Menus\Dialog\dialog_scrollbar_line.dds </filename>
+	<width> 16 </width>
+	<height> 400 </height>		<!-- default, may change -- marks the distance between the two arrows, not including them -->
+	<y> 0 </y>					<!-- default, may change -- marks the position of the bottom edge of the top arrow -->
+	<x> 0 </x>					<!-- default, may change -->
+	<user1> 0 </user1>			<!-- minimum range value -->
+	<user2> 100 </user2>		<!-- maximum range value -->
+	<user3> 1 </user3>			<!-- step distance -->
+	<user4> 10 </user4>			<!-- jump distance -->
+	<user5> 0 </user5>			<!-- starting value -->
+	<user6> -1 </user6>			<!-- marker's id -- must change to enable dragging -->
+	<user7>						<!-- current value as ineger between min and max -->
+		<copy src="child(vertical_scroll_marker)" trait="_value_scrolled_to"/>
+	</user7>
+	<user8> 5 </user8>			<!-- How many items are visible at once -->
+	<user10> &true; </user10>	<!-- Should and empty list hide the scroll bar? -->
+	
+	<_scrollable_range>
+		<copy src="me()" trait="user2"/>
+		<sub src="me()" trait="user1"/>
+		<max>0</max>
+	</_scrollable_range>
+	
+	<!-- The scrollbar should only be visible if scrolling can be done -->
+	<visible>
+		<copy src="me()" trait="user2" />
+		<gt> 0 </gt>
+		<and src="me()" trait="user10"/>
+	</visible>
+	
+	<rect name="vertical_scroll_topside">
+		<id> &generic; </id>
+		<target> &true; </target>
+		<depth> 3 </depth>
+		<height> <!-- make it long enough to stretch from the top arrow to the marker -->
+			<copy src="sibling(vertical_scroll_marker)" trait="y"/>
+		</height>
+		<width> 37 </width>
+		<y> 0 </y>
+		<x> -11 </x>
+		<clicksound>3</clicksound>
+	</rect>
+	
+	<rect name="vertical_scroll_bottomside">
+		<id> &generic; </id>
+		<target> &true; </target>
+		<depth> 2 </depth>
+		<height>
+			<copy src="parent()" trait="height"/>
+			<sub src="sibling(vertical_scroll_topside)" trait="height"/>
+			<sub src="sibling(vertical_scroll_marker)" trait="height"/>
+		</height>
+		<width> 37 </width>
+		<y>
+			<copy src="sibling(vertical_scroll_topside)" trait="height"/>
+			<add src="sibling(vertical_scroll_marker)" trait="height"/>
+		</y>
+		<x> -11 </x>
+		<clicksound>3</clicksound>
+	</rect>
+	
+	<image name="vertical_scroll_top">
+		<id> &generic; </id>
+		<target> &true; </target>
+		<depth> 4 </depth>
+		<filename> \Menus\Dialog\dialog_scrollbar_up.dds </filename>
+		<height> 50 </height>
+		<width> 37 </width>
+		<y> -50 </y>
+		<x> -11 </x>
+		<clicksound>3</clicksound>
+	</image>
+	
+	<image name="vertical_scroll_bottom">
+		<id> &generic; </id>
+		<target> &true; </target>
+		<depth> 4 </depth>
+		<filename> \Menus\Dialog\dialog_scrollbar_down.dds </filename>
+		<height> 51 </height>
+		<width> 42 </width>
+		<y> <copy src="parent()" trait="height"/> </y>
+		<x> -11 </x>
+		<clicksound>3</clicksound>
+	</image>
+	<image name="vertical_scroll_marker">
+		<id> <copy src="parent()" trait="user6"/> </id>
+		<target> &true; </target>
+		<depth> 6 </depth>
+		<filename> \Menus\Dialog\dialog_scrollbar_marker.dds </filename>
+		<height> 39 </height>
+		<width> 34 </width>
+		<y> <!-- set my position relative to the current scroll -->
+			<copy src="parent()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<mul>
+				<copy src="me()" trait="_value_scrolled_to"/>
+				<sub src="parent()" trait="user1"/>
+				<div src="parent()" trait="_scrollable_range"/>
+			</mul>
+		</y>
+		<x> -10 </x>
+		<_value_scrolled_to>
+			<!-- copy old value -->
+			<add>
+				<copy src="sibling(vertical_scroll_bottom)" trait="clicked"/>
+				<sub src="sibling(vertical_scroll_top)" trait="clicked"/>
+				<mul src="parent()" trait="user3"/> <!-- step distance -->
+			</add>
+			<add>
+				<copy src="sibling(vertical_scroll_bottomside)" trait="clicked"/>
+				<sub src="sibling(vertical_scroll_topside)" trait="clicked"/>
+				<mul src="parent()" trait="user4"/>	<!-- jump distance -->
+			</add>
+			<add>
+				<copy src="me()" trait="user9"/>
+				<add src="me()" trait="user10"/>
+				<mul src="parent()" trait="user3"/> <!-- step distance -->
+			</add>
+			<add src="parent()" trait="user5"/>
+			<min>
+				<copy src="parent()" trait="user2"/>
+				<sub src="parent()" trait="user1"/>
+			</min>
+			<max> 0 </max>
+		</_value_scrolled_to>
+		<user8>	<!-- for dragging - drag interval -->
+			<copy src="parent()" trait="height"/>
+			<sub src="me()" trait="height"/>
+			<div src="parent()" trait="_scrollable_range"/>
+		</user8>
+		<user9> 0 </user9>	<!-- for dragging - lines dragged -->
+		<user10> <copy src="parent()" trait="user9"/> </user10>
+		<clicksound>3</clicksound>
+	</image>
+<!-- /image -->

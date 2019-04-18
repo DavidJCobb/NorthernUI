@@ -1,0 +1,21 @@
+<text name="book_line">
+	<visible> true </visible>
+	<depth> 2 </depth>
+	<x> 0 </x>
+	<y>
+		<copy src="me()" trait="user0"/>
+		<sub> 1 </sub>
+		<mul> 32 </mul>
+	</y>
+	<wrapwidth> <copy src="parent()" trait="wrapwidth"/> </wrapwidth>
+	<string>
+		<copy src="parent()" trait="user0"/>
+		<add src="me()" trait="user0"/>
+		<!-- a value > 0 before a string copy copys only that line number -->
+		<copy src="parent()" trait="string"/>
+	</string>
+	<red> 117 </red>
+	<green> 59 </green>
+	<blue> 33 </blue>
+	<alpha> 255 </alpha>
+</text>
