@@ -6,6 +6,7 @@
 namespace RE {
    class InventoryMenu : public Menu { // sizeof == 0x58
       public:
+         enum { kID = 0x3EA };
          InventoryMenu();
          ~InventoryMenu();
 

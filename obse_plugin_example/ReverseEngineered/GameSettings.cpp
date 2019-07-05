@@ -53,6 +53,7 @@ namespace RE {
       SettingInfo* const sSaveFailed     = (SettingInfo*) 0x00B387D8;
       SettingInfo* const sSaveSuccessful = (SettingInfo*) 0x00B387D0;
       SettingInfo* const sSlotsFull      = (SettingInfo*) 0x00B38620;
+      SettingInfo* const sSort           = (SettingInfo*) 0x00B385D0;
       SettingInfo* const sTravelQuestion = (SettingInfo*) 0x00B38C60;
       SettingInfo* const sViewAll        = (SettingInfo*) 0x00B388A0;
       SettingInfo* const sYes            = (SettingInfo*) 0x00B38CF8;

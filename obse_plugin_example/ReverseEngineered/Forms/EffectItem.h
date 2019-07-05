@@ -148,7 +148,7 @@ namespace RE {
          DEFINE_MEMBER_FN(GetItem,                EffectItem*, 0x00414B10, UInt32); // alias of GetEffectItemByIndex
          DEFINE_MEMBER_FN(GetEffectItemByIndex,   EffectItem*, 0x00414B10, UInt32);
          DEFINE_MEMBER_FN(HasEffectMatchingAlch,  bool,        0x00414F00, UInt32 effectCode, UInt32 actorValueOrOther);
-         DEFINE_MEMBER_FN(HasNonPoisonousEffects, bool,        0x00414EB0);
+         DEFINE_MEMBER_FN(IsPoison,               bool,        0x00414EB0);
    };
 
    class MagicItem : public TESFullName {

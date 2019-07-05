@@ -642,7 +642,7 @@ void XXNAlchemyMenu::UpdatePotion() {
       ExtraContainerChanges::EntryData* ebx = this->apparati[0];
       qualities[0] = /*SInt8*/ RE::GetFormQuality(ebx->type);
    }
-   if (CALL_MEMBER_FN(potionEffects, HasNonPoisonousEffects)())
+   if (!CALL_MEMBER_FN(potionEffects, IsPoison)())
       hasPosEffects = true;
    if (auto eax = this->apparati[1])
       qualities[1] = RE::GetFormQuality(eax->type);
@@ -812,7 +812,7 @@ void XXNAlchemyMenu::CreatePotion() {
       //_MESSAGE("%s: About to commit new base potion to CBOL", __FUNCTION__);
       ThisStdCall(0x00459800, *g_createdBaseObjList, this->potion);
       //this->potion->weight.weight = 0.0F; // vanilla does it in AlchemyMenu::CookPotion; we do it in our UpdatePotion instead
-      if (CALL_MEMBER_FN((RE::EffectItemList*) &(this->potion->magicItem.list), HasNonPoisonousEffects)()) { // TODO: Obviously we got the name on that method backwards; this also has implications for other stuff we decoded, in UpdatePotion, as well
+      if (CALL_MEMBER_FN((RE::EffectItemList*) &(this->potion->magicItem.list), IsPoison)()) {
          this->potion->model.SetModelPath("Clutter\\Potions\\PotionPoison.NIF");
          this->potion->icon.SetPath("Clutter\\Potions\\IconPotionPoison01.dds");
       } else {

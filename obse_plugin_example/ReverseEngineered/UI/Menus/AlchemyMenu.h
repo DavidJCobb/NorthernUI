@@ -136,7 +136,7 @@ namespace RE {
    //  - Float: Quality of apparatus[3]
    //  - Float: Quality of apparatus[1]
    //  - Float: Quality of apparatus[2]
-   //  - Bool:  Whether the effect's containing list has any non-hostile effects (use EffectItemList::HasNonPoisonousEffects). If false, result is a poison.
+   //  - Bool:  Whether the effect's containing list has any non-hostile effects (use !EffectItemList::IsPoison). If false, result is a poison.
    //
    DEFINE_SUBROUTINE_EXTERN(void,  ComputeType1PotionEffectStrength, 0x00548420, float* outMagnitude, float* outDuration, float baseCost, float mortarAndPestleInfluence, UInt32, bool isHostile, float, float, float, bool isNotPoison);
    DEFINE_SUBROUTINE_EXTERN(void,  ComputeType2PotionEffectStrength, 0x005486A0, float* outDuration,                      float baseCost, float mortarAndPestleInfluence, UInt32, bool isHostile, float, float, float, bool isNotPoison);

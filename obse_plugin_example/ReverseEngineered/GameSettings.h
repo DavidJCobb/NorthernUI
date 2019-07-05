@@ -54,6 +54,7 @@ namespace RE {
       extern SettingInfo* const sSaveFailed;     // "Save failed."
       extern SettingInfo* const sSaveSuccessful; // "Save successful."
       extern SettingInfo* const sSlotsFull;      // "You have already made the maximum number of selections."
+      extern SettingInfo* const sSort;           // "Sort" // apparently the A-button label when the InventoryMenu's column headers have focus
       extern SettingInfo* const sTravelQuestion;
       extern SettingInfo* const sViewAll;        // "View All"
       extern SettingInfo* const sYes;            // "Yes" // suitable for message box buttons

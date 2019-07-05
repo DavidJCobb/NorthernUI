@@ -34,7 +34,12 @@
 		</min>
 	</user12>
 	<!-- user13 through user17 used for additional header positioning -->
-	<user18> &true; </user18>		<!-- is A button hint visible? xbox only -->
+	<user18>&true;</user18>		<!-- is A button hint visible? xbox only -->
+   
+   <!--
+      NorthernUI overwrites user11 and user18, restoring Xbox build functionality 
+      where the A-button label would change depending on what has mouseover focus.
+   -->
 	
 	<xleft> <ref src="inventory_tabs_prev" trait="clicked" /></xleft>
 	<xright><ref src="inventory_tabs_next" trait="clicked" /></xright>
@@ -940,10 +945,14 @@
             <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
             <_dxScanCode>276</_dxScanCode>
             <target>&false;</target><_dontGreyOut>&true;</_dontGreyOut>
-            <visible><copy src="northernui()" trait="_xxnGamepadAvailable" /></visible>
+            <visible>
+               <copy src="northernui()" trait="_xxnGamepadAvailable" />
+               <and  src="menu()"       trait="user18" />
+            </visible>
             <x>0</x>
             <y>0</y>
             <string><copy src="xxnStrings()" trait="_inventoryUseItem" /></string>
+            <string><copy src="menu()" trait="user11" /></string>
          </rect>
          <rect name="drop">
             <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
