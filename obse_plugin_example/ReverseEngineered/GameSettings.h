@@ -67,5 +67,29 @@ namespace RE {
       extern SettingInfo** const sMagicRangeNames; // 7 pointers; includes projectile types e.g. bolt, fog
       //
       extern SettingInfo** const sControlMappingNames; // 29 pointers; names of mappings corresponding to Input.h kControl enum
+
+      // 18 pointers; all settings of the form GMST:sTargetType_____; array indices seem to correspond exactly with HUDReticle icon enum
+      //
+      // [ 0] == Take
+      // [ 1] == Open (container)
+      // [ 2] == Sit
+      // [ 3] == Activate
+      // [ 4] == Sleep
+      // [ 5] == Read
+      // [ 6] == Talk
+      // [ 7] == Open (door)
+      // [ 8] == Ride (horse)
+      // [ 9] == Talk (essential)
+      // [10] == Feed/Talk (vampire)
+      // [11] == Equip
+      // [12] == Unequip
+      // [13] == Drink
+      // [14] == Eat
+      // [15] == Recharge
+      // [16] == Brew
+      // [17] == Apply
+      // [18] == Repair
+      //
+      extern SettingInfo** const sReticleVerbs;
    };
 };

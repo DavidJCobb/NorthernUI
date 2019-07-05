@@ -10,10 +10,16 @@
 	<menufade> 0.15 </menufade>
 	<user0></user0>	<!-- Action text (set in code) -->
 	<user1> 128 </user1>
-	<user2> &false; </user2> <!-- Visibility of A-button action text (xbox only) -->
+	<user2>
+      <copy>&false;</copy>
+      <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+   </user2> <!-- Visibility of A-button action text (xbox only) -->
 	<user3> 20 </user3>
 	<user4> &false; </user4> <!-- true if telekenisis is active -->
 	<user5></user5>	<!-- Action button icon index (set in code, xbox only) -->
+   
+   <user18>0</user18> <!-- gamepad keycode (NorthernUI) -->
+   
 	<red>
 		<copy> 254 </copy> <!-- red level for telekenisis -->
 		<onlyif src="me()" trait="user4" /> <!-- if telekenisis, else -->
@@ -46,19 +52,37 @@
 		<visible> <copy src="HUDInfoMenu" trait="user2"/> </visible>
 		<filename> Menus\Shared\all_xbox_buttons.dds </filename>
 		<cropx>
-			<copy src="HUDInfoMenu" trait="user5"/>
+			<copy src="HUDInfoMenu" trait="user5" /> <!-- original Xbox value; not set on PC -->
+         <copy> <!-- convert DXScanCode from NorthernUI to the enum below... -->
+            <copy src="HUDInfoMenu" trait="user18" /> <!-- DXScanCode -->
+            <sub>270</sub> <!-- Start to 0 -->
+            <sub> <!-- Oblivion puts the bumpers after ABXY, not before -->
+               <copy>2</copy>
+               <onlyif>
+                      <copy src="HUDInfoMenu" trait="user18" /><gte>276</gte>
+                  <or><copy src="HUDInfoMenu" trait="user18" /><lte>289</lte></or>
+               </onlyif>
+            </sub>
+            <add> <!-- Oblivion puts the bumpers after ABXY, not before -->
+               <copy>4</copy>
+               <onlyif>
+                      <copy src="HUDInfoMenu" trait="user18" /><eq>274</eq>
+                  <or><copy src="HUDInfoMenu" trait="user18" /><eq>275</eq></or>
+               </onlyif>
+            </add>
+         </copy>
 			<copy src="me()" trait="_crop_"/>
 		</cropx>
-		<width> 64 </width>
-		<height> 64 </height>
+		<width> 64</width>
+		<height>64</height>
 		<x>
 			<copy src="hudinfo_action_text" trait="x"/>
-			<sub src="hudinfo_action_text" trait="width"/>
-			<sub src="me()" trait="width"/>
+			<sub  src="hudinfo_action_text" trait="width"/>
+			<sub  src="me()" trait="width"/>
 		</x>
 		<y>
 			<copy src="hudinfo_name" trait="y"/>
-			<sub src="me()" trait="height"/>
+			<sub  src="me()" trait="height"/>
 			<add>8</add>
 		</y>
 		<_crop_0> 704 </_crop_0>	<!-- start -->

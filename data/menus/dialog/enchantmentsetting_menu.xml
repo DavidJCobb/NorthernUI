@@ -251,9 +251,9 @@
                <visible>&true;</visible>
                <x>0</x>
                <y>
-                  <copy src="sibling()" trait="height" />
+                  <copy   src="sibling()" trait="height" />
                   <onlyif src="sibling()" trait="visible"/>
-                  <add  src="sibling()" trait="y" />
+                  <add    src="sibling()" trait="y" />
                </y>
                <width><copy src="parent()" trait="width" /></width>
                <height>
@@ -446,10 +446,23 @@
                <listindex>3</listindex>
                <xup>  &prev;</xup>
                <xdown>&next;</xdown>
-               <xleft> <ref src="child(horizontal_scroll_left)"  trait="clicked" /></xleft>
-               <xright><ref src="child(horizontal_scroll_right)" trait="clicked" /></xright>
-               <xbuttonlb><ref src="child(horizontal_scroll_leftside)"  trait="clicked" /></xbuttonlb>
-               <xbuttonrb><ref src="child(horizontal_scroll_rightside)" trait="clicked" /></xbuttonrb>
+               <xleft>
+                  <ref src="child(horizontal_scroll_left)"  trait="clicked" />
+                  <ref src="me()" trait="clicked" />
+               </xleft>
+               <xright>
+                  <ref src="child(horizontal_scroll_right)" trait="clicked" />
+                  <ref src="me()" trait="clicked" />
+               </xright>
+               <xbuttonlb>
+                  <ref src="child(horizontal_scroll_leftside)"  trait="clicked" />
+                  <ref src="me()" trait="clicked" />
+               </xbuttonlb>
+               <xbuttonrb>
+                  <ref src="child(horizontal_scroll_rightside)" trait="clicked" />
+                  <ref src="me()" trait="clicked" />
+               </xbuttonrb>
+               <clicksound>3</clicksound>
                
                <user0>&false;</user0>	<!-- false = normal (scroll bar), true = special for lock/open spell -->
                <user1></user1>				<!-- lock level text -->
@@ -510,7 +523,7 @@
                      <user6> 15 </user6>			<!-- ID for marker/slider -->
                      <user8> &false; </user8>	<!-- show number -->
                      
-                     <visible>&true;</visible> <!-- needs to be specifically set to zero, or EffectSettingMenu::HandleFrame won't read and apply the slider value -->
+                     <visible><copy src="parent()" trait="visible" /></visible> <!-- needs to be specifically set to zero, or EffectSettingMenu::HandleFrame won't read and apply the slider value -->
                   </image>
                </rect>
                <!-- slider values: -->

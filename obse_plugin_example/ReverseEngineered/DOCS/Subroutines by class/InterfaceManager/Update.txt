@@ -44,7 +44,7 @@ void InterfaceManager::Update() {
       }
       bLMBDown = ebx->QueryMouseKeyState(kMouseControl_Left, kKeyQuery_Down); // esp4C
       bLMBUp   = ebx->QueryMouseKeyState(kMouseControl_Left, kKeyQuery_Up);   // esp48
-      bLMBHold = ebx->QueryMouseKeyState(kMouseControl_Left, kKeyQuery_Hold); // esp54
+      bLMBHold = ebx->QueryMouseKeyState(kMouseControl_Left, kKeyQuery_Hold); // esp54 // this variable also influences rotating the player model in the menus?
       if (bLMBHold)
          this->mouseLMBDownTime += 0.001; // seconds
       else
@@ -138,7 +138,7 @@ void InterfaceManager::Update() {
                SInt32 id = ecx->GetFloatTraitValue(kTileValue_id);
                this->activeMenu->HandleMouseDown(id, ecx);
             } else {
-               if (GetGlobalScriptStateObj()->unk31 > 0) { // at 0x005827AE
+               if (GetGlobalScriptStateObj()->unk31 > 0) { // at 0x005827AE // handle console selection-by-click?
                   //
                   // ...
                   //
@@ -149,7 +149,11 @@ void InterfaceManager::Update() {
       if (bLMBHold) { // at 0x00583400
          if (Menu* eax = this->activeMenu) {
             SInt32 id = this->activeTile->GetFloatTraitValue(kTileValue_id);
-            this->activeMenu->HandleFrameMousedown(eax, this->activeTile);
+            this->activeMenu->HandleFrameMouseDown(eax, this->activeTile);
+            //
+            // HUDMainMenu::HandleFrameMouseDown is what handles the "player grab zone" -- that is, the 
+            // ability to click and drag on the player model shown in the Big Four menus in order to 
+            // rotate it.
          }
          if ((Menu* eax = this->unkA4) && (auto ecx = this->activeTile)) {
             SInt32 id = ecx->GetFloatTraitValue(kTileValue_id);

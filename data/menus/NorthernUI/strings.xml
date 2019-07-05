@@ -114,29 +114,34 @@
    <_enchantmentMenuLabelEffType>Effect Type:</_enchantmentMenuLabelEffType>
 
    <!----- HUDINFOMENU ----------------------------------------------------->
+   <!--
+      NOTE: As of NorthernUI 1.2.2, some of these strings are unused, with the 
+      UI preferring the strings defined in Oblivion.esm's game settings.
+   -->
+   
    <!-- Verbs shown when aiming at something: -->
-   <_activateVerbGeneric>Interact</_activateVerbGeneric>
-   <_activateVerbOpenContainer>Open</_activateVerbOpenContainer>
-   <_activateVerbReadBook>Read</_activateVerbReadBook>
-   <_activateVerbRideMount>Ride</_activateVerbRideMount>
-   <_activateVerbSit>Sit</_activateVerbSit>
-   <_activateVerbSpeakToNPC>Talk</_activateVerbSpeakToNPC>
-   <_activateVerbTakeItem>Take</_activateVerbTakeItem>
-   <_activateVerbUseBed>Sleep</_activateVerbUseBed>
-   <_activateVerbUseDoor>Use</_activateVerbUseDoor>
-   <_activateVerbVampireFeed>Feed</_activateVerbVampireFeed>
+   <_activateVerbGeneric>Interact</_activateVerbGeneric> <!-- superseded by Oblivion.esm -->
+   <_activateVerbOpenContainer>Open</_activateVerbOpenContainer> <!-- superseded by Oblivion.esm -->
+   <_activateVerbReadBook>Read</_activateVerbReadBook> <!-- superseded by Oblivion.esm -->
+   <_activateVerbRideMount>Ride</_activateVerbRideMount> <!-- superseded by Oblivion.esm -->
+   <_activateVerbSit>Sit</_activateVerbSit> <!-- superseded by Oblivion.esm -->
+   <_activateVerbSpeakToNPC>Talk</_activateVerbSpeakToNPC> <!-- superseded by Oblivion.esm -->
+   <_activateVerbTakeItem>Take</_activateVerbTakeItem> <!-- superseded by Oblivion.esm -->
+   <_activateVerbUseBed>Sleep</_activateVerbUseBed> <!-- superseded by Oblivion.esm -->
+   <_activateVerbUseDoor>Use</_activateVerbUseDoor> <!-- superseded by Oblivion.esm -->
+   <_activateVerbVampireFeed>Feed/Talk</_activateVerbVampireFeed> <!-- superseded by Oblivion.esm -->
    
    <!-- Verbs shown when aiming at something, if interacting would be a crime: -->
    <_activateCrimeGeneric>Interact</_activateCrimeGeneric>
-   <_activateCrimeOpenContainer>Open</_activateCrimeOpenContainer>
-   <_activateCrimeReadBook>Read</_activateCrimeReadBook>
+   <_activateCrimeOpenContainer>Open</_activateCrimeOpenContainer> <!-- superseded by Oblivion.esm -->
+   <_activateCrimeReadBook>Read</_activateCrimeReadBook> <!-- superseded by Oblivion.esm -->
    <_activateCrimeRideMount>Steal</_activateCrimeRideMount>
-   <_activateCrimeSit>Sit</_activateCrimeSit>
+   <_activateCrimeSit>Sit</_activateCrimeSit> <!-- superseded by Oblivion.esm -->
    <_activateCrimePickpocketNPC>Pickpocket</_activateCrimePickpocketNPC>
    <_activateCrimeTakeItem>Steal</_activateCrimeTakeItem>
-   <_activateCrimeUseBed>Sleep</_activateCrimeUseBed>
+   <_activateCrimeUseBed>Sleep</_activateCrimeUseBed> <!-- superseded by Oblivion.esm -->
    <_activateCrimeUseDoor>Trespass</_activateCrimeUseDoor>
-   <_activateCrimeVampireFeed>Feed</_activateCrimeVampireFeed>
+   <_activateCrimeVampireFeed>Feed/Pickpocket</_activateCrimeVampireFeed>
    
    <!-- Verbs shown when aiming at something (miscellaneous): -->
    <_activateVerbOpenDoor>Open</_activateVerbOpenDoor>

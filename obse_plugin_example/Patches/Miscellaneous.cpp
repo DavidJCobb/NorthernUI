@@ -453,7 +453,7 @@ namespace CobbPatches {
                return false;
             if (CALL_MEMBER_FN(tile, GetFloatTraitValue)(kTileValue_target) == 2.0F)
                return true;
-            if (CALL_MEMBER_FN(tile, GetFloatTraitValue)(kTileValue_xlist) == 108.0F) { // see code starting at 0x00581203
+            if (CALL_MEMBER_FN(tile, GetFloatTraitValue)(kTileValue_xlist) == 108.0F) { // xlist == &xlist;? see code starting at 0x00581203
                for (auto node = tile->childList.end; node; node = node->prev) {
                   auto child = node->data;
                   if (!child)

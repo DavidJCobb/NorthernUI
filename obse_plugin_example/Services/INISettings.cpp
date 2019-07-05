@@ -55,6 +55,8 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(fLookSensitivityMin,       "XInput", 1.0F);
          XXN_MAKE_INI_SETTING(fLookSensitivityStep,      "XInput", 0.8F);
          XXN_MAKE_INI_SETTING(iLookSensitivityStepCount, "XInput", 6);
+         XXN_MAKE_INI_SETTING(iPlayerMenuModelJoystickMaxRotateSpeed, "XInput", 400); // mouse pixels per second
+         XXN_MAKE_INI_SETTING(iPlayerMenuModelJoystickMaxZoomSpeed,   "XInput", 200); // mouse pixels per second
       };
       #undef XXN_MAKE_INI_SETTING
       //

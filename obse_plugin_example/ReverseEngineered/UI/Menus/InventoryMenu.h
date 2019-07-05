@@ -22,6 +22,6 @@ namespace RE {
          float			unk48;				//048
          UInt32			unk4C;				//04C
          ExtraContainerChanges::EntryData* unk50; // 50
-         UInt32			unk54;				//054 uninitialized
+         SInt32 unk54; // 54 // listindex of last-focused inventory list item
    };
 };

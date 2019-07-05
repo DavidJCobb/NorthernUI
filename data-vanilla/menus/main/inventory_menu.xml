@@ -38,7 +38,10 @@
 		</min>
 	</user12>
 	<!-- user13 through user17 used for additional header positioning -->
-	<user18> &true; </user18>		<!-- is A button hint visible? xbox only -->
+	<user18> <!-- is A button hint visible? xbox only -->
+      <copy>&true;</copy>
+      <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+   </user18>
 	
 	<xleft> <ref src="inv_tabs_prev" trait="clicked" /> </xleft>
 	<xright> <ref src="inv_tabs_next" trait="clicked" /> </xright>

@@ -152,6 +152,7 @@
     <ClCompile Include="Patches\SavegameSafeDelete.cpp" />
     <ClCompile Include="Patches\RaceSexMenu.cpp" />
     <ClCompile Include="Patches\SaveMenu.cpp" />
+    <ClCompile Include="Patches\SpellMakingMenu.cpp" />
     <ClCompile Include="Patches\StatsMenu.cpp" />
     <ClCompile Include="Patches\TagIDs\Main.cpp" />
     <ClCompile Include="Patches\TagIDs\Operators.cpp" />
@@ -285,6 +286,7 @@
     <ClInclude Include="Patches\RaceSexMenu.h" />
     <ClInclude Include="Patches\SaveMenu.h" />
     <ClInclude Include="Patches\Selectors.h" />
+    <ClInclude Include="Patches\SpellMakingMenu.h" />
     <ClInclude Include="Patches\StatsMenu.h" />
     <ClInclude Include="Patches\TagIDs\Main.h" />
     <ClInclude Include="Patches\TagIDs\Operators.h" />
@@ -334,6 +336,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\EnchantmentMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\GameplayMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\HUDInfoMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\HUDMainMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\HUDReticle.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\InventoryMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\LoadgameMenu.h" />

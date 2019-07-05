@@ -1,5 +1,6 @@
 #pragma once
 #include "ReverseEngineered/UI/MenuTextInputState.h"
+#include "ReverseEngineered/Forms/EffectItem.h"
 #include "obse/GameMenus.h"
 
 namespace RE {
@@ -7,6 +8,15 @@ namespace RE {
       public:
          SpellMakingMenu();
          ~SpellMakingMenu();
+         enum { kID = 0x411 };
+
+         enum {
+            kTraitID_Root_SkillRequirement     = kTileValue_user3, // string
+            kTraitID_Root_SpellMagickaCost     = kTileValue_user4, // float
+            kTraitID_Root_GoldCostToCreate     = kTileValue_user5, // float
+            kTraitID_Root_ShowSkillRequirement = kTileValue_user6, // UI bool
+            kTraitID_Root_PlayerGold           = kTileValue_user7, // float
+         };
 
          UInt32 unk28 = 0;
          UInt32 unk2C = 0;
@@ -29,7 +39,7 @@ namespace RE {
          UInt8  unk6C = 0; // analogous to AlchemyMenu::unkA4
          UInt8  unk6D[3];
          MenuTextInputState* unk70;
-         void*  unk74 = nullptr;
+         SpellItem* unk74 = nullptr;
 
          MEMBER_FN_PREFIX(SpellMakingMenu);
          DEFINE_MEMBER_FN(FocusTextField, void, 0x005D7590);

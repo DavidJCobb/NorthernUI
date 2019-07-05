@@ -54,6 +54,10 @@
 		<gt> 0 </gt>
 		<sub> 1 </sub>
 	</_mouseover_any>
+   
+   <_isUsable> <!-- Needed to block REF operators from directing keynav to our buttons if we're hidden -->
+      <copy src="me()" trait="visible" /><neq>&false;</neq>
+   </_isUsable>
 	
 	<text name="quantity_display_text">
       <include src="NorthernUI\fonts\normal.xml" />
@@ -106,7 +110,7 @@
    <!-- Hitboxes for clicking on the scrollbar track: -->
 	<rect name="horizontal_scroll_leftside">
 		<id>&generic;</id>
-		<target>&true;</target>
+		<target><copy src="parent()" trait="_isUsable" /></target>
       <clips><copy src="parent()" trait="clips" /></clips>
 		<depth>2</depth>
 		<width> <!-- make it long enough to stretch from the left arrow to the marker -->
@@ -119,7 +123,7 @@
 	</rect>
 	<rect name="horizontal_scroll_rightside">
 		<id>&generic;</id>
-		<target>&true;</target>
+		<target><copy src="parent()" trait="_isUsable" /></target>
       <clips><copy src="parent()" trait="clips" /></clips>
 		<depth>2</depth>
 		<width>
@@ -139,7 +143,7 @@
    <!-- Scrollbar graphics: -->
    <image name="horizontal_scroll_left">
 		<id>&generic;</id>
-		<target>&true;</target>
+		<target><copy src="parent()" trait="_isUsable" /></target>
       <clips><copy src="parent()" trait="clips" /></clips>
       <depth>4</depth>
       <zoom><copy src="parent()" trait="zoom" /></zoom>
@@ -159,7 +163,7 @@
 	</image>
 	<image name="horizontal_scroll_right">
 		<id>&generic;</id>
-		<target>&true;</target>
+		<target><copy src="parent()" trait="_isUsable" /></target>
       <clips><copy src="parent()" trait="clips" /></clips>
       <depth>4</depth>
       <zoom><copy src="parent()" trait="zoom" /></zoom>
@@ -188,7 +192,7 @@
 	</image>
 	<image name="horizontal_scroll_marker">
 		<id><copy src="parent()" trait="user6" /></id>
-		<target>&true;</target>
+		<target><copy src="parent()" trait="_isUsable" /></target>
       <clips><copy src="parent()" trait="clips" /></clips>
       <depth>6</depth>
       <zoom><copy src="parent()" trait="zoom" /></zoom>

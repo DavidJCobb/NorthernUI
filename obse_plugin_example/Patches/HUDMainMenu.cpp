@@ -1,6 +1,14 @@
 #include "Patches/HUDMainMenu.h"
+
 #include "ReverseEngineered/ExtraData/ExtraContainerChanges.h"
+#include "ReverseEngineered/UI/InterfaceManager.h"
 #include "ReverseEngineered/UI/Tile.h"
+#include "ReverseEngineered/UI/Menus/HUDMainMenu.h"
+#include "ReverseEngineered/Systems/Timing.h"
+#include "Patches/XboxGamepad/Main.h"
+#include "Patches/XboxGamepad/CustomControls.h"
+#include "Services/INISettings.h"
+#include "Miscellaneous/math.h";
 #include "obse_common/SafeWrite.h";
 
 namespace CobbPatches {
@@ -40,9 +48,49 @@ namespace CobbPatches {
             WriteRelJump(0x005A7C0E, (UInt32)&Outer);
          };
       };
+      namespace XInputPlayerMenuModelRotate {
+         void _stdcall Inner(RE::HUDMainMenu* menu) {
+            static UInt32 lastUpdate = 0;
+            //
+            if (CALL_MEMBER_FN(*RE::ptrInterfaceManager, GetTopmostMenuID)() != 1) // Abort if not in a "big four" menu
+               return;
+            XXNGamepad* gamepad = XXNGamepadSupportCore::GetInstance()->GetAnyGamepad();
+            if (!gamepad)
+               return;
+            bool   swap = XXNGamepadConfigManager::GetInstance().swapSticksMenuMode;
+            SInt32 xRaw =  gamepad->GetJoystickAxis(swap ? XXNGamepad::kJoystickAxis_LeftX : XXNGamepad::kJoystickAxis_RightX);
+            SInt32 yRaw = -gamepad->GetJoystickAxis(swap ? XXNGamepad::kJoystickAxis_LeftY : XXNGamepad::kJoystickAxis_RightY);
+            //
+            float frameTime = RE::g_timeInfo->frameTime;
+            float speedRot  = (float)NorthernUI::INI::XInput::iPlayerMenuModelJoystickMaxRotateSpeed.iCurrent * frameTime;
+            float speedZoom = (float)NorthernUI::INI::XInput::iPlayerMenuModelJoystickMaxZoomSpeed.iCurrent   * frameTime;
+            //
+            float x = (float)xRaw / 100.0F * speedRot;
+            float y = (float)yRaw / 100.0F * speedZoom;
+            //
+            if (xRaw || yRaw)
+               RE::UpdateMainMenuPlayerModelAngle(x, y);
+         };
+         __declspec(naked) void Outer() {
+            _asm {
+               mov  eax, 0x006ECC80; // reproduce patched-over call to TESObjectREFR::GetParentCell
+               call eax;
+               push eax; // protect
+               push ebp;
+               call Inner; // stdcall
+               pop  eax; // restore
+               mov  ecx, 0x005A6E1E;
+               jmp  ecx;
+            }
+         };
+         void Apply() {
+            WriteRelJump(0x005A6E19, (UInt32)&Outer);
+         };
+      };
 
       void Apply() {
          ShowWeaponCharge::Apply();
+         XInputPlayerMenuModelRotate::Apply();
       };
    };
 };

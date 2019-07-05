@@ -55,6 +55,8 @@ namespace RE {
    //
    DEFINE_SUBROUTINE_EXTERN(void,   HideBigFour,          0x0057CC00);
    DEFINE_SUBROUTINE_EXTERN(void,   ShowOrRefreshBigFour, 0x0057CAC0);
+   //
+   DEFINE_SUBROUTINE_EXTERN(void, UpdateMainMenuPlayerModelAngle, 0x005A5900, float cursorMovementX, float cursorMovementY);
 
    class InterfaceManager {
       public:
@@ -94,7 +96,7 @@ namespace RE {
          };
 
          SceneGraph* unk000; // 000 // == *g_interfaceSceneGraph
-         SceneGraph* unk004; // 004 // == *g_interface3DSceneGraph // has a BSFogProperty added to it
+         SceneGraph* unk004; // 004 // == *g_interface3DSceneGraph // has a BSFogProperty added to it // the shadow-scene-node inside of this contains the 3D model of the player seen in the Big Four menus
          UInt8  unk008; // 08
                         //  - truthy means not in "menu mode" (so, "in explore mode?")
                         //  - value 1 alters the behavior of ShowQuickKeysMenu
@@ -134,7 +136,7 @@ namespace RE {
          NiNode* cursorScene; // 058 // "Cursor Root"
          NiNode* unk05C; // 05C
          NiNode* unk060; // 060 // containing node for player model in menus?
-         ShadowSceneNode* playerScene; // 064
+         ShadowSceneNode* playerScene; // 064 // the player, as shown in the menus
          Tile*   menuRoot; // 068
          Tile*   strings;  // 06C
          NiNode* unk070;							// 070 // "DebugText Root"

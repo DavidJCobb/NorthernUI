@@ -57,6 +57,7 @@
 #include "Patches/RaceSexMenu.h"
 #include "Patches/SavegameSafeDelete.h"
 #include "Patches/SaveMenu.h"
+#include "Patches/SpellMakingMenu.h"
 #include "Patches/StatsMenu.h"
 #include "Patches/Selectors.h"
 #include "Patches/TagIDs/Main.h" //#include "Patches/Traits.h"
@@ -292,6 +293,7 @@ extern "C" {
             man.RegisterPatch("QuestAddedMenu", &CobbPatches::QuestAddedMenu::Apply, {});
             man.RegisterPatch("RaceSexMenu",    &CobbPatches::RaceSexMenu::Apply, {});
             man.RegisterPatch("SaveMenu",       &CobbPatches::SaveMenu::Apply, {});
+            man.RegisterPatch("SpellMakingMenu", &CobbPatches::SpellMakingMenu::Apply, {});
             man.RegisterPatch("StatsMenu",      &CobbPatches::StatsMenu::Apply, {});
             man.RegisterPatch("VideoMenu",      &CobbPatches::VideoMenu::Apply, {});
             //

@@ -28,6 +28,8 @@ namespace RE {
    //
    DEFINE_SUBROUTINE(void, HideBigFour,          0x0057CC00);
    DEFINE_SUBROUTINE(void, ShowOrRefreshBigFour, 0x0057CAC0);
+   //
+   DEFINE_SUBROUTINE(void, UpdateMainMenuPlayerModelAngle, 0x005A5900, float, float);
 
    float InterfaceManager::GetNormalizedMouseAxisMovement(UInt8 axis) { // 1, 2, 3 = x, y, z
       if (axis < 1)

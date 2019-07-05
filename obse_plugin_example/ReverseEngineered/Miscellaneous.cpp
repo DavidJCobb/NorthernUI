@@ -3,10 +3,12 @@
 #include "obse/Script.h"
 
 namespace RE {
+   DEFINE_SUBROUTINE(const char*, ActorValueIndexToSkillName, 0x00565CC0, UInt32 avIndex);
    DEFINE_SUBROUTINE(bool,   FormIsGoldAsInCurrency, 0x00469980, TESForm* form);
    DEFINE_SUBROUTINE(UInt32, GetFormQuality,         0x0046E3F0, TESForm* form);
    DEFINE_SUBROUTINE(float,  GetFormWeight,          0x00470620, TESForm* form);
    DEFINE_SUBROUTINE(TESBipedModelForm*, GetTESBipedModelForm, 0x004691B0, TESForm* form);
+   DEFINE_SUBROUTINE(SInt32, MagicSchoolToActorValueIndex, 0x0041B770, MagicSchool); // returns -1 if invalid
    DEFINE_SUBROUTINE(float,  RoundToMultipleOf,      0x004843B0, float value, float divisor);
    DEFINE_SUBROUTINE(UInt32, SkillMasteryLevelToMinimumSkillLevel, 0x0056A360, UInt32 skillMasteryLevel);
    DEFINE_SUBROUTINE(const char*, SkillMasteryLevelToString, 0x0056A340, UInt32 skillMasteryLevel);

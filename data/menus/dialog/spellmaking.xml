@@ -10,8 +10,12 @@
 	<user3>  </user3>							<!-- "requires skill level" text -->
 	<user4> 0 </user4>							<!-- cost to cast the spell that is being created -->
 	<user5> 0 </user5>							<!-- cost of the spell that is being created -->
-	<user6> &false; </user6>					<!-- visibility of "requires skill level" text -->
+	<user6> &false; </user6> <!-- visibility of "requires skill level" text -->
 	<user7> 0 </user7>							<!-- Player gold -->
+   
+   <user22>-1</user22> <!-- NorthernUI: required skill actor value index (matches school of costliest effect) -->
+   <user23>-1</user23> <!-- NorthernUI: required skill level -->
+   <user24>-1</user24> <!-- NorthernUI: player skill level -->
 	
 	<xbuttonb> <ref src="spell_button_exit" trait="clicked"/> </xbuttonb>
 	<xbuttonx> <ref src="spell_button_create" trait="clicked"/> </xbuttonx>
@@ -223,13 +227,47 @@
             <width><copy src="sibling()" trait="width" /></width>
             <height>
                <copy src="child()" trait="y" />
-               <add  src="child()" trait="height" />
+               <add>
+                  <copy src="child()"   trait="height" />
+                  <onlyif src="child()" trait="visible" />
+               </add>
+               <add>
+                  <copy>16</copy>
+                  <onlyifnot src="child()" trait="visible" />
+               </add>
             </height>
             <visible><copy src="SpellmakingMenu" trait="user6" /></visible>
             
-            <red>255</red>
-            <green>45</green>
-            <blue>45</blue>
+            <_playerCannotCast>
+               <copy src="menu()" trait="user23" />
+               <gt>
+                  <copy src="menu()" trait="user24" />
+               </gt>
+               <and><copy src="menu()" trait="user23" /><neq>-1</neq></and>
+               <and><copy src="menu()" trait="user24" /><neq>-1</neq></and>
+            </_playerCannotCast>
+            
+            <red>
+               <copy>140</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif src="me()" trait="_playerCannotCast" />
+               </max>
+            </red>
+            <green>
+               <copy>45</copy>
+               <max>
+                  <copy>140</copy>
+                  <onlyifnot src="me()" trait="_playerCannotCast" />
+               </max>
+            </green>
+            <blue>
+               <copy>45</copy>
+               <max>
+                  <copy>140</copy>
+                  <onlyifnot src="me()" trait="_playerCannotCast" />
+               </max>
+            </blue>
             
             <image name="separator">
                <filename>Menus\NorthernUI\Shared\border_min.dds</filename>
@@ -240,6 +278,7 @@
                <y>16</y>
             </image>
             <text name="prefix">
+               <visible><copy src="parent()" trait="_playerCannotCast" /></visible>
                <string><copy src="xxnStrings()" trait="_spellmakingMenuCannotCastPrefix" /></string>
                <include src="NorthernUI\fonts\normal.xml" />
                <red>  <copy src="parent()" trait="red" /></red>
@@ -261,8 +300,11 @@
                <blue> <copy src="parent()" trait="blue" /></blue>
                <x>
                   <copy src="sibling()" trait="x" />
-                  <add  src="sibling()" trait="width" />
-                  <add>6</add> <!-- width of a space -->
+                  <add>
+                     <copy src="sibling()" trait="width" />
+                     <add>6</add> <!-- width of a space -->
+                     <onlyif src="sibling()" trait="visible" />
+                  </add>
                </x>
                <y><copy src="sibling()" trait="y" /></y>
             </text>
@@ -280,6 +322,7 @@
                <y><copy src="sibling()" trait="y" /></y>
             </text>
             <text name="addendum">
+               <visible><copy src="parent()" trait="_playerCannotCast" /></visible>
                <string><copy src="xxnStrings()" trait="_spellmakingMenuCannotCastAddendum" /></string>
                <include src="NorthernUI\fonts\normal.xml" />
                <red>  <copy src="parent()" trait="red" /></red>
@@ -288,8 +331,11 @@
                <x>0</x>
                <y>
                   <copy src="sibling()" trait="y" />
-                  <add  src="sibling()" trait="height" />
-                  <add>4</add>
+                  <add>
+                     <copy src="sibling()" trait="height" />
+                     <add>4</add>
+                     <onlyif src="parent()" trait="_playerCannotCast" />
+                  </add>
                </y>
                <wrapwidth>
                   <copy src="parent()" trait="width" />

@@ -6,6 +6,7 @@
 #include "ReverseEngineered/Systems/Input.h"
 #include "ReverseEngineered/UI/Tile.h"
 #include "ReverseEngineered/UI/Menus/HUDInfoMenu.h"
+#include "ReverseEngineered/GameSettings.h"
 #include "obse/GameMenus.h"
 #include "obse/Utilities.h"
 #include "obse_common/SafeWrite.h"
@@ -52,13 +53,6 @@ namespace CobbPatches {
                priorXbox = xbox;
             }
          }
-{//DEBUG
-   auto pad = XXNGamepadSupportCore::GetInstance()->GetAnyGamepad();
-   if (pad) {
-      CALL_MEMBER_FN(tile, UpdateFloat)(kTileValue_user10, pad->GetJoystickAxis(1));
-      CALL_MEMBER_FN(tile, UpdateFloat)(kTileValue_user11, pad->GetJoystickAxis(2));
-   }
-}
          if (target) {
             /*// The HorseFix hook already handles this.
             if (CALL_MEMBER_FN(target, IsHorse)()) { // Interacting with a ridden horse counts as interacting with its rider.
@@ -87,6 +81,13 @@ namespace CobbPatches {
                   if (CALL_MEMBER_FN(target, ActivatingWouldBeACrime)())
                      value = 2.0F;
                CALL_MEMBER_FN(tile, UpdateFloat)(kTileValue_user20, value); // NorthernUI: Activating the object would be a crime?
+            }
+            {  // Restore Xbox verb (user0)
+               auto index = iconEnum - 1;
+               const char* verb = nullptr;
+               if (index <= 18)
+                  verb = RE::GMST::sReticleVerbs[index]->s;
+               CALL_MEMBER_FN(tile, UpdateString)(kTileValue_user0, verb);
             }
             CALL_MEMBER_FN(tile, UpdateFloat)(kTileValue_user21, (float) iconEnum); // NorthernUI: HUDReticle icon enum
             CALL_MEMBER_FN(tile, UpdateFloat)(kTileValue_user22, (float) CALL_MEMBER_FN(target, GetOpenState)());

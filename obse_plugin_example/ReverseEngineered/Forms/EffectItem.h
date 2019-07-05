@@ -1,5 +1,6 @@
 #pragma once
 #include "ReverseEngineered/_BASE.h"
+#include "ReverseEngineered/Miscellaneous.h"
 #include "obse/GameForms.h"
 
 namespace RE {
@@ -92,6 +93,7 @@ namespace RE {
          DEFINE_MEMBER_FN(FormatDescription,       BSStringT*,  0x004145D0, BSStringT* out, MagicItem* myContainingMagicItem, float seemsUnused); // used for spell, potion, etc. effect descriptions seen in various menus // wraps FormatDescriptionInner; gets the params you don't supply // out MUST be empty or uninitialized
          DEFINE_MEMBER_FN(FormatDescriptionInner,  void,        0x00413BE0, BSStringT* out, UInt32 magicItemVirtualMethod06CallResult, float seemsUnused, bool isApparelEnchant, bool isPotion, bool isWeaponEnchant); // out MUST be empty or uninitialized
          DEFINE_MEMBER_FN(GetDuration,             SInt32, 0x004133C0); // returns 0 if setting's NoDuration flag is set
+         DEFINE_MEMBER_FN(GetMagicSchool,          RE::MagicSchool, 0x00412F20);
          DEFINE_MEMBER_FN(GetName,                 void,   0x00413A90, char* out); // e.g. "Restore [Attribute Name]" for a 'REAT' effectCode
          DEFINE_MEMBER_FN(GetScriptedOrActualName, void,   0x004139F0, BSStringT* name); // suitable for internal use, e.g. as the name of a generated tile
          DEFINE_MEMBER_FN(IsHostile,               bool,   0x00413470);
@@ -141,6 +143,8 @@ namespace RE {
          MEMBER_FN_PREFIX(EffectItemList);
          DEFINE_MEMBER_FN(AddItem,                void,        0x00414B90, EffectItem*);
          DEFINE_MEMBER_FN(Clear,                  void,        0x00414C70); // remove all effects
+         DEFINE_MEMBER_FN(FormatCostliestEffectSkillRequirement, BSStringT*, 0x00415390, BSStringT* out);
+         DEFINE_MEMBER_FN(GetCostliestEffect,     EffectItem*, 0x004152C0, UInt32, bool);
          DEFINE_MEMBER_FN(GetItem,                EffectItem*, 0x00414B10, UInt32); // alias of GetEffectItemByIndex
          DEFINE_MEMBER_FN(GetEffectItemByIndex,   EffectItem*, 0x00414B10, UInt32);
          DEFINE_MEMBER_FN(HasEffectMatchingAlch,  bool,        0x00414F00, UInt32 effectCode, UInt32 actorValueOrOther);

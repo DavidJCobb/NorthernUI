@@ -148,6 +148,26 @@
    <_verb_51><copy src="xxnStrings()" trait="_activateVerbHarvestFlora" /></_verb_51> <!-- flora -->
    <_verb_52><copy src="xxnStrings()" trait="_activateVerbYieldToEnemy" /></_verb_52> <!-- enemy in combat, targeting player, while player holds block -->
    
+   <!-- Use strings defined in Oblivion.esm whenever possible -->
+   <_verb_0><copy src="menu()" trait="user0" /></_verb_0>
+   <_verb_1><copy src="menu()" trait="user0" /></_verb_1>
+   <_verb_2><copy src="menu()" trait="user0" /></_verb_2>
+   <_verb_3><copy src="menu()" trait="user0" /></_verb_3>
+   <_verb_4><copy src="menu()" trait="user0" /></_verb_4>
+   <_verb_5><copy src="menu()" trait="user0" /></_verb_5>
+   <_verb_6><copy src="menu()" trait="user0" /></_verb_6>
+   <_verb_7><copy src="menu()" trait="user0" /></_verb_7>
+   <_verb_8><copy src="menu()" trait="user0" /></_verb_8>
+   <_verb_9><copy src="menu()" trait="user0" /></_verb_9>
+   <_verb_10><copy src="menu()" trait="user0" /></_verb_10>
+   <_verb_11><copy src="menu()" trait="user0" /></_verb_11>
+   <_verb_12><copy src="menu()" trait="user0" /></_verb_12>
+   <_verb_22><copy src="menu()" trait="user0" /></_verb_22> <!-- Container (crime) -->
+   <_verb_23><copy src="menu()" trait="user0" /></_verb_23> <!-- Sit (crime) -->
+   <_verb_24><copy src="menu()" trait="user0" /></_verb_24> <!-- Activate (crime) -->
+   <_verb_25><copy src="menu()" trait="user0" /></_verb_25> <!-- Sleep (crime) -->
+   <_verb_26><copy src="menu()" trait="user0" /></_verb_26> <!-- Read (crime) -->
+   
    <_verb>
       <copy src="HUDInfoMenu" trait="user21" />
       <add> <!-- overrides for crimes -->

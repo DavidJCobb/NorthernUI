@@ -66,5 +66,7 @@ namespace RE {
       SettingInfo** const sMagicRangeNames = (SettingInfo**) 0x00B037E4; // seven pointers
       //
       SettingInfo** const sControlMappingNames = (SettingInfo**) 0x00B399D0; // 29 pointers; names of mappings corresponding to Input.h kControl enum
+      //
+      SettingInfo** const sReticleVerbs = (SettingInfo**) 0x00B39A64;
    };
 };

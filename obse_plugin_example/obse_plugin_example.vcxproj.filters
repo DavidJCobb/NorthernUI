@@ -108,6 +108,7 @@
     <ClCompile Include="Patches\MessageMenu.cpp" />
     <ClCompile Include="Patches\ExtendedConsoleCommands.cpp" />
     <ClCompile Include="Patches\Compatibility\Dynamic Training Cost\Main.cpp" />
+    <ClCompile Include="Patches\SpellMakingMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -262,7 +263,6 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
-    <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\Commands_ActiveEffect.h" />
     <ClInclude Include="..\obse\obse\Commands_Actor.h" />
     <ClInclude Include="..\obse\obse\Commands_ActorValue.h" />
@@ -363,7 +363,6 @@
     <ClInclude Include="..\obse\obse\ThreadLocal.h" />
     <ClInclude Include="..\obse\obse\Utilities.h" />
     <ClInclude Include="..\obse\obse\VarMap.h" />
-    <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
@@ -8018,6 +8017,8 @@
     <ClInclude Include="Patches\ExtendedConsoleCommands.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\TrainingMenu.h" />
     <ClInclude Include="Patches\Compatibility\Dynamic Training Cost\Main.h" />
+    <ClInclude Include="Patches\SpellMakingMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\HUDMainMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

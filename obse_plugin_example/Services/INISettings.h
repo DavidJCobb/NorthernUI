@@ -75,6 +75,8 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(fLookSensitivityMin,       "XInput", 1.0F);
          XXN_MAKE_INI_SETTING(fLookSensitivityStep,      "XInput", 0.8F);
          XXN_MAKE_INI_SETTING(iLookSensitivityStepCount, "XInput", 6);
+         XXN_MAKE_INI_SETTING(iPlayerMenuModelJoystickMaxRotateSpeed, "XInput", 400); // mouse pixels per second
+         XXN_MAKE_INI_SETTING(iPlayerMenuModelJoystickMaxZoomSpeed,   "XInput", 200); // mouse pixels per second
       };
       #undef XXN_MAKE_INI_SETTING
       //
@@ -106,7 +108,7 @@ namespace NorthernUI {
             //
             void Add(INISetting* setting);
             void Load();
-            void Save(); // UNFINISHED -- SEE BOTTOM. IT WRITES TO A TEMPORARY FILE; WE NEED TO SWAP THE FILES AT THE END OF THE PROCESS. THEN WE NEED TO REMOVE THE CALL TO THIS FUNCTION FROM THE END OF Load.
+            void Save();
             //
             INISetting* Get(std::string& category, std::string& name) const;
             INISetting* Get(const char*  category, const char*  name) const;
