@@ -1,6 +1,9 @@
 <!-- xbox_floating_hint.xml -->
 <!-- rect name="xbox_floating_hint" -->
-	<visible> &xbox; </visible>
+	<visible>
+      <copy>&xbox;</copy>
+      <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+   </visible>
 	<width>
 		<copy src="child(xbox_floating_hint_text)" trait="x"/>
 		<add src="child(xbox_floating_hint_text)" trait="width"/>

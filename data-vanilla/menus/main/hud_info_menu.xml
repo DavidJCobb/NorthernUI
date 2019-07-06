@@ -101,7 +101,7 @@
 
 	<text name="hudinfo_action_text">
 		<visible> <copy src="HUDInfoMenu" trait="user2"/> </visible>
-		<string> <copy src="parent()" trait="user0"/> </string>
+		<string> <copy src="HUDInfoMenu" trait="user0"/> </string>
 		<justify> &right; </justify>
 		<font> 2 </font>
 		<red> <copy src="parent()" trait="red"/> </red>

@@ -44,9 +44,6 @@ namespace CobbPatches {
          //
          // Show the appropriate verb next to the A button icon when mousing over an item.
          //
-         // TODO: Mousing over a category header should show "Sort" as the A-button action. 
-         // Our current hook can't do this.
-         //
          namespace ItemVerbs {
             void _stdcall Inner(UInt8 formType, TESForm* item, RE::ExtraContainerChanges::EntryData* entry) {
                constexpr char* empty = "";

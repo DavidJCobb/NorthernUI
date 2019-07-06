@@ -4,11 +4,13 @@
 #include "ReverseEngineered/UI/InterfaceManager.h"
 #include "ReverseEngineered/UI/Tile.h"
 #include "ReverseEngineered/UI/Menus/HUDMainMenu.h"
+#include "ReverseEngineered/UI/Menus/MapMenu.h"
 #include "ReverseEngineered/Systems/Timing.h"
 #include "Patches/XboxGamepad/Main.h"
 #include "Patches/XboxGamepad/CustomControls.h"
 #include "Services/INISettings.h"
 #include "Miscellaneous/math.h";
+#include "obse/GameMenus.h";
 #include "obse_common/SafeWrite.h";
 
 namespace CobbPatches {
@@ -54,6 +56,11 @@ namespace CobbPatches {
             //
             if (CALL_MEMBER_FN(*RE::ptrInterfaceManager, GetTopmostMenuID)() != 1) // Abort if not in a "big four" menu
                return;
+            {  // Do not rotate if the MapMenu is open.
+               auto root = (RE::Tile*)g_TileMenuArray->data[RE::MapMenu::kID - 0x3E9];
+               if (root && CALL_MEMBER_FN(root, NiNodeIsNotCulled)())
+                  return;
+            }
             XXNGamepad* gamepad = XXNGamepadSupportCore::GetInstance()->GetAnyGamepad();
             if (!gamepad)
                return;

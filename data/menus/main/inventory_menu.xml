@@ -34,7 +34,7 @@
 		</min>
 	</user12>
 	<!-- user13 through user17 used for additional header positioning -->
-	<user18>&true;</user18>		<!-- is A button hint visible? xbox only -->
+	<user18>&false;</user18>		<!-- is A button hint visible? xbox only -->
    
    <!--
       NorthernUI overwrites user11 and user18, restoring Xbox build functionality 
@@ -951,7 +951,7 @@
             </visible>
             <x>0</x>
             <y>0</y>
-            <string><copy src="xxnStrings()" trait="_inventoryUseItem" /></string>
+            <!-- <string><copy src="xxnStrings()" trait="_inventoryUseItem" /></string> -->
             <string><copy src="menu()" trait="user11" /></string>
          </rect>
          <rect name="drop">

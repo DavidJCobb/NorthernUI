@@ -22,7 +22,7 @@
 		<add src="child(inv_background)" trait="width"/>
 		<sub> 20 </sub>
 	</user10>
-	<user11>Use/Equip</user11>				<!-- used for xbox hints - what should the A button do, TEXT -->
+	<user11></user11>				<!-- used for xbox hints - what should the A button do, TEXT -->
 	<user12>						<!-- lowest possible drop for the pop-up menu -->
 		<copy src="screen()" trait="height"/>
 		<sub src="screen()" trait="cropy"/>
@@ -38,10 +38,12 @@
 		</min>
 	</user12>
 	<!-- user13 through user17 used for additional header positioning -->
-	<user18> <!-- is A button hint visible? xbox only -->
-      <copy>&true;</copy>
-      <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
-   </user18>
+	<user18>&false;</user18>		<!-- is A button hint visible? xbox only -->
+   
+   <!--
+      NorthernUI overwrites user11 and user18, restoring Xbox build functionality 
+      where the A-button label would change depending on what has mouseover focus.
+   -->
 	
 	<xleft> <ref src="inv_tabs_prev" trait="clicked" /> </xleft>
 	<xright> <ref src="inv_tabs_next" trait="clicked" /> </xright>
