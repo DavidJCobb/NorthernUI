@@ -636,14 +636,14 @@ void XXNAlchemyMenu::UpdatePotion() {
    //
    static_assert(std::extent<decltype(XXNAlchemyMenu::apparati)>::value >= 3, "XXNAlchemyMenu::UpdatePotion is only programmed to work with at least four alchemy apparati available.");
    SInt8 qualities[std::extent<decltype(XXNAlchemyMenu::apparati)>::value];
-   bool  hasPosEffects = false;
+   bool  isPoison = false;
    float revealedEffectCount = 0.0F;
    {
       ExtraContainerChanges::EntryData* ebx = this->apparati[0];
       qualities[0] = /*SInt8*/ RE::GetFormQuality(ebx->type);
    }
-   if (!CALL_MEMBER_FN(potionEffects, IsPoison)())
-      hasPosEffects = true;
+   if (CALL_MEMBER_FN(potionEffects, IsPoison)())
+      isPoison = true;
    if (auto eax = this->apparati[1])
       qualities[1] = RE::GetFormQuality(eax->type);
    if (auto eax = this->apparati[3])
@@ -724,12 +724,12 @@ void XXNAlchemyMenu::UpdatePotion() {
             noMagnitude = effectFlags & EffectSetting::kEffect_NoMagnitude;
          }
          if (!noDuration && !noMagnitude) { // at 0x005949E0
-            RE::ComputeType1PotionEffectStrength(&magnitude, &duration, baseCost, mortarAndPestleMult, esi, isHostile, qualities[3], qualities[1], qualities[2], hasPosEffects);
+            RE::ComputeType1PotionEffectStrength(&magnitude, &duration, baseCost, mortarAndPestleMult, esi, isHostile, qualities[3], qualities[1], qualities[2], isPoison);
          } else { // at 0x00594A2B
             if (noMagnitude) // at 0x00594A3C
-               RE::ComputeType2PotionEffectStrength(&duration, baseCost, mortarAndPestleMult, esi, isHostile, qualities[3], qualities[1], qualities[2], hasPosEffects);
+               RE::ComputeType2PotionEffectStrength(&duration, baseCost, mortarAndPestleMult, esi, isHostile, qualities[3], qualities[1], qualities[2], isPoison);
             else
-               RE::ComputeType3PotionEffectStrength(&magnitude, baseCost, mortarAndPestleMult, esi, isHostile, qualities[3], qualities[1], qualities[2], hasPosEffects);
+               RE::ComputeType3PotionEffectStrength(&magnitude, baseCost, mortarAndPestleMult, esi, isHostile, qualities[3], qualities[1], qualities[2], isPoison);
          }
          SInt32 finalDuration  = (SInt32) round(duration);
          SInt32 finalMagnitude = (SInt32) round(magnitude);
