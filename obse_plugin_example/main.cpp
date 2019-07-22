@@ -39,6 +39,7 @@
 #include "Patches/DialogMenu.h"
 #include "Patches/EffectSettingMenu.h"
 #include "Patches/EnchantingAndSigilStoneMenus.h"
+#include "Patches/EnhancedMovement.h"
 #include "Patches/Exploratory.h" // ====== TEST PATCHES ======
 #include "Patches/ExtendedConsoleCommands.h"
 #include "Patches/Fonts.h"
@@ -254,6 +255,7 @@ extern "C" {
             man.RegisterPatch("Miscellaneous", &CobbPatches::Miscellaneous::Apply, {});
             man.RegisterPatch("Exploratory",   &CobbPatches::Exploratory::Apply,   {});
             man.RegisterPatch("Logging",       &CobbPatches::Logging::Apply,       {});
+            man.RegisterPatch("EnhancedMovement",   &CobbPatches::EnhancedMovement::Apply,   {});
             man.RegisterPatch("MenuTextInputState", &CobbPatches::MenuTextInputState::Apply, {});
             man.RegisterPatch("SavegameSafeDelete", &CobbPatches::SavegameSafeDelete::Apply, {});
             man.RegisterPatch(

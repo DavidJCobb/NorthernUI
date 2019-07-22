@@ -110,6 +110,8 @@
     <ClCompile Include="Patches\Compatibility\Dynamic Training Cost\Main.cpp" />
     <ClCompile Include="Patches\SpellMakingMenu.cpp" />
     <ClCompile Include="ReverseEngineered\Forms\Actor.cpp" />
+    <ClCompile Include="Patches\EnhancedMovement.cpp" />
+    <ClCompile Include="Miscellaneous\rotation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -8019,6 +8021,8 @@
     <ClInclude Include="Patches\SpellMakingMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\HUDMainMenu.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\NiControllerManager.h" />
+    <ClInclude Include="Patches\EnhancedMovement.h" />
+    <ClInclude Include="Miscellaneous\rotation.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

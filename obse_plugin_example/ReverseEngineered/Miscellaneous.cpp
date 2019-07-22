@@ -15,6 +15,8 @@ namespace RE {
 
    DEFINE_SUBROUTINE(bool, IsQuietNaN, 0x00984012, double);
 
+   DEFINE_SUBROUTINE(void, MultiplyMatrixByColumn, 0x00710250, NiVector3& out, const NiVector3& column, const NiMatrix33& matrix);
+
    bool GetScriptVariableValue(TESQuest* quest, const char* variableName, double& out) {
       out = 0.0;
       //
@@ -34,4 +36,15 @@ namespace RE {
       out = varCurrent->data;
       return true;
    }
+};
+
+namespace cobb {
+   void matrix_from_ni(matrix& out, const NiMatrix33& source) {
+      static_assert(sizeof(NiMatrix33) == sizeof(matrix), "Structs not the same size.");
+      memcpy(&out, &source, sizeof(NiMatrix33));
+   };
+   void matrix_to_ni(NiMatrix33& out, const matrix& source) {
+      static_assert(sizeof(NiMatrix33) == sizeof(matrix), "Structs not the same size.");
+      memcpy(&out, &source, sizeof(NiMatrix33));
+   };
 };

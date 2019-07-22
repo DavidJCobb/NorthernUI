@@ -189,13 +189,13 @@ namespace cobb {
       }
       UInt32 s = 256;
       char*  b = (char*) malloc(s);
-      UInt32 r = vsprintf(b, format, args);
+      UInt32 r = vsprintf_s(b, s, format, args);
       while (r > s) {
          va_copy(args, safe);
          s += 20;
          delete b;
          char*  b = (char*)malloc(s);
-         r = vsprintf(b, format, args);
+         r = vsprintf_s(b, s, format, args);
       }
       out  = b;
       delete b;

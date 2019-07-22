@@ -2,6 +2,8 @@
 #include "ReverseEngineered/_BASE.h"
 #include "obse/Utilities.h"
 
+#include "Miscellaneous/rotation.h"
+
 class TESBipedModelForm;
 class TESQuest;
 namespace RE {
@@ -44,16 +46,50 @@ namespace RE {
       float& operator[] (int x) {
          return this->data[x];
       }
+      const float& operator[] (int x) const {
+         return this->data[x];
+      }
 
       MEMBER_FN_PREFIX(NiMatrix33);
-      DEFINE_MEMBER_FN(AddViaCopy,       NiMatrix33*, 0x0070FFC0, NiMatrix33* out, NiMatrix33* other); // returns out
-      DEFINE_MEMBER_FN(MultiplyByColumn, NiVector3*,  0x007101F0, NiVector3*  out, NiVector3*  other); // returns out
-      DEFINE_MEMBER_FN(MultiplyViaCopy,  NiMatrix33*, 0x007100A0, NiMatrix33* out, NiMatrix33* other); // returns out
+      DEFINE_MEMBER_FN(ApplyRelativeRotation, NiMatrix33*, 0x0053D7A0, NiMatrix33& out, const NiMatrix33& relative); // returns out
+      DEFINE_MEMBER_FN(AddViaCopy,       NiMatrix33*, 0x0070FFC0, NiMatrix33& out, const NiMatrix33& other); // returns out
+      DEFINE_MEMBER_FN(Equals,           bool,        0x0070FF20, const NiMatrix33& other);
+      DEFINE_MEMBER_FN(Invert,           bool,        0x007102B0, NiMatrix33& out); // returns false if the operation fails
+      DEFINE_MEMBER_FN(InvertForce,      void,        0x007103C0, NiMatrix33& out); // if the operation fails, sets the out matrix to all zeroes
+      DEFINE_MEMBER_FN(MultiplyByColumn, NiVector3*,  0x007101F0, NiVector3&  out, const NiVector3& other); // returns out
+      DEFINE_MEMBER_FN(MultiplyByScalar, NiMatrix33*, 0x00710190, NiMatrix33& out, float scalar); // returns out
+      DEFINE_MEMBER_FN(MultiplyViaCopy,  NiMatrix33*, 0x007100A0, NiMatrix33& out, const NiMatrix33& other); // out = this * other // returns out
+      DEFINE_MEMBER_FN(MultiplyOpposite, NiMatrix33*, 0x00710490, NiMatrix33& out, const NiMatrix33& other); // out = other * this // returns out // matrix multiplication is not commutative
+      DEFINE_MEMBER_FN(Overwrite,        NiMatrix33*, 0x00710400, NiMatrix33& out); // overwrites (out) with (this)
+      DEFINE_MEMBER_FN(SetFromAxisAngle, void,        0x0070FE20, float angle, float x, float y, float z);
+      DEFINE_MEMBER_FN(SetFromColumns,   NiMatrix33*, 0x0070FCC0, const NiVector3& col1, const NiVector3& col2, const NiVector3& col3); // returns self
       DEFINE_MEMBER_FN(SetFromPitch,     void,        0x0070FD30, float pitch); // same unit as TESObjectREFR::rotX
+      DEFINE_MEMBER_FN(SetFromRoll,      void,        0x0070FD80, float roll);
       DEFINE_MEMBER_FN(SetFromYaw,       void,        0x0070FDD0, float yaw); // same unit as TESObjectREFR::rotZ
       DEFINE_MEMBER_FN(SetToIdentity,    void,        0x0070FD10);
-      DEFINE_MEMBER_FN(SubtractViaCopy,  NiMatrix33*, 0x00710030, NiMatrix33* out, NiMatrix33* other); // returns out
+      DEFINE_MEMBER_FN(SubtractViaCopy,  NiMatrix33*, 0x00710030, NiMatrix33& out, const NiMatrix33& other); // returns out
+
+      inline bool operator==(const NiMatrix33& other) {
+         return CALL_MEMBER_FN(this, Equals)(other);
+      }
+
+      float determinant() const {
+         const NiMatrix33& m = *this; // we can't stop operator[] on NiMatrix33* from being treated as pointer index
+         return (m[0] * m[4] * m[8]) +
+                (m[1] * m[5] * m[6]) +
+                (m[2] * m[3] * m[7]) -
+                (m[2] * m[4] * m[6]) -
+                (m[1] * m[3] * m[8]) -
+                (m[0] * m[5] * m[7]);
+      }
    };
+
+   //
+   // out.x = (other.x * mat[0]) + (other.y * mat[3]) + (other.z * mat[6]);
+   // out.y = (other.x * mat[1]) + (other.y * mat[4]) + (other.z * mat[7]);
+   // out.z = (other.x * mat[2]) + (other.y * mat[5]) + (other.z * mat[8]);
+   //
+   DEFINE_SUBROUTINE_EXTERN(void, MultiplyMatrixByColumn, 0x00710250, NiVector3& out, const NiVector3& column, const NiMatrix33& matrix);
 
    struct SimpleLock {
       UInt32 threadID;
@@ -61,4 +97,9 @@ namespace RE {
    };
 
    bool GetScriptVariableValue(TESQuest* quest, const char* variableName, double& out);
+};
+
+namespace cobb {
+   void matrix_from_ni(matrix& out, const NiMatrix33& source);
+   void matrix_to_ni(NiMatrix33& out, const matrix& source);
 };

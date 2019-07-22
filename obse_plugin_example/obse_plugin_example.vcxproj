@@ -126,6 +126,7 @@
     <ClCompile Include="Fun\x86Reader.cpp" />
     <ClCompile Include="Miscellaneous\InGameDate.cpp" />
     <ClCompile Include="Miscellaneous\math.cpp" />
+    <ClCompile Include="Miscellaneous\rotation.cpp" />
     <ClCompile Include="Patches\AudioMenu.cpp" />
     <ClCompile Include="Patches\ClassMenu.cpp" />
     <ClCompile Include="Patches\Compatibility\Dynamic Map\Types.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="Patches\DialogMenu.cpp" />
     <ClCompile Include="Patches\EffectSettingMenu.cpp" />
     <ClCompile Include="Patches\EnchantingAndSigilStoneMenus.cpp" />
+    <ClCompile Include="Patches\EnhancedMovement.cpp" />
     <ClCompile Include="Patches\ExtendedConsoleCommands.cpp" />
     <ClCompile Include="Patches\HUDMainMenu.cpp" />
     <ClCompile Include="Patches\InventoryMenu.cpp" />
@@ -241,6 +243,7 @@
     <ClInclude Include="Miscellaneous\InGameDate.h" />
     <ClInclude Include="Miscellaneous\large_bitset.h" />
     <ClInclude Include="Miscellaneous\math.h" />
+    <ClInclude Include="Miscellaneous\rotation.h" />
     <ClInclude Include="Miscellaneous\strings.h" />
     <ClInclude Include="Patches\AlchemyMenu.h" />
     <ClInclude Include="Patches\AudioMenu.h" />
@@ -256,6 +259,7 @@
     <ClInclude Include="Patches\Compatibility\Dynamic Map\Main.h" />
     <ClInclude Include="Patches\EffectSettingMenu.h" />
     <ClInclude Include="Patches\EnchantingAndSigilStoneMenus.h" />
+    <ClInclude Include="Patches\EnhancedMovement.h" />
     <ClInclude Include="Patches\Exploratory.h" />
     <ClInclude Include="Patches\ExtendedConsoleCommands.h" />
     <ClInclude Include="Patches\Fonts.h" />

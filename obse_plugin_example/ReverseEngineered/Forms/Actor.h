@@ -254,6 +254,11 @@ namespace RE {
          bool FindAnimInRange(UInt32 lowBound, UInt32 highBound = -1);
          bool PathsInclude(const char* subString);
 
+         // MSVC sucks and can compile the CALL_MEMBER_FN version as if the args were (UInt16*, AnimBodyPart)
+         inline AnimCode GetCurrentAnimCodeForBodyPart(AnimBodyPart bp) {
+            return ThisStdCall(0x00470720, this, static_cast<UInt32>(bp));
+         };
+
          MEMBER_FN_PREFIX(ActorAnimData);
          DEFINE_MEMBER_FN(ContainsSequence,         bool,                 0x00470D00, AnimSequenceBase*);
          DEFINE_MEMBER_FN(FindPlayingSequence,      BSAnimGroupSequence*, 0x00474BD0); // searches all sequences in (manager); just calls FindPlayingSequenceAfter(nullptr)

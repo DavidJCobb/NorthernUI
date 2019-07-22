@@ -15,6 +15,10 @@ namespace cobb {
    extern bool strieq(const std::string& a, const std::string& b);
    extern bool striendswith(const std::string& haystack, const std::string& needle);
 
+   constexpr size_t cstrlen(const char* s) {
+      return *s ? 1 + cstrlen(s + 1) : 0;
+   }
+
    //
    // Given a format like "example %s %s %d", the valid tokens would be "ssd". For 
    // "example %.*s" or "example %*d" the tokens would be "*s". Note that format 
