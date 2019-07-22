@@ -31,6 +31,8 @@ namespace RE {
    DEFINE_SUBROUTINE_EXTERN(UInt32, SkillMasteryLevelToMinimumSkillLevel, 0x0056A360, UInt32 skillMasteryLevel);
    DEFINE_SUBROUTINE_EXTERN(const char*, SkillMasteryLevelToString, 0x0056A340, UInt32 skillMasteryLevel);
 
+   DEFINE_SUBROUTINE_EXTERN(bool, IsQuietNaN, 0x00984012, double);
+
    struct NiMatrix33 {
       //
       // [0, 1, 2,

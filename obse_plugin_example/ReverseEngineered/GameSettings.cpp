@@ -3,6 +3,8 @@
 namespace RE {
    namespace GMST {
       SettingInfo* const fPotionGoldValueMult = (SettingInfo*) 0x00B37A48;
+      SettingInfo* const fVanityModeXMult     = (SettingInfo*) 0x00B36B88;
+      SettingInfo* const fVanityModeYMult     = (SettingInfo*) 0x00B36B90;
       //
       SettingInfo* const iInventoryAskQuantityAt = (SettingInfo*) 0x00B38688;
       //

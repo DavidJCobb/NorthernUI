@@ -13,6 +13,8 @@ namespace RE {
    DEFINE_SUBROUTINE(UInt32, SkillMasteryLevelToMinimumSkillLevel, 0x0056A360, UInt32 skillMasteryLevel);
    DEFINE_SUBROUTINE(const char*, SkillMasteryLevelToString, 0x0056A340, UInt32 skillMasteryLevel);
 
+   DEFINE_SUBROUTINE(bool, IsQuietNaN, 0x00984012, double);
+
    bool GetScriptVariableValue(TESQuest* quest, const char* variableName, double& out) {
       out = 0.0;
       //

@@ -10,8 +10,44 @@ namespace RE {
             //	RefIDIdx	combatController;
          };
          enum {
-            kMovementFlag_Sneaking = 0x00000400, // overridden by kMovementFlag_Swimming
-            kMovementFlag_Swimming = 0x00000800,
+            kAction_None                   = -1,
+            kAction_EquipWeapon            = 0,
+            kAction_UnequipWeapon          = 1,
+            kAction_Attack                 = 2,
+            kAction_AttackFollowThrough    = 3,
+            kAction_AttackBow              = 4,
+            kAction_AttackBowArrowAttached = 5,
+            kAction_Block   = 6,
+            kAction_Recoil  = 7,
+            kAction_Stagger = 8,
+            kAction_Dodge   = 9,
+            kAction_LowerBodyAnim   = 10,
+            kAction_SpecialIdle     = 11,
+            kAction_ScriptAnimation = 12,
+         };
+         enum {
+            kMovement_Forward   = 0x0001,
+            kMovement_Backward  = 0x0002,
+            kMovement_Left      = 0x0004,
+            kMovement_Right     = 0x0008,
+            kMovement_TurnLeft  = 0x0010,
+            kMovement_TurnRight = 0x0020,
+            //
+            kMovement_Walk  = 0x0100,
+            kMovement_Run   = 0x0200,
+            kMovement_Sneak = 0x0400,	// overridden by kMovementFlag_Swimming
+            kMovement_Swim  = 0x0800,
+            kMovement_Jump  = 0x1000, //Jump and above appear not to be used.
+            kMovement_Fly   = 0x2000,
+            kMovement_Fall  = 0x4000,
+            kMovement_Slide = 0x8000,
+            //
+            // Utility:
+            //
+            kMovement_AnyWASD    = 0x000F,
+            kMovement_AnyFwdBack = 0x0003,
+            kMovement_AnyStrafe  = 0x000C,
+            kMovement_Any        = 0x003F,
          };
 
          BaseProcess();
@@ -79,11 +115,11 @@ namespace RE {
          virtual UInt32	Unk_38(void) = 0;
          virtual void	Unk_39(UInt32 arg0) = 0;
          virtual UInt32	Unk_3A(UInt32 arg0) = 0;
-         virtual UInt32	Unk_3B(UInt32 arg0) = 0;
+         virtual ExtraContainerChanges::EntryData*  GetEquippedWeaponData(bool mustBeInHands) = 0; // 3B
          virtual void*  Unk_3C(UInt32 arg0) = 0;
-         virtual ExtraContainerChanges::EntryData* GetEquippedWeaponData(bool arg0) = 0;
+         virtual ExtraContainerChanges::EntryData* GetEquippedAmmoData(bool mustBeInHands) = 0;
          virtual UInt32	Unk_3E(UInt32 arg0) = 0;
-         virtual ExtraContainerChanges::EntryData* GetEquippedAmmoData(bool arg0) = 0;
+         virtual UInt32 Unk_3F() = 0;
          virtual void	Unk_40(UInt32 arg0) = 0;
          virtual bool	Unk_41(UInt32 arg0, UInt32 arg1) = 0;
          virtual bool	Unk_42(UInt32 arg0) = 0;
@@ -95,10 +131,10 @@ namespace RE {
          virtual UInt32	Unk_48(UInt32 arg0) = 0;
          virtual UInt32	Unk_49(UInt32 arg0) = 0;
          virtual UInt32	Unk_4A(UInt32 arg0) = 0;
-         virtual UInt32	Unk_4B(UInt32 arg0) = 0;
+         virtual void*  Unk_4B(UInt32 arg0) = 0;
          virtual UInt32	Unk_4C(UInt32 arg0) = 0;
          virtual UInt32	Unk_4D(UInt32 arg0) = 0;
-         virtual bool	Unk_4E(void) = 0;
+         virtual bool	Unk_4E() = 0;
          virtual bool	Unk_4F(void) = 0;
          virtual UInt8	GetUnk084(void) = 0;
          virtual void	SetUnk084(UInt8 arg0) = 0;
@@ -119,7 +155,7 @@ namespace RE {
          virtual TESPackage::eProcedure	GetCurrentPackProcedure(void) = 0;  //OR def
          virtual TESPackage*				GetCurrentPackage(void) = 0;	// returns MiddleHighProcess::pkg0C0 if not NULL, else BaseProcess::package
          virtual void					Unk_62(UInt32 arg0) = 0;			// marks ScriptEventList::kEvent_OnPackageDone
-         virtual bhkCharacterProxy **	GetCharProxy(bhkCharacterProxy ** characterProxy) = 0;	// increfs and returns the proxy (or sets to NULL)
+         virtual NiPointer<bhkCharacterProxy>* GetCharProxy(NiPointer<bhkCharacterProxy>& characterProxy) = 0; // 63 // increfs and returns the proxy (or sets to NULL)
          virtual void	Unk_64(void * obj) = 0;
          virtual void	Unk_65(void) = 0;
          virtual void	Unk_66(void) = 0;
@@ -135,7 +171,7 @@ namespace RE {
          virtual void	Unk_70(void) = 0;
          virtual void	Unk_71(void) = 0;
          virtual bool	GetLOS(UInt32 arg0, TESObjectREFR* target) = 0;	// arg0 unused
-         virtual void	Unk_73(void) = 0;
+         virtual bool	Unk_73() = 0; // possibly "is in dialogue"
          virtual void	Unk_74(void) = 0;
          virtual void	Unk_75(void) = 0;
          virtual void	Unk_76(void) = 0;
@@ -181,7 +217,7 @@ namespace RE {
          virtual void	Unk_9E(void) = 0;
          virtual void	Unk_9F(void) = 0;
          virtual void	Unk_A0(void) = 0;
-         virtual void	Unk_A1(void) = 0;
+         virtual SInt32 Unk_A1(UInt32) = 0; // A1
          virtual void	Unk_A2(void) = 0;
          virtual void	Unk_A3(void) = 0;
          virtual void	Unk_A4(void) = 0;
@@ -196,18 +232,18 @@ namespace RE {
          virtual void	Unk_AD(void) = 0;
          virtual void	Unk_AE(void) = 0;
          virtual void	Unk_AF(void) = 0;
-         virtual UInt32	GetMovementFlags(void) = 0;
-         virtual void	Unk_B1(UInt32 actuallyAnInt, bool) = 0;
-         virtual void	Unk_B2(UInt32) = 0; // SetMovementFlags?
-         virtual void	Unk_B3(Actor*, NiVector3) = 0; // carries out strafing movement?
-         virtual UInt32	Unk_B4(void) = 0; // returns int/enum
-         virtual void	Unk_B5(void) = 0;
-         virtual void	Unk_B6(void) = 0;
+         virtual UInt32	GetMovementFlags() = 0; // B0
+         virtual void	ModifyMovementFlags(UInt32 bits, bool clearOrSet) = 0; // B1
+         virtual void	SetMovementFlags(UInt16) = 0; // B2
+         virtual void	Move(Actor* subject, NiVector3 moveOffset_onlyUsedIfCollisionDisabled) = 0; // B3 // carries out WASD movement
+         virtual SInt32	GetCurrentAction() = 0; // B4
+         virtual void*  Unk_B5() = 0; // B5 // return value unk68 == TESAnimGroup*
+         virtual void	Unk_B6(SInt32, BSAnimGroupSequence*) = 0;
 
          // action is one of kAction_XXX. Returns action, return value probably unused.
          virtual UInt16	SetCurrentAction(UInt16 action, BSAnimGroupSequence* sequence) = 0;
          virtual void	Unk_B8(void) = 0;
-         virtual void	Unk_B9(void) = 0;
+         virtual UInt32 Unk_B9() = 0;
          virtual UInt8	GetKnockedState(void) = 0;
          virtual void	Unk_BB(void) = 0;
          virtual void	Unk_BC(void) = 0;
@@ -217,10 +253,10 @@ namespace RE {
          virtual void	Unk_BE(void) = 0;
          virtual UInt8	GetCombatMode(void) = 0;
          virtual UInt8	SetCombatMode(UInt8 CombatMode) = 0;
-         virtual UInt8	GetWeaponOut(void) = 0;
+         virtual UInt8	GetWeaponOut(void) = 0; // C1
          virtual UInt8	SetWeaponOut(UInt8 WeaponOut) = 0;
 
-         virtual void	Unk_C3(void) = 0;
+         virtual void	SetUnk20C(NiVector3) = 0; // C3
          virtual void*	Unk_C4(void) = 0;	// returns some pointer
          virtual void	Unk_C5(void) = 0;
          virtual void	Unk_C6(void) = 0;

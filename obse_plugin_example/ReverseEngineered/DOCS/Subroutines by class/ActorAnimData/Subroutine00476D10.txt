@@ -1,0 +1,442 @@
+void ActorAnimData::Subroutine00476D10(Actor* Arg1, float Arg2, float Arg3) {
+   //
+   // This function sets ActorAnimData::unk0C, which is later used by MobileObject::Move 
+   // to move the player in accordance with their animation.
+   //
+   // However, it seems that the value we assign to ActorAnimData::unk0C at the end of 
+   // this function depends largely on the value that ActorAnimData::unk18 has prior to 
+   // this function running. Where does that get set?
+   //
+   auto esi = this;
+   if (this->unkB8 || this->unkB4) {
+      do {
+         if (*(0x00B33C28) >= *(0x00B06548))
+            jump to 0x00476DDF
+         this->TES4_00474070(this->unkB4, 0);
+         if (eax = this->unkB8) {
+            this->unkB8 = eax->unk04;
+            delete eax;
+         }
+         this->unkB4 = 0;
+         bool al = this->TES4_00471730();
+         if (!al)
+            jump to 0x00476DDF;
+         *(0x00B33C28)++;
+         
+      } while (true);
+   }
+   // at 0x00476D95
+   if (Actor* eax = this->unkC8) {
+      if (ecx = eax->process) {
+         if (ecx->GetCurrentAction() == -1) { // at 0x00476DB3
+            if (this->animSequences[kAnimBodyPart_RightArm] == nullptr) {
+               auto ebx = this->unkC8;
+               this->unkC8 = 0;
+               this->TES4_00471990();
+               this->TES4_00476410(ebx, 1);
+            }
+         }
+      }
+   }
+   // at 0x00476DDF
+   auto ebx = &this->unkD4;
+   auto edi = 2;
+   do {
+      auto eax = *ebx;
+      if (!eax)
+         continue;
+      auto ecx = eax->unk10;
+      if (ecx) {
+         if (ecx->state != kState_Invalid)
+            continue;
+      } else {
+         if (!eax->unk00)
+            continue;
+      }
+      this->TES4_00472ED0(ebx);
+   } while (ebx += 4, --edi);
+   NiNode* ecx = this->unk04; // at 0x00476E1A
+   if (!ecx)
+      return;
+   this->unk00 = 1;
+   this->unk0C = NiPoint3(0, 0, 0);
+   if (this->unk90 == 5) { // at 0x00476E4C
+      float a = Arg3;
+      if (Arg3 == -1.0F)
+         a = this->unk94;
+      float esp18 = a;
+      ecx->ConditionallyUpdatePropsAndControllers(esp18, 1);
+      return;
+   }
+   AnimBodyPart edi = 0; // at 0x00476E86
+   do {
+      AnimCode      eax = this->currentCodes[edi + 1];
+      AnimGroupType ebx = eax.type();
+      AnimGroupType eax = this->unk70[edi].type();
+      if (ebx == 0xFF && eax != ebx) {
+         this->unk5C[edi] = this->unk7C[edi];
+         AnimCode ebx = this->unk70[edi];
+         if (ebx.type() != 0xFF) {
+            AnimSequenceBase* esp20;
+            if (this->unk9C->LookupByKey(ebx, &esp20)) {
+               BSAnimGroupSequence* eax = esp20->GetByIndex(-1);
+               this->TES4_00474530(eax, ebx, -1);
+            }
+         }
+         // at 0x00476EF8
+         this->unk70[edi] = 0x00FF;
+         ebx = this->unk3C[edi + 1].type();
+      }
+      // at 0x00476F0F
+      AnimBodyPart eax = edi;
+      switch (edi) {
+         case 6:
+            eax = 3;
+            break;
+         case 5:
+            eax = 0;
+      }
+      esp60[edi] = 0.0F; // at 0x00476F35
+      esp74[edi] = this->animSequences[eax];
+      auto ecx = esp74[edi];
+      if (ebx != 0xFF && ecx)
+         esp60[edi] = ecx->TES4_0049F4A0(this->unk94);
+   } while (++edi < kAnimBodyPart_Count); // at 0x00476F5C
+   if (Arg3 != -1.0F) {
+      this->unk94 = -1.0F;
+      this->unk04->ConditionallyUpdatePropsAndControllers(this->unk94, 1);
+   }
+   AnimBodyPart ebx = 0;
+   this->unk94 += Arg2;
+   do {
+      AnimBodyPart eax = ebx;
+      switch (ebx) {
+         case 6:
+            eax = 3;
+            break;
+         case 5:
+            eax = 0;
+      }
+      BSAnimGroupSequence* edi = this->animSequences[eax];
+      auto esp18 = this->unk38[ebx + 1];
+      AnimGroupType esp14 = this->unk70[ebx].type();
+      if (esp18 == 0xFF || !edi)
+         continue;
+      SInt32 ecx = this->unk90;
+      if (ecx == 6 || ecx == 5) {
+         if (ecx != 6 || (ebx > 0 && ebx <= 3)) { // second condition at 0x00477051
+            esp20 = edi->offset - edi->begin - Arg2; // at 0x0047705A
+            edi->offset = esp20 + edi->begin;
+            continue;
+         }
+      } else if (ebx == ecx) // at 0x0047700E
+         jump to 0x0047705A;
+      eax = edi->state; // at 0x00477012
+      ecx = esp18;
+      if (eax != kState_Animating)
+         continue;
+      if (ecx >= kAnimGroup_Forward && ecx <= kAnimGroup_TurnRight) { // movement anim
+         float a = (this->movement * Arg2) - Arg2;
+         float b = edi->offset - edi->begin;
+         float esp20 = a + b;
+         edi->offset = esp20 + edi->begin; // jumped 0x004770AB
+      } else if (ecx >= kAnimGroup_Equip && ecx <= kAnimGroup_AttackRightPower) { // weapon anim
+         float a = (this->attack * Arg2) - Arg2;
+         float esp20 = edi->offset - edi->begin;
+         esp20 += a;
+         edi->offset = esp20 + edi->begin; // at 0x004770AB
+      }
+      // at 0x004770B1
+      if (eax != kState_Animating)
+         continue;
+      double        offsetPlusUnk94 = edi->offset + this->unk94;
+      TESAnimGroup* animGroup       = edi->animGroup;
+      eax = s_animGroupInfos[ecx].unk0C; // at 0x004770BD
+      switch (eax) { // at 0x004770C4
+         case 4: // at 0x004770D4
+            if (eax < 3) {
+               float a = animGroup->GetFrameTime(eax + 1);
+               if (a < offsetPlusUnk94)
+                  this->unk48[ebx]++;
+            }
+            if (esp14 != 0xFF) { // AnimGroupType // near 0x0047710E
+               if (animGroup->GetFrameTime(3) <= offsetPlusUnk94) {
+                  this->unk5C[ebx] = this->unk7C[ebx];
+                  this->TES4_00476260(this->unk70[ebx], -1);
+                  this->unk70[ebx] = 0x00FF;
+               }
+            } else // near 0x00477169
+               if (animGroup->GetFrameTime(3) <= offsetPlusUnk94) // call near 0x00477169; jump to 0x004774AE for comparison
+                  this->TES4_004733A0(ebx);
+            continue;
+         case 7: // at 0x0047717B
+            eax = this->unk48[ebx];
+            if (a < 4) {
+               if (animGroup->GetFrameTime(eax + 1) < offsetPlusUnk94) {
+                  this->unk48[ebx]++;
+                  if (ebx == kAnimBodyPart_RightArm && this->unk48[kAnimBodyPart_RightArm] == 2)
+                     edi->offset = animGroup->GetFrameTime(2) - this->unk94;
+               }
+            }
+            // at 0x004771DB
+            if (esp14 != 0xFF) {
+               if (animGroup->GetFrameTime(4) <= offsetPlusUnk94) { // at 0x0047720D
+                  this->unk5C[ebx] = this->unk7C[ebx];
+                  this->TES4_00476260(this->unk70[ebx], -1);
+                  this->unk70[ebx] = 0x00FF;
+               }
+            } else
+               if (animGroup->GetFrameTime(4) <= offsetPlusUnk94) // call near 0x00477236; jump to 0x004774AE for comparison
+                  this->TES4_004733A0(ebx);
+            continue;
+         case 2:
+         case 3:
+         case 5:
+         case 6:
+            // at 0x00477248
+            eax = this->unk48[ebx];
+            if (eax < 2)
+               if (animGroup->GetFrameTime(eax + 1) < offsetPlusUnk94)
+                  this->unk48[ebx]++;
+            if (esp14 != 0xFF) { // near 0x00477282
+               if (animGroup->GetFrameTime(2) <= offsetPlusUnk94) // jump to 0x004774AE for comparison
+                  this->TES4_004733A0(ebx);
+            } else
+               if (animGroup->GetFrameTime(2) <= offsetPlusUnk94) // call near 0x004772B4; jump to 0x004774AE for comparison
+                  this->TES4_004733A0(ebx);
+            continue;
+         case 0:
+         case 1:
+            // at 0x004772C6
+            if (edi->cycleType == kCycle_Loop) {
+               if (this->unk48[ebx] < 1) { // at 0x004772D5
+                  do {
+                     if (animGroup->GetFrameTime(this->unk48[ebx]) >= offsetPlusUnk94)
+                        break;
+                     eax = this->unk48[ebx];
+                     ecx = 1;
+                     if (eax) { // via SUB EAX, 0; JZ...
+                        eax -= ecx;
+                        if (!eax)
+                           this->unk48[ebx] = ecx; // at 0x0047731F
+                     } else
+                        this->unk48[ebx] = ecx; // at 0x0047731F
+                     // at 0x00477323
+                  } while (this->unk48[ebx] < ecx);
+               }
+               // at 0x00477329
+               if (esp14 != 0xFF) { // at 0x00477347
+                  float a = animGroup->GetFrameTime(1);
+                  if (a > offsetPlusUnk94)
+                     continue;
+                  this->unk5C[ebx] = this->unk7C[ebx];
+                  this->TES4_00476260(this->unk70[ebx], -1);
+                  this->unk70[ebx] = 0x00FF;
+               } else {
+                  // at 0x00477384
+                  if (animGroup->GetFrameTime(1) <= offsetPlusUnk94) {
+                     if (this->unk5C[ebx]) {
+                        this->unk48[ebx] = 0;
+                        float esp20 = edi->offset - edi->begin - (edi->end - edi->begin);
+                        edi->offset = esp20 + edi->begin; // near 0x004773C5
+                        eax = this->unk5C[ebx];
+                        if (eax != -1)
+                           this->unk5C[ebx]--;
+                        continue;
+                     }
+                  }
+                  // at 0x004773EC
+                  if (edi->animGroup->GetFrameTime(1) <= offsetPlusUnk94) // jump to 0x004774AE for comparison
+                     this->TES4_004733A0(ebx);
+                  continue;
+               }
+            }
+            // at 0x00477414
+            if (!this->unk48[ebx])
+               if (edi->animGroup->GetFrameTime(1) <= offsetPlusUnk94) // jump to 0x004774AE for comparison
+                  this->unk48[ebx] = 1;
+            // at 0x0047744D
+            if (esp14 != 0xFF) {
+               if (animGroup->GetFrameTime(1) ?? offsetPlusUnk94) // at 0x0047747F
+                  continue;
+               this->unk5C[ebx] = this->unk7C[ebx];
+               this->TES4_00476260(this->unk70[ebx], -1);
+               this->unk70[ebx] = 0x00FF;
+               continue;
+            } else {
+               if (animGroup->GetFrameTime(1) ?? offsetPlusUnk94) // at 0x004774B3
+                  continue;
+               this->TES4_004733A0(ebx);
+            }
+      }
+      // at 0x004774BD
+   } while (++ebx < kAnimBodyPart_Count); // at 0x004774C3
+   MobileObject* edi = Arg1;
+   if (this->unk08) {
+      Actor* ebx   = nullptr;
+      Actor* esp14 = nullptr;
+      if (edi) {
+         if (edi->IsActor()) {
+            esp14 = ebx = edi;
+            if (edi->GetMountedHorse()) {
+               auto eax = edi->GetSitSleepState();
+               if (eax >= 2 && eax <= 5) // at 0x00477515
+                  this->TES4_004728C0();
+            }
+         }
+      }
+      // at 0x0047752F
+      NiPoint3 esp54 = this->unk18;
+      NiNode*  eax   = this->unk08;
+      if (eax->m_children.firstFreeEntry <= 0)
+         eax = nullptr;
+      else {
+         eax = eax->data[0];
+      }
+      float esp1C = eax->m_localTranslate.z;
+      NiPoint3 esp30 = NiPoint3(0, 0, 0);
+      bool isJumping = false; // esp13
+      if (ebx->MovementFlagsIncludeWASD()) { // at 0x0047758F
+         if (!esp14->IsOverencumbered()) {
+            UInt16 ebx = esp14->process->GetMovementFlags();
+            BSAnimGroupSequence* eax = this->animSequences[kAnimBodyPart_LowerBody];
+            if (eax && (ebx & kMovement_AnyWASD)) { // at 0x004775D0
+               AnimGroupType eax = eax->animGroup->GetAnimGroupType();
+               if (eax == kAnimGroup_JumpStart || eax == kAnimGroup_JumpLoop) {
+                  BSAnimGroupSequence* ecx = this->animSequences[kAnimBodyPart_LowerBody];
+                  auto eax = ecx->state;
+                  if ((eax != kState_TransDest && eax != kState_EaseIn) || (esp14 != *g_thePlayer))
+                     jump to 0x00477837;
+                  isJumping = true;
+               }
+               if (ebx & kMovement_Run) { // at 0x0047760F
+                  if (ebx & kMovement_Forward)
+                     edi = kAnimGroup_FastForward;
+                  else if (ebx & kMovement_Backward)
+                     edi = kAnimGroup_FastBackward;
+                  else if (ebx & kMovement_Left)
+                     edi = kAnimGroup_FastLeft;
+                  else if (ebx & kMovement_Right)
+                     edi = kAnimGroup_FastRight;
+               } else {
+                  // at 0x0047764C
+                  if (ebx & 0xFF00) {
+                     if (ebx & kMovement_Forward)
+                        edi = kAnimGroup_Forward;
+                     else if (ebx & kMovement_Backward)
+                        edi = kAnimGroup_Backward;
+                     else if (ebx & kMovement_Left)
+                        edi = kAnimGroup_Left;
+                     else if (ebx & kMovement_Right)
+                        edi = kAnimGroup_Right;
+                  }
+               }
+               // edi == expected anim group type, given actor's movement flags
+               // at 0x00477682
+               AnimGroupType eax = this->animSequences[kAnimBodyPart_LowerBody]->animGroup->GetAnimGroupType();
+               if (edi == eax) {
+                  //
+                  // We're already playing the animation for this movement.
+                  //
+                  TESAnimGroup* ecx = this->animSequences[kAnimBodyPart_LowerBody]->animGroup;
+                  float esp20 = g_timeInfo->frameTime;
+                  ecx->GetUnk14(&esp48); // NiPoint3 esp48 = ecx->unk14;
+                  //
+                  // ...
+                  //
+                  // fall through to 0x00477837 using a jump
+               } else {
+                  //
+                  // We're playing a different animation, which we must interrupt or 
+                  // transition to the animation for the new movement.
+                  //
+                  // at 0x00477746
+                  edi = (UInt32) esp14->TES4_005E5690(edi, 0, 0);
+                  if (edi & 0xFF) { // at 0x00477762
+                     if (this->unk9C->LookupByKey(edi, &esp20)) {
+                        eax = esp20->GetByIndex(-1);
+                        if (eax) { // at 0x00477790
+                           TESAnimGroup* eax = eax->animGroup;
+                           float esp20 = g_timeInfo->frameTime;
+                           eax->GetUnk14(&esp48); // NiPoint3 esp48 = ecx->unk14; // at 0x004777AA
+                           //
+                           // ...
+                        }
+                     }
+                  }
+               }
+               // fall through to 0x00477837
+            }
+         }
+      }
+      // at 0x00477837
+      float esp20 = this->unk94;
+      if (this->unk08) {
+         eax->m_localTranslate = this->unk18;
+      }
+      // at 0x0047785A
+      this->unk04->TES4_0047C990(esp20, this->unk08);
+      if (this->unk08) {
+         this->unk18 = this->unk08->m_localTranslate;
+         this->unk6C = NiPoint3(0, 0, 0);
+      }
+      NiPoint3 eax_ecx_edx;
+      if (isJumping) {
+         eax_ecx_edx = esp30; // air control?
+      } else {
+         // at 0x004778C2
+         NiPoint3 esp48 = this->unk18 - esp54;
+         eax_ecx_edx = esp48;
+      }
+      //
+      // This NiPoint3 is the queued movement, seemingly as a delta from our 
+      // last-stored position (or whatever the heck ActorAnimData::unk18 is). 
+      // If we want to implement 360-degree movement, shimming this assign 
+      // operation and replacing the queuedMovement value (based on the 
+      // gamepad input) seems like it'd work...
+      //
+      // ...except we'd need to get the right movement speed for the player's 
+      // state (e.g. walk/run/swim/etc.) and scale it by the frame time.
+      //
+      // We need to figure out how ActorAnimData::unk18 is set, it seems.
+      //
+      this->queuedMovement = eax_ecx_edx; // at 0x004778EF
+      //
+      this->queuedMovement *= Arg1->GetScale();
+      NiNode* eax = this->unk08;
+      if (eax->m_children.firstFreeEntry <= 0)
+         eax = nullptr;
+      else
+         eax = eax->m_children.data[0]; // at 0x00477934
+      this->queuedMovement.z = eax->m_localTranslate.z - esp1C;
+   }
+   ecx = this->unk04; // at 0x00477946
+   if (!(ecx->m_flags & kFlag_AppCulled)) { // at 0x0047794D
+      esp14 = 0;
+      edx = 0;
+      do {
+         SInt32 ecx = this->unk90;
+         //
+         // ...
+         //
+      } while ((edx = ++esp14) < 5); // at 0x00477ACA
+   }
+   edi = this->unkCC; // at 0x00477AD0
+   if (edi) {
+      if (edi->unk00 == 2) {
+         eax = edi->unk10;
+         if (!eax || eax->state != 0) { // at 0x00477AEA
+            Actor* ecx = edi->unk28; // at 0x00477AEC
+            edi->unk00 = 3;
+            if (ecx && ecx->GetCurrentAction() == kAction_SpecialIdle)
+               ecx->TES4_005EFFD0(-1, 0);
+            edi = edi->unk04; // at 0x00477B0F
+            if (edi == 2 || edi == 3) { // at 0x00477B1A
+               this->TES4_00475440(1, 0);
+            }
+         }
+      }
+   }
+   this->unk90 = 0xFF; // at 0x00477B27
+   return;
+}

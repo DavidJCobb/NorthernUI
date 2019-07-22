@@ -1,0 +1,72 @@
+bool ActorAnimData::Subroutine004723A0(NiPoint3& outPosChange, Actor* subject, bool Arg3, bool preventVerticalMovement) {
+   auto ebx = this;
+   if (!this->unk04)
+      return false;
+   NiPoint3 esp1C = NiPoint3(0, 0, 0);
+   NiPoint3 esp10 = this->unk0C;
+   NiMatrix33 esp20 = this->unk04->m_localRotate;
+   auto esi = subject;
+   if (!subject->IsCreature()) {
+      if (subject->MovementFlagsIncludeWASD()) {
+         BSAnimGroupSequence* eax = this->animSequences[kAnimBodyPart_LowerBody];
+         if (eax) { // at 0x00472423
+            AnimGroupType eax = eax->animGroup->GetAnimGroupType();
+            if (eax >= kAnimGroup_Forward && eax <= kAnimGroup_FastRight) {
+               BSAnimGroupSequence* ecx = this->animSequences[kAnimBodyPart_LowerBody];
+               float esp54 = g_timeInfo->frameTime;
+               float a = ecx->animGroup->GetUnk14Length();
+               a *= this->movement;
+               esp54 *= a;
+               if (eax = this->animSequences[kAnimBodyPart_RightArm]) { // at 0x0047247F
+                  if (eax->state == kState_Animating) {
+                     eax = eax->animGroup;
+                     float esp0C = g_timeInfo->frameTime;
+                     float b = eax->GetUnk14Length();
+                     b *= this->attack;
+                     esp0C *= b;
+                     if (esp54 < esp0C)
+                        esp54 = esp0C;
+                  }
+               }
+               // at 0x004724C0
+               esp54 *= 4.0;
+               if (0.0F < a) {
+                  if (esp10.x > esp54)
+                     esp10.x = a;
+                  if (esp10.y > esp54)
+                     esp10.y = a;
+                  if (esp10.z > esp54)
+                     esp10.z = a;
+                  esp54 = -esp54;
+                  if (esp10.x < esp54)
+                     esp10.x = -esp54;
+                  if (esp10.y < esp54)
+                     esp10.y = -esp54;
+                  if (esp10.z < esp54)
+                     esp10.z = -esp54;
+               }
+            }
+         }
+      }
+   }
+   // at 0x00472575
+   if (subject) {
+      switch (subject->GetSitSleepState()) {
+         case 3:
+         case 5:
+         case 8:
+         case 10:
+            float scale = subject->GetScale();
+            esp10.x /= scale;
+            esp10.y /= scale;
+      }
+   }
+   if (preventVerticalMovement) // at 0x004725CC
+      esp10.z = 0.0F;
+   if (Arg3) {
+      TES4_00710580(&esp28, &esp1C, 1, &esp10, esp50);
+      return true;
+   }
+   outPosChange = esp10;
+   return true;
+}

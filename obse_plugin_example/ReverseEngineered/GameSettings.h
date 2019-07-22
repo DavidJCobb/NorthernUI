@@ -4,6 +4,8 @@
 namespace RE {
    namespace GMST {
       extern SettingInfo* const fPotionGoldValueMult;
+      extern SettingInfo* const fVanityModeXMult;
+      extern SettingInfo* const fVanityModeYMult;
       //
       extern SettingInfo* const iInventoryAskQuantityAt;
       //

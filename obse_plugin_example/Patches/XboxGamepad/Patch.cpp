@@ -323,6 +323,33 @@ namespace CobbPatches {
                WriteRelJump(0x006719C7, (UInt32)&OuterY);
             };
          };
+         namespace Vanity {
+            void _stdcall Inner(float timestep) {
+               auto input   = RE::OSInputGlobals::GetInstance();
+               auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(0);
+               //
+               float x = CALL_MEMBER_FN(input, GetMouseAxisMovement)(1) / 57;
+               float y = CALL_MEMBER_FN(input, GetMouseAxisMovement)(2) / 57;
+               x += s_look.x;
+               y += s_look.y;
+               x *= RE::GMST::fVanityModeXMult->f * timestep;
+               y *= RE::GMST::fVanityModeYMult->f * timestep;
+               *(float*)(0x00B3BB28) += x;
+               *(float*)(0x00B3BB20) += y;
+            }
+            __declspec(naked) void Outer() {
+               _asm {
+                  mov  eax, dword ptr [ebp + 0x8];
+                  push eax;
+                  call Inner; // stdcall
+                  mov  eax, 0x00671B99;
+                  jmp  eax;
+               }
+            }
+            void Apply() {
+               WriteRelJump(0x00671B56, (UInt32)&Outer);
+            }
+         }
          namespace XAxis {
             float Inner() {
                auto input = RE::OSInputGlobals::GetInstance();
@@ -360,8 +387,7 @@ namespace CobbPatches {
                auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(0);
                if (gamepad) {
                   auto& config = XXNGamepadConfigManager::GetInstance();
-                  float g = (float)gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookLeftRight->i) / 24.0F;
-                  x += g;
+                  float gX = (float)gamepad->GetJoystickAxis(RE::INI::Controls::iJoystickLookLeftRight->i);
                }
                return x;
             };
@@ -415,6 +441,7 @@ namespace CobbPatches {
          };
          void Apply() {
             Registrations::Apply();
+            Vanity::Apply();
             XAxis::Apply();
             YAxis::Apply();
             XAxisUnknown::Apply();

@@ -46,7 +46,7 @@ void InterfaceManager::Update() {
       bLMBUp   = ebx->QueryMouseKeyState(kMouseControl_Left, kKeyQuery_Up);   // esp48
       bLMBHold = ebx->QueryMouseKeyState(kMouseControl_Left, kKeyQuery_Hold); // esp54 // this variable also influences rotating the player model in the menus?
       if (bLMBHold)
-         this->mouseLMBDownTime += 0.001; // seconds
+         this->mouseLMBDownTime += g_timeInfo->frameTime; // seconds
       else
          this->mouseLMBDownTime = 0.0;
       this->mouseZAxisMovement = (float) ebx->GetMouseAxisMovement(3); // Z-axis (scroll wheel)

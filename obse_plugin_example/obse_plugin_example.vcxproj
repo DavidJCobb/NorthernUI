@@ -160,6 +160,7 @@
     <ClCompile Include="Patches\UIDiagnostics.cpp" />
     <ClCompile Include="Patches\VideoMenu.cpp" />
     <ClCompile Include="Patches\XboxGamepad\CustomControls.cpp" />
+    <ClCompile Include="ReverseEngineered\Forms\Actor.cpp" />
     <ClCompile Include="ReverseEngineered\NetImmerse\NiTypes.cpp" />
     <ClCompile Include="ReverseEngineered\Systems\Core.cpp" />
     <ClCompile Include="ReverseEngineered\Systems\Input.cpp" />
@@ -312,6 +313,7 @@
     <ClInclude Include="ReverseEngineered\GameSettings.h" />
     <ClInclude Include="ReverseEngineered\INISettings.h" />
     <ClInclude Include="ReverseEngineered\Miscellaneous.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\NiControllerManager.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\NiGeometry.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\NiObject.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\NiPixelData.h" />
@@ -368,6 +370,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00470D20.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine004723A0.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00474530.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00476D10.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,55 +5,6 @@ namespace RE {
    extern const bool*  bPlayerInVanityMode;
    extern const float* fVanityCurDistance;
 
-   class PlayerCharacter;
-
-   class AnimSequenceBase;
-   struct ActorAnimData { // sizeof == 0xDC // most likely ActorAnimData or a subclass
-      UInt32    unk00 = 0; // not a pointer
-      NiAVObject* unk04 = nullptr;
-      void*     unk08 = nullptr; // NetImmerse
-      NiVector3 unk0C;
-      NiVector3 unk18;
-      UInt32    unk24 = 0;
-      UInt32    unk28 = 0;
-      UInt32    unk2C = 0;
-      UInt32    unk30 = 0;
-      UInt32    unk34 = 0;
-      float     unk38 = 0.0;
-      UInt16    unk3C[5]; // 3C
-      UInt16    unk46;
-      UInt32    unk48[5] = { (UInt32)-1, (UInt32)-1, (UInt32)-1, (UInt32)-1, (UInt32)-1 }; // 48 // related to unk5C and unk7C
-      UInt32    unk5C[5] = { (UInt32)-1, (UInt32)-1, (UInt32)-1, (UInt32)-1, (UInt32)-1 }; // 5C // related to unk48 and unk7C
-      UInt16    unk70[5]; // 70
-      UInt16    unk7A;
-      UInt32    unk7C[5] = { (UInt32)-1, (UInt32)-1, (UInt32)-1, (UInt32)-1, (UInt32)-1 }; // 7C // related to unk48 and unk5C
-      UInt8     unk90 = 0xFF;
-      UInt8     unk91;
-      UInt8     unk92;
-      UInt8     unk93;
-      float     unk94 = 0.0; // valid arg to NiAVObject::ConditionallyUpdatePropsAndControllers
-      NiControllerManager* unk98 = nullptr;
-      NiTPointerMap<AnimSequenceBase>* unk9C; // 9C
-      BSAnimGroupSequence* unkA0[5] = { 0, 0, 0, 0, 0 }; // A0
-      UInt32    unkB4 = 0;
-      UInt32    unkB8 = 0;
-      float     unkBC = 1.0;
-      float     unkC0 = 1.0;
-      UInt8     unkC4 = 0;
-      UInt8     unkC5;
-      UInt8     unkC6;
-      UInt8     unkC7;
-      void*     unkC8 = nullptr; // its unk58 has a vtbl
-      void*     unkCC = nullptr;
-      UInt32    unkD0 = 0;
-      UInt32    unkD4 = 0;
-      UInt32    unkD8 = 0;
-
-      MEMBER_FN_PREFIX(ActorAnimData);
-      DEFINE_MEMBER_FN(Destructor, void, 0x00475B60);
-   };
-   typedef ActorAnimData Struct00473EB0;
-
    class PlayerCharacter : public Character { // sizeof == 0x800
       public:
          enum {
@@ -169,8 +120,8 @@ namespace RE {
          void*  unk574; // 574 // has a vtbl
          UInt32 unk578[(0x588 - 0x578) >> 2];	// 578
          bool   isThirdPerson;					// 588
-         UInt8  pad589;
-         UInt8  pad58A; // 58A // set to 1 when GMST:fVanityModeForceDefault is used
+         UInt8  unk589; // 589
+         UInt8  unk58A; // 58A // set to 1 when GMST:fVanityModeForceDefault is used
          bool   isAutoRunning; // 58B
          bool   isAutoMoving;	// 58C
          UInt32 sleepHours; // 590 // GetPCSleepHours, IsTimePassing (truthy)
@@ -304,10 +255,13 @@ namespace RE {
          MEMBER_FN_PREFIX(PlayerCharacter);
          DEFINE_MEMBER_FN(GetAppropriateNiNode,   NiNode*, 0x006600F0); // gets first-person or third-person node based on third-person state
          DEFINE_MEMBER_FN(HandleBorderRegions,    void,    0x006714E0); // called by the player movement code; listed here for documentation purposes only; do not call
+         DEFINE_MEMBER_FN(GetPlayerAnimData, ActorAnimData*, 0x0065D750, bool which);
          DEFINE_MEMBER_FN(GetSkillLevel,          UInt32,  0x005F1910, UInt32 skillId);
          DEFINE_MEMBER_FN(GetLuckModifiedSkill,   float,   0x005E0430, UInt32 skillId);
          DEFINE_MEMBER_FN(OnPushIntoRegionBorder, void,    0x0066FF10, bool); // called for every frame the player tries to push into a border region; shows a "you can't go that way" message and moves the player or their mount to the lastSafePosition.
+         DEFINE_MEMBER_FN(SetFirstPersonCameraEnabled, void, 0x0066C580, bool);
          DEFINE_MEMBER_FN(ShowQuestUpdate,        bool,    0x006697A0, QuestStageItem* stage);
+         DEFINE_MEMBER_FN(Subroutine005E6C10,     bool ,   0x005E6C10); // possibly IsInDialogue
          DEFINE_MEMBER_FN(Subroutine006640D0,     UInt8,   0x006640D0);
          DEFINE_MEMBER_FN(UpdateLastSafePosition, void,    0x00664320); // updates lastSafePosition and lastSafeWorld; called per-frame when the player moves and is determined to not be moving into a border region
          //

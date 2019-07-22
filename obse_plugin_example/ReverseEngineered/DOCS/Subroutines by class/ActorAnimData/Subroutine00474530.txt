@@ -1,0 +1,155 @@
+void ActorAnimData::Subroutine00474530(BSAnimGroupSequence*Arg1, AnimCode Arg2, AnimBodyPart Arg3) {
+   AnimCode      eax = Arg2;
+   AnimGroupType ecx = Arg2.type();
+   AnimBodyPart  eax = Arg3;
+   AnimGroupType esp1C = ecx;
+   AnimBodyPart  esp14 = Arg3;
+   if (Arg3 == -1) {
+      esp14 = s_animGroupInfos[Arg2.type()].unk08;
+   }
+   AnimBodyPart esp18 = esp14;
+   switch (esp14) {
+      case 6:
+         esp14 = 3;
+         break;
+      case 5:
+         esp14 = 0;
+   }
+   BSAnimGroupSequence* edi = this->animSequences[eax]; // at 0x004745AF
+   ebx = 0;
+   esp38 = false;
+   if (edi)
+      ebx = edi->state;
+   BSAnimGroupSequence* ebp = Arg1;
+   if (!Arg1 || Arg2 == 0x00FF) // code for "no animation"
+      return 0;
+   if (Arg1->state == kState_EaseOut)
+      Arg1->TES4_006C9CB0(0.0F, 0);
+   if (Arg1->state != kState_Inactive & Arg1->cycleType == kCycle_Loop) {
+      if (!IsMenuMode() || this->unk04 != (*g_thePlayer)->TES4_00660110()) {
+         this->unk48[esp14] = 0;
+         return Arg1;
+      }
+   }
+   ebx = esp14;
+   // at 0x0047462C
+   if (IsMenuMode() && (this->unk04 != (*g_thePlayer)->TES4_00660110()) && !(*g_createdBaseObjList)->TES4_0045A500()) {
+      this->TES4_00470FC0(kAnimBodyPart_SpecialIdle, 0.0F); // stops animations?
+      this->TES4_00470FC0(kAnimBodyPart_LowerBody,   0.0F); // stops animations?
+      this->TES4_00470FC0(kAnimBodyPart_LeftArm,     0.0F); // stops animations?
+      this->TES4_00470FC0(kAnimBodyPart_LeftHand,    0.0F); // stops animations?
+      NiControllerManager* ecx = this->manager;
+      if (ecx) {
+         auto eax = this->animSequences[kAnimBodyPart_RightArm];
+         if (eax && eax->state != kState_Inactive) {
+            auto eax = eax->unk58;
+            if (eax)
+               ecx->TES4_00470B50(eax, 0.0F);
+            auto edx = this->animSequences[kAnimBodyPart_RightArm];
+            if (edx->state == kState_TransDest)
+               this->manager->TES4_006C4480(0.0F);
+            this->animSequences[kAnimBodyPart_RightArm]->TES4_006C9CB0(0.0F, 0);
+         }
+      }
+      // at 0x004746FB
+      this->animSequences[kAnimBodyPart_RightArm] = nullptr;
+      this->currentCodes[kAnimBodyPart_RightArm] = 0x00FF;
+      this->unk70[kAnimBodyPart_RightArm] = 0x00FF;
+      this->unk48[kAnimBodyPart_RightArm] = -1;
+      (*g_thePlayer)->TES4_005EFFD0(-1);
+      this->TES4_004728C0(); // alter node unk04?
+   } else {
+      // at 0x00474735
+      if (esp14 != kState_Animating)
+         this->TES4_00470FC0(esp18, 0.0F);
+      else // at 0x00474752
+         if (esp18 != esp14 || /*byte*/this->unkC4 != 0 || Arg1->state != kState_Inactive)
+            this->TES4_00470FC0(esp18, 0.0F);
+   }
+   // at 0x00474779
+   this->unk3C[esp14] = Arg2;
+   this->animSequences[esp14] = Arg1;
+   if ((!IsMenuMode() || this->unk04 == (*g_thePlayer)->TES4_00660110()) && edi) {
+      NiPointer<TESAnimGroup> esp30 = Arg1->animGroup;
+      NiPointer<TESAnimGroup> esp34 = edi->animGroup;
+      esp28 = true;
+      if (esp34->GetUnk20()) {
+         bool bl = esp34->GetUnk20();
+         bool al = esp30->GetUnk20();
+         if (bl == al) {
+            if (edi->numFrames != Arg1->numFrames) {
+               //
+               // ... error log at 0x00474926
+               //
+            }
+            esp38 = true;
+            if (Arg1 == edi) {
+               Log004A7A60("Morph Error: Trying to morph from sequence to itself.'%s' on '%s'.", edi->unk08, this->unk04->unk08);
+               eps38 = false;
+            }
+         }
+      }
+      // at 0x0047482F
+      // esp30 destructor
+      // esp34 destructor
+   }
+   // at 0x00474852
+   al = 0;
+   float esp34 = INI:General:fAnimationDefaultBlend;
+   if (edi)
+      al = edi->animGroup->unk21;
+   cl = Arg1->animGroup->unk21;
+   al = std::max(al, cl);
+   if (al)
+      esp34 = (float)(UInt32)al / 30.0;
+   // at 0x0047488D
+   bool a = true;
+   if (!IsMenuMode() == (*g_thePlayer)->unk5D8 == this->unk04)
+      a = AreCursorAndMenuOfTypeVisible(kMenuID_RaceSexMenu, 0);
+   if (a)
+      esp34 = INI:Interface:fMenuModeAnimBlend;
+   if (this->unKC4)
+      esp34 = 0.0F;
+   esp34 /= INI:General:fAnimationMult;
+   Arg1->offset = Arg1->begin + 0.0; // compile-time constant 0, probably
+   if (esp34 < 0.01F) { // at 0x00474900
+      Arg1->TES4_006C9BA0(0, 1, 1.0F, 0.0F, 0, 0);
+   } else {
+      // at 0x0047494C
+      if (esp38) {
+         // next func is critical to movement and anims
+         this->manager->TES4_006C4060(edi, Arg1, esp34, 0, 1.0F, 1.0F);
+      } else {
+         if (edi && edi->state != 0) {
+            bool al = this->manager->TES4_006C4000(edi, Arg1, (float)???, 0, 1, 1.0F, 0);
+            if (al)
+               jump to 0x04074A34;
+         }
+         // at 0x004749A8
+         NiNode* eax = (*g_thePlayer)->TES4_00660110(1);
+         if (this->unk04 != eax) { // at 0x004749BA
+            NiNode* eax = (*g_thePlayer)->TES4_00660110(0);
+            if (edi != eax) {
+               auto eax = (*g_worldSceneGraph)->unkDC;
+               if (!TES4_0047F7B0(edi, eax) || *(UInt8*)(0x00B333B8)) {
+                  // at 0x004749F2
+                  this->manager->TES4_00470B20(Arg1, 0, 1, 1.0F, 0.0F, 0);
+                  jump to 0x00474A34;
+               }
+            }
+         }
+         // at 0x00474A14
+         this->manager->TES4_006C5C70(Arg1, 0.0F, esp34, 0, 0);
+      }
+   }
+   // at 0x00474A34
+   switch (s_animGroupInfos[esp1C].unk0C) {
+      default:
+         this->unk48[esp14] = 0;
+   }
+   if (this->unkC4) {
+      this->unkC4 = 0;
+      this->ApplyUnk18ToNode08(this->unk94, 0, 1);
+   }
+   return Arg1;
+}

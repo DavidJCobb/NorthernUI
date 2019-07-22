@@ -1,0 +1,89 @@
+AnimCode ActorAnimData::Subroutine00470D20(AnimCode Arg1, bool isRecursing) {
+   auto esi   = this;
+   auto esp10 = Arg1; // implicit -- stack pushes
+   do {
+      ebx = Arg1;
+      if (this->map9C->LookupByKey(Arg1, &esp08)) {
+         BSAnimGroupSequence* eax = esp08->GetByIndex(-1);
+         if (eax)
+            return Arg1;
+      }
+      if (Arg1.combatType()) {
+         //
+         // Check if as a result of our combat type, we should override the normal 
+         // result of this function?
+         //
+         AnimSequenceBase* esp08;
+         switch (Arg1.combatType()) {
+            case kAnimCombatType_Staff: // at 0x00470D84
+               if (Arg1.bodyState() == kAnimBodyState_Swim) { // at 0x00470D92
+                  //
+                  // If (ebx) is a swimming animation, check whether we 
+                  // have a two-handed animation already; if so, use it.
+                  //
+                  AnimCode alt = Arg1.withCombatType(kAnimCombatType_TwoHand);
+                  if (this->map9C->LookupByKey(alt, &esp08)) { // at 0x00470DB3
+                     BSAnimGroupSequence* eax = esp08->GetByIndex(-1);
+                     if (eax)
+                        return alt; // jumped to 0x00470EE8
+                  }
+               }
+            case kAnimCombatType_TwoHand:
+            case kAnimCombatType_Bow:
+               // at 0x00470DCA
+               //
+               // If we have a one-handed animation already, use it?
+               //
+               AnimCode alt = Arg1.withCombatType(kAnimCombatType_OneHand);
+               if (this->map9C->LookupByKey(alt, &esp08)) {
+                  BSAnimGroupSequence* eax = esp08->GetByIndex(-1);
+                  if (eax)
+                     return alt; // jumped to 0x00470EFA
+               }
+         }
+         // at 0x00470E02
+         if (this->map9C->LookupByKey(Arg1.withCombatType(kAnimCombatType_None), &esp08)) {
+            BSAnimGroupSequence* eax = esp08->GetByIndex(-1);
+            if (eax)
+               return Arg1;
+         }
+      }
+      // at 0x00470E34
+      if (Arg1.type()) {
+         //
+         // Convert running animation codes to walking animation codes:
+         //
+         auto ebx = Arg1.toWalkCode(); // done with a switch case, which also skips to 0x00470E9D if it's not a running code
+         if (ebx != Arg1 && ebx.type()) {
+            //
+            // If we were asked about a running animation, check if we're already 
+            // playing the walking animation that corresponds with it; if so, 
+            // return that walking animation's code.
+            //
+            eax = this->TES4_00470D20(ebx.withBodyState(kAnimBodyState_Default), true);
+            if (eax.type() == ebx.type())
+               return eax;
+         }
+      }
+      // at 0x00470E9D
+      if (isRecursing)
+         return 0x0000; // == MakeAnimCode(kAnimBodyState_Default, kAnimCombatType_None, kAnimGroup_Idle)
+      bool bl;
+      if (Arg1.bodyState()) {
+         //
+         // If we were asked about an animation with a non-default body state 
+         // (i.e. sneak, swim, fly), then check if we're already playing the 
+         // default-body-state animation that corresponds with it; if so, 
+         // return that animation's code.
+         //
+         eax = this->TES4_00470D20(Arg1.withBodyState(kAnimBodyState_Default), true);
+         if (eax.type() == Arg1.type())
+            return eax;
+      }
+      if (!Arg1.type())
+         return 0x0000; // == MakeAnimCode(kAnimBodyState_Default, kAnimCombatType_None, kAnimGroup_Idle)
+      isRecursing = false;
+   } while (true);
+   // at 0x00470EDF
+   return ebx;
+}
