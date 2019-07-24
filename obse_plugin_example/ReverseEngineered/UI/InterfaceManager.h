@@ -56,6 +56,8 @@ namespace RE {
    DEFINE_SUBROUTINE_EXTERN(void,   HideBigFour,          0x0057CC00);
    DEFINE_SUBROUTINE_EXTERN(void,   ShowOrRefreshBigFour, 0x0057CAC0);
    //
+   DEFINE_SUBROUTINE_EXTERN(TESObjectREFR*, GetReticleTarget, 0x00579540);
+   //
    DEFINE_SUBROUTINE_EXTERN(void, UpdateMainMenuPlayerModelAngle, 0x005A5900, float cursorMovementX, float cursorMovementY);
 
    class InterfaceManager {
@@ -167,7 +169,7 @@ namespace RE {
          TESObjectREFR* debugSelection; // 0BC // the current console ref
          UInt32  unkC0;
          TESObjectREFR* unk0C4; // 0C4
-         TESObjectREFR* unk0C8; // 0C8
+         TESObjectREFR* reticleTarget; // 0C8
          TESObjectREFR* unk0CC; // 0CC
          UInt32  unk0D0; // D0
          UInt32  unk0D4; // D4

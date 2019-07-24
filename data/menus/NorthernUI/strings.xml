@@ -333,6 +333,8 @@
    <_optionBarterConfirmHandlerAlt>Barter Confirm Prompt (Alt):</_optionBarterConfirmHandlerAlt>
    <_optionBarterConfirmHandlerCtrl>Barter Confirm Prompt (Ctrl):</_optionBarterConfirmHandlerCtrl>
    <_optionUsePlaystationButtonIcons>Use PlayStation Button Icons:</_optionUsePlaystationButtonIcons>
+   <_optionEnhancedMovementBehavior>Enhanced Movement:</_optionEnhancedMovementBehavior>
+   <_optionEnhancedCameraBehavior>Camera Behavior:</_optionEnhancedCameraBehavior>
    
    <_optEnumBarterConfirmHandlerDefault>Always (Default)</_optEnumBarterConfirmHandlerDefault>
    <_optEnumBarterConfirmHandlerTakeOne>When Not Free</_optEnumBarterConfirmHandlerTakeOne>
@@ -341,6 +343,10 @@
    <_optEnumQuantityHandlerDefault>Ask</_optEnumQuantityHandlerDefault>
    <_optEnumQuantityHandlerTakeOne>Transfer One</_optEnumQuantityHandlerTakeOne>
    <_optEnumQuantityHandlerTakeAll>Transfer All</_optEnumQuantityHandlerTakeAll>
+   
+   <_optEnumEnhancedCameraBehaviorOblivion>Oblivion</_optEnumEnhancedCameraBehaviorOblivion>
+   <_optEnumEnhancedCameraBehaviorSkyrim>Skyrim</_optEnumEnhancedCameraBehaviorSkyrim>
+   <_optEnumEnhancedCameraBehaviorFree>Free</_optEnumEnhancedCameraBehaviorFree> <!-- "free" as in "unrestricted movement and camera" -->
    
    <_optDescLocalMapRes>Adjust the render resolution of the Local Map. Oblivion's world is divided into grid cells, and this option is measured in pixels per grid cell.</_optDescLocalMapRes>
    <_optDescShowHUDClock>Control whether the in-game time of day is displayed on the HUD.</_optDescShowHUDClock>
@@ -355,6 +361,8 @@
    <_optDescBarterConfirmHandlerAlt>Control when the game asks you to confirm a sale or purchase, when you're holding the Alt key.</_optDescBarterConfirmHandlerAlt>
    <_optDescBarterConfirmHandlerCtrl>Control when the game asks you to confirm a sale or purchase, when you're holding the Ctrl key.</_optDescBarterConfirmHandlerCtrl>
    <_optDescUsePlaystationButtonIcons>Control whether the gamepad UI uses Xbox or PlayStation button icons.</_optDescUsePlaystationButtonIcons>
+   <_optDescEnhancedMovementBehavior>If this option is enabled, your character's angle of movement will exactly match your joystick direction. If this option is disabled, the joystick works the same as WASD.</_optDescEnhancedMovementBehavior>
+   <_optDescEnhancedCameraBehavior>Control the behavior of the third-person camera. You can use the camera behaviors seen in Oblivion or Skyrim, or a "Free" behavior that allows you to move totally independently of the camera direction.</_optDescEnhancedCameraBehavior>
    
    <!----- XXNCONTROLSMENU ------------------------------------------------->
    <_optCtrlGStick>Gameplay Sticks:</_optCtrlGStick>

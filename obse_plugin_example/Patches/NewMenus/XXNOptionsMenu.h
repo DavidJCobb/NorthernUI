@@ -52,6 +52,10 @@ class XXNOptionsMenu : public RE::Menu {
          kTileID_OptionBarterConfirmHandlerCtrl_Right = 34,
          kTileID_OptionBarterConfirmHandlerCtrl_Value = 35,
          kTileID_OptionUsePlaystationButtonIcons = 36,
+         kTileID_OptionEnhancedMovement = 37,
+         kTileID_OptionEnhancedCamera_Left = 38,
+         kTileID_OptionEnhancedCamera_Right = 39,
+         kTileID_OptionEnhancedCamera_Value = 40,
       };
       enum {
          kTraitID_CheckboxState = kTileValue_user20,
@@ -62,6 +66,9 @@ class XXNOptionsMenu : public RE::Menu {
          kRootTrait_BarterConfirmHandlerAlways    = kTileValue_user13,
          kRootTrait_BarterConfirmHandlerIfNotFree = kTileValue_user14,
          kRootTrait_BarterConfirmHandlerNever     = kTileValue_user15,
+         kRootTrait_EnhancedCameraBehaviorOblivion = kTileValue_user16,
+         kRootTrait_EnhancedCameraBehaviorSkyrim   = kTileValue_user17,
+         kRootTrait_EnhancedCameraBehaviorFree     = kTileValue_user18,
       };
       enum Confirmation : UInt8 {
          kConfirmationBox_None = 0,
@@ -86,6 +93,8 @@ class XXNOptionsMenu : public RE::Menu {
       EnumpickerStr optionBarterConfirmHandlerDefault;
       EnumpickerStr optionBarterConfirmHandlerAlt;
       EnumpickerStr optionBarterConfirmHandlerCtrl;
+      Checkbox      optionEnhancedMovement;
+      EnumpickerStr optionEnhancedCamera;
 
       virtual void	Dispose(bool); // 00 // destructor
       virtual void	HandleTileIDChange(SInt32 newID, RE::Tile* tile);

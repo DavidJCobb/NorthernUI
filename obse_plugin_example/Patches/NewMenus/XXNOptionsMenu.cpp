@@ -122,6 +122,18 @@ void XXNOptionsMenu::HandleTileIDChange(SInt32 newID, RE::Tile* tile) {
       case kTileID_OptionUsePlaystationButtonIcons:
          this->optionUsePlaystationButtonIcons.tile = tile;
          return;
+      case kTileID_OptionEnhancedMovement:
+         this->optionEnhancedMovement.tile = tile;
+         return;
+      case kTileID_OptionEnhancedCamera_Value:
+         this->optionEnhancedCamera.tileValue = tile;
+         return;
+      case kTileID_OptionEnhancedCamera_Left:
+         this->optionEnhancedCamera.tileLeft = tile;
+         return;
+      case kTileID_OptionEnhancedCamera_Right:
+         this->optionEnhancedCamera.tileRight = tile;
+         return;
    }
 };
 void XXNOptionsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
@@ -167,6 +179,10 @@ void XXNOptionsMenu::HandleMouseUp(SInt32 tileID, RE::Tile* target) {
    if (this->optionBarterConfirmHandlerAlt.HandleClick(target))
       return;
    if (this->optionUsePlaystationButtonIcons.HandleClick(target))
+      return;
+   if (this->optionEnhancedMovement.HandleClick(target))
+      return;
+   if (this->optionEnhancedCamera.HandleClick(target))
       return;
 };
 void XXNOptionsMenu::HandleMouseover(SInt32 tileID, RE::Tile* target) {
@@ -232,6 +248,10 @@ bool XXNOptionsMenu::AnyUnchanged() const {
       return true;
    if (NorthernUI::INI::Features::bUsePlaystationButtonIcons.bCurrent != this->optionUsePlaystationButtonIcons.Get())
       return true;
+   if (NorthernUI::INI::Features::bEnhancedMovement360Movement.bCurrent != this->optionEnhancedMovement.Get())
+      return true;
+   if (NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent != this->optionEnhancedCamera.index)
+      return true;
    return false;
 };
 void XXNOptionsMenu::Commit() {
@@ -248,6 +268,8 @@ void XXNOptionsMenu::Commit() {
    NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iCurrent = this->optionBarterConfirmHandlerAlt.index;
    NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iCurrent = this->optionBarterConfirmHandlerCtrl.index;
    NorthernUI::INI::Features::bUsePlaystationButtonIcons.bCurrent = this->optionUsePlaystationButtonIcons.Get();
+   NorthernUI::INI::Features::bEnhancedMovement360Movement.bCurrent = this->optionEnhancedMovement.Get();
+   NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent = this->optionEnhancedCamera.index;
    //
    (NorthernUI::INI::INISettingManager::GetInstance()).Save();
    NorthernUI::INI::SendChangeEvent();
@@ -266,6 +288,8 @@ void XXNOptionsMenu::ResetDefaults() {
    this->optionBarterConfirmHandlerAlt.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iDefault);
    this->optionBarterConfirmHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iDefault);
    this->optionUsePlaystationButtonIcons.Set(NorthernUI::INI::Features::bUsePlaystationButtonIcons.bDefault);
+   this->optionEnhancedMovement.Set(NorthernUI::INI::Features::bEnhancedMovement360Movement.bDefault);
+   this->optionEnhancedCamera.SetByIndex(NorthernUI::INI::Features::iEnhancedMovementCameraMode.iDefault);
 };
 void XXNOptionsMenu::Setup() {
    //
@@ -299,6 +323,12 @@ void XXNOptionsMenu::Setup() {
       this->optionQuantityHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
       this->optionQuantityHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
    }
+   {  // handle enhanced camera mode labels
+      this->optionEnhancedCamera.values.reserve(3);
+      this->optionEnhancedCamera.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraBehaviorOblivion));
+      this->optionEnhancedCamera.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraBehaviorSkyrim));
+      this->optionEnhancedCamera.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraBehaviorFree));
+   }
    this->optionLocalMapRes.Set(NorthernUI::INI::Display::uLocalMapResolutionPerCell.iCurrent, true);
    this->optionSuppressDLCPopups.Set(NorthernUI::INI::Features::bSuppressDLCStartup.bCurrent);
    this->optionUseXXNAlchemyMenu.Set(NorthernUI::INI::Menus::bUseXXNAlchemyMenu.bCurrent);
@@ -312,6 +342,8 @@ void XXNOptionsMenu::Setup() {
    this->optionBarterConfirmHandlerAlt.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iCurrent);
    this->optionBarterConfirmHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iCurrent);
    this->optionUsePlaystationButtonIcons.Set(NorthernUI::INI::Features::bUsePlaystationButtonIcons.bCurrent);
+   this->optionEnhancedMovement.Set(NorthernUI::INI::Features::bEnhancedMovement360Movement.bCurrent);
+   this->optionEnhancedCamera.SetByIndex(NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent);
 };
 
 /*static*/ void XXNOptionsMenu::Confirm_ResetDefaults() {

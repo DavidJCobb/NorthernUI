@@ -121,11 +121,52 @@ namespace CobbPatches {
       //
       namespace IndependentCamera {
          //
-         // TODO: There is an imperfection in our "Skyrim Standard" camera behavior: if you 
-         // turn the camera to face a different direction than the player and then move 
-         // forward, the camera snaps to the player's direction. We should have the player 
-         // snap to the camera's direction on the first frame of movement.
+         // This patch allows the user to choose between three different behaviors for 
+         // the third-person camera:
          //
+         // OBLIVION STANDARD: The camera and the player always face in the same direct-
+         // ion. The "look" inputs rotate the player-character, and the camera is kept 
+         // in synch with her.
+         //
+         // SKYRIM STANDARD: If the player-character isn't moving and doesn't have her 
+         // weapon drawn, then the camera can be rotated independently of her. If the 
+         // camera is facing in a different direction from her when the player starts 
+         // moving, then she snaps to the camera at the start of the movement.
+         //
+         // FREE MOVEMENT: The camera and the player-character can face different 
+         // directions even during movement or with a melee weapon drawn; the player-
+         // character is rotated to face in her direction of movement. However, if a 
+         // ranged weapon or spell is equipped, then she is forced to face camera-forward 
+         // so that aiming works properly.
+         //
+         // -----------------------------------------------------------------------------
+         //
+         // TODO: Every time the player switches to first-person, the player should be 
+         // rotated to match the camera. (Be careful: the input handler switches the 
+         // player in and out of first-person view repeatedly for some reason!)
+         //
+         NorthernUI::EnhancedMovementCameraType _GetPref() {
+            auto mode = NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent;
+            switch (mode) {
+               case NorthernUI::kEnhancedMovementCameraType_FreeMovement:
+               case NorthernUI::kEnhancedMovementCameraType_OblivionStandard:
+               case NorthernUI::kEnhancedMovementCameraType_SkyrimStandard:
+                  return (NorthernUI::EnhancedMovementCameraType)mode;
+            }
+            return NorthernUI::kEnhancedMovementCameraType_OblivionStandard;
+         }
+         //
+         // These static bools exist to facilitate the "Skyrim Standard" camera behavior. 
+         // If you turn the camera to face a different direction from your character and 
+         // then start moving, your character should snap to face the camera (instead of 
+         // the camera snapping to face the player again). As such, we need to be able to 
+         // tell whether the current frame is the first frame of your movement.
+         //
+         static bool s_lastFrameMovement = false;
+         static bool s_thisFrameMovement = false;
+         bool _JustStartedMoving() {
+            return s_thisFrameMovement && !s_lastFrameMovement;
+         }
          bool _IsTryingToMove() {
             auto input = RE::OSInputGlobals::GetInstance();
             auto value = CALL_MEMBER_FN(input, GetJoystickAxisMovement)(0, RE::INI::Controls::iJoystickMoveLeftRight->i);
@@ -136,13 +177,21 @@ namespace CobbPatches {
                return true;
             return false;
          }
-         bool _ShouldFaceCamera(RE::PlayerCharacter* player) {
-            auto mode = NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent;
+         bool _ShouldFaceCamera(RE::PlayerCharacter* player) { // Should player-forward and camera-forward synch?
+            //
+            // Running these checks multiple times a frame is messy, but unless I just go 
+            // all out and replace the entire player input handler at 00671620, this is 
+            // the only way to do it.
+            //
+            if (!player->isThirdPerson)
+               return true;
+            auto mode = _GetPref();
             if (mode == NorthernUI::kEnhancedMovementCameraType_OblivionStandard)
                return true;
-            if (mode == NorthernUI::kEnhancedMovementCameraType_SkyrimStandard)
+            if (mode == NorthernUI::kEnhancedMovementCameraType_SkyrimStandard) {
                if (CALL_MEMBER_FN(player, GetWeaponOut)() || _IsTryingToMove())
                   return true;
+            }
             //
             // TODO: Even in "Free Movement" mode, if you have a ranged weapon or spell out, 
             // we should force you to face camera-forward so that you can actually aim and 
@@ -150,61 +199,72 @@ namespace CobbPatches {
             //
             return false;
          }
+         void _UpdateFrameMovementState() {
+            s_lastFrameMovement = s_thisFrameMovement;
+            s_thisFrameMovement = _IsTryingToMove();
+         }
          //
          namespace ActivatePick {
             //
-            // TODO: Make the activation pick (i.e. what your reticle aims at, both for UI 
-            // purposes and when activating objects) aim based on the camera yaw rather 
-            // than the actor yaw, as in Skyrim.
+            // When using the "Skyrim" or "Free" camera modes, this code makes the reticle 
+            // aim camera-forward rather than actor-forward. This means that you can activate 
+            // objects even if your character is facing away from them, but activating the 
+            // thing YOU'RE looking at is smoother and more intuitive than activating the 
+            // thing that YOUR CHARACTER is looking at -- especially when you factor in 
+            // camera pitch and small objects bunched together (think of things on shelves).
             //
-         }
-         namespace CameraRelativeMovement {
-            //
-            // MobileObject::Move is used to move the player, and it receives a NiVector3 
-            // that is intended to be applied relative to the player's facing direction; 
-            // that vector represents the player's input (with appropriate scaling for 
-            // each animation).
-            //
-            // We want to make it camera-relative instead. Fortunately, MobileObject::Move 
-            // literally just builds a NiMatrix33 from the player yaw, and we can make it 
-            // use the camera yaw instead.
-            //
-            void _stdcall Inner(RE::Actor* subject, NiVector3& delta) {
-               if (subject != (RE::Actor*) *g_thePlayer)
-                  return;
-               if (_ShouldFaceCamera((RE::PlayerCharacter*)subject))
-                  return;
-               NiVector3 working;
-               RE::NiMatrix33 frame;
-               CALL_MEMBER_FN(&frame, SetFromYaw)(*RE::fPlayerCameraYaw);
-               CALL_MEMBER_FN(&frame, MultiplyByColumn)(working, delta);
-               //
-               // working = delta shifted from camera-relative coordinates to world coordinates
-               //
-               CALL_MEMBER_FN(&frame, SetFromYaw)(subject->GetZRotation());
-               frame = frame.transpose();
-               CALL_MEMBER_FN(&frame, MultiplyByColumn)(delta, working);
-               //
-               // delta = working shifted from world coordinates to actor-relative coordinates
+            float _stdcall Inner() {
+               auto player = (RE::PlayerCharacter*) *g_thePlayer;
+               if (_ShouldFaceCamera(player))
+                  return player->GetZRotation();
+               return *RE::fPlayerCameraYaw;
             }
             __declspec(naked) void Outer() {
                _asm {
-                  mov  eax, dword ptr [ebp + 0xC];
-                  push eax;
-                  push edi;
+                  fstp st(0); // replace this with Inner's return value
                   call Inner; // stdcall
-                  mov  ecx, edi;
-                  mov  eax, 0x0065A2C0; // reproduce patched-over call to MobileObject::GetCharacterProxy
-                  call eax;             //
-                  mov  ecx, 0x0065AF46;
-                  jmp  ecx;
+                  push ecx;
+                  lea  ecx, [esp + 0x60];
+                  mov  eax, 0x005807AB;
+                  jmp  eax;
                }
             }
             void Apply() {
-               WriteRelJump(0x0065AF41, (UInt32)&Outer);
+               WriteRelJump(0x005807A6, (UInt32)&Outer);
             }
          }
          namespace HandlePlayerInput {
+            namespace PrepCamera {
+               //
+               // TODO: We also need to reset the camera to match the player on the frame that 
+               // the player loads into a new area.
+               //
+               void _stdcall Inner(RE::PlayerCharacter* player) {
+                  *RE::fPlayerCameraPitch = CALL_MEMBER_FN(player, GetPitch)();
+                  if (_ShouldFaceCamera(player)) {
+                     _UpdateFrameMovementState();
+                     if (_GetPref() == NorthernUI::kEnhancedMovementCameraType_SkyrimStandard) {
+                        if (_JustStartedMoving())
+                           //
+                           // TODO: REGRESSION: This seems to have stopped working??
+                           //
+                           player->SetZRotation(*RE::fPlayerCameraYaw);
+                     }
+                     *RE::fPlayerCameraYaw = player->GetZRotation();
+                  }
+               }
+               __declspec(naked) void Outer() {
+                  _asm {
+                     push ebx;
+                     call Inner;
+                     mov  eax, 0x00671B34;
+                     jmp  eax;
+                  }
+               }
+               void Apply() {
+                  WriteRelJump(0x00671B15, (UInt32)&Outer);
+               }
+            }
             namespace Yaw {
                void _stdcall Inner(RE::PlayerCharacter* player, float yawChange) {
                   if (_ShouldFaceCamera(player))
@@ -225,24 +285,6 @@ namespace CobbPatches {
                }
                void Apply() {
                   WriteRelJump(0x00671D7A, (UInt32)&Outer);
-               }
-            }
-            namespace FinalizeCamera {
-               void _stdcall Inner(RE::PlayerCharacter* player) {
-                  *RE::fPlayerCameraPitch = CALL_MEMBER_FN(player, GetPitch)();
-                  if (_ShouldFaceCamera(player))
-                     *RE::fPlayerCameraYaw   = player->GetZRotation();
-               }
-               __declspec(naked) void Outer() {
-                  _asm {
-                     push ebx;
-                     call Inner;
-                     mov  eax, 0x00671B34;
-                     jmp  eax;
-                  }
-               }
-               void Apply() {
-                  WriteRelJump(0x00671B15, (UInt32)&Outer);
                }
             }
             //
@@ -290,9 +332,40 @@ namespace CobbPatches {
             }
             //
             void Apply() {
+               PrepCamera::Apply();
                Yaw::Apply();
-               FinalizeCamera::Apply();
                MovementFlags::Apply();
+            }
+         }
+         namespace POVSwitch {
+            //
+            // When the player switches to first-person view, snap them to face camera-forward 
+            // in order to maintain visual continuity.
+            //
+            // TODO: this doesn't seem to work
+            //
+            void _stdcall Inner(bool isThirdPerson) {
+               if (isThirdPerson)
+                  return;
+               if (_GetPref() == NorthernUI::kEnhancedMovementCameraType_OblivionStandard)
+                  return;
+               ((RE::PlayerCharacter*)*g_thePlayer)->SetZRotation(*RE::fPlayerCameraYaw);
+            }
+            __declspec(naked) void Outer() {
+               _asm {
+                  mov  byte ptr [esi + 0x588], al; // reproduce patched-over instruction
+                  push eax; // protect
+                  push al;
+                  call Inner; // stdcall
+                  pop  eax; // restore
+                  test al, al; // reproduce overridden comparison
+                  mov  ecx, 0x0066C59E;
+                  jmp  ecx;
+               }
+            }
+            void Apply() {
+               WriteRelJump(0x0066C598, (UInt32)&Outer);
+               SafeWrite8  (0x0066C59D, 0x90); // courtesy NOP
             }
          }
          namespace UpdatePlayerCamera {
@@ -305,7 +378,7 @@ namespace CobbPatches {
                   *RE::fPlayerCameraPitch = CALL_MEMBER_FN(player, GetPitch)();
                   if (!_ShouldFaceCamera(player))
                      return;
-                  *RE::fPlayerCameraYaw   = player->GetZRotation();
+                  *RE::fPlayerCameraYaw = player->GetZRotation();
                }
                __declspec(naked) void Outer() {
                   _asm {
@@ -319,37 +392,15 @@ namespace CobbPatches {
                   WriteRelJump(0x0066B73F, (UInt32)&Outer);
                }
             }
-            namespace SnapForFirstPerson {
-               //
-               // ...but DO snap it to the player for first-person.
-               //
-               void _stdcall Inner(RE::PlayerCharacter* player) {
-                  if (!_ShouldFaceCamera(player))
-                     *RE::fPlayerCameraYaw = player->GetZRotation();
-               }
-               __declspec(naked) void Outer() {
-                  _asm {
-                     push ebp;
-                     call Inner; // stdcall
-                     push ecx;               // reproduce patched-over instructions
-                     lea  ecx, [esp + 0x64]; //
-                     mov  eax, 0x0066B7BA;
-                     jmp  eax;
-                  }
-               }
-               void Apply() {
-                  WriteRelJump(0x0066B7B5, (UInt32)&Outer);
-               }
-            }
             void Apply() {
                NoInitialAssign::Apply();
-               SnapForFirstPerson::Apply();
             }
          }
          void Apply() {
-            //CameraRelativeMovement::Apply(); // made superfluous by MovementFlags handling, and causes problems if enabled alongside it
             HandlePlayerInput::Apply();
             UpdatePlayerCamera::Apply();
+            POVSwitch::Apply();
+            ActivatePick::Apply();
          }
       }
       //
