@@ -974,9 +974,13 @@ void XXNAlchemyMenu::RenderEffectList() {
    {  // Add the "All Ingredients" list item.
       allCats = CALL_MEMBER_FN(this, CreateTemplatedTile)(container, "effect_list_item_template", nullptr);
       if (allCats) {
+         auto text = CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_AllIngredientsName);
+         if (!text)
+            text = "All Ingredients";
+         //
          CALL_MEMBER_FN(allCats, UpdateFloat) (kTileValue_id, kTileID_InventoryShowAllCategories);
          CALL_MEMBER_FN(allCats, UpdateFloat) (kTileValue_listindex, (float) (listindex++));
-         CALL_MEMBER_FN(allCats, UpdateString)(kInventoryCategoryTrait_Name, "All Ingredients");
+         CALL_MEMBER_FN(allCats, UpdateString)(kInventoryCategoryTrait_Name, text);
          CALL_MEMBER_FN(allCats, UpdateFloat) (kInventoryCategoryTrait_IsSelected, this->selectedEffect ? 1.0F : 2.0F);
          CALL_MEMBER_FN(allCats, UpdateString)(kInventoryCategoryTrait_EffectCode, " ");
          CALL_MEMBER_FN(allCats, UpdateFloat) (kInventoryCategoryTrait_AVOrOther, 0.0F);

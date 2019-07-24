@@ -43,13 +43,47 @@ namespace CobbPatches {
 
       namespace FixMovementZeroing {
          //
-         // Once you start using the joystick, your joystick input will scale the 
-         // player-character's movement speed. If the joystick is zeroed, then the 
-         // speed multiplier may be left at zero, causing WASD to move the character 
-         // extremely slowly. This fix catches a zero multiplier and forces it to 
-         // one. (It won't affect anything if the joystick is zeroed and WASD isn't 
-         // being pressed.)
+         // For some reason, Bethesda used a static float (fPlayerMoveAnimMult) to 
+         // keep track of the gamepad's influence on player movement. The float is 
+         // a multiplier by which the player's movement and animation speed will be 
+         // scaled. It initializes to 1.0F and is only modified if gamepad input is 
+         // received, so if you don't play with a gamepad at all, then the float 
+         // stays at 1.0F and all WASD movement happens at full speed.
          //
+         // However, if you move the joystick with a gamepad, then the float will 
+         // change to reflect the joystick magnitude (I'm simplifying). The problem 
+         // is this: when you return the joystick to a neutral (zero) position, you 
+         // are by definition no longer moving the joystick... which means that the 
+         // float doesn't reset; it retains the value from the last frame that the 
+         // joystick was off-center, and this value will reflect an extremely small 
+         // joystick magnitude. This means that from that point on, all WASD move-
+         // ment will be carried out using an extremely small multiplier, slowing 
+         // the player to a crawl.
+         //
+         // This patch resets fPlayerMoveAnimMult to 1.0F whenever the joystick is 
+         // not being used.
+         //
+         // A few notes:
+         //
+         //  - Why did they use a static float? It's only used by one function, and 
+         //    its value doesn't need to be retained between calls. They could've 
+         //    just used a local variable, and manually set it to 1.0F when there 
+         //    was no gamepad input.
+         //
+         //  - The float isn't actually based on the joystick magnitude; it's 
+         //    based on the magnitude of the furthest-moved joystick axis. This is 
+         //    an important distinction: if you have the joystick at a perfect 
+         //    diagonal, then both axes are going to be (+/-)70% of the maximum 
+         //    range... which means that fPlayerMoveAnimMult will be about 0.7. In 
+         //    other words, in the vanilla game, it's impossible to move at full 
+         //    speed at a diagonal angle using a joystick. (Our EnhancedMovement.h 
+         //    patches address this.)
+         //
+         //    The PC build has noticeably incomplete gamepad support compared to 
+         //    the Xbox build (as one might infer from the sheer size of this 
+         //    file). Hard to say whether the speed issue affects the Xbox build.
+         //
+         static_assert(RE::fPlayerMoveAnimMult == (float*)0x00B14E58, "Movement zeroing fix: fPlayerMoveAnimMult is in a different place.");
          __declspec(naked) void Outer() {
             _asm {
                // vanilla: test eax, eax;
@@ -62,7 +96,7 @@ namespace CobbPatches {
                mov  ecx, 0x00672168;
                jmp  ecx;
             lZero:
-               mov  eax, 0x00B14E58;
+               mov  eax, 0x00B14E58; // fPlayerMoveAnimMult
                mov  dword ptr [eax], 0x3F800000;
                mov  eax, 0x0067218B;
                jmp  eax;
@@ -369,6 +403,7 @@ namespace CobbPatches {
             __declspec(naked) void Outer() {
                _asm {
                   call Inner;
+                  test esi, esi; // reproduce comparison that can get bulldozed by Inner
                   mov  ecx, 0x00671C5E;
                   jmp  ecx;
                };

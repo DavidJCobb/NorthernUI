@@ -815,7 +815,6 @@
             </y>
             <width>
                <copy src="parent()" trait="width" />
-               <sub>128</sub>
             </width>
             <height>
                <copy src="child()" trait="y" />
@@ -915,7 +914,6 @@
             </y>
             <width>
                <copy src="parent()" trait="width" />
-               <sub>128</sub>
             </width>
             <height>
                <copy src="child()" trait="y" />
@@ -993,11 +991,7 @@
                         <string><copy src="xxnStrings()" trait="_effectSettingCostPerUseRatioSym" /></string>
                         <include src="NorthernUI\fonts\normal.xml" />
                         <red>140</red><green>140</green><blue>140</blue>
-                        <x>
-                           <copy src="sibling()" trait="x" />
-                           <add  src="sibling()" trait="width" />
-                           <add>6</add> <!-- width of a space -->
-                        </x>
+                        <x>6</x>
                         <y>0</y>
                      </text>
                      <text name="magnitude_max">
@@ -1042,11 +1036,7 @@
                         <string><copy src="xxnStrings()" trait="_enchantmentMenuUsesPrefix" /></string>
                         <include src="NorthernUI\fonts\normal.xml" />
                         <red>140</red><green>140</green><blue>140</blue>
-                        <x>
-                           <copy src="sibling()" trait="x" />
-                           <add  src="sibling()" trait="width" />
-                           <add>6</add> <!-- width of a space -->
-                        </x>
+                        <x>6</x>
                         <y>0</y>
                      </text>
                      <text name="uses">

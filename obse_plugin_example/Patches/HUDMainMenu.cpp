@@ -9,9 +9,9 @@
 #include "Patches/XboxGamepad/Main.h"
 #include "Patches/XboxGamepad/CustomControls.h"
 #include "Services/INISettings.h"
-#include "Miscellaneous/math.h";
-#include "obse/GameMenus.h";
-#include "obse_common/SafeWrite.h";
+#include "Miscellaneous/math.h"
+#include "obse/GameMenus.h"
+#include "obse_common/SafeWrite.h"
 
 namespace CobbPatches {
    namespace HUDMainMenu {

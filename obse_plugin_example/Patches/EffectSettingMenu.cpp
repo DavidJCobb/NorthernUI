@@ -27,7 +27,7 @@ namespace CobbPatches {
             };
          };
          void Apply() {
-            WriteRelJump(0x005A0272, (UInt32)&Outer);
+            WriteRelJump(0x005A0272, (UInt32)&Outer); // EffectSettingMenu::HandleFrame+0x12
          };
       };
       namespace ShowChargeCostBetter {

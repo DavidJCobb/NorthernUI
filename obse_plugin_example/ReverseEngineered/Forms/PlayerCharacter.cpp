@@ -5,6 +5,9 @@ namespace RE {
    const float* fVanityCurDistance  = (float* )0x00B3BB24;
    // 0x00B3BB05 may be an "auto vanity" bool, but auto vanity also sets 0x00B3BB04 to true
 
+   //constexpr float* fPlayerMoveAnimMult = (float*)0x00B14E58;
+   //constexpr float* fPlayerTurnAnimMult = (float*)0x00B14E5C;
+
    __declspec(naked) void ModPCMiscStat(UInt32 statIndex, UInt32 changeBy) {
       //
       // Writing this in C++ can cause the compiler to compile wrong code; sometimes, 

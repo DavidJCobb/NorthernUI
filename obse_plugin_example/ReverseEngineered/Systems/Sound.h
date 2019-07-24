@@ -110,6 +110,6 @@ namespace RE {
                                                       
          MEMBER_FN_PREFIX(OSSoundGlobals);
          DEFINE_MEMBER_FN(Subroutine006ADE50, TESGameSound*, 0x006ADE50, const char* soundEditorID, UInt32, UInt32);  // used by LockPickMenu
-         DEFINE_MEMBER_FN(PlaySound,          TESGameSound*, 0x006AE0A0, UInt32 soundRefID, UInt32 flags, bool arg2); // used by PlaySound command // flags: seen 0x101 (non-locational), 0x102 (locational)
+         DEFINE_MEMBER_FN(Play_Sound,         TESGameSound*, 0x006AE0A0, UInt32 soundRefID, UInt32 flags, bool arg2); // used by PlaySound command // flags: seen 0x101 (non-locational), 0x102 (locational)
    };
 };

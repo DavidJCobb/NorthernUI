@@ -112,6 +112,7 @@
     <ClCompile Include="ReverseEngineered\Forms\Actor.cpp" />
     <ClCompile Include="Patches\EnhancedMovement.cpp" />
     <ClCompile Include="Miscellaneous\rotation.cpp" />
+    <ClCompile Include="Services\TileDump.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -8023,6 +8024,7 @@
     <ClInclude Include="ReverseEngineered\NetImmerse\NiControllerManager.h" />
     <ClInclude Include="Patches\EnhancedMovement.h" />
     <ClInclude Include="Miscellaneous\rotation.h" />
+    <ClInclude Include="Services\TileDump.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

@@ -5,8 +5,10 @@
 #include "Miscellaneous/strings.h"
 #include "obse_common/SafeWrite.h"
 #include "obse/GameAPI.h" // g_bConsoleMode
+#include "obse/GameMenus.h"
 //
 #include "Services/INISettings.h"
+#include "Services/TileDump.h"
 
 #include "ReverseEngineered/Miscellaneous.h" // quest testing
 #include "obse/GameData.h" // quest testing
@@ -124,6 +126,46 @@ namespace CobbPatches {
             }
             HACK_ForceLogAllCommandResults::s_enabled = flag;
          }
+         void tileInfo(const char* args) {
+            if (!args || args[0] != ' ') {
+               _MESSAGE("tileInfo: You must specify a tile to search for, optionally preceded by a menu ID (decimal) and space.");
+               return;
+            }
+            args = args + 1;
+            if (args[0] == '\0') {
+               _MESSAGE("tileInfo: You must specify a tile to search for, optionally preceded by a menu ID (decimal) and space.");
+               return;
+            }
+            SInt32      menuID = 0;
+            const char* name   = args;
+            {
+               char* end = nullptr;
+               menuID = strtoul(args, &end, 10);
+               if (!(end && *end == ' ')) {
+                  menuID = 0;
+               } else {
+                  name = end + 1;
+               }
+            }
+            auto ui   = RE::InterfaceManager::GetInstance();
+            auto tile = ui->menuRoot;
+            if (menuID) {
+               menuID -= 0x3E9;
+               if (menuID > 0 && menuID < g_TileMenuArray->capacity) {
+                  TileMenu* menu = g_TileMenuArray->data[menuID];
+                  if (menu)
+                     tile = (RE::Tile*)menu;
+               }
+            }
+            if (!tile->name.m_data || strcmp(tile->name.m_data, name) != 0)
+               tile = RE::GetDescendantTileByName(tile, name);
+            if (tile) {
+               _MESSAGE("tileInfo: tile %s found.", tile->name.m_data);
+               TileDump(tile);
+            } else {
+               _MESSAGE("tileInfo: tile %s not found.", name);
+            }
+         }
       }
       namespace Hook {
          bool _startsWith(const char* a, const char* b) {
@@ -147,6 +189,10 @@ namespace CobbPatches {
             }
             if (_startsWith(input + cobb::cstrlen("!xxn "), "setForceLog")) {
                Commands::setForceLog(input + cobb::cstrlen("!xxn ") + cobb::cstrlen("setForceLog"));
+               return true;
+            }
+            if (_startsWith(input + cobb::cstrlen("!xxn "), "tileInfo")) {
+               Commands::tileInfo(input + cobb::cstrlen("!xxn ") + cobb::cstrlen("tileInfo"));
                return true;
             }
          }

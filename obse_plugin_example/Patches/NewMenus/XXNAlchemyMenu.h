@@ -57,6 +57,9 @@ class XXNAlchemyMenu : public RE::Menu {
          kTileID_InventoryItem              = 102, // generated tiles only
       };
       enum {
+         kRootTrait_AllIngredientsName = kTileValue_user0,
+      };
+      enum {
          kInventoryTrait_ItemName       = kTileValue_user1,
          kInventoryTrait_ItemIcon       = kTileValue_user6,
          kInventoryTrait_ItemCount      = kTileValue_user7,

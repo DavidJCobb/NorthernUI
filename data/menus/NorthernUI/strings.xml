@@ -36,6 +36,8 @@
    <_alchemyMenuRenamePotion>Rename Potion</_alchemyMenuRenamePotion>
    
    <_alchemyMenuPotionNamePrefix>Potion Name:</_alchemyMenuPotionNamePrefix>
+   
+   <_alchemyAllIngredientsList>All Ingredients</_alchemyAllIngredientsList>
 
    <!----- CLASSMENU ------------------------------------------------------>
    <_classMenuButtonSelect>Select Class</_classMenuButtonSelect>

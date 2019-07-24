@@ -5,6 +5,7 @@
 
 #include "Miscellaneous/rotation.h"
 #include "ReverseEngineered/Forms/Actor.h"
+#include "ReverseEngineered/Forms/PlayerCharacter.h"
 #include "ReverseEngineered/Systems/Input.h"
 #include "ReverseEngineered/Systems/Timing.h"
 #include "ReverseEngineered/INISettings.h"
@@ -49,17 +50,12 @@ namespace CobbPatches {
             x = (std::max)(-ce_speedCap, (std::min)(ce_speedCap, x * 0.02F)); // same multipliers as in the vanilla code circa 0x006720CB
             y = (std::max)(-ce_speedCap, (std::min)(ce_speedCap, y * 0.02F));
             float length = std::sqrt((posDelta.x * posDelta.x) + (posDelta.y * posDelta.y) + (posDelta.z * posDelta.z));
-            posDelta.x = length * x;
-            posDelta.y = length * y;
             //
-            // TODO: Are we sure that posDelta will have consistent lengths? The code that (somehow) eventually 
-            //       computes it uses two modifiers which are stored at 0x00B14E5C and 0x00B14E58. The former 
-            //       is a "strafe axis magnitude" and is based on the left/right joystick movement only (no 
-            //       keyboard effect). The latter is a "main axis magnitude" and is based on the movement of 
-            //       whichever joystick is further from the center -- which means that diagonal movement will 
-            //       produce shorter values even if the joystick magnitude is the same.
+            // We're scaling the movement by the input, but the movement has already been scaled by a multiplier 
+            // computed from the input; so, we undo the vanilla scale by simply dividing it instead of adding it.
             //
-            //       Then again, are those even used? They're stored somewhere, but are they used?
+            posDelta.x = length * x / *RE::fPlayerMoveAnimMult;
+            posDelta.y = length * y / *RE::fPlayerMoveAnimMult;
             //
             {  // Facing direction
                //
@@ -83,6 +79,14 @@ namespace CobbPatches {
                            case RE::kAnimGroup_Backward:
                            case RE::kAnimGroup_FastBackward:
                               angle = (3.14159F / 2) - atan2(-y, -x);
+                              break;
+                           case RE::kAnimGroup_Left:
+                           case RE::kAnimGroup_FastLeft:
+                              angle = (3.14159F / 2) - atan2(-x, y);
+                              break;
+                           case RE::kAnimGroup_Right:
+                           case RE::kAnimGroup_FastRight:
+                              angle = (3.14159F / 2) - atan2(x, -y);
                               break;
                            default:
                               break;

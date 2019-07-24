@@ -2,6 +2,7 @@
 #include "ReverseEngineered/_BASE.h"
 #include "ReverseEngineered/UI/TagIDs.h"
 #include "obse/GameTiles.h"
+#include "obse/NiTypes.h"
 
 //
 // The XML parse process works as follows:
@@ -42,6 +43,15 @@
 //    this happens immediately; templated content is kept at Stage 1.5, and is 
 //    only put through Stage 2 when instances of the template are appended to 
 //    the displayed content.
+//
+//     - The hierarchy is created using Tile::CreateTemplatedChildren, which 
+//       iterates through TileTemplate's items paying attention only to tile 
+//       starts and ends.
+//
+//     - Once the hierarchy is created, it becomes possible to properly 
+//       resolve src attributes on traits; Tile::UpdateTemplatedChildren is 
+//       used to walk TileTemplate's items and add all traits to all tiles as 
+//       necessary.
 //
 // Additional notes for understanding disassembly of the parser:
 //
@@ -121,8 +131,9 @@ namespace RE {
             union Operand {
                Value* ref;
                float  immediate;
+               UInt32 opcode; // used if the outer opcode is 0xA or 0xF, denoting nesting; this is then the "true" opcode (e.g. <copy> nested stuff </copy> this would be Copy)
             };
-            struct Expression { // sizeof == 0x14 // are we sure? I think it may be 0x18, with an unk14 field. see 0058CBE0
+            struct Expression { // sizeof == 0x18
                Expression* prev;    // 00
                Expression* next;    // 04
                Operand     operand; // 08 // first entry in any linked list is always ref; others are immediate
@@ -149,6 +160,21 @@ namespace RE {
                   this->next  = nullptr; 
                   this->refPrev = nullptr;
                   this->refNext = nullptr;
+               };
+               //
+               Expression() {};
+               Expression(Value* v) {
+                  CALL_MEMBER_FN(this, ConstructorA)(v);
+               };
+               //
+               MEMBER_FN_PREFIX(Expression);
+               DEFINE_MEMBER_FN(ConstructorA, Expression&, 0x005888C0, Value*);
+               DEFINE_MEMBER_FN(Destructor,   void,        0x005888E0);
+               //
+               enum Type { // unofficial
+                  kType_Immediate,
+                  kType_Ref,
+                  kType_Opcode,
                };
                //
                void DebugLog(std::string* indent = nullptr) const;
@@ -187,6 +213,23 @@ namespace RE {
                      this->refNext = nullptr;
                   }
                };
+
+               inline Type GetType() const {
+                  switch (this->opcode) {
+                     case 0x65:
+                        return kType_Ref;
+                     case 0xA:
+                     case 0xF:
+                        return kType_Opcode;
+                  }
+                  return kType_Immediate;
+               }
+               inline bool IsListHead() const {
+                  return this->opcode == kTagID_OperatorNoOp;
+               }
+               inline bool WasNukedDueToCircularReference() const { // see TileValueFormsCircularReference at 0x0058BAD0
+                  return this->opcode == 0;
+               }
             };
 
             bool IsNum()    { return bIsNum == 1; }
@@ -234,10 +277,13 @@ namespace RE {
             //                      \ 
             //                       \ J
             // 
-            // The Expression::refPrev field represents a relationship from right to left. It's 
-            // not entirely clear how Expression:refNext is set or maintained when there are 
-            // branches; it may be a temporary value used only when checking for circular 
-            // references between traits.
+            // Because each Expression represents a single operator, Expressions that pull from 
+            // another tile contain the pulled value, unaltered. This is how refNext works: it's 
+            // a linked list. For simplicity's sake, imagine that all of the above are simple 
+            // copy operators; this means that the traits effectively *are* their operators and 
+            // we can represent them using the same letters; the refNext chain is therefore:
+            //
+            // A - B - C - D - E - F - G - H - I - J
             // 
             // Another demonstration, using an example confirmed through memory inspection:
             // 
@@ -339,13 +385,13 @@ namespace RE {
          // on CTC's return value.
          //
          DEFINE_MEMBER_FN(CreateTemplatedChildren, Tile*, 0x00590330, TileTemplate*); // returns last created tile; writes each to their template items
-         DEFINE_MEMBER_FN(UpdateTemplatedChildren, void,  0x0058CF40, TileTemplate*); // call after CreateTemplatedChildren
+         DEFINE_MEMBER_FN(UpdateTemplatedChildren, void,  0x0058CF40, TileTemplate*); // call after CreateTemplatedChildren; call it on the created child
 
          void AppendToTile(::Tile* target); // 0058D1C0
          void GetAbsoluteCoordinates(float& outX, float& outY, float& outDepth);
 
-         typedef NiTListBase <Tile>	RefList;
-         typedef NiTListBase <Value>	ValueList;
+         typedef NiTListBase<Tile>  RefList;
+         typedef NiTListBase<Value> ValueList;
 
          Tile* GetRoot(void);
 
@@ -490,7 +536,7 @@ namespace RE {
       UInt8           pad0193;
       UInt32          unk0194;
       Struct0058CD30* unk0198; // 0198 // memory address is 00B3B0A8
-      UInt32          unk019C; // 019C // counter; memory address is 00B3B0AC
+      UInt32          valuesCount; // 019C // counter; memory address is 00B3B0AC
 
       static TileParseState* GetInstance() {
          return g_tileParseState;
@@ -498,7 +544,7 @@ namespace RE {
       static void Initialize() {
          auto i = GetInstance();
          memset(i->values, 0, sizeof(i->values));
-         i->unk019C = 0;
+         i->valuesCount = 0;
       };
    };
 
