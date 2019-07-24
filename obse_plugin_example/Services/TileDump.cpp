@@ -83,13 +83,6 @@ void TileDump(RE::Tile* tile) {
    _MESSAGE(" - Tile logged.");
 }
 
-bool HACKHACKHACKOperandIsConst(RE::Tile::Value::Expression* a) {
-   UInt32 awful = (UInt32)a & 0xFFF00000;
-   UInt32 test  = a->operand.opcode;
-   if ((test & 0xFFF00000) == awful)
-      return false;
-}
-
 void TileCyclicalReferenceChecker::Check(RE::Tile::Value* base, bool isRecursing) {
    if (!isRecursing) {
       _MESSAGE("=========================================================");
@@ -182,5 +175,6 @@ void TileCyclicalReferenceChecker::Check(RE::Tile::Value* base, bool isRecursing
    if (!isRecursing) {
       _MESSAGE("Check complete. If no circular reference was listed, then none were found.");
       _MESSAGE("=========================================================");
+      this->found.clear();
    }
 }

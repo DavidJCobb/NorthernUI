@@ -2,8 +2,13 @@
 #include "ReverseEngineered/Forms/Actor.h"
 
 namespace RE {
-   extern const bool*  bPlayerInVanityMode;
-   extern const float* fVanityCurDistance;
+   extern bool*  const bPlayerInVanityMode;
+   extern float* const fVanityCurDistance;
+   extern float* const fVanityControlX; // player X input / 57 * timestep * GMST:fVanityModeXMult
+   extern float* const fVanityControlY; // player Y input / 57 * timestep * GMST:fVanityModeYMult
+   extern float* const fAutoVanityModeTimer;
+   extern float* const fPlayerCameraPitch;
+   extern float* const fPlayerCameraYaw;
 
    // Values computed during movement processing; used to control the speed of the walking and 
    // turning animations (with the caveat that the walking animation speed also influences the 
@@ -213,7 +218,7 @@ namespace RE {
          UInt8  unk73A;
          UInt8  unk73B;
          UInt32 unk73C[(0x748 - 0x73C) >> 2];	// 73C
-         bool   unk748; // 748 // see 006717BB and 006719D9; is the condition for jump at 0067228F
+         bool   isFlycamEnabled; // 748 // see 006717BB and 006719D9; is the condition for jump at 0067228F
          UInt8  unk749;
          UInt8  unk74A;
          UInt8  unk74B;
@@ -274,6 +279,7 @@ namespace RE {
          // The below are listed for documentation's sake, and probably shouldn't be called.
          //
          DEFINE_MEMBER_FN(HandleArcheryZoom, void, 0x00666670, float maybeSeconds);
+         DEFINE_MEMBER_FN(UpdateFlycam,      void, 0x006643A0); // flycam controls are handled in here
    };
    static_assert(sizeof(PlayerCharacter) == 0x800, "RE::PlayerCharacter is the wrong size.");
    static_assert(offsetof(PlayerCharacter, miscStats) == 0x658, "RE::PlayerCharacter is the wrong size.");

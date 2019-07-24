@@ -82,6 +82,20 @@ namespace RE {
                 (m[1] * m[3] * m[8]) -
                 (m[0] * m[5] * m[7]);
       }
+
+      NiMatrix33 transpose() const noexcept {
+         NiMatrix33 out;
+         out.data[0] = this->data[0];
+         out.data[1] = this->data[3];
+         out.data[2] = this->data[6];
+         out.data[3] = this->data[2];
+         out.data[4] = this->data[4];
+         out.data[5] = this->data[7];
+         out.data[6] = this->data[2];
+         out.data[7] = this->data[5];
+         out.data[8] = this->data[8];
+         return out;
+      };
    };
 
    //

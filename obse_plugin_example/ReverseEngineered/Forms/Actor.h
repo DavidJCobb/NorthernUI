@@ -377,7 +377,7 @@ namespace RE {
          virtual void	Unk_D7(void) = 0;
          virtual void	Unk_D8(void) = 0;
          virtual void	Unk_D9(void) = 0;
-         virtual void	Unk_DA(void) = 0;
+         virtual void	Unk_DA(float) = 0;
          virtual void	Unk_DB(void) = 0;
          virtual void	Unk_DC(void) = 0;
          virtual void	Unk_DD(void) = 0;
@@ -493,6 +493,7 @@ namespace RE {
          DEFINE_MEMBER_FN(GetRunSpeed,                 float,  0x005E3750);
          DEFINE_MEMBER_FN(GetSwimSpeed,                float,  0x005E3920);
          DEFINE_MEMBER_FN(GetWalkSpeed,                float,  0x005E3590);
+         DEFINE_MEMBER_FN(GetWeaponOut, bool, 0x005E0DA0);
          DEFINE_MEMBER_FN(GetSkillMasteryLevelBySkill, UInt32, 0x005F23B0, UInt32 skillActorValue); // see enum RE::SkillMasteryLevel
          DEFINE_MEMBER_FN(IsHorse,                     bool,   0x005E3290);
    };

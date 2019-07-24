@@ -1,6 +1,7 @@
 #pragma once
 #include "obse/GameProcess.h"
 
+class bhkCharacterController;
 namespace RE {
    class Actor;
    class TESObjectREFR;
@@ -142,9 +143,9 @@ namespace RE {
          virtual void	SetUnk01E(UInt32 arg0) = 0;
          virtual void	Unk_54(UInt32 arg0, UInt32 arg1, UInt32 arg2, UInt32 arg3) = 0;
          virtual void	SetUnk024(UInt32 arg) = 0;
-         virtual void	Unk_56(void) = 0;
+         virtual void	Unk_56(void) = 0; // related to AI packages, sleep, and fChase3rdPersonZUnitsPerSecond
          virtual void	Unk_57(void) = 0;
-         virtual void	Unk_58(void) = 0;
+         virtual void	Unk_58(float) = 0; // called by Unk_56 with fChase3rdPersonZUnitsPerSecond as the argument
          virtual void	GetUnk028(float arg) = 0;
          virtual float	SetUnk028(void) = 0;
          virtual void	Unk_5B(void) = 0;
@@ -157,7 +158,7 @@ namespace RE {
          virtual void					Unk_62(UInt32 arg0) = 0;			// marks ScriptEventList::kEvent_OnPackageDone
          virtual NiPointer<bhkCharacterProxy>* GetCharProxy(NiPointer<bhkCharacterProxy>& characterProxy) = 0; // 63 // increfs and returns the proxy (or sets to NULL)
          virtual void	Unk_64(void * obj) = 0;
-         virtual void	Unk_65(void) = 0;
+         virtual void	Unk_65(Actor*) = 0;
          virtual void	Unk_66(void) = 0;
          virtual void	Unk_67(void) = 0;
          virtual void	Unk_68(void) = 0;
@@ -253,7 +254,7 @@ namespace RE {
          virtual void	Unk_BE(void) = 0;
          virtual UInt8	GetCombatMode(void) = 0;
          virtual UInt8	SetCombatMode(UInt8 CombatMode) = 0;
-         virtual UInt8	GetWeaponOut(void) = 0; // C1
+         virtual bool   GetWeaponOut() = 0; // C1
          virtual UInt8	SetWeaponOut(UInt8 WeaponOut) = 0;
 
          virtual void	SetUnk20C(NiVector3) = 0; // C3
@@ -344,19 +345,19 @@ namespace RE {
          virtual void	Unk_118(void) = 0;
          virtual void	Unk_119(void) = 0;
          virtual void	Unk_11A(void) = 0;
-         virtual void	Unk_11B(void) = 0;
+         virtual void*  Unk_11B() = 0;
          virtual void	Unk_11C(void) = 0;
          virtual void	Unk_11D(void) = 0;
          virtual void	Unk_11E(void) = 0;
          virtual UInt32 Unk_11F() = 0; // returns enum? if not implemented here, check on HighProcess
          virtual void	Unk_120(void) = 0;
-         virtual void	Unk_121(void) = 0;
+         virtual void	Unk_121(Actor*) = 0;
          virtual void	Unk_122(void) = 0;
          virtual void	Unk_123(void) = 0;
          virtual void	Unk_124(void) = 0;
          virtual void	Unk_125(void) = 0;
          virtual void	Unk_126(void) = 0;
-         virtual void	Unk_127(void) = 0;
+         virtual void	Unk_127() = 0;
          virtual void	Unk_128(void) = 0;
          virtual void	Unk_129(void) = 0;
          virtual void	Unk_12A(void) = 0;
@@ -390,6 +391,358 @@ namespace RE {
          TESPackage::eProcedure	editorPackProcedure;	// 004
          TESPackage				* editorPackage;		// 008
    };
+   class LowProcess : public BaseProcess { // sizeof == 0x90
+      public:
+         LowProcess();
+         ~LowProcess();
+
+         virtual void	Unk_141(void) = 0;
+         virtual void	Unk_142(void) = 0;
+         virtual void	Unk_143(void) = 0;
+         virtual void	Unk_144(void) = 0;
+         virtual void	Alarm(Actor* Act) = 0;
+         virtual void	Unk_146(void) = 0;
+         virtual void	Unk_147(void) = 0;
+         virtual void	Unk_148(void) = 0;
+         virtual void	Unk_149(void) = 0;
+         virtual void	Unk_14A(void) = 0;
+         virtual void	Unk_14B(void) = 0;
+         virtual void	Unk_14C(void) = 0;
+         virtual void	Unk_14D(void) = 0;
+         virtual void	Unk_14E(void) = 0;
+         virtual void	Unk_14F(void) = 0;
+         virtual void	Unk_150(void) = 0;
+         virtual void	Unk_151(void) = 0;
+         virtual void	Unk_152(void) = 0;
+         virtual void	Unk_153(void) = 0;
+         virtual void	Unk_154(void) = 0;
+         virtual void	Unk_155(void) = 0;
+         virtual void	Unk_156(void) = 0;
+         virtual UInt8	MountHorse(Actor* Act) = 0;				// 560
+         virtual UInt8	DismountHorse(Actor* Act) = 0;			// 564
+         virtual void	Unk_159(void) = 0;
+
+         float	unk00C;				// 00C - initialized to -1
+         float	unk010;				// 010
+         float	curHour;			// 014 - initialized to -1
+         UInt32	curPackedDate;		// 018 - (year << 13) | (month << 9) | day
+         UInt8	unk01C;				// 01C
+         UInt8	unk01D;				// 01D
+         UInt8	unk01E;				// 01E
+         UInt8	IsAlerted;			// 01F
+         UInt8	unk020;				// 020
+         UInt8	pad021[3];			// 021
+         TESForm * usedItem;			// 024 for idles like reading book, making potions, etc
+         float	unk028;				// 028
+         Actor*	Follow;				// 02C
+         TESObjectREFR   * unk030;	// 030 seen XMarkerHeading refs here
+         PathLow	* pathing;			// 034
+         UInt32	unk038;				// 038
+         UInt32	unk03C;				// 03C
+         UInt32	unk040;				// 040
+         UInt32	unk044;				// 044
+         UInt32	unk048;				// 048
+         UInt32	unk04C;				// 04C
+         UInt32	unk050;				// 050
+         UInt32	unk054;				// 054
+         UInt32	unk058;				// 058
+         UInt32	unk05C;				// 05C
+         UInt32	unk060;				// 060
+         UInt32	unk064;				// 064
+         UInt32	unk068;				// 068
+         UInt32	unk06C;				// 06C
+         ActorValues	avDamageModifiers;	// 070
+         UInt8	unk084;				// 084
+         UInt8	pad085[3];			// 085
+         float	unk088;				// 088 - counter in seconds
+         float	unk08C;				// 08C
+   };
+   static_assert(sizeof(LowProcess) == 0x90, "RE::LowProcess is the wrong size!");
+
+   class MiddleLowProcess : public LowProcess { // sizeof == 0xA8
+      public:
+         MiddleLowProcess();
+         ~MiddleLowProcess();
+
+         virtual void	Unk_15A(void) = 0;
+
+         UInt32			unk090;				// 090
+         ActorValues		maxAVModifiers;		// 094
+   };
+   static_assert(sizeof(MiddleLowProcess) == 0xA8, "RE::MiddleLowProcess is the wrong size!");
+
+   class MiddleHighProcess : public MiddleLowProcess { // sizeof == 0x18C
+      public:
+         MiddleHighProcess();
+         ~MiddleHighProcess();
+
+         virtual void	Unk_15B(void) = 0;
+         virtual void	Unk_15C(void) = 0;
+         virtual void	Unk_15D(void) = 0;
+         virtual void	Unk_15E(void) = 0;
+         virtual void	Unk_15F(void) = 0;
+         virtual void	Dialogue(Actor* Act) = 0;
+         virtual void	RemoveWornItems(Actor* Act, UInt8 Arg2, int Arg3) = 0;
+         virtual void	Travel(Actor* Act, UInt8 Arg2, float Arg3, int Arg4 = 0) = 0;
+         virtual void	Unk_163(void) = 0;
+         virtual void	Unk_164(void) = 0;
+
+         // 10
+         struct Unk128 {
+            UInt32	unk0;	// 0
+            UInt32	unk4;	// 4
+            UInt32	unk8;	// 8
+            UInt16	unkC;	// C
+            UInt8	unkE;	// E
+            UInt8	padF;	// F
+         };
+
+         // 8
+         struct EffectListNode {
+            ActiveEffect	* effect;	// 0
+            EffectListNode	* next;		// 4
+         };
+
+         UInt32				unk0A8;		// 0A8
+         UInt32				unk0AC;		// 0AC
+         UInt32				unk0B0;		// 0B0
+         UInt32				unk0B4;		// 0B4
+         UInt32				unk0B8;		// 0B8
+         float				unk0BC;		// 0BC
+         TESPackage			* currentPackage;	// 0C0 if null, editorPackage applies
+         UInt32				unk0C4;		// 0C4
+         UInt8				unk0C8;		// 0C8
+         UInt8				pad0C9[3];	// 0C9
+         TESPackage::eProcedure	currentPackProcedure;		// 0CC
+         UInt8				unk0D0;		// 0D0
+         UInt8				pad0D0[15];	// 0D1 - never initialized
+         UInt32				unk0E0;		// 0E0
+         ExtraContainerChanges::EntryData* equippedWeaponData;	// 0E4
+         ExtraContainerChanges::EntryData* equippedLightData;	// 0E8
+         ExtraContainerChanges::EntryData* equippedAmmoData;		// 0EC
+         ExtraContainerChanges::EntryData* equippedShieldData;   // 0F0
+         UInt8				unk0F4;		// 0F4
+         UInt8				unk0F5;		// 0F5
+         UInt8				pad0F6[2];	// 0F6
+         float				unk0F8;		// 0F8
+         UInt32				unk0FC;		// 0FC
+         UInt32				unk100;		// 100
+         UInt32				unk104;		// 104
+         UInt32				unk108;		// 108
+         UInt32				unk10C;		// 10C
+         UInt32				unk110;		// 110
+         UInt8				unk114;		// 114
+         UInt8				unk115;		// 115
+         UInt8				pad116[2];	// 116
+         bhkCharacterProxy* charProxy;	// 118 - seen bhkCharacterProxy
+         SInt8				knockedState;	// 11C  //TODO maybe unsigned??
+         UInt8				sleepState;		// 11D
+         UInt8				pad11E;		// 11E
+         UInt8				pad11F;		// 11F
+         TESObjectREFR*		Furniture;	// 120
+         UInt8				unk124;		// 124 - init'd to 0x7F
+         Unk128				unk128;		// 128
+         UInt16				unk138;		// 138
+         UInt8				pad13A[2];	// 13A
+         UInt32				unk13C;		// 13C
+         UInt32				unk140;		// 140
+         MagicItem			* queuedMagicItem;	// 144 set before calling sub_69AF30 after Addspell cmd, unset upon return
+         UInt32				unk148;		// 148
+         UInt8				unk14C;		// 14C looks like true if casting, or possibly a casting state
+         UInt8				pad14D[3];	// 14D
+         UInt32				unk150;		// 150
+         float				actorAlpha;	// 154 valid values 0-1
+         float				unk158;		// 158
+         NiExtraData			* unk15C;	// 15C seen BSFaceGenAnimationData*, reset when modifying character face
+         UInt8				unk160;		// 160
+         UInt8				unk161;		// 161
+         UInt8				pad162[2];	// 162
+         UInt32				unk164;		// 164
+         UInt8				unk168;		// 168
+         UInt8				unk169;		// 169
+         UInt8				unk16A;		// 16A
+         UInt8				unk16B;		// 16B
+         UInt8				unk16C;		// 16C
+         UInt8				unk16D;		// 16D
+         UInt8				pad16E[2];	// 16E
+         UInt32				unk170;		// 170
+         EffectListNode		* effectList;	// 174
+         UInt32				unk178;		// 178
+         ActorAnimData		* animData;	// 17C
+         UInt8				unk180;		// 180
+         UInt8				pad181[3];	// 181
+         NiObject			* unk184;	// 184 - seen BSShaderPPLightingProperty
+         BSBound				* boundingBox;	// 188
+
+         bhkCharacterController* GetCharacterController();
+   };
+   static_assert(sizeof(MiddleHighProcess) == 0x18C, "RE::MiddleHighProcess is the wrong size!");
+
+   class HighProcess : public MiddleHighProcess { // sizeof == 0x2EC
+      public:
+         HighProcess();
+         ~HighProcess();
+
+         enum {
+            kActionType_Default = 0,
+            kActionType_Action,
+            kActionType_Script,
+            kActionType_Combat,
+            kActionType_Dialog,
+
+            kActionType_Max
+         };
+         enum {
+            kDetectionState_Lost = 0,
+            kDetectionState_Unseen,
+            kDetectionState_Noticed,
+            kDetectionState_Seen,
+
+            kDetectionState_Max
+         };
+
+         struct DetectionList { // sizeof == 0x8
+            struct Data {
+               Actor			* actor;
+               UInt8			detectionState;
+               UInt8			pad04[3];
+               UInt8			hasLOS;
+               UInt8			pad08[3];
+               SInt32			detectionLevel;
+            };
+
+            Data* data;
+            DetectionList* next;
+
+            Data* Info() const { return data; }
+            DetectionList* Next() const { return next; }
+         };
+         typedef Visitor<DetectionList, DetectionList::Data> DetectionListVisitor;
+
+         // this appears to be a common linked list class
+         // 4
+         struct Node190 {
+            void	* data;
+            Node190	* next;
+         };
+
+         // 10
+         struct Unk1BC {
+            UInt32	unk0;
+            UInt32	unk4;
+            UInt32	unk8;
+            UInt32	unkC;
+         };
+
+         DetectionList	* detectionList;	// 18C
+         Node190	unk190;		// 190
+         UInt32	unk198;		// 198
+         float	unk19C;		// 19C - idle chatter comment timer
+         UInt8	unk1A0;		// 1A0
+         UInt8	pad1A1[3];	// 1A1
+         UInt32	unk1A4;		// 1A4
+         UInt32	unk1A8;		// 1A8
+         UInt32	unk1AC;		// 1AC
+         UInt32	unk1B0;		// 1B0 - uninitialized
+         UInt32	unk1B4;		// 1B4 - uninitialized
+         UInt32	unk1B8;		// 1B8
+         Unk1BC	unk1BC;		// 1BC
+         UInt32	unk1CC;		// 1CC - uninitialized
+         UInt8	unk1D0;		// 1D0
+         UInt8	unk1D1;		// 1D1
+         UInt32	unk1D4;		// 1D4
+         UInt32	unk1D8;		// 1D8
+         UInt32	unk1DC;		// 1DC
+         UInt32	unk1E0;		// 1E0
+         UInt8	unk1E4;		// 1E4
+         UInt8	pad1E5[3];	// 1E5
+         UInt32	unk1E8;		// 1E8
+         UInt32	unk1EC;		// 1EC
+         UInt32	unk1F0;		// 1F0
+         SInt16	currentAction;	// 1F4 - related to 1F8. returned by vtbl +2D0
+         UInt8	pad1F6[2];	// 1F6
+         UInt32	unk1F8;		// 1F8 - related to 1F4. Sometimes a BSAnimGroupSequence*
+         UInt16	movementFlags;	// 1FC - returned by vtbl + 2C0
+         UInt8	pad1FE[2];	// 1FE
+         UInt32	unk200;		// 200
+         float	unk204;		// 204
+         UInt16	unk208;		// 208
+         UInt8	pad20A[2];	// 20A
+         NiVector3 unk20C; // 20C
+         UInt32	unk218;		// 218
+         float	unk21C;		// 21C
+         UInt32	unk220[2];	// 220
+         UInt8	unk228;		// 228
+         UInt8	pad229[3];	// 229
+         float	unk22C;		// 22C
+         float	unk230;		// 230 - initialized to ((rand() % 5000) * .001) + 10
+         UInt32	unk234;		// 234 - not initialized
+         float	swimBreath;		// 238 - initialized to 0x41A00000
+         UInt8	unk23C;		// 23C
+         UInt8	unk23D[3];	// 23D
+         UInt32	unk240;		// 240
+         UInt8	unk244;		// 244
+         UInt8	unk245[3];	// 245
+         float	unk248;		// 248 // camera distance?
+         UInt8	unk24C;		// 24C
+         UInt8	pad24D[3];	// 24D
+         UInt32	unk250;		// 250
+         UInt32	unk254;		// 254
+         UInt32	unk258;		// 258
+         UInt8	unk25C;		// 25C
+         UInt8	unk25D;		// 25D
+         UInt8	pad25E[2];	// 25E
+         float	unk260;		// 260
+         UInt32	unk264;		// 264
+         NiObject	* unk268;	// 268 - decref'able pointer
+         float	unk26C;		// 26C
+         UInt32	unk270;		// 270
+         UInt32	unk274;		// 274
+         UInt8	unk278;		// 278
+         UInt8	pad279[3];	// 279
+         NiVector3 unk27C;		// 27C
+         UInt32	unk288;		// 288
+         UInt32	unk28C;		// 28C
+         UInt8	unk290;		// 290
+         UInt8	pad291[3];	// 291
+         float	unk294;		// 294
+         UInt32	unk298;		// 298
+         UInt32	unk29C;		// 29C
+         UInt32	unk2A0;		// 2A0
+         UInt32	unk2A4;		// 2A4
+         UInt8	unk2A8;		// 2A8
+         UInt8	unk2A9;		// 2A9
+         UInt8	pad2AA[2];	// 2AA
+         float	unk2AC;		// 2AC
+         float	unk2B0;		// 2B0
+         UInt32	unk2B4;		// 2B4
+         UInt8	unk2B8;		// 2B8
+         UInt8	unk2B9;		// 2B9
+         UInt8	pad2BA[2];	// 2BA
+         UInt32	unk2BC;		// 2BC
+         UInt32	unk2C0;		// 2C0
+         UInt32	unk2C4;		// 2C4
+         TESObjectREFR	* actionTarget[kActionType_Max];	// 2C8
+         UInt8			actionActive[kActionType_Max];		// 2DC - true if the specified action is running
+         UInt8	pad2E1[3];	// 2E1
+         TESObjectREFR	* unk2E4;	// 2E4
+         UInt8	unk2E8;		// 2E8
+         UInt8	pad2E9[3];	// 2E9
+
+         bool IsAttacking()
+            {	return currentAction >= kAction_Attack && currentAction <= kAction_AttackBowArrowAttached;	}
+         bool IsBlocking()
+            {	return currentAction == kAction_Block;	}
+         bool IsRecoiling()
+            {	return currentAction == kAction_Recoil;	}
+         bool IsStaggered()
+            {	return currentAction == kAction_Stagger;	}
+         bool IsDodging()
+            {	return currentAction == kAction_Dodge;	}
+         bool IsMovementFlagSet(UInt32 flag)
+            {	return (movementFlags & flag) == flag;	}
+   };
+   static_assert(sizeof(HighProcess) == 0x2EC, "RE::HighProcess is the wrong size!");
 
    class CombatController : public TESPackage { // sizeof == 0x1C0
       public:

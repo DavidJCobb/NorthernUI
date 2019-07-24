@@ -1,8 +1,13 @@
 #include "PlayerCharacter.h"
 
 namespace RE {
-   const bool*  bPlayerInVanityMode = (bool*)  0x00B3BB04;
-   const float* fVanityCurDistance  = (float* )0x00B3BB24;
+   bool*  const bPlayerInVanityMode  = (bool*)  0x00B3BB04;
+   float* const fVanityCurDistance   = (float*) 0x00B3BB24;
+   float* const fVanityControlX      = (float*) 0x00B3BB28;
+   float* const fVanityControlY      = (float*) 0x00B3BB20;
+   float* const fAutoVanityModeTimer = (float*) 0x00B3BB08;
+   float* const fPlayerCameraPitch   = (float*) 0x00B3BAC4;
+   float* const fPlayerCameraYaw     = (float*) 0x00B3BAC8;
    // 0x00B3BB05 may be an "auto vanity" bool, but auto vanity also sets 0x00B3BB04 to true
 
    //constexpr float* fPlayerMoveAnimMult = (float*)0x00B14E58;

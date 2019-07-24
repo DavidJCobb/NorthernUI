@@ -48,6 +48,7 @@ namespace RE {
          DEFINE_MEMBER_FN(GetItemCount,            UInt32,                0x005E0F00, TESForm* item);
          DEFINE_MEMBER_FN(GetOpenState,            OpenState,             0x004DE660);
          DEFINE_MEMBER_FN(GetOwner,                TESForm*,              0x004DB6B0);
+         DEFINE_MEMBER_FN(GetPitch,                float,                 0x004A9720); // literally just returns rotX
          DEFINE_MEMBER_FN(IsCreature,              bool,                  0x005E3270);
          DEFINE_MEMBER_FN(IsHorse,                 bool,                  0x004D74D0);
          DEFINE_MEMBER_FN(IsInInterior,            bool,                  0x004D8B90);

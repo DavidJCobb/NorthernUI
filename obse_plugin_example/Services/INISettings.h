@@ -17,6 +17,11 @@ namespace NorthernUI {
       kQuantityHandler_TakeOne = 1,
       kQuantityHandler_TakeAll = 2,
    };
+   enum EnhancedMovementCameraType : SInt32 {
+      kEnhancedMovementCameraType_OblivionStandard = 0,
+      kEnhancedMovementCameraType_SkyrimStandard   = 1,
+      kEnhancedMovementCameraType_FreeMovement     = 2,
+   };
 
    namespace INI {
       //
@@ -56,6 +61,7 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(bSuppressDLCStartup, "Features", false);
          XXN_MAKE_INI_SETTING(bUsePlaystationButtonIcons, "Features", false);
          XXN_MAKE_INI_SETTING(bEnhancedMovement360Movement, "Features", false);
+         XXN_MAKE_INI_SETTING(iEnhancedMovementCameraMode, "Features", kEnhancedMovementCameraType_OblivionStandard);
       };
       namespace Menus {
          XXN_MAKE_INI_SETTING(bUseXXNAlchemyMenu,         "Menus", true);
