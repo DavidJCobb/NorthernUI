@@ -552,7 +552,7 @@
             randomly as the player's position (yes, position, not rotation) changes. 
             Easiest fix is to just use a separate clipwindow.
             
-            Weird goddamn game...
+            Weird...
          -->
          <rect name="compass_markings_clip">
             <clips>&true;</clips>

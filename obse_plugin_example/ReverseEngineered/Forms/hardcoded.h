@@ -29,4 +29,5 @@ namespace RE {
    static const auto ptrCreatureFactionForm = (TESFaction**)    0x00B36298;
    static const auto ptrEyeReanimateForm    = (TESEyes**)       0x00B362BC;
    static const auto ptrVampireRaceForm     = (TESRace**)       0x00B36308;
+   static const auto ptrDefaultPlayerSpell  = (SpellItem**)     0x00B335A8;
 };

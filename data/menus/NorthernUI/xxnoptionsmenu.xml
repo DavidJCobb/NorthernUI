@@ -267,7 +267,8 @@
          <height>
             <copy src="child(bolt_on_content)" trait="height" />
             <add  src="child(edge_b)"          trait="height" />
-            <max>96</max> <!-- size doesn't change properly when the text changes... -->
+            <add>8</add>
+            <max>24</max> <!-- prevent overlap issues with one line of text -->
          </height>
          <visible>
             <copy src="child(opt_description)" trait="user24" /><neq>0</neq>
@@ -276,11 +277,11 @@
          <rect name="bolt_on_content">
             <include src="NorthernUI/fragments/pause/bolt_on_content_box.xml" />
             <height>
-               <copy src="child()" trait="y" />
-               <add  src="child()" trait="height" />
+               <copy src="child(opt_description)" trait="y" />
+               <add  src="child(opt_description)" trait="height" />
             </height>
             <y>
-               <copy src="parent()" trait="user24" />
+               <copy src="parent()" trait="user24" /> <!-- defined in prefab -->
                <sub  src="me()"     trait="height" />
                <div>2</div>
             </y>

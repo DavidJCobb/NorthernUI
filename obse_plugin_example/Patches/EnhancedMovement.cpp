@@ -60,10 +60,6 @@ namespace CobbPatches {
             posDelta.y = length * y / *RE::fPlayerMoveAnimMult;
             //
             {  // Facing direction
-               //
-               // TODO: Once we've decided on all the different behaviors we want for animations, add an INI 
-               //       setting that controls them via an enum
-               //
                auto root = subject->niNode;
                if (root) {
                   auto node = _GetNodeByName(root, ce_targetNode);
@@ -145,6 +141,8 @@ namespace CobbPatches {
          // rotated to match the camera. (Be careful: the input handler switches the 
          // player in and out of first-person view repeatedly for some reason!)
          //
+         // TODO: Test to make sure everything works when swimming and when on a horse.
+         //
          NorthernUI::EnhancedMovementCameraType _GetPref() {
             auto mode = NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent;
             switch (mode) {
@@ -192,11 +190,40 @@ namespace CobbPatches {
                if (CALL_MEMBER_FN(player, GetWeaponOut)() || _IsTryingToMove())
                   return true;
             }
-            //
-            // TODO: Even in "Free Movement" mode, if you have a ranged weapon or spell out, 
-            // we should force you to face camera-forward so that you can actually aim and 
-            // fire it properly.
-            //
+            if (mode == NorthernUI::kEnhancedMovementCameraType_FreeMovement) {
+               //
+               // If the player has their weapon/spell drawn, and the weapon or the spell 
+               // is ranged, then force the player to face forward so that they can aim 
+               // and fire it properly.
+               //
+               if (CALL_MEMBER_FN(player, GetWeaponOut)()) {
+                  //
+                  // Check weapon...
+                  //
+                  auto process = player->process;
+                  if (process) {
+                     auto weapon = process->GetEquippedWeaponData(true);
+                     if (weapon) {
+                        auto form = (TESObjectWEAP*)weapon->type;
+                        if (form->type == TESObjectWEAP::kType_Bow || form->type == TESObjectWEAP::kType_Staff) {
+                           return true;
+                        }
+                     }
+                  }
+                  //
+                  // Check spell...
+                  //
+                  auto spell = CALL_MEMBER_FN(player, GetEquippedMagicItem)();
+                  if (spell) {
+                     auto node = &spell->list.effectList;
+                     do {
+                        auto effect = node->effectItem;
+                        if (effect->range == EffectItem::kRange_Target)
+                           return true;
+                     } while (node = node->next);
+                  }
+               }
+            }
             return false;
          }
          void _UpdateFrameMovementState() {
@@ -230,25 +257,34 @@ namespace CobbPatches {
                }
             }
             void Apply() {
-               WriteRelJump(0x005807A6, (UInt32)&Outer);
+               WriteRelJump(0x005807A6, (UInt32)&Outer); // InterfaceManager::MaintainReticleTarget+0xD6
             }
          }
          namespace HandlePlayerInput {
+            //
+            // Patches to the subroutine that handles most player input.
+            //
             namespace PrepCamera {
                //
                // TODO: We also need to reset the camera to match the player on the frame that 
                // the player loads into a new area.
                //
+               // Hm... Maybe maintain the form ID of the cell or worldspace the player was in 
+               // on the previous frame, and compare to that every frame? Ugly, but probably a 
+               // lot easier than finding a hook analogous to ESO PLAYER_ACTIVATED.
+               //
                void _stdcall Inner(RE::PlayerCharacter* player) {
+                  _UpdateFrameMovementState();
                   *RE::fPlayerCameraPitch = CALL_MEMBER_FN(player, GetPitch)();
                   if (_ShouldFaceCamera(player)) {
-                     _UpdateFrameMovementState();
                      if (_GetPref() == NorthernUI::kEnhancedMovementCameraType_SkyrimStandard) {
-                        if (_JustStartedMoving())
+                        if (_JustStartedMoving()) {
                            //
                            // TODO: REGRESSION: This seems to have stopped working??
                            //
+                           _MESSAGE("[DEBUG][CAMERA] Skyrim -- the player just started moving; snap them camera-forward");
                            player->SetZRotation(*RE::fPlayerCameraYaw);
+                        }
                      }
                      *RE::fPlayerCameraYaw = player->GetZRotation();
                   }
@@ -266,6 +302,11 @@ namespace CobbPatches {
                }
             }
             namespace Yaw {
+               //
+               // Intercept the code that takes the player's look input and applies it. (We only 
+               // need to intercept the yaw angle; we should keep pitch synched for the player 
+               // and camera.)
+               //
                void _stdcall Inner(RE::PlayerCharacter* player, float yawChange) {
                   if (_ShouldFaceCamera(player))
                      CALL_MEMBER_FN(player, ModifyYaw)(yawChange);
@@ -289,6 +330,11 @@ namespace CobbPatches {
             }
             //
             namespace MovementFlags {
+               //
+               // Intercept the call to PlayerCharacter::process::SetMovementFlags, so that we 
+               // can tamper with the movement flags to set and the player's yaw angle as needed 
+               // for the current camera mode.
+               //
                void _stdcall Inner(RE::PlayerCharacter* player, UInt16& flags) {
                   if (_ShouldFaceCamera(player))
                      return;
@@ -369,6 +415,9 @@ namespace CobbPatches {
             }
          }
          namespace UpdatePlayerCamera {
+            //
+            // Patches to PlayerCharacter::UpdateCamera.
+            //
             namespace NoInitialAssign {
                //
                // Prevent the "camera update" function from snapping the camera angle to the player 

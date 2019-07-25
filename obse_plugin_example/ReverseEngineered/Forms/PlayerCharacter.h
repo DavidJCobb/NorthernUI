@@ -264,22 +264,24 @@ namespace RE {
          static void UpdateHead(void);	// TODO: investigate further
 
          MEMBER_FN_PREFIX(PlayerCharacter);
-         DEFINE_MEMBER_FN(GetAppropriateNiNode,   NiNode*, 0x006600F0); // gets first-person or third-person node based on third-person state
-         DEFINE_MEMBER_FN(HandleBorderRegions,    void,    0x006714E0); // called by the player movement code; listed here for documentation purposes only; do not call
-         DEFINE_MEMBER_FN(GetPlayerAnimData, ActorAnimData*, 0x0065D750, bool which);
-         DEFINE_MEMBER_FN(GetSkillLevel,          UInt32,  0x005F1910, UInt32 skillId);
-         DEFINE_MEMBER_FN(GetLuckModifiedSkill,   float,   0x005E0430, UInt32 skillId);
-         DEFINE_MEMBER_FN(OnPushIntoRegionBorder, void,    0x0066FF10, bool); // called for every frame the player tries to push into a border region; shows a "you can't go that way" message and moves the player or their mount to the lastSafePosition.
+         DEFINE_MEMBER_FN(GetAppropriateNiNode,   NiNode*,        0x006600F0); // gets first-person or third-person node based on third-person state
+         DEFINE_MEMBER_FN(HandleBorderRegions,    void,           0x006714E0); // called by the player movement code; listed here for documentation purposes only; do not call
+         DEFINE_MEMBER_FN(GetEquippedMagicItem,   MagicItem*,     0x0065D4A0); // used by HUDMainMenu
+         DEFINE_MEMBER_FN(GetPlayerAnimData,      ActorAnimData*, 0x0065D750, bool which);
+         DEFINE_MEMBER_FN(GetSkillLevel,          UInt32,         0x005F1910, UInt32 skillId);
+         DEFINE_MEMBER_FN(GetLuckModifiedSkill,   float,          0x005E0430, UInt32 skillId);
+         DEFINE_MEMBER_FN(OnPushIntoRegionBorder, void,           0x0066FF10, bool); // called for every frame the player tries to push into a border region; shows a "you can't go that way" message and moves the player or their mount to the lastSafePosition.
          DEFINE_MEMBER_FN(SetFirstPersonCameraEnabled, void, 0x0066C580, bool);
-         DEFINE_MEMBER_FN(ShowQuestUpdate,        bool,    0x006697A0, QuestStageItem* stage);
-         DEFINE_MEMBER_FN(Subroutine005E6C10,     bool ,   0x005E6C10); // possibly IsInDialogue
-         DEFINE_MEMBER_FN(Subroutine006640D0,     UInt8,   0x006640D0);
-         DEFINE_MEMBER_FN(UpdateLastSafePosition, void,    0x00664320); // updates lastSafePosition and lastSafeWorld; called per-frame when the player moves and is determined to not be moving into a border region
+         DEFINE_MEMBER_FN(ShowQuestUpdate,        bool,           0x006697A0, QuestStageItem* stage);
+         DEFINE_MEMBER_FN(Subroutine005E6C10,     bool ,          0x005E6C10); // possibly IsInDialogue
+         DEFINE_MEMBER_FN(Subroutine006640D0,     UInt8,          0x006640D0);
+         DEFINE_MEMBER_FN(UpdateLastSafePosition, void,           0x00664320); // updates lastSafePosition and lastSafeWorld; called per-frame when the player moves and is determined to not be moving into a border region
          //
          // The below are listed for documentation's sake, and probably shouldn't be called.
          //
          DEFINE_MEMBER_FN(HandleArcheryZoom, void, 0x00666670, float maybeSeconds);
          DEFINE_MEMBER_FN(UpdateFlycam,      void, 0x006643A0); // flycam controls are handled in here
+         DEFINE_MEMBER_FN(UpdateCamera,      void, 0x0066B710, UInt32);
    };
    static_assert(sizeof(PlayerCharacter) == 0x800, "RE::PlayerCharacter is the wrong size.");
    static_assert(offsetof(PlayerCharacter, miscStats) == 0x658, "RE::PlayerCharacter is the wrong size.");
