@@ -115,7 +115,7 @@ namespace RE {
          virtual void	Unk_37(UInt32 arg0) = 0;
          virtual UInt32	Unk_38(void) = 0;
          virtual void	Unk_39(UInt32 arg0) = 0;
-         virtual UInt32	Unk_3A(UInt32 arg0) = 0;
+         virtual NiObject*	GetFaceAnimationData(Actor* subject) = 0; // 3A
          virtual ExtraContainerChanges::EntryData*  GetEquippedWeaponData(bool mustBeInHands) = 0; // 3B
          virtual void*  Unk_3C(UInt32 arg0) = 0;
          virtual ExtraContainerChanges::EntryData* GetEquippedAmmoData(bool mustBeInHands) = 0;
@@ -238,20 +238,20 @@ namespace RE {
          virtual void	SetMovementFlags(UInt16) = 0; // B2
          virtual void	Move(Actor* subject, NiVector3 moveOffset_onlyUsedIfCollisionDisabled) = 0; // B3 // carries out WASD movement
          virtual SInt32	GetCurrentAction() = 0; // B4
-         virtual void*  Unk_B5() = 0; // B5 // return value unk68 == TESAnimGroup*
-         virtual void	Unk_B6(SInt32, BSAnimGroupSequence*) = 0;
+         virtual BSAnimGroupSequence* GetCurrentActionAnimation() = 0; // B5
+         virtual void	SetCurrentAction(SInt32 action, BSAnimGroupSequence*) = 0; // B6
 
          // action is one of kAction_XXX. Returns action, return value probably unused.
-         virtual UInt16	SetCurrentAction(UInt16 action, BSAnimGroupSequence* sequence) = 0;
-         virtual void	Unk_B8(void) = 0;
-         virtual UInt32 Unk_B9() = 0;
-         virtual UInt8	GetKnockedState(void) = 0;
-         virtual void	Unk_BB(void) = 0;
-         virtual void	Unk_BC(void) = 0;
+         virtual bool	Unk_B7() = 0; // tests anim group type
+         virtual bool	Unk_B8() = 0;
+         virtual UInt8  GetKnockedState() = 0; // B9
+         virtual void   SetKnockedState(UInt8) = 0; // BA
+         virtual void	Unk_BB(UInt32) = 0; // BB // no-op on HighProcess
+         virtual void	Unk_BC(UInt32, UInt32, UInt32, UInt32, UInt32) = 0; // BC
 
          // arg3 is a multiplier, arg4 appears to be base force to apply
-         virtual void	KnockbackActor(Actor* target, float arg1, float arg2, float arg3, float arg4) = 0;
-         virtual void	Unk_BE(void) = 0;
+         virtual UInt32 Unk_BD(UInt32) = 0;
+         virtual void	Unk_BE(Actor*) = 0; // handles knockdown face anim and state
          virtual UInt8	GetCombatMode(void) = 0;
          virtual UInt8	SetCombatMode(UInt8 CombatMode) = 0;
          virtual bool   GetWeaponOut() = 0; // C1
@@ -281,8 +281,8 @@ namespace RE {
          virtual void	Unk_D8(void) = 0;
          virtual void	Unk_D9(void) = 0;
          virtual void	Unk_DA(void) = 0;
-         virtual UInt32	Unk_DB() = 0; // returns int/enum
-         virtual UInt8	GetSleepState(void) = 0;
+         virtual UInt8	GetSitSleepState() = 0; // DB
+         virtual void	SetCurrentFurniture(Actor* actor, UInt32 sitSleepState, TESObjectREFR* furniture, UInt32) = 0; // DC
          virtual void	Unk_DD(void) = 0;
          virtual TESObjectREFR* GetFurniture() = 0;
          virtual void	Unk_DF(void) = 0;
@@ -536,10 +536,10 @@ namespace RE {
          UInt8				pad116[2];	// 116
          bhkCharacterProxy* charProxy;	// 118 - seen bhkCharacterProxy
          SInt8				knockedState;	// 11C  //TODO maybe unsigned??
-         UInt8				sleepState;		// 11D
+         UInt8				sitSleepState; // 11D
          UInt8				pad11E;		// 11E
          UInt8				pad11F;		// 11F
-         TESObjectREFR*		Furniture;	// 120
+         TESObjectREFR*		furniture;	// 120
          UInt8				unk124;		// 124 - init'd to 0x7F
          Unk128				unk128;		// 128
          UInt16				unk138;		// 138
@@ -553,7 +553,7 @@ namespace RE {
          UInt32				unk150;		// 150
          float				actorAlpha;	// 154 valid values 0-1
          float				unk158;		// 158
-         NiExtraData			* unk15C;	// 15C seen BSFaceGenAnimationData*, reset when modifying character face
+         NiExtraData			* unk15C;	// 15C seen BSFaceGenAnimationData*, reset when modifying character face // getter is BaseProcess::GetFaceAnimationData
          UInt8				unk160;		// 160
          UInt8				unk161;		// 161
          UInt8				pad162[2];	// 162

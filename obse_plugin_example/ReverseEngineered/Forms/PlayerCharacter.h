@@ -270,6 +270,7 @@ namespace RE {
          DEFINE_MEMBER_FN(GetPlayerAnimData,      ActorAnimData*, 0x0065D750, bool which);
          DEFINE_MEMBER_FN(GetSkillLevel,          UInt32,         0x005F1910, UInt32 skillId);
          DEFINE_MEMBER_FN(GetLuckModifiedSkill,   float,          0x005E0430, UInt32 skillId);
+         DEFINE_MEMBER_FN(IsInDialogue,           bool,           0x005E6C10);
          DEFINE_MEMBER_FN(OnPushIntoRegionBorder, void,           0x0066FF10, bool); // called for every frame the player tries to push into a border region; shows a "you can't go that way" message and moves the player or their mount to the lastSafePosition.
          DEFINE_MEMBER_FN(SetFirstPersonCameraEnabled, void, 0x0066C580, bool);
          DEFINE_MEMBER_FN(ShowQuestUpdate,        bool,           0x006697A0, QuestStageItem* stage);

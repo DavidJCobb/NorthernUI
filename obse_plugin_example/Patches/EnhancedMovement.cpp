@@ -42,6 +42,22 @@ namespace CobbPatches {
             //
             if (subject != (RE::Actor*)*g_thePlayer)
                return;
+            if (subject->IsDead(0))
+               //
+               // The calculations we do below go horribly wrong when the player is dead, causing them 
+               // to rocket off a significant distance. In outdoor environments, this triggers a load 
+               // screen that preempts the game's attempt at letting you pick a save file to load after 
+               // death, causing the game to softlock at the load screen. This is not a crash -- if you 
+               // use memory hacking to set OSGlobals::quitToMainMenuQueued to true, then the game 
+               // immediately returns to the main menu, though I can't speak as to any side-effects -- 
+               // but it's obviously undesirable.
+               //
+               // If you're wondering how the player can move if they're dead? Well, we hook the virtual 
+               // Move function on HighProcess, and when the player is dead, that actually gets called 
+               // with a zero-length NiPoint3 as its argument. I don't remember exactly where and I 
+               // certainly don't know why.
+               //
+               return;
             auto input = RE::OSInputGlobals::GetInstance();
             auto xRaw =  CALL_MEMBER_FN(input, GetJoystickAxisMovement)(0, RE::INI::Controls::iJoystickMoveLeftRight->i);
             auto yRaw = -CALL_MEMBER_FN(input, GetJoystickAxisMovement)(0, RE::INI::Controls::iJoystickMoveFrontBack->i);
@@ -111,7 +127,7 @@ namespace CobbPatches {
             }
          }
          void Apply() {
-            WriteRelJump(0x0063CB35, (UInt32)&Outer);
+            WriteRelJump(0x0063CB35, (UInt32)&Outer); // HighProcess::Move+0x405
          }
       }
       //
@@ -141,8 +157,6 @@ namespace CobbPatches {
          // rotated to match the camera. (Be careful: the input handler switches the 
          // player in and out of first-person view repeatedly for some reason!)
          //
-         // TODO: Test to make sure everything works when swimming and when on a horse.
-         //
          NorthernUI::EnhancedMovementCameraType _GetPref() {
             auto mode = NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent;
             switch (mode) {
@@ -160,10 +174,15 @@ namespace CobbPatches {
          // the camera snapping to face the player again). As such, we need to be able to 
          // tell whether the current frame is the first frame of your movement.
          //
-         static bool s_lastFrameMovement = false;
-         static bool s_thisFrameMovement = false;
+         static bool   s_lastFrameMovement = false;
+         static bool   s_thisFrameMovement = false;
+         static UInt32 s_lastWorldOrCellID = 0;
+         static UInt32 s_thisWorldOrCellID = 0;
          bool _JustStartedMoving() {
             return s_thisFrameMovement && !s_lastFrameMovement;
+         }
+         bool _WorldOrCellChanged() {
+            return s_thisWorldOrCellID != s_lastWorldOrCellID;
          }
          bool _IsTryingToMove() {
             auto input = RE::OSInputGlobals::GetInstance();
@@ -182,6 +201,12 @@ namespace CobbPatches {
             // the only way to do it.
             //
             if (!player->isThirdPerson)
+               return true;
+            if (_WorldOrCellChanged())
+               return true;
+            if (player->GetMountedHorse()) // I don't understand mounted camera control well enough to tamper with it; the patches I have for control on foot break it
+               return true;
+            if (CALL_MEMBER_FN(player, IsInDialogue)())
                return true;
             auto mode = _GetPref();
             if (mode == NorthernUI::kEnhancedMovementCameraType_OblivionStandard)
@@ -229,6 +254,17 @@ namespace CobbPatches {
          void _UpdateFrameMovementState() {
             s_lastFrameMovement = s_thisFrameMovement;
             s_thisFrameMovement = _IsTryingToMove();
+            //
+            s_lastWorldOrCellID = s_thisWorldOrCellID;
+            auto cell = (*g_thePlayer)->parentCell;
+            if (cell) {
+               auto world = cell->worldSpace;
+               if (world)
+                  s_thisWorldOrCellID = world->refID;
+               else
+                  s_thisWorldOrCellID = cell->refID;
+            } else
+               s_thisWorldOrCellID = 0;
          }
          //
          namespace ActivatePick {
@@ -250,8 +286,8 @@ namespace CobbPatches {
                _asm {
                   fstp st(0); // replace this with Inner's return value
                   call Inner; // stdcall
-                  push ecx;
-                  lea  ecx, [esp + 0x60];
+                  push ecx;               // reproduce patched-over instructions
+                  lea  ecx, [esp + 0x60]; //
                   mov  eax, 0x005807AB;
                   jmp  eax;
                }
@@ -278,13 +314,8 @@ namespace CobbPatches {
                   *RE::fPlayerCameraPitch = CALL_MEMBER_FN(player, GetPitch)();
                   if (_ShouldFaceCamera(player)) {
                      if (_GetPref() == NorthernUI::kEnhancedMovementCameraType_SkyrimStandard) {
-                        if (_JustStartedMoving()) {
-                           //
-                           // TODO: REGRESSION: This seems to have stopped working??
-                           //
-                           _MESSAGE("[DEBUG][CAMERA] Skyrim -- the player just started moving; snap them camera-forward");
+                        if (_JustStartedMoving())
                            player->SetZRotation(*RE::fPlayerCameraYaw);
-                        }
                      }
                      *RE::fPlayerCameraYaw = player->GetZRotation();
                   }
@@ -299,6 +330,8 @@ namespace CobbPatches {
                }
                void Apply() {
                   WriteRelJump(0x00671B15, (UInt32)&Outer);
+                  SafeWrite16 (0x00671B1A, 0x9090); // courtesy NOPs
+                  SafeWrite8  (0x00671B1C, 0x90);
                }
             }
             namespace Yaw {
@@ -439,6 +472,7 @@ namespace CobbPatches {
                }
                void Apply() {
                   WriteRelJump(0x0066B73F, (UInt32)&Outer);
+                  SafeWrite32 (0x0066B744, 0x90909090); // courtesy NOPs
                }
             }
             void Apply() {

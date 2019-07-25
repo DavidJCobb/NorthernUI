@@ -28,6 +28,7 @@ namespace RE {
             kSitSleepState_ReadyToSit = 2,
             kSitSleepState_Sitting = 3,
             kSitSleepState_ReadyToStand = 4,
+            kSitSleepState_UnknownSit05 = 5,
             kSitSleepState_LoadingSleepIdle = 6,
             kSitSleepState_ReadyToSleep = 7,
             kSitSleepState_ReadyToSleep_B = 8,
@@ -41,6 +42,7 @@ namespace RE {
          DEFINE_MEMBER_FN(GetBaseTESContainer,     TESContainer*,         0x004D6D40);
          DEFINE_MEMBER_FN(GetCurrentWorldspace,    TESWorldSpace*,        0x004D6670);
          DEFINE_MEMBER_FN(GetExtraMapMarkerData,   ExtraMapMarker::Data*, 0x004D7730);
+         DEFINE_MEMBER_FN(GetFaceAnimationData,    NiObject*,             0x004D66B0, NiNode* refrRootNode);
          DEFINE_MEMBER_FN(GetFullName,             const char*,           0x004DA2A0);
          DEFINE_MEMBER_FN(GetHUDReticleIconEnum,   UInt32,                0x004DE980);
          DEFINE_MEMBER_FN(GetInventoryItemByIndex, ExtraContainerChanges::EntryData*, 0x004D88F0, UInt32 index, bool useDataHandler); // for looping, and meant for use by menus; returns a NEW COPY of the EntryData in the ref's inventory; caller is responsible for deleting the copy // specify false for the bool
@@ -52,6 +54,7 @@ namespace RE {
          DEFINE_MEMBER_FN(IsCreature,              bool,                  0x005E3270);
          DEFINE_MEMBER_FN(IsHorse,                 bool,                  0x004D74D0);
          DEFINE_MEMBER_FN(IsInInterior,            bool,                  0x004D8B90);
+         DEFINE_MEMBER_FN(SetPitch,                void,                  0x004D89D0, float);
          DEFINE_MEMBER_FN(Unlock,                  void,                  0x004DBEA0);
 
          bool IsEmpty();

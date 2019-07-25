@@ -22,10 +22,10 @@ namespace RE {
          virtual void	Unk_6C(void) = 0;
          virtual void	Move(float arg0, NiVector3& offset, UInt32 movementFlags) = 0;
          virtual void	Jump(void) = 0;	// jump?
-         virtual void	Unk_6F(void) = 0;
+         virtual void	Unk_6F(bool) = 0;
          virtual void	Unk_70(void) = 0;	// 70
          virtual void	Unk_71(void) = 0;
-         virtual void	Unk_72(void) = 0;
+         virtual bool	Unk_72() = 0;
          virtual void	SetPosition(NiVector3&) = 0; // 73
          virtual void	Unk_74(void) = 0;
          virtual void	Unk_75(void) = 0;
@@ -51,5 +51,6 @@ namespace RE {
          DEFINE_MEMBER_FN(ModifyPitch,              void,   0x0065ABC0, float radians);
          DEFINE_MEMBER_FN(ModifyYaw,                void,   0x00659B90, float radians);
          DEFINE_MEMBER_FN(MovementFlagsIncludeWASD, bool,   0x005E05B0);
+         DEFINE_MEMBER_FN(SetPitch,                 void,   0x0065A650, float pitch); // unlike TESObjectREFR, enforces pitch constraints
    };
 };

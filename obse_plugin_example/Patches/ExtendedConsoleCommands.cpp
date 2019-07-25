@@ -104,6 +104,14 @@ namespace CobbPatches {
             } else
                _MESSAGE("activeTileID: No tile.");
          }
+         void forceCrashOnNextLoadScreen() {
+            SafeWrite8 (0x00578E10, 0x31); // XOR EAX, EAX
+            SafeWrite8 (0x00578E11, 0xC0);
+            SafeWrite8 (0x00578E12, 0xC7); // MOV DWORD PTR [EAX], 5
+            SafeWrite8 (0x00578E13, 0x00);
+            SafeWrite32(0x00578E14, 0x00000005);
+            _MESSAGE("forceCrashOnNextLoadScreen: Done.");
+         }
          void genericTestCommand() { // modify this to test whatever we need to test
             _MESSAGE("genericTestCommand: Running...");
             //
@@ -177,6 +185,10 @@ namespace CobbPatches {
                return false;
             if (_startsWith(input + cobb::cstrlen("!xxn "), "activeTileID")) {
                Commands::activeTileID();
+               return true;
+            }
+            if (_startsWith(input + cobb::cstrlen("!xxn "), "forceCrashOnNextLoadScreen")) {
+               Commands::forceCrashOnNextLoadScreen();
                return true;
             }
             if (_startsWith(input + cobb::cstrlen("!xxn "), "genericTestCommand")) {

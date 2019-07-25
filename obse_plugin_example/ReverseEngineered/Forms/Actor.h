@@ -488,9 +488,11 @@ namespace RE {
          bool IsTalking();
 
          MEMBER_FN_PREFIX(Actor);
+         DEFINE_MEMBER_FN(GetFaceAnimationData, NiObject*, 0x005A12B0); // -> BaseProcess::GetFaceAnimationData -> TESObjectREFR::GetFaceAnimationData
          DEFINE_MEMBER_FN(GetLuckModifiedSkill,        float,  0x005E0430, UInt32 skillActorValue);
          DEFINE_MEMBER_FN(GetMovementSpeed,            float,  0x005E65B0); // checks movement flags to get the appropriate speed value
          DEFINE_MEMBER_FN(GetRunSpeed,                 float,  0x005E3750);
+         DEFINE_MEMBER_FN(GetStamina,                  float,  0x005E0A60); // "fatigue" is a stupid name for this stat and i refuse to use it
          DEFINE_MEMBER_FN(GetSwimSpeed,                float,  0x005E3920);
          DEFINE_MEMBER_FN(GetWalkSpeed,                float,  0x005E3590);
          DEFINE_MEMBER_FN(GetWeaponOut, bool, 0x005E0DA0);

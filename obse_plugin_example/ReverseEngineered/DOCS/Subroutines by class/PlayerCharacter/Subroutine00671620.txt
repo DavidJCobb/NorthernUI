@@ -1,0 +1,845 @@
+float* const fPlayerTurnAnimMult = (float*)0x00B14E5C;
+// clamped to the range of [0.0F, 1.5F]; computed from absolute 
+// value of look input or strafe input
+
+float* const fPlayerMoveAnimMult = (float*)0x00B14E58;
+// clamped to the range of [0.0F, 1.0F]; computed from absolute 
+// value of move input along largest of the X or Y axis (which 
+// is a bad shortcut: directional movement will never reach 
+// full movement or animation speed this way)
+//
+// this affects movement speed AND animation speed. it only gets 
+// set when gamepad movement occurs, but it's initialized to 1, 
+// so WASD movement is fine until gamepad movement occurs (thus 
+// one of NorthernUI's hooks)
+
+//
+// Arg1 is a time value (seconds?).
+//
+void PlayerCharacter::Subroutine00671620(float Arg1) {
+   InputManager* input = (*(0x00B33398))->unk20;
+   auto edx = *g_worldSceneGraph;
+   auto ebx = this;
+   this->unk7FC = 0.0F;
+   this->unk800 = 0.0F;
+   auto esp28 = edx;
+   auto esp54 = 0;
+   bool esp13 = 0;
+   this->TES4_00667520();
+   if (eax = this->TES4_0065A2C0()) {
+      //
+      // ...
+      //
+   } else
+      this->unk115 = 0;
+   this->process->unk12C();
+   ?
+   ? //Hard-to-decipher float operations.
+   ?
+   if (????? ?? ?????) {
+      this->process->Unk_12B();
+   } else {
+      this->process->Unk_D5(???);
+   }
+   if (this->unk738) { // byte/bool
+      float a = this->unk76();
+      if (a <= 0.0F) {
+         this->TES4_006636B0();
+         this->process->Unk_70(GMST:fDetectionTimerSetting);
+      } else {
+         this->Unk_77();
+      }
+   }
+   // at 0x00671725
+   float b;
+   if (0.0F >= this->unk618) {
+      *(0x00B3BD00).TES4_0067A230();
+      b = GMST:fSortActorDistanceListTimer;
+   } else {
+      b = this->unk618 - *(float*)(0x00B33E9C);
+   }
+   this->unk618 = b;
+   auto esi = GMST:iActivatePickLength;
+   auto ui = InterfaceManager_GetSingleton(0, 1);
+   ui->activatePickLength = esi;
+   ui->MaintainReticleTarget();
+   if (this->unk71F) { // at 0x00671784
+      this->unk71F = false;
+      this->TES4_0066FF10(1);
+   }
+   if (ecx = this->unk5C4) {
+      ecx->Activate(this, 0, 0, 1);
+      this->unk5C4 = nullptr;
+      return;
+   }
+   if (this->isFlycamEnabled)
+      this->UpdateFlycam();
+   if (this->isThirdPerson) // at 0x006717D2
+      this->process->Unk_24(this);
+   auto eax = this->process->GetSitSleepState();
+   BaseProcess* ecx;
+   auto edi;
+   if (eax == 4) {
+      edi = esp54 = this->GetMountedHorse(); // edi
+      ecx = esp54 ? esp54->process : this->process;
+   } else
+      ecx = this->process;
+   UInt16 esi = ecx->GetMovementFlags();
+   if (this->IsSneaking() && !esp54 && this->TES4_005E05B0()) { // at 0x00671837
+      if (*(UInt32*)(0x00B3B368) < 3 && this->unk5A8) {
+         if (1.0F < this->unk5A4) {
+            this->Unk_E7(0x1F, 0, 0.0F);
+            this->unk5A4 = 0.0F;
+         } else {
+            this->unk5A4 += *(float*)(0x00B33E9C);
+         }
+      }
+   } else { // at 0x00671896
+      if (this->TES4_005E0530() && !esp54 && this->TES4_005E05B0()) {
+         if (1.0F < this->unk5A0) {
+            this->Unk_E7(0x0D, 1, 0.0F);
+            this->unk5A0 = 0.0F;
+         } else {
+            this->unk5A0 += *(float*)(0x00B33E9C);
+         }
+      } else { // at 0x006718F6
+         if (esi & 0x200 && !esp54 && this->TES4_005E05B0()) {
+            if (1.0F < this->unk59C) {
+               this->Unk_E7(0x0D, 0, 0.0F);
+               this->unk59C = 0.0F;
+            } else {
+               this->unk59C += *(float*)(0x00B33E9C);
+            }
+         }
+      }
+   }
+   // at 0x00671949
+   esi &= 0x0000CC00;
+   esp14 = esi;
+   SInt32 esi = input->GetMouseAxisMovement(1); // x
+   SInt32 edi = input->GetMouseAxisMovement(2); // y
+   SInt32 esp1C = input->GetMouseAxisMovement(3); // z (scroll wheel)
+   //
+   // NorthernUI hooks these next few lines for look sensitivity fixes.
+   //
+   SInt32 eax = input->GetJoystickAxisMovement(0, INI:Controls:iJoystickLookLeftRight);
+   esi += (float)eax * INI:Controls:fJoystickLookLRMult;
+   SInt32 esp6C = esi;
+   //
+   eax = input->GetJoystickAxisMovement(0, INI:Controls:iJoystickLookUpDown);
+   edi += (float)eax * INI:Controls:fJoystickLookUDMult;
+   SInt32 esp68 = edi;
+   //
+   if (this->isFlycamEnabled) { // at 0x006719D9
+      edi = 0;
+      esi = 0;
+      esp6C = 0;
+      esp68 = 0;
+      esp1C = 0;
+   }
+   if (INI:Controls:bInvertYValues) {
+      esp68 = edi = -edi;
+   }
+   float esp1C = /*SInt32*/ esp1C;
+   if (esp1C != 0.0F) {
+      if (*(UInt8*)(0x00B3BB04))
+         esp13 = true;
+      if (*(UInt8*)(0x00B3BB04) || this->isThirdPerson) { // at 0x00671A2C
+         float a = esp1C * GMST:fVanityModeWheelMult;
+         *(float*)(0x00B3BB24) -= a;
+         if (this->IsDead(0)) {
+            if (GMST:fVanityModeWheelDeadMin > *(float*)(0x00B3BB24))
+               *(float*)(0x00B3BB24) = GMST:fVanityModeWheelDeadMin;
+         } else { // at 0x00671A75
+            if (GMST:fVanityModeWheelMin > *(float*)(0x00B3BB24)) {
+               if (*(UInt8*)(0x00B3BB04))
+                  this->SetFirstPersonCameraEnabled(true); // WalkBlessed replaces this member function
+               *(float*)(0x00B3BB24) = GMST:fVanityModeWheelMin;
+            }
+         }
+         if (GMST:fVanityModeWheelMax < *(float*)(0x00B3BB24))
+            *(float*)(0x00B3BB24) = GMST:fVanityModeWheelMax;
+      }
+      if (!this->isThirdPerson) { // at 0x00671AD0
+         float b = esp1C * GMST:fVanityModeWheelMult;
+         if (b < 0.0) {
+            this->SetFirstPersonCameraEnabled(true); // WalkBlessed replaces this member function
+            if (*(float*)(0x00B3BB24) < 50.0)
+               *(float*)(0x00B3BB24) = 50.0;
+         }
+      }
+   } // at 0x00671B13
+   *(float*)(0x00B3BAC8) = this->GetZRotation();
+   *(float*)(0x00B3BAC4) = this->GetPitch();
+   //
+   // WalkBlessed jump HERE at 0x00671B34: thirdPCRotHookPacAddr
+   // Overrides the next if-statement for vanity mode purposes.
+   //
+   if (bPlayerInVanityMode) { // at 0x00671B3B
+      auto eax = this->process->Unk_11F();
+      if (!eax) { // at 0x00671B56
+         *fVanityControlX += (esp6C / 57 * GMST:fVanityModeXMult * Arg1);
+         *fVanityControlY += (esp68 / 57 * GMST:fVanityModeYMult * Arg1);
+         //
+         // == at 0x00671B99 ==
+         // jumped to from below
+         //
+         if (this->unk71D || this->unk71C)
+            jump to 0x006735D0; // at 0x00671BAD
+         if (this->IsDead(0))
+            jump to 0x006735D0;
+         //
+         // ...
+         // conditions in here jump to 0x00671E16 below
+         //
+         AdvancePCLevel();
+         return;
+      }
+   } // at 0x00671C44
+   if (esi || esp54) { // at 0x00671C4C
+      float esp1C = esp6C * INI:Controls:fMouseSensitivity; // patched by NorthernUI
+      if (esi) {
+         if (0.0F > esp1C)
+            esp14 |= 0x10;
+         else
+            esp14 |= 0x20;
+      }
+      if (!this->GetDeadState()) { // at 0x00671C86
+         if (this->GetCurrentAction() != kAction_Stagger && !this->unk71D || !this->unk71C) {
+            auto eax = this->process->GetSitSleepState();
+            if (eax == 4) {
+               float a = (this->unk61C += esp1C);
+               if (a < -PI/2)
+                  a = -PI/2;
+               else if (a > PI/2)
+                  a = PI/2;
+               this->unk61C = a;
+               if (esp54)
+                  *fPlayerTurnAnimMult = 1.5F;
+            } else if (eax == 0) {
+               float esp38 = abs(esp1C); // at 0x00671D2D
+               *fPlayerTurnAnimMult = esp38 / (INI:Controls:fMouseSensitivity * 24.0); // patched by NorthernUI
+               *fPlayerTurnAnimMult = std::min(*fPlayerTurnAnimMult, 1.5F);
+               this->ModifyYaw(esp1C); // at 0x00671D7A
+            }
+         }
+      }
+   }
+   if (edi) { // at 0x00671D81
+      float esp38 = esp68 * INI:Controls:fMouseSensitivity; // patched by NorthernUI
+      this->ModPitch(esp38);
+   }
+   if (!this->process->TES4_00633250()) jump to 0x00671B99; // upward
+   if (this->unk574)
+      this->TES4_0066A670();
+   this->TES4_0065E900();
+   this->isThirdPerson = !this->isThirdPerson;
+   this->TES4_00603CA0(Arg1); // WalkBlessed hooks inside this member function
+   this->isThirdPerson = !this->isThirdPerson;
+   this->TES4_00603CA0(Arg1); // WalkBlessed hooks inside this member function
+   this->TES4_0066B710(0);
+   return;
+   //
+   // == at 0x00671E16 ==
+   // jumped to from above
+   //
+   this->TES4_006606F0();
+   TES4_0065DA20();
+   eax = input->QueryControlState(kControl_DrawSheatheWeapon, 1);
+   if (eax && this->TES4_????????() && this->unk5C0 == 0) { // Oblivion Reloaded wraps a function call
+      if (this->CallProcessVirtualB4() == -1) { // at 0x00671E53
+         //
+         // ...
+         //
+      }
+   }
+   if (input->QueryControlState(kControl_AutoRun, 1))
+      this->isAutoRunning = !this->isAutoRunning;
+   if (input->QueryControlState(kControl_AutoMove, 1))
+      this->isAutoMoving = !this->isAutoMoving;
+   if (this->isAutoMoving) { // at 0x00671EB8
+      if (input->QueryControlState(kControl_Forward, 0) || input->QueryControlState(kControl_StrafeRight, 0) || input->QueryControlState(kControl_StrafeLeft, 0)) {
+         this->isAutoMoving = false;
+      } else
+         input->SendControlPress(kControl_Forward);
+   }
+   if (esp54 == 0) { // at 0x00671F11
+      if (input->QueryControlState(kControl_Sneak, 1)) {
+         //
+         // ...
+         //
+      }
+   }
+   eax = esp28; // at 0x00671F85
+   if (eax->m_children.firstFreeEntry == 0)
+      eax = nullptr;
+   else
+      eax = eax->m_children.data[0];
+   NiPoint3 esp3C(1.0F, 0.0F, 0.0F); // actor forward vector; multiply by speed and add to position for forward movement
+   NiPoint3 esp5C(1.0F, 0.0F, 0.0F); // actor side vector (left? or right?)
+   NiMatrix33 esp7C = eax->m_localRotate; // memcpy(esp + 0x7C, &eax->m_localRotate, 9 * sizeof(float));
+   NiPoint3 esp48 = this->pos; // position + final speed
+   NiPoint3 esp70 = this->pos; // seems to be used at 0x00672E92
+   esp3C.x = esp7C.unk04;
+   esp3C.y = esp7C.unk10;
+   esp3C.z = esp7C.unk1C;
+   if (this->flags & 0x10 == 0) { // at 0x00672020
+      esp44 = 0.0F;
+      esp3C.Normalize();
+   } else {
+      esp5C.x = esp7C.unk00;
+      esp5C.y = esp7C.unk0C;
+      esp5C.z = esp7C.unk18;
+   }
+   if (this->unk57C == 2) { // at 0x0067205F
+      this->TES4_0066DFD0(Arg1);
+   }
+   this->TES4_00663740();
+   //
+   SInt32 eax = input->GetJoystickAxisMovement(0, INI:Controls:iJoystickMoveLeftRight);
+   SInt32 esi = (float)eax * INI:Controls:fJoystickMoveLRMult;
+   eax = input->GetJoystickAxisMovement(0, INI:Controls:iJoystickMoveFrontBack);
+   SInt32 esp38 = (float)eax * INI:Controls:fJoystickMoveFBMult;
+   if (esi) { // if we are moving to the left or right // at 0x006720CB
+      UInt32 ARG;
+      ?
+      ? ...
+      ?
+      input->SendControlPress(ARG); // either 2 or 3, i.e. StrafeLeft or StrafeRight
+      esp28 = abs(esi);
+      *fPlayerTurnAnimMult = (float)esp28 * 0.02;
+      if (1.5F < *fPlayerTurnAnimMult)
+         *fPlayerTurnAnimMult = 1.5F;
+   }
+   ecx = abs(esp38); // at 0x00672118
+   edi = abs(esi);
+   esp1C = ecx;
+   esp28 = edi;
+   if (ecx < edi) { // if we are mostly strafing // at 0x00672136
+      UInt32 bitmask;
+      //
+      // This float scales the player's speed. If the joystick magnitude is 
+      // 50 or greater, then the speed would scale to 1.0 or greater (before 
+      // being capped to 1.0 in subsequent instructions), given that 1 / 0.02 
+      // equals 50. (Remember that joystick max magnitude is 100.)
+      //
+      *fPlayerMoveAnimMult = (float)/*SInt32*/esp28 * 0.02;
+      //
+      // This bitmask stuff is only needed if we don't end up faking strafe 
+      // keypresses, but we DO fake them above, so it's redundant. Weird.
+      //
+      if (esi >= 0)
+         bitmask = 4;
+      else
+         bitmask = 8;
+      esp14 |= bitmask;
+   } else { // if we are mostly moving forward or back
+      eax = esp38;
+      UInt8 ARG;
+      bool  doCall;
+      if (eax) {
+         ?
+         ? // set ARG to 0 or 1, i.e. Forward or Back; set doCall
+         ?
+         if (doCall)
+            input->SendControlPress(ARG);
+         *fPlayerMoveAnimMult = (float)/*SInt32*/esp1C * 0.02;
+      }
+   }
+   if (1.0F < *fPlayerMoveAnimMult)
+      *fPlayerMoveAnimMult = 1.0F;
+   if (edi > 98 || ecx > 98) { // at 0x006721AC
+      input->SendControlPress(kControl_Run); // the outermost 2% of joystick input counts as "running"
+   }
+   if (this->isAutoRunning) {
+      if (!input->QueryControlState(kControl_Run, 1)) {
+         if (!input->QueryControlState(kControl_Run, 0)) {
+            input->SendControlPress(kControl_Run);
+            esp14 |= 0x200;
+         }
+      }
+   } else { // at 0x006721F4
+      if (input->QueryControlState(kControl_Run, 1) || input->QueryControlState(kControl_Run, 0))
+         esp14 |= 0x200;
+   }
+   float esp28 = this->GetMovementSpeed(); // at 0x00672225
+   esp28 *= *fPlayerMoveAnimMult;
+   esp5C *= esp28; // NiPoint3: movement speed strafing
+   esp28 = esp28; // at 0x0067226B
+   esp3C *= esp28; // NiPoint 3: movement speed forward/backstep
+   if (this->isFlycamEnabled == 0) { // at 0x0067228F
+      if (input->QueryControlState(kControl_Forward, 1) || input->QueryControlState(kControl_Forward, 0)) {
+         eax = esp14; // at 0x006722B5
+         esp48 += esp3C;
+         if (eax & kMovement_Run == 0) // 0x0200
+            eax |= kMovement_Walk; // 0x0100
+         eax |= kMovement_Forward; // 0x0001
+         esp14 = eax;
+      }
+      if (input->QueryControlState(kControl_Back, 1) || input->QueryControlState(kControl_Back, 0)) {
+         eax = esp14;
+         esp48 -= esp3C;
+         if (eax & kMovement_Run == 0) // 0x0200
+            eax |= kMovement_Walk; // 0x0100
+         eax |= kMovement_Backward; // 0x0002
+         esp14 = eax;
+      }
+      if (input->QueryControlState(kControl_StrafeLeft, 1) || input->QueryControlState(kControl_StrafeLeft, 0)) {
+         eax = esp14;
+         esp48 -= esp5C;
+         if (eax & kMovement_Run == 0) // 0x0200
+            eax |= kMovement_Walk; // 0x0100
+         eax |= kMovement_Left; // 0x0004
+         esp14 = eax;
+      }
+      if (input->QueryControlState(kControl_StrafeRight, 1) || input->QueryControlState(kControl_StrafeRight, 0)) {
+         eax = esp14;
+         esp48 += esp5C;
+         if (eax & kMovement_Run == 0) // 0x0200
+            eax |= kMovement_Walk; // 0x0100
+         eax |= kMovement_Right; // 0x0008
+         esp14 = eax;
+      }
+   } else { // at 0x006723F4
+      eax = esp14;
+   }
+   //
+   // The esp48 variable will be used much later, at 0x00672E6B. It's very 
+   // likely a "final position" variable.
+   //
+   esi = esp54;
+   if (esi) { // horse ref? // at 0x00672400
+      eax &= 0x0000FFCF; // clear the "turn left" and "turn right" movement flags
+      esp14 = eax;
+      if (eax & kMovement_Left) { // 0x0004
+         //
+         // ...
+         //
+      } else
+         *(float*)(0x00B3BCEC) = 0.0F;
+      if (eax & kMovement_Right) { // 0x0008 // at 0x00672495
+         //
+         // ...
+         //
+      } else
+         *(float*)(0x00B3BCE8) = 0.0F;
+      eax = esp14;
+      eax &= ~(kMovement_Left | kMovement_Right); // ~(4 | 8)
+      esp14 = eax;
+      esi->process->SetMovementFlags(eax); // virtual 0xB2
+      if (esp14 & 1 || (esp14 & 0x3E) == 0) { // at 0x0067253A
+         //
+         // ...
+         //
+      }
+      esi->TES4_0065A650(this->GetPitch()); // at 0x0067258E
+   } else {
+      this->process->SetMovementFlags(eax); // virtual 0xB2
+   }
+   this->TES4_0066C650(); // conditional swap to first-person camera
+   bool esp59 = this->isThirdPerson;
+   if (this->GetKnockedState() == 0 && this->unk5C0 == 0) { // not knocked down or knocked out // at 0x006725CD
+      //
+      // ...
+      //
+   } else { // knocked down or knocked out // at 0x00672B99
+      //
+      // ...
+      //
+   }
+   if (input->QueryControlState(kControl_Rest, 1) { // at 0x00672BE3
+      //
+      // ... various checks and error messages (e.g. "enemies nearby") ...
+      //
+      // ... not sure if this actually carries out the Wait as well ...
+      //
+   }
+   if (this->Unk_63() == 4 && esi) { // 0x00672DA7
+      //
+      // ...
+      //
+   }
+   this->isThirdPerson = true;
+   //
+   // NOPing out this next call prevents the player from moving. They don't even 
+   // play their walking/running animations. The next call decides what animation 
+   // the player should use.
+   //
+   // Even in first-person, where animations aren't relevant, NOPing out this 
+   // call halts all movement.
+   //
+   //  - ActorAnimData::Subroutine00470D20 seems to compute the AnimGroup type 
+   //    to play for movement; see call at 005FDE53
+   //
+   //     - It seems that the anim group type influences the movements we do; 
+   //       if I force it to 4 (backwards movement) there, then we always move 
+   //       backwards
+   //
+   //  - Translate Actor::TES4_005FCAB0; we've transliterated most of it already
+   //
+   //     - Arg1 == speed scale along "dominant" axis (i.e. forward/back or 
+   //               strafe -- whichever we're heading "more" in); caps at 1.0
+   //
+   //     - Arg2 == scale along "strafe" axis, capped at 1.5
+   //
+   this->TES4_005FCAB0(*fPlayerMoveAnimMult, *fPlayerTurnAnimMult); // at 0x00672E0D
+   this->isThirdPerson = esp59;
+   if (this->unk594)
+      this->TES4_0065F770();
+   if (*g_isCollisionOff == 0 && INI:HAVOK:bDisablePlayerCollision == 0) {
+      this->ModifyFormFlag00000010(false);
+   } else {
+      if (this->flags & 0x10 == 0) {
+         esi = this->TES4_0065A2C0();
+         if (esi) {
+            //
+            // The following call takes our "final position" NiPoint3, but NOPing 
+            // it out doesn't affect any visible behavior.
+            //
+            esi->TES4_00452A10(&esp48); // at 0x00672E6B
+            esi = esi->unk08;
+            if (esi) {
+               esi->TES4_008AC0B0(0x00BA7A40);
+            }
+         }
+         this->ModifyFormFlag00000010(true);
+      } // at 0x00672E8C
+      float esp28 = esp50 - esp78;
+      float esp30 = esp28 * Arg1;
+      NiPoint3 esp3C;
+      esp3C.x =
+      esp3C.y =
+      esp3C.z =
+      //
+      // The following call changes the player's internal position.
+      //
+      this->Unk_73(&esp3C);
+   }
+   //
+   // If this next call is no-op'd out, then we can't move. However, the argument 
+   // passed to it doesn't even seem to matter: forcing all of its coordinates to 
+   // zero (or rather, all coordinates on the NiPoint3 copied into the arguments) 
+   // doesn't change the game's behavior at all. How strange.
+   //
+   // Presumably, then, the next call makes us actually move, though the earlier 
+   // call to decide on an animation was somehow a prerequisite.
+   //
+   // esp5C, a NiPoint3, is passed on the stack rather than by reference, so it's 
+   // equivalent to three float args.
+   //
+   //  - HighProcess::Unk_B3+1A8 (0x0063C8D8) tests movement flags to see if 
+   //    diagonal movement is occurring, but that's just for Special Idle and 
+   //    Scripted Movement actions.
+   //
+   //  - If form flag 0x10 is set on the actor, then the NiPoint3 argument is 
+   //    used. The check is at HighProcess::Unk_B3+3E9 (0x0063CAB8). That flag is 
+   //    set by the ToggleCollision command when a reference's collision is 
+   //    disabled.
+   //
+   //  - Otherwise, the player is moved via MobileObject::Move (Virtual 0x6D), 
+   //    called from HighProcess::Unk_B3+410 (0x0063CB40). By then, the game 
+   //    already knows the position offset it wants to apply to the player, and 
+   //    it passes that offset as the second argument to Move.
+   //
+   //     - Looks like the NiPoint3 is retrieved by ActorAnimData::TES4_004723A0, 
+   //       which pulls it from ActorAnimData::unk0C.
+   //
+   //        - The NiPoint3 is initialized to ActorAnimData::unk0C before further 
+   //          processing is done on it. Guessing that unk0C is itself set by 
+   //          ActorAnimData code inside of the prior call in this function, 
+   //          PlayerCharacter::TES4_005FCAB0.
+   //
+   //           - ActorAnimData::Subroutine00476D10+BDF?
+   //
+   // Possibilities:
+   //
+   //  - To guarantee camera-relative movement regardless of the player's facing 
+   //    direction, patch MobileObject::Move+40A (0x0065B33A): check if (this) is  
+   //    the player and if so, use the camera yaw instead of the actor yaw to 
+   //    construct the NiMatrix33 at esp78.
+   //
+   //  - To implement perfect 360-degree movement, we need to find the code that 
+   //    takes the actor movement flags and turns them into a NiPoint to be sent 
+   //    through PlayerCharacter::Move to its super, MobileObject::Move.
+   //
+   //     - It looks like the movement flags sent to Move are only used for very 
+   //       basic checks, e.g. "abort if no WASD flags are set" and "use special 
+   //       handling for diagonal movements + scripted idles."
+   //
+   this->process->Unk_B3(this, esp5C); // at 0x00672F04
+   this->HandleBorderRegions(); // updates last-safe-position, or snaps the player to it and shows a "you can't go that way" message
+   if (esp6C || esp68 || esp14 & 0xF) {
+      esp13 = true;
+   }
+   if (input->QueryControlState(kControl_QuickSave, kKeyQuery_Down))
+      (*g_createdBaseObjList)->TES4_00466AD0();
+   if (input->QueryControlState(kControl_QuickLoad, kKeyQuery_Down))
+      (*g_createdBaseObjList)->TES4_00466B00();
+   if (!input->QueryControlState(kControl_TogglePOV, kKeyQuery_Down) && !input->QueryControlState(kControl_TogglePOV, kKeyQuery_Hold)) { // at 0x00672F7A
+      if (!input->QueryControlState(kControl_TogglePOV, kKeyQuery_Up)) {
+         if (!bPlayerInVanityMode || *(0x00B3BB05))
+            jump to 0x00673076;
+      }
+      if (GMST:fVanityModeDelay > *(float*)0x00B3BCE0) {
+         this->isThirdPerson ^= 1;
+         *(UInt8*)0x00B14E4D = true;
+         bool cl = !this->isThirdPerson;
+         this->TES4_00664F70(cl);
+         esp13 = true;
+         *(float*)(0x00B3BCE0) += 0.0F; // via FLDZ and a jump to 0x00673070
+         jump to 0x00673076;
+      }
+      // at 0x00672FEE
+      if (bPlayerInVanityMode) {
+         *(UInt8*)0x00B14E4D = true;
+         bool dl = !this->isThirdPerson;
+         bPlayerInVanityMode = false;
+         this->TES4_00664F70(dl);
+         esp13 = true;
+         *(float*)(0x00B3BCE0) += 0.0F; // via FLDZ and a jump to 0x00673070
+         jump to 0x00673076;
+      }
+   }
+   if (!IsInMenuMode()) { // at 0x00673027
+      esp13 = true;
+      if (GMST:fVanityModeDelay <= *(float*)(0x00B3BCE0) && *(byte*)(0x00B3BB04) == 0) {
+         *(byte*)(0x00B3BB04) = true;
+         *(byte*)(0x00B14E4D) = 1;
+         this->TES4_00664F70();
+      } else {
+         *(float*)(0x00B3BCE0) += Arg1; // at 0x00673070
+      }
+   }
+   // at 0x00673076
+   if (input->QueryControlState(kControl_Activate, kKeyQuery_Down)) { // at 0x00673083
+      if (!IsMenuMode() && !this->unk5C0) {
+         if (!this->Unk_68() && !/*bool*/esp1B) {
+            esi = TES4_00579540();
+            eax = this->GetActorValue(kActorVal_Invisibility);
+            if (eax > 0) {
+               this->unk68.TES4_006A24B0('INVI', 0);
+            }
+            esp1B = false;
+            if (esi) {
+               if (esi->Unk_3A() && OBLIVION_CAST(esi, TESObjectREFR, ArrowProjectile)) {
+                  if (esi->unk60 == 0)
+                     esp1B = true;
+               }
+               if (esi->Unk_64()) {
+                  edi = esi->unk58;
+                  if (edi->Unk_11F() == 5) jump to 0x00673226;
+                  if (edi->Unk_11F() == 6) jump to 0x00673226;
+               }
+               if (esp1B) jump to 0x00673226;
+            }
+            UpdateHUDInfoMenuTarget(0, 0, 0);
+            if (esi) { // at 0x0067317F
+               if (esi->Activate(this, 0, 0, 1))
+                  jump to 0x00673226;
+               if (this->GetMountedHorse()) {
+                  if (esi->TES4_004D7630() || esi->GetBaseObject()->typeID == 0x12) {
+                     eax = this->GetMountedHorse();
+                     eax->Activate(this, 0, 0, 1);
+                  }
+               }
+            } // at 0x006731DE
+            TESObjectREFR* eax = nullptr;
+            if (this->process->Unk_DE()) {
+               eax = this->process->Unk_DE();
+            } else {
+               if (this->GetMountedHorse())
+                  eax = this->GetMountedHorse();
+            }
+            if (eax) // actually, they skip this with a JMP if there's no Unk_DE or horse, and they don't initialize eax either
+               eax->Activate(this, 0, 0, 1);
+            esp13 = true; // at 0x00673226
+         }
+      }
+   }
+   if (*(bool*)(0x00B3BB05)) { // at 0x00673232
+      if (esp13) {
+         *fAutoVanityModeTimer = 0.0F;
+         bool eax = !this->IsThirdPerson;
+         *(bool*)(0x00B3BB05) = 0;
+         *(bool*)(0x00B3BB04) = 0;
+         this->TES4_00664F70(eax);
+      } else { // at 0x00673267
+         *(float*)(0x00B3BB34) -= GMST:fVanityModeAutoXSpeed / 57 * Arg1;
+         *(float*)(0x00B3BCDC) += GMST:fVanityModeAutoYSpeed / 57 * Arg1;
+         //
+         // ...
+         //
+      }
+   } else if (*bPlayerInVanityMode == false) { // at 0x0067330A
+      float a = esp13 ? 0.0F : *fAutoVanityModeTimer;
+      *fAutoVanityModeTimer = a + Arg1;
+      if (GMST:fVanityModeAutoDelay < *fAutoVanityModeTimer) { // at 0x00673343
+         *(float*)(0x00B3BB34) = 0.0F;
+         *(float*)(0x00B3BB2C) = this->isThirdPerson ? this->GetPitch() : 0.0F;
+         *(bool*)(0x00B14E4D) = true;
+         *(bool*)(0x00B3BB05) = true;
+         *(bool*)(0x00B3BB04) = true;
+         if (!this->isThirdPerson) { // at 0x00673381
+            this->TES4_00664F70(0);
+         }
+      }
+   } // at 0x00673392
+   this->TES4_00671170(Arg1); // related to Z-keying (Havok-grabbing) objects
+   ecx = *(0x00B3BB1C);
+   if (ecx) { // at 0x006733A8
+      edx = eax = *(0x00B3BCD8);
+      eax++;
+      *(0x00B3BCD8) = eax;
+      if (edx < 0x14) {
+         esp3C = esp48;
+         esp3C.z = esp48.z + 128.0;
+         esp3C.y += 64.0;
+         esp3C.x += 64.0;
+         ecx->TES4_004D69A0(&esp3C);
+         *(0x00B3BB1C).TES4_004D9960(0x00B3F9A8);
+      }
+   } // at 0x00673413
+   {
+      bool a = !*(bool*)(0x00B3BB04);
+      a = a && !this->isThirdPerson;
+      a = a && !*(bool*)(0x00B3BB05);
+      a = a && !IsMenuMode();
+      SetHUDReticleStateIfPlayerHasNode(a); // patched by NorthernUI
+   }
+   if (!this->IsDead(0)) { // at 0x0067345A
+      if (!this->Unk_7E()) { // not dead/dying?
+         this->Unk_DA(/*float*/ *(0x00B3BD00).TES4_00673B00());
+      }
+   }
+   ActorAnimData* eax = this->GetAnimData(); // MobileObject::GetAnimData
+   this->unk5CC->unkBC = eax->unkBC;
+   this->unk5CC->unkC0 = eax->unkC0;
+   this->HandleArcheryZoom(Arg1);
+   this->isThirdPerson = !this->isThirdPerson;
+   this->TES4_00603CA0(Arg1); // WalkBlessed hooks inside this member function
+   this->isThirdPerson = !this->isThirdPerson;
+   this->TES4_00603CA0(Arg1); // WalkBlessed hooks inside this member function
+   if (!this->isFlycamEnabled) { // at 0x006734FC
+      this->TES4_0066B710(0);
+   }
+   if (this->process->Unk_B9() || this->HasFatigue()) { // "fatigue" = oblivion term for "stamina," not for "a lack of stamina"
+      if (!this->isThirdPerson)
+         this->TES4_0066C600();
+   }
+   if (!this->isThirdPerson) {
+      if (this->Unk_66(0))
+         this->SetFirstPersonCameraEnabled(0); // WalkBlessed overwrites this member function
+   }
+   TES4_004D5370(); // at 0x0067355C
+   static TESObjectCELL* s_lastSeenCell; // (TESObjectCELL**)0x00B3BCD4
+   if (s_lastSeenCell)
+      if (this->GetParentCell() == s_lastSeenCell)
+         return;
+   s_lastSeenCell = this->GetParentCell(); // at 0x0067358B
+   if (!(*g_modelLoader)->TES4_0043E000())
+      return;
+   (*g_TES)->ShowLoadingAreaMessage();
+   (*g_modelLoader)->TES4_0043DF10();
+   (*g_ioManager)->TES4_00434020();
+   return; // at 0x006735CD.
+   //
+   // at 0x006735D0:
+   //
+   // We only jump to this branch if the player is dead, I think.
+   //
+   if (*(float*)0x00B3BAE0 > 10.0F) {
+      if (this->unk71D && this->process->GetSitSleepState() == 4) {
+         this->unk71D = 0;
+         this->Unk_6F(this->unk71C);
+         this->process->SetCurrentPackage(nullptr);
+         *(float*)0x00B3BAE0 = 0.0F;
+         return;
+      }
+      // at 0x0067364C
+      if (this->IsDead(0) || this->process->GetSitSleepState() == kSitSleepState_NotSitting) {
+         // at 0x0067366F
+         this->TES4_005EAE70();
+         this->unk71C = 0;
+         this->Unk_6F(this->unk71D);
+         this->process->SetCurrentFurniture(this, kSitSleepState_NotSitting, (TESObjectREFR*)nullptr, 0x7F);
+      }
+      // at 0x006736AC
+      *(float*)0x00B3BAE0 = 0.0F;
+      return;
+   }
+   // at 0x006736BD
+   if (this->unk71C) {
+      *(float*)0x00B3BAE0 += g_timeInfo->frameTime;
+      if (this->process->GetSitSleepState() == 4 || this->process->GetSitSleepState() == 9 || this->process->Unk_61()) {
+         // at 0x0067370F
+         this->unk71C = 0;
+         this->Unk_6F(this->unk71D);
+         this->process->SetCurrentPackage(nullptr);
+         *(float*)0x00B3BAE0 = 0.0F;
+         return;
+      }
+   } else if (this->unk71D) {
+         *(float*)0x00B3BAE0 += g_timeInfo->frameTime;
+         if (this->process->Unk_BD() == 0) { // death? knockdown? animations??
+            this->unk71D = false;
+            this->Unk_6F(this->unk71C);
+            this->process->SetCurrentPackage(nullptr);
+            *(float*)0x00B3BAE0 = 0.0F;
+         }
+      }
+   }
+   static float s_timeAtWhichWePopDeathLoadMenu; // &s_timeAtWhichWePopDeathLoadMenu == (float*)0x00B15018
+   // at 0x006737B5
+   this->TES4_00605770(Arg1);
+   this->process->Move(this, NiPoint3(0, 0 ,0));
+   if (0.0F < GMST:fPlayerDeathReloadTime) {
+      auto eax = this->GetDeadState();
+      if (eax != 2 && eax != 1) {
+         s_timeAtWhichWePopDeathLoadMenu = -1.0F;
+      } else {
+         UInt32 now = g_timeInfo->unk10; // esi
+         if (0.0F > s_timeAtWhichWePopDeathLoadMenu) // at 0x0067383F
+            s_timeAtWhichWePopDeathLoadMenu = (float)now / 1000.0 + GMST:fPlayerDeathReloadTime;
+         // at 0x0067386D
+         if (s_timeAtWhichWePopDeathLoadMenu < (float)now / 1000.0) {
+            //
+            // Death reload timer has expired.
+            //
+            s_timeAtWhichWePopDeathLoadMenu = -1.0F;
+            if ((*g_createdBaseObjList)->unk1C0) { // name of the most recent save file
+               ShowPauseMenu();
+               ShowLoadMenu(0);
+            } else {
+               // at 0x006738C4
+               OSGlobals::GetInstance()->quitToMainMenuQueued = true;
+            }
+         }
+      }
+   } else {
+      //
+      // If the "death load delay" has been disabled, then immediately pop up a 
+      // message box asking the player if they wish to reload the game.
+      //
+      // at 0x006738CF
+      if (this->GetDeadState() == 2) {
+         if (*(UInt8*)0x00B3BB07 == false) { // at 0x006738E0
+            this->Unk_72();
+            if ((*g_createdBaseObjList)->unk1C0) {
+               ShowMessageBox("Reload the current save game?", 0x00663270, 1, "Reload", "Main Menu", nullptr);
+            } else {
+               // at 0x00673924
+               OSGlobals::GetInstance()->quitToMainMenuQueued = true;
+            }
+            *(UInt8*)0x00B3BB07 = true; // at 0x0067392E // this is the only place it's set to non-zero
+         }
+      }
+   }
+   // at 0x00673935
+   this->UpdateCamera(0);
+   if (OSInputGlobals::GetSingleton()->QueryControlState(kControl_QuickLoad, kKeyQuery_Down)) {
+      if ((*g_createdBaseObjList)->TES4_00466B00()) {
+         s_timeAtWhichWePopDeathLoadMenu = -1.0F;
+      }
+   }
+   // at 0x0067396A
+}
