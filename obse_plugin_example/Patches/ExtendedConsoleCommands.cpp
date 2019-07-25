@@ -2,6 +2,7 @@
 #include "ReverseEngineered/UI/Menu.h"
 #include "ReverseEngineered/UI/Tile.h"
 #include "ReverseEngineered/UI/InterfaceManager.h"
+#include "ReverseEngineered/Forms/PlayerCharacter.h" // for camera state vars
 #include "Miscellaneous/strings.h"
 #include "obse_common/SafeWrite.h"
 #include "obse/GameAPI.h" // g_bConsoleMode
@@ -104,13 +105,8 @@ namespace CobbPatches {
             } else
                _MESSAGE("activeTileID: No tile.");
          }
-         void forceCrashOnNextLoadScreen() {
-            SafeWrite8 (0x00578E10, 0x31); // XOR EAX, EAX
-            SafeWrite8 (0x00578E11, 0xC0);
-            SafeWrite8 (0x00578E12, 0xC7); // MOV DWORD PTR [EAX], 5
-            SafeWrite8 (0x00578E13, 0x00);
-            SafeWrite32(0x00578E14, 0x00000005);
-            _MESSAGE("forceCrashOnNextLoadScreen: Done.");
+         void cameraState() {
+            _MESSAGE("cameraState: yaw %f, pitch %f", *RE::fPlayerCameraYaw, *RE::fPlayerCameraPitch);
          }
          void genericTestCommand() { // modify this to test whatever we need to test
             _MESSAGE("genericTestCommand: Running...");
@@ -187,8 +183,8 @@ namespace CobbPatches {
                Commands::activeTileID();
                return true;
             }
-            if (_startsWith(input + cobb::cstrlen("!xxn "), "forceCrashOnNextLoadScreen")) {
-               Commands::forceCrashOnNextLoadScreen();
+            if (_startsWith(input + cobb::cstrlen("!xxn "), "cameraState")) {
+               Commands::cameraState();
                return true;
             }
             if (_startsWith(input + cobb::cstrlen("!xxn "), "genericTestCommand")) {
