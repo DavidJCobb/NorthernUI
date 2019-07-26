@@ -22,6 +22,11 @@ namespace NorthernUI {
       kEnhancedMovementCameraType_SkyrimStandard   = 1,
       kEnhancedMovementCameraType_FreeMovement     = 2,
    };
+   enum ChaseCameraMode : SInt32 {
+      kChaseCameraMode_Standard = 0,
+      kChaseCameraMode_Fixed    = 1,
+      kChaseCameraMode_Disabled = 2,
+   };
 
    namespace INI {
       //
@@ -62,6 +67,7 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(bUsePlaystationButtonIcons, "Features", false);
          XXN_MAKE_INI_SETTING(bEnhancedMovement360Movement, "Features", false);
          XXN_MAKE_INI_SETTING(iEnhancedMovementCameraMode, "Features", kEnhancedMovementCameraType_OblivionStandard);
+         XXN_MAKE_INI_SETTING(iChaseCameraMode, "Features", kChaseCameraMode_Fixed);
       };
       namespace Menus {
          XXN_MAKE_INI_SETTING(bUseXXNAlchemyMenu,         "Menus", true);

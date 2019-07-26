@@ -53,9 +53,12 @@ class XXNOptionsMenu : public RE::Menu {
          kTileID_OptionBarterConfirmHandlerCtrl_Value = 35,
          kTileID_OptionUsePlaystationButtonIcons = 36,
          kTileID_OptionEnhancedMovement = 37,
-         kTileID_OptionEnhancedCamera_Left = 38,
+         kTileID_OptionEnhancedCamera_Left  = 38,
          kTileID_OptionEnhancedCamera_Right = 39,
          kTileID_OptionEnhancedCamera_Value = 40,
+         kTileID_OptionCameraInertia_Left  = 41,
+         kTileID_OptionCameraInertia_Right = 42,
+         kTileID_OptionCameraInertia_Value = 43,
       };
       enum {
          kTraitID_CheckboxState = kTileValue_user20,
@@ -69,6 +72,9 @@ class XXNOptionsMenu : public RE::Menu {
          kRootTrait_EnhancedCameraBehaviorOblivion = kTileValue_user16,
          kRootTrait_EnhancedCameraBehaviorSkyrim   = kTileValue_user17,
          kRootTrait_EnhancedCameraBehaviorFree     = kTileValue_user18,
+         kRootTrait_EnhancedCameraInertiaStandard = kTileValue_user19,
+         kRootTrait_EnhancedCameraInertiaFixed    = kTileValue_user20,
+         kRootTrait_EnhancedCameraInertiaDisabled = kTileValue_user21,
       };
       enum Confirmation : UInt8 {
          kConfirmationBox_None = 0,
@@ -95,6 +101,7 @@ class XXNOptionsMenu : public RE::Menu {
       EnumpickerStr optionBarterConfirmHandlerCtrl;
       Checkbox      optionEnhancedMovement;
       EnumpickerStr optionEnhancedCamera;
+      EnumpickerStr optionCameraInertia;
 
       virtual void	Dispose(bool); // 00 // destructor
       virtual void	HandleTileIDChange(SInt32 newID, RE::Tile* tile);

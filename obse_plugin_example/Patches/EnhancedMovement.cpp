@@ -132,6 +132,7 @@ namespace CobbPatches {
       }
       //
       namespace IndependentCamera {
+         constexpr bool ce_preventChaseCameraSwingOnCellTransition = true;
          //
          // This patch allows the user to choose between three different behaviors for 
          // the third-person camera:
@@ -151,7 +152,25 @@ namespace CobbPatches {
          // ranged weapon or spell is equipped, then she is forced to face camera-forward 
          // so that aiming works properly.
          //
+         // We also adjust the inertial effect that Oblivion applies to the camera, 
+         // offering the player three options:
+         //
+         // STANDARD: The camera inertia effect is not modified in any way.
+         //
+         // FIXED: We fix a bug in the camera inertia effect that can cause the camera 
+         // to swing wildly when you pass through some load doors, depending on the 
+         // difference between your angle going into the first door and your angle 
+         // coming out of the second door. Because the effect generally only happens 
+         // as you walk in and out of buildings, it almost looks like an intentional 
+         // attempt at showing off the environment you're stepping into; however, it 
+         // messes with movement and in practice, it's disorienting and irritating 
+         // beyond measure.
+         //
+         // DISABLE: Disable the camera inertia entirely.
+         //
          // -----------------------------------------------------------------------------
+         //
+         // BUG: The compass uses the player orientation, not the camera orientation
          //
          // TODO: Every time the player switches to first-person, the player should be 
          // rotated to match the camera. (Be careful: the input handler switches the 
@@ -318,6 +337,14 @@ namespace CobbPatches {
                            player->SetZRotation(*RE::fPlayerCameraYaw);
                      }
                      *RE::fPlayerCameraYaw = player->GetZRotation();
+                  }
+                  switch (NorthernUI::INI::Features::iChaseCameraMode.iCurrent) {
+                     case NorthernUI::kChaseCameraMode_Fixed:
+                        if (s_lastWorldOrCellID == s_thisWorldOrCellID)
+                           break;
+                     case NorthernUI::kChaseCameraMode_Disabled:
+                        *RE::bChaseCameraResetQueued = true;
+                        break;
                   }
                }
                __declspec(naked) void Outer() {

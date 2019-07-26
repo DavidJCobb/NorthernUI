@@ -50,6 +50,7 @@ namespace RE {
          void SetCanFastTravel(bool bCan) { if (bCan) worldFlags &= ~kFlag_NoFastTravel; else worldFlags |= kFlag_NoFastTravel; }
 
          MEMBER_FN_PREFIX(TESWorldSpace);
+         DEFINE_MEMBER_FN(GetRootWorldspace, TESWorldSpace*, 0x004EF7E0);
          DEFINE_MEMBER_FN(GetRootWorldspaceUnk84, Unk84*, 0x004EF1B0);
    };
 };

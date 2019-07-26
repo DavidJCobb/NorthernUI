@@ -333,7 +333,7 @@ namespace RE {
          virtual void	ModBaseAV_F(UInt32 avCode, float amt) = 0;
          virtual void	ModBaseAV(UInt32 avCode, SInt32 amt) = 0;
          virtual void	Unk_AD(void) = 0;
-         virtual void	Unk_AE(void) = 0;
+         virtual ExtraContainerChanges::EntryData* Unk_AE(SInt32) = 0;
          virtual void	Unk_AF(void) = 0;
          virtual void	Unk_B0(void) = 0;	// B0
          virtual void	Unk_B1(void) = 0;

@@ -113,6 +113,7 @@
     <ClCompile Include="Patches\EnhancedMovement.cpp" />
     <ClCompile Include="Miscellaneous\rotation.cpp" />
     <ClCompile Include="Services\TileDump.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\InventoryMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />

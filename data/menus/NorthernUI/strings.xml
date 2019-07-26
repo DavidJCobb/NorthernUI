@@ -335,6 +335,7 @@
    <_optionUsePlaystationButtonIcons>Use PlayStation Button Icons:</_optionUsePlaystationButtonIcons>
    <_optionEnhancedMovementBehavior>Enhanced Movement:</_optionEnhancedMovementBehavior>
    <_optionEnhancedCameraBehavior>Camera Behavior:</_optionEnhancedCameraBehavior>
+   <_optionEnhancedCameraInertia>Camera Inertia:</_optionEnhancedCameraInertia>
    
    <_optEnumBarterConfirmHandlerDefault>Always (Default)</_optEnumBarterConfirmHandlerDefault>
    <_optEnumBarterConfirmHandlerTakeOne>When Not Free</_optEnumBarterConfirmHandlerTakeOne>
@@ -347,6 +348,10 @@
    <_optEnumEnhancedCameraBehaviorOblivion>Oblivion</_optEnumEnhancedCameraBehaviorOblivion>
    <_optEnumEnhancedCameraBehaviorSkyrim>Skyrim</_optEnumEnhancedCameraBehaviorSkyrim>
    <_optEnumEnhancedCameraBehaviorFree>Free</_optEnumEnhancedCameraBehaviorFree> <!-- "free" as in "unrestricted movement and camera" -->
+   
+   <_optEnumEnhancedCameraInertiaStandard>Unchanged</_optEnumEnhancedCameraInertiaStandard>
+   <_optEnumEnhancedCameraInertiaFixed>Fixed</_optEnumEnhancedCameraInertiaFixed> <!-- "fixed" as in "I fixed a bug," not as in "fixed into place" -->
+   <_optEnumEnhancedCameraInertiaDisabled>Disabled</_optEnumEnhancedCameraInertiaDisabled>
    
    <_optDescLocalMapRes>Adjust the render resolution of the Local Map. Oblivion's world is divided into grid cells, and this option is measured in pixels per grid cell.</_optDescLocalMapRes>
    <_optDescShowHUDClock>Control whether the in-game time of day is displayed on the HUD.</_optDescShowHUDClock>
@@ -363,6 +368,7 @@
    <_optDescUsePlaystationButtonIcons>Control whether the gamepad UI uses Xbox or PlayStation button icons.</_optDescUsePlaystationButtonIcons>
    <_optDescEnhancedMovementBehavior>If this option is enabled, your character's angle of movement will exactly match your joystick direction. If this option is disabled, the joystick works the same as WASD.</_optDescEnhancedMovementBehavior>
    <_optDescEnhancedCameraBehavior>Control the behavior of the third-person camera. You can use the camera behaviors seen in Oblivion or Skyrim, or a "Free" behavior that allows you to move totally independently of the camera direction.</_optDescEnhancedCameraBehavior>
+   <_optDescEnhancedCameraInertia>By default, Oblivion applies inertia to the third-person camera and tilts it to accentuate your movement. This functionality has a bug that causes the camera to swing wildly when you go in and out of some buildings.</_optDescEnhancedCameraInertia>
    
    <!----- XXNCONTROLSMENU ------------------------------------------------->
    <_optCtrlGStick>Gameplay Sticks:</_optCtrlGStick>

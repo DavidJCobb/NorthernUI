@@ -25,4 +25,6 @@ namespace RE {
          ExtraContainerChanges::EntryData* unk50; // 50
          SInt32 unk54; // 54 // listindex of last-focused inventory list item
    };
+
+   DEFINE_SUBROUTINE_EXTERN(void, NotifyInventoryMenuOfInventoryChange, 0x0057A3B0, UInt32);
 };
