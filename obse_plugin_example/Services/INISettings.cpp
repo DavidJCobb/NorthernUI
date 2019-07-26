@@ -37,7 +37,7 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(bUsePlaystationButtonIcons, "Features", false);
          XXN_MAKE_INI_SETTING(bEnhancedMovement360Movement, "Features", false);
          XXN_MAKE_INI_SETTING(iEnhancedMovementCameraMode, "Features", kEnhancedMovementCameraType_OblivionStandard);
-         XXN_MAKE_INI_SETTING(iChaseCameraMode, "Features", kChaseCameraMode_Standard);
+         XXN_MAKE_INI_SETTING(iCameraInertiaMode, "Features", kCameraInertiaMode_Fixed);
       };
       namespace Menus {
          XXN_MAKE_INI_SETTING(bUseXXNAlchemyMenu, "Menus", true);

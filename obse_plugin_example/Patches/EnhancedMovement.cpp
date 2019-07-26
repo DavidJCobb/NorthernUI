@@ -152,6 +152,8 @@ namespace CobbPatches {
          // ranged weapon or spell is equipped, then she is forced to face camera-forward 
          // so that aiming works properly.
          //
+         // -----------------------------------------------------------------------------
+         //
          // We also adjust the inertial effect that Oblivion applies to the camera, 
          // offering the player three options:
          //
@@ -170,11 +172,10 @@ namespace CobbPatches {
          //
          // -----------------------------------------------------------------------------
          //
-         // BUG: The compass uses the player orientation, not the camera orientation
-         //
          // TODO: Every time the player switches to first-person, the player should be 
          // rotated to match the camera. (Be careful: the input handler switches the 
-         // player in and out of first-person view repeatedly for some reason!)
+         // player in and out of first-person view repeatedly for some reason!) Unless... 
+         // What exactly does Skyrim do, again?
          //
          NorthernUI::EnhancedMovementCameraType _GetPref() {
             auto mode = NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent;
@@ -315,6 +316,30 @@ namespace CobbPatches {
                WriteRelJump(0x005807A6, (UInt32)&Outer); // InterfaceManager::MaintainReticleTarget+0xD6
             }
          }
+         namespace Compass {
+            //
+            // By default, the compass uses the player's rotation rather than the 
+            // camera's rotation.
+            //
+            float _stdcall Inner(RE::PlayerCharacter* player) {
+               if (_GetPref() == NorthernUI::kEnhancedMovementCameraType_OblivionStandard)
+                  return player->GetZRotation();
+               return *RE::fPlayerCameraYaw;
+            }
+            __declspec(naked) void Outer() {
+               _asm {
+                  push ecx;
+                  call Inner; // stdcall
+                  mov  eax, 0x005A6F15;
+                  jmp  eax;
+               }
+            }
+            void Apply() {
+               WriteRelJump(0x005A6F0B, (UInt32)&Outer); // somewhere in HUDMainMenu::HandleFrame
+               SafeWrite16 (0x005A6F10, 0x9090); // courtesy NOPs
+               SafeWrite8  (0x005A6F12, 0x90);
+            }
+         }
          namespace HandlePlayerInput {
             //
             // Patches to the subroutine that handles most player input.
@@ -338,12 +363,12 @@ namespace CobbPatches {
                      }
                      *RE::fPlayerCameraYaw = player->GetZRotation();
                   }
-                  switch (NorthernUI::INI::Features::iChaseCameraMode.iCurrent) {
-                     case NorthernUI::kChaseCameraMode_Fixed:
+                  switch (NorthernUI::INI::Features::iCameraInertiaMode.iCurrent) {
+                     case NorthernUI::kCameraInertiaMode_Fixed:
                         if (s_lastWorldOrCellID == s_thisWorldOrCellID)
                            break;
-                     case NorthernUI::kChaseCameraMode_Disabled:
-                        *RE::bChaseCameraResetQueued = true;
+                     case NorthernUI::kCameraInertiaMode_Disabled:
+                        *RE::bCameraInertiaResetQueued = true;
                         break;
                   }
                }
@@ -509,8 +534,10 @@ namespace CobbPatches {
          void Apply() {
             HandlePlayerInput::Apply();
             UpdatePlayerCamera::Apply();
-            POVSwitch::Apply();
+            //POVSwitch::Apply();
+            //
             ActivatePick::Apply();
+            Compass::Apply();
          }
       }
       //

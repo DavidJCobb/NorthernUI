@@ -8,7 +8,7 @@ namespace RE {
    float* const fAutoVanityModeTimer = (float*) 0x00B3BB08;
    float* const fPlayerCameraPitch   = (float*) 0x00B3BAC4;
    float* const fPlayerCameraYaw     = (float*) 0x00B3BAC8;
-   bool*  const bChaseCameraResetQueued = (bool*) 0x00B14E4D;
+   bool*  const bCameraInertiaResetQueued = (bool*) 0x00B14E4D;
    // 0x00B3BB05 may be an "auto vanity" bool, but auto vanity also sets 0x00B3BB04 to true
 
    //constexpr float* fPlayerMoveAnimMult = (float*)0x00B14E58;

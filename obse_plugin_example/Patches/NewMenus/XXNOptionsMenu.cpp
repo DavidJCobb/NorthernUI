@@ -263,7 +263,7 @@ bool XXNOptionsMenu::AnyUnchanged() const {
       return true;
    if (NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent != this->optionEnhancedCamera.index)
       return true;
-   if (NorthernUI::INI::Features::iChaseCameraMode.iCurrent != this->optionCameraInertia.index)
+   if (NorthernUI::INI::Features::iCameraInertiaMode.iCurrent != this->optionCameraInertia.index)
       return true;
    return false;
 };
@@ -283,7 +283,7 @@ void XXNOptionsMenu::Commit() {
    NorthernUI::INI::Features::bUsePlaystationButtonIcons.bCurrent = this->optionUsePlaystationButtonIcons.Get();
    NorthernUI::INI::Features::bEnhancedMovement360Movement.bCurrent = this->optionEnhancedMovement.Get();
    NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent = this->optionEnhancedCamera.index;
-   NorthernUI::INI::Features::iChaseCameraMode.iCurrent = this->optionCameraInertia.index;
+   NorthernUI::INI::Features::iCameraInertiaMode.iCurrent = this->optionCameraInertia.index;
    //
    (NorthernUI::INI::INISettingManager::GetInstance()).Save();
    NorthernUI::INI::SendChangeEvent();
@@ -304,7 +304,7 @@ void XXNOptionsMenu::ResetDefaults() {
    this->optionUsePlaystationButtonIcons.Set(NorthernUI::INI::Features::bUsePlaystationButtonIcons.bDefault);
    this->optionEnhancedMovement.Set(NorthernUI::INI::Features::bEnhancedMovement360Movement.bDefault);
    this->optionEnhancedCamera.SetByIndex(NorthernUI::INI::Features::iEnhancedMovementCameraMode.iDefault);
-   this->optionCameraInertia.SetByIndex(NorthernUI::INI::Features::iChaseCameraMode.iDefault);
+   this->optionCameraInertia.SetByIndex(NorthernUI::INI::Features::iCameraInertiaMode.iDefault);
 };
 void XXNOptionsMenu::Setup() {
    //
@@ -365,7 +365,7 @@ void XXNOptionsMenu::Setup() {
    this->optionUsePlaystationButtonIcons.Set(NorthernUI::INI::Features::bUsePlaystationButtonIcons.bCurrent);
    this->optionEnhancedMovement.Set(NorthernUI::INI::Features::bEnhancedMovement360Movement.bCurrent);
    this->optionEnhancedCamera.SetByIndex(NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent);
-   this->optionCameraInertia.SetByIndex(NorthernUI::INI::Features::iChaseCameraMode.iCurrent);
+   this->optionCameraInertia.SetByIndex(NorthernUI::INI::Features::iCameraInertiaMode.iCurrent);
 };
 
 /*static*/ void XXNOptionsMenu::Confirm_ResetDefaults() {

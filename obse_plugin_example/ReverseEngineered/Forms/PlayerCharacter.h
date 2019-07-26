@@ -9,7 +9,7 @@ namespace RE {
    extern float* const fAutoVanityModeTimer;
    extern float* const fPlayerCameraPitch;
    extern float* const fPlayerCameraYaw;
-   extern bool*  const bChaseCameraResetQueued;
+   extern bool*  const bCameraInertiaResetQueued;
 
    // Values computed during movement processing; used to control the speed of the walking and 
    // turning animations (with the caveat that the walking animation speed also influences the 

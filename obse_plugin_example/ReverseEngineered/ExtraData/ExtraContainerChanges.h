@@ -7,15 +7,17 @@ namespace RE {
       public:
          struct EntryData : public ::ExtraContainerChanges::EntryData {
             MEMBER_FN_PREFIX(EntryData);
-            DEFINE_MEMBER_FN(Destructor,     void,        0x00484470);
-            DEFINE_MEMBER_FN(GetCharge,      float,       0x004849C0);
-            DEFINE_MEMBER_FN(GetHealth,      float,       0x00484850, bool returnAbsolute); // if arg is false, returns percentage (e.g. 66.0F) // -1 if no valid value
-            DEFINE_MEMBER_FN(GetIcon,        const char*, 0x004851B0, Actor*); // icon -- but it checks ownership, tho??
-            DEFINE_MEMBER_FN(GetName,        const char*, 0x00488DF0);
-            DEFINE_MEMBER_FN(GetOwner,       TESForm*,    0x00484B70);
-            DEFINE_MEMBER_FN(GetUses,        SInt32,      0x00484970); // -1 if no valid value
-            DEFINE_MEMBER_FN(IsEquippedItem, bool,        0x00484E80, UInt32);
-            DEFINE_MEMBER_FN(SetCount,       void,        0x0060D020, UInt32 count);
+            DEFINE_MEMBER_FN(Destructor,        void,        0x00484470);
+            DEFINE_MEMBER_FN(GetCharge,         float,       0x004849C0);
+            DEFINE_MEMBER_FN(GetHealth,         float,       0x00484850, bool returnAbsolute); // if arg is false, returns percentage (e.g. 66.0F) // -1 if no valid value
+            DEFINE_MEMBER_FN(GetIcon,           const char*, 0x004851B0, Actor*); // icon -- but it checks ownership, tho??
+            DEFINE_MEMBER_FN(GetName,           const char*, 0x00488DF0);
+            DEFINE_MEMBER_FN(GetOwner,          TESForm*,    0x00484B70);
+            DEFINE_MEMBER_FN(GetStatusBitmask,  SInt32,      0x00485C00); // mainly for UI
+            DEFINE_MEMBER_FN(GetStatusIconFile, const char*, 0x0048F6A0, SInt32 bitmask); // mainly for UI
+            DEFINE_MEMBER_FN(GetUses,           SInt32,      0x00484970); // -1 if no valid value
+            DEFINE_MEMBER_FN(IsEquippedItem,    bool,        0x00484E80, UInt32);
+            DEFINE_MEMBER_FN(SetCount,          void,        0x0060D020, UInt32 count);
 
             // Used to filter inventory displays for menus.
             //

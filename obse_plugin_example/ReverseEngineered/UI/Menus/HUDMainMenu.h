@@ -25,5 +25,11 @@ namespace RE {
          float  cursorDragY; // 6C
          float  unk70; // 70
          // ...?
+
+         MEMBER_FN_PREFIX(HUDMainMenu);
+         DEFINE_MEMBER_FN(LevelUpIconIsVisible,          bool, 0x005A56C0);
+         DEFINE_MEMBER_FN(SetEquippedSpellIconFilename,  void, 0x005A62B0, const char* filename);
+         DEFINE_MEMBER_FN(SetEquippedWeaponIconFilename, void, 0x005A6A40, const char* filename); // also calls UpdateWeaponIconStatusMask
+         DEFINE_MEMBER_FN(UpdateWeaponIconStatusMask,    void, 0x005A6220, UInt32 zeroClearsStatus);
    };
 };
