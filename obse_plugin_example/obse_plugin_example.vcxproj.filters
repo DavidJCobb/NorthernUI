@@ -8026,6 +8026,7 @@
     <ClInclude Include="Patches\EnhancedMovement.h" />
     <ClInclude Include="Miscellaneous\rotation.h" />
     <ClInclude Include="Services\TileDump.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\BSPlayerDistanceCheckController.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

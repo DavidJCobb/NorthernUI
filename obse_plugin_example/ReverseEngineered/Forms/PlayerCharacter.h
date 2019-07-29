@@ -1,6 +1,7 @@
 #pragma once
 #include "ReverseEngineered/Forms/Actor.h"
 
+class bhkMouseSpringAction;
 namespace RE {
    extern bool*  const bPlayerInVanityMode;
    extern float* const fVanityCurDistance;
@@ -10,6 +11,7 @@ namespace RE {
    extern float* const fPlayerCameraPitch;
    extern float* const fPlayerCameraYaw;
    extern bool*  const bCameraInertiaResetQueued;
+   extern DetectionState* const iPlayerCurrentDetectionState;
 
    // Values computed during movement processing; used to control the speed of the walking and 
    // turning animations (with the caveat that the walking animation speed also influences the 
@@ -129,7 +131,7 @@ namespace RE {
          float		scriptAVModifiers[kActorVal_OblivionMax];	// 324
          UInt32		unk444[(0x570 - 0x444) >> 2];				// 444
          TESObjectREFR* lastActivatedLoadDoor;	// 570 - most recently activated load door
-         void*  unk574; // 574 // has a vtbl
+         NiPointer<bhkMouseSpringAction> telekinesisSpring; // 574 // constructed shortly before, and assigned at, 0x0066D879; used for telekinesis and maybe for Z-keying as well
          UInt32 unk578[(0x588 - 0x578) >> 2];	// 578
          bool   isThirdPerson;					// 588
          UInt8  unk589; // 589
@@ -139,9 +141,9 @@ namespace RE {
          UInt32 sleepHours; // 590 // GetPCSleepHours, IsTimePassing (truthy)
          UInt32 unk594;	// 594
          float  unk598; // 598 // related to archery zoom when holding LT/block
-         float  unk59C; // 59C // treated similarly to 5A0 and 5A4
-         float  unk5A0; // 5A0 // 
-         float  unk5A4; // 5A4 // 
+         float  expTimerAthleticsRun  = 0.0F; // 59C // Increases when running outside of Sneak mode. When this reaches or exceeds 1.0 (one second), player gains Athletics experience and the timer resets.
+         float  expTimerAthleticsSwim = 0.0F; // 5A0 // Increases when swimming. When this reaches or exceeds 1.0 (one second), player gains Athletics experience and the timer resets.
+         float  expTimerSneak         = 0.0F; // 5A4 // Increases when running while in Sneak mode. When this reaches or exceeds 1.0 (one second), player gains Sneak experience and the timer resets.
          UInt8  unk5A8; // 5A8
          UInt8  unk5A9;
          UInt8  unk5AA;
@@ -157,7 +159,7 @@ namespace RE {
          UInt8  unk5C1;
          UInt8  unk5C2;
          UInt8  unk5C3;
-         TESObjectREFR* unk5C4; // 5C4 // reference that the player is queued to activate, if any
+         TESObjectREFR* unk5C4; // 5C4 // reference that the player is queued to activate, if any // related to auto-doors
          void*  unk5C8; // 5C8 // A getter retrives this instead of 104 if you're in first-person.
          ActorAnimData* firstPersonAnimData;		// 5CC
          NiNode* firstPersonNiNode;			// 5D0

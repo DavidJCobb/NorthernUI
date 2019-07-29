@@ -13,6 +13,12 @@ float* const fPlayerMoveAnimMult = (float*)0x00B14E58;
 // so WASD movement is fine until gamepad movement occurs (thus 
 // one of NorthernUI's hooks)
 
+bool*  const bPlayerInVanityMode       = (bool*) 0x00B3BB04;
+bool*  const bCameraInertiaResetQueued = (bool*) 0x00B14E4D;
+float* const fPlayerCameraPitch   = (float*) 0x00B3BAC4;
+float* const fPlayerCameraYaw     = (float*) 0x00B3BAC8;
+DetectionState* const iPlayerCurrentDetectionState = (DetectionState*) 0x00B3B368;
+
 //
 // Arg1 is a time value (seconds?).
 //
@@ -65,9 +71,9 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
    ui->MaintainReticleTarget();
    if (this->unk71F) { // at 0x00671784
       this->unk71F = false;
-      this->TES4_0066FF10(1);
+      this->TES4_0066FF10(1); // related to border region notification messages
    }
-   if (ecx = this->unk5C4) {
+   if (ecx = this->unk5C4) { // queued activation -- used for "auto" doors?
       ecx->Activate(this, 0, 0, 1);
       this->unk5C4 = nullptr;
       return;
@@ -75,44 +81,51 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
    if (this->isFlycamEnabled)
       this->UpdateFlycam();
    if (this->isThirdPerson) // at 0x006717D2
-      this->process->Unk_24(this);
+      this->process->Unk_24(this); // related to GMST:fAIIdleAnimationDistance
+   //
+   // Movement-related skill gains:
+   //
    auto eax = this->process->GetSitSleepState();
    BaseProcess* ecx;
-   auto edi;
+   Creature* edi;   // horse
+   Creature* esp54; // horse
    if (eax == 4) {
       edi = esp54 = this->GetMountedHorse(); // edi
       ecx = esp54 ? esp54->process : this->process;
    } else
       ecx = this->process;
    UInt16 esi = ecx->GetMovementFlags();
-   if (this->IsSneaking() && !esp54 && this->TES4_005E05B0()) { // at 0x00671837
-      if (*(UInt32*)(0x00B3B368) < 3 && this->unk5A8) {
-         if (1.0F < this->unk5A4) {
-            this->Unk_E7(0x1F, 0, 0.0F);
-            this->unk5A4 = 0.0F;
+   if (this->IsSneaking() && !esp54 && this->MovementFlagsIncludeWASD()) { // at 0x00671837
+      if (*iPlayerCurrentDetectionState < kDetectionState_Seen && this->unk5A8) {
+         if (1.0F < this->expTimerSneak) {
+            this->ModExperience(0x1F, 0, 0.0F); // Sneak
+            this->expTimerSneak = 0.0F;
          } else {
-            this->unk5A4 += *(float*)(0x00B33E9C);
+            this->expTimerSneak += g_timeInfo->frameTime;
          }
       }
    } else { // at 0x00671896
-      if (this->TES4_005E0530() && !esp54 && this->TES4_005E05B0()) {
-         if (1.0F < this->unk5A0) {
-            this->Unk_E7(0x0D, 1, 0.0F);
-            this->unk5A0 = 0.0F;
+      if (this->IsSwimming() && !esp54 && this->MovementFlagsIncludeWASD()) {
+         if (1.0F < this->expTimerAthleticsSwim) {
+            this->ModExperience(0x0D, 1, 0.0F); // Athletics
+            this->expTimerAthleticsSwim = 0.0F;
          } else {
-            this->unk5A0 += *(float*)(0x00B33E9C);
+            this->expTimerAthleticsSwim += g_timeInfo->frameTime;
          }
       } else { // at 0x006718F6
-         if (esi & 0x200 && !esp54 && this->TES4_005E05B0()) {
-            if (1.0F < this->unk59C) {
-               this->Unk_E7(0x0D, 0, 0.0F);
-               this->unk59C = 0.0F;
+         if ((esi & kMovement_Run) && !esp54 && this->MovementFlagsIncludeWASD()) {
+            if (1.0F < this->expTimerAthleticsRun) {
+               this->ModExperience(0x0D, 0, 0.0F); // Athletics
+               this->expTimerAthleticsRun = 0.0F;
             } else {
-               this->unk59C += *(float*)(0x00B33E9C);
+               this->expTimerAthleticsRun += g_timeInfo->frameTime;
             }
          }
       }
    }
+   //
+   // Look controls:
+   //
    // at 0x00671949
    esi &= 0x0000CC00;
    esp14 = esi;
@@ -141,10 +154,10 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
       esp68 = edi = -edi;
    }
    float esp1C = /*SInt32*/ esp1C;
-   if (esp1C != 0.0F) {
-      if (*(UInt8*)(0x00B3BB04))
+   if (esp1C != 0.0F) { // any scroll wheel movement
+      if (*bPlayerInVanityMode)
          esp13 = true;
-      if (*(UInt8*)(0x00B3BB04) || this->isThirdPerson) { // at 0x00671A2C
+      if (*bPlayerInVanityMode || this->isThirdPerson) { // at 0x00671A2C
          float a = esp1C * GMST:fVanityModeWheelMult;
          *(float*)(0x00B3BB24) -= a;
          if (this->IsDead(0)) {
@@ -152,7 +165,7 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
                *(float*)(0x00B3BB24) = GMST:fVanityModeWheelDeadMin;
          } else { // at 0x00671A75
             if (GMST:fVanityModeWheelMin > *(float*)(0x00B3BB24)) {
-               if (*(UInt8*)(0x00B3BB04))
+               if (*bPlayerInVanityMode)
                   this->SetFirstPersonCameraEnabled(true); // WalkBlessed replaces this member function
                *(float*)(0x00B3BB24) = GMST:fVanityModeWheelMin;
             }
@@ -169,34 +182,21 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
          }
       }
    } // at 0x00671B13
-   *(float*)(0x00B3BAC8) = this->GetZRotation();
-   *(float*)(0x00B3BAC4) = this->GetPitch();
+   *fPlayerCameraYaw   = this->GetZRotation();
+   *fPlayerCameraPitch = this->GetPitch();
    //
    // WalkBlessed jump HERE at 0x00671B34: thirdPCRotHookPacAddr
    // Overrides the next if-statement for vanity mode purposes.
    //
-   if (bPlayerInVanityMode) { // at 0x00671B3B
-      auto eax = this->process->Unk_11F();
+   if (*bPlayerInVanityMode) { // vanity mode camera XY control // at 0x00671B3B
+      auto eax = this->process->Unk_11F(); // returns HighProcess::unk2BC
       if (!eax) { // at 0x00671B56
          *fVanityControlX += (esp6C / 57 * GMST:fVanityModeXMult * Arg1);
          *fVanityControlY += (esp68 / 57 * GMST:fVanityModeYMult * Arg1);
-         //
-         // == at 0x00671B99 ==
-         // jumped to from below
-         //
-         if (this->unk71D || this->unk71C)
-            jump to 0x006735D0; // at 0x00671BAD
-         if (this->IsDead(0))
-            jump to 0x006735D0;
-         //
-         // ...
-         // conditions in here jump to 0x00671E16 below
-         //
-         AdvancePCLevel();
-         return;
+         jump to 0x00671B99;
       }
    } // at 0x00671C44
-   if (esi || esp54) { // at 0x00671C4C
+   if (esi || esp54) { // non-vanity-mode camera yaw // at 0x00671C4C
       float esp1C = esp6C * INI:Controls:fMouseSensitivity; // patched by NorthernUI
       if (esi) {
          if (0.0F > esp1C)
@@ -225,20 +225,39 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
          }
       }
    }
-   if (edi) { // at 0x00671D81
+   if (edi) { // non-vanity-mode camera pitch // at 0x00671D81
       float esp38 = esp68 * INI:Controls:fMouseSensitivity; // patched by NorthernUI
       this->ModPitch(esp38);
    }
-   if (!this->process->TES4_00633250()) jump to 0x00671B99; // upward
-   if (this->unk574)
-      this->TES4_0066A670();
-   this->TES4_0065E900();
-   this->isThirdPerson = !this->isThirdPerson;
-   this->TES4_00603CA0(Arg1); // WalkBlessed hooks inside this member function
-   this->isThirdPerson = !this->isThirdPerson;
-   this->TES4_00603CA0(Arg1); // WalkBlessed hooks inside this member function
-   this->TES4_0066B710(0);
-   return;
+   if (this->process->TES4_00633250()) { // something to do with HighProcess::unk2BC
+      if (this->unk574)
+         this->TES4_0066A670();
+      this->TES4_0065E900();
+      this->isThirdPerson = !this->isThirdPerson;
+      this->TES4_00603CA0(Arg1); // WalkBlessed hooks inside this member function
+      this->isThirdPerson = !this->isThirdPerson;
+      this->TES4_00603CA0(Arg1); // WalkBlessed hooks inside this member function
+      this->TES4_0066B710(0);
+      return;
+   }
+   //
+   // == at 0x00671B99 ==
+   //
+   if (this->unk71D || this->unk71C)
+      jump to 0x006735D0; // at 0x00671BAD
+   if (this->IsDead(0))
+      jump to 0x006735D0;
+   auto ecx = (*g_thePlayer)->process->editorPackage;
+   if (ecx) {
+      eax = ecx->Destroy(true);
+      (*g_thePlayer)->process->editorPackage = nullptr;
+   }
+   if ((*g_thePlayer)->process->GetCurrentPackage())
+      (*g_thePlayer)->process->SetCurrentPackage(nullptr);
+   if (this->bCanLevelUp && INI:GamePlay:bInstantLevelUp) { // do instant level up when applicable
+      AdvancePCLevel();
+      return;
+   }
    //
    // == at 0x00671E16 ==
    // jumped to from above
@@ -247,7 +266,7 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
    TES4_0065DA20();
    eax = input->QueryControlState(kControl_DrawSheatheWeapon, 1);
    if (eax && this->TES4_????????() && this->unk5C0 == 0) { // Oblivion Reloaded wraps a function call
-      if (this->CallProcessVirtualB4() == -1) { // at 0x00671E53
+      if (this->GetCurrentAction() == -1) { // at 0x00671E53
          //
          // ...
          //
@@ -576,13 +595,16 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
    if (input->QueryControlState(kControl_QuickLoad, kKeyQuery_Down))
       (*g_createdBaseObjList)->TES4_00466B00();
    if (!input->QueryControlState(kControl_TogglePOV, kKeyQuery_Down) && !input->QueryControlState(kControl_TogglePOV, kKeyQuery_Hold)) { // at 0x00672F7A
+      //
+      // If the key is NOT being held -- and yes, I checked that twice.
+      //
       if (!input->QueryControlState(kControl_TogglePOV, kKeyQuery_Up)) {
-         if (!bPlayerInVanityMode || *(0x00B3BB05))
+         if (!*bPlayerInVanityMode || *(0x00B3BB05))
             jump to 0x00673076;
       }
       if (GMST:fVanityModeDelay > *(float*)0x00B3BCE0) {
-         this->isThirdPerson ^= 1;
-         *(UInt8*)0x00B14E4D = true;
+         this->isThirdPerson ^= 1; // toggle the bit?
+         *bCameraInertiaResetQueued = true;
          bool cl = !this->isThirdPerson;
          this->TES4_00664F70(cl);
          esp13 = true;
@@ -590,10 +612,10 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
          jump to 0x00673076;
       }
       // at 0x00672FEE
-      if (bPlayerInVanityMode) {
-         *(UInt8*)0x00B14E4D = true;
+      if (*bPlayerInVanityMode) {
+         *bCameraInertiaResetQueued = true;
          bool dl = !this->isThirdPerson;
-         bPlayerInVanityMode = false;
+         *bPlayerInVanityMode = false;
          this->TES4_00664F70(dl);
          esp13 = true;
          *(float*)(0x00B3BCE0) += 0.0F; // via FLDZ and a jump to 0x00673070
@@ -602,9 +624,9 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
    }
    if (!IsInMenuMode()) { // at 0x00673027
       esp13 = true;
-      if (GMST:fVanityModeDelay <= *(float*)(0x00B3BCE0) && *(byte*)(0x00B3BB04) == 0) {
-         *(byte*)(0x00B3BB04) = true;
-         *(byte*)(0x00B14E4D) = 1;
+      if (GMST:fVanityModeDelay <= *(float*)(0x00B3BCE0) && !bPlayerInVanityMode) {
+         *bPlayerInVanityMode = true;
+         *bCameraInertiaResetQueued = true;
          this->TES4_00664F70();
       } else {
          *(float*)(0x00B3BCE0) += Arg1; // at 0x00673070
@@ -660,8 +682,8 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
       if (esp13) {
          *fAutoVanityModeTimer = 0.0F;
          bool eax = !this->IsThirdPerson;
-         *(bool*)(0x00B3BB05) = 0;
-         *(bool*)(0x00B3BB04) = 0;
+         *(bool*)(0x00B3BB05) = false;
+         *bPlayerInVanityMode = false;
          this->TES4_00664F70(eax);
       } else { // at 0x00673267
          *(float*)(0x00B3BB34) -= GMST:fVanityModeAutoXSpeed / 57 * Arg1;
@@ -678,7 +700,7 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
          *(float*)(0x00B3BB2C) = this->isThirdPerson ? this->GetPitch() : 0.0F;
          *(bool*)(0x00B14E4D) = true;
          *(bool*)(0x00B3BB05) = true;
-         *(bool*)(0x00B3BB04) = true;
+         *bPlayerInVanityMode = true;
          if (!this->isThirdPerson) { // at 0x00673381
             this->TES4_00664F70(0);
          }
@@ -700,7 +722,7 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
       }
    } // at 0x00673413
    {
-      bool a = !*(bool*)(0x00B3BB04);
+      bool a = !*bPlayerInVanityMode;
       a = a && !this->isThirdPerson;
       a = a && !*(bool*)(0x00B3BB05);
       a = a && !IsMenuMode();

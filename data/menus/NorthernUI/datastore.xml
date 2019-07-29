@@ -35,6 +35,58 @@
       <copy src="child(_GETTER_xxnClockImageWidth)" trait="filewidth" />
    </_xxnClockImageFilewidth>
    
+   <_fontsNormal_1>Data\Fonts\OpenSans_22CB_Normal_Win1252.fnt</_fontsNormal_1>
+   <_fontsNormal_2>Data\Fonts\OpenSans_22CB_Normal_Win1251.fnt</_fontsNormal_2>
+   <_fontsLarge_1>Data\Fonts\OpenSans_50CB_Normal_Win1252.fnt</_fontsLarge_1>
+   <_fontsLarge_2>Data\Fonts\OpenSans_50CB_Normal_Win1251.fnt</_fontsLarge_2>
+   <_fontsMediumLargeUpper_1>Data\Fonts\OpenSans_36CB_Uppercase_Win1252.fnt</_fontsMediumLargeUpper_1>
+   <_fontsMediumLargeUpper_2>Data\Fonts\OpenSans_36CB_Uppercase_Win1251.fnt</_fontsMediumLargeUpper_2>
+   <_fontsShadowed_1>Data\Fonts\OpenSans_22CB_Shadowed_Win1252.fnt</_fontsShadowed_1>
+   <_fontsShadowed_2>Data\Fonts\OpenSans_22CB_Shadowed_Win1251.fnt</_fontsShadowed_2>
+   <_fontsSmall_1>Data\Fonts\OpenSans_15CB_Normal_Win1252.fnt</_fontsSmall_1>
+   <_fontsSmall_2>Data\Fonts\OpenSans_15CB_Normal_Win1251.fnt</_fontsSmall_2>
+   
+   <_fontNormal>
+      <copy>
+         <copy src="xxnLocalization()" trait="_textEncoding" />
+         <max>0</max>
+         <add>1</add>
+      </copy>
+      <copy src="me()" trait="_fontsNormal_" />
+   </_fontNormal>
+   <_fontLarge>
+      <copy>
+         <copy src="xxnLocalization()" trait="_textEncoding" />
+         <max>0</max>
+         <add>1</add>
+      </copy>
+      <copy src="me()" trait="_fontsLarge_" />
+   </_fontLarge>
+   <_fontMediumLargeUpper>
+      <copy>
+         <copy src="xxnLocalization()" trait="_textEncoding" />
+         <max>0</max>
+         <add>1</add>
+      </copy>
+      <copy src="me()" trait="_fontsMediumLargeUpper_" />
+   </_fontMediumLargeUpper>
+   <_fontShadowed>
+      <copy>
+         <copy src="xxnLocalization()" trait="_textEncoding" />
+         <max>0</max>
+         <add>1</add>
+      </copy>
+      <copy src="me()" trait="_fontsShadowed_" />
+   </_fontShadowed>
+   <_fontSmall>
+      <copy>
+         <copy src="xxnLocalization()" trait="_textEncoding" />
+         <max>0</max>
+         <add>1</add>
+      </copy>
+      <copy src="me()" trait="_fontsSmall_" />
+   </_fontSmall>
+   
    <image name="_GETTER_xxnClockImageWidth">
       <zoom><copy src="parent()" trait="_xxnClockImageScale" /></zoom>
       <filename><copy src="parent()" trait="_xxnClockImageFile" /></filename>

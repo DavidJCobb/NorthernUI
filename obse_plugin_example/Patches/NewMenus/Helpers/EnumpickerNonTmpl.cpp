@@ -4,7 +4,6 @@
 #include <sstream>
 
 namespace XXNMenuHelpers {
-
    UInt32 EnumpickerUInt::Get() const {
       if (!this->values.size())
          return 0;
@@ -71,6 +70,12 @@ namespace XXNMenuHelpers {
    //
    //
    //
+   void EnumpickerStr::AddValue(const char* s) {
+      if (!s)
+         this->values.push_back("<MISSING TEXT>");
+      else
+         this->values.push_back(s);
+   }
    std::string EnumpickerStr::Get() const {
       if (!this->values.size())
          return "";

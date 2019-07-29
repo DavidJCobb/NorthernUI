@@ -1,0 +1,105 @@
+<!-- Data\Menus\NorthernUI\localizationconfig.xml -->
+<!-- This file defines the tile that will be accessible through src="xxnlocalization()" -->
+<rect name="NorthernUILocalizationConfig">
+   <!--
+      This file contains settings that are provided specifically to help 
+      with translating the mod. Where the strings.xml file contains text, 
+      this file contains options that can be used to control the design 
+      of the menus.
+      
+      Most of these settings are numbers. Some settings are yes-or-no 
+      settings that use "&true;" to mean "yes" and "&false;" to mean "no."
+   -->
+   
+   <!-- SETTINGS FOR THE ENTIRE MOD --------------------------------------- ->
+      These settings are applied all over the mod.
+   <---------------------------------------------------------------------- -->
+
+      <!-- TEXT ENCODING
+         0 = Win-1252 (ANSI)
+         1 = Win-1251 (Cyrillic)
+         
+         This must be set so that NorthernUI knows what font files to use.
+      -->
+      <_textEncoding>0</_textEncoding>
+      
+      
+   
+   <!-- SETTINGS FOR THE "BIG FOUR" MENUS --------------------------------- ->
+      These settings influence the Stats, Magic, Items, and Journal menus.
+   <---------------------------------------------------------------------- -->
+   
+      <!-- Control whether the menu headers use a smaller font. -->
+      <_big4TabUseSmallerHeaders>&false;</_big4TabUseSmallerHeaders>
+      
+      
+   
+   <!-- SETTINGS FOR THE ENHANCED ALCHEMY MENU ---------------------------- ->
+      These settings influence NorthernUI's enhanced Alchemy menu.
+   <---------------------------------------------------------------------- -->
+   
+      <!-- Increase the width of the menu by this amount. -->
+      <_xxnAlchMenuWidthAdjust>0</_xxnAlchMenuWidthAdjust>
+   
+      <!-- Increase the width of the left-side column by this amount. -->
+      <_xxnAlchCategoriesWidthAdjust>0</_xxnAlchCategoriesWidthAdjust>
+      
+      
+   
+   <!-- SETTINGS FOR THE MAGIC EFFECT SETTING MENU ------------------------ ->
+      These settings influence the menu used to customize specific spell 
+      effects, when spellmaking or creating an enchantment.
+   <---------------------------------------------------------------------- -->
+   
+      <!-- Increase the width of the menu by this amount. -->
+      <_effectsettingWidthAdjust>0</_effectsettingWidthAdjust>
+      
+      
+   
+   <!-- SETTINGS FOR THE PAUSE MENU --------------------------------------- ->
+      These settings influence the pause menu and all of the options 
+      submenus.
+   <---------------------------------------------------------------------- -->
+   
+      <!-- Increase the width of the menu by this amount. -->
+      <_pauseMinWidthAdjust>0</_pauseMinWidthAdjust>
+      
+      
+   
+   <!-- SETTINGS FOR THE OBLIVION OPTIONS MENUS --------------------------- ->
+      These settings influence the options menus for Audio, Video, and 
+      Gameplay settings.
+   <---------------------------------------------------------------------- -->
+   
+      <!-- Increase the width of the option labels by this amount. -->
+      <_optionsLabelWidthAdjust>0</_optionsLabelWidthAdjust>
+      
+      
+   
+   <!-- SETTINGS FOR THE STATS MENU --------------------------------------- ->
+      These settings influence the Stats menu.
+   <---------------------------------------------------------------------- -->
+   
+      <!-- Increase the width of the Skill Type (Major/Minor) column. -->
+      <_statsColumnAdjustSkillType>0</_statsColumnAdjustSkillType>
+   
+      <!-- Increase the width of the Skill Level column. -->
+      <_statsColumnAdjustSkillValue>0</_statsColumnAdjustSkillValue>
+   
+      <!-- Increase the width used to display Misc Stats. -->
+      <_statsMiscStatWidthAdjust>0</_statsMiscStatWidthAdjust>
+      
+      
+   
+   <!-- SETTINGS FOR THE NorthernUI OPTIONS MENU -------------------------- ->
+      These settings influence the NorthernUI options menu.
+   <---------------------------------------------------------------------- -->
+   
+      <!-- Increase the width of the option labels by this amount. -->
+      <_xxnOptionsLabelWidthAdjust>0</_xxnOptionsLabelWidthAdjust>
+      
+      <!-- Increase the width of sliders, buttons, etc., by this amount. -->
+      <_xxnOptionsControlWidthAdjust>0</_xxnOptionsControlWidthAdjust>
+      
+      
+</rect>

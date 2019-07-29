@@ -319,6 +319,7 @@
     <ClInclude Include="ReverseEngineered\GameSettings.h" />
     <ClInclude Include="ReverseEngineered\INISettings.h" />
     <ClInclude Include="ReverseEngineered\Miscellaneous.h" />
+    <ClInclude Include="ReverseEngineered\NetImmerse\BSPlayerDistanceCheckController.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\NiControllerManager.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\NiGeometry.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\NiObject.h" />

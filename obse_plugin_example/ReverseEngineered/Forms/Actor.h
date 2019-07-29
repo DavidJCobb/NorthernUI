@@ -76,6 +76,13 @@ namespace RE {
       kAnimCombatType_Bow     = 5,
       kAnimCombatType_Idle    = 6,
    };
+   enum DeadState : UInt32 {
+      kDeadState_Alive       = 0,
+      kDeadState_Dying       = 1,
+      kDeadState_Dead        = 2,
+      kDeadState_Unconscious = 3,
+      kDeadState_Unk06       = 6,
+   };
 
    extern const char** s_AnimCombatTypeNames;
    extern const char** s_AnimBodyPartNames;
@@ -234,7 +241,7 @@ namespace RE {
          UInt32    unk5C[kAnimBodyPart_Count]; // 5C
          AnimCode  unk70[kAnimBodyPart_Count]; // 70
          UInt32    unk7C[kAnimBodyPart_Count]; // 7C // same type as 5C
-         SInt8 unk90; // 90
+         SInt8 unk90; // 90 // Console:SkipAnim sets this to 5; it may be an AnimBodyPart to skip with "5" treated as "all" where applicable
          UInt8 unk91[3];
          float unk94; // 94 // some sort of time value // valid arg to NiAVObject::ConditionallyUpdatePropsAndControllers
          NiControllerManager*   manager;		//98
@@ -270,6 +277,7 @@ namespace RE {
          DEFINE_MEMBER_FN(Subroutine00470D20, AnimCode, 0x00470D20, AnimCode, bool isRecursiveCall); // queue animcode arg to play? but it doesn't modify anything; it's just a getter
          DEFINE_MEMBER_FN(StopAnimation,      void,     0x00470FC0, AnimBodyPart, float); // unconfirmed
          DEFINE_MEMBER_FN(ApplyUnk18ToNode08, void,     0x00471230, float, void*); // sets unk08's local translate to unk18 and does something with unk04 and unk08
+         DEFINE_MEMBER_FN(SetUnk90,           void,     0x004706D0, UInt8);
          DEFINE_MEMBER_FN(Subroutine00472330, SInt16,   0x00472330, AnimCode); // returns length of a TESAnimGroup's unk14
          DEFINE_MEMBER_FN(Subroutine004723A0, bool,     0x004723A0, NiVector3& out_myLengthIsTheAnimDelta, Actor* actor, bool, bool preventVerticalMovement);
          DEFINE_MEMBER_FN(Subroutine00474530, UInt32,   0x00474530, BSAnimGroupSequence*, AnimCode code, SInt32);
@@ -458,7 +466,7 @@ namespace RE {
          PowerListEntry greaterPowerList; // 09C
          Unk0A4 unk0A4;							// 0A4
          float  unk0AC;							// 0AC
-         UInt32 DeadState;						// 0B0
+         DeadState deadState; // 0B0
          UInt32 unk0B4;							// 0B4
          UInt32 unk0B8;							// 0B8
          float  unk0BC;							// 0BC

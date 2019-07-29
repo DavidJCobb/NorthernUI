@@ -706,6 +706,14 @@
          </div>
       </_tabSpacing>
       
+      <_fontType_1><copy src="NorthernUI()" trait="_fontLarge" /></_fontType_1>
+      <_fontType_2><copy src="NorthernUI()" trait="_fontMediumLargeUpper" /></_fontType_2>
+      <_fontPath>
+         <copy src="xxnLocalization()" trait="_big4TabUseSmallerHeaders" />
+         <eq>&true;</eq>
+         <copy src="me()" trait="_fontType_" />
+      </_fontPath>
+      
       <rect name="tab_stats">
          <locus>&true;</locus>
          <target>&true;</target>
@@ -731,7 +739,7 @@
             <string><copy src="xxnStrings()" trait="_statsMenuTitle" /></string>
             <x>0</x>
             <y>5</y>
-            <include src="NorthernUI\fonts\large.xml" />
+            <xxnFontPath><copy src="hudmain_menu_selector" trait="_fontPath" /></xxnFontPath>
             <red>
                <copy>140</copy>
                <max>
@@ -769,7 +777,7 @@
             <string><copy src="xxnStrings()" trait="_inventoryMenuTitle" /></string>
             <x>0</x>
             <y>5</y>
-            <include src="NorthernUI\fonts\large.xml" />
+            <xxnFontPath><copy src="hudmain_menu_selector" trait="_fontPath" /></xxnFontPath>
             <red>
                <copy>140</copy>
                <max>
@@ -807,7 +815,7 @@
             <string><copy src="xxnStrings()" trait="_magicMenuTitle" /></string>
             <x>0</x>
             <y>5</y>
-            <include src="NorthernUI\fonts\large.xml" />
+            <xxnFontPath><copy src="hudmain_menu_selector" trait="_fontPath" /></xxnFontPath>
             <red>
                <copy>140</copy>
                <max>
@@ -845,7 +853,7 @@
             <string><copy src="xxnStrings()" trait="_mapMenuTitle" /></string>
             <x>0</x>
             <y>5</y>
-            <include src="NorthernUI\fonts\large.xml" />
+            <xxnFontPath><copy src="hudmain_menu_selector" trait="_fontPath" /></xxnFontPath>
             <red>
                <copy>140</copy>
                <max>

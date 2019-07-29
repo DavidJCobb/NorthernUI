@@ -2,7 +2,17 @@
 #include "obse/GameProcess.h"
 
 class bhkCharacterController;
+class NiBillboardNode;
 namespace RE {
+   enum DetectionState : UInt32 {
+      kDetectionState_Lost = 0,
+      kDetectionState_Unseen,
+      kDetectionState_Noticed,
+      kDetectionState_Seen,
+
+      kDetectionState_Max
+   };
+
    class Actor;
    class TESObjectREFR;
    class BaseProcess {
@@ -78,7 +88,7 @@ namespace RE {
          virtual void	Unk_15(UInt32 arg0) = 0;
          virtual void	Unk_16(UInt32 arg0, UInt32 arg1) = 0;
          virtual void	Unk_17(void) = 0;
-         virtual void	Unk_18(UInt32 arg0) = 0;
+         virtual void	UpdateHealthBar(Actor*) = 0; // for INI:Gameplay:bHealthBarShowing
          virtual bool	Unk_19(void) = 0;
          virtual void	Unk_1A(UInt32 arg0) = 0;
          virtual bool	Unk_1B(UInt32 arg0, UInt32 arg1) = 0;
@@ -90,7 +100,7 @@ namespace RE {
          virtual void	Unk_21(UInt32 arg0, UInt32 arg1, UInt32 arg2) = 0;
          virtual bool	Unk_22(void) = 0;
          virtual void	Unk_23(UInt32 arg0) = 0;
-         virtual void	Unk_24(UInt32 arg0) = 0;
+         virtual void	Unk_24(Actor* subject) = 0;
          virtual void	Unk_25(void) = 0;
          virtual void	UpdateUnk088(void) = 0;
          virtual float	GetUnk088(void) = 0;
@@ -150,11 +160,11 @@ namespace RE {
          virtual float	SetUnk028(void) = 0;
          virtual void	Unk_5B(void) = 0;
          virtual void	Unk_5C(void) = 0;
-         virtual void	Unk_5D(void) = 0;
+         virtual TESPackage*	GetCurrentPackage() = 0;
          virtual void					SetCurrentPackage(TESPackage* Package) = 0;
          virtual void					SetCurrentPackProcedure(TESPackage::eProcedure PackProcedure) = 0; //OR def Note OR definiton say this return a eProcedure
          virtual TESPackage::eProcedure	GetCurrentPackProcedure(void) = 0;  //OR def
-         virtual TESPackage*				GetCurrentPackage(void) = 0;	// returns MiddleHighProcess::pkg0C0 if not NULL, else BaseProcess::package
+         virtual UInt32				GetCurrentPackageFormFlags() = 0; // 61
          virtual void					Unk_62(UInt32 arg0) = 0;			// marks ScriptEventList::kEvent_OnPackageDone
          virtual NiPointer<bhkCharacterProxy>* GetCharProxy(NiPointer<bhkCharacterProxy>& characterProxy) = 0; // 63 // increfs and returns the proxy (or sets to NULL)
          virtual void	Unk_64(void * obj) = 0;
@@ -248,9 +258,8 @@ namespace RE {
          virtual void   SetKnockedState(UInt8) = 0; // BA
          virtual void	Unk_BB(UInt32) = 0; // BB // no-op on HighProcess
          virtual void	Unk_BC(UInt32, UInt32, UInt32, UInt32, UInt32) = 0; // BC
-
          // arg3 is a multiplier, arg4 appears to be base force to apply
-         virtual UInt32 Unk_BD(UInt32) = 0;
+         virtual UInt32 Unk_BD(Actor*) = 0;
          virtual void	Unk_BE(Actor*) = 0; // handles knockdown face anim and state
          virtual UInt8	GetCombatMode(void) = 0;
          virtual UInt8	SetCombatMode(UInt8 CombatMode) = 0;
@@ -349,7 +358,7 @@ namespace RE {
          virtual void	Unk_11C(void) = 0;
          virtual void	Unk_11D(void) = 0;
          virtual void	Unk_11E(void) = 0;
-         virtual UInt32 Unk_11F() = 0; // returns enum? if not implemented here, check on HighProcess
+         virtual UInt32 Unk_11F() = 0; // returns enum? // returns HighProcess::unk2BC
          virtual void	Unk_120(void) = 0;
          virtual void	Unk_121(Actor*) = 0;
          virtual void	Unk_122(void) = 0;
@@ -637,7 +646,7 @@ namespace RE {
          DetectionList	* detectionList;	// 18C
          Node190	unk190;		// 190
          UInt32	unk198;		// 198
-         float	unk19C;		// 19C - idle chatter comment timer
+         float	unk19C;		// 19C // initialized to GMST:fIdleChatterCommentTimer
          UInt8	unk1A0;		// 1A0
          UInt8	pad1A1[3];	// 1A1
          UInt32	unk1A4;		// 1A4
@@ -693,10 +702,10 @@ namespace RE {
          UInt8	unk25D;		// 25D
          UInt8	pad25E[2];	// 25E
          float	unk260;		// 260
-         UInt32	unk264;		// 264
-         NiObject	* unk268;	// 268 - decref'able pointer
-         float	unk26C;		// 26C
-         UInt32	unk270;		// 270
+         float unk264; // 264 // related to rendering a health bar (INI:Gameplay:bHealthBarShowing); see HighProcess::Unk_18
+         NiBillboardNode* unk268; // 268 // rendered health bar // hardcoded texture: "Data\\Textures\\Menus\\Misc\\HealthBar3DBW.dds"
+         float	unk26C; // 26C
+         float unk270; // 270 // INI:GamePlay:fHealthBarEmittanceTime
          UInt32	unk274;		// 274
          UInt8	unk278;		// 278
          UInt8	pad279[3];	// 279
@@ -719,7 +728,7 @@ namespace RE {
          UInt8	unk2B8;		// 2B8
          UInt8	unk2B9;		// 2B9
          UInt8	pad2BA[2];	// 2BA
-         UInt32	unk2BC;		// 2BC
+         UInt32	unk2BC = 1;		// 2BC
          UInt32	unk2C0;		// 2C0
          UInt32	unk2C4;		// 2C4
          TESObjectREFR	* actionTarget[kActionType_Max];	// 2C8
@@ -741,6 +750,12 @@ namespace RE {
             {	return currentAction == kAction_Dodge;	}
          bool IsMovementFlagSet(UInt32 flag)
             {	return (movementFlags & flag) == flag;	}
+
+         MEMBER_FN_PREFIX(HighProcess);
+         DEFINE_MEMBER_FN(Constructor, HighProcess&, 0x00628EE0);
+
+         DEFINE_MEMBER_FN(Subroutine00633250, void, 0x00633250, Actor* subject); // handles unk2BC
+         DEFINE_MEMBER_FN(Subroutine00628630, void, 0x00628630, Actor* subject, bool); // sets unk2BC if player is not invisible
    };
    static_assert(sizeof(HighProcess) == 0x2EC, "RE::HighProcess is the wrong size!");
 

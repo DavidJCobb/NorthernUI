@@ -18,8 +18,8 @@
       of the in-game date. You can use the USER20 and USER21 traits to decide 
       how they should be formatted.
    -->
-   <user10>foo</user10>
-   <user11>foo</user11>
+   <user10>...</user10>
+   <user11>...</user11>
    
    <!-- USER20 and USER21: Date formats
       The date format can be any string of text, with special codes mixed in 
@@ -75,9 +75,8 @@
       on hours can be translated, but not here. Modify <NorthernUI.l10n.txt>, a 
       file located in the same directory as NorthernUI.dll.
    -->
-   <!-- <user20>%ih:%2im %sh on %sw, %iD%sD of %sM, 3E %iY</user20> -->
-   <user20>%sw, %ih:%2im %sh</user20>
-   <user21>%iD%sD of %sM</user21>
+   <user20><copy src="xxnStrings()" trait="_hudClockLine1" /></user20>
+   <user21><copy src="xxnStrings()" trait="_hudClockLine2" /></user21>
    
    <rect name="content_root">
       <locus>&true;</locus>

@@ -58,6 +58,7 @@ namespace XXNMenuHelpers {
       bool requiresRestart = false;
       bool sorted = false; // note: only applied when Set adds an entry into the list; just sort your initializer lists by hand, friendo
 
+      void AddValue(const char*);
       std::string Get() const;
       SInt32 IndexOf(const std::string&) const;
       bool HandleClick(RE::Tile* tile); // returns true if event handled; false if event not relevant

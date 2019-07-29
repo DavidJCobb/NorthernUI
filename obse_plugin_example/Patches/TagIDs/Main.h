@@ -46,11 +46,17 @@ namespace CobbPatches {
       constexpr UInt32 _traitOpBinaryOr  = 0x160C; // operator (float)
       constexpr UInt32 _traitStrings     = 0x160D; // selector
       constexpr UInt32 _traitOpSetIfZero = 0x160E; // operator (float)
+      constexpr UInt32 _traitLocConfig   = 0x160F; // selector
       //
       // NOTE: ID 0x1771 is not registered, but the vanilla code sets it on the menu root.
       //
       // NOTE: ID 0x1772 is not registered, but the vanilla code uses it to indicate some form of 
       //       menu state.
+      //
+      // NOTE: Tile::Value::AppendSrcOperator doesn't allow traits with IDs below 0xFA1 to be 
+      //       used as the target of a src="" attribute.
+      //
+      // NOTE: IDs 0x2710 and above are used for underscore-prefixed traits.
       //
       const TagID tagIDs[] = {
          { XXN_NEW_TAG_ID(_traitFontPath,   "xxnfontpath",   kType_Trait,    0, 1) },
@@ -69,6 +75,7 @@ namespace CobbPatches {
          { XXN_NEW_TAG_ID(_traitOpBinaryOr,  "xxnopbinaryor",  kType_Operator, 0, 0) },
          { XXN_NEW_TAG_ID(_traitStrings,     "xxnstrings",     kType_Selector, 0, 0) },
          { XXN_NEW_TAG_ID(_traitOpSetIfZero, "xxnopsetifzero", kType_Operator, 0, 0) },
+         { XXN_NEW_TAG_ID(_traitLocConfig,   "xxnlocalization", kType_Selector, 0, 0) },
       };
       constexpr UInt32 menuQueOperatorMin = 0x7EC;
       constexpr UInt32 menuQueOperatorMax = 0x7F0;

@@ -121,7 +121,10 @@
                      <add>16</add>
                      <onlyif src="pause_submenu_scrollbar" trait="visible" />
                   </sub>
-                  <min>450</min>
+                  <min>
+                     <copy>450</copy>
+                     <add src="xxnLocalization()" trait="_optionsLabelWidthAdjust" />
+                  </min>
                </width>
                <height><copy src="parent()" trait="height" /></height>
                <x>0</x>
@@ -139,6 +142,11 @@
                <xlist>&xlist;</xlist>
                <xscroll><ref src="pause_submenu_scrollbar" trait="user5" /></xscroll>
                
+               <user10>
+                  <copy>200</copy>
+                  <add src="xxnLocalization()" trait="_optionsLabelWidthAdjust" />
+               </user10>
+               
                <rect name="option_resolution">
                   <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
                   <listindex><copy>0</copy></listindex> <!-- for some reason, this breaks if we don't use COPY -->
@@ -147,6 +155,7 @@
                   <user2>26</user2> <!-- enumpicker right ID -->
                   <user11><copy src="strings()" trait="_resolution" /></user11> <!-- label -->
                   <string><copy src="VideoMenu" trait="user4" /></string> <!-- enumpicker value -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -156,11 +165,13 @@
                   <user0>5</user0> <!-- slider ID -->
                   <user1>6</user1> <!-- slider thumb ID -->
                   <user2>25</user2> <!-- slider jump distance -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_texturesize">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_texturesize" /></user11>
                   <user0>20</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -170,6 +181,7 @@
                   <user0>12</user0> <!-- slider ID -->
                   <user1>13</user1> <!-- slider thumb ID -->
                   <user2>25</user2> <!-- slider jump distance -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -179,6 +191,7 @@
                   <user0>14</user0> <!-- slider ID -->
                   <user1>15</user1> <!-- slider thumb ID -->
                   <user2>25</user2> <!-- slider jump distance -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -188,6 +201,7 @@
                   <user0>16</user0> <!-- slider ID -->
                   <user1>17</user1> <!-- slider thumb ID -->
                   <user2>25</user2> <!-- slider jump distance -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -197,6 +211,7 @@
                   <user0>18</user0> <!-- slider ID -->
                   <user1>19</user1> <!-- slider thumb ID -->
                   <user2>25</user2> <!-- slider jump distance -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -206,6 +221,7 @@
                   <user0>22</user0> <!-- slider ID -->
                   <user1>23</user1> <!-- slider thumb ID -->
                   <user2>25</user2> <!-- slider jump distance -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -215,6 +231,7 @@
                   <user0>28</user0> <!-- slider ID -->
                   <user1>29</user1> <!-- slider thumb ID -->
                   <user2>25</user2> <!-- slider jump distance -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -222,6 +239,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_distantlod" /></user11>
                   <user0>9</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -229,6 +247,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_distbuild" /></user11>
                   <user0>30</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -236,6 +255,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_disttrees" /></user11>
                   <user0>31</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -244,6 +264,7 @@
                   <user11><copy src="strings()" trait="_intshad" /></user11>
                   <user0>32</user0> <!-- slider ID -->
                   <user1>33</user1> <!-- slider thumb ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -252,6 +273,7 @@
                   <user11><copy src="strings()" trait="_extshad" /></user11>
                   <user0>34</user0> <!-- slider ID -->
                   <user1>35</user1> <!-- slider thumb ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -259,6 +281,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_self_shadows" /></user11>
                   <user0>10</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -266,6 +289,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_grass_shadows" /></user11>
                   <user0>21</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -273,6 +297,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_canopyshadows" /></user11>
                   <user0>11</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -280,6 +305,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_shadowfiltering" /></user11>
                   <user0>48</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -288,6 +314,7 @@
                   <user11><copy src="strings()" trait="_speclight" /></user11>
                   <user0>36</user0> <!-- slider ID -->
                   <user1>37</user1> <!-- slider thumb ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -295,6 +322,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_hdr" /></user11>
                   <user0>38</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -302,6 +330,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_bloom" /></user11>
                   <user0>47</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -309,6 +338,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_water_detail" /></user11>
                   <user0>39</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -316,6 +346,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_water_reflections" /></user11>
                   <user0>40</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -323,6 +354,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_water_displacement" /></user11>
                   <user0>41</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -330,6 +362,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_window_reflections" /></user11>
                   <user0>42</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -337,6 +370,7 @@
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_blood" /></user11>
                   <user0>43</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                </rect> <!-- /menuitem -->
@@ -346,6 +380,7 @@
                   <user2>46</user2> <!-- enumpicker right ID -->
                   <user11><copy src="strings()" trait="_antialiasing" /></user11> <!-- label -->
                   <string><copy src="VideoMenu" trait="user5" /></string> <!-- enumpicker value -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <visible><not>&xbox;</not></visible>
                   <xdown><ref src="video_return_button" trait="mouseover" /></xdown>

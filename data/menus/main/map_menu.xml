@@ -409,7 +409,7 @@
             <text name="value_prefix"> <!-- TODO: Make this an actual zoom% readout -->
                <include src="NorthernUI\fonts\normal.xml" />
                <depth>1</depth>
-               <string>Zoom:&nbsp;</string>
+               <string><copy src="xxnStrings()" trait="_mapMenuZoomLabel" /></string>
                <red>255</red>
                <green>255</green>
                <blue>255</blue>

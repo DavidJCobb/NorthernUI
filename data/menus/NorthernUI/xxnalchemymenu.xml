@@ -34,6 +34,7 @@
       <_headerEnabled>&true;</_headerEnabled>
       <_headerText><copy src="xxnStrings()" trait="_alchemyMenuTitle" /></_headerText>
       <_isMainMenu>&false;</_isMainMenu>
+      <_widthAdjust><copy src="xxnLocalization()" trait="_xxnAlchMenuWidthAdjust" /></_widthAdjust>
       <id>0</id>
       
       <rect name="content">
@@ -73,6 +74,7 @@
                <copy src="parent()" trait="width" />
                <div>3</div>
                <add>10</add> <!-- we need all the width we can get -->
+               <add src="xxnLocalization()" trait="_xxnAlchCategoriesWidthAdjust" />
             </width>
             <height><copy src="parent()" trait="height" /></height>
             

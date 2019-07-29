@@ -57,27 +57,38 @@
                <y>0</y>
                <width>
                   <copy src="parent()"  trait="width" />
-                  <min>450</min>
+                  <min>
+                     <copy>450</copy>
+                     <add src="xxnLocalization()" trait="_optionsLabelWidthAdjust" />
+                  </min>
                </width>
                <height><copy src="parent()" trait="height" /></height>
+               
+               <user10>
+                  <copy>200</copy>
+                  <add src="xxnLocalization()" trait="_optionsLabelWidthAdjust" />
+               </user10>
                
                <rect name="option_mouse_sensitivity">
                   <include src="NorthernUI/fragments/pause/option_slider.xml" />
                   <user11><copy src="strings()" trait="_mousesensitivity" /></user11>
                   <user0>5</user0> <!-- slider ID -->
                   <user1>6</user1> <!-- slider thumb ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect>
                <rect name="option_invert_y">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_inverty" /></user11>
                   <user0>7</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect>
                <rect name="option_swap_sticks">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_swapstickcontrols" /></user11>
                   <user0>8</user0> <!-- button ID -->
-                  <string>Click Here</string>
+                  <string><copy src="xxnStrings()" trait="_controlsClickToSwapSticks" /></string>
                   <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect>
                <rect name="separator">
                   <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
@@ -118,6 +129,7 @@
                   <user0>&generic;</user0> <!-- button ID -->
                   <target>&false;</target>
                   <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect>
                <rect name="option_readout_rightstick">
                   <!-- not a real button -->
@@ -127,6 +139,7 @@
                   <user0>&generic;</user0> <!-- button ID -->
                   <target>&false;</target>
                   <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect>
                <rect name="separator">
                   <locus>&true;</locus>
@@ -164,6 +177,7 @@
                   <user12>...</user12>
                   <string>»</string>
                   <user0>9</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect>
             </rect>
             <rect name="page_bindings">

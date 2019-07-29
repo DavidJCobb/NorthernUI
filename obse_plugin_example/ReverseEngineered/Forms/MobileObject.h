@@ -48,6 +48,7 @@ namespace RE {
          DEFINE_MEMBER_FN(ClearAllMovementFlags,    void,   0x005E05D0);
          DEFINE_MEMBER_FN(GetCharacterProxy,        bhkCharacterProxy*, 0x0065A2C0);
          DEFINE_MEMBER_FN(GetCurrentAction,         SInt32, 0x005E0EE0);
+         DEFINE_MEMBER_FN(IsSwimming,               bool,   0x005E0530);
          DEFINE_MEMBER_FN(ModifyPitch,              void,   0x0065ABC0, float radians);
          DEFINE_MEMBER_FN(ModifyYaw,                void,   0x00659B90, float radians);
          DEFINE_MEMBER_FN(MovementFlagsIncludeWASD, bool,   0x005E05B0);

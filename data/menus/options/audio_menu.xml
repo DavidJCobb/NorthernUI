@@ -35,7 +35,10 @@
                <locus>&true;</locus>
                <width>
                   <copy src="parent()"  trait="width" />
-                  <min>450</min>
+                  <min>
+                     <copy>450</copy>
+                     <add src="xxnLocalization()" trait="_optionsLabelWidthAdjust" />
+                  </min>
                </width>
                <height><copy src="parent()" trait="height" /></height>
                <x>0</x>
@@ -49,6 +52,11 @@
                <xdefault>&true;</xdefault>
                <xlist>&xlist;</xlist>
                
+               <user10>
+                  <copy>200</copy>
+                  <add src="xxnLocalization()" trait="_optionsLabelWidthAdjust" />
+               </user10>
+               
                <rect name="option_volume_master">
                   <include src="NorthernUI/fragments/pause/option_slider.xml" />
                   <listindex><copy>0</copy></listindex> <!-- for some reason, this breaks if we don't use COPY -->
@@ -56,30 +64,35 @@
                   <user11><copy src="strings()" trait="_mastervolume" /></user11> <!-- label -->
                   <user0>1</user0> <!-- slider ID -->
                   <user1>2</user1> <!-- slider thumb ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_volume_voice">
                   <include src="NorthernUI/fragments/pause/option_slider.xml" />
                   <user11><copy src="strings()" trait="_voicevolume" /></user11> <!-- label -->
                   <user0>3</user0> <!-- slider ID -->
                   <user1>4</user1> <!-- slider thumb ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_volume_effect">
                   <include src="NorthernUI/fragments/pause/option_slider.xml" />
                   <user11><copy src="strings()" trait="_effectvolume" /></user11> <!-- label -->
                   <user0>5</user0> <!-- slider ID -->
                   <user1>6</user1> <!-- slider thumb ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_volume_footstep">
                   <include src="NorthernUI/fragments/pause/option_slider.xml" />
                   <user11><copy src="strings()" trait="_footstepvolume" /></user11> <!-- label -->
                   <user0>7</user0> <!-- slider ID -->
                   <user1>8</user1> <!-- slider thumb ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_volume_music">
                   <include src="NorthernUI/fragments/pause/option_slider.xml" />
                   <user11><copy src="strings()" trait="_musicvolume" /></user11> <!-- label -->
                   <user0>9</user0> <!-- slider ID -->
                   <user1>10</user1> <!-- slider thumb ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <xdown><ref src="gameplay_return_button" trait="mouseover" /></xdown>
                </rect> <!-- /menuitem -->

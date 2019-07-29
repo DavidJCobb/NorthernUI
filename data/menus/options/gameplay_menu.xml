@@ -34,7 +34,10 @@
                <locus>&true;</locus>
                <width>
                   <copy src="parent()"  trait="width" />
-                  <min>450</min>
+                  <min>
+                     <copy>450</copy>
+                     <add src="xxnLocalization()" trait="_optionsLabelWidthAdjust" />
+                  </min>
                </width>
                <height><copy src="parent()" trait="height" /></height>
                <x>0</x>
@@ -48,6 +51,11 @@
                <xdefault>&true;</xdefault>
                <xlist>&xlist;</xlist>
                
+               <user10>
+                  <copy>200</copy>
+                  <add src="xxnLocalization()" trait="_optionsLabelWidthAdjust" />
+               </user10>
+               
                <rect name="option_difficulty">
                   <include src="NorthernUI/fragments/pause/option_slider.xml" />
                   <listindex><copy>0</copy></listindex> <!-- for some reason, this breaks if we don't use COPY -->
@@ -57,36 +65,43 @@
                   <user1>2</user1> <!-- slider thumb ID -->
                   <user2>10</user2> <!-- slider jump distance -->
                   <user3>1</user3> <!-- slider step distance -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_subtitles_general">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_generalsubtitles" /></user11>
                   <user0>3</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_subtitles_dialogue">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_dialoguesubtitles" /></user11>
                   <user0>4</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_crosshair">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_crosshair" /></user11>
                   <user0>5</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_autosave_rest">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_saveonrest" /></user11>
                   <user0>6</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_autosave_wait">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_saveonwait" /></user11>
                   <user0>7</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                </rect> <!-- /menuitem -->
                <rect name="option_autosave_travel">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
                   <user11><copy src="strings()" trait="_saveontravel" /></user11>
                   <user0>8</user0> <!-- button ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   
                   <xdown><ref src="gameplay_return_button" trait="mouseover" /></xdown>
                </rect> <!-- /menuitem -->

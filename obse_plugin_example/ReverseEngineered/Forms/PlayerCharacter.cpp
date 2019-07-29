@@ -9,6 +9,7 @@ namespace RE {
    float* const fPlayerCameraPitch   = (float*) 0x00B3BAC4;
    float* const fPlayerCameraYaw     = (float*) 0x00B3BAC8;
    bool*  const bCameraInertiaResetQueued = (bool*) 0x00B14E4D;
+   DetectionState* const iPlayerCurrentDetectionState = (DetectionState*) 0x00B3B368;
    // 0x00B3BB05 may be an "auto vanity" bool, but auto vanity also sets 0x00B3BB04 to true
 
    //constexpr float* fPlayerMoveAnimMult = (float*)0x00B14E58;

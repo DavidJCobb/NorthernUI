@@ -88,7 +88,10 @@
 		</y>
       
       <include src="NorthernUI\cards\border_box_ornate.xml" />
-		<user20>600</user20>
+		<user20>
+         <copy>600</copy>
+         <add src="xxnLocalization()" trait="_effectsettingWidthAdjust" />
+      </user20>
 		<user21>
          <copy src="charge_stats" trait="y" />
          <add  src="charge_stats" trait="height" />

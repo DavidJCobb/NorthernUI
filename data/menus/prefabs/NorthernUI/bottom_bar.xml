@@ -19,6 +19,7 @@
    <y> <!-- align with screen bottom -->
       <copy src="screen()" trait="height" />
       <sub  src="me()"     trait="height" />
+      <sub  src="menu()"   trait="y" />
    </y>
    
    <image name="border_top">

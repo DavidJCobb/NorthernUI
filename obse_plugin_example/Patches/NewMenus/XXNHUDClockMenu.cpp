@@ -43,6 +43,8 @@ void XXNHUDClockMenu::Render() {
       UInt32 i = 0;
       do {
          const char* format = CALL_MEMBER_FN(root, GetStringTraitValue)(kRootTrait_FormatString1 + i);
+         if (!format)
+            continue;
          char formatted[256];
          this->date.Format(formatted, format);
          CALL_MEMBER_FN(root, UpdateString)(kRootTrait_FormattedOutput1 + i, formatted);

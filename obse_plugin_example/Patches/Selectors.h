@@ -3,6 +3,7 @@
 
 extern RE::Tile* g_northernUIDatastore;
 extern RE::Tile* g_northernUIStringstore;
+extern RE::Tile* g_northernUILocConfigTile;
 
 namespace CobbPatches {
    namespace Selectors {

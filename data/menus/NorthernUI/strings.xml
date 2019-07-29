@@ -56,6 +56,10 @@
 
    <!----- CONTROLSMENU ---------------------------------------------------->
    <_controlsMenuEscToCancel>Press Esc to cancel.</_controlsMenuEscToCancel>
+   
+   <!-- This text only appears if the user disables NorthernUI's gamepad 
+        support and chooses to use Oblivion's unfinished support instead: -->
+   <_controlsClickToSwapSticks>Click Here</_controlsClickToSwapSticks>
 
    <!----- DIALOGMENU ------------------------------------------------------>
    <_dialogueMenuBarterItems01>Have anything good for sale?</_dialogueMenuBarterItems01>
@@ -204,6 +208,10 @@
    <_mapMenuNoActiveQuest>No quest has been set as active. Browse to the list of in-progress quests and select one to set it as active and view its objectives. If possible, the maps and your HUD compass will show the location of the active quest's next objective.</_mapMenuNoActiveQuest>
    <_mapMenuNoCompletedQuests>No quests have been completed yet.</_mapMenuNoCompletedQuests>
    <_mapMenuNoInProgressQuests>No quests are in progress right now.</_mapMenuNoInProgressQuests>
+   
+   <!-- Normally, whitespace at the start or end of a piece of text gets ignored. 
+        You can use &nbsp; to intentionally add spacing. -->
+   <_mapMenuZoomLabel>Zoom:&nbsp;</_mapMenuZoomLabel>
 
    <!----- NEGOTIATEMENU --------------------------------------------------->
    <!-- This menu allows you to choose how you plan on haggling with merchants. 
@@ -312,6 +320,51 @@
 
    <!----- TRAININGMENU ---------------------------------------------------->
    <_trainingMenuButtonTrain>Train</_trainingMenuButtonTrain>
+
+   <!----- XXNHUDCLOCKMENU-------------------------------------------------->
+   <_hudClockLine1>%sw, %ih:%2im %sh</_hudClockLine1>
+   <_hudClockLine2>%iD%sD of %sM</_hudClockLine2>
+   <!--
+      You can edit the two lines above to customize how the HUD Clock shows 
+      the in-game date and time. These lines consist of several placeholders 
+      which mark where the game should show the date, the month, the year, 
+      the hour, the minute, the second, and so on. Here is a list of the 
+      most useful placeholders:
+      
+      %sw      | The weekday.
+      %iD      | The date of the month.
+      %sD      | The ordinal suffix for the date of the month, e.g. "4th."
+      %SD      | The ordinal suffix in caps, e.g. "4TH."
+      %iM      | The month's number, from 1 to 12.
+      %sM      | The name of the month.
+      %iY      | The current year. Does not include the 3E suffix.
+      %ih      | The hour, on a 12-hour clock.
+      %sh      | The "am" or "pm" suffix for the hour.
+      %Sh      | The "AM" or "PM" suffix for the hour.
+      %2im     | The minute, padded to two digits (e.g. "03").
+      %2is     | The second, padded to two digits (e.g. "06").
+      %sS      | The season (Spring, Summer, Fall, Winter).
+      
+      And here are some examples, using the fictional names for months and 
+      weekdays seen in English Oblivion.
+      
+      %sw, %id%sd of %sm      | Sundas, 3rd of Last Seed
+      %sw %2id %sm            | Sundas 03 Last Seed
+      %2id/%2im 3E%iy         | 03/08 3E427
+      %ih:%2im %sh            | 2:13 pm
+      %ih:%2im %Sh            | 2:13 PM
+      asdf %% asdf %%         | asdf % asdf %
+      
+      Here are those same examples, but with real-world month an weekday 
+      names, for clarity:
+      
+      %sw, %id%sd of %sm      | Sunday, 3rd of August
+      %sw %2id %sm            | Sunday 03 August
+      %2id/%2im 3E%iy         | 03/08 3E2019
+      %ih:%2im %sh            | 2:13 pm
+      %ih:%2im %Sh            | 2:13 PM
+      asdf %% asdf %%         | asdf % asdf %
+   -->
    
    <!----- XXNOPTIONSMENU -------------------------------------------------->
    <_optionHintRequiresRestart>(requires restart)</_optionHintRequiresRestart>

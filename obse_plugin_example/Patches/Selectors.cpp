@@ -9,8 +9,9 @@
 #include "obse/GameTiles.h"
 #include "obse_common/SafeWrite.h"
 
-extern RE::Tile* g_northernUIDatastore   = nullptr;
-extern RE::Tile* g_northernUIStringstore = nullptr;
+extern RE::Tile* g_northernUIDatastore     = nullptr;
+extern RE::Tile* g_northernUIStringstore   = nullptr;
+extern RE::Tile* g_northernUILocConfigTile = nullptr;
 
 namespace CobbPatches {
    namespace Selectors {
@@ -83,7 +84,15 @@ namespace CobbPatches {
          namespace Setup { // Patch InterfaceManager::InitializeMenuRootAndStrings
             constexpr char* pathDatastore = "Data\\Menus\\NorthernUI\\datastore.xml";
             constexpr char* pathStrings   = "Data\\Menus\\NorthernUI\\strings.xml";
+            constexpr char* pathLocCfg    = "Data\\Menus\\NorthernUI\\localizationconfig.xml";
             void Inner(RE::Tile* menuRoot) {
+               if ((*g_FileFinder)->FindFile(pathLocCfg, 0, 0, -1) == FileFinder::kFileStatus_NotFound) {
+                  _MESSAGE("XXNLocalization file is missing. The xxnLocalization tile will be nullptr.");
+               } else {
+                  g_northernUILocConfigTile = CALL_MEMBER_FN(menuRoot, ReadXML)(pathLocCfg);
+                  if (g_northernUILocConfigTile)
+                     CALL_MEMBER_FN(g_northernUILocConfigTile, AppendToTile)(nullptr, nullptr); // remove from Tile hierarchy
+               //
                if ((*g_FileFinder)->FindFile(pathDatastore, 0, 0, -1) == FileFinder::kFileStatus_NotFound) {
                   _MESSAGE("Datastore file is missing. The datastore will be nullptr.");
                } else {
@@ -93,11 +102,12 @@ namespace CobbPatches {
                }
                //
                if ((*g_FileFinder)->FindFile(pathStrings, 0, 0, -1) == FileFinder::kFileStatus_NotFound) {
-                  _MESSAGE("XXNStrings file is missing. The xxnStrings will be nullptr.");
+                  _MESSAGE("XXNStrings file is missing. The xxnStrings tile will be nullptr.");
                } else {
                   g_northernUIStringstore = CALL_MEMBER_FN(menuRoot, ReadXML)(pathStrings);
                   if (g_northernUIStringstore)
                      CALL_MEMBER_FN(g_northernUIStringstore, AppendToTile)(nullptr, nullptr); // remove from Tile hierarchy
+               }
                }
                //
                OnINIChange(nullptr, 0, 0); // apply traits that are drawn from INI settings, for initial load (we'd do this in the outermost Apply() but the tile doesn't exist then!)
@@ -177,6 +187,9 @@ namespace CobbPatches {
             RE::Tile* XXNStrings(const char* arg) {
                return g_northernUIStringstore;
             };
+            RE::Tile* XXNLocalization(const char* arg) {
+               return g_northernUILocConfigTile;
+            };
          };
          __declspec(naked) void Outer() {
             //
@@ -193,6 +206,8 @@ namespace CobbPatches {
                je   lXXNStrings;
                cmp  eax, CobbPatches::TagIDs::_traitDescendant; // descendant(tilename)
                je   lDescendant;
+               cmp  eax, CobbPatches::TagIDs::_traitLocConfig; // descendant(tilename)
+               je   lXXNLocalization;
                jmp  lExitUnhandled;
             lDescendant:
                lea  eax, [esp + 0xC];
@@ -218,6 +233,12 @@ namespace CobbPatches {
                lea  eax, [esp + 0xC];
                push eax;
                call Inner::XXNStrings;
+               add  esp, 4;
+               jmp  lExitHandled;
+            lXXNLocalization:
+               lea  eax, [esp + 0xC];
+               push eax;
+               call Inner::XXNLocalization;
                add  esp, 4;
                //
                // When adding new cases, make sure that all but the last end with the 

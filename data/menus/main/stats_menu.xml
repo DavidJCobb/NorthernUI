@@ -25,10 +25,16 @@
    <_valueColorG_3> 64</_valueColorG_3>
    <_valueColorB_3> 64</_valueColorB_3>
    
-   <_skillListRowHeight>        69</_skillListRowHeight>
-   <_skillListColWidthType>     70</_skillListColWidthType>
+   <_skillListRowHeight>69</_skillListRowHeight>
+   <_skillListColWidthType>
+      <copy>70</copy>
+      <add src="xxnLocalization()" trait="_statsColumnAdjustSkillType" />
+   </_skillListColWidthType>
    <_skillListColWidthProgress>215</_skillListColWidthProgress>
-   <_skillListColWidthValue>    55</_skillListColWidthValue>
+   <_skillListColWidthValue>
+      <copy>55</copy>
+      <add src="xxnLocalization()" trait="_statsColumnAdjustSkillValue" />
+   </_skillListColWidthValue>
    
    <_factionListRowHeight>  155</_factionListRowHeight>
    <_factionListIconX>       15</_factionListIconX>
@@ -1785,7 +1791,10 @@
 			<depth>3</depth>
 			<width>
             <copy src="parent()" trait="width" />
-            <min>400</min>
+            <min>
+               <copy>400</copy>
+               <add src="xxnLocalization()" trait="_statsMiscStatWidthAdjust" />
+            </min>
          </width>
 			<height><copy src="StatsMenu" trait="_miscStatListRowHeight" /></height>
 			<x>0</x>

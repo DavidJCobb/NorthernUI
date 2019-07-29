@@ -34,7 +34,10 @@
       <copy src="screen()" trait="width" />
       <mult>0.833333333</mult>
       <min>1060</min>
-      <max> 600</max>
+      <max>
+         <copy>600</copy>
+         <add src="xxnLocalization()" trait="_pauseMinWidthAdjust" />
+      </max>
    </user20>
    <user21>640</user21>
    <user22>&false;</user22> <!-- box-sizing:border-box -->

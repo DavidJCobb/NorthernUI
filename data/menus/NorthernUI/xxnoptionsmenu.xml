@@ -22,6 +22,13 @@
    <user19><copy src="xxnStrings()" trait="_optEnumEnhancedCameraInertiaStandard" /></user19>
    <user20><copy src="xxnStrings()" trait="_optEnumEnhancedCameraInertiaFixed" /></user20>
    <user21><copy src="xxnStrings()" trait="_optEnumEnhancedCameraInertiaDisabled" /></user21>
+   
+   <_labelColMinWidth>  300</_labelColMinWidth>
+   <_controlColMaxWidth>200</_controlColMaxWidth>
+   <_preferredTotalWidth>
+      <copy src="me()" trait="_labelColMinWidth" />
+      <add  src="me()" trait="_controlColMaxWidth" />
+   </_preferredTotalWidth>
 
    <rect name="content_space">
       <include src="NorthernUI/fragments/pause/base.xml" />
@@ -104,7 +111,11 @@
                      <add>16</add>
                      <onlyif src="pause_submenu_scrollbar" trait="visible" />
                   </sub>
-                  <min>500</min>
+                  <min>
+                     <copy src="menu()" trait="_preferredTotalWidth" />
+                     <add src="xxnLocalization()" trait="_xxnOptionsLabelWidthAdjust" />
+                     <add src="xxnLocalization()" trait="_xxnOptionsControlWidthAdjust" />
+                  </min>
                </width>
                <height><copy src="parent()" trait="height" /></height>
                <x>0</x>
@@ -122,7 +133,10 @@
                <xlist>&xlist;</xlist>
                <xscroll><ref src="pause_submenu_scrollbar" trait="user5" /></xscroll>
                
-               <user10>300</user10>
+               <user10>
+                  <copy src="menu()" trait="_labelColMinWidth" />
+                  <add src="xxnLocalization()" trait="_xxnOptionsLabelWidthAdjust" />
+               </user10>
                
                <rect name="option_local_map_resolution">
                   <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />

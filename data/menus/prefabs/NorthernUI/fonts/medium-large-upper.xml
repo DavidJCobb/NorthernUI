@@ -1,4 +1,6 @@
 <!-- Use this prefab to specify a font in between the normal and 
      large sizes, with all glyphs forced to uppercase. -->
 <font>1</font>
-<xxnFontPath>Data\Fonts\OpenSansCB36Upper.fnt</xxnFontPath>
+<!-- <xxnFontPath>Data\Fonts\OpenSansCB36Upper.fnt</xxnFontPath> -->
+
+<xxnFontPath><copy src="NorthernUI()" trait="_fontMediumLargeUpper" /></xxnFontPath>

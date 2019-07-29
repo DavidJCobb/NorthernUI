@@ -312,43 +312,43 @@ void XXNOptionsMenu::Setup() {
    //
    {  // handle barter-confirm-handler labels
       this->optionBarterConfirmHandlerDefault.values.reserve(3);
-      this->optionBarterConfirmHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerAlways));
-      this->optionBarterConfirmHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerIfNotFree));
-      this->optionBarterConfirmHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerNever));
+      this->optionBarterConfirmHandlerDefault.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerAlways));
+      this->optionBarterConfirmHandlerDefault.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerIfNotFree));
+      this->optionBarterConfirmHandlerDefault.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerNever));
       this->optionBarterConfirmHandlerAlt.values.reserve(3);
-      this->optionBarterConfirmHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerAlways));
-      this->optionBarterConfirmHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerIfNotFree));
-      this->optionBarterConfirmHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerNever));
+      this->optionBarterConfirmHandlerAlt.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerAlways));
+      this->optionBarterConfirmHandlerAlt.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerIfNotFree));
+      this->optionBarterConfirmHandlerAlt.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerNever));
       this->optionBarterConfirmHandlerCtrl.values.reserve(3);
-      this->optionBarterConfirmHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerAlways));
-      this->optionBarterConfirmHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerIfNotFree));
-      this->optionBarterConfirmHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerNever));
+      this->optionBarterConfirmHandlerCtrl.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerAlways));
+      this->optionBarterConfirmHandlerCtrl.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerIfNotFree));
+      this->optionBarterConfirmHandlerCtrl.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_BarterConfirmHandlerNever));
    }
    {  // handle quantity-handler labels
       this->optionQuantityHandlerDefault.values.reserve(3);
-      this->optionQuantityHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
-      this->optionQuantityHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
-      this->optionQuantityHandlerDefault.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
+      this->optionQuantityHandlerDefault.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
+      this->optionQuantityHandlerDefault.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
+      this->optionQuantityHandlerDefault.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
       this->optionQuantityHandlerAlt.values.reserve(3);
-      this->optionQuantityHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
-      this->optionQuantityHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
-      this->optionQuantityHandlerAlt.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
+      this->optionQuantityHandlerAlt.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
+      this->optionQuantityHandlerAlt.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
+      this->optionQuantityHandlerAlt.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
       this->optionQuantityHandlerCtrl.values.reserve(3);
-      this->optionQuantityHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
-      this->optionQuantityHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
-      this->optionQuantityHandlerCtrl.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
+      this->optionQuantityHandlerCtrl.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerDefault));
+      this->optionQuantityHandlerCtrl.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeOne));
+      this->optionQuantityHandlerCtrl.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_QuantityHandlerTakeAll));
    }
    {  // handle enhanced camera mode labels
       this->optionEnhancedCamera.values.reserve(3);
-      this->optionEnhancedCamera.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraBehaviorOblivion));
-      this->optionEnhancedCamera.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraBehaviorSkyrim));
-      this->optionEnhancedCamera.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraBehaviorFree));
+      this->optionEnhancedCamera.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraBehaviorOblivion));
+      this->optionEnhancedCamera.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraBehaviorSkyrim));
+      this->optionEnhancedCamera.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraBehaviorFree));
    }
    {  // handle chase camera mode labels
       this->optionCameraInertia.values.reserve(3);
-      this->optionCameraInertia.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraInertiaStandard));
-      this->optionCameraInertia.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraInertiaFixed));
-      this->optionCameraInertia.values.push_back(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraInertiaDisabled));
+      this->optionCameraInertia.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraInertiaStandard));
+      this->optionCameraInertia.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraInertiaFixed));
+      this->optionCameraInertia.AddValue(CALL_MEMBER_FN(this->tile, GetStringTraitValue)(kRootTrait_EnhancedCameraInertiaDisabled));
    }
    this->optionLocalMapRes.Set(NorthernUI::INI::Display::uLocalMapResolutionPerCell.iCurrent, true);
    this->optionSuppressDLCPopups.Set(NorthernUI::INI::Features::bSuppressDLCStartup.bCurrent);

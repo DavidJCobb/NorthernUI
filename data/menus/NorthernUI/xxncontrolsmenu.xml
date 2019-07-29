@@ -150,7 +150,6 @@
                      <add>16</add>
                      <onlyif src="pause_submenu_scrollbar" trait="visible" />
                   </sub>
-                  <min>550</min>
                </width>
                <height><copy src="parent()" trait="height" /></height>
                <x>0</x>
