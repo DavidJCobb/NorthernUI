@@ -1,0 +1,162 @@
+Tile* Tile::CreateTemplatedChildren(Arg1) {
+   Tile* ebp = this;
+   Tile* result = nullptr;
+   auto  ebx = Arg1->unk0C.start;
+   if (!ebx)
+      return result;
+   do {
+      Tile::TileTemplateItem* edi = ebx->data;
+      ebx = ebx->next;
+      eax = edi->unk00;
+      if (eax == kCode_TileStart) { // 0x28
+         esi = CreateTile(ebp, (SInt32)edi->unk04);
+         if (!esi) {
+            // jumped to 0x005903BD
+            Log4A7A60("Unable to create tile. Aborting menu creation.");
+            return nullptr;
+         }
+         esi->Unk_01(this, nullptr, nullptr);
+         esi->name.Replace_MinBufLen(&edi->name.m_data, 0);
+         if (!result)
+            result = esi;
+         edi->unk10 = esi;
+         ebp = esi;
+      } else if (eax == kCode_TileEnd) // 0x2D
+         ebp = ebp->parent;
+   } while (ebx);
+   return result;
+}
+
+namespace MenuQue {
+   Tile* Tile::CreateTemplatedChildren(Arg1) {
+      auto ebp0C = this;
+      auto ecx   = Arg1->unk10;
+      auto esi   = 0;
+      auto edi   = 0;
+      auto eax   = 0;
+      auto edx   = 0;
+      auto ebp2C = edi;
+      Tile* ebp1C = eax; // result
+      auto ebp20 = edx;
+      auto ebp10 = esi;
+      auto ebp14 = esi;
+      auto ebp18 = 0;
+      auto ebp24 = 0;
+      if (!ecx)
+         return nullptr;
+      do {
+         ecx = ebp08;
+         edi = ebp2C;
+         edx = ebp20;
+         Tile::TileTemplateItem* ebx = ebp08->data;
+         eax = ebp->unk00;
+         ebp08 = ebp08->next;
+         char ebp08 = 0;
+         if (eax == 0x28) { // at $+1E87D
+            ebp01 = 1;
+            if (edx) { // at $+1E883
+               if (ebp10) {
+                  edx->name.Replace_MinBufLen(ebp10->name.m_data);
+                  ebp10 = nullptr;
+               }
+               if (!ebp14)
+                  jump to $+1EAA9;
+               eax = ebp14->name.m_data; // via a MenuQue getter
+               edi = ebp08;
+               if (!*(0x00B3B0A8) || **(0x00B3B0A8) != edi) {
+                  // jumped to $+1EA86
+                  ecx = edi->unk08;
+                  if (!ecx)
+                     jump to $+1EAA6;
+                  eax = TES4_0058BC80(eax);
+               } else {
+                  ecx = edi->unk08;
+                  if (!ecx)
+                     jump to $+1EAA6;
+                  ($+1ED90)(eax);
+               }
+               // jumped to $+1EA93
+               if (!eax)
+                  jump to $+1EAA6;
+               ebp08 = edi->($+1E590)(eax, ebp24);
+               // at $+1EAA6
+               ebp14 = 0;
+               if (ebp18) // at $+1EAA9
+                  ebp18 = 0;
+               ebp20 = 0;
+            }
+            if (!ebp01) // at $+1EAB4
+               continue;
+            ebp2C = edi = CreateTile(ebp0C, (UInt32)ebx->unk04);
+            if (!edi) {
+               // jumped to $+1EB39
+               if (*MQ_4E400)
+                  MQ_4E400 = unknownLogger("Tile::XMLParseTilesEx", "Unable to create tile. Abort tile parsing.");
+               return nullptr;
+            }
+            edi->Unk_01(ebp0C, nullptr, nullptr);
+            if (ebx->name.m_data)
+               edi->name.Replace_MinBufLen(ebx->name.m_data, 0);
+            ebx->unk10 = edi;
+            ebp0C = edi;
+            if (!ebp1C)
+               ebp1C = edi;
+            continue;
+         } else if (eax == 0x2D) {
+            if (edx) {
+               if (ecx) {
+                  ebp08 = ecx->unk04;
+               } else {
+                  ebp08 = nullptr;
+               }
+               jump to $+1E883;
+            } else {
+               // at $+1E8FF
+               edx = ebp0C->unk10;
+               ebp0C = edx;
+               continue;
+            }
+         } else if (eax == 0x2A) { // at $+1E910
+            if (!edi)
+               continue;
+            ebp20 = edi;
+            if ((float)kAttrID_name == ebx->unk04) { // at $+1E931
+               if (ebp10) {
+                  if (!*MQ_4E410)
+                     jump to $+1EA70;
+                  MQ_4E410 = unknownLogger("Tile::XMLParseTilesEx", "Attribute 'name' already used for tile, skipping it....");
+               } else
+                  ebp10 = ebx; // at $+1E96A
+               jump to $+1EA70;
+            } else if ((float)kAttrID_src == ebx->unk04) { // at $+1E972
+               if (ebp14) {
+                  if (!*MQ_4E40C)
+                     jump to $+1EA70;
+                  MQ_4E40C = unknownLogger("Tile::XMLParseTilesEx", "Attribute 'src' already used for tile, skipping it....");
+               } else
+                  ebp14 = ebx;
+               jump to $+1EA70;
+            } else if ((float)kAttrID_MenuQue_dest == ebx->unk04) { // at $+1E9D3 // 3005 == 0xBBD
+               if (ebp18) {
+                  if (!*MQ_4E408)
+                     jump to $+1EA70;
+                  MQ_4E408 = unknownLogger("Tile::XMLParseTilesEx", "Attribute 'dest' already used for tile, skipping it....");
+               } else
+                  ebp18 = ebx;
+               jump to $+1EA70;
+            }
+            if (!*MQ_4E404)
+               jump to $+1EA70;
+            MQ_4E404 = unknownLogger("Tile::XMLParseTilesEx", "Unknown attribute '%s=%s', skipping it...", TagIDToTagName(ebx->unk04), ebx->unk08.m_data);
+            // at $+1EA70
+            eax = ebp08;
+            if (!eax)
+               return ebp1C;
+            ebp24 = eax->unk04;
+            continue;
+         } else
+            jump to $+1E883;
+      } while (ebp08);
+   }
+   return ebp1C;
+}

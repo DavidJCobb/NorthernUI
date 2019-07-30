@@ -80,13 +80,16 @@
       These settings influence the Stats menu.
    <---------------------------------------------------------------------- -->
    
-      <!-- Increase the width of the Skill Type (Major/Minor) column. -->
+      <!-- Modify the width of the Skill Type (Major/Minor) column. -->
       <_statsColumnAdjustSkillType>0</_statsColumnAdjustSkillType>
    
-      <!-- Increase the width of the Skill Level column. -->
+      <!-- Modify the width of the Skill Level column. -->
       <_statsColumnAdjustSkillValue>0</_statsColumnAdjustSkillValue>
    
-      <!-- Increase the width used to display Misc Stats. -->
+      <!-- Modify the width of the Skill Progress column. -->
+      <_statsColumnAdjustSkillProgress>0</_statsColumnAdjustSkillProgress>
+   
+      <!-- Modify the width used to display Misc Stats. -->
       <_statsMiscStatWidthAdjust>0</_statsMiscStatWidthAdjust>
       
       
@@ -100,6 +103,9 @@
       
       <!-- Increase the width of sliders, buttons, etc., by this amount. -->
       <_xxnOptionsControlWidthAdjust>0</_xxnOptionsControlWidthAdjust>
+      
+      <!-- Use alternate positioning for "requires restart" text. -->
+      <_xxnOptionsRequiresRestartInside>&false;</_xxnOptionsRequiresRestartInside>
       
       
 </rect>

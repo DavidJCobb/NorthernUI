@@ -229,9 +229,9 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
       float esp38 = esp68 * INI:Controls:fMouseSensitivity; // patched by NorthernUI
       this->ModPitch(esp38);
    }
-   if (this->process->TES4_00633250()) { // something to do with HighProcess::unk2BC
-      if (this->unk574)
-         this->TES4_0066A670();
+   if (this->process->TES4_00633250()) { // something to do with HighProcess::unk2BC // at 0x00671DAB
+      if (this->telekinesisSpring)
+         this->TES4_0066A670(); // sever the connection and release the grabbed object?
       this->TES4_0065E900();
       this->isThirdPerson = !this->isThirdPerson;
       this->TES4_00603CA0(Arg1); // WalkBlessed hooks inside this member function
@@ -242,6 +242,7 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
    }
    //
    // == at 0x00671B99 ==
+   // This code occurs earlier, up at the vanity control stuff, and is jumped to by 0x00671DAB.
    //
    if (this->unk71D || this->unk71C)
       jump to 0x006735D0; // at 0x00671BAD
@@ -254,13 +255,12 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
    }
    if ((*g_thePlayer)->process->GetCurrentPackage())
       (*g_thePlayer)->process->SetCurrentPackage(nullptr);
-   if (this->bCanLevelUp && INI:GamePlay:bInstantLevelUp) { // do instant level up when applicable
+   if (this->bCanLevelUp && INI:GamePlay:bInstantLevelUp) { // do instant level up when applicable // at 0x00671C30
       AdvancePCLevel();
       return;
    }
    //
    // == at 0x00671E16 ==
-   // jumped to from above
    //
    this->TES4_006606F0();
    TES4_0065DA20();

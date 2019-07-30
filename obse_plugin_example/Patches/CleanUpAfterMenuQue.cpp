@@ -43,7 +43,7 @@ namespace CobbPatches {
          };
          //
          // KNOWN MENUQUE PATCH SITES NOT CLEANED UP BY US:
-         //  - 0x00403F60 - Patches Singleton00B33398::InputManager::RebindControl.
+         //  - 0x00403F60 - Patches OSInputGlobals::RebindControl.
          //  - 0x0057CEE0 - Patches the very start of InterfaceMenu::ForceCloseAllActiveMenus.
          //  - 0x00582547 - NOPs several instructions in InterfaceManager::Update, with the apparent intention of allowing tiles without IDs to send mouse-up events.
          //  - 0x0058391E - Patches InterfaceManager::Update, with the apparent intention of forcing code that forwards an exit-button click to LoadgameMenu to send the tile pointer rather than just ID#1 and nullptr.
@@ -52,7 +52,6 @@ namespace CobbPatches {
          //  - 0x0058B039 - Patches the very end of Tile::DefineTileValuesAndTraits in order to define MenuQue traits.
          //  - 0x0058B86D - Replaces all behavior for the parent() selector.
          //  - 0x0058C01A - Patches Tile::Value::DoActionEnumeration.
-         //  - 0x0058D1AC - Patches the very end of Tile::UpdateTemplatedChildren.
          //  - 0x0058DA77 - Patches Tile::Subroutine0058DA70.
          //  - 0x00590330 - Patches the very start of Tile::CreateTemplatedChildren.
          //  - 0x005910AC - One of eight patch sites apparently used to allow case-insensitive texture paths in menus.
@@ -267,7 +266,7 @@ namespace CobbPatches {
             {0x0058C798,  1}, // Tile::Value::DoActionEnumeration
             {0x0058C7BA,  1}, // Tile::Value::DoActionEnumeration
             {0x0058C85F,  1}, // Tile::Value::DoActionEnumeration
-            {0x0058CF66,  1}, // Tile::UpdateTemplatedChildren
+            {0x0058CF66,  1}, // Tile::UpdateTemplatedChildren // apparently does special processing when MenuQue's XML entities for behavior are used
             {0x0058D0F8,  1}, // Tile::UpdateTemplatedChildren
             {0x0058D1AC,  5}, // Tile::UpdateTemplatedChildren
             {0x0058D2F0,  2}, // Struct0058BCD0::AddTemplateItem

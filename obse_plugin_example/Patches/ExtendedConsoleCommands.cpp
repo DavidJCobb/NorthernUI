@@ -10,6 +10,7 @@
 //
 #include "Services/INISettings.h"
 #include "Services/TileDump.h"
+#include "Selectors.h"
 
 #include "ReverseEngineered/Miscellaneous.h" // quest testing
 #include "obse/GameData.h" // quest testing
@@ -142,27 +143,36 @@ namespace CobbPatches {
             }
             SInt32      menuID = 0;
             const char* name   = args;
-            {
-               char* end = nullptr;
-               menuID = strtoul(args, &end, 10);
-               if (!(end && *end == ' ')) {
-                  menuID = 0;
-               } else {
-                  name = end + 1;
+            RE::Tile*   tile   = nullptr;
+            if (stricmp(name, "northernui()") == 0) {
+               tile = g_northernUIDatastore;
+            } else if (stricmp(name, "xxnstrings()") == 0) {
+               tile = g_northernUIStringstore;
+            } else if (stricmp(name, "xxnlocalization()") == 0) {
+               tile = g_northernUILocConfigTile;
+            } else {
+               {
+                  char* end = nullptr;
+                  menuID = strtoul(args, &end, 10);
+                  if (!(end && *end == ' ')) {
+                     menuID = 0;
+                  } else {
+                     name = end + 1;
+                  }
                }
-            }
-            auto ui   = RE::InterfaceManager::GetInstance();
-            auto tile = ui->menuRoot;
-            if (menuID) {
-               menuID -= 0x3E9;
-               if (menuID > 0 && menuID < g_TileMenuArray->capacity) {
-                  TileMenu* menu = g_TileMenuArray->data[menuID];
-                  if (menu)
-                     tile = (RE::Tile*)menu;
+               auto ui = RE::InterfaceManager::GetInstance();
+               tile = ui->menuRoot;
+               if (menuID) {
+                  menuID -= 0x3E9;
+                  if (menuID > 0 && menuID < g_TileMenuArray->capacity) {
+                     TileMenu* menu = g_TileMenuArray->data[menuID];
+                     if (menu)
+                        tile = (RE::Tile*)menu;
+                  }
                }
+               if (!tile->name.m_data || strcmp(tile->name.m_data, name) != 0)
+                  tile = RE::GetDescendantTileByName(tile, name);
             }
-            if (!tile->name.m_data || strcmp(tile->name.m_data, name) != 0)
-               tile = RE::GetDescendantTileByName(tile, name);
             if (tile) {
                _MESSAGE("tileInfo: tile %s found.", tile->name.m_data);
                TileDump(tile);

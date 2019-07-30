@@ -191,11 +191,24 @@
                      <x>
                         <copy src="parent()" trait="width" />
                         <add>32</add>
+                        <min>
+                           <copy src="sibling(checkbox)" trait="x" />
+                           <sub>8</sub>
+                           <sub  src="me()" trait="width" />
+                           <add>
+                              <copy>9999</copy>
+                              <onlyif>
+                                 <copy src="xxnLocalization()" trait="_xxnOptionsRequiresRestartInside" />
+                                 <neq>&true;</neq>
+                              </onlyif>
+                           </add>
+                        </min>
                      </x>
                      <y>
                         <copy src="parent()" trait="height" />
                         <sub  src="me()"     trait="height" />
                         <div>2</div>
+                        <add>1</add>
                      </y>
                      <depth>0</depth>
                      <red>
@@ -203,8 +216,7 @@
                         <max>
                            <copy>255</copy>
                            <onlyif>
-                              <copy src="parent()" trait="mouseover" />
-                              <add  src="sibling(enumpicker)" trait="_mouseover_any" />
+                              <copy src="parent()" trait="_mouseover_any" />
                               <gt>0</gt>
                            </onlyif>
                         </max>

@@ -124,7 +124,18 @@ namespace CobbPatches {
                   if (!tagIdOrTraitValue && aValue[0] == '_')
                      tagIdOrTraitValue = RE::GetOrCreateTempTagID(aValue, -1);
                   auto tItemNew = RE::Tile::TileTemplateItem::Create(aId, tagIdOrTraitValue, aValue, (SInt32)tagIdOrTraitValue, aLineNo); // ebp
-                  {
+                  bool shouldDoStrNumCheck = true;
+                  if (g_menuQue.detected) {
+                     shouldDoStrNumCheck = false;
+                     if (aId == ParseCode::kCode_MQTextContent) {
+                        if (0.0F == tagIdOrTraitValue) {
+                           if (-1.0F != tagIdOrTraitValue) {
+                              shouldDoStrNumCheck = true;
+                           }
+                        }
+                     }
+                  }
+                  if (shouldDoStrNumCheck) {
                      /*// Vanilla code. Should be retained for reference.
                      bool   isNumber = true;
                      UInt32 i = 0; // edx

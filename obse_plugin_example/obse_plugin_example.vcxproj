@@ -380,11 +380,15 @@
     <None Include="exports.def" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="ReverseEngineered\DOCS\GetOrCreateTempTraitID.txt" />
+    <Text Include="ReverseEngineered\DOCS\ParseXML.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00470D20.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine004723A0.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00474530.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00476D10.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\PlayerCharacter\Subroutine00671620.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\CreateTemplatedChildren.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\UpdateTemplatedChildren.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

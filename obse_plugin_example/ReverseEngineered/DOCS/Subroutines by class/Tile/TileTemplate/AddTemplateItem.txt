@@ -26,7 +26,7 @@ void TileTemplate::AddTemplateItem(UInt32 aId, const char* aValue, UInt32 aLineN
    if (!Arg4)
       esp14 = TileStrToStrId(aValue);
    if (!esp14 && aValue[0] == '_')
-      esp14 = GetOrCreateTempTagID(aValue, -1);
+      esp14 = GetOrCreateTempTraitID(aValue, -1);
    auto ebp = new Tile::TileTemplateItem(Arg1, esp14, aValue, (SInt32)esp14, aLineNo); // newTemplateItem
    {
       bool   isNumber = true;
@@ -41,18 +41,18 @@ void TileTemplate::AddTemplateItem(UInt32 aId, const char* aValue, UInt32 aLineN
       }
       if (isNumber) {
          if (-1.0 == esp14) // at 0x0058D40E
-            sscanf(value, "%f", &esp14);
+            sscanf(aValue, "%f", &esp14);
          if (0.0 == esp14)
-            sscanf(value, "%f", &esp14);
+            sscanf(aValue, "%f", &esp14);
          ebp->string.Replace_MinBufLen("", 0);
          ebp->tagType = esp14;
-         ebp->unk10 = (SInt32)esp14;
+         ebp->result  = (SInt32)esp14;
       }
    }
    auto edx = this; // at 0x0058D465
-   Tile::TemplateItem* ebx = nullptr; // = node[length - 1].data // Z
-   Tile::TemplateItem* esi = nullptr; // = node[length - 2].data // Y
-   Tile::TemplateItem* edi = nullptr; // = node[length - 3].data // X
+   Tile::TileTemplateItem* ebx = nullptr; // = node[length - 1].data // Z
+   Tile::TileTemplateItem* esi = nullptr; // = node[length - 2].data // Y
+   Tile::TileTemplateItem* edi = nullptr; // = node[length - 3].data // X
    {
       auto eax = this->items.end;
       if (eax) {
@@ -73,7 +73,7 @@ void TileTemplate::AddTemplateItem(UInt32 aId, const char* aValue, UInt32 aLineN
          if (ebx->tagType == (float)0x3E7) {
             auto owner = this->owner; // 0x0058D4C9
             if (owner->unk0C) {
-               Log004A7A60("Can't have nested template definitions in an XML file.";
+               Log004A7A60("Can't have nested template definitions in an XML file.");
                ebx = nullptr;
             } else {
                TileTemplate* eax = owner->GetTileTemplate(aValue);
@@ -105,8 +105,8 @@ void TileTemplate::AddTemplateItem(UInt32 aId, const char* aValue, UInt32 aLineN
          }
       }
       // jumped to 0x0058D632
-      ebp->unk00 = ParseCode::kCode_Trait;
-      ebp->unk10 = kTileValue_name;
+      ebp->unk00  = ParseCode::kCode_Trait;
+      ebp->result = kTileValue_name;
       this->items.Append(ebp);
       return;
    }
@@ -126,14 +126,14 @@ void TileTemplate::AddTemplateItem(UInt32 aId, const char* aValue, UInt32 aLineN
                if (esi->tagType == esp14) { // at 0x0058D6A9
                   if (IsTrait(ebp->tagType)) {
                      esi->unk00 = ParseCode::kCode_Trait; // near 0x0058D6DA
-                  } else if (IsOperator(ebp->tagType) { // near 0x0058D6E2
+                  } else if (IsOperator(ebp->tagType)) { // near 0x0058D6E2
                      esi->unk00 = ParseCode::kCode_TraitActionDefinition;
                   } else {
                      esi->unk00 = -1;
                      Log004A7A60("Bad trait/action type in XML");
                   }
                   // at 0x0058D71D
-                  esi->unk10 = (SInt32)esi->tagType;
+                  esi->result  = (SInt32)esi->tagType;
                   esi->tagType = ebx->tagType;
                   esi->string.Replace_MinBufLen(ebx->string.m_data, 0);
                   auto esi = this->items.RemoveLast();
@@ -153,10 +153,10 @@ void TileTemplate::AddTemplateItem(UInt32 aId, const char* aValue, UInt32 aLineN
          if (
             ebx->unk00 == kTileValue_trait
          && esi && esi->unk00 == kTileValue_src
-         && edi && edi->unk00 == ParseCode::kCode_TraitActionStart && edi->unk04 == (float)???
+         && edi && edi->unk00 == ParseCode::kCode_TraitActionStart && edi->unk04 == esp14
          ) {
-            edi->unk00 = ParseCode::kCode_TraitActionLink;
-            edi->unk10 = (SInt32)edi->tagType;
+            edi->unk00   = ParseCode::kCode_TraitActionLink;
+            edi->result  = (SInt32)edi->tagType;
             edi->tagType = ebx->tagType;
             edi->string.CopyNameFromOther(&esi->string);
             auto esi = this->items.RemoveLast();
@@ -179,12 +179,12 @@ void TileTemplate::AddTemplateItem(UInt32 aId, const char* aValue, UInt32 aLineN
       ; // just FPU manip // at 0x0058D87D
    }
    // at 0x0058D87F
-   if (IsTrait(ebp->unk10)) { // at 0x0058D895
+   if (IsTrait(ebp->result)) { // at 0x0058D895
       if (ebp->unk00 == ParseCode::kCode_StartTag)
          ebp->unk00 = ParseCode::kCode_SetNextTagname;
       else if (ebp->unk00 == ParseCode::kCode_EndTag)
          ebp->unk00 = ParseCode::kCode_ClearNextTagname;
-   } else if (IsOperator(ebp->unk10)) { // at 0x0058D8C2
+   } else if (IsOperator(ebp->result)) { // at 0x0058D8C2
       if (ebp->unk00 == ParseCode::kCode_StartTag)
          ebp->unk00 = ParseCode::kCode_TraitActionStart;
       else if (ebp->unk00 == ParseCode::kCode_EndTag)

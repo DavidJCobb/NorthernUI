@@ -1,0 +1,324 @@
+Struct0058CD30* ParseXML(Arg1, Arg2, Arg3) {
+   enum ParseState {
+      kParseState_FileStart     = 0, // basically the same as 3; just an optimization to avoid checking for a lot of stuff that can only come later in the file
+      kParseState_InTag         = 1, // starting tag unless the first non-control-code char we find is '/'
+      kParseState_SelfClosing   = 2, // we found a "/" indicating a self-closing tag, and are now expecting a ">"
+      kParseState_NotInAnything = 3, // after file start but not in a tag/comment/etc.
+      kParseState_InComment     = 4,
+      kParseState_InAttrName    = 5,
+      kParseState_InAttrValue   = 6,
+   }
+   
+   auto edi   = Arg1;
+   auto esp24 = new Struct0058CD30();
+   auto esp30 = esp24;
+   auto ebp = 0;
+   esp10C8 = -1;
+   esp30   = 0;
+   const char* fileContents; // esp20
+   UInt32      fileLength;   // esp34
+   if (Arg2) {
+      fileContents = Arg2; // file contents as const char*
+      fileLength   = Arg3;
+   } else {
+      ebp = TES4_00585220(Arg1, 0);
+      esp30 = ebp;
+      fileContents = ebp->unk04; // file contents as const char*
+      fileLength   = ebp->unk00;
+   }
+   UInt8 bl = 0;
+   ParseState edi = kParseState_FileStart;
+   char   espBC[0x1000] = '\0'; // used for: attribute name, attribute value, text nodes
+   UInt32 esp38 = 0; // current trait/entity/tag ID
+   char   currentTagname[0x80] = '\0'; // esp3C
+   bool   inQuotes     = false; // esp1F // inside of a double-quote pair (only "; ' is not checked for)
+   bool   inClosingTag = false; // esp17
+   lineNumber = 1; // esp18 // line number, used to log errors
+   esp2C = 0;
+   if (ebp) { // at 0x0058DCB7
+      esp2C = TES4_00589110(ebp, 1);
+      if (esp2C != ebp) {
+         fileContents = esp2C->unk04;
+         fileLength   = esp2C->unk00;
+      } else
+         esp2C = 0;
+   }
+   UInt32 ebp = 0; // iterator through file contents
+   if (fileLength) { // at 0x0058DCE7
+      do {
+         char eax = fileContents[ebp];
+         if (eax == '\n')
+            lineNumber++;
+         if (edi == kParseState_FileStart) { // at 0x0058DD02
+            if (eax == '<') {
+               eax = ebp + 3;
+               if (eax < fileLength && fileContents[ebp + 1] == '!' && fileContents[ebp + 2] == '-' && fileContents[ebp + 3] == '-') {
+                  bl  = 0;
+                  edi = kParseState_InComment; // code comment
+               } else {
+                  edi = kParseState_InTag; // tag
+                  currentTagname[0] = '\0'; // reset current tag
+                  inClosingTag = false; // 0 == opening tag?
+               }
+               continue;
+            }
+         } else if (edi == kParseState_InTag) { // at 0x0058DD4A
+            if (currentTagname[0] == '\0' && eax == '/') {
+               inClosingTag = true; // closing tag?
+               continue;
+            }
+            if (eax != '>' && (ebp + 1 >= fileLength || eax != '/' || fileContents[ebp + 1] != '>')) {
+               ecx = ebp + 1; // at 0x0058DD86
+               if (eax <= ' ') { // control code, newline, or tab
+                  if (currentTagname[0] != '\0') {
+                     UInt32 token = inClosingTag ? 0xF : 0xA;
+                     esp24->GetData()->AddTemplateItem(token, currentTagname, lineNumber, 0);
+                     bl = 1; // jumped to 0x0058E1C9
+                  }
+                  continue;
+               }
+               // at 0x0058DDCF
+               if (bl) {
+                  ebp--;
+                  edi = kParseState_InAttrName;
+                  bl  = 0;
+                  continue;
+               }
+               currentTagname[esi] = eax;
+               esi++;
+               currentTagname[esi] = '\0';
+               continue;
+            }
+            // current char is '/' or next is '>' ?
+            if (currentTagname[0]) { // at 0x0058DDF8
+               if (inClosingTag)
+                  esp24->GetData()->AddTemplateItem(0xF, &esp38, esp1C, 0);
+               else
+                  esp24->GetData()->AddTemplateItem(0xA, &esp38, esp1C, 0);
+            } else if (bl == 0) {
+               // jumped to 0x0058E25E
+               Log004A7A60("XML ERROR: %s -- in file '%s' on line %i.", "Empty tag name", esp28, lineNumber);
+               *(bool*)0x00B3B0A0 = true;
+               return nullptr;
+            }
+            esi = 0;
+            edi = fileContents[ebp] != '/' ? kParseState_NotInAnything : kParseState_SelfClosing;
+            bl  = 0;
+            continue;
+         } else if (edi == kParseState_InComment) { // code comment
+            ecx = ebp + 2;
+            if (ebp + 2 >= fileLength)
+               continue;
+            if (eax != '-')
+               continue;
+            if (fileContents[ebp + 1] != '-')
+               continue;
+            if (fileContents[ebp + 2] != '>')
+               continue;
+            //
+            // End of XML comment.
+            //
+            ebp = ecx; // skip two more glyphs, and then the continue will skip another -- that is, skip the ending --> in the code comment
+            edi = kParseState_NotInAnything;
+            bl  = 0;
+            continue;
+         } else if (edi == kParseState_InAttrName) { // at 0x0058DEAD
+            if (eax == '>') {
+               // jumped to 0x0058E2D6
+               Log004A7A60("XML Error: %s -- in file '%s' on line %i.", "Attribute with no value", esp28, lineNumber);
+               *(bool*)0x00B3B0A0 = true;
+               return nullptr;
+            }
+            ecx = ebp + 1;
+            if (ebp + 1 < fileLength && eax == '/') {
+               if (fileContents[ebp + 1] == '>') {
+                  // jumped to 0x0058E2D6
+                  Log004A7A60("XML Error: %s -- in file '%s' on line %i.", "Attribute with no value", esp28, lineNumber);
+                  *(bool*)0x00B3B0A0 = true;
+                  return nullptr;
+               }
+            }
+            if (eax == '=') {
+               if (espBC[0] == '\0') {
+                  // jumped to 0x0058E285
+                  Log004A7A60("XML Error: %s -- in file '%s' on line %i.", "Missing attribute name", esp28, lineNumber);
+                  *(bool*)0x00B3B0A0 = true;
+                  return nullptr;
+               }
+               esp38 = TagNameToTagID(&espBC);
+               espBC[0] = '\0';
+               edi = kParseState_InAttrValue;
+               bl  = 0;
+               continue;
+            } else if (eax < ' ') { // control codes, newline, tab // at 0x0058DF0B
+               if (espBC[0] == '\0')
+                  continue;
+               esp38 = TagNameToTagID(&espBC);
+               espBC[0] = '\0';
+               esi = 0;
+            } else { // at 0x0058DF39
+               if (bl) {
+                  // jumped to 0x0058E2AC
+                  Log004A7A60("XML Error: %s -- in file '%s' on line %i.", "Unexpected word after attribute name", esp28, lineNumber);
+                  *(bool*)0x00B3B0A0 = true;
+                  return nullptr;
+               }
+               espBC[esi] = eax;
+               esi++;
+               espBC[esi] = '\0';
+               if (esi <= 0x1000)
+                  continue;
+               Log004A7A60("XML Read buffer too small!");
+               continue;
+            }
+         } else if (edi == kParseState_InAttrValue) { // at 0x0058DF79
+            if (eax == '"') {
+               inQuotes = !inQuotes;
+               continue;
+            }
+            if (inQuotes) {
+               // jumped to 0x0058DF46
+               espBC[esi] = eax;
+               esi++;
+               espBC[esi] = '\0';
+               if (esi <= 0x1000)
+                  continue;
+               Log004A7A60("XML Read buffer too small!");
+               continue;
+            }
+            if (eax != '>' && (ebp + 1 >= fileLength || eax != '/' || fileContents[ebp + 1] != '>')) {
+               ecx = ebp + 1;
+               if (eax <= ' ') { // control codes, newline, tab
+                  if (espBC[0] == '\0')
+                     continue;
+                  esp24->GetData()->AddTemplateItem(esp38, espBC, esp18, 0);
+                  espBC[0] = '\0';
+                  esi = 0;
+                  bl = 1;
+                  continue;
+               }
+               if (bl == 0) {
+                  // jumped to 0x0058DF46
+                  espBC[esi] = eax;
+                  esi++;
+                  espBC[esi] = '\0';
+                  if (esi <= 0x1000)
+                     continue;
+                  Log004A7A60("XML Read buffer too small!");
+                  continue;
+               }
+               ebp--;
+               edi = kParseState_InAttrName;
+               bl = 0;
+               continue;
+            }
+            if (espBC[0] != '\0') {
+               esp24->GetData()->AddTemplateItem(esp38, espBC, lineNumber, 0);
+            } else {
+               if (bl == 0) {
+                  // jumped to 0x0058E300
+                  Log004A7A60("XML ERROR: %s -- in file '%s' on line %i.", "Missing attribute's value", esp28, lineNumber);
+                  *(bool*)0x00B3B0A0 = true;
+                  return nullptr;
+               }
+            }
+            eax = 0;
+            esi = 0;
+            espBC[0] = '\0';
+            edi = fileContents[ebp] != '/' ? kParseState_NotInAnything : kParseState_SelfClosing;
+            bl = 0;
+            continue;
+         } else if (edi == kParseState_SelfClosing) { // at 0x0058E06F
+            //
+            // We found a "/" indicating a self-closing tag, and are now expecting 
+            // a ">".
+            //
+            if (eax != '>') {
+               // jumped to 0x0058E32A
+               Log004A7A60("XML ERROR: %s -- in file '%s' on line %i.", "Close-tag marker '/' not followed by end-of-tag marker '>'", esp28, lineNumber);
+               *(bool*)0x00B3B0A0 = true;
+               return nullptr;
+            }
+            esp24->GetData()->AddTemplateItem(0xF, currentTagname, lineNumber, 0);
+            edi = kParseState_NotInAnything;
+            currentTagname[0] = '\0';
+            continue;
+         } else if (edi == kParseState_NotInAnything) { // at 0x0058E0A9
+            //
+            // For this parse state, bool (bl) indicates whether we've found 
+            // any text-content that isn't whitespace. We ignore all whitespace 
+            // and control codes until we find non-whitespace/non-control chars.
+            //
+            if (eax == '<') {
+               if (ebp + 3 < fileLength && fileContents[ebp + 1] == '!' && fileContents[ebp + 2] == '-' && fileContents[ebp + 3] == '-') {
+                  bl  = 0;
+                  edi = kParseState_InComment; // comment
+                  continue;
+               }
+               if (espBC[0] != '\0') {
+                  //
+                  // espBC was a text node which preceded the start-of-tag 
+                  // we just found. Save it.
+                  //
+                  // First, trim any trailing whitespace:
+                  //
+                  eax = strlen(espBC) - 1;
+                  while (espBC[eax] > ' ')
+                     eax--;
+                  espBC[eax + 1] = '\0';
+                  UInt32 token = ?????;
+                  #if MENUQUE
+                     token = 0xD;
+                  #endif
+                  esp24->GetData()->AddTemplateItem(token, espBC, lineNumber, espBC[0] != '&');
+               }
+               esi = 0;
+               bl  = 0;
+               espBC[0] = '\0';
+               inClosingTag = false;
+               edi = kParseState_InTag; // parsing tag?
+               currentTagname[0] = '\0';
+               continue;
+            }
+            if (eax == '>' || (ebp + 1 < fileLength && eax == '/' && fileContents[ebp + 1] == '>')) {
+               // jumped to 0x0058E354
+               Log004A7A60("XML ERROR: %s -- in file '%s' on line %i.", "Unballanced end-of-tag marker '>' found", esp28, lineNumber);
+               *(bool*)0x00B3B0A0 = true;
+               return nullptr;
+            }
+            //
+            // Remember any text-content we find outside of "<" and ">" glyphs, 
+            // but discard any leading whitespace.
+            //
+            if (eax <= ' ' && bl == 0)
+               //
+               // If this is whitespace and we haven't found any non-whitespace 
+               // glyphs, then it's leading whitespace. Skip it.
+               //
+               continue;
+            espBC[esi] = eax;
+            esi++;
+            espBC[esi] = '\0';
+            if (esi > 0x1000)
+               Log4A7A60("XML Read buffer too small!");
+            bl = 1; // found non-whitespace
+         }
+         // at 0x0058E1CB
+      } while (++ebp < fileLength);
+   }
+   eax = esp2C; // at 0x0058E1DA
+   if (eax) {
+      if (eax->unk04)
+         delete eax->unk04;
+      eax->unk04 = nullptr;
+      delete eax;
+   }
+   eax = esp30;
+   if (eax) {
+      if (eax->unk04)
+         delete eax->unk04;
+      eax->unk04 = nullptr;
+      delete eax;
+   }
+   return esp24;
+}

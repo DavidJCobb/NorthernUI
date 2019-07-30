@@ -88,6 +88,19 @@ namespace RE {
             return (Tile*) obj;
          }
 
+         struct StringListElement { // sizeof == 0x10
+            //
+            // This struct represents a temporary trait (i.e. a trait with an underscore-prefixed name) 
+            // and is stored in global arrays and lists. Underscore-prefixed traits have IDs created 
+            // for them at run-time in the order they're encountered; these IDs start at 0x2710.
+            //
+            UInt32    traitID;  // 00
+            UInt32    refCount; // 04 // actually, it's the ref count minus one
+            BSStringT name;     // 08
+
+            MEMBER_FN_PREFIX(StringListElement);
+            DEFINE_MEMBER_FN(Constructor, StringListElement&, 0x00589F20, SInt32, BSStringT);
+         };
          struct TileTemplateItem { // these are better thought of as "tokens" created from the XML parser
             // constructor: 00589FA0
             enum Code : SInt32 { // values for unk00
@@ -97,6 +110,8 @@ namespace RE {
                kCode_EndTag                = 0x0F, // any end   tag // converted to something else in parse Stage 1.5
                kCode_NonConstNonSrcOperatorStart = 0x14, // start of non-const, non-src operator
                kCode_NonConstNonSrcOperatorEnd   = 0x19, // end   of non-const, non-src operator
+               kCode_ContainerOperatorStart = kCode_NonConstNonSrcOperatorStart,
+               kCode_ContainerOperatorEnd   = kCode_NonConstNonSrcOperatorEnd,
                kCode_NonConstTraitStart    = 0x1E, // start of non-const trait // during Stage 1.5 parsing, some of these are converted to ConstTraits.
                kCode_NonConstTraitEnd      = 0x23, // end   of non-const trait
                kCode_TileStart             = 0x28, // start of a tile: result and tagType are tag ID, string is name attr; CreateTemplatedChildren builds it while UpdateTemplatedChildren uses it to determine what to apply traits, etc., to
@@ -432,16 +447,6 @@ namespace RE {
 
             MEMBER_FN_PREFIX(Struct00588A70);
             DEFINE_MEMBER_FN(DestroySelf, void, 0x005895E0); // deletes self
-         };
-
-         struct StringListElement { // sizeof == 0x10 // A registered trait.
-            //
-            // A registered Oblivion XML trait, tag name, or operator name.
-            // Constructor: 00589EB0 (SInt32 code, const char* name)
-            //
-            SInt32    traitID;   // 00
-            UInt32    unk04;     // 04 // not set during constructor
-            BSStringT traitName; // 08
          };
 
          enum {

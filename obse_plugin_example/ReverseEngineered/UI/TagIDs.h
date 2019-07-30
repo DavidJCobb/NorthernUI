@@ -53,6 +53,12 @@ namespace RE {
       kEntityID_last  = 0x06B, // listindex
       kEntityID_xlist = 0x06C,
       kEntityID_xitem = 0x06D,
+      kEntityID_MenuQue_Scroll         = 0x0F9,
+      kEntityID_MenuQue_FocusBox       = 0x0FA,
+      kEntityID_MenuQue_TextEdit       = 0x0FB,
+      kEntityID_MenuQue_DragRect       = 0x0FC,
+      kEntityID_MenuQue_DragHorizontal = 0x0FD,
+      kEntityID_MenuQue_DragVertical   = 0x0FE,
       kEntityID_scale = 0x0FF,
       //
       // Tile types (decimal > 900):
@@ -160,6 +166,7 @@ namespace RE {
       kAttrID_name  = 0xBBA,
       kAttrID_src   = 0xBBB,
       kAttrID_trait = 0xBBC,
+      kAttrID_MenuQue_dest = 0xBBD,
       //
       // Traits (decimal > 4000):
       //

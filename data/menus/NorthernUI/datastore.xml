@@ -35,6 +35,12 @@
       <copy src="child(_GETTER_xxnClockImageWidth)" trait="filewidth" />
    </_xxnClockImageFilewidth>
    
+   <!-- Font-handling code -->
+   
+   <!-- All font files, sorted by encoding
+      0 = Windows-1252 (ANSI)
+      1 = Windows-1251 (Cyrillic)
+   -->
    <_fontsNormal_1>Data\Fonts\OpenSans_22CB_Normal_Win1252.fnt</_fontsNormal_1>
    <_fontsNormal_2>Data\Fonts\OpenSans_22CB_Normal_Win1251.fnt</_fontsNormal_2>
    <_fontsLarge_1>Data\Fonts\OpenSans_50CB_Normal_Win1252.fnt</_fontsLarge_1>
@@ -46,46 +52,39 @@
    <_fontsSmall_1>Data\Fonts\OpenSans_15CB_Normal_Win1252.fnt</_fontsSmall_1>
    <_fontsSmall_2>Data\Fonts\OpenSans_15CB_Normal_Win1251.fnt</_fontsSmall_2>
    
+   <!-- Computed font paths, to be made available to the rest of the mod -->
    <_fontNormal>
-      <copy>
-         <copy src="xxnLocalization()" trait="_textEncoding" />
-         <max>0</max>
-         <add>1</add>
-      </copy>
+      <copy src="xxnLocalization()" trait="_textEncoding" />
+      <max>0</max>
+      <add>1</add>
       <copy src="me()" trait="_fontsNormal_" />
    </_fontNormal>
    <_fontLarge>
-      <copy>
-         <copy src="xxnLocalization()" trait="_textEncoding" />
-         <max>0</max>
-         <add>1</add>
-      </copy>
+      <copy src="xxnLocalization()" trait="_textEncoding" />
+      <max>0</max>
+      <add>1</add>
       <copy src="me()" trait="_fontsLarge_" />
    </_fontLarge>
    <_fontMediumLargeUpper>
-      <copy>
-         <copy src="xxnLocalization()" trait="_textEncoding" />
-         <max>0</max>
-         <add>1</add>
-      </copy>
+      <copy src="xxnLocalization()" trait="_textEncoding" />
+      <max>0</max>
+      <add>1</add>
       <copy src="me()" trait="_fontsMediumLargeUpper_" />
    </_fontMediumLargeUpper>
    <_fontShadowed>
-      <copy>
-         <copy src="xxnLocalization()" trait="_textEncoding" />
-         <max>0</max>
-         <add>1</add>
-      </copy>
+      <copy src="xxnLocalization()" trait="_textEncoding" />
+      <max>0</max>
+      <add>1</add>
       <copy src="me()" trait="_fontsShadowed_" />
    </_fontShadowed>
    <_fontSmall>
-      <copy>
-         <copy src="xxnLocalization()" trait="_textEncoding" />
-         <max>0</max>
-         <add>1</add>
-      </copy>
+      <copy src="xxnLocalization()" trait="_textEncoding" />
+      <max>0</max>
+      <add>1</add>
       <copy src="me()" trait="_fontsSmall_" />
    </_fontSmall>
+   
+   <!-- ------------------------------------------------------------------------- -->
    
    <image name="_GETTER_xxnClockImageWidth">
       <zoom><copy src="parent()" trait="_xxnClockImageScale" /></zoom>

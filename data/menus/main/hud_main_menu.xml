@@ -714,6 +714,17 @@
          <copy src="me()" trait="_fontType_" />
       </_fontPath>
       
+      <_labelOffsetTop>
+         <copy>5</copy>
+         <add>
+            <copy>5</copy>
+            <onlyif>
+               <copy src="xxnLocalization()" trait="_big4TabUseSmallerHeaders" />
+               <eq>&true;</eq>
+            </onlyif>
+         </add>
+      </_labelOffsetTop>
+      
       <rect name="tab_stats">
          <locus>&true;</locus>
          <target>&true;</target>
@@ -728,6 +739,13 @@
          <height>
             <copy src="child(text)" trait="height" />
             <add>8</add>
+            <add>
+               <copy>14</copy>
+               <onlyif>
+                  <copy src="xxnLocalization()" trait="_big4TabUseSmallerHeaders" />
+                  <eq>&true;</eq>
+               </onlyif>
+            </add>
          </height>
          <_selected>
             <copy src="HUDMainMenu" trait="user4" />
@@ -738,7 +756,7 @@
          <text name="text">
             <string><copy src="xxnStrings()" trait="_statsMenuTitle" /></string>
             <x>0</x>
-            <y>5</y>
+            <y><copy src="hudmain_menu_selector" trait="_labelOffsetTop" /></y>
             <xxnFontPath><copy src="hudmain_menu_selector" trait="_fontPath" /></xxnFontPath>
             <red>
                <copy>140</copy>
@@ -762,11 +780,8 @@
          </x>
          <y>0</y>
          <depth>5</depth>
-         <width><copy src="child(text)" trait="width" /></width>
-         <height>
-            <copy src="child(text)" trait="height" />
-            <add>8</add>
-         </height>
+         <width> <copy src="child(text)" trait="width" /></width>
+         <height><copy src="sibling()"   trait="height" /></height>
          <_selected>
             <copy src="HUDMainMenu" trait="user4" />
             <add>8</add>
@@ -776,7 +791,7 @@
          <text name="text">
             <string><copy src="xxnStrings()" trait="_inventoryMenuTitle" /></string>
             <x>0</x>
-            <y>5</y>
+            <y><copy src="hudmain_menu_selector" trait="_labelOffsetTop" /></y>
             <xxnFontPath><copy src="hudmain_menu_selector" trait="_fontPath" /></xxnFontPath>
             <red>
                <copy>140</copy>
@@ -800,11 +815,8 @@
          </x>
          <y>0</y>
          <depth>5</depth>
-         <width><copy src="child(text)" trait="width" /></width>
-         <height>
-            <copy src="child(text)" trait="height" />
-            <add>8</add>
-         </height>
+         <width> <copy src="child(text)" trait="width" /></width>
+         <height><copy src="sibling()"   trait="height" /></height>
          <_selected>
             <copy src="HUDMainMenu" trait="user4" />
             <add>8</add>
@@ -814,7 +826,7 @@
          <text name="text">
             <string><copy src="xxnStrings()" trait="_magicMenuTitle" /></string>
             <x>0</x>
-            <y>5</y>
+            <y><copy src="hudmain_menu_selector" trait="_labelOffsetTop" /></y>
             <xxnFontPath><copy src="hudmain_menu_selector" trait="_fontPath" /></xxnFontPath>
             <red>
                <copy>140</copy>
@@ -838,11 +850,8 @@
          </x>
          <y>0</y>
          <depth>5</depth>
-         <width><copy src="child(text)" trait="width" /></width>
-         <height>
-            <copy src="child(text)" trait="height" />
-            <add>8</add>
-         </height>
+         <width> <copy src="child(text)" trait="width" /></width>
+         <height><copy src="sibling()"   trait="height" /></height>
          <_selected>
             <copy src="HUDMainMenu" trait="user4" />
             <add>8</add>
@@ -852,7 +861,7 @@
          <text name="text">
             <string><copy src="xxnStrings()" trait="_mapMenuTitle" /></string>
             <x>0</x>
-            <y>5</y>
+            <y><copy src="hudmain_menu_selector" trait="_labelOffsetTop" /></y>
             <xxnFontPath><copy src="hudmain_menu_selector" trait="_fontPath" /></xxnFontPath>
             <red>
                <copy>140</copy>

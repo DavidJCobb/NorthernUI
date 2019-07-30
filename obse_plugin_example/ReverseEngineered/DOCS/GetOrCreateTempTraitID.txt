@@ -1,0 +1,75 @@
+struct Tile::StringListElement { // sizeof == 0x10; constructor == 0x00589F20
+   UInt32 traitID;  // 00
+   UInt32 refCount; // 04 // actually, it's the ref count minus one
+   BSStringT name;  // 08
+}
+
+typedef NiTList<Tile::StringListElement>  SLEList;
+typedef NiTArray<Tile::StringListElement> SLEArray;
+
+constexpr SLEList*  g_tempLists     = (SLEList*)  0x00B3B0B0; // at least 0x1B of them
+constexpr SLEArray* g_tempTraitList = (SLEArray*) 0x00B13BC4;
+
+UInt32 GetOrCreateTempTagID(const char* name, SInt32) {
+   auto ebx = Arg1;
+   if (Arg1[0] == '_') {
+      edi = 0; // at 0x0058B130
+      if (g_tempTraitList->firstFreeEntry > 0) {
+         do {
+            Tile::StringListElement* esi = g_tempTraitList->data[edi];
+            ecx = esi->name.m_data;
+            if (ecx[0] == '\0')
+               continue;
+            if (MAYBE_strcoll(ecx, Arg1) == 0) {
+               esi->refCount++;
+               return esi->traitID;
+            }
+         } while (++edi < g_tempTraitList->firstFreeEntry);
+      }
+   } else {
+      UInt32 index = 0x1B;
+      if (Arg1[0] != '&') {
+         // near 0x0058B10A
+         char eax = Arg1[0] - 0x20; // to lowercase
+         if (eax < 0 || eax > 0x1A)
+            eax = 0;
+      }
+      // at 0x0058B078
+      auto esi = g_tempLists[index].start; // sizeof(item) == 0x10
+      if (esi) {
+         do {
+            Entry* edi = esi->data;
+            eax = edi->name.m_data;
+            esi = esi->next;
+            if (eax[0] == '\0')
+               continue;
+            if (MAYBE_strcoll(eax, Arfg1) == 0) {
+               edi->refCount++; // refccount
+               return edi->traitID;
+            }
+         } while (esi);
+      }
+   }
+   // jumped to 0x0058B0AB
+   auto esi = new Entry(Arg2, BSStringT(nullptr));
+   auto edi = esi;
+   // at 0x0058B1A9
+   edi->unk04 = edx;
+   UInt32 esi = g_tempTraitList->firstFreeEntry;
+   UInt32 ecx = g_tempTraitList->capacity;
+   esp20 = -1;
+   if (esi >= ecx) {
+      g_tempTraitList->SetCapacity(g_tempTraitList->growSize + esi);
+      edx = 0;
+   }
+   eax = g_tempTraitList->data;
+   if (esi >= g_tempTraitList->firstFreeEntry) {
+      g_tempTraitList->firstFreeEntry = esi + 1;
+      g_tempTraitList->numObjs++;
+   } else {
+      if (g_tempTraitList->data[esi] == edx)
+         g_tempTraitList->numObjs++;
+   }
+   g_tempTraitList->data[esi] = edi;
+   return ebp;
+}

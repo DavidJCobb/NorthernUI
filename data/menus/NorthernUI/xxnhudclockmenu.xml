@@ -18,8 +18,8 @@
       of the in-game date. You can use the USER20 and USER21 traits to decide 
       how they should be formatted.
    -->
-   <user10>...</user10>
-   <user11>...</user11>
+   <user10>&nbsp;</user10>
+   <user11>&nbsp;</user11>
    
    <!-- USER20 and USER21: Date formats
       The date format can be any string of text, with special codes mixed in 

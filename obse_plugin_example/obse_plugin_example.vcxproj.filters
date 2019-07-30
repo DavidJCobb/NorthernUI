@@ -8037,5 +8037,9 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00476D10.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine004723A0.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\PlayerCharacter\Subroutine00671620.txt" />
+    <Text Include="ReverseEngineered\DOCS\GetOrCreateTempTraitID.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\UpdateTemplatedChildren.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\CreateTemplatedChildren.txt" />
+    <Text Include="ReverseEngineered\DOCS\ParseXML.txt" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,139 @@
+void Tile::UpdateTemplatedChildren(Struct0058BCD0* Arg1) {
+   auto eax = Arg1;
+   auto ecx = Arg1->unk0C.start;
+   auto edi = 0;
+   Tile*  ebp = nullptr; // templated Tile*
+   UInt32 edx = 0; // tile or trait ID
+   esp10 = 0;
+   if (!ecx)
+      return;
+   do {
+      Tile::TileTemplateItem* esi = ecx->data;
+      eax = esi->unk00;
+      ecx = ecx->next;
+      esp1C = ecx;
+      if (eax == kCode_TileStart) {
+         ebp = esi->resultTile;
+         if (!esp10)
+            esp10 = ebp;
+         *b2ndPassParserIsInATile = true;
+         continuel;
+      }
+      if (eax == kCode_TileEnd) {
+         *b2ndPassParserIsInATile = false;
+         esi = ebp->valueList.start;
+         if (esi) {
+            do {
+               ecx = esi->data;
+               esi = esi->next;
+               if (ecx->id == kTileValue_class)
+                  continue;
+               ecx->DoActionEnumeration(true);
+            } while (esi);
+         }
+         ebp = ebp->parent;
+         continue;
+      }
+      if (eax == kCode_ConstTrait) {
+         if (!ebp) {
+            // jumped to 0x0058D0C5
+            Log004A7A60("Trait defined outside of any tile.");
+            continue;
+         }
+         if (0.0 == esi->num || !esi->str.m_dataLen) {
+            if (esi->id != kTagID_string && esi->id != kTagID_filename) { // NorthernUI patches this check
+               float esp18 = esi->unk04;
+               eax = ebp->GetOrCreateTrait(eax);
+               if (eax == edi) {
+                  edi = 0;
+                  continue;
+               }
+               eax->SetFloatValue(esp14);
+               continue;
+            }
+         }
+         eax = esi->id; // at 0x0058D050
+         if (eax == kTileValue_name) {
+            ebp->SetNameAndDestroyArgument(BSStringT(esi->unk08));
+            continue;
+         }
+         esi = esi->str.m_data;
+         ecx = ebp;
+         if (eax == kTileValue_filename) {
+            if (eax = ecx->GetOrCreateTrait(eax)) {
+               eax->SetStringValue(esi);
+            }
+            ebp->flags |= kTileFlag_ChangedFilename;
+            continue;
+         }
+         if (eax = ecx->GetOrCreateTrait(eax)) {
+            eax->SetStringValue(esi);
+            continue;
+         }
+         // jumped to 0x0058D198
+         Log004A7A60("Trait defined outside of any tile.");
+         continue;
+      } else if (eax == kCode_NonConstTraitStart) {
+         ebx = (SInt32) esi->unk04;
+         continue;
+      } else if (eax == kCode_NonConstTraitEnd) {
+         ebx = 0;
+         continue;
+      } else if (eax == kCode_ConstOperator) {
+         if (ebx) {
+            #if MENUQUE // branch replaced by MenuQue via jump at 0x0058D0F8...
+               ebp04 = esi;
+               ebp0C = ebp00; // ??
+               ebp08 = ebx;
+               Tile::Value* ebp10 = ebp0C->GetOrCreateTrait(ebx);
+               eax = ebp04->str.Length();
+               if (eax && 0.0 == ebp04->unk04) {
+                  ebp10->MQ_1D4A0(ebp04->str.m_data, ebp04->unk10);
+               } else {
+                  ebp10->TES4_0058CBE0(ebp04->unk04, ebp04->unk10);
+               }
+            #else
+               eax = ebp->GetOrCreateTrait(ebx);
+               eax->TES4_0058CBE0(esp14, (float)esi->unk04);
+            #endif
+            continue;
+         }
+         // jumped to 0x0058D198
+         Log004A7A60("Action defined outside of any trait.");
+         continue;
+      } else if (eax == kCode_SrcOperator) {
+         if (ebx) {
+            auto edi = ProcessSrcAttributeVal(ebp, esi->unk08);
+            if (!edi)
+               continue;
+            ebp->AppendSrcOperatorToTrait(ebx, edi, (SInt32)esi->tagType, esi->result);
+            continue;
+         }
+         // jumped to 0x0058D198
+         Log004A7A60("Action link defined outside of any trait.");
+         continue;
+      } else if (eax == kCode_ContainerOperatorStart) {
+         if (ebx != 0) {
+            ebp->AppendContainerOperatorToTrait(ebx, (SInt32)esi->unk04, kCode_StartTag);
+            continue;
+         }
+         // jumped to 0x0058D198
+         Log004A7A60("Action begun outside of any trait.");
+         continue;
+      } else if (eax == kCode_ContainerOperatorEnd) {
+         if (ebx != 0) {
+            ebp->AppendContainerOperatorToTrait(ebx, (SInt32)esi->tagType, kCode_EndTag);
+            continue;
+         }
+         // jumped to 0x0058D198
+         Log004A7A60("Action ended outside of any trait.");
+         continue;
+      }
+      edi = 0;
+   } while (ecx = esp1C);
+   #if MENUQUE // MenuQue: jump at 0x0058D1AC
+      auto singleton = ($+513E4);
+      singleton->($+156F0)();
+   #endif
+   return;
+}

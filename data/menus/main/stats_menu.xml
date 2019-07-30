@@ -30,7 +30,10 @@
       <copy>70</copy>
       <add src="xxnLocalization()" trait="_statsColumnAdjustSkillType" />
    </_skillListColWidthType>
-   <_skillListColWidthProgress>215</_skillListColWidthProgress>
+   <_skillListColWidthProgress>
+      <copy>215</copy>
+      <add src="xxnLocalization()" trait="_statsColumnAdjustSkillProgress" />
+   </_skillListColWidthProgress>
    <_skillListColWidthValue>
       <copy>55</copy>
       <add src="xxnLocalization()" trait="_statsColumnAdjustSkillValue" />
