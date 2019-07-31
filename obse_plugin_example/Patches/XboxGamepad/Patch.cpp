@@ -358,6 +358,8 @@ namespace CobbPatches {
             };
          };
          namespace Vanity {
+            static bool s_walkBlessed = false;
+            //
             void _stdcall Inner(float timestep) {
                auto input   = RE::OSInputGlobals::GetInstance();
                auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(0);
@@ -366,10 +368,22 @@ namespace CobbPatches {
                float y = CALL_MEMBER_FN(input, GetMouseAxisMovement)(2) / 57;
                x += s_look.x;
                y += s_look.y;
-               x *= RE::GMST::fVanityModeXMult->f * timestep;
-               y *= RE::GMST::fVanityModeYMult->f * timestep;
-               *(float*)(0x00B3BB28) += x;
-               *(float*)(0x00B3BB20) += y;
+               x *= RE::GMST::fVanityModeXMult->f;
+               y *= RE::GMST::fVanityModeYMult->f;
+               if (!s_walkBlessed) {
+                  //
+                  // The vanilla game multiplies the vanity mode sensitivity settings by the current 
+                  // timestep. WalkBlessed doesn't (and they overwrite the vanity mode sensitivity 
+                  // settings in-memory with a smaller value, to compensate). If we multiply by the 
+                  // timestep, then the camera turn speed becomes unusably slow when WalkBlessed is 
+                  // installed; if we don't multiply by the timestep, then it becomes unusably fast 
+                  // without WalkBlessed.
+                  //
+                  x *= timestep;
+                  y *= timestep;
+               }
+               *RE::fVanityControlX += x;
+               *RE::fVanityControlY += y;
             }
             __declspec(naked) void Outer() {
                _asm {
@@ -382,6 +396,8 @@ namespace CobbPatches {
             }
             void Apply() {
                WriteRelJump(0x00671B56, (UInt32)&Outer);
+               //
+               s_walkBlessed = g_obse->GetPluginLoaded("WalkBlessed");
             }
          }
          namespace XAxis {

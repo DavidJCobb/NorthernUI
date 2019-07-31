@@ -220,6 +220,8 @@ namespace CobbPatches {
             // all out and replace the entire player input handler at 00671620, this is 
             // the only way to do it.
             //
+            if (*RE::bPlayerInVanityMode) // you can move while in Vanity Mode, so since we haven't figured out the best way to replace Vanity Mode, let's just back off so that it behaves sensibly, yeah?
+               return true;
             if (!player->isThirdPerson)
                return true;
             if (_WorldOrCellChanged())

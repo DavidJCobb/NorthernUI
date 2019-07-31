@@ -13,12 +13,41 @@
 	<user2>
       <copy>&false;</copy>
       <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+      <and>
+         <copy src="HUDInfoMenu" trait="user21" /><neq>0</neq>
+      </and>
    </user2> <!-- Visibility of A-button action text (xbox only) -->
 	<user3> 20 </user3>
 	<user4> &false; </user4> <!-- true if telekenisis is active -->
 	<user5></user5>	<!-- Action button icon index (set in code, xbox only) -->
    
    <user18>0</user18> <!-- gamepad keycode (NorthernUI) -->
+   
+   <!-- USER21: NorthernUI patch: Icon enum, consistent with HUDReticle. -->
+   <user21>
+      <!--
+         This calculation serves two purposes.
+
+         We need the HUDInfoMenu to remain functional if the DLL isn't present. As 
+         such, the value specified here in the XML (which will be overwritten by 
+         the DLL) cannot be 0.
+         
+         The second purpose is to work around a vanilla issue: HUDInfoMenu is always 
+         displayed even when nothing has been looked at yet... and when nothing has 
+         been looked at yet, the values here in the XML will be used. If we defaulted 
+         this to a constant e.g. -1, then an activate prompt would be incorrectly 
+         shown immediately after loading into the game for the first time.
+      -->
+      <copy src="hudinfo_lock_text"    trait="visible" />
+      <or   src="hudinfo_value_text"   trait="visible" />
+      <or   src="hudinfo_weight_text"  trait="visible" />
+      <or   src="hudinfo_damage_text"  trait="visible" />
+      <or   src="hudinfo_armor_text"   trait="visible" />
+      <or   src="hudinfo_health_text"  trait="visible" />
+      <or   src="hudinfo_uses_text"    trait="visible" />
+      <or   src="hudinfo_quality_text" trait="visible" />
+      <sub>1</sub> <!-- convert {0,1,2 : undefined,false,true} to {0,1 : false,true}. -->
+   </user21>
    
 	<red>
 		<copy> 254 </copy> <!-- red level for telekenisis -->

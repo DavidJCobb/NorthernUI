@@ -241,7 +241,7 @@ namespace RE {
          virtual MagicItem* GetQueuedMagicItem(void) = 0;	// returns MiddleHighProcess+144
          virtual void	Unk_AC(void) = 0;
          virtual void	Unk_AD(void) = 0;
-         virtual void	Unk_AE(void) = 0;
+         virtual UInt8  Unk_AE() = 0; // returns byte unk14C
          virtual void	Unk_AF(void) = 0;
          virtual UInt32	GetMovementFlags() = 0; // B0
          virtual void	ModifyMovementFlags(UInt32 bits, bool clearOrSet) = 0; // B1

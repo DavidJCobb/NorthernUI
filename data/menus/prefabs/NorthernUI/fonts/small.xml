@@ -1,6 +1,4 @@
 <!-- Use this prefab to specify a normal font: outlined, normal font 
      size. This will be suitable for item counts. -->
 <font>3</font>
-<!-- <xxnFontPath>Data\Fonts\OpenSans15CBThinSdwSubpx.fnt</xxnFontPath> -->
-
 <xxnFontPath><copy src="NorthernUI()" trait="_fontSmall" /></xxnFontPath>

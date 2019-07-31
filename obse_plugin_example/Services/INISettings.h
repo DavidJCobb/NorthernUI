@@ -65,7 +65,7 @@ namespace NorthernUI {
          XXN_MAKE_INI_SETTING(bShowHUDInputViewer, "Features", false);
          XXN_MAKE_INI_SETTING(bSuppressDLCStartup, "Features", false);
          XXN_MAKE_INI_SETTING(bUsePlaystationButtonIcons, "Features", false);
-         XXN_MAKE_INI_SETTING(bEnhancedMovement360Movement, "Features", false);
+         XXN_MAKE_INI_SETTING(bEnhancedMovement360Movement, "Features", true);
          XXN_MAKE_INI_SETTING(iEnhancedMovementCameraMode, "Features", kEnhancedMovementCameraType_OblivionStandard);
          XXN_MAKE_INI_SETTING(iCameraInertiaMode, "Features", kCameraInertiaMode_Fixed);
       };

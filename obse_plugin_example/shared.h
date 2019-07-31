@@ -6,6 +6,7 @@ struct OBSESerializationInterface;
 extern PluginHandle g_pluginHandle;
 extern const UInt32 g_pluginVersion;
 #if OBLIVION
+   extern const OBSEInterface* g_obse;
    extern OBSESerializationInterface* g_serialization;
    extern OBSEArrayVarInterface*      g_arrayIntfc;
    extern OBSEScriptInterface*        g_scriptInterface;

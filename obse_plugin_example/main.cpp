@@ -77,6 +77,7 @@ PluginHandle                g_pluginHandle    = kPluginHandle_Invalid;
 OBSESerializationInterface* g_serialization   = nullptr;
 OBSEArrayVarInterface*      g_arrayIntfc      = nullptr;
 OBSEScriptInterface*        g_scriptInterface = nullptr;
+const OBSEInterface* g_obse = nullptr;
 
 #define COBB_USING_SERIALIZATION 0
 
@@ -213,6 +214,8 @@ extern "C" {
       #if COBB_SUPPRESS_CRT_CRASH_HANDLER == 1
          _set_invalid_parameter_handler(SuppressCRTCrashHandling);
       #endif
+
+      g_obse = obse;
 
       g_pluginHandle = obse->GetPluginHandle();
 
