@@ -16,6 +16,7 @@
 	<_is_xbox>
 		<copy src="me()" trait="user20"/>
 		<gt>0</gt>
+      <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
 	</_is_xbox>
 	
 	<image name="button_no_background_icon">

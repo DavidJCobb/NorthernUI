@@ -4,6 +4,7 @@
 
 #include "ReverseEngineered/NetImmerse/NiTypes.h"
 #include "ReverseEngineered/UI/Tile.h"
+#include "Miscellaneous/strings.h"
 
 #include "Patches/CleanUpAfterMenuQue.h" // needed so we can vary parser behavior for MenuQue
 #include "./Traits.h"
@@ -68,6 +69,61 @@ namespace CobbPatches {
          return false;
       };
       //
+      namespace RegistrationFixes {
+         constexpr UInt32* iHighestTempIndex = (UInt32*)0x00B13BC0;
+         //
+         // Oblivion tries to remember the highest registered index for temporary 
+         // (underscore-prefixed) traits. However, it apparently never actually 
+         // sets the index, which breaks Tile::Value::AppendSrcOperator.
+         //
+         namespace GetOrCreateTempTagID {
+            void _stdcall Inner(UInt32 tempTraitID) {
+               if (tempTraitID > *iHighestTempIndex)
+                  *iHighestTempIndex = tempTraitID;
+            }
+            __declspec(naked) void Outer() {
+               _asm {
+                  mov  dword ptr [esi * 4 + eax], edi; // reproduce patched-over instruction
+                  mov  eax, ebp; // reproduce patched-over instruction
+                  push eax; // protect
+                  push eax;
+                  call Inner; // stdcall
+                  pop  eax; // restore
+                  mov  ecx, 0x0058B20A;
+                  jmp  ecx;
+               }
+            }
+            void Apply() {
+               WriteRelJump(0x0058B205, (UInt32)&Outer);
+            }
+         }
+         namespace RegisterTrait {
+            void _stdcall Inner(RE::Tile::StringListElement* entry) {
+               if (entry->traitID > *iHighestTempIndex)
+                  *iHighestTempIndex = entry->traitID;
+            }
+            __declspec(naked) void Outer() {
+               _asm {
+                  mov  eax, 0x0042D800; // reproduce patched-over call to NiTArray<Tile::StringListElement>::Subroutine0042D800
+                  call eax;             //
+                  push eax; // protect
+                  mov  eax, dword ptr [esp + 0x24];
+                  push eax;
+                  call Inner; // stdcall
+                  pop  eax; // restore
+                  mov  ecx, 0x0058A173;
+                  jmp  ecx;
+               }
+            }
+            void Apply() {
+               WriteRelJump(0x0058A16E, (UInt32)&Outer);
+            }
+         }
+         void Apply() {
+            RegisterTrait::Apply();
+            GetOrCreateTempTagID::Apply();
+         }
+      }
       namespace Registration {
          //
          // Register our tag IDs.
@@ -408,32 +464,145 @@ namespace CobbPatches {
             };
          };
          //
+         namespace Diagnostics_Helpers {
+            typedef RE::Tile::TileTemplateItem TileTemplateItem;
+            //
+            void _LogItem(RE::Tile::TileTemplateItem* token, const char* prefix = "") {
+               auto line = token->lineNumber;
+               auto str = token->string.m_data;
+               auto name = RE::TagIDToName(token->result);
+               switch (token->unk00) {
+                  case TileTemplateItem::kCode_StartTag:
+                     _MESSAGE("%sLine %03d: START TAG | %08X | %f / %s", prefix, line, token->result, token->tagType, str);
+                     break;
+                  case TileTemplateItem::kCode_EndTag:
+                     _MESSAGE("%sLine %03d: END   TAG | %08X | %f / %s", prefix, line, token->result, token->tagType, str);
+                     break;
+                  case TileTemplateItem::kCode_NonConstNonSrcOperatorStart:
+                     if (str)
+                        _MESSAGE("%sLine %03d: <%s> <!-- container operator start; operator name should be %s -->", prefix, line, name, str);
+                     else
+                        _MESSAGE("%sLine %03d: <%s> <!-- container operator start -->", prefix, line, name);
+                     break;
+                  case TileTemplateItem::kCode_NonConstNonSrcOperatorEnd:
+                     if (str)
+                        _MESSAGE("%sLine %03d: </%s> <!-- container operator end; operator name should be %s -->", prefix, line, name, str);
+                     else
+                        _MESSAGE("%sLine %03d: </%s> <!-- container operator end -->", prefix, line, name);
+                     break;
+                  case TileTemplateItem::kCode_NonConstTraitStart:
+                     if (str)
+                        _MESSAGE("%sLine %03d: <%s> <!-- trait start; trait name should be %s -->", prefix, line, name, str);
+                     else
+                        _MESSAGE("%sLine %03d: <%s> <!-- trait start -->", prefix, line, name);
+                     break;
+                  case TileTemplateItem::kCode_NonConstTraitEnd:
+                     if (str)
+                        _MESSAGE("%sLine %03d: </%s> <!-- trait end; trait name should be %s -->", prefix, line, name, str);
+                     else
+                        _MESSAGE("%sLine %03d: </%s> <!-- trait end -->", prefix, line, name);
+                     break;
+                  case TileTemplateItem::kCode_TileStart:
+                     _MESSAGE("%sLine %03d: <%s name=\"%s\"> <!-- tile start -->", prefix, line, RE::TagIDToName(token->result), str);
+                     break;
+                  case TileTemplateItem::kCode_TileEnd:
+                     _MESSAGE("%sLine %03d: </%s> <!-- tile end -->", prefix, line, RE::TagIDToName(token->result));
+                     break;
+                  case TileTemplateItem::kCode_ConstTrait:
+                     if (str)
+                        _MESSAGE("%sLine %03d: <%s>%s</%s> <!-- reads as value %f -->", prefix, line, name, str, name, token->tagType);
+                     else
+                        _MESSAGE("%sLine %03d: <%s>%f</%s>", prefix, line, name, token->tagType, name);
+                     break;
+                  case TileTemplateItem::kCode_ConstOperator:
+                     {
+                        auto opName = RE::TagIDToName(token->result);
+                        if (str) {
+                           _MESSAGE("%sLine %03d: <%s>%s</%s> <!-- reads as %f -->", prefix, line, opName, str, opName, token->tagType);
+                        } else
+                           _MESSAGE("%sLine %03d: <%s>%f</%s>", prefix, line, opName, token->tagType, opName);
+                     }
+                     break;
+                  case TileTemplateItem::kCode_SrcOperator:
+                     {
+                        auto opName = RE::TagIDToName(token->result);
+                        auto srcTrait = RE::TagIDToName((UInt32)token->tagType);
+                        _MESSAGE("%sLine %03d: <%s src=\"%s\" trait=\"%s\" />", prefix, line, opName, str, srcTrait);
+                     }
+                     break;
+                  case TileTemplateItem::kCode_TextContent:
+                     _MESSAGE("%sLine %03d: TEXT CONTENT | %f / %08X / %s", prefix, line, token->tagType, token->result, str);
+                     break;
+                  case TileTemplateItem::kCode_AttributeName:
+                     _MESSAGE("%sLine %03d: ATTRIBUTE: NAME  | %f / %08X / %s", prefix, line, token->tagType, token->result, str);
+                     break;
+                  case TileTemplateItem::kCode_AttributeSrc:
+                     _MESSAGE("%sLine %03d: ATTRIBUTE: SRC   | %f / %08X / %s", prefix, line, token->tagType, token->result, str);
+                     break;
+                  case TileTemplateItem::kCode_AttributeTrait:
+                     _MESSAGE("%sLine %03d: ATTRIBUTE: TRAIT | %f / %08X / %s", prefix, line, token->tagType, token->result, str);
+                     break;
+                  case TileTemplateItem::kCode_MQTextContent:
+                     if (str)
+                        _MESSAGE("%sLine %03d: %s <!-- MenuQue text content --> <!-- reads as value %f -->", prefix, line, str, token->tagType);
+                     else
+                        _MESSAGE("%sLine %03d: %f <!-- MenuQue text content, but no string is defined; this is a float -->", prefix, line, token->tagType);
+                     break;
+                  default:
+                     _MESSAGE("%sLine %03d: Code %03X | %08X | %f / %s", prefix, line, token->unk00, token->result, token->tagType, str);
+               }
+            }
+         }
          namespace Diagnostics_Incremental {
             //
             // Wraps AddTemplateItem and allows us to see tokens as they're constructed or 
             // converted. Only works with the vanilla subroutine and the MenuQue subroutine.
             //
-            // WARNING: THIS WILL SPAM THE LOGS! With my datastore and xxnStrings files in 
-            // place and fully written out, I got 100MB of logs before the main menu was even 
-            // done loading.
+            // WARNING: THIS WILL SPAM THE LOGS!
             //
             static UInt32 s_menuQuePatchAddr = 0;
             //
             void Inner(RE::TileTemplate* tmpl) {
-               _MESSAGE("Last execution left the template in the following state:", tmpl);
-               auto node = tmpl->items.start;
+               typedef RE::Tile::TileTemplateItem TileTemplateItem;
+               //
+               _MESSAGE("== AddTemplateItem: Last execution left the template in the following state:", tmpl);
+               auto count = tmpl->items.numItems;
+               auto node  = tmpl->items.end;
                if (node) {
-                  do {
-                     auto data = node->data;
-                     if (!data)
-                        continue;
-                     _MESSAGE("   Token: 0x%02X: result (%d == %03X); values (%.f | %s).", data->unk00, data->result, data->result, data->tagType, data->string.m_data);
-                  } while (node = node->next);
+                  TileTemplateItem* itemEnd = node->data;
+                  TileTemplateItem* itemZ   = nullptr;
+                  TileTemplateItem* itemY   = nullptr;
+                  TileTemplateItem* itemX   = nullptr;
+                  if (node = node->prev) {
+                     itemZ = node->data;
+                     if (node = node->prev) {
+                        itemY = node->data;
+                        if (node = node->prev)
+                           itemX = node->data;
+                     }
+                  }
+                  //
+                  std::string prefix;
+                  if (itemEnd) {
+                     cobb::snprintf(prefix, "items[%d] == ", count - 1);
+                     Diagnostics_Helpers::_LogItem(itemEnd, prefix.c_str());
+                  }
+                  if (itemZ) {
+                     cobb::snprintf(prefix, "items[%d] == ", count - 2);
+                     Diagnostics_Helpers::_LogItem(itemZ, prefix.c_str());
+                  }
+                  if (itemY) {
+                     cobb::snprintf(prefix, "items[%d] == ", count - 3);
+                     Diagnostics_Helpers::_LogItem(itemY, prefix.c_str());
+                  }
+                  if (itemX) {
+                     cobb::snprintf(prefix, "items[%d] == ", count - 4);
+                     Diagnostics_Helpers::_LogItem(itemX, prefix.c_str());
+                  }
                } else
-                  _MESSAGE("   NO TOKENS.");
-               _MESSAGE("   LIST ENDS.");
+                  _MESSAGE("NO TOKENS");
                if (tmpl->owner)
-                  _MESSAGE("   OWNER Unk0C == %08X", tmpl->owner->unk0C);
+                  _MESSAGE("OWNER Unk0C == %08X", tmpl->owner->unk0C);
             };
             __declspec(naked) void __stdcall Shim() {
                _asm {
@@ -481,6 +650,8 @@ namespace CobbPatches {
             // Hooks the end of the parse process and allows us to see the final token list.
             //
             void Inner(RE::TileTemplate* tmpl) {
+               typedef RE::Tile::TileTemplateItem TileTemplateItem;
+               //
                if (!tmpl) {
                   _MESSAGE("ParseXML has finished. No result.");
                   return;
@@ -488,12 +659,14 @@ namespace CobbPatches {
                _MESSAGE("ParseXML has finished with template at %08X with name %08X: %s. Final tokens follow:", tmpl, tmpl->name.m_data, tmpl->name.m_data);
                auto node = tmpl->items.start;
                if (node) {
-                  do {
-                     auto data = node->data;
-                     if (!data)
+                  for (auto node = tmpl->items.start; node; node = node->next) {
+                     TileTemplateItem* token = node->data;
+                     if (!token) {
+                        _MESSAGE(" - MISSING TOKEN");
                         continue;
-                     _MESSAGE("   Token: 0x%02X: result (%d == %03X); values (%.f | %s).", data->unk00, data->result, data->result, data->tagType, data->string.m_data);
-                  } while (node = node->next);
+                     }
+                     Diagnostics_Helpers::_LogItem(token, "");
+                  }
                } else
                   _MESSAGE("   NO TOKENS.");
                _MESSAGE("   LIST ENDS.");
@@ -534,6 +707,7 @@ namespace CobbPatches {
 
       void Apply() {
          Registration::Apply();
+         RegistrationFixes::Apply();
          //
          // Divided into other files:
          //

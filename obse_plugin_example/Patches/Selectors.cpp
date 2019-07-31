@@ -92,6 +92,7 @@ namespace CobbPatches {
                   g_northernUILocConfigTile = CALL_MEMBER_FN(menuRoot, ReadXML)(pathLocCfg);
                   if (g_northernUILocConfigTile)
                      CALL_MEMBER_FN(g_northernUILocConfigTile, AppendToTile)(nullptr, nullptr); // remove from Tile hierarchy
+               }
                //
                if ((*g_FileFinder)->FindFile(pathDatastore, 0, 0, -1) == FileFinder::kFileStatus_NotFound) {
                   _MESSAGE("Datastore file is missing. The datastore will be nullptr.");
@@ -107,7 +108,6 @@ namespace CobbPatches {
                   g_northernUIStringstore = CALL_MEMBER_FN(menuRoot, ReadXML)(pathStrings);
                   if (g_northernUIStringstore)
                      CALL_MEMBER_FN(g_northernUIStringstore, AppendToTile)(nullptr, nullptr); // remove from Tile hierarchy
-               }
                }
                //
                OnINIChange(nullptr, 0, 0); // apply traits that are drawn from INI settings, for initial load (we'd do this in the outermost Apply() but the tile doesn't exist then!)
@@ -138,6 +138,14 @@ namespace CobbPatches {
                RE::Tile* t = g_northernUIDatastore;
                if (t) {
                   g_northernUIDatastore = nullptr;
+                  t->Dispose(true);
+               }
+               if (t = g_northernUIStringstore) {
+                  g_northernUIStringstore = nullptr;
+                  t->Dispose(true);
+               }
+               if (t = g_northernUILocConfigTile) {
+                  g_northernUILocConfigTile = nullptr;
                   t->Dispose(true);
                }
             };

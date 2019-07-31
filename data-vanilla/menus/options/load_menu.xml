@@ -264,7 +264,7 @@
 		
 		<image name="load_delete_icon">
 			<visible>
-            <copy>&true;</copy>
+            <copy>&xbox;</copy>
             <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
          </visible>
 			<depth>3</depth>
@@ -284,7 +284,7 @@
 
 		<text name="load_delete_text">
 			<visible>
-            <copy>&true;</copy>
+            <copy>&xbox;</copy>
             <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
          </visible>
 			<string> <copy src="strings()" trait="_delete"/> </string>
