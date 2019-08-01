@@ -30,54 +30,7 @@ namespace CobbPatches {
                //
                // If we don't handle MenuQue, the game will crash.
                //
-               namespace Recognition {
-                  //
-                  // These functions allow us to recognize MenuQue's hook if it 
-                  // is identical to the hook from a known version, but simply 
-                  // moved.
-                  //
-                  // These functions should return the absolute address (NOT the 
-                  // module-base-relative address) of the MenuQue subroutine we 
-                  // wish to use. If the subroutine is not found, they should 
-                  // return zero.
-                  //
-                  UInt32 v16a(UInt32 hookTargetAbsAddr) {
-                     UInt32 possible = 0;
-                     //
-                     try {
-                        x86Reader reader(hookTargetAbsAddr);
-                        reader.MOV <UInt8>(x86Reader::ecx, x86Reader::esp, 0x14);
-                        reader.PUSH(x86Reader::ebp);
-                        reader.LEA(x86Reader::ebp, x86Reader::esp, 4); // lea ebp, [esp+4];
-                        reader.PUSHAD();
-                        reader.PUSH(x86Reader::ecx);
-                        reader.MOV <UInt8>(x86Reader::eax, x86Reader::ebp, 0x28);
-                        reader.PUSH(x86Reader::eax);
-                        reader.MOV <UInt8>(x86Reader::eax, x86Reader::ebp, 0x44);
-                        reader.PUSH(x86Reader::eax);
-                        reader.MOV <UInt8>(x86Reader::eax, x86Reader::ebp, 0x50);
-                        reader.PUSH(x86Reader::eax);
-                        possible = reader.CallToAnyAddress();
-                        reader.POPAD();
-                        reader.POP(x86Reader::ebp);
-                        reader.CMP(x86Reader::ecx, 0x7D1);
-                        reader.JG<SInt8>(0x02);
-                        reader.JE<SInt8>(0x0E);
-                        reader.CMP(x86Reader::ecx, 0x7EB);
-                        reader.JG<SInt8>(0x06);
-                        reader.JumpThroughAnyStatic();
-                        reader.FloatPopDiscard(1);
-                        reader.FloatPopDiscard(0);
-                        reader.JumpThroughAnyStatic();
-                        //
-                        // This version of MenuQue has the hook in a different place, but the opcodes are identical to v16a. 
-                        // We can pluck the subroutine pointer we need out of this hook and proceed.
-                        //
-                        return possible;
-                     } catch (std::runtime_error) {}
-                     return 0;
-                  };
-               };
+               /*//
                struct Patch {
                   const char* version;
                   UInt32 hookTarget; // where does the hook jump to?
@@ -87,48 +40,38 @@ namespace CobbPatches {
                   { "16a", 0x000125A0, 0x00012180 },
                   { "16b", 0x00012990, 0x00012570 },
                };
+               //*/
 
                typedef void(__stdcall *f_MQOperatorHandler)(RE::Tile::Value* kThis, RE::Tile::Value* esp44, RE::Tile::Value::Expression* currentExpr, UInt32 operatorID);
                static f_MQOperatorHandler mqOperatorHandler = nullptr;
                //
+               UInt32 _getJumpTarget(UInt32 jumpFrom) { // arg should be address of 0xE9 byte
+                  if (*(UInt8*)jumpFrom != 0xE9)
+                     return 0;
+                  return *(UInt32*)(jumpFrom + 1) + (jumpFrom + 1) + sizeof(void*);
+               }
                void Apply() {
                   _MESSAGE(" - Checking for MenuQue hooks here...");
                   if (!g_menuQue.detected)
                      return;
-                  if (!g_menuQue.addrBase) {
-                     _MESSAGE(" - MenuQue's base address is missing. Unable to apply safety patches; expect a crash on startup.");
+                  UInt32 jumpAbs = _getJumpTarget(0x0058C33E);
+                  if (!jumpAbs) {
+                     _MESSAGE(" - We detected MenuQue, but theres's no hook at Tile::Value::DoActionEnumeration+0x45E. Aborting operator safety patch; if you experience crashes, contact NorthernUI's author.");
                      return;
                   }
-                  if (*(UInt8*)(0x0058C33E) != 0xE9) // check for patched-in JMP
-                     return;
                   _MESSAGE(" - Detected hook to Tile::Value::DoActionEnumeration+0x45E. Checking to see if it's a known or identifiable MenuQue hook.");
-                  UInt32 jumpAbs = *(UInt32*)(0x0058C33F) + 0x0058C33F + sizeof(void*);
-                  UInt32 jumpRel = jumpAbs - g_menuQue.addrBase;
                   //
-                  for (auto i = 0; i < std::extent<decltype(knownVersions)>::value; i++) {
-                     auto& p = knownVersions[i];
-                     if (jumpRel == p.hookTarget) {
-                        mqOperatorHandler = (f_MQOperatorHandler) (g_menuQue.addrBase + p.subToCall);
-                        _MESSAGE("    - Located MenuQue's operator handler at MQ:0x%08X per data for known MenuQue version %s.", p.subToCall, p.version);
-                        return;
-                     }
+                  if (g_menuQue.fingerprintedVersion == MenuQueState::kFingerprintedVersion_16b) {
+                     mqOperatorHandler = (f_MQOperatorHandler)(g_menuQue.addrBase + 0x00012570);
+                     _MESSAGE("    - Assumed MenuQue's operator handler is at MQ:0x%08X per data for known MenuQue version %s.", 0x00012570, "v16b");
+                     return;
                   }
-                  //
-                  // Patch isn't known. See if we can recognize it by its compiled code.
-                  //
-                  if (g_menuQue.addrSize && jumpAbs < g_menuQue.addrBase + g_menuQue.addrSize) {
+                  UInt32 jumpRel = jumpAbs - g_menuQue.addrBase;
+                  if (jumpAbs >= g_menuQue.addrBase && (!g_menuQue.addrSize || jumpAbs < (g_menuQue.addrBase + g_menuQue.addrSize))) {
                      _MESSAGE("    - Not a known MenuQue hook. Jump target read as MQ_%08X (%08X).", jumpRel, jumpAbs);
                   } else {
                      _MESSAGE("    - Not a MenuQue hook. Jump target read as %08X.", jumpAbs);
                   }
-                  UInt32 candidate = 0;
-                  if (candidate = Recognition::v16a(jumpAbs)) {
-                     mqOperatorHandler = (f_MQOperatorHandler) candidate;
-                     _MESSAGE("    - MenuQue hook has identical content to a known version. MenuQue's operator handler is at MQ:0x%08X.", candidate - g_menuQue.addrBase);
-                     return;
-                  }
-                  _MESSAGE("    - Unable to recognize hook site. Failed to preserve MenuQue's operator handler; we will probably CTD during startup.");
-                  return;
                };
             };
             //

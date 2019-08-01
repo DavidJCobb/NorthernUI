@@ -132,7 +132,6 @@ namespace CobbPatches {
       }
       //
       namespace IndependentCamera {
-         constexpr bool ce_preventChaseCameraSwingOnCellTransition = true;
          //
          // This patch allows the user to choose between three different behaviors for 
          // the third-person camera:
@@ -348,12 +347,11 @@ namespace CobbPatches {
             //
             namespace PrepCamera {
                //
-               // TODO: We also need to reset the camera to match the player on the frame that 
-               // the player loads into a new area.
+               // We need to reset the camera to match the player on the frame that the player 
+               // loads into a new area.
                //
-               // Hm... Maybe maintain the form ID of the cell or worldspace the player was in 
-               // on the previous frame, and compare to that every frame? Ugly, but probably a 
-               // lot easier than finding a hook analogous to ESO PLAYER_ACTIVATED.
+               // We maintain the form ID of the cell or worldspace the player was in on the 
+               // previous frame, and compare to that every frame.
                //
                void _stdcall Inner(RE::PlayerCharacter* player) {
                   _UpdateFrameMovementState();

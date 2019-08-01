@@ -587,7 +587,7 @@ namespace RE {
    };
    static_assert(sizeof(MiddleHighProcess) == 0x18C, "RE::MiddleHighProcess is the wrong size!");
 
-   class HighProcess : public MiddleHighProcess { // sizeof == 0x2EC
+   class HighProcess : public MiddleHighProcess { // sizeof == 0x2EC // Oblivion Reloaded 7.0+ extends this to 0x300
       public:
          HighProcess();
          ~HighProcess();

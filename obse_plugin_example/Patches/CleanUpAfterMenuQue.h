@@ -23,9 +23,23 @@
 //
 
 struct MenuQueState {
+   enum FingerprintedVersion : UInt32 {
+      kFingerprintedVersion_16b,
+      //
+      kFingerprintedVersion_Unknown = -1,
+   };
+   enum OBSEVersion : UInt32 { // version as reported by OBSE, though I don't yet know whether MQ actually updated it
+      kOBSEVersion_16b = 0x00000010,
+      //
+      kOBSEVersion_Unknown = -1,
+   };
+   //
    bool   detected = false;
    UInt32 addrBase = 0;
    UInt32 addrSize = 0;
+   OBSEVersion          obseVersion          = kOBSEVersion_Unknown;
+   FingerprintedVersion fingerprintedVersion = kFingerprintedVersion_Unknown;
+   //
    bool   newMenuIDFixFailed = false;
 };
 extern MenuQueState g_menuQue;
