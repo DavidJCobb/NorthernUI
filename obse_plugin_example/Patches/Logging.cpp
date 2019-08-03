@@ -55,6 +55,9 @@ namespace CobbPatches {
             WriteRelCall(0x0058BBD3, (UInt32)&Log);
             WriteRelCall(0x0058BBDD, (UInt32)&Log);
             //
+            if (!NorthernUI::INI::Debug::bUIFullCyclicalRefDebugging.bCurrent) {
+               return;
+            }
             WriteRelJump(0x0058BBB9, (UInt32)&Outer);
          }
       }

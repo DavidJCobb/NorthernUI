@@ -18,6 +18,7 @@ namespace NorthernUI {
       };
       namespace Debug {
          XXN_MAKE_INI_SETTING(bSwipeUnusedVanillaLogs, "Debug", false);
+         XXN_MAKE_INI_SETTING(bUIFullCyclicalRefDebugging, "Debug", false); // WARNING: CAN GENERATE MULTIPLE GIGS OF OUTPUT
       };
       namespace Display {
          XXN_MAKE_INI_SETTING(bForceNativeResolutionUI,   "Display", false);
