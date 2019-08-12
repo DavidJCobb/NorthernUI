@@ -1,0 +1,87 @@
+bool Archive::Subroutine0042D000(Arg1, BSHash& Arg2, Arg3, Arg4, Arg5) {
+   auto esp18 = Arg3;
+   auto ebp   = this;
+   auto esp24 = Arg4;
+   bool esp13 = false; // implicit
+   if (this->unk194 & 1)
+      return false;
+   auto esi = this->folders[Arg1];
+   auto edi = this->unk190;
+   auto ebx = esi->count;
+   if (edi < ebx) { // at 0x0042D078
+      BSAEntry* edi = esi->files[edi];
+      if (!Arg5) {
+         if ((edi->offset & 0x80000000) ^ (al << 3) & 1) // weird
+            jump to 0x0042D0E0;
+      }
+      if (!edi->isInvalidated()) { // at 0x0042D0A1
+         auto eax = Arg2->sub0042BC10(edi->hash);
+         if (eax == 0) {
+            if (!this->sub0042C1D0(edi, Arg4)) {
+               *Arg3 = esp14;
+               return true;
+            }
+            return false;
+         }
+      }
+   }
+   // at 0x0042D0E0
+   if (!ebx)
+      return esp13;
+   BSAEntry* eax   = esi->files;
+   BSAEntry* esp2C = eax;
+   edx:eax = Arg2;
+   esp14 = ebx;
+   esp1C = Arg2 & 0xFFFFFFFF;
+   esp20 = Arg2 >> 0x20;
+   ecx = 0;
+   do {
+      eax = (esp14 - ecx) / 2; // esp14 == number of files in folder
+      edi = ecx + eax;
+      esi = edi * 0x10 + esp2C; // uh
+      edx = esi->hash.unk04;
+      ebx = esi->hash.unk00;
+      if (esp20 > edx) {
+         edx = 1;
+         ecx = edi;
+         continue;
+      } else if (esp20 == edx) {
+         if (esp1C >= ebx) {
+            if (esp20 < edx)
+               jump to 0x0042D152;
+            if (esp20 == edx && esp1C <= ebx)
+               jump to 0x0042D152;
+            edx = 1;
+            ecx = edi;
+            continue;
+         }
+      }
+      edx = -1;
+      esp14 = edi;
+   } while (eax);
+   if (edx)
+      return esp13;
+   // at 0x0042D152
+   if (!this->sub0042C2D0(esi, Arg5))
+      return esp13;
+   ebp = Arg4;
+   if (this->sub0042C1D0(esi, Arg4))
+      return esp13;
+   esp18->unk00 = edi;
+   this->unk190 = edi;
+   esp13 = true;
+   if (!Arg4)
+      return esp13;
+   if (!INI::Archive::bCheckRuntimeCollisions) // at 0x0042D198
+      return esp13;
+   if (!(this->header.flags & kBSAFlag_HasFileNames))
+      return esp13;
+   sub0098443C(Arg4, 0, 0 &esp30, 0);
+   esi = this->sub0042CC00(&esp13C, edi);
+   eax = sub0098262D(esi, &esp30);
+   if (eax) {
+      Log004A7A60("HashMap Collision between %s and %s", esi, &esp30);
+      return false;
+   }
+   return esp13;
+}

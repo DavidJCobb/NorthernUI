@@ -9,6 +9,14 @@ namespace RE {
    namespace INI {
       DEFINE_SUBROUTINE(void, SetSpecularDistances, 0x00497D20, float);
 
+      namespace Archive {
+         SettingInfo* const bUseArchives = (SettingInfo*) 0x00B04428;
+         SettingInfo* const bInvalidateOlderFiles   = (SettingInfo*) 0x00B04460;
+         SettingInfo* const bCheckRuntimeCollisions = (SettingInfo*) 0x00B04430;
+         SettingInfo* const iRetainDirectoryStringTable = (SettingInfo*) 0x00B04438;
+         SettingInfo* const iRetainFilenameStringTable  = (SettingInfo*) 0x00B04440;
+         SettingInfo* const iRetainFilenameOffsetTable  = (SettingInfo*) 0x00B04448;
+      };
       namespace Audio {
          SettingInfo* const fDefaultEffectsVolume = (SettingInfo*) 0x00B161A8;
          SettingInfo* const fDefaultFootVolume    = (SettingInfo*) 0x00B16198;

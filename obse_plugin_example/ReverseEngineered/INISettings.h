@@ -11,6 +11,14 @@ namespace RE {
    namespace INI {
       DEFINE_SUBROUTINE_EXTERN(void, SetSpecularDistances, 0x00497D20, float); // sets both specular-LOD distances and updates cached values used at run-time
 
+      namespace Archive {
+         extern SettingInfo* const bUseArchives;
+         extern SettingInfo* const bInvalidateOlderFiles;
+         extern SettingInfo* const bCheckRuntimeCollisions;
+         extern SettingInfo* const iRetainDirectoryStringTable;
+         extern SettingInfo* const iRetainFilenameStringTable;
+         extern SettingInfo* const iRetainFilenameOffsetTable;
+      };
       namespace Audio {
          extern SettingInfo* const fDefaultEffectsVolume;
          extern SettingInfo* const fDefaultFootVolume;

@@ -3,6 +3,15 @@
 #include "obse/Script.h"
 
 namespace RE {
+   namespace native { // here for documentation purposes; don't bother actually using these
+      DEFINE_SUBROUTINE(SInt32, _access, 0x00982D71, const char* path, UInt32); // educated guess
+      DEFINE_SUBROUTINE(FILE,   fopen,   0x00982440, const char* filename, const char* mode);
+      DEFINE_SUBROUTINE(size_t, fread,   0x00987F5B, void* buffer, size_t elementSize, size_t elementCount, FILE *stream);
+      DEFINE_SUBROUTINE(size_t, fread_s, 0x0098817E, void* buffer, size_t bufSize, size_t elementSize, size_t elementCount, FILE *stream); // could be _fread_nolock_s2
+      DEFINE_SUBROUTINE(UInt32, fseek,   0x00984801, FILE* stream, SInt32 offset, UInt32 origin);
+      DEFINE_SUBROUTINE(UInt32, strncmp, 0x009864D9, const char*, const char*, size_t);
+   };
+
    DEFINE_SUBROUTINE(const char*, ActorValueIndexToSkillName, 0x00565CC0, UInt32 avIndex);
    DEFINE_SUBROUTINE(bool,   FormIsGoldAsInCurrency, 0x00469980, TESForm* form);
    DEFINE_SUBROUTINE(UInt32, GetFormQuality,         0x0046E3F0, TESForm* form);

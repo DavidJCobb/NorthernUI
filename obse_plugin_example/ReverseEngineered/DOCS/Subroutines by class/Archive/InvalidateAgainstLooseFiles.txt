@@ -1,0 +1,48 @@
+UInt32 Archive::InvalidateAgainstLooseFiles(const char* pathRoot, const char* pathDeep, FILETIME* thisArchiveLastModified) {
+   auto ebx = this;
+   char esp17C[MAX_PATH]; // stack 0x17C - 0x280
+   esp20 = pathRoot;
+   esp24 = pathDeep;
+   esp1C = thisArchiveLastModified;
+   esp14 = 0;
+   strcpy(&esp17C, pathRoot); // inlined
+   memcpy(&esp17C + strlen(esp17C), pathDeep, strlen(pathDeep)); // inlined string append
+   memcpy(&esp17C + strlen(esp17C), "*.*", 4); // inlined string append
+   WIN32_FIND_DATAA esp3C;
+   auto esi   = FindFirstFileA(&esp17C, &esp3C); // at 0x0042D35F
+   auto esp28 = esi;
+   if (esi == -1)
+      return 0;
+   char esp280[MAX_PATH];
+   strcpy(&esp280, pathDeep);
+   aut eax = strlen(esp280);
+   if (eax & 0xFF > 1) // at 0x0042D3A5
+      esp280[(eax & 0xFF) - 1] = '\0';
+   auto esp34 = BSHash(&esp280, 2);
+   if (this->sub0042CE40(&esp34, &esp18, 0))
+      esp13 = true;
+   auto ebp = esp18;
+   do { // at 0x0042D3F0
+      if (esp3C.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY && esp3C.cFileName[0] != '.') {
+         strcpy(esp17C, pathDeep);
+         //auto eax = strlen(&esp3C.cFileName);
+         memcpy(&esp17C + strlen(esp17C), esp3C.cFileName, strlen(esp3C.cFileName)); // inlined string append
+         memcpy(&esp17C + strlen(esp17C), "\\", 1); // inlined string append
+         esp14 += this->InvalidateAgainstLooseFiles(pathRoot, &esp17C, thisArchiveLastModified); // recurse
+         esi = esp28;
+         continue;
+      }
+      if (!esp13) // at 0x0042D49F
+         continue;
+      if (CompareFileTime(&esp3C.ftLastWriteTime, thisArchiveLastModified) <= 0) // call at 0x0042D4AB
+         continue;
+      auto esp2C = BSHash(&esp3C.cFileName, 0);
+      if (!this->sub0042D000(pathDeep, &esp2C, &esp18, 0, 0))
+         continue;
+      eax = esp18;
+      this->folders[ebp]->files[esp18]->offset &= 0x80000000; // or folders[esp18]->files[ebp]?
+      esp14++;
+   } while (FindNextFileA(esi, &esp3C)); // at 0x0042D50F
+   FindClose(esi);
+   return esp14;
+}

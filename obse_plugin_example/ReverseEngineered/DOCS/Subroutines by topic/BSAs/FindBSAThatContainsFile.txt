@@ -1,0 +1,46 @@
+constexpr Archive** g_lastMatchedArchive = (Archive**)0x00B338E4;
+
+Archive* FindBSAThatContainsFile(const char* Arg1, UInt16/*BSAFiletypeFlags*/ Arg2 = 0xFFFF) {
+   if (!*g_archiveList)
+      return nullptr;
+   if (Arg1[0] == '\\')
+      Arg1++;
+   auto eax = strncmp(Arg1, "Data\\", 5);
+   if (eax) {
+      if (strncmp(Arg1, "data\\", 5) == 0)
+         Arg1 += 5;
+   } else
+      Arg1 += 5;
+   if (Arg2 == 0xFFFF) {
+      auto eax = strlen(Arg1);
+      Arg2 = sub0042BA90(Arg1 + eax - 3);
+   }
+   sub006FA1B0(Arg1, &esp18, &esp20); // at 0x0042EAE6
+   auto esi   = *g_lastMatchedArchive;
+   auto esp10 = esi;
+   if (esi) {
+      if (esi->header.fileFlags & Arg2) {
+         if (esi->sub0042E020(&esp18, &esp20, &esp0C, &esp14, Arg1)
+            return esi;
+      }
+   }
+   auto ebx = *g_archiveList;
+   if (ebx) {
+      do {
+         Archive* esi = ebx->data;
+         if (!esi)
+            continue;
+         if (esi == esp10)
+            continuel;
+         if (!(esi->header.fileFlags & Arg2))
+            continue;
+         if (!esi->sub0042CE40(&esp18, &esp0C, Arg1))
+            continue;
+         if (esi->sub0042EB8F(esp0C, &esp20, &esp14, Arg1, 0)) {
+            *g_lastMatchedArchive = esi;
+            return esi;
+         }
+      } while (ebx = ebx->next);
+   }
+   return nullptr;
+}
