@@ -9,6 +9,8 @@ namespace RE {
       DEFINE_SUBROUTINE(size_t, fread,   0x00987F5B, void* buffer, size_t elementSize, size_t elementCount, FILE *stream);
       DEFINE_SUBROUTINE(size_t, fread_s, 0x0098817E, void* buffer, size_t bufSize, size_t elementSize, size_t elementCount, FILE *stream); // could be _fread_nolock_s2
       DEFINE_SUBROUTINE(UInt32, fseek,   0x00984801, FILE* stream, SInt32 offset, UInt32 origin);
+      DEFINE_SUBROUTINE(void,   _splitpath, 0x0098443C, const char* path, char* outDrive, char* outDirectory, char* outFilename, char* outExtension);
+      DEFINE_SUBROUTINE(UInt32, stat,    0x00983754, const char* path, void* out);
       DEFINE_SUBROUTINE(UInt32, strncmp, 0x009864D9, const char*, const char*, size_t);
    };
 

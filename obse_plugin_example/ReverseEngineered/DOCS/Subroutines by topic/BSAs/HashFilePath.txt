@@ -1,0 +1,26 @@
+void HashFilePath(const char* filename, BSHash& Arg2, BSHash& Arg3) {
+   char outDrive[?];     // esp0C
+   char outDirectory[?]; // esp130
+   char outFilename[?];  // esp2C
+   char outExtension[?]; // esp1C
+   outDrive[0]     = '\0';
+   outDirectory[0] = '\0';
+   outFilename[0]  = '\0';
+   outExtension[0] = '\0';
+   _splitpath(filename, &outDrive, &outDirectory, &outFilename, &outExtension);
+   sub006FA080(&outFilename, &outExtension, Arg3);
+   //
+   // From here on out, (outFilename) is cannibalized and used as space 
+   // to construct a full pathname.
+   //
+   strcpy(&outFilename, &outDrive);
+   memcpy(&outDirectory + strlen(&outDirectory), &outDirectory, strlen(&outDirectory));
+   if (outFilename[0] == '\0')
+      outFilename[0] = '.';
+   char& filenameEnd = outFilename[strlen(&outFilename) - 1];
+   if (filenameEnd == '\\')
+      filenameEnd = '\0';
+   sub006FA080(&outFilename, 0, Arg2);
+   //sub006FA080(Arg2, 0, &outFilename);
+   return;
+}

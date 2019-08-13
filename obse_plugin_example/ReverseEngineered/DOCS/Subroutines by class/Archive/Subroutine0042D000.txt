@@ -11,7 +11,7 @@ bool Archive::Subroutine0042D000(Arg1, BSHash& Arg2, Arg3, Arg4, Arg5) {
    if (edi < ebx) { // at 0x0042D078
       BSAEntry* edi = esi->files[edi];
       if (!Arg5) {
-         if ((edi->offset & 0x80000000) ^ (al << 3) & 1) // weird
+         if ((edi->offset & 0x80000000) ^ (this->unk194 & 8)) // weird
             jump to 0x0042D0E0;
       }
       if (!edi->isInvalidated()) { // at 0x0042D0A1
@@ -67,7 +67,7 @@ bool Archive::Subroutine0042D000(Arg1, BSHash& Arg2, Arg3, Arg4, Arg5) {
    ebp = Arg4;
    if (this->sub0042C1D0(esi, Arg4))
       return esp13;
-   esp18->unk00 = edi;
+   *Arg3 = edi;
    this->unk190 = edi;
    esp13 = true;
    if (!Arg4)

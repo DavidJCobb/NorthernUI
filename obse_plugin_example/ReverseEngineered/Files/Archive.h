@@ -11,28 +11,32 @@ namespace RE {
       DEFINE_MEMBER_FN(Constructor,        BSHash&, 0x006FA2D0, const char* str, UInt32 type);
       DEFINE_MEMBER_FN(Subroutine0042BC10, UInt32,  0x0042BC10, const BSHash& other);
    };
+   DEFINE_SUBROUTINE_EXTERN(void, HashFilePath, 0x006FA1B0, const char* filename, BSHash& outFile, BSHash& outFolder);
 
    class Archive;
    constexpr UInt32 ce_bsaSignatureBSwapped = '\0ASB';
 
    extern LinkedPointerList<Archive>* const g_archiveList; // All loaded BSAs in this order: INI-specified archives; non-Oblivion.esm archives in the same order as the load order. Oblivion BSAs are specified by the INI (though Mod Organizer can override this in a way that looks confusing).
-   extern NiTArray<BSHash>* const g_archiveInvalidatedFilenames; // related to archive invalidation bugs. one for directory names; one for file names; which is which?
+   //
+   // These maps are used for ArchiveInvalidation.txt and ONLY for ArchiveInvalidation.txt:
+   //
+   extern NiTArray<BSHash>* const g_archiveInvalidatedFilenames;
    extern NiTArray<BSHash>* const g_archiveInvalidatedDirectoryPaths;
 
-   // don't know if this is safe to call:
+   // Not sure if LoadBSAFile is safe to call; others almost certainly aren't, or are already called during startup
    DEFINE_SUBROUTINE_EXTERN(void, LoadBSAFile, 0x0042F4C0, const char* filePath, UInt32 zeroA, UInt32 zeroB); // adds archive to g_archiveList
-   //
+   DEFINE_SUBROUTINE_EXTERN(void, DiscardAllBSARetainedFilenames, 0x0042C970);
    DEFINE_SUBROUTINE_EXTERN(void, ReadArchiveInvalidationTxtFile, 0x0042D840, const char* filename);
 
    enum BSAFlags : UInt32 {
-      kBSAFlag_HasFolderNames = 0x0001,
-      kBSAFlag_HasFileNames   = 0x0002,
-      kBSAFlag_Compressed     = 0x0004,
-      kBSAFlag_Unk0008        = 0x0008,
+      kBSAFlag_HasFolderNames  = 0x0001,
+      kBSAFlag_HasFileNames    = 0x0002,
+      kBSAFlag_Compressed      = 0x0004,
+      kBSAFlag_Unk0008         = 0x0008, // related to retaining directory strings/offsets
       kBSAFlag_RetainFilenameStrings = 0x0010,
       kBSAFlag_RetainFilenameOffsets = 0x0020,
       kBSAFlag_IsXbox360Archive      = 0x0040,
-      kBSAFlag_Unk0080         = 0x0080,
+      kBSAFlag_Unk0080         = 0x0080, // related to retaining directory strings/offsets
       kBSAFlag_Unk0100         = 0x0100,
       kBSAFlag_Unk0200         = 0x0200,
       kBSAFlag_Unk0400         = 0x0400,
@@ -57,7 +61,7 @@ namespace RE {
       BSHash hash; // 00 // hash of the file/folder path
       union {
          UInt32 count = 0; // number of files
-         UInt32 size;      // size of the file
+         UInt32 size;      // size of the file in bytes
       }; // 08
       union {
          UInt32    offset = 0; // data offset within the file (where it's an offset FROM differs between folders and files)
@@ -90,8 +94,21 @@ namespace RE {
       DEFINE_MEMBER_FN(Constructor, BSAHeader&, 0x006FA180);
    };
 
+   struct CompressedArchiveFile { // sizeof == 0x174
+      enum { kVTBL = 0x00A35E64 };
+
+      // TODO
+
+      MEMBER_FN_PREFIX(CompressedArchiveFile);
+      DEFINE_MEMBER_FN(Constructor, CompressedArchiveFile&, 0x0042D6D0, UInt32, UInt32, UInt32, UInt32, UInt32);
+   };
+
    class Archive : public BSFile { // sizeof == 0x280
       public:
+         enum Flags194 {
+            kFlag194_Unk08 = 0x08,
+         };
+         
          BSAHeader header; // 154
          BSAEntry* folders = nullptr; // 178 // array
          UInt32 unk17C;
@@ -118,6 +135,8 @@ namespace RE {
          CRITICAL_SECTION unk200; // 200 // wrapped in a struct that allows for automatic initialization/destruction
          UInt32 unk218[(0x280 - 0x218) / 4];
 
+         /*// Functions provided as example documentation only. At a minimum they need nullptr checks.
+         //
          const char* getFileName(UInt8 folderIndex, UInt8 fileIndex) const {
             auto offset = this->fileNameOffsetsByFolder[folderIndex][fileIndex];
             return &this->fileNames[offset];
@@ -125,16 +144,21 @@ namespace RE {
          const char* getFolderName(UInt8 index) const {
             auto offset = this->folderNameOffsets[index];
             return &this->folderNames[offset];
-         };
+         }
+         //*/
 
          MEMBER_FN_PREFIX(Archive);
          DEFINE_MEMBER_FN(Constructor, Archive&, 0x0042EE80, const char* filePath, UInt32, bool, UInt32);
+         DEFINE_MEMBER_FN(CheckDelete,    void, 0x0042C910); // Dispose(true), with conditions?
+         DEFINE_MEMBER_FN(CheckFileIsOverridden, bool, 0x0042C1D0, BSAEntry& file, const char* looseFilePath); // called by FolderContainsFile; invalidates the file if it's older than a matching loose file
+         DEFINE_MEMBER_FN(ContainsFile,   bool, 0x0042E020, const BSHash& file, const BSHash& folder, UInt32& outFolderIndex, UInt32& outFileIndexInFolder, const char* normalizedFilepath); // just calls ContainsFolder and FolderContainsFile
+         DEFINE_MEMBER_FN(ContainsFolder, bool, 0x0042CE40, const BSHash& folder, UInt32& outFolderIndex, const char* normalizedFilepath);
+         DEFINE_MEMBER_FN(DiscardRetainedFilenames,   void, 0x0042C0D0, UInt32); // conditional on unk194 flag 0x04
+         DEFINE_MEMBER_FN(FolderContainsFile, bool, 0x0042D000, UInt32 folderIndex, const BSHash& file, UInt32& outFileIndexInFolder, const char* normalizedFilepath, UInt32 zero); // file path is used for CheckFileIsOverridden
          DEFINE_MEMBER_FN(RetainsFilenameStringTable, bool, 0x0042BD30);
          DEFINE_MEMBER_FN(RetainsFilenameOffsetTable, bool, 0x0042BD50);
          DEFINE_MEMBER_FN(Subroutine0042BD70, bool, 0x0042BD70);
-         DEFINE_MEMBER_FN(Subroutine0042CE40, bool, 0x0042CE40, UInt32, UInt32, const char* normalizedFilepath);
-         DEFINE_MEMBER_FN(Subroutine0042D000, bool, 0x0042D000, UInt32, UInt32, UInt32, UInt32, const char* normalizedFilepath);
-         DEFINE_MEMBER_FN(Subroutine0042E020, bool, 0x0042E020, UInt32, UInt32, UInt32, UInt32, const char* normalizedFilepath);
+         DEFINE_MEMBER_FN(Subroutine0042E070, UInt32, 0x0042E070, UInt32, UInt32, UInt32, UInt32); // load a file?
          //
          // The below are all called during the constructor, so don't use them:
          //
@@ -143,15 +167,15 @@ namespace RE {
          DEFINE_MEMBER_FN(LoadFolderNames,      const char*, 0x0042CAE0, UInt32 stopAt); // returns loaded folder names
          DEFINE_MEMBER_FN(SetReadWriteFuncs,    void,   0x004307F0, bool);
 
-         //
-         // Don't actually call these; they're offered as an example:
+         /*// Function provided as example documentation only.
          //
          inline UInt32 _example_InvalidateAgainstLooseFiles() {
             WIN32_FIND_DATAA data;
             if (FindFirstFileA(this->m_path, &data) == INVALID_HANDLE_VALUE)
                return 0;
-            return CALL_MEMBER_FN(this, InvalidateAgainstLooseFiles)("Data\\", "", &data.ftLastWriteTime);
+            return CALL_MEMBER_FN(this, InvalidateAgainstLooseFiles)("Data\\", "", data.ftLastWriteTime);
          }
+         //*/
    };
    static_assert(sizeof(Archive) >= 0x280, "RE::Archive is too small!");
    static_assert(sizeof(Archive) <= 0x280, "RE::Archive is too large!");
