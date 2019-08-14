@@ -46,6 +46,36 @@
       
       
    
+   <!-- SETTINGS FOR THE INVENTORY MENU ----------------------------------- ->
+      These settings influence the Inventory menu.
+   <---------------------------------------------------------------------- -->
+   
+      <!-- Modify the width of the Gold / Cost column. -->
+      <_inventoryColumnAdjustGold>0</_inventoryColumnAdjustGold>
+   
+      <!-- Modify the width of the Weight column. -->
+      <_inventoryColumnAdjustWeight>0</_inventoryColumnAdjustWeight>
+   
+      <!-- Modify the width of the Damage / Armor / Quality column. -->
+      <_inventoryColumnAdjustStat>0</_inventoryColumnAdjustStat>
+   
+      <!-- Modify the width of the Condition column. -->
+      <_inventoryColumnAdjustCondition>0</_inventoryColumnAdjustCondition>
+      
+      
+   
+   <!-- SETTINGS FOR THE MAGIC MENU --------------------------------------- ->
+      These settings influence the Magic menu.
+   <---------------------------------------------------------------------- -->
+   
+      <!-- Modify the width of the Spell Cost column. -->
+      <_magicColumnAdjustCost>0</_magicColumnAdjustCost>
+   
+      <!-- Modify the width of the Spell Magnitude column. -->
+      <_magicColumnAdjustMagnitude>0</_magicColumnAdjustMagnitude>
+      
+      
+   
    <!-- SETTINGS FOR THE MAGIC EFFECT SETTING MENU ------------------------ ->
       These settings influence the menu used to customize specific spell 
       effects, when spellmaking or creating an enchantment.

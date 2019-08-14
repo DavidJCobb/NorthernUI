@@ -38,8 +38,16 @@
 	<xbuttonrb><ref src="inventory_tabs_next" trait="clicked" /></xbuttonrb>
    
    <!-- Config for this menu. Some of this may get moved to prefabs. -->
-   <_itemInfoColumnWidth> 60 </_itemInfoColumnWidth>
-   <_equipMarkerOffset>    8 </_equipMarkerOffset> <!-- Distance between "equipped item" marker and menu outer edge -->
+   <_magicColumnWidthCost>
+      <copy>60</copy>
+      <add src="xxnLocalization()" trait="_magicColumnAdjustCost" />
+   </_magicColumnWidthCost>
+   <_magicColumnWidthDuration>60</_magicColumnWidthDuration>
+   <_magicColumnWidthMagnitude>
+      <copy>60</copy>
+      <add src="xxnLocalization()" trait="_magicColumnAdjustMagnitude" />
+   </_magicColumnWidthMagnitude>
+   <_equipMarkerOffset>8</_equipMarkerOffset> <!-- Distance between "equipped item" marker and menu outer edge -->
    <_itemIconZoom>66</_itemIconZoom>
    <_itemIconSize>
       <copy>64</copy>
@@ -226,10 +234,7 @@
                   <y>0</y>
                   <width>
                      <copy src="parent()" trait="width"/>
-                     <sub>
-                        <copy src="MagicMenu" trait="_itemInfoColumnWidth" />
-                        <mult src="parent()"  trait="_columncount" />
-                     </sub>
+                     <sub  src="col_header_1" trait="width()" />
                   </width>
                   <height><copy src="child(label)" trait="height"/></height>
                   
@@ -260,7 +265,15 @@
                      <add  src="sibling()" trait="width" />
                   </x>
                   <y><copy src="sibling()" trait="y" /></y>
-                  <width> <copy src="MagicMenu" trait="_itemInfoColumnWidth" /></width>
+                  
+                  <_widths_1><copy src="MagicMenu" trait="_magicColumnWidthCost" /></_widths_1>
+                  <_widths_2><copy src="MagicMenu" trait="_magicColumnWidthMagnitude" /></_widths_2>
+                  <width>
+                     <copy src="menu()" trait="user0" />
+                     <eq>5</eq>
+                     <copy src="me()" trait="_widths_" />
+                  </width>
+                  
                   <height><copy src="sibling()" trait="height" /></height>
                   
                   <!-- Keyboard/Xbox behavior: -->
@@ -755,8 +768,9 @@
                <copy src="parent()" trait="width" />
                <sub  src="me()"     trait="x" />
                <sub>
-                  <copy src="MagicMenu" trait="_itemInfoColumnWidth" />
-                  <mult src="parent()"  trait="_columncount" />
+                  <copy src="sibling(column_1)" trait="width" />
+                  <add  src="sibling(column_2)" trait="width" />
+                  <add  src="sibling(column_3)" trait="width" />
                </sub>
             </width>
             <height><copy src="parent()" trait="height" /></height>
@@ -797,7 +811,7 @@
 				<string><copy src="parent()" trait="user3" /></string>
             <visible><copy src="parent()" trait="_columncount" /><gte>1</gte></visible>
             <width> <!-- Collapse if not visible. -->
-               <copy   src="MagicMenu" trait="_itemInfoColumnWidth" />
+               <copy   src="MagicMenu" trait="_magicColumnWidthMagnitude" />
                <onlyif src="me()" trait="visible" />
             </width>
             <height><copy src="parent()" trait="height" /></height>
@@ -839,7 +853,7 @@
 				<string><copy src="parent()" trait="user4" /></string>
             <visible><copy src="parent()" trait="_columncount" /><gte>2</gte></visible>
             <width> <!-- Collapse if not visible. -->
-               <copy   src="MagicMenu" trait="_itemInfoColumnWidth" />
+               <copy   src="MagicMenu" trait="_magicColumnWidthDuration" />
                <onlyif src="me()" trait="visible" />
             </width>
             <height><copy src="parent()" trait="height" /></height>
@@ -881,7 +895,7 @@
 				<string><copy src="parent()" trait="user5" /></string>
             <visible><copy src="parent()" trait="_columncount" /><gte>3</gte></visible>
             <width> <!-- Collapse if not visible. -->
-               <copy   src="MagicMenu" trait="_itemInfoColumnWidth" />
+               <copy   src="MagicMenu" trait="_magicColumnWidthCost" />
                <onlyif src="me()" trait="visible" />
             </width>
             <height><copy src="parent()" trait="height" /></height>

@@ -47,7 +47,22 @@
 	<xbuttonrb><ref src="inventory_tabs_next" trait="clicked" /></xbuttonrb>
    
    <!-- Config for this menu. Some of this may get moved to prefabs. -->
-   <_itemInfoColumnWidth>60</_itemInfoColumnWidth>
+   <_itemColumnWidthGold>
+      <copy>60</copy>
+      <add src="xxnLocalization()" trait="_inventoryColumnAdjustGold" />
+   </_itemColumnWidthGold>
+   <_itemColumnWidthWeight>
+      <copy>60</copy>
+      <add src="xxnLocalization()" trait="_inventoryColumnAdjustWeight" />
+   </_itemColumnWidthWeight>
+   <_itemColumnWidthStat>
+      <copy>60</copy>
+      <add src="xxnLocalization()" trait="_inventoryColumnAdjustStat" />
+   </_itemColumnWidthStat>
+   <_itemColumnWidthCondition>
+      <copy>60</copy>
+      <add src="xxnLocalization()" trait="_inventoryColumnAdjustCondition" />
+   </_itemColumnWidthCondition>
    <_itemIconZoom>66</_itemIconZoom>
    <_itemIconSize>
       <copy>64</copy>
@@ -434,8 +449,10 @@
                   <width>
                      <copy src="parent()" trait="width"/>
                      <sub>
-                        <copy src="InventoryMenu" trait="_itemInfoColumnWidth" />
-                        <mult src="parent()"      trait="_columncount" />
+                        <copy src="sibling(col_header_1)" trait="width" />
+                        <add  src="sibling(col_header_2)" trait="width" />
+                        <add  src="sibling(col_header_3)" trait="width" />
+                        <add  src="sibling(col_header_4)" trait="width" />
                      </sub>
                   </width>
                   <height>
@@ -461,6 +478,7 @@
                </rect>
                <rect name="col_header_1"> <!-- typically value -->
                   <locus>&true;</locus>
+                  <visible>&true;</visible>
                   <id>15</id>
                   <target>&true;</target>
                   <clicksound>3</clicksound>
@@ -469,7 +487,10 @@
                      <add  src="sibling()" trait="width" />
                   </x>
                   <y><copy src="sibling()" trait="y" /></y>
-                  <width> <copy src="InventoryMenu" trait="_itemInfoColumnWidth" /></width>
+                  <width>
+                     <copy src="InventoryMenu" trait="_itemColumnWidthGold" />
+                     <onlyif src="me()" trait="visible" />
+                  </width>
                   <height><copy src="sibling()" trait="height" /></height>
                   
                   <!-- Keyboard/Xbox behavior: -->
@@ -491,6 +512,7 @@
                </rect>
                <rect name="col_header_2"> <!-- typically weight -->
                   <locus>&true;</locus>
+                  <visible>&true;</visible>
                   <id>16</id>
                   <target>&true;</target>
                   <clicksound>3</clicksound>
@@ -499,7 +521,10 @@
                      <add  src="sibling()" trait="width" />
                   </x>
                   <y><copy src="sibling()" trait="y" /></y>
-                  <width> <copy src="InventoryMenu" trait="_itemInfoColumnWidth" /></width>
+                  <width>
+                     <copy src="InventoryMenu" trait="_itemColumnWidthWeight" />
+                     <onlyif src="me()" trait="visible" />
+                  </width>
                   <height><copy src="sibling()" trait="height" /></height>
                   
                   <!-- Keyboard/Xbox behavior: -->
@@ -530,7 +555,10 @@
                      <add  src="sibling()" trait="width" />
                   </x>
                   <y><copy src="sibling()" trait="y" /></y>
-                  <width> <copy src="InventoryMenu" trait="_itemInfoColumnWidth" /></width>
+                  <width>
+                     <copy src="InventoryMenu" trait="_itemColumnWidthStat" />
+                     <onlyif src="me()" trait="visible" />
+                  </width>
                   <height><copy src="sibling()" trait="height" /></height>
                   
                   <!-- Keyboard/Xbox behavior: -->
@@ -582,7 +610,10 @@
                      <add  src="sibling()" trait="width" />
                   </x>
                   <y><copy src="sibling()" trait="y" /></y>
-                  <width> <copy src="InventoryMenu" trait="_itemInfoColumnWidth" /></width>
+                  <width>
+                     <copy src="InventoryMenu" trait="_itemColumnWidthCondition" />
+                     <onlyif src="me()" trait="visible" />
+                  </width>
                   <height><copy src="sibling()" trait="height" /></height>
                   
                   <!-- Keyboard/Xbox behavior: -->
@@ -1332,8 +1363,10 @@
                <copy src="parent()" trait="width" />
                <sub  src="me()"     trait="x" />
                <sub>
-                  <copy src="InventoryMenu" trait="_itemInfoColumnWidth" />
-                  <mult src="parent()"      trait="_columncount" />
+                  <copy src="sibling(column_1)" trait="width" />
+                  <add  src="sibling(column_2)" trait="width" />
+                  <add  src="sibling(column_3)" trait="width" />
+                  <add  src="sibling(column_4)" trait="width" />
                </sub>
             </width>
             <height><copy src="child()" trait="height" /></height>
@@ -1370,7 +1403,7 @@
 				<string><copy src="parent()" trait="user2" /></string>
             <visible><copy src="parent()" trait="_columncount" /><gte>1</gte></visible>
             <width> <!-- Collapse if not visible. -->
-               <copy   src="InventoryMenu" trait="_itemInfoColumnWidth" />
+               <copy   src="InventoryMenu" trait="_itemColumnWidthGold" />
                <onlyif src="me()" trait="visible" />
             </width>
             <height><copy src="parent()" trait="height" /></height>
@@ -1412,7 +1445,7 @@
 				<string><copy src="parent()" trait="user3" /></string>
             <visible><copy src="parent()" trait="_columncount" /><gte>2</gte></visible>
             <width> <!-- Collapse if not visible. -->
-               <copy   src="InventoryMenu" trait="_itemInfoColumnWidth" />
+               <copy   src="InventoryMenu" trait="_itemColumnWidthWeight" />
                <onlyif src="me()" trait="visible" />
             </width>
             <height><copy src="parent()" trait="height" /></height>
@@ -1458,7 +1491,7 @@
                <!-- <and><copy src="me()" trait="string" /><neq></neq></and> -->
             </visible>
             <width> <!-- Collapse if not visible. -->
-               <copy   src="InventoryMenu" trait="_itemInfoColumnWidth" />
+               <copy   src="InventoryMenu" trait="_itemColumnWidthStat" />
                <onlyif src="me()" trait="visible" />
             </width>
             <height><copy src="parent()" trait="height" /></height>
@@ -1504,7 +1537,7 @@
                <!-- <and><copy src="me()" trait="string" /><neq></neq></and> -->
             </visible>
             <width> <!-- Collapse if not visible. -->
-               <copy   src="InventoryMenu" trait="_itemInfoColumnWidth" />
+               <copy   src="InventoryMenu" trait="_itemColumnWidthCondition" />
                <onlyif src="me()" trait="visible" />
             </width>
             <height><copy src="parent()" trait="height" /></height>
