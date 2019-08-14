@@ -71,10 +71,13 @@ namespace RE {
       MEMBER_FN_PREFIX(BSAEntry);
       DEFINE_MEMBER_FN(Constructor, BSAEntry&, 0x0042BD20);
 
-      bool isInvalidated() const {
+      bool isKnownNotToBeOverridden() const { // files only
+         return (this->size & 0x80000000); // set by Archive::CheckFileIsOverridden once we know the file isn't overridden by a loose file
+      }
+      bool isInvalidated() const { // files only
          return (this->offset & 0x80000000) == 0;
       }
-      void invalidate() {
+      void invalidate() { // files only
          this->offset &= 0x80000000;
       }
    };
@@ -112,8 +115,7 @@ namespace RE {
          BSAHeader header; // 154
          BSAEntry* folders = nullptr; // 178 // array
          UInt32 unk17C;
-         UInt32 unk180;
-         UInt32 unk184;
+         __time64_t myDateModified; // 180 // same type as the Date Modified in stat()
          UInt32 unk188 = 0; // same type as unk148
          UInt32 unk18C = -1;
          UInt32 unk190 = -1;

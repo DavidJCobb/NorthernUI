@@ -162,6 +162,7 @@
     <ClCompile Include="Patches\UIDiagnostics.cpp" />
     <ClCompile Include="Patches\VideoMenu.cpp" />
     <ClCompile Include="Patches\XboxGamepad\CustomControls.cpp" />
+    <ClCompile Include="ReverseEngineered\Files\Archive.cpp" />
     <ClCompile Include="ReverseEngineered\Forms\Actor.cpp" />
     <ClCompile Include="ReverseEngineered\NetImmerse\NiTypes.cpp" />
     <ClCompile Include="ReverseEngineered\Systems\Core.cpp" />
@@ -307,6 +308,7 @@
     <ClInclude Include="Patches\XboxGamepad\Patch.h" />
     <ClInclude Include="Patches\XXNMenus.h" />
     <ClInclude Include="ReverseEngineered\ExtraData\ExtraContainerChanges.h" />
+    <ClInclude Include="ReverseEngineered\Files\Archive.h" />
     <ClInclude Include="ReverseEngineered\Files\BSFile.h" />
     <ClInclude Include="ReverseEngineered\Forms\Actor.h" />
     <ClInclude Include="ReverseEngineered\Forms\AlchemyItem.h" />
@@ -386,9 +388,13 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine004723A0.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00474530.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00476D10.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Archive\InvalidateAgainstLooseFiles.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Archive\Subroutine0042D000.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\PlayerCharacter\Subroutine00671620.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\CreateTemplatedChildren.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\UpdateTemplatedChildren.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\FindBSAThatContainsFile.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\HashFilePath.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

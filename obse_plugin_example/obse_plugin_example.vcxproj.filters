@@ -114,6 +114,7 @@
     <ClCompile Include="Miscellaneous\rotation.cpp" />
     <ClCompile Include="Services\TileDump.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\InventoryMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\Files\Archive.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -266,7 +267,6 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
-    <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\Commands_ActiveEffect.h" />
     <ClInclude Include="..\obse\obse\Commands_Actor.h" />
     <ClInclude Include="..\obse\obse\Commands_ActorValue.h" />
@@ -367,7 +367,6 @@
     <ClInclude Include="..\obse\obse\ThreadLocal.h" />
     <ClInclude Include="..\obse\obse\Utilities.h" />
     <ClInclude Include="..\obse\obse\VarMap.h" />
-    <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
@@ -8027,6 +8026,7 @@
     <ClInclude Include="Miscellaneous\rotation.h" />
     <ClInclude Include="Services\TileDump.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\BSPlayerDistanceCheckController.h" />
+    <ClInclude Include="ReverseEngineered\Files\Archive.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
@@ -8041,5 +8041,9 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\UpdateTemplatedChildren.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\CreateTemplatedChildren.txt" />
     <Text Include="ReverseEngineered\DOCS\ParseXML.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Archive\InvalidateAgainstLooseFiles.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\FindBSAThatContainsFile.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Archive\Subroutine0042D000.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\HashFilePath.txt" />
   </ItemGroup>
 </Project>

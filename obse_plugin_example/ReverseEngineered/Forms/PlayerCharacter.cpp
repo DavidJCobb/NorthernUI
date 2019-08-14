@@ -1,4 +1,5 @@
 #include "PlayerCharacter.h"
+#include "obse/NiRenderer.h"
 
 namespace RE {
    bool*  const bPlayerInVanityMode  = (bool*)  0x00B3BB04;
@@ -29,4 +30,31 @@ namespace RE {
          retn;
       }
    };
+
+   bool PlayerCharacter::IsOblivionReloadedImmersiveFirstPerson() const {
+      //
+      // Oblivion Reloaded's "immersive first-person camera" feature works by 
+      // making it so that you're always in third-person view, with the game 
+      // positioning the camera inside of your head. This means that the 
+      // (isThirdPerson) field on PlayerCharacter is no longer reliable.
+      //
+      // Oblivion Reloaded expands NiDX9Renderer from 0xB00 bytes to 0xB44 
+      // bytes, and uses the bool at offset 0xB41 to indicate whether we're 
+      // in true third-person, or third-person as a proxy for immersive first-
+      // person.
+      //
+      struct ORRenderer {
+         UInt32 padding[0xB40 / 4];
+         UInt8  unkB40;
+         bool   isFirstPerson; // B41
+         UInt8  unkB42;
+         UInt8  unkB43;
+      };
+      UInt32 rendererSize = *(UInt32*)0x0076BD75;
+      if (rendererSize >= 0xB44) {
+         auto renderer = (ORRenderer*) *g_renderer;
+         return renderer->isFirstPerson;
+      }
+      return false;
+   }
 };

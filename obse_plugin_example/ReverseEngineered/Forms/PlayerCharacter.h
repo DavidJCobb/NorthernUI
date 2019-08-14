@@ -266,6 +266,8 @@ namespace RE {
          bool SetSkeletonPath(const char* newPath);
          static void UpdateHead(void);	// TODO: investigate further
 
+         bool IsOblivionReloadedImmersiveFirstPerson() const;
+
          MEMBER_FN_PREFIX(PlayerCharacter);
          DEFINE_MEMBER_FN(GetAppropriateNiNode,   NiNode*,        0x006600F0); // gets first-person or third-person node based on third-person state
          DEFINE_MEMBER_FN(HandleBorderRegions,    void,           0x006714E0); // called by the player movement code; listed here for documentation purposes only; do not call

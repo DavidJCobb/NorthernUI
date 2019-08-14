@@ -1,5 +1,4 @@
 #include "obse/PluginAPI.h"
-#include "obse/CommandTable.h"
 #include "obse_common/SafeWrite.cpp"
 
 #if OBLIVION

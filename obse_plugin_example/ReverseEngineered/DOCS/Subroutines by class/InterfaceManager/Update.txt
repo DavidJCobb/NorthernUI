@@ -84,12 +84,15 @@ void InterfaceManager::Update() {
          //
          // MenuQue patch site: update the KYO::TileLink instance for mouseTarget->GetContainingMenu() by calling MQ_14A90(mouseTarget)
          //
+         // Oblivion Reloaded patch site: intercept all right-clicks made when InventoryMenu is open by jumping to OR_219D0. (This is 
+         // the same patch site as MenuQue; it's a conflict.)
+         //
          // Handle activeMenu/activeTile:
          //
          if (bLMBUp && this->activeMenu) { // at 0x0058252B
             auto eax = this->unkA0;
-            if (!eax || eax == this->activeTile) {
-               if (auto eax = this->activeTile->GetTrait(kTileValue_id)) {
+            if (!eax || eax == this->activeTile) { // the latter of these two conditions is NOP'd by either MenuQue or Oblivion Reloaded
+               if (auto eax = this->activeTile->GetTrait(kTileValue_id)) { // condition  is NOP'd by either MenuQue or Oblivion Reloaded
                   auto ecx = this->activeMenu;
                   if (ecx->unk24 == 1) {
                      auto clicksound = this->activeTile->GetFloatTraitValue(kTileValue_clicksound);

@@ -223,6 +223,8 @@ namespace CobbPatches {
                return true;
             if (!player->isThirdPerson)
                return true;
+            if (player->IsOblivionReloadedImmersiveFirstPerson()) // Oblivion Reloaded's immersive first-person view is actually third-person with the camera stuck in the player's head; if we tamper with the player model, we break that
+               return true;
             if (_WorldOrCellChanged())
                return true;
             if (player->GetMountedHorse()) // I don't understand mounted camera control well enough to tamper with it; the patches I have for control on foot break it
