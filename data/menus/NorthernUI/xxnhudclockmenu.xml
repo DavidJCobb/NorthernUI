@@ -63,9 +63,9 @@
       
       OUTPUT EXAMPLE              | FORMAT STRING USED
       ----------------------------+------------------------
-        Sundas, 17th of Last Seed | %sw, %2id%sd of %sm
-        Sundas 03 Last Seed       | %sw %id %sm
-        03/08 3E427               | %2id/%2im 3E%iy
+        Sundas, 17th of Last Seed | %sw, %2iD%sD of %sM
+        Sundas 03 Last Seed       | %sw %iD %sM
+        03/08 3E427               | %2iD/%2im 3E%iY
         2:13 pm                   | %ih:%2im %sh
         2:13 PM                   | %ih:%2im %Sh
         asdf % asdf %             | asdf %% asdf %%

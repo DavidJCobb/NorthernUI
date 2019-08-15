@@ -11,6 +11,19 @@
 	<xbuttonb> <ref src="sleep_button_cancel" trait="clicked"/> </xbuttonb>
 	<xbuttona> <ref src="sleep_button_sleep_wait" trait="clicked"/> </xbuttona>
 	
+   <!-- NORTHERNUI EXTENSIONS
+      USER22: Set to &true; to overwrite the default date/time strings with 
+              custom ones.
+      USER23: Custom format string for the time.
+      USER24: Custom format string for the date.
+      
+      Note that if either USER23 or USER24 is blank, then it won't overwrite. 
+      Whitespace, when not trimmed by the XML parser, does not count as 
+      "blank," i.e. a string of "&nbsp;" will produce whitespace output.
+   -->
+   <user22>&true;</user22>
+   <user23><copy src="xxnStrings()" trait="_sleepWaitFormatString01" /></user23>
+   <user24><copy src="xxnStrings()" trait="_sleepWaitFormatString02" /></user24>
 
 	<!-- BACKGROUND ============================================================================-->
 	<rect name="sleep_background">
@@ -170,7 +183,6 @@
             <width>
                <copy src="child(weekday_and_time)" trait="width" />
                <add  src="child(joiner_comma)"     trait="width" />
-               <add  src="child(joiner_space)"     trait="width" />
                <add  src="child(date)"             trait="width" />
             </width>
             <height>
@@ -199,20 +211,7 @@
             </text>
             <text name="joiner_comma">
                <depth>4</depth>
-               <string>,</string>
-               <include src="NorthernUI\fonts\normal.xml" />
-               <justify>&left;</justify>
-               <red>140</red><green>140</green><blue>140</blue>
-               <x>
-                  <copy src="sibling()" trait="x" />
-                  <add  src="sibling()" trait="width" />
-               </x>
-               <y><copy src="sibling()" trait="y" /></y>
-            </text>
-            <text name="joiner_space"> <!-- Ugly hack: whitespace gets trimmed and NBSP/0x0A aren't supported, so we use an invisible char as a space -->
-               <depth>4</depth>
-               <string>-</string>
-               <visible>&false;</visible>
+               <string><copy src="xxnStrings()" trait="_sleepWaitDateTimeJoiner" /></string>
                <include src="NorthernUI\fonts\normal.xml" />
                <justify>&left;</justify>
                <red>140</red><green>140</green><blue>140</blue>

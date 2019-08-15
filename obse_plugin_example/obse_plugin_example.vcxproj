@@ -154,6 +154,7 @@
     <ClCompile Include="Patches\SavegameSafeDelete.cpp" />
     <ClCompile Include="Patches\RaceSexMenu.cpp" />
     <ClCompile Include="Patches\SaveMenu.cpp" />
+    <ClCompile Include="Patches\SleepWaitMenu.cpp" />
     <ClCompile Include="Patches\SpellMakingMenu.cpp" />
     <ClCompile Include="Patches\StatsMenu.cpp" />
     <ClCompile Include="Patches\TagIDs\Main.cpp" />
@@ -294,6 +295,7 @@
     <ClInclude Include="Patches\RaceSexMenu.h" />
     <ClInclude Include="Patches\SaveMenu.h" />
     <ClInclude Include="Patches\Selectors.h" />
+    <ClInclude Include="Patches\SleepWaitMenu.h" />
     <ClInclude Include="Patches\SpellMakingMenu.h" />
     <ClInclude Include="Patches\StatsMenu.h" />
     <ClInclude Include="Patches\TagIDs\Main.h" />
@@ -361,6 +363,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\RaceSexMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\RepairMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\SigilStoneMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\SleepWaitMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\SpellMakingMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\TextEditMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\TrainingMenu.h" />

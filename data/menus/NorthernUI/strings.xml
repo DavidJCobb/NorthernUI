@@ -292,6 +292,25 @@
    <_skillsMenuButtonSelectSkill>Select Skill</_skillsMenuButtonSelectSkill>
    <_skillsMenuButtonSelectSpec>Select Specialization</_skillsMenuButtonSelectSpec>
 
+   <!----- SLEEPWAITMENU --------------------------------------------------->
+   <!-- The text that appears between the time and date. If you want spaces at 
+        the beginning or end, type &nbsp; -->
+   <_sleepWaitDateTimeJoiner>,&nbsp;</_sleepWaitDateTimeJoiner>
+   
+   <!-- Format strings for the time and date, respectively. Leave these blank 
+        to keep the default format. These use the same codes as XXNHUDClockMenu.
+
+        These values would produce the same output as the vanilla English text:
+        %sw %ih:%2im %sh
+        %sm %id, 3E%iy
+        
+        Some examples:
+        %ih:%2im %sh on %sw      X:XX pm on Weekday
+        %sM %iD, 3E%iY           Monthname 3, 3E433
+   -->
+   <_sleepWaitFormatString01>%ih:%2im %sh on %sw</_sleepWaitFormatString01>
+   <_sleepWaitFormatString02>%sM %iD, 3E%iY</_sleepWaitFormatString02>
+
    <!----- SPELLMAKINGMENU ------------------------------------------------->
    <_spellmakingMenuSpellName>Spell Name:</_spellmakingMenuSpellName>
    

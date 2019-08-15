@@ -115,6 +115,7 @@
     <ClCompile Include="Services\TileDump.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\InventoryMenu.cpp" />
     <ClCompile Include="ReverseEngineered\Files\Archive.cpp" />
+    <ClCompile Include="Patches\SleepWaitMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -8027,6 +8028,8 @@
     <ClInclude Include="Services\TileDump.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\BSPlayerDistanceCheckController.h" />
     <ClInclude Include="ReverseEngineered\Files\Archive.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\SleepWaitMenu.h" />
+    <ClInclude Include="Patches\SleepWaitMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

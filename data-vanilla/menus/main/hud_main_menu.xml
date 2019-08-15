@@ -212,7 +212,10 @@
 			
 			<image name="hudmain_frame_left">
 				<depth> 1 </depth>
-				<visible> &xenon; </visible>
+				<visible>
+               <copy>&xenon;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </visible>
 				<filename> Menus\HUD\hud_xbox_lt.dds </filename>
 				<width> 42 </width>
 				<height> 35 </height>
@@ -222,7 +225,10 @@
 			
 			<image name="hudmain_frame_right">
 				<depth> 1 </depth>
-				<visible> &xenon; </visible>
+				<visible>
+               <copy>&xenon;</copy>
+               <copy src="NorthernUI()" trait="_xxnGamepadAvailable" />
+            </visible>
 				<filename> Menus\HUD\hud_xbox_rt.dds </filename>
 				<width> 45 </width>
 				<height> 35 </height>
