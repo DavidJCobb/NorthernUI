@@ -37,7 +37,7 @@ namespace RE {
          UInt32				unk070;			//070
          UInt32				unk074;			//074
          UInt32				unk078;			//078
-         UInt8				LastViewState;			//07C
+         bool    wasThirdPersonView; // 7C // was the player in third-person view when they first entered dialogue?
          UInt8				pad07D[3];
          UInt32				unk080;			//080 init'd to 1
          UInt32				unk084;			//084

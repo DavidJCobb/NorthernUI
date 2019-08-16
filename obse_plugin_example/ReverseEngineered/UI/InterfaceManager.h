@@ -59,6 +59,8 @@ namespace RE {
    DEFINE_SUBROUTINE_EXTERN(TESObjectREFR*, GetReticleTarget, 0x00579540);
    //
    DEFINE_SUBROUTINE_EXTERN(void, UpdateMainMenuPlayerModelAngle, 0x005A5900, float cursorMovementX, float cursorMovementY);
+   //
+   DEFINE_SUBROUTINE_EXTERN(void, MoveCursorTo, 0x00579320, float xPercent, float yPercent);
 
    class InterfaceManager {
       public:
@@ -85,7 +87,7 @@ namespace RE {
             kSpecialKey_PageDown   = 0x8000000A,
          };
 
-         struct Fade {
+         struct Fade { // sizeof == 0x14; MenuQue extends to 0x18
             //
             // Actually, I think this might be wrong. It's certainly related to menu fades, but it 
             // may handle more functionality. See, FadeMenu above is called by Tile::AnimateTrait.
@@ -95,6 +97,7 @@ namespace RE {
             float  unk08; // 08 // time maximum? // initialized to max(0.0, menufade or explorefade)
             Fade*  next;  // 0C
             Fade*  prev;  // 10
+            // MenuQue adds a field at offset 0x14
          };
 
          SceneGraph* unk000; // 000 // == *g_interfaceSceneGraph
@@ -105,6 +108,7 @@ namespace RE {
                         //  - value 2 and value 5 are processed the same way by InterfaceManager::Upate
                         //  - value 3 is set when a menu ID is being added to the active stack
                         //  - value 4 is checked for at 0x00584267
+                        //  - value 8 prevents the in-game menu cursor from updating if we're not in exclusive fullscreen
          UInt8  unk009; // 09 // set to 1 at 0x00584094 and 0x00584189; possibly indicates that a menu fade is in progress
          UInt8  statsMenuSelectedTab; // 0A // verified via memory inspection during testing
          UInt8  itemsMenuSelectedTab; // 0B // verified via memory inspection during testing
@@ -200,7 +204,6 @@ namespace RE {
 
          bool  CreateTextEditMenu(const char* promptText, const char* defaultText);
          float GetDepth();
-         bool  IsGameMode();
          bool  MenuModeHasFocus(UInt32 menuType);		// returns true if menuType is on top (has focus)
          bool  OtherMenusAreActive(UInt32 yourMenuID);
          void  SetCursorPosition(float x, float y, bool forceShowCursor = false);
@@ -219,6 +222,7 @@ namespace RE {
          DEFINE_MEMBER_FN(GetCursorScreenX,             SInt32, 0x005952D0); // converts cursorPos from center-relative to top-left-relative or somesuch
          DEFINE_MEMBER_FN(GetCursorScreenY,             SInt32, 0x00593020); // converts cursorPos from center-relative to top-left-relative or somesuch
          DEFINE_MEMBER_FN(GetTopmostMenuID,             UInt32, 0x0057CF60); // checks activeMenuIDs
+         DEFINE_MEMBER_FN(HideCursor,                   void,   0x0057FD60);
          DEFINE_MEMBER_FN(MaintainReticleTarget,        void,   0x005806D0); // raycasts; supplies target to HUDReticle and HUDInfoMenu
          DEFINE_MEMBER_FN(Mouseout,                     void,   0x0057D730, bool fullProcess); // clears activeTile and activeMenu // "full processing" here means updating "mouseover" on the tile and firing a mouseout event on the menu
          DEFINE_MEMBER_FN(SelectItemsMenuTabByIndex,    void,   0x0057CE20, UInt8);
@@ -232,11 +236,13 @@ namespace RE {
          DEFINE_MEMBER_FN(SetSafeZoneState,             void,   0x0057FDC0, UInt32);
          DEFINE_MEMBER_FN(Subroutine0057CFE0,           SInt32, 0x0057CFE0, UInt32 menuID, bool);
          DEFINE_MEMBER_FN(Subroutine0057D240,           bool,   0x0057D240, UInt32);
-         DEFINE_MEMBER_FN(Subroutine0057DA90,           Tile*,  0x0057DA90, UInt32* out, Tile* searchRoot); // getter; see file in _DOCS\
+         DEFINE_MEMBER_FN(Subroutine0057DA90,           Tile*,  0x0057DA90, UInt32* out, Tile* searchRoot); // getter; see file in _DOCS
+         DEFINE_MEMBER_FN(MoveCursorTo,                 void,   0x0057F490, float xPercent, float yPercent);
          //
          // Things you should probably never need to call:
          //
          DEFINE_MEMBER_FN(AddMenuToActiveIDStack,       void,   0x0057D640, UInt32 id);
+         DEFINE_MEMBER_FN(CreateBigFourMenuInstances,   void,   0x0057E150);
          DEFINE_MEMBER_FN(ForceCloseAllActiveMenus,     void,   0x0057CEE0); // acts on activeMenuIDs: gets Menus referred to by list and calls Dispose on them; empties list; note that other pointers to the menus become unsafe, obv
          DEFINE_MEMBER_FN(HandleNavigationKeypress,     void,   0x00580BA0, UInt32 specialKeycode); // internal handler: sends menu event 0E and handles x-navigation traits // see enum below
          DEFINE_MEMBER_FN(InitializeMenuRootAndStrings, UInt32, 0x00581CC0, UInt32); // creates cursor, menuRoot, and strings

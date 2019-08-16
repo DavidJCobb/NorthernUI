@@ -1006,11 +1006,11 @@ namespace CobbPatches {
                s_lastShowedAt = RE::g_timeInfo->unk10;
             };
             void Apply() {
-               WriteRelJump(0x00583E2B, (UInt32)&PatchedEnd);
+               WriteRelJump(0x00583E2B, (UInt32)&PatchedEnd); // SetInterfaceManagerCursorAlpha+0x3B
             };
          };
          namespace CursorUpdateHook {
-            static bool  s_cursorMoved = false;
+            static bool s_cursorMoved = false;
 
             namespace Start {
                void Inner() {
@@ -1026,7 +1026,7 @@ namespace CobbPatches {
                   };
                };
                void Apply() {
-                  WriteRelJump(0x0057E90C, (UInt32)&Outer);
+                  WriteRelJump(0x0057E90C, (UInt32)&Outer); // InterfaceManager::UpdateCursorState+0x14C
                };
             };
             namespace IfChanged {
@@ -1077,7 +1077,6 @@ namespace CobbPatches {
                         s_lastShowedAt = now;
                         break;
                      case kCursorState_Hiding:
-                        //prop->alpha = (std::min)(1.0F, prop->alpha) - 0.0666F; // hm... the game only cares whether alpha is zero or not. is this because of IM's NiAlphaProperty?
                         prop->alpha = (std::min)(1.0F, prop->alpha) - (2.0F * RE::g_timeInfo->frameTime); // fade out over half a second (one second, twice as fast)
                         if (prop->alpha <= 0.0F) {
                            prop->alpha = 0.0F;

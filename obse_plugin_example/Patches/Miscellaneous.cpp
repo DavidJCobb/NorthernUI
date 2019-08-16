@@ -846,6 +846,142 @@ namespace CobbPatches {
             WriteRelJump(0x0043E6A5, (UInt32)&Outer);
          };
       };
+      namespace CursorInitialPosition {
+         //
+         // Allow a menu to control the cursor's initial position, if that menu is 
+         // being opened from game mode.
+         //
+         /*
+            LIST OF THINGS THAT TAMPER WITH THE CURSOR:
+
+            ForceShowInterfaceManagerCursor // only called by MessageHandler::Unk_09; not for normal gameplay
+             - Sets "visible" trait to true
+             - Rebuilds 3D via Tile::HandleChangeFlags if there is no rendered node
+
+            InterfaceManager::Subroutine0057D480 // smells like startup code to me
+             - Tampers with loading screen's displayed meter progress
+             - Sets "culled" flag on rendered node
+             - Sets "visible" trait to false
+             - Manually calls Tile::HandleChangeFlags
+
+            InterfaceManager::SetCursorFilename
+             - Sets "string" trait
+
+            InterfaceManager::UpdateCursorState
+             - Modifies rendered node position, and caches on IM singleton as well
+             - Clears "culled" flag from rendered node
+             - Sets "visible" trait to true
+
+            InterfaceManager::Subroutine0057EA20 // callers include Menu::EnableMenu, but it's before our current "cursor position" patch, so... :\ 
+             - Conditionally sets "visible" trait to true
+
+            InterfaceManager::MoveCursorTo // WndProc and LockPickMenu only
+             - Modifies rendered node position
+             - Clears "culled" flag from rendered node
+             - Sets "visible" trait to true
+
+            InterfaceManager::HideCursor
+             - Sets "culled" flag on rendered node
+             - Sets "visible" trait to false
+
+            InterfaceManager::InitializeMenuRootAndStrings
+             - Sets "culled" flag on rendered node
+
+            InterfaceManager::Update
+             - Conditionally sets "string" trait
+             - Clears "culled" flag on rendered node
+             - Sets "visible" trait to true
+             - Calls UpdateCursorState
+
+            SetInterfaceManagerCursorAlpha
+             - Directly modifies alpha in the NiAlphaProperty on the rendered node
+
+            InterfaceManager::Subroutine00583E60 // used, among other things, for dragging items out of the inventory menu
+             - Clears "culled" flag on rendered node
+             - Sets "visible" trait to true
+             - Sets "string" trait
+             - Calls Tile::HandleChangeFlags
+
+            InterfaceManager::Subroutine00583F40
+             - Sets "culled" flag on rendered node
+             - Sets "visible" trait to false
+             - Calls Tile::HandleChangeFlags
+
+            InterfaceManagerGetNewMenuDepthNonMember
+             - Updates "depth" trait
+             - Updates rendered node position
+         */
+         //
+         void _stdcall Inner(RE::Menu* menu) {
+            auto root = menu->tile;
+            if (!root)
+               return;
+            auto ui = *RE::ptrInterfaceManager;
+            {  // Verify that this is the only active menu
+               bool  found   = true;
+               UInt8 i       = 0;
+               auto  current = menu->GetID();
+               do {
+                  auto id = ui->activeMenuIDs[i];
+                  if (id) {
+                     if (id == current)
+                        found = true;
+                     else
+                        return;
+                  }
+               } while (++i < std::extent<decltype(RE::InterfaceManager::activeMenuIDs)>::value);
+               if (!found)
+                  return;
+_MESSAGE("Tampering with initial cursor position for menu %3X...", current);
+            }
+            auto traitX = CALL_MEMBER_FN(root, GetTrait)(TagIDs::_traitInitialCursorX);
+            if (!traitX || !traitX->bIsNum)
+               return;
+            auto traitY = CALL_MEMBER_FN(root, GetTrait)(TagIDs::_traitInitialCursorY);
+            if (!traitY || !traitY->bIsNum)
+               return;
+_MESSAGE("Menu has the needed traits.");
+            auto cursor = ui->cursor;
+            if (!cursor)
+               return;
+            auto node   = cursor->renderedNode;
+            if (!node)
+               return;
+            float x = traitX->num;
+            float y = traitY->num;
+            float screenWidth  = RE::GetNormalizedScreenWidth();
+            float screenHeight = RE::GetNormalizedScreenHeight();
+            {  // clamp
+               float maxX = screenWidth  - CALL_MEMBER_FN(cursor, GetFloatTraitValue)(RE::kTagID_width); // make sure the cursor isn't just in-bounds, but also actually visible
+               float maxY = screenHeight - CALL_MEMBER_FN(cursor, GetFloatTraitValue)(RE::kTagID_height);
+               x = (std::max)(0.0F, (std::min)(x, maxX));
+               y = (std::max)(0.0F, (std::min)(y, maxY));
+            }
+_MESSAGE("Desired position is (%f, %f).", x, y);
+            x /= screenWidth;
+            y /= screenHeight;
+_MESSAGE("Desired position is (%f%%, %f%%).", x * 100.0F, y * 100.0F);
+            CALL_MEMBER_FN(ui, MoveCursorTo)(x, y);
+_MESSAGE("Final cursor position (given 0,0 = screen center) is (%f, %f). Node is %08X.", node->m_localTranslate.x, node->m_localTranslate.z, node);
+            {  // update InterfaceManager::cursorPos
+               ui->cursorPos.x = node->m_localTranslate.x;
+               ui->cursorPos.z = node->m_localTranslate.z;
+            }
+         }
+         __declspec(naked) void Outer() {
+            _asm {
+               mov  eax, 0x00584980; // reproduce patched-over call to InterfaceManagerGetNewMenuDepthNonMember
+               call eax;             //
+               push esi;
+               call Inner; // stdcall
+               mov  eax, 0x005851FC;
+               jmp  eax;
+            }
+         }
+         void Apply() {
+            WriteRelJump(0x005851F7, (UInt32)&Outer); // Menu::EnableMenu+0x67
+         }
+      }
 
       void Apply() {
          //
@@ -863,6 +999,7 @@ namespace CobbPatches {
          SuppressQuantityMenu::Apply();
          ZoomTraitUpdatesChangeFlags::Apply();
          FixReloadHUDCrash::Apply();
+         CursorInitialPosition::Apply();
       };
    };
 };

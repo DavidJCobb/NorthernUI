@@ -99,5 +99,7 @@ namespace RE {
          extern SettingInfo* const bUseWaterDisplacements; // default value is true
          extern SettingInfo* const bUseWaterReflections;   // default value is true
       };
+
+      extern SettingInfo** const fLoadingBarSegmentPercentages; // four pointers for settings fPercentageOfBar0 - fPercentageOfBar3
    };
 };

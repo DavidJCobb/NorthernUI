@@ -171,6 +171,7 @@
     <ClCompile Include="ReverseEngineered\UI\Menus\AudioMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\GameplayMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\InventoryMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\LoadingMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\LockPickMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\OptionsMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\TextEditMenu.cpp" />
@@ -335,6 +336,7 @@
     <ClInclude Include="ReverseEngineered\Systems\AI.h" />
     <ClInclude Include="ReverseEngineered\Systems\Core.h" />
     <ClInclude Include="ReverseEngineered\Systems\Input.h" />
+    <ClInclude Include="ReverseEngineered\Systems\MessageHandler.h" />
     <ClInclude Include="ReverseEngineered\Systems\Sound.h" />
     <ClInclude Include="ReverseEngineered\Systems\Timing.h" />
     <ClInclude Include="ReverseEngineered\TESSaveLoadGame.h" />
@@ -353,6 +355,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\HUDReticle.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\InventoryMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\LoadgameMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\LoadingMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\LockPickMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\MapMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\MessageMenu.h" />
