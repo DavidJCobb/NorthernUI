@@ -1001,16 +1001,19 @@ namespace CobbPatches {
          namespace CursorAlpha {
             void PatchedEnd(SInt32 alpha) {
                s_rightfulAlpha = alpha;
-               s_showCursor = true;
-               s_cursorCurrentState = kCursorState_Shown;
-               s_lastShowedAt = RE::g_timeInfo->unk10;
+               if (alpha) {
+                  s_showCursor = true;
+                  s_cursorCurrentState = kCursorState_Shown;
+                  s_lastShowedAt = RE::g_timeInfo->unk10;
+               }
             };
             void Apply() {
                WriteRelJump(0x00583E2B, (UInt32)&PatchedEnd); // SetInterfaceManagerCursorAlpha+0x3B
             };
          };
          namespace CursorUpdateHook {
-            static bool s_cursorMoved = false;
+            static bool s_cursorMoved       = false;
+            static bool s_mustHideNextFrame = false;
 
             namespace Start {
                void Inner() {
@@ -1045,6 +1048,23 @@ namespace CobbPatches {
             };
             namespace End {
                void __stdcall Inner(RE::InterfaceManager* ui) {
+                  if (s_mustHideNextFrame) {
+                     s_mustHideNextFrame = false;
+                     //
+                     auto node = ui->cursor->renderedNode;
+                     if (node->m_children.firstFreeEntry) {
+                        auto child = (RE::NiAVObject*) node->m_children.data[0];
+                        if (child) {
+                           auto prop = (RE::NiMaterialProperty*) CALL_MEMBER_FN(child, GetPropertyByType)(RE::NiMaterialProperty::kType);
+                           if (prop)
+                              prop->alpha = 0.0F;
+                        }
+                     }
+                     s_showCursor = false;
+                     s_cursorCurrentState = kCursorState_Hidden;
+                     s_lastShowedAt = 0;
+                     return;
+                  }
                   auto now = RE::g_timeInfo->unk10;
                   if (s_cursorMoved) {
                      s_showCursor   = true;
@@ -1100,11 +1120,71 @@ namespace CobbPatches {
                   WriteRelJump(0x0057EA06, (UInt32)&Outer);
                };
             };
+            namespace ForceHideOnAllMenusClosed {
+               //
+               // Consider this situation: you move the mouse when a menu is open, close 
+               // that menu before the cursor fades, and return to gameplay. Then, ages 
+               // later, you open another menu. The cursor will still be visible. Yet if 
+               // instead, you move the mouse when a menu is open, let the cursor fade, 
+               // and then close that menu, play the game, and open another menu, then the 
+               // cursor will be invisible.
+               //
+               // This hook lets us set the cursor fade state whenever all active menus 
+               // (i.e. all menus that can take input) are closed.
+               //
+               // TODO: THIS DOESN'T WORK, OR DOESN'T WORK CONSISTENTLY
+               //
+               void _stdcall Inner() {
+                  auto ui = *RE::ptrInterfaceManager;
+                  {  // Verify that no active menus remain
+                     UInt8 i = 0;
+                     do {
+                        auto id = ui->activeMenuIDs[i];
+                        if (id)
+                           return;
+                     } while (++i < std::extent<decltype(RE::InterfaceManager::activeMenuIDs)>::value);
+                  }
+                  s_mustHideNextFrame = true;
+               }
+               __declspec(naked) void Outer() {
+                  _asm {
+                     call Inner; // stdcall
+                     mov  eax, 0x00582160; // reproduce patched-over call to InterfaceManager_GetSingleton
+                     call eax;             //
+                     mov  ecx, 0x00584807;
+                     jmp  ecx;
+                  }
+               }
+               void Apply() {
+                  WriteRelJump(0x00584802, (UInt32)&Outer); // Menu::FadeOut+0xC2
+               }
+            }
+            namespace DontReShowCursorAfterLoadingScreen {
+               //
+               // ShowLoadingMenu sets the cursor alpha to zero so that you don't see the 
+               // cursor on loading screens. LoadingMenu::~LoadingMenu sets the alpha back 
+               // to full. That messes with us per the above.
+               //
+               void Inner(UInt8 desiredAlpha) {
+                  //
+                  // LoadingMenu hid the cursor. If we're only just now coming out of the 
+                  // loading screen, and if we're not reverting the alpha, then the cursor 
+                  // is still hidden; update our state vars accordingly:
+                  //
+                  s_showCursor = false;
+                  s_cursorCurrentState = kCursorState_Hidden;
+               }
+               void Apply() {
+                  WriteRelCall(0x005ADC11, (UInt32)&Inner); // replace call to SetInterfaceManagerCursorAlpha in LoadingMenu::~LoadingMenu
+               }
+            }
             
             void Apply() {
                Start::Apply();
                IfChanged::Apply();
                End::Apply();
+               ForceHideOnAllMenusClosed::Apply();
+               DontReShowCursorAfterLoadingScreen::Apply();
             };
          };
          void Apply() {

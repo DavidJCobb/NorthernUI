@@ -47,8 +47,6 @@ namespace CobbPatches {
       constexpr UInt32 _traitStrings     = 0x160D; // selector
       constexpr UInt32 _traitOpSetIfZero = 0x160E; // operator (float)
       constexpr UInt32 _traitLocConfig   = 0x160F; // selector
-      constexpr UInt32 _traitInitialCursorX = 0x1610; // trait is handled in patch Miscellaneous.cpp: CobbPatches::Miscellaneous::CursorInitialPosition
-      constexpr UInt32 _traitInitialCursorY = 0x1611; // trait is handled in patch Miscellaneous.cpp: CobbPatches::Miscellaneous::CursorInitialPosition
       //
       // NOTE: ID 0x1771 is not registered, but the vanilla code sets it on the menu root.
       //
@@ -78,8 +76,6 @@ namespace CobbPatches {
          { XXN_NEW_TAG_ID(_traitStrings,     "xxnstrings",     kType_Selector, 0, 0) },
          { XXN_NEW_TAG_ID(_traitOpSetIfZero, "xxnopsetifzero", kType_Operator, 0, 0) },
          { XXN_NEW_TAG_ID(_traitLocConfig,   "xxnlocalization", kType_Selector, 0, 0) },
-         { XXN_NEW_TAG_ID(_traitInitialCursorX, "xxnInitialCursorX", kType_Trait, 0, 0) },
-         { XXN_NEW_TAG_ID(_traitInitialCursorY, "xxnInitialCursorY", kType_Trait, 0, 0) },
       };
       constexpr UInt32 menuQueOperatorMin = 0x7EC;
       constexpr UInt32 menuQueOperatorMax = 0x7F0;
