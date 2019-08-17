@@ -172,7 +172,7 @@ void InterfaceManager::Update() {
       }
       // at 0x005834A8
       Keyboard_Device esp30 = 0; // keycode, basically
-      eax = *(0x00B33398)->unk20->GetBufferedKeyStateChange(&esp30);
+      eax = OSInputGlobals::GetInstance()->GetBufferedKeyStateChange(&esp30);
       if (eax == 2) { // key up // at 0x005834C1
          do {
             ecx = g_timeInfo->unk10; // current time in ms, though I don't know if it's since the executable booted, the timing system started running, etc..
@@ -181,7 +181,7 @@ void InterfaceManager::Update() {
             this->unk124 = 0;
             this->unk11C = 0;
             this->KeyStateChangeToChar(2, esp30);
-            eax = *(0x00B33398)->unk20->GetBufferedKeyStateChange(&esp30);
+            eax = OSInputGlobals::GetInstance()->GetBufferedKeyStateChange(&esp30);
          } while (eax == 2)
       }
       //

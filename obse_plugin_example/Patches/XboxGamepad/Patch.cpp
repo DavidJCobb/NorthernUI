@@ -1013,8 +1013,39 @@ namespace CobbPatches {
          };
          namespace CursorUpdateHook {
             static bool s_cursorMoved       = false;
+            static bool s_ignoreNextMove    = false; // cursor movement affects the cursor's node position, not the cursor's X/Y traits, so when Bethesda updates the cursor depth (upon opening a new menu), they reset the cursor's position
             static bool s_mustHideNextFrame = false;
 
+            namespace CursorDepthChange {
+               //
+               // When a new active menu opens, Bethesda must update the cursor's depth to place it 
+               // in front of the menu. However, this can reset the cursor's position to the center 
+               // of the screen. How? Well, when you move the cursor, Bethesda doesn't change the x 
+               // or y traits on the cursor tile; they just move the cursor's rendered node by dir-
+               // ectly modifying its m_localTranslate. However, when they update the depth, they 
+               // do so by changing the tile's depth trait. This flags the tile as having its pos-
+               // ition changed, and so the tile updates its m_localTranslate from its x, y, and 
+               // depth traits -- resetting the changes Bethesda was making manually.
+               //
+               // For now, I don't care to prevent this from happening, but I need to know when it 
+               // has, so that we don't react to it as if the user moved the cursor.
+               //
+               void Inner() {
+                  s_ignoreNextMove = true;
+               }
+               __declspec(naked) void Outer() {
+                  _asm {
+                     mov  eax, 0x0058CEB0; // reproduce patched-over call to Tile::UpdateFloat
+                     call eax;             // 
+                     call Inner;
+                     mov  eax, 0x00584B18;
+                     jmp  eax;
+                  }
+               }
+               void Apply() {
+                  WriteRelJump(0x00584B13, (UInt32)&Outer); // InterfaceManagerGetNewMenuDepthNonMember+0x193
+               }
+            }
             namespace Start {
                void Inner() {
                   s_cursorMoved = !XXNGamepadSupportCore::GetInstance()->anyConnected;
@@ -1067,8 +1098,12 @@ namespace CobbPatches {
                   }
                   auto now = RE::g_timeInfo->unk10;
                   if (s_cursorMoved) {
-                     s_showCursor   = true;
-                     s_lastShowedAt = now;
+                     if (s_ignoreNextMove) { // TODO: we may not need this? s_mustHideNextFrame covers the same frames that this does
+                        s_ignoreNextMove = false;
+                     } else {
+                        s_showCursor   = true;
+                        s_lastShowedAt = now;
+                     }
                   } else if (s_showCursor) {
                      if (s_lastShowedAt) {
                         if (now - s_lastShowedAt >= NorthernUI::INI::Display::fAutoHideCursorDelay.fCurrent * /*to ms:*/1000)
@@ -1078,8 +1113,13 @@ namespace CobbPatches {
                   }
                   if (s_showCursor && s_cursorCurrentState == kCursorState_Shown)
                      return;
-                  if (!s_showCursor && s_cursorCurrentState == kCursorState_Hidden)
-                     return;
+                  //if (!s_showCursor && s_cursorCurrentState == kCursorState_Hidden)
+                  //   return;
+                  //
+                  // something else is forcing the cursor alpha to visible when certain menus open, and I 
+                  // can't find what. this is WAY too minor to be worth the amount of time I've spent on 
+                  // it already; just run the below on every frame the cursor is supposed to be hidden
+                  //
                   s_cursorCurrentState = s_showCursor ? kCursorState_Shown : kCursorState_Hiding;
                   //
                   auto node = ui->cursor->renderedNode;
@@ -1101,6 +1141,12 @@ namespace CobbPatches {
                         if (prop->alpha <= 0.0F) {
                            prop->alpha = 0.0F;
                            s_cursorCurrentState = kCursorState_Hidden;
+                        }
+                        break;
+                     case kCursorState_Hidden: // brute-force the cursor to hidden if something else is messing with it
+                        if (prop->alpha) {
+                           prop->alpha = 0.0F;
+                           return;
                         }
                   }
                   prop->count++;
@@ -1132,16 +1178,15 @@ namespace CobbPatches {
                // This hook lets us set the cursor fade state whenever all active menus 
                // (i.e. all menus that can take input) are closed.
                //
-               // TODO: THIS DOESN'T WORK, OR DOESN'T WORK CONSISTENTLY
-               //
                void _stdcall Inner() {
                   auto ui = *RE::ptrInterfaceManager;
                   {  // Verify that no active menus remain
                      UInt8 i = 0;
                      do {
                         auto id = ui->activeMenuIDs[i];
-                        if (id)
+                        if (id) {
                            return;
+                        }
                      } while (++i < std::extent<decltype(RE::InterfaceManager::activeMenuIDs)>::value);
                   }
                   s_mustHideNextFrame = true;
@@ -1151,12 +1196,12 @@ namespace CobbPatches {
                      call Inner; // stdcall
                      mov  eax, 0x00582160; // reproduce patched-over call to InterfaceManager_GetSingleton
                      call eax;             //
-                     mov  ecx, 0x00584807;
+                     mov  ecx, 0x005847F4;
                      jmp  ecx;
                   }
                }
                void Apply() {
-                  WriteRelJump(0x00584802, (UInt32)&Outer); // Menu::FadeOut+0xC2
+                  WriteRelJump(0x005847EF, (UInt32)&Outer); // Menu::FadeOut+0xAF
                }
             }
             namespace DontReShowCursorAfterLoadingScreen {
@@ -1180,6 +1225,7 @@ namespace CobbPatches {
             }
             
             void Apply() {
+               CursorDepthChange::Apply();
                Start::Apply();
                IfChanged::Apply();
                End::Apply();

@@ -290,7 +290,50 @@ bool Tile::HandleChangeFlags() {
    if (this->flags & kTileFlag_ChangedCoords) { // at 0x0058F2EA
       if (!this->renderedNode) jump to 0x0058F899; // below
       if (ebx) jump to 0x0058F5C2; // skip all if hidden
-      
+      if (this->GetFloatTraitValue(kTagID_locus) != 2.0F && this->parent != InterfaceManager_GetSingleton(0, 1)->menuRoot) {
+         float esp38 = this->GetFloatTraitValue(kTagID_depth);
+         this->renderedNode->m_localTransform = NiVector3(0, 0, 0);
+         NiVector3 esp3C = NiVector3(0, 0, 0);
+         esp3C.x += this->GetFloatTraitValue(kTagID_x);
+         esp3C.z -= this->GetFloatTraitValue(kTagID_y);
+         esp3C.y += esp38 * -0.008;
+         if (this->GetID() == 0x388)
+            esp3C.y -= this->GetFloatTraitValue(kTagID_depth3d);
+         auto ebp = this->renderedNode; // at 0x0058F3E1
+         edi = 0;
+         if (ebp->m_children.m_firstFreeEntry > 0) {
+            //
+            // ...
+            //
+         }
+      } else {
+         // at 0x0058F452
+         NiVector3 esp3C = NiVector3(0, 0, 0);
+         esp3C.x =  this->GetFloatTraitValue(kTagID_x);
+         esp3C.z = -this->GetFloatTraitValue(kTagID_y);
+         esp3C.y =  this->GetFloatTraitValue(kTagID_depth) * -0.008;
+         if (this->GetID() == 0x388)
+            esp3C.y -= this->GetFloatTraitValue(kTagID_depth3d);
+         if (this->parent == InterfaceManager_GetSingleton(0, 1)->menuRoot) {
+            esp3C.x -= GetNormalizedScreenWidth() * 0.5;
+            esp3C.z += GetNormalizedScreenHeight();
+            esp3C.z -= GetNormalizedScreenHeight() * 0.5;
+         }
+         this->renderedNode->m_localTransform = esp3C; // at 0x0058F522
+         edi = 0;
+         ebp = this->renderedNode;
+         if (ebp->m_children.firstFreeEntry > 0) {
+            //
+            // ...
+            //
+         }
+         // at 0x0058F5A9
+         this->sub00589430();
+      }
+      // at 0x0058F5B0
+      bool esp15 = true;
+      if (this->flags & kTileFlag_ChangedCoords)
+         this->flags = this->flags xor kTileFlag_ChangedCoords; // clear flag
    }
    if (this->renderedNode) { // at 0x0058F5C6
       //
@@ -304,7 +347,9 @@ bool Tile::HandleChangeFlags() {
          if (this->flags & kTileFlag_ChangedClips) {
             auto edi = this->parent;
             if (edi) { // at 0x0058F6D2
-               
+               //
+               // ...
+               //
             }
             esp15 = true;
             this->flags &= ~kTileFlag_ChangedClips;
