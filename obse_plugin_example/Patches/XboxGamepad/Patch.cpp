@@ -108,49 +108,32 @@ namespace CobbPatches {
          };
       };
       namespace PauseKey {
+         bool _stdcall Inner(UInt32 keycode, bool result) {
+            if (result || keycode != 0x1D)
+               return result;
+            auto core = XXNGamepadSupportCore::GetInstance();
+            UInt32 i = 0;
+            do {
+               auto gamepad = core->GetGamepad(i);
+               if (gamepad && gamepad->GetButtonState(XXNGamepad::kGamepadButton_Start, RE::kKeyQuery_Up, false))
+                  return true;
+            } while (++i < 4);
+            return false;
+         }
          __declspec(naked) void Outer() {
             _asm {
-               mov  cl, 0x80;
-               xor  eax, eax;
-               test byte ptr [edi + 0x19F5], cl; // DIK_ESC, last frame
-               jnz  lNotKeyboard;
-               test byte ptr [edi + 0x18F5], cl; // DIK_ESC, this frame
-               jz   lNotKeyboard;
-               mov  al, 1;
-               jmp  lExit;
-            lNotKeyboard:
-               xor  edx, edx;                           // UInt32 i = 0;
-            lLoopStart:                                 // do {
-               call XXNGamepadSupportCore::GetInstance; //
-               mov  ecx, eax;                           //
-               push edx;                                //
-               call XXNGamepadSupportCore::GetGamepad;  //    eax = XXNGamepadSupportCore::GetInstance()->GetGamepad(i);
-               inc  edx;                                //    i++;
-               test eax, eax;                           //    if (!eax)
-               je   lLoopStart;                         //       continue;
-               push edx;                                // // edx is considered a temporary register; we need to protect it
-               push 2;                                  //
-               push 4;                                  // // XXNGamepad::kGamepadButton_Start
-               mov  ecx, eax;                           //
-               call XXNGamepad::GetButtonState;         //       eax = eax->GetButtonState(XXNGamepad::kGamepadButton_Start, 2);
-               pop  edx;                                // // restore protected edx
-               test eax, eax;                           //       if (eax)
-               jnz  lExit;                              //          return eax;
-               cmp  edx, 4;                             //
-               jl   lLoopStart;                         // } while (i < 4);
-            lExit:
-               pop edi;
-               retn 8;
+               push eax;
+               mov  ecx, dword ptr [esp + 4];
+               push ecx;
+               call Inner; // stdcall
+               retn 8; // reproduce patched-over instruction
             };
          };
          void Apply() {
             #if XXN_USE_UI_SIDE_PAUSE == 1
                return;
             #endif
-            WriteRelJump(0x004035A8, (UInt32)&Outer);
-            SafeWrite32 (0x004035AD, 0x90909090); // courtesy NOPs
-            SafeWrite16 (0x004035B1, 0x9090);
-            SafeWrite8  (0x004035B3, 0x90);
+            WriteRelJump(0x004035C2, (UInt32)&Outer);
          };
       };
       namespace LoadControls {
@@ -1019,7 +1002,11 @@ namespace CobbPatches {
             namespace Start {
                void Inner() {
                   s_cursorMoved = !XXNGamepadSupportCore::GetInstance()->anyConnected;
-                  s_mouseActive = CALL_MEMBER_FN(RE::OSInputGlobals::GetInstance(), QueryMouseKeyState)(RE::kMouseControl_Left, RE::kKeyQuery_Hold);
+                  auto input = RE::OSInputGlobals::GetInstance();
+                  if (input)
+                     s_mouseActive = CALL_MEMBER_FN(input, QueryMouseKeyState)(RE::kMouseControl_Left, RE::kKeyQuery_Hold);
+                  else
+                     s_mouseActive = false;
                };
                __declspec(naked) void Outer() {
                   _asm {
@@ -1223,7 +1210,7 @@ namespace CobbPatches {
                }
                __declspec(naked) void Outer() {
                   _asm {
-                     je   lNoMouse;
+                     je   lNoMouse; // reproduce patched-over conditional jump
                      call Inner;
                      test al, al;
                      jz   lNoMouse;
@@ -1274,26 +1261,11 @@ namespace CobbPatches {
             retn 8; // we are replacing a member function
          };
       };
-      __declspec(naked) bool QueryJoystickButtonState(UInt8 gamepad, UInt8 button, UInt8 state) {
-         _asm {
-            call XXNGamepadSupportCore::GetInstance;
-            mov  ecx, eax;
-            mov  eax, dword ptr [esp + 4];
-            push eax;
-            call XXNGamepadSupportCore::GetGamepad;
-            test eax, eax;
-            je   lReturnFalse;
-            mov  ecx, eax;
-            mov  edx, dword ptr [esp + 8];
-            mov  eax, dword ptr [esp + 0xC];
-            push eax;
-            push edx;
-            call XXNGamepad::GetButtonState;
-            retn 0xC;
-         lReturnFalse:
-            xor  eax, eax;
-            retn 0xC;
-         };
+      bool QueryJoystickButtonState(UInt8 gamepad, UInt8 button, UInt8 state) {
+         auto gp = XXNGamepadSupportCore::GetInstance()->GetGamepad(gamepad);
+         if (!gp)
+            return false;
+         return gp->GetButtonState(button, (RE::KeyQuery)state);
       };
       __declspec(naked) void Hook_SendControlPress() {
          _asm { // given esi instanceof InputManager && ecx == InputManager::Control
@@ -1351,13 +1323,12 @@ namespace CobbPatches {
             // Patches:
             //
             {  // OSInputGlobals::PollAndUpdateInputState
-               WriteRelCall(0x004046B8, (UInt32) &Hook_UpdateGamepads);
+               WriteRelCall(0x004046B8, (UInt32)&Hook_UpdateGamepads);
                SafeMemset  (0x004046BD, 0x90, 0x0040472F - 0x004046BD);
             }
-            WriteRelJump(0x00402F50, (UInt32) &GetJoystickAxisMovement); // needs NOPs // Replace vanilla OSInputGlobals::GetJoystickAxisMovement
-            {
-               WriteRelJump(0x00402FC0, (UInt32) &QueryJoystickButtonState);
-               //
+            WriteRelJump(0x00402F50, (UInt32)&GetJoystickAxisMovement); // needs NOPs // Replace vanilla OSInputGlobals::GetJoystickAxisMovement
+            WriteRelJump(0x00402FC0, (UInt32)&QueryJoystickButtonState); // OSInputGlobals::QueryJoystickButtonState+0x00
+            {  //
                // Patch OSInputGlobals::QueryInputState to compare the specified joystick number to 4 
                // instead of to OSInputGlobals::joystickCount:
                //
@@ -1373,7 +1344,7 @@ namespace CobbPatches {
                //
                SafeWrite16(0x004034BA, 0x9090);
             }
-            WriteRelJump(0x004033E8, (UInt32) &Hook_SendControlPress);
+            WriteRelJump(0x004033E8, (UInt32)&Hook_SendControlPress); // OSInputGlobals::SendControlPress+0x68
             PauseKey::Apply();
             DontSaveOurMappings::Apply();
             LoadControls::Apply();

@@ -8034,6 +8034,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\LoadingMenu.h" />
     <ClInclude Include="ScriptCommands\XInput.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Miscellaneous\templates.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

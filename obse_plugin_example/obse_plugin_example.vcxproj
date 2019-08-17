@@ -251,6 +251,7 @@
     <ClInclude Include="Miscellaneous\math.h" />
     <ClInclude Include="Miscellaneous\rotation.h" />
     <ClInclude Include="Miscellaneous\strings.h" />
+    <ClInclude Include="Miscellaneous\templates.h" />
     <ClInclude Include="Patches\AlchemyMenu.h" />
     <ClInclude Include="Patches\AudioMenu.h" />
     <ClInclude Include="Patches\ClassMenu.h" />

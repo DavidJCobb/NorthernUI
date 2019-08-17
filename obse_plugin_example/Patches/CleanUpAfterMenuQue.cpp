@@ -224,24 +224,6 @@ namespace CobbPatches {
             SafeMemset(address, 0x90, count);
          }
          _MESSAGE(" - All known patches have been looked at.");
-         /*//
-         //
-         // Get the module base.
-         //
-         if (GetMQModuleBaseFromWinAPI()) {
-            _MESSAGE(" - MenuQue's base address reads as %08X (size %08X) based on Windows APIs.", g_menuQue.addrBase, g_menuQue.addrSize);
-         } else {
-            _MESSAGE(" - Unable to identify MenuQue's base address using Windows APIs (too many modules loaded?). Will try the ugly method, which is only reliable for MenuQue v16b.");
-            UInt32 callFrom = 0x0058BFBC;
-            if (*(char*)callFrom == (char)0xE9) {
-               UInt32 a = *(UInt32*)(callFrom + 1);
-               UInt32 t = a + callFrom + 1 + 4;
-               g_menuQue.addrBase = t - 0x00012040;
-               _MESSAGE(" - MenuQue's base address reads as %08X based on the patch to %08X.", g_menuQue.addrBase, callFrom);
-            } else if (g_menuQue.detected)
-               _MESSAGE(" - Unable to identify MenuQue's base address! Some of our compatibility patches will not function!");
-         }
-         //*/
          //
          // Apply any other fixes.
          //

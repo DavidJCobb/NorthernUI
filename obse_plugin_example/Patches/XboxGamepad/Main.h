@@ -65,9 +65,9 @@ class XXNGamepad {
       SInt32 AnyKeyMatches(KeyQuery state) const; // returns -1 if no matches
       void   Clear();
       __declspec(noinline) bool GetButtonState(UInt8 button, KeyQuery state, bool ignoreDisabled = false) const;
-      SInt32 GetJoystickAxis(UInt8 axis) const;
+      SInt32 GetJoystickAxis(UInt8 axis) const; // NOTE: currently called directly by handwritten assembly in Patch.cpp
       void   IgnoreButtons(); // flags all currently-pressed buttons as "ignore;" see (uiIgnore)
-      void   SendControlPress(UInt8 button);
+      void   SendControlPress(UInt8 button); // NOTE: currently called directly by handwritten assembly in Patch.cpp
       void   SetVibrationSpeeds(UInt16 speed) const;
       void   SetVibrationSpeeds(UInt16 speedL, UInt16 speedR) const;
 
