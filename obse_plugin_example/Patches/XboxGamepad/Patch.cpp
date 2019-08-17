@@ -1013,42 +1013,13 @@ namespace CobbPatches {
          };
          namespace CursorUpdateHook {
             static bool s_cursorMoved       = false;
-            static bool s_ignoreNextMove    = false; // cursor movement affects the cursor's node position, not the cursor's X/Y traits, so when Bethesda updates the cursor depth (upon opening a new menu), they reset the cursor's position
+            static bool s_mouseActive       = false; // pressing a button, etc.
             static bool s_mustHideNextFrame = false;
 
-            namespace CursorDepthChange {
-               //
-               // When a new active menu opens, Bethesda must update the cursor's depth to place it 
-               // in front of the menu. However, this can reset the cursor's position to the center 
-               // of the screen. How? Well, when you move the cursor, Bethesda doesn't change the x 
-               // or y traits on the cursor tile; they just move the cursor's rendered node by dir-
-               // ectly modifying its m_localTranslate. However, when they update the depth, they 
-               // do so by changing the tile's depth trait. This flags the tile as having its pos-
-               // ition changed, and so the tile updates its m_localTranslate from its x, y, and 
-               // depth traits -- resetting the changes Bethesda was making manually.
-               //
-               // For now, I don't care to prevent this from happening, but I need to know when it 
-               // has, so that we don't react to it as if the user moved the cursor.
-               //
-               void Inner() {
-                  s_ignoreNextMove = true;
-               }
-               __declspec(naked) void Outer() {
-                  _asm {
-                     mov  eax, 0x0058CEB0; // reproduce patched-over call to Tile::UpdateFloat
-                     call eax;             // 
-                     call Inner;
-                     mov  eax, 0x00584B18;
-                     jmp  eax;
-                  }
-               }
-               void Apply() {
-                  WriteRelJump(0x00584B13, (UInt32)&Outer); // InterfaceManagerGetNewMenuDepthNonMember+0x193
-               }
-            }
             namespace Start {
                void Inner() {
                   s_cursorMoved = !XXNGamepadSupportCore::GetInstance()->anyConnected;
+                  s_mouseActive = CALL_MEMBER_FN(RE::OSInputGlobals::GetInstance(), QueryMouseKeyState)(RE::kMouseControl_Left, RE::kKeyQuery_Hold);
                };
                __declspec(naked) void Outer() {
                   _asm {
@@ -1079,7 +1050,7 @@ namespace CobbPatches {
             };
             namespace End {
                void __stdcall Inner(RE::InterfaceManager* ui) {
-                  if (s_mustHideNextFrame) {
+                  if (s_mustHideNextFrame && !s_mouseActive) {
                      s_mustHideNextFrame = false;
                      //
                      auto node = ui->cursor->renderedNode;
@@ -1097,13 +1068,9 @@ namespace CobbPatches {
                      return;
                   }
                   auto now = RE::g_timeInfo->unk10;
-                  if (s_cursorMoved) {
-                     if (s_ignoreNextMove) { // TODO: we may not need this? s_mustHideNextFrame covers the same frames that this does
-                        s_ignoreNextMove = false;
-                     } else {
-                        s_showCursor   = true;
-                        s_lastShowedAt = now;
-                     }
+                  if (s_mouseActive || s_cursorMoved) {
+                     s_showCursor   = true;
+                     s_lastShowedAt = now;
                   } else if (s_showCursor) {
                      if (s_lastShowedAt) {
                         if (now - s_lastShowedAt >= NorthernUI::INI::Display::fAutoHideCursorDelay.fCurrent * /*to ms:*/1000)
@@ -1111,14 +1078,35 @@ namespace CobbPatches {
                      } else
                         s_lastShowedAt = now;
                   }
+                  if (!s_showCursor && s_cursorCurrentState != kCursorState_Hidden) {
+                     if (ui->activeTile && ui->activeMenu) {
+                        //
+                        // If the cursor is hidden, treat that as mouseout. We want this for things 
+                        // like MapMenu where you can move the cursor over a map icon, let it hide, 
+                        // and then (if we don't clear the mouseover state) press A to activate the 
+                        // icon under the hidden cursor -- not intuitive! The alternative for that 
+                        // case is to have the code here query MapMenu to try and find the hovered 
+                        // map icon, which is... not great.
+                        //
+                        auto tile = ui->activeTile;
+                        auto menu = ui->activeMenu;
+                        if (menu->unk24 == 1) {
+                           CALL_MEMBER_FN(tile, UpdateFloat)(kTileValue_mouseover, 0.0);
+                           SInt32 id = CALL_MEMBER_FN(tile, GetFloatTraitValue)(kTileValue_id);
+                           menu->HandleMouseout(id, tile);
+                           ui->activeTile = nullptr;
+                           ui->activeMenu = nullptr;
+                        }
+                     }
+                  }
                   if (s_showCursor && s_cursorCurrentState == kCursorState_Shown)
                      return;
-                  //if (!s_showCursor && s_cursorCurrentState == kCursorState_Hidden)
-                  //   return;
                   //
-                  // something else is forcing the cursor alpha to visible when certain menus open, and I 
-                  // can't find what. this is WAY too minor to be worth the amount of time I've spent on 
-                  // it already; just run the below on every frame the cursor is supposed to be hidden
+                  // DO NOT skip the code below if the cursor is already fully hidden. Something else -- 
+                  // maybe vanilla, maybe another DLL -- is forcing the cursor alpha to visible when 
+                  // menus open, and I can't find what. This is WAY too minor to be worth the time I've 
+                  // spent on it already, so just run the below on every frame we're supposed to be 
+                  // hiding the cursor on.
                   //
                   s_cursorCurrentState = s_showCursor ? kCursorState_Shown : kCursorState_Hiding;
                   //
@@ -1223,14 +1211,42 @@ namespace CobbPatches {
                   WriteRelCall(0x005ADC11, (UInt32)&Inner); // replace call to SetInterfaceManagerCursorAlpha in LoadingMenu::~LoadingMenu
                }
             }
+            namespace NoMouseoverIfCursorHidden {
+               //
+               // Setting the cursor's alpha to zero doesn't prevent it from mouseovering things, 
+               // which can cause problems, most notably in MapMenu.
+               //
+               bool _stdcall Inner() {
+                  if (s_cursorCurrentState == kCursorState_Hidden)
+                     return false;
+                  return true;
+               }
+               __declspec(naked) void Outer() {
+                  _asm {
+                     je   lNoMouse;
+                     call Inner;
+                     test al, al;
+                     jz   lNoMouse;
+                     mov  eax, 0x00582403;
+                     jmp  eax;
+                  lNoMouse:
+                     mov  eax, 0x005833FC;
+                     jmp  eax;
+                  }
+               }
+               void Apply() {
+                  WriteRelJump(0x005823FD, (UInt32)&Outer);
+                  SafeWrite8(0x005823FD + 5, 0x90); // courtesy NOP
+               }
+            }
             
             void Apply() {
-               CursorDepthChange::Apply();
                Start::Apply();
                IfChanged::Apply();
                End::Apply();
                ForceHideOnAllMenusClosed::Apply();
                DontReShowCursorAfterLoadingScreen::Apply();
+               NoMouseoverIfCursorHidden::Apply();
             };
          };
          void Apply() {

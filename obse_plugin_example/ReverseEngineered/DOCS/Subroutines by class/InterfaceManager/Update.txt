@@ -131,7 +131,7 @@ void InterfaceManager::Update() {
             if ((auto eax = this->activeMenu) && eax->unk24 == 1) {
                this->activeTile->UpdateFloat(kTileValue_mouseover, 1.0);
                SInt32 id = this->activeTile->GetFloatTraitValue(kTileValue_id);
-               this->activeMenu->HandleMouseover(eax, this->activeTile);
+               this->activeMenu->HandleMouseover(id, this->activeTile);
             }
             this->altActiveTile = nullptr;
          }
