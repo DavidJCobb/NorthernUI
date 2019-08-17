@@ -108,7 +108,7 @@ namespace CobbPatches {
          };
       };
       namespace PauseKey {
-         bool _stdcall Inner(UInt32 keycode, bool result) {
+         UInt32 _stdcall Inner(UInt32 keycode, bool result) { // MUST return a UInt32, not a bool
             if (result || keycode != 0x1D)
                return result;
             auto core = XXNGamepadSupportCore::GetInstance();
@@ -122,8 +122,8 @@ namespace CobbPatches {
          }
          __declspec(naked) void Outer() {
             _asm {
-               push eax;
                mov  ecx, dword ptr [esp + 4];
+               push eax;
                push ecx;
                call Inner; // stdcall
                retn 8; // reproduce patched-over instruction
@@ -1261,7 +1261,7 @@ namespace CobbPatches {
             retn 8; // we are replacing a member function
          };
       };
-      bool QueryJoystickButtonState(UInt8 gamepad, UInt8 button, UInt8 state) {
+      UInt32 _stdcall QueryJoystickButtonState(UInt8 gamepad, UInt8 button, UInt8 state) { // MUST return a UInt32, not a bool
          auto gp = XXNGamepadSupportCore::GetInstance()->GetGamepad(gamepad);
          if (!gp)
             return false;
@@ -1327,7 +1327,7 @@ namespace CobbPatches {
                SafeMemset  (0x004046BD, 0x90, 0x0040472F - 0x004046BD);
             }
             WriteRelJump(0x00402F50, (UInt32)&GetJoystickAxisMovement); // needs NOPs // Replace vanilla OSInputGlobals::GetJoystickAxisMovement
-            WriteRelJump(0x00402FC0, (UInt32)&QueryJoystickButtonState); // OSInputGlobals::QueryJoystickButtonState+0x00
+            WriteRelJump(0x00402FC0, (UInt32)&QueryJoystickButtonState); // replace vanilla OSInputGlobals::QueryJoystickButtonState
             {  //
                // Patch OSInputGlobals::QueryInputState to compare the specified joystick number to 4 
                // instead of to OSInputGlobals::joystickCount:

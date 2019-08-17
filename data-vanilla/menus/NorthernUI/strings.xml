@@ -24,8 +24,8 @@
         %ih:%2im %sh on %sw      X:XX pm on Weekday
         %sM %iD, 3E%iY           Monthname 3, 3E433
    -->
-   <_sleepWaitFormatString01>%ih:%2im %sh on %sw</_sleepWaitFormatString01>
-   <_sleepWaitFormatString02>%sM %iD, 3E%iY</_sleepWaitFormatString02>
+   <_sleepWaitFormatString01></_sleepWaitFormatString01>
+   <_sleepWaitFormatString02></_sleepWaitFormatString02>
    
    <!----- XXNOPTIONSMENU -------------------------------------------------->
    <_optionHintRequiresRestart>(requires restart)</_optionHintRequiresRestart>

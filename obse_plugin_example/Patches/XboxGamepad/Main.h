@@ -41,7 +41,7 @@ class XXNGamepad {
       bool           isConnected = false; // assembly code assumes this is at offset 01 within the class
       XINPUT_GAMEPAD lastFrame;
       XINPUT_GAMEPAD thisFrame;
-      XINPUT_GAMEPAD ignoring;
+      XINPUT_GAMEPAD ignoring; // used to prevent UI oddities when opening/closing menus
       XINPUT_GAMEPAD disabled; // anything disabled by scripts
 
       typedef RE::KeyQuery KeyQuery;

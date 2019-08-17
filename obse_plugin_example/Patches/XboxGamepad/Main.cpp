@@ -102,8 +102,6 @@ XXNGamepad::XXNGamepad() {
    ZeroMemory(&this->disabled,  sizeof(this->disabled));
 };
 
-static bool bDebugGamepadA = false;
-
 void XXNGamepad::Update() {
    memcpy(&this->lastFrame, &this->thisFrame, sizeof(this->thisFrame));
    XINPUT_STATE state;
