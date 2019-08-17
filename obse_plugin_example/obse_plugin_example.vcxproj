@@ -175,6 +175,7 @@
     <ClCompile Include="ReverseEngineered\UI\Menus\LockPickMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\OptionsMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\TextEditMenu.cpp" />
+    <ClCompile Include="ScriptCommands\XInput.cpp" />
     <ClCompile Include="Services\PatchManagement.cpp" />
     <ClCompile Include="Services\TileDump.cpp" />
     <ClCompile Include="shared.cpp" />
@@ -310,6 +311,7 @@
     <ClInclude Include="Patches\XboxGamepad\Main.h" />
     <ClInclude Include="Patches\XboxGamepad\Patch.h" />
     <ClInclude Include="Patches\XXNMenus.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ReverseEngineered\ExtraData\ExtraContainerChanges.h" />
     <ClInclude Include="ReverseEngineered\Files\Archive.h" />
     <ClInclude Include="ReverseEngineered\Files\BSFile.h" />
@@ -376,6 +378,7 @@
     <ClInclude Include="ReverseEngineered\UI\Tile.h" />
     <ClInclude Include="ReverseEngineered\_BASE.h" />
     <ClInclude Include="ScriptCommands\OBSESamples.h" />
+    <ClInclude Include="ScriptCommands\XInput.h" />
     <ClInclude Include="Services\FontShim.h" />
     <ClInclude Include="Services\INISettings.h" />
     <ClInclude Include="Services\PatchManagement.h" />
@@ -401,6 +404,9 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\UpdateTemplatedChildren.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\FindBSAThatContainsFile.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\HashFilePath.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NorthernUI.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

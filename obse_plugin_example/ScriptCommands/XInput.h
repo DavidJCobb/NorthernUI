@@ -1,0 +1,9 @@
+#pragma once
+#include "obse/CommandTable.h"
+
+extern CommandInfo kCommandInfo_IsGamepadKeyPressed;
+extern CommandInfo kCommandInfo_IsGamepadKeyPressedEvenIfDisabled;
+extern CommandInfo kCommandInfo_DisableGamepadKey;
+extern CommandInfo kCommandInfo_EnableGamepadKey;
+extern CommandInfo kCommandInfo_IsGamepadKeyDisabled;
+extern CommandInfo kCommandInfo_GetGamepadControl;

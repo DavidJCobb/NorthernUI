@@ -17,11 +17,14 @@ namespace RE {
    constexpr UInt32 ce_bsaSignatureBSwapped = '\0ASB';
 
    extern LinkedPointerList<Archive>* const g_archiveList; // All loaded BSAs in this order: INI-specified archives; non-Oblivion.esm archives in the same order as the load order. Oblivion BSAs are specified by the INI (though Mod Organizer can override this in a way that looks confusing).
+   extern Archive* const g_archiveWhichProvidedLastFile; // speeds up lookups in FindBSAThatContainsFile; SkyBSA works in part by deliberately preventing this pointer from ever being used
    //
    // These maps are used for ArchiveInvalidation.txt and ONLY for ArchiveInvalidation.txt:
    //
    extern NiTArray<BSHash>* const g_archiveInvalidatedFilenames;
    extern NiTArray<BSHash>* const g_archiveInvalidatedDirectoryPaths;
+
+   DEFINE_SUBROUTINE_EXTERN(void, FindBSAThatContainsFile, 0x0042EA60, const char* filepath, UInt32 filetypeFlags);
 
    // Not sure if LoadBSAFile is safe to call; others almost certainly aren't, or are already called during startup
    DEFINE_SUBROUTINE_EXTERN(void, LoadBSAFile, 0x0042F4C0, const char* filePath, UInt32 zeroA, UInt32 zeroB); // adds archive to g_archiveList

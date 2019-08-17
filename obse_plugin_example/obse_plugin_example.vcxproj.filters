@@ -117,6 +117,7 @@
     <ClCompile Include="ReverseEngineered\Files\Archive.cpp" />
     <ClCompile Include="Patches\SleepWaitMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\LoadingMenu.cpp" />
+    <ClCompile Include="ScriptCommands\XInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -268,7 +269,6 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
-    <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\Commands_ActiveEffect.h" />
     <ClInclude Include="..\obse\obse\Commands_Actor.h" />
     <ClInclude Include="..\obse\obse\Commands_ActorValue.h" />
@@ -369,7 +369,6 @@
     <ClInclude Include="..\obse\obse\ThreadLocal.h" />
     <ClInclude Include="..\obse\obse\Utilities.h" />
     <ClInclude Include="..\obse\obse\VarMap.h" />
-    <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
@@ -8033,6 +8032,8 @@
     <ClInclude Include="Patches\SleepWaitMenu.h" />
     <ClInclude Include="ReverseEngineered\Systems\MessageHandler.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\LoadingMenu.h" />
+    <ClInclude Include="ScriptCommands\XInput.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
@@ -8051,5 +8052,8 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\FindBSAThatContainsFile.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Archive\Subroutine0042D000.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\HashFilePath.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NorthernUI.rc" />
   </ItemGroup>
 </Project>

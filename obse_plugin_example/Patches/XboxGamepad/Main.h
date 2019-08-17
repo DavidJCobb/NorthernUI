@@ -42,6 +42,7 @@ class XXNGamepad {
       XINPUT_GAMEPAD lastFrame;
       XINPUT_GAMEPAD thisFrame;
       XINPUT_GAMEPAD ignoring;
+      XINPUT_GAMEPAD disabled; // anything disabled by scripts
 
       typedef RE::KeyQuery KeyQuery;
 
@@ -63,12 +64,15 @@ class XXNGamepad {
 
       SInt32 AnyKeyMatches(KeyQuery state) const; // returns -1 if no matches
       void   Clear();
-      __declspec(noinline) bool GetButtonState(UInt8 button, KeyQuery state) const;
+      __declspec(noinline) bool GetButtonState(UInt8 button, KeyQuery state, bool ignoreDisabled = false) const;
       SInt32 GetJoystickAxis(UInt8 axis) const;
       void   IgnoreButtons(); // flags all currently-pressed buttons as "ignore;" see (uiIgnore)
       void   SendControlPress(UInt8 button);
       void   SetVibrationSpeeds(UInt16 speed) const;
       void   SetVibrationSpeeds(UInt16 speedL, UInt16 speedR) const;
+
+      bool GetDisableState(UInt8 button) const;
+      void SetDisableState(UInt8 button, bool disabled);
 
       static const char* GetButtonName(UInt8 button); // NOT localized; used internally
       static UInt32 GetButtonCode(const char* name); // NOT localized; used internally

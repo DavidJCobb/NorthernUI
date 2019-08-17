@@ -206,8 +206,10 @@ namespace CobbPatches {
       void Apply() {
          _MESSAGE("MenuQue checks and handling...");
          Identify();
-         if (!g_menuQue.detected)
+         if (!g_menuQue.detected) {
+            PatchManager::GetInstance().FireEvent(PatchManager::Req::P_MenuQue); // fire any other patches that were waiting on us
             return;
+         }
          _MESSAGE("Cleaning up after MenuQue patches... (Some leave broken bytes, which is harmless but will confuse a disassembler.)");
          for (UInt32 i = 0; i < std::extent<decltype(calls)>::value; i++) {
             UInt32 address = calls[i].address;

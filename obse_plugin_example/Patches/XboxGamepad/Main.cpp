@@ -99,6 +99,7 @@ XXNGamepad::XXNGamepad() {
    ZeroMemory(&this->lastFrame, sizeof(this->lastFrame));
    ZeroMemory(&this->thisFrame, sizeof(this->thisFrame));
    ZeroMemory(&this->ignoring,  sizeof(this->ignoring));
+   ZeroMemory(&this->disabled,  sizeof(this->disabled));
 };
 
 static bool bDebugGamepadA = false;
@@ -145,16 +146,20 @@ void XXNGamepad::Clear() {
    ZeroMemory(&this->lastFrame, sizeof(this->lastFrame));
    ZeroMemory(&this->thisFrame, sizeof(this->thisFrame));
 };
-bool XXNGamepad::GetButtonState(UInt8 button, KeyQuery state) const {
+bool XXNGamepad::GetButtonState(UInt8 button, KeyQuery state, bool ignoreDisabled) const {
    if (button > kGamepadButton_LastStandardButton) { // special cases
       bool now;
       bool before;
       switch (button) {
          case kGamepadButton_SpecialCaseLT:
+            if (!ignoreDisabled && this->disabled.bLeftTrigger)
+               return false;
             now    = this->thisFrame.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
             before = this->lastFrame.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
             break;
          case kGamepadButton_SpecialCaseRT:
+            if (!ignoreDisabled && this->disabled.bRightTrigger)
+               return false;
             now    = this->thisFrame.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
             before = this->lastFrame.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD;
             break;
@@ -171,6 +176,9 @@ bool XXNGamepad::GetButtonState(UInt8 button, KeyQuery state) const {
          return now != before;
       return false;
    }
+   if (!ignoreDisabled)
+      if ((this->disabled.wButtons >> button) & 1)
+         return false;
    bool now = (this->thisFrame.wButtons >> button) & 1;
    if (state == KeyQuery::kKeyQuery_Hold) // key hold
       return now;
@@ -253,6 +261,36 @@ void XXNGamepad::SetVibrationSpeeds(UInt16 speedL, UInt16 speedR) const {
    vibration.wRightMotorSpeed = speedR; // use any value between 0-65535 here
    XInputSetState(this->index, &vibration);
 };
+
+bool XXNGamepad::GetDisableState(UInt8 button) const {
+   if (button > kGamepadButton_LastStandardButton) { // special cases
+      switch (button) {
+         case kGamepadButton_SpecialCaseLT:
+            return this->disabled.bLeftTrigger;
+         case kGamepadButton_SpecialCaseRT:
+            return this->disabled.bRightTrigger;
+      }
+      return false;
+   }
+   return (this->disabled.wButtons >> button) & 1;
+}
+void XXNGamepad::SetDisableState(UInt8 button, bool disabled) {
+   if (button > kGamepadButton_LastStandardButton) { // special cases
+      switch (button) {
+         case kGamepadButton_SpecialCaseLT:
+            this->disabled.bLeftTrigger = disabled;
+            break;
+         case kGamepadButton_SpecialCaseRT:
+            this->disabled.bRightTrigger = disabled;
+            break;
+      }
+      return;
+   }
+   if (disabled)
+      this->disabled.wButtons |= (1 << button);
+   else
+      this->disabled.wButtons &= ~(1 << button);
+}
 
 // ----------------------------------------------------------------------
 

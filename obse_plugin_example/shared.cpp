@@ -1,6 +1,11 @@
 #include "shared.h"
 
-const UInt32 g_pluginVersion = 0x01030201; // major, minor, patch, build
+const UInt32 g_pluginVersion = 0x01040000; // major, minor, patch, build
+//
+// REMINDER: UPDATE THE RESOURCE FILE IN THE PROJECT ROOT AS WELL, SO THAT 
+// THE VERSION NUMBER SHOWN WHEN RIGHT-CLICKING THE DLL AND GOING TO DETAILS 
+// IS ACCURATE
+//
 
 extern void SafeMemcpy(UInt32 destination, UInt32 source, UInt32 size) { // based on OBSE SafeWriteXX // TODO: some patch files still have their own copy; have them share this one instead
    UInt32 oldProtect;
