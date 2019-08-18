@@ -1,9 +1,15 @@
 #pragma once
 #include "obse/CommandTable.h"
 
+class OBSEInterface;
+
 extern CommandInfo kCommandInfo_IsGamepadKeyPressed;
-extern CommandInfo kCommandInfo_IsGamepadKeyPressedEvenIfDisabled;
 extern CommandInfo kCommandInfo_DisableGamepadKey;
 extern CommandInfo kCommandInfo_EnableGamepadKey;
 extern CommandInfo kCommandInfo_IsGamepadKeyDisabled;
 extern CommandInfo kCommandInfo_GetGamepadControl;
+extern CommandInfo kCommandInfo_IsGamepadConnected;
+extern CommandInfo kCommandInfo_GetGamepadJoystickMagnitude;
+extern CommandInfo kCommandInfo_GetGamepadTriggerMagnitude;
+
+void RegisterXInputCommands(const OBSEInterface* obse);
