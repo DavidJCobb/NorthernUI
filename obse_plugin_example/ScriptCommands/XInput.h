@@ -11,5 +11,3 @@ extern CommandInfo kCommandInfo_GetGamepadControl;
 extern CommandInfo kCommandInfo_IsGamepadConnected;
 extern CommandInfo kCommandInfo_GetGamepadJoystickMagnitude;
 extern CommandInfo kCommandInfo_GetGamepadTriggerMagnitude;
-
-void RegisterXInputCommands(const OBSEInterface* obse);

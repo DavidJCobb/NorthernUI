@@ -5,21 +5,6 @@
 #include "ReverseEngineered/Systems/Input.h"
 #include "obse/PluginAPI.h"
 
-void RegisterXInputCommands(const OBSEInterface* obse) {
-   obse->SetOpcodeBase(0x2000); // FOR TESTING; CHANGE THIS BEFORE WE SHIP
-   obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
-   obse->RegisterCommand(&kCommandInfo_DisableGamepadKey);
-   obse->RegisterCommand(&kCommandInfo_EnableGamepadKey);
-   obse->RegisterCommand(&kCommandInfo_IsGamepadKeyDisabled);
-   obse->RegisterCommand(&kCommandInfo_GetGamepadControl);
-   obse->RegisterCommand(&kCommandInfo_IsGamepadConnected);
-   obse->RegisterCommand(&kCommandInfo_GetGamepadJoystickMagnitude);
-   obse->RegisterCommand(&kCommandInfo_GetGamepadTriggerMagnitude);
-   obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
-   obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
-   obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
-};
-
 //
 // TODO:
 //
@@ -47,37 +32,37 @@ constexpr UInt32 ce_is_static     = 0;
 constexpr UInt32 ce_flags_default = 0;
 
 ParamInfo kParams_Gamepad[1] = {
-   { "int:gamepad index",  kParamType_Integer, 0 },
+   { "int gamepad index",  kParamType_Integer, 0 },
 };
 ParamInfo kParams_Gamepad_Key_Flags[3] = {
-   { "int:gamepad index",  kParamType_Integer, 0 },
-   { "int:gamepad button", kParamType_Integer, 0 },
-   { "int:options flags",  kParamType_Integer, 0 },
+   { "int gamepad index",  kParamType_Integer, 0 },
+   { "int gamepad button", kParamType_Integer, 0 },
+   { "int options flags",  kParamType_Integer, 0 },
 };
 ParamInfo kParams_GamepadAndKey[2] = {
-   { "int:gamepad index",  kParamType_Integer, 0 },
-   { "int:gamepad button", kParamType_Integer, 0 },
+   { "int gamepad index",  kParamType_Integer, 0 },
+   { "int gamepad button", kParamType_Integer, 0 },
 };
 ParamInfo kParams_Control[1] = {
-   { "int:control index",  kParamType_Integer, 0 },
+   { "int control index",  kParamType_Integer, 0 },
 };
 ParamInfo kParams_JoystickState[4] = {
-   { "int:gamepad index",  kParamType_Integer, 0 },
-   { "int:which joystick", kParamType_Integer, 0 },
-   { "int:which axis",     kParamType_Integer, 0 },
-   { "int:options flags",  kParamType_Integer, 0 },
+   { "int gamepad index",  kParamType_Integer, 0 },
+   { "int which joystick", kParamType_Integer, 0 },
+   { "int which axis",     kParamType_Integer, 0 },
+   { "int options flags",  kParamType_Integer, 0 },
 };
 ParamInfo kParams_TriggerState[3] = {
-   { "int:gamepad index", kParamType_Integer, 0 },
-   { "int:which trigger", kParamType_Integer, 0 },
-   { "int:options flags", kParamType_Integer, 0 },
+   { "int gamepad index", kParamType_Integer, 0 },
+   { "int which trigger", kParamType_Integer, 0 },
+   { "int options flags", kParamType_Integer, 0 },
 };
 
-#define XXN_COMMAND(n, sn, d, args, exec) { n, sn, ce_opcode_auto, d, ce_is_static, std::extent<decltype(args)>::value, args, exec, Cmd_Default_Parse, nullptr, ce_flags_default };
+#define XXN_COMMAND(n, sn, d, args, exec) { n, sn, ce_opcode_auto, d, ce_is_static, std::extent<decltype(args)>::value, args, exec, nullptr, nullptr, ce_flags_default };
 
 #define XXN_CMD_EXPLANATION_ANY_GAMEPAD  "Gamepad index -1 means \"any gamepad.\""
 #define XXN_CMD_EXPLANATION_ALL_GAMEPADS "Gamepad index -1 means \"all gamepads.\""
-#define XXN_CMD_EXPLANATION_CHECK_FLAGS  "If the flags argument has bit 1 set, then we ignore scripted attempts at disabling keys."
+#define XXN_CMD_EXPLANATION_CHECK_FLAGS  "If the flags argument has bit 1 set, then we ignore scripted attempts at disabling keys and return the key's true state."
 
 static bool Cmd_Exec_IsGamepadKeyPressed(COMMAND_ARGS) { // Analogous to IsKeyPressed and IsKeyPressed2
    *result = 0.0;

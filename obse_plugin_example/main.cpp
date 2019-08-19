@@ -29,6 +29,7 @@
 #include "Services/Translations.h"
 //#include "ScriptCommands/OBSESamples.h"
 //#include "ScriptCommands/HUDReticle.h"
+#include "ScriptCommands/XInput.h"
 #include "Patches/Miscellaneous.h"
 #include "Patches/AlchemyMenu.h"
 #include "Patches/AudioMenu.h"
@@ -165,6 +166,8 @@ extern "C" {
          if (baseAddr && GetModuleInformation(GetCurrentProcess(), baseAddr, &info, sizeof(info)))
             _MESSAGE("We're loaded to the span of memory at %08X - %08X.", info.lpBaseOfDll, (UInt32)info.lpBaseOfDll + info.SizeOfImage);
       }
+      if (obse->isEditor)
+         _MESSAGE("We've been loaded inside of the Construction Set.");
 
       // version checks
       if(!obse->isEditor) {
@@ -308,13 +311,29 @@ extern "C" {
             man.RegisterPatch("DynamicMapEmulation", &CobbPatches::DynamicMapEmulation::Apply, { PatchManager::Req::G_MainMenu });
             man.RegisterPatch("DynamicTrainingCost", &CobbPatches::DynamicTrainingCost::Apply, { PatchManager::Req::G_MainMenu });
          }
+
+         // register to receive messages from OBSE
+         OBSEMessagingInterface* msgIntfc = (OBSEMessagingInterface*)obse->QueryInterface(kInterface_Messaging);
+         msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
+         g_msg = msgIntfc;
+
+         (NorthernUI::L10N::StrManager::GetInstance()).Update(); // load translatable strings from a file
       }
-
-      // register to receive messages from OBSE
-      OBSEMessagingInterface* msgIntfc = (OBSEMessagingInterface*)obse->QueryInterface(kInterface_Messaging);
-      msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
-      g_msg = msgIntfc;
-
+      obse->SetOpcodeBase(0x2000); // FOR TESTING; CHANGE THIS BEFORE WE SHIP
+      {  // Register script commands.
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
+         obse->RegisterCommand(&kCommandInfo_DisableGamepadKey);
+         obse->RegisterCommand(&kCommandInfo_EnableGamepadKey);
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyDisabled);
+         obse->RegisterCommand(&kCommandInfo_GetGamepadControl);
+         obse->RegisterCommand(&kCommandInfo_IsGamepadConnected);
+         obse->RegisterCommand(&kCommandInfo_GetGamepadJoystickMagnitude);
+         obse->RegisterCommand(&kCommandInfo_GetGamepadTriggerMagnitude);
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
+      }
+      /*//
       // get command table, if needed
       OBSECommandTableInterface* cmdIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
       if (cmdIntfc) {
@@ -326,9 +345,7 @@ extern "C" {
       } else {
          _MESSAGE("Couldn't read command table");
       }
-
-      (NorthernUI::L10N::StrManager::GetInstance()).Update(); // load translatable strings from a file
-
+      //*/
       return true;
    }
 };
