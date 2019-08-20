@@ -17,7 +17,15 @@ namespace RE {
    constexpr UInt32 ce_bsaSignatureBSwapped = '\0ASB';
 
    extern LinkedPointerList<Archive>* const g_archiveList; // All loaded BSAs in this order: INI-specified archives; non-Oblivion.esm archives in the same order as the load order. Oblivion BSAs are specified by the INI (though Mod Organizer can override this in a way that looks confusing).
-   extern Archive* const g_archiveWhichProvidedLastFile; // speeds up lookups in FindBSAThatContainsFile; SkyBSA works in part by deliberately preventing this pointer from ever being used
+   extern Archive** const g_archiveWhichProvidedLastFile; // speeds up lookups in FindBSAThatContainsFile; SkyBSA works in part by deliberately preventing this pointer from ever being used
+
+   // Used by:
+   //  - LazyFileLookup (bottom of this file)
+   //  - sub0042EBC0
+   //
+   extern Archive** const g_firstLoadedArchivesByType;  // g_firstLoadedArchivesByType[type] == first loaded Archive flagged with that filetype
+   extern Archive** const g_secondaryArchiveByTypeList; // offset from the first list by sizeof(void*) * 9
+
    //
    // These maps are used for ArchiveInvalidation.txt and ONLY for ArchiveInvalidation.txt:
    //
@@ -25,11 +33,13 @@ namespace RE {
    extern NiTArray<BSHash>* const g_archiveInvalidatedDirectoryPaths;
 
    DEFINE_SUBROUTINE_EXTERN(void, FindBSAThatContainsFile, 0x0042EA60, const char* filepath, UInt32 filetypeFlags);
+   DEFINE_SUBROUTINE_EXTERN(void, InvalidateFileInAllLoadedBSAs, 0x0042EDF0, const BSHash& folder, const BSHash& file, UInt16 filetypeFlags); // only affects BSAs in g_archiveList, so Archives can use it while loading; in practice, none should
 
    // Not sure if LoadBSAFile is safe to call; others almost certainly aren't, or are already called during startup
-   DEFINE_SUBROUTINE_EXTERN(void, LoadBSAFile, 0x0042F4C0, const char* filePath, UInt32 zeroA, UInt32 zeroB); // adds archive to g_archiveList
+   DEFINE_SUBROUTINE_EXTERN(void, LoadBSAFile, 0x0042F4C0, const char* filePath, UInt16 overrideFiletypeFlags, UInt32 zero); // adds archive to g_archiveList
    DEFINE_SUBROUTINE_EXTERN(void, DiscardAllBSARetainedFilenames, 0x0042C970);
    DEFINE_SUBROUTINE_EXTERN(void, ReadArchiveInvalidationTxtFile, 0x0042D840, const char* filename);
+   DEFINE_SUBROUTINE_EXTERN(void, RemoveFromTypeToBSAMap, 0x0042BE10, Archive*); // called when an Archive is deleted
 
    enum BSAFlags : UInt32 {
       kBSAFlag_HasFolderNames  = 0x0001,
@@ -74,6 +84,15 @@ namespace RE {
       MEMBER_FN_PREFIX(BSAEntry);
       DEFINE_MEMBER_FN(Constructor, BSAEntry&, 0x0042BD20);
 
+      UInt32 getOffset() const { // files only
+         return this->offset & 0x7FFFFFFF;
+      }
+      UInt32 getSize() const { // files only
+         return this->size & 0x3FFFFFFF;
+      }
+      bool isNonDefaultCompression() const { // files only
+         return (this->size & 0x40000000);
+      }
       bool isKnownNotToBeOverridden() const { // files only
          return (this->size & 0x80000000); // set by Archive::CheckFileIsOverridden once we know the file isn't overridden by a loose file
       }
@@ -100,13 +119,22 @@ namespace RE {
       DEFINE_MEMBER_FN(Constructor, BSAHeader&, 0x006FA180);
    };
 
-   struct CompressedArchiveFile { // sizeof == 0x174
-      enum { kVTBL = 0x00A35E64 };
+   class ArchiveFile : public BSFile { // sizeof == 0x15C
+      public:
+         Archive* owner;  // 154
+         UInt32   offset; // 158 // offset within the BSA file
 
-      // TODO
+         MEMBER_FN_PREFIX(ArchiveFile);
+         DEFINE_MEMBER_FN(Constructor, ArchiveFile&, 0x0042D540, const char* path, Archive* owner, UInt32 offset, UInt32 filesize, SInt32);
+   };
+   class CompressedArchiveFile : public ArchiveFile { // sizeof == 0x174
+      public:
+         enum { kVTBL = 0x00A35E64 };
 
-      MEMBER_FN_PREFIX(CompressedArchiveFile);
-      DEFINE_MEMBER_FN(Constructor, CompressedArchiveFile&, 0x0042D6D0, UInt32, UInt32, UInt32, UInt32, UInt32);
+         // TODO
+
+         MEMBER_FN_PREFIX(CompressedArchiveFile);
+         DEFINE_MEMBER_FN(Constructor, CompressedArchiveFile&, 0x0042D6D0, UInt32, UInt32, UInt32, UInt32, UInt32);
    };
 
    class Archive : public BSFile { // sizeof == 0x280
@@ -130,8 +158,8 @@ namespace RE {
          UInt32* folderNameOffsets = nullptr; // 19C // possibly an array of offsets, in 198, for each folder name
          char*   fileNames   = nullptr; // 1A0 // "File Name Block" in UESP docs: a bunch of consecutive zero-terminated strings
          UInt32** fileNameOffsetsByFolder = nullptr; // 1A4
-         UInt32 unk1A8 = 0;
-         UInt8  unk1AC = 0;
+         UInt32 refCount = 0; // 1A8
+         bool   queuedForDeletion = 0; // 1AC
          UInt8  unk1AD;
          UInt8  unk1AE;
          UInt8  unk1AF;
@@ -154,16 +182,20 @@ namespace RE {
 
          MEMBER_FN_PREFIX(Archive);
          DEFINE_MEMBER_FN(Constructor, Archive&, 0x0042EE80, const char* filePath, UInt32, bool, UInt32);
-         DEFINE_MEMBER_FN(CheckDelete,    void, 0x0042C910); // Dispose(true), with conditions?
          DEFINE_MEMBER_FN(CheckFileIsOverridden, bool, 0x0042C1D0, BSAEntry& file, const char* looseFilePath); // called by FolderContainsFile; invalidates the file if it's older than a matching loose file
          DEFINE_MEMBER_FN(ContainsFile,   bool, 0x0042E020, const BSHash& file, const BSHash& folder, UInt32& outFolderIndex, UInt32& outFileIndexInFolder, const char* normalizedFilepath); // just calls ContainsFolder and FolderContainsFile
          DEFINE_MEMBER_FN(ContainsFolder, bool, 0x0042CE40, const BSHash& folder, UInt32& outFolderIndex, const char* normalizedFilepath);
          DEFINE_MEMBER_FN(DiscardRetainedFilenames,   void, 0x0042C0D0, UInt32); // conditional on unk194 flag 0x04
          DEFINE_MEMBER_FN(FolderContainsFile, bool, 0x0042D000, UInt32 folderIndex, const BSHash& file, UInt32& outFileIndexInFolder, const char* normalizedFilepath, UInt32 zero); // file path is used for CheckFileIsOverridden
+         DEFINE_MEMBER_FN(GetFile,      ArchiveFile*, 0x0042E1A0, const BSAEntry& file, SInt32, const char* normalizedFilepath);
+         DEFINE_MEMBER_FN(GetFileEntry, BSAEntry*,    0x0042D240, const BSHash& folder, const BSHash& file, const char* normalizedFilepath);
          DEFINE_MEMBER_FN(RetainsFilenameStringTable, bool, 0x0042BD30);
          DEFINE_MEMBER_FN(RetainsFilenameOffsetTable, bool, 0x0042BD50);
          DEFINE_MEMBER_FN(Subroutine0042BD70, bool, 0x0042BD70);
          DEFINE_MEMBER_FN(Subroutine0042E070, UInt32, 0x0042E070, UInt32, UInt32, UInt32, UInt32); // load a file?
+         //
+         DEFINE_MEMBER_FN(CheckDelete, void, 0x0042C910); // 
+         DEFINE_MEMBER_FN(DecRef,      void, 0x0042C910); // Bethesda calls this "CheckDelete;" define it with both names
          //
          // The below are all called during the constructor, so don't use them:
          //
@@ -181,7 +213,30 @@ namespace RE {
             return CALL_MEMBER_FN(this, InvalidateAgainstLooseFiles)("Data\\", "", data.ftLastWriteTime);
          }
          //*/
+
+         inline void IncRef() {
+            InterlockedIncrement(&this->refCount);
+         };
    };
    static_assert(sizeof(Archive) >= 0x280, "RE::Archive is too small!");
    static_assert(sizeof(Archive) <= 0x280, "RE::Archive is too large!");
+
+   //
+   // QueuedFileEntry relies on LazyFileLookup to get a BSAEntry pointer, which gets 
+   // stored to QueuedFileEntry::unk24. I'm not sure where that actually gets used, but 
+   // presumably QueuedFileEntry has no way to refer to any BSA other than the ones in 
+   // g_firstLoadedArchivesByType.
+   //
+   // The real object of interest, however, is QueuedTexture::Unk_01. This function 
+   // checks its unk24 pointer -- also a BSAEntry -- and retrieves the actual stored 
+   // file from the BSA, i.e. an ArchiveFile*. And as it turns out, QueuedTexture also 
+   // uses LazyFileLookup to store a BSAEntry pointer to its unk24.
+   //
+   // The purpose of BSA Redirection, then, is to ensure that these lookups always fail, 
+   // because the redirect BSA is g_firstLoadedArchivesByType[kBSAFiletypeFlag_Textures] 
+   // and it contains only a dummy file that will never match anything. These lookups 
+   // only check that BSA, so if they fail, then what do their callers do? What calls 
+   // QueuedTexture::Unk_01?
+   //
+   DEFINE_SUBROUTINE_EXTERN(BSAEntry*, LazyFileLookup, 0x0042DB10, BSAFileFlags filetype, const BSHash& folder, const BSHash& file, const char* normalizedFilepath);
 };

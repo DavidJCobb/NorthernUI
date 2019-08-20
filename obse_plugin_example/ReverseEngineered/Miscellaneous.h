@@ -6,6 +6,7 @@
 
 class TESBipedModelForm;
 class TESQuest;
+struct _finddata_t;
 namespace RE {
    enum MagicSchool : UInt32 { // AVs 0x14 - 0x19
       kMagicSchool_Alteration  = 0,
@@ -24,13 +25,17 @@ namespace RE {
 
    namespace native { // here for documentation purposes; don't bother actually using these
       DEFINE_SUBROUTINE_EXTERN(SInt32, _access, 0x00982D71, const char* path, UInt32); // educated guess
+      DEFINE_SUBROUTINE_EXTERN(SInt32, _findfirst, 0x009844EC, const char* filespec, _finddata_t*);
+      DEFINE_SUBROUTINE_EXTERN(SInt32, _findnext,  0x0098461C, intptr_t, _finddata_t*);
       DEFINE_SUBROUTINE_EXTERN(FILE,   fopen,   0x00982440, const char* filename, const char* mode);
       DEFINE_SUBROUTINE_EXTERN(size_t, fread,   0x00987F5B, void* buffer, size_t elementSize, size_t elementCount, FILE *stream);
       DEFINE_SUBROUTINE_EXTERN(size_t, fread_s, 0x0098817E, void* buffer, size_t bufSize, size_t elementSize, size_t elementCount, FILE *stream);
       DEFINE_SUBROUTINE_EXTERN(UInt32, fseek,   0x00984801, FILE* stream, SInt32 offset, UInt32 origin);
+      DEFINE_SUBROUTINE_EXTERN(size_t, getline, 0x009821F5, char* out, UInt32 size, FILE* stream);
       DEFINE_SUBROUTINE_EXTERN(void,   _splitpath, 0x0098443C, const char* path, char* outDrive, char* outDirectory, char* outFilename, char* outExtension);
       DEFINE_SUBROUTINE_EXTERN(UInt32, stat,    0x00983754, const char* path, void* out);
       DEFINE_SUBROUTINE_EXTERN(UInt32, strncmp, 0x009864D9, const char*, const char*, size_t);
+      DEFINE_SUBROUTINE_EXTERN(char*,  strtok,  0x0098349C, char* strToken, const char* delim);
 
       static constexpr UInt32* CONST_SEEK_SET = (UInt32*)0x00A853D0;
       static constexpr UInt32* CONST_SEEK_CUR = (UInt32*)0x00A853D4;
