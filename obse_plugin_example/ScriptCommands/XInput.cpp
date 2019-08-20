@@ -64,17 +64,15 @@ ParamInfo kParams_TriggerState[3] = {
 #define XXN_CMD_EXPLANATION_ALL_GAMEPADS "Gamepad index -1 means \"all gamepads.\""
 #define XXN_CMD_EXPLANATION_CHECK_FLAGS  "If the flags argument has bit 1 set, then we ignore scripted attempts at disabling keys and return the key's true state."
 
-static bool Cmd_Exec_IsGamepadKeyPressed(COMMAND_ARGS) { // Analogous to IsKeyPressed and IsKeyPressed2
+static bool Cmd_Exec_IsGamepadKeyPressed(COMMAND_ARGS) { // Analogous to IsKeyPressed and its variants
    *result = 0.0;
    SInt32 gpIndex = ce_anyGamepad;
    UInt32 keycode = 0;
-   bool   honest;
-   {
-      UInt32 flags = 0;
-      if (!ExtractArgs(PASS_EXTRACT_ARGS, &gpIndex, &keycode, &flags))
-         return true;
-      bool honest = flags & 1;
-   }
+   UInt32 flags   = 0;
+   if (!ExtractArgs(PASS_EXTRACT_ARGS, &gpIndex, &keycode, &flags))
+      return true;
+   bool honest = (flags & 1);
+   //
    if (gpIndex != ce_anyGamepad) {
       auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(gpIndex);
       if (gamepad && gamepad->GetButtonState(keycode, RE::kKeyQuery_Hold, honest))
@@ -100,25 +98,29 @@ CommandInfo kCommandInfo_IsGamepadKeyPressed = XXN_COMMAND(
    Cmd_Exec_IsGamepadKeyPressed
 );
 
+void _ModifyGamepadDisableState(SInt32 gpIndex, UInt32 keycode, bool state) { // helper function for commands
+   auto core = XXNGamepadSupportCore::GetInstance();
+   if (gpIndex == ce_everyGamepad) {
+      gpIndex = 0;
+      do {
+         auto gamepad = core->GetGamepad(gpIndex);
+         if (gamepad)
+            gamepad->SetDisableState(keycode, state);
+      } while (++gpIndex < 4);
+   } else {
+      auto gamepad = core->GetGamepad(gpIndex);
+      if (gamepad)
+         gamepad->SetDisableState(keycode, state);
+   }
+}
+
 static bool Cmd_Exec_DisableGamepadKey(COMMAND_ARGS) {
    *result = 0.0;
    SInt32 gpIndex = ce_everyGamepad;
    UInt32 keycode = 0;
    if (!ExtractArgs(PASS_EXTRACT_ARGS, &gpIndex, &keycode))
       return true;
-   if (gpIndex == ce_everyGamepad) {
-      auto core = XXNGamepadSupportCore::GetInstance();
-      gpIndex = 0;
-      do {
-         auto gamepad = core->GetGamepad(gpIndex);
-         if (gamepad)
-            gamepad->SetDisableState(keycode, true);
-      } while (++gpIndex < 4);
-   } else {
-      auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(gpIndex);
-      if (gamepad)
-         gamepad->SetDisableState(keycode, true);
-   }
+   _ModifyGamepadDisableState(gpIndex, keycode, true);
    return true;
 }
 CommandInfo kCommandInfo_DisableGamepadKey = XXN_COMMAND(
@@ -135,19 +137,7 @@ static bool Cmd_Exec_EnableGamepadKey(COMMAND_ARGS) {
    UInt32 keycode = 0;
    if (!ExtractArgs(PASS_EXTRACT_ARGS, &gpIndex, &keycode))
       return true;
-   if (gpIndex == ce_everyGamepad) {
-      auto core = XXNGamepadSupportCore::GetInstance();
-      gpIndex = 0;
-      do {
-         auto gamepad = core->GetGamepad(gpIndex);
-         if (gamepad)
-            gamepad->SetDisableState(keycode, false);
-      } while (++gpIndex < 4);
-   } else {
-      auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(gpIndex);
-      if (gamepad)
-         gamepad->SetDisableState(keycode, false);
-   }
+   _ModifyGamepadDisableState(gpIndex, keycode, false);
    return true;
 }
 CommandInfo kCommandInfo_EnableGamepadKey = XXN_COMMAND(
@@ -211,12 +201,18 @@ CommandInfo kCommandInfo_GetGamepadControl = XXN_COMMAND(
 
 static bool Cmd_Exec_IsGamepadConnected(COMMAND_ARGS) {
    *result = 0.0;
-   UInt32 gpIndex = 0;
+   SInt32 gpIndex = 0;
    if (!ExtractArgs(PASS_EXTRACT_ARGS, &gpIndex))
       return true;
-   auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(gpIndex);
-   if (gamepad && gamepad->isConnected)
-      *result = 1.0;
+   if (gpIndex == ce_anyGamepad) {
+      auto gamepad = XXNGamepadSupportCore::GetInstance()->GetAnyGamepad(); // only returns a connected gamepad
+      if (gamepad)
+         *result = 1.0;
+   } else {
+      auto gamepad = XXNGamepadSupportCore::GetInstance()->GetGamepad(gpIndex);
+      if (gamepad && gamepad->isConnected)
+         *result = 1.0;
+   }
    return true;
 }
 CommandInfo kCommandInfo_IsGamepadConnected = XXN_COMMAND(

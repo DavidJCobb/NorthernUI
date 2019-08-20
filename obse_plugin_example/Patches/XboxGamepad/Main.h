@@ -42,7 +42,7 @@ class XXNGamepad {
       XINPUT_GAMEPAD lastFrame;
       XINPUT_GAMEPAD thisFrame;
       XINPUT_GAMEPAD ignoring; // used to prevent UI oddities when opening/closing menus
-      XINPUT_GAMEPAD disabled; // anything disabled by scripts
+      XINPUT_GAMEPAD disabled; // indicate buttons disabled by scripts
 
       typedef RE::KeyQuery KeyQuery;
 
