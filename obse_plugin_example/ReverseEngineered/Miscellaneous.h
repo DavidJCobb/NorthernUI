@@ -25,6 +25,7 @@ namespace RE {
 
    namespace native { // here for documentation purposes; don't bother actually using these
       DEFINE_SUBROUTINE_EXTERN(SInt32, _access, 0x00982D71, const char* path, UInt32); // educated guess
+      DEFINE_SUBROUTINE_EXTERN(void,   _alloca, 0x00983FA0); // UNCONFIRMED. Uses (eax) as argument; caller assumes (esp) is the allocated space.
       DEFINE_SUBROUTINE_EXTERN(SInt32, _findfirst, 0x009844EC, const char* filespec, _finddata_t*);
       DEFINE_SUBROUTINE_EXTERN(SInt32, _findnext,  0x0098461C, intptr_t, _finddata_t*);
       DEFINE_SUBROUTINE_EXTERN(FILE,   fopen,   0x00982440, const char* filename, const char* mode);
