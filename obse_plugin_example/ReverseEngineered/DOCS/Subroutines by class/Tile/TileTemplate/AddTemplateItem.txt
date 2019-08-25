@@ -122,7 +122,7 @@ void TileTemplate::AddTemplateItem(UInt32 aId, const char* aValue, UInt32 aLineN
       // at 0x0058D66F
       if (ebx) {
          if (ebx->unk00 == kTileValue_value && esi) {
-            if (esi->unk00 == ParseCode::kCode_SetNextTagname || esi->unk00 == ParseCode::kCode_TraitActionStart) { // at 0x0058D697
+            if (esi->unk00 == ParseCode::kCode_NonConstTraitStart || esi->unk00 == ParseCode::kCode_ContainerOperatorStart) { // at 0x0058D697
                if (esi->tagType == esp14) { // at 0x0058D6A9
                   if (IsTrait(ebp->tagType)) {
                      esi->unk00 = ParseCode::kCode_Trait; // near 0x0058D6DA

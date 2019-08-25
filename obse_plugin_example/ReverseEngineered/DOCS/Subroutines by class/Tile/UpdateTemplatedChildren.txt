@@ -94,14 +94,19 @@ void Tile::UpdateTemplatedChildren(Struct0058BCD0* Arg1) {
                // just blindly write a string to the operand: operators don't store type info, 
                // so there has to be some way that we *know* it's a string operator.
                //
-               if (eax && 0.0 == ebp04->tagType) { // TileTemplateItem::tagType == tile/trait type ID or float trait value
-                  ebp10->MQ_1D4A0(ebp04->str.m_data, ebp04->unk10);
+               if (eax && 0.0 == ebp04->tagType) { // TileTemplateItem::tagType == tile/trait type ID or float trait value -- here, the latter
+                  //
+                  // Next function creates a new Expression and sets its operand to 
+                  // basically a strcpy of the input string. Then, it fires off a 
+                  // call to DoActionEnumeration(0).
+                  //
+                  ebp10->MQ_1D4A0(ebp04->str.m_data, ebp04->unk10, true);
                } else {
-                  ebp10->TES4_0058CBE0(ebp04->tagType, ebp04->unk10);
+                  ebp10->AppendConstOperator(ebp04->tagType, ebp04->unk10);
                }
             #else
                eax = ebp->GetOrCreateTrait(ebx);
-               eax->TES4_0058CBE0(esp14, (float)esi->tagType);
+               eax->AppendConstOperator(esp14, (float)esi->tagType);
             #endif
             continue;
          }

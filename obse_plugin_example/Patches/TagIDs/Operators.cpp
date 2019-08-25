@@ -15,6 +15,100 @@
 namespace CobbPatches {
    namespace TagIDs {
       namespace Operators {
+         namespace StringOperandSupport {
+            //
+            // The only way to do this without conflicting with MenuQue is to do it basically the 
+            // same way that MenuQue does it. We have to patch the same sites and do more or less 
+            // the same things, though obviously I've written my own code for the purpose.
+            //
+            namespace ExpressionDestructor {
+               //
+               // Free strings from memory when their owning operators die. MenuQue doesn't do 
+               // this, probably for maximum safety in case something clobbers the byte that they 
+               // and we co-opt as an "is string" bool, but I don't want to leak every string 
+               // that ever gets stuffed into an operand.
+               //
+               void _stdcall Inner(RE::Tile::Value::Expression* op) {
+                  if (op->isString && op->operand.string) {
+                     FormHeap_Free((void*)op->operand.string);
+                     op->operand.string = nullptr;
+                     op->isString = false;
+                  }
+               }
+               __declspec(naked) void Outer() {
+                  _asm {
+                     push ecx;
+                     call Inner; // stdcall
+                     pop  esi; // reproduce patched-over instruction
+                     retn;     // reproduce patched-over instruction
+                  };
+               }
+               void Apply() {
+                  WriteRelJump(0x0058892B, (UInt32)&Outer);
+               }
+            }
+            namespace ExpressionRemove {
+               //
+               // Free strings from memory if their owning operators are removed. This typically 
+               // happens if a trait's value is overwritten with a constant at run-time.
+               //
+               void Inner(RE::Tile::Value::Expression* op) {
+                  if (op->isString && op->operand.string) {
+                     FormHeap_Free((void*)op->operand.string);
+                     op->operand.string = nullptr;
+                     op->isString = false;
+                  }
+                  FormHeap_Free((void*)op);
+               }
+               void Apply() {
+                  WriteRelCall(0x0058898A, (UInt32)&Inner);
+               }
+
+            }
+            namespace ParseXML {
+               //
+               // Modify ParseXML: have the text-content for a node use parse code 0xD (a MenuQue 
+               // extension) instead of the usual 0xBB9 (the game seems to treat text-content the 
+               // same as the value of an attribute named "value").
+               //
+               void Apply() {
+                  SafeWrite32(0x0058E14B + 1, RE::kTagID_MQTextContent);
+               }
+            }
+            namespace UpdateTemplatedChildren {
+               //
+               // Modify UpdateTemplatedChildren: when parsing a const operator, check whether the 
+               // parsed value is a string; if so, give the operator a string operand.
+               //
+               void _stdcall Inner(RE::Tile* tile, UInt32 traitID, RE::Tile::TileTemplateItem* item) {
+                  auto trait = CALL_MEMBER_FN(tile, GetOrCreateTrait)(traitID);
+                  if (item->string.GetLength() && item->tagType == 0.0F) // tagType can be a tag type OR a float trait value; here, it's the latter
+                     trait->AppendStringOperator(item->result, item->string.m_data);
+                  else
+                     CALL_MEMBER_FN(trait, AppendConstOperator)(item->tagType, item->result);
+               }
+               __declspec(naked) void Outer() {
+                  _asm {
+                     push esi;
+                     push ebx;
+                     push ebp;
+                     call Inner; // stdcall
+                     mov  eax, 0x0058D11A;
+                     jmp  eax;
+                  }
+               }
+               void Apply() {
+                  WriteRelJump(0x0058D0F8, (UInt32)&Outer);
+               }
+            }
+            //
+            void Apply() {
+               ExpressionDestructor::Apply();
+               ExpressionRemove::Apply();
+               ParseXML::Apply();
+               UpdateTemplatedChildren::Apply();
+            }
+         };
          namespace DoActionEnumeration {
             //
             // NOTE: We haven't managed to fully implement string operators, so 
@@ -75,7 +169,7 @@ namespace CobbPatches {
                };
             };
             //
-            bool Inner(const UInt32 operatorID, RE::Tile::Value* const kThis, RE::Tile::Value* const esp44, const float argument, RE::Tile::Value::Expression* const current) {
+            bool Inner(const UInt16 operatorID, RE::Tile::Value* const kThis, RE::Tile::Value* const esp44, const float argument, RE::Tile::Value::Expression* const current) {
                //
                // This subroutine should generally only handle our custom operators, since we just 
                // jump back to the vanilla code for vanilla operators.
@@ -136,6 +230,35 @@ namespace CobbPatches {
                      if (kThis->num == 0.0F)
                         kThis->num = argument;
                      return true;
+                  case _traitPrefSave:
+                     if (current->isString) {
+                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, current->operand.string);
+                        //
+                        // TODO
+                        //
+                     }
+                     return true;
+                  case _traitPrefLoad:
+                     if (current->isString) {
+                        _MESSAGE("XML has asked to load pref %s.", current->operand.string);
+                        //
+                        // TODO
+                        //
+                     } else
+                        kThis->num = 0.0F;
+                     return true;
+                  case _traitPrefReset:
+                     if (current->isString) {
+                        _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", current->operand.string, kThis->num);
+                        if (kThis->num = RE::kEntityID_true) {
+                           //
+                           // TODO
+                           //
+                           // queue the pref to reset, and return the default value as the result of this operator
+                           //
+                        }
+                     }
+                     return true;
                }
                return false;
             };
@@ -177,6 +300,7 @@ namespace CobbPatches {
          };
          //
          void Apply() {
+            StringOperandSupport::Apply();
             DoActionEnumeration::Apply();
          };
       };

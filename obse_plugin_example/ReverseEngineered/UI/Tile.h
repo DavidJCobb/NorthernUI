@@ -1,6 +1,7 @@
 #pragma once
 #include "ReverseEngineered/_BASE.h"
 #include "ReverseEngineered/UI/TagIDs.h"
+#include "obse/GameAPI.h"
 #include "obse/GameTiles.h"
 #include "obse/NiTypes.h"
 
@@ -147,13 +148,17 @@ namespace RE {
                Value*      ref;
                float       immediate;
                UInt32      opcode; // used if the outer opcode is 0xA or 0xF, denoting nesting; this is then the "true" opcode (e.g. <copy> nested stuff </copy> this would be Copy)
-               const char* string; // MenuQue
+               const char* string; // MenuQue and NorthernUI; we both allocate on the game's heap
             };
             struct Expression { // sizeof == 0x18
+               static Expression* CreateOnGameHeap();
+
                Expression* prev;    // 00
                Expression* next;    // 04
                Operand     operand; // 08 // first entry in any linked list is always ref; others are immediate
-               UInt32      opcode;  // 0C // i.e. 7D1 "copy", 7D2 "add", etc // 0x65 == unknown
+               UInt16      opcode;  // 0C // i.e. 7D1 "copy", 7D2 "add", etc // 0x65 == unknown
+               bool        isString; // 0E // MenuQue extension; in the vanilla game, (opcode) is a dword; among other things, that means circular reference errors force this to false (0)
+               UInt8       pad0F;
                Expression* refPrev = nullptr; // 10
                Expression* refNext = nullptr; // 14
                //
@@ -176,6 +181,11 @@ namespace RE {
                   this->next  = nullptr; 
                   this->refPrev = nullptr;
                   this->refNext = nullptr;
+                  //
+                  if (this->isString && this->operand.string) { // MenuQue and NorthernUI
+                     FormHeap_Free((void*)this->operand.string);
+                     this->operand.string = nullptr;
+                  }
                };
                //
                Expression() {};
@@ -191,6 +201,7 @@ namespace RE {
                   kType_Immediate,
                   kType_Ref,
                   kType_Opcode,
+                  kType_String, // MenuQue and NorthernUI
                };
                //
                void DebugLog(std::string* indent = nullptr) const;
@@ -238,6 +249,8 @@ namespace RE {
                      case 0xF:
                         return kType_Opcode;
                   }
+                  if (this->isString)
+                     return kType_String;
                   return kType_Immediate;
                }
                inline bool IsListHead() const {
@@ -353,6 +366,8 @@ namespace RE {
             DEFINE_MEMBER_FN(SetFloatValue,                  void,        0x0058CA00, float value);
             DEFINE_MEMBER_FN(SetStringValue,                 void,        0x0058CA50, const char* value);
             DEFINE_MEMBER_FN(UpdateInboundReferences,        void,        0x0058BDD0); // called at the end of DoActionEnumeration, to ensure that other traits pulling from this trait are updated too
+
+            void AppendStringOperator(UInt32 operatorID, const char* str);
          };
 
          virtual void        Dispose(bool);
@@ -419,6 +434,8 @@ namespace RE {
          bool DeleteValue   (UInt32 valueType);
          void DeleteChildren();
          SInt32 GetFontIndex(); // zero-indexed, not one-indexed as in the trait; accounts for xxnFontPath
+
+         void AppendStringOperatorToTrait(UInt32 traitID, UInt32 operatorID, const char* str);
 
          //	void* vtbl;	 // 00
          UInt8     unk04;     // 04 - 0 = base tile

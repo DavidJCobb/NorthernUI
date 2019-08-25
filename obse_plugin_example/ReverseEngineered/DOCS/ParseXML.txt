@@ -266,9 +266,9 @@ Struct0058CD30* ParseXML(Arg1, Arg2, Arg3) {
                   while (espBC[eax] > ' ')
                      eax--;
                   espBC[eax + 1] = '\0';
-                  UInt32 token = ?????;
+                  UInt32 token = kAttrID_value; // at 0x0058E14B
                   #if MENUQUE
-                     token = 0xD;
+                     token = 0xD; // at 0x0058E14B
                   #endif
                   esp24->GetData()->AddTemplateItem(token, espBC, lineNumber, espBC[0] != '&');
                }

@@ -48,6 +48,9 @@ namespace CobbPatches {
       constexpr UInt32 _traitStrings     = 0x160D; // selector
       constexpr UInt32 _traitOpSetIfZero = 0x160E; // operator (float)
       constexpr UInt32 _traitLocConfig   = 0x160F; // selector
+      constexpr UInt32 _traitPrefSave    = 0x1610; // operator (string operand)
+      constexpr UInt32 _traitPrefLoad    = 0x1611; // operator (string operand)
+      constexpr UInt32 _traitPrefReset   = 0x1612; // operator (string operand)
       //
       // NOTE: ID 0x1771 is not registered, but the vanilla code sets it on the menu root.
       //
@@ -77,6 +80,9 @@ namespace CobbPatches {
          { XXN_NEW_TAG_ID(_traitStrings,     "xxnstrings",     kType_Selector, 0, 0) },
          { XXN_NEW_TAG_ID(_traitOpSetIfZero, "xxnopsetifzero", kType_Operator, 0, 0) },
          { XXN_NEW_TAG_ID(_traitLocConfig,   "xxnlocalization", kType_Selector, 0, 0) },
+         { XXN_NEW_TAG_ID(_traitPrefSave,    "xxnprefsavevalue", kType_Operator, 0, 1) },
+         { XXN_NEW_TAG_ID(_traitPrefLoad,    "xxnprefloadvalue", kType_Operator, 0, 1) },
+         { XXN_NEW_TAG_ID(_traitPrefReset,   "xxnprefresetvalue", kType_Operator, 0, 1) },
       };
       constexpr UInt32 menuQueOperatorMin = 0x7EC;
       constexpr UInt32 menuQueOperatorMax = 0x7F0;

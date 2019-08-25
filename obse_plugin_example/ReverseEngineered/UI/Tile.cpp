@@ -145,6 +145,39 @@ namespace RE {
 
    //
 
+   Tile::Value::Expression* Tile::Value::Expression::CreateOnGameHeap() {
+      auto mem = FormHeap_Allocate(sizeof(Expression));
+      memset(mem, 0, sizeof(Expression));
+      return (new (mem) Expression());
+   }
+
+   void Tile::Value::AppendStringOperator(UInt32 operatorID, const char* str) {
+      //if (!CobbPatches::TagIDs::IsOperatorWithStringOperand(operatorID))
+      //   return;
+      auto last = this->operators;
+      if (last->next)
+         do {
+            last = last->next;
+         } while (last->next);
+      auto op = Tile::Value::Expression::CreateOnGameHeap();
+      op->prev     = last;
+      op->next     = nullptr;
+      {
+         auto length = strlen(str) + 1;
+         auto buffer = (char*) FormHeap_Allocate(length);
+         buffer[length - 1] = '\0';
+         memcpy(buffer, str, length - 1);
+         op->operand.string = buffer;
+      }
+      op->opcode   = operatorID;
+      op->isString = true;
+      op->refPrev  = nullptr;
+      op->refNext  = nullptr;
+      last->next = op;
+   }
+
+   //
+
    bool Tile::GetFloatValue(UInt32 traitID, float* out) {
       auto trait = CALL_MEMBER_FN(this, GetTrait)(traitID);
       if (trait && trait->bIsNum) {
@@ -203,6 +236,10 @@ namespace RE {
          outDepth += CALL_MEMBER_FN(tile, GetFloatTraitValue)(kTileValue_depth);
       } while (tile = tile->parent);
    };
+
+   void Tile::AppendStringOperatorToTrait(UInt32 traitID, UInt32 operatorID, const char* str) {
+      CALL_MEMBER_FN(this, GetOrCreateTrait)(traitID)->AppendStringOperator(operatorID, str);
+   }
 
    void RegisterTrait(const char* trait, const SInt32 code) {
       #if OBLIVION_VERSION == OBLIVION_VERSION_1_2_416
