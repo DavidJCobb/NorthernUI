@@ -42,7 +42,7 @@ void Tile::UpdateTemplatedChildren(Struct0058BCD0* Arg1) {
          }
          if (0.0 == esi->num || !esi->str.m_dataLen) {
             if (esi->id != kTagID_string && esi->id != kTagID_filename) { // NorthernUI patches this check
-               float esp18 = esi->unk04;
+               float esp18 = esi->tagType;
                eax = ebp->GetOrCreateTrait(eax);
                if (eax == edi) {
                   edi = 0;
@@ -74,27 +74,34 @@ void Tile::UpdateTemplatedChildren(Struct0058BCD0* Arg1) {
          Log004A7A60("Trait defined outside of any tile.");
          continue;
       } else if (eax == kCode_NonConstTraitStart) {
-         ebx = (SInt32) esi->unk04;
+         ebx = (SInt32) esi->tagType;
          continue;
       } else if (eax == kCode_NonConstTraitEnd) {
          ebx = 0;
          continue;
       } else if (eax == kCode_ConstOperator) {
          if (ebx) {
+            // at 0x0058D0F8
             #if MENUQUE // branch replaced by MenuQue via jump at 0x0058D0F8...
                ebp04 = esi;
                ebp0C = ebp00; // ??
                ebp08 = ebx;
                Tile::Value* ebp10 = ebp0C->GetOrCreateTrait(ebx);
                eax = ebp04->str.Length();
-               if (eax && 0.0 == ebp04->unk04) {
+               //
+               // So by here, we already know whether this operator should be a string or not, 
+               // which implies that that was determined earlier in the parse process. We can't 
+               // just blindly write a string to the operand: operators don't store type info, 
+               // so there has to be some way that we *know* it's a string operator.
+               //
+               if (eax && 0.0 == ebp04->tagType) { // TileTemplateItem::tagType == tile/trait type ID or float trait value
                   ebp10->MQ_1D4A0(ebp04->str.m_data, ebp04->unk10);
                } else {
-                  ebp10->TES4_0058CBE0(ebp04->unk04, ebp04->unk10);
+                  ebp10->TES4_0058CBE0(ebp04->tagType, ebp04->unk10);
                }
             #else
                eax = ebp->GetOrCreateTrait(ebx);
-               eax->TES4_0058CBE0(esp14, (float)esi->unk04);
+               eax->TES4_0058CBE0(esp14, (float)esi->tagType);
             #endif
             continue;
          }

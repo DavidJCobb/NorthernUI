@@ -38,11 +38,20 @@ namespace CobbPatches {
          for (UInt32 i = 0; i < std::extent<decltype(tagIDs)>::value; i++) {
             const auto& tag = tagIDs[i];
             if (id == tag.id)
-               if (tag.type == TagIDType::kType_Operator)
-                  return true;
+               return (tag.type == TagIDType::kType_Operator);
          }
          return false;
-      };
+      }
+      bool IsOperatorWithStringOperand(UInt32 id) {
+         if (id >= 0x7EC && id <= 0x7F0) // MenuQue operators
+            return true;
+         for (UInt32 i = 0; i < std::extent<decltype(tagIDs)>::value; i++) {
+            const auto& tag = tagIDs[i];
+            if (id == tag.id)
+               return (tag.type == TagIDType::kType_Operator && tag.isString);
+         }
+         return false;
+      }
       bool IsTile(UInt32 id) {
          return (id >= 0x385 && id <= 0x38B);
       }
@@ -240,7 +249,9 @@ namespace CobbPatches {
                         }
                      }
                   }
+                  //
                   // at 0x0058D493
+                  //
                   // ecx == ebx->unk00
                   if (aId == ParseCode::kCode_AttributeName) { // NAME attribute -- tile or template start
                      if (tItemZ && tItemZ->unk00 == ParseCode::kCode_StartTag) {
@@ -259,8 +270,7 @@ namespace CobbPatches {
                               if (!owner->unk0C) // at 0x0058D503
                                  owner->unk0C = CALL_MEMBER_FN(owner, AppendTileTemplate)(aValue);
                            }
-                           auto item = this->items.RemoveLast(); // removes tItemZ
-                           if (item) {
+                           if (auto item = this->items.RemoveLast()) {
                               item->~TileTemplateItem(); // FormHeap_Free(item->string.m_data);
                               FormHeap_Free(item);       // FormHeap_Free(item);
                            }
@@ -270,8 +280,7 @@ namespace CobbPatches {
                            }
                            return; // jumps to 0x0058D85F
                         }
-                        // jumped to 0x0058D5CD
-                        if (tItemZ->unk00 == ParseCode::kCode_StartTag && CobbPatches::TagIDs::IsTile(tItemZ->tagType)) {
+                        if (CobbPatches::TagIDs::IsTile(tItemZ->tagType)) {
                            //
                            // TERMINATING BRANCH #1: TILE START
                            //
@@ -290,7 +299,6 @@ namespace CobbPatches {
                            return; // jumps to 0x0058D943
                         }
                      }
-                     // jumped to 0x0058D632
                      //
                      // TERMINATING BRANCH #2
                      //
@@ -298,11 +306,12 @@ namespace CobbPatches {
                      tItemNew->result = ParseCode::kCode_AttributeName;
                      this->items.Append(tItemNew);
                      return;
-                  } else if (g_menuQue.detected) {
+                  }
+                  if (g_menuQue.detected) {
                      //
                      // MenuQue compatibility.
                      //
-                     if (aId >= ParseCode::kCode_TextContent && aId <= ParseCode::kCode_AttributeMQDest) {
+                     if (aId >= RE::kAttrID_value && aId <= RE::kAttrID_MenuQue_dest) { // attributes // at MQ+1E10B
                         auto eax = tItemZ->unk00;
                         if (eax == ParseCode::kCode_TileStart || eax == ParseCode::kCode_TileMQAttribute) {
                            //
@@ -314,21 +323,32 @@ namespace CobbPatches {
                            return;
                         }
                      }
-                     if (tItemZ && tItemZ->unk00 == ParseCode::kCode_MQTextContent
-                     && tItemY && (tItemY->unk00 == ParseCode::kCode_NonConstTraitStart || tItemY->unk00 == ParseCode::kCode_NonConstNonSrcOperatorStart)
-                     && tItemY->tagType == tagIdOrTraitValue) {
+                     if (aId == ParseCode::kCode_EndTag && (float)RE::kTagID_template == tagIdOrTraitValue) { // template end // at MQ+1E16E
+                        auto owner = this->owner;
+                        if (owner->unk0C)
+                           owner->unk0C = nullptr;
+                        else
+                           _MESSAGE("[AddTemplateItem] Closing tag for template definition does not match.");
+                        tItemNew->~TileTemplateItem();
+                        FormHeap_Free(tItemNew);
+                        return;
+                     }
+                     if (  tItemZ && tItemZ->unk00 == ParseCode::kCode_MQTextContent
+                        && tItemY && (tItemY->unk00 == ParseCode::kCode_NonConstTraitStart || tItemY->unk00 == ParseCode::kCode_ContainerOperatorStart)
+                        && tItemY->tagType == tagIdOrTraitValue
+                     ) {
                         //
                         // MENUQUE TERMINATING BRANCH: JUST AFTER TEXTCONTENT OF TRAIT OR OPERATOR
                         //
-                        if (CobbPatches::TagIDs::IsTrait(tItemNew->tagType)) {
+                        if (CobbPatches::TagIDs::IsTrait(tItemNew->tagType))
                            tItemY->unk00 = ParseCode::kCode_ConstTrait;
-                        } else if (CobbPatches::TagIDs::IsOperator(tItemNew->tagType)) {
+                        else if (CobbPatches::TagIDs::IsOperator(tItemNew->tagType))
                            tItemY->unk00 = ParseCode::kCode_ConstOperator;
-                        } else {
+                        else {
                            tItemY->unk00 = ParseCode::kCode_Invalid;
                            _MESSAGE("[AddTemplateItem:MenuQue-Compat] Bad trait/action type in XML");
-                        } // at MQ:0x0001E29D
-                        tItemY->result = (SInt32)tItemY->tagType;
+                        } // at MQ+1E29D
+                        tItemY->result  = (SInt32)tItemY->tagType;
                         tItemY->tagType = tItemZ->tagType;
                         CALL_MEMBER_FN(&tItemY->string, Replace_MinBufLen)(tItemZ->string.m_data, 0);
                         if (auto esi = this->items.RemoveLast()) { // removes tItemZ
@@ -339,80 +359,53 @@ namespace CobbPatches {
                         FormHeap_Free(tItemNew);
                         return;
                      }
-                  }
-                  if (aId == ParseCode::kCode_EndTag) { // at 0x0058D570
-                     if (tagIdOrTraitValue == kTileValue_template && this->owner->unk0C) {
-                        //
-                        // TERMINATING BRANCH #3: TEMPLATE END
-                        //
-                        this->owner->unk0C = nullptr; // set template currently being parsed to nullptr
-                        if (tItemNew) {
-                           tItemNew->~TileTemplateItem();
-                           FormHeap_Free(tItemNew);
-                        }
-                        return; // jumps to 0x0058D943
-                     }
-                     // at 0x0058D66F
-                     if (tItemZ) {
-                        if (tItemZ->unk00 == ParseCode::kCode_TextContent && tItemY) {
-                           if (tItemY->unk00 == ParseCode::kCode_NonConstTraitStart || tItemY->unk00 == ParseCode::kCode_NonConstNonSrcOperatorStart) { // at 0x0058D697
-                              if (tItemY->tagType == tagIdOrTraitValue) { // at 0x0058D6A9
-                                 //
-                                 // TERMINATING BRANCH #4: OPERATOR START OR TRAIT TEXT CONTENT
-                                 //
-                                 // tItemY   == start of non-const trait
-                                 // tItemZ   == tile textContent
-                                 // tItemNew == end tag; not template
-                                 //
-                                 // Handle this by setting tItemY's parse-code to either "trait" or "operator." Then, 
-                                 // copy tItemZ's float and string values (tagType and string) to tItemY, and destroy 
-                                 // tItemZ and tItemNew.
-                                 //
-                                 if (CobbPatches::TagIDs::IsTrait(tItemNew->tagType)) {
-                                    tItemY->unk00 = ParseCode::kCode_ConstTrait; // near 0x0058D6DA
-                                 } else if (CobbPatches::TagIDs::IsOperator(tItemNew->tagType)) { // near 0x0058D6E2
-                                    tItemY->unk00 = ParseCode::kCode_ConstOperator;
-                                 } else {
-                                    tItemY->unk00 = ParseCode::kCode_Invalid;
-                                    _MESSAGE("[AddTemplateItem] Bad trait/action type in XML");
-                                 }
-                                 // at 0x0058D71D
-                                 tItemY->result = (SInt32) tItemY->tagType;
-                                 tItemY->tagType = tItemZ->tagType;
-                                 CALL_MEMBER_FN(&tItemY->string, Replace_MinBufLen)(tItemZ->string.m_data, 0);
-                                 auto esi = this->items.RemoveLast(); // removes tItemZ
-                                 if (esi) {
-                                    esi->~TileTemplateItem();
-                                    FormHeap_Free(esi);
-                                 }
-                                 tItemNew->~TileTemplateItem();
-                                 FormHeap_Free(tItemNew);
-                                 return; // jumps to 0x0058D943
-                              }
+                     //
+                     // End of MenuQue-compatible code.
+                     //
+                  } else {
+                     //
+                     // Non-MenuQue vanilla code.
+                     //
+                     if (aId == ParseCode::kCode_EndTag) { // at 0x0058D570
+                        if (tagIdOrTraitValue == kTileValue_template && this->owner->unk0C) {
+                           //
+                           // TERMINATING BRANCH #3: TEMPLATE END
+                           //
+                           this->owner->unk0C = nullptr; // set template currently being parsed to nullptr
+                           if (tItemNew) {
+                              tItemNew->~TileTemplateItem();
+                              FormHeap_Free(tItemNew);
                            }
+                           return; // jumps to 0x0058D943
                         }
-                        // at 0x0058D78E
-                        if (            tItemZ->unk00 == ParseCode::kCode_AttributeTrait
-                           && tItemY && tItemY->unk00 == ParseCode::kCode_AttributeSrc
-                           && tItemX && tItemX->unk00 == ParseCode::kCode_NonConstNonSrcOperatorStart && tItemX->tagType == tagIdOrTraitValue
+                        if (tItemZ && tItemZ->unk00 == ParseCode::kCode_TextContent
+                         && tItemY && (tItemY->unk00 == ParseCode::kCode_NonConstTraitStart || tItemY->unk00 == ParseCode::kCode_NonConstNonSrcOperatorStart) && tItemY->tagType == tagIdOrTraitValue
                         ) {
                            //
-                           // TERMINATING BRANCH #5: OPERATOR SRC/TRAIT CONSTRUCTION
+                           // TERMINATING BRANCH #4: OPERATOR START OR TRAIT TEXT CONTENT
                            //
-                           // tItemX == operator start // tagType == operator ID
-                           // tItemY == src attribute  // string  == attribute value
-                           // tItemZ == trait
+                           // tItemY   == start of non-const trait
+                           // tItemZ   == tile textContent
+                           // tItemNew == end tag; not template
                            //
-                           tItemX->unk00   = ParseCode::kCode_SrcOperator;
-                           tItemX->result  = (SInt32) tItemX->tagType;
-                           tItemX->tagType = tItemZ->tagType;
-                           CALL_MEMBER_FN(&tItemX->string, CopyValueFromOther)(&tItemY->string);
+                           // Handle this by setting tItemY's parse-code to either "trait" or "operator." Then, 
+                           // copy tItemZ's float and string values (tagType and string) to tItemY, and destroy 
+                           // tItemZ and tItemNew.
+                           //
+                           if (CobbPatches::TagIDs::IsTrait(tItemNew->tagType)) {
+                              tItemY->unk00 = ParseCode::kCode_ConstTrait; // near 0x0058D6DA
+                           } else if (CobbPatches::TagIDs::IsOperator(tItemNew->tagType)) { // near 0x0058D6E2
+                              tItemY->unk00 = ParseCode::kCode_ConstOperator;
+                           } else {
+                              tItemY->unk00 = ParseCode::kCode_Invalid;
+                              _MESSAGE("[AddTemplateItem] Bad trait/action type in XML");
+                           }
+                           // at 0x0058D71D
+                           tItemY->result = (SInt32)tItemY->tagType;
+                           tItemY->tagType = tItemZ->tagType;
+                           CALL_MEMBER_FN(&tItemY->string, Replace_MinBufLen)(tItemZ->string.m_data, 0);
                            auto esi = this->items.RemoveLast(); // removes tItemZ
                            if (esi) {
-                              esi->~TileTemplateItem();
-                              FormHeap_Free(esi);
-                           }
-                           if (esi = this->items.RemoveLast()) { // removes tItemY
                               esi->~TileTemplateItem();
                               FormHeap_Free(esi);
                            }
@@ -421,7 +414,38 @@ namespace CobbPatches {
                            return; // jumps to 0x0058D943
                         }
                      }
-                     ; // just FPU manip // at 0x0058D87D
+                     //
+                     // End of non-MenuQue vanilla code.
+                     //
+                  }
+                  if (aId == ParseCode::kCode_EndTag
+                     && tItemZ && tItemZ->unk00 == ParseCode::kCode_AttributeTrait
+                     && tItemY && tItemY->unk00 == ParseCode::kCode_AttributeSrc
+                     && tItemX && tItemX->unk00 == ParseCode::kCode_NonConstNonSrcOperatorStart && tItemX->tagType == tagIdOrTraitValue
+                  ) {
+                     //
+                     // TERMINATING BRANCH #5: OPERATOR SRC/TRAIT CONSTRUCTION
+                     //
+                     // tItemX == operator start // tagType == operator ID
+                     // tItemY == src attribute  // string  == attribute value
+                     // tItemZ == trait
+                     //
+                     tItemX->unk00   = ParseCode::kCode_SrcOperator;
+                     tItemX->result  = (SInt32) tItemX->tagType;
+                     tItemX->tagType = tItemZ->tagType;
+                     CALL_MEMBER_FN(&tItemX->string, CopyValueFromOther)(&tItemY->string);
+                     auto esi = this->items.RemoveLast(); // removes tItemZ
+                     if (esi) {
+                        esi->~TileTemplateItem();
+                        FormHeap_Free(esi);
+                     }
+                     if (esi = this->items.RemoveLast()) { // removes tItemY
+                        esi->~TileTemplateItem();
+                        FormHeap_Free(esi);
+                     }
+                     tItemNew->~TileTemplateItem();
+                     FormHeap_Free(tItemNew);
+                     return; // jumps to 0x0058D943
                   }
                   //
                   // at 0x0058D87F

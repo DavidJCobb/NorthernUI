@@ -144,9 +144,10 @@ namespace RE {
          };
          struct Value {
             union Operand {
-               Value* ref;
-               float  immediate;
-               UInt32 opcode; // used if the outer opcode is 0xA or 0xF, denoting nesting; this is then the "true" opcode (e.g. <copy> nested stuff </copy> this would be Copy)
+               Value*      ref;
+               float       immediate;
+               UInt32      opcode; // used if the outer opcode is 0xA or 0xF, denoting nesting; this is then the "true" opcode (e.g. <copy> nested stuff </copy> this would be Copy)
+               const char* string; // MenuQue
             };
             struct Expression { // sizeof == 0x18
                Expression* prev;    // 00
@@ -294,9 +295,10 @@ namespace RE {
             // 
             // Because each Expression represents a single operator, Expressions that pull from 
             // another tile contain the pulled value, unaltered. This is how refNext works: it's 
-            // a linked list. For simplicity's sake, imagine that all of the above are simple 
-            // copy operators; this means that the traits effectively *are* their operators and 
-            // we can represent them using the same letters; the refNext chain is therefore:
+            // a linked list. There's no difference between the operator in J pulling from the 
+            // trait in G, versus the operator in J somehow pulling from the operator in I that 
+            // pulls from the trait in G; it's the same value being pulled; therefore, the link-
+            // ed list contains:
             //
             // A - B - C - D - E - F - G - H - I - J
             // 

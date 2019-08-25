@@ -224,6 +224,13 @@ CommandInfo kCommandInfo_IsGamepadConnected = XXN_COMMAND(
 );
 
 static bool Cmd_Exec_GetGamepadJoystickMagnitude(COMMAND_ARGS) {
+   //
+   // Returns a value between -100 and 100 indicating how far the joystick has 
+   // been pushed along the specified axis.
+   //
+   // NOTE: the magnitude getter's result will always be positive since it's a 
+   // distance, and it may exceed 100 due to hardware variation or defects.
+   //
    enum Stick {
       kStick_Left  = 0,
       kStick_Right = 0,
@@ -280,9 +287,12 @@ CommandInfo kCommandInfo_GetGamepadJoystickMagnitude = XXN_COMMAND(
 );
 
 static bool Cmd_Exec_GetGamepadTriggerMagnitude(COMMAND_ARGS) {
+   //
+   // Returns a value between 0 and 255 indicating how far down the trigger has been pressed.
+   //
    enum Trigger {
-      kTrigger_Left = 0,
-      kTrigger_Right = 0,
+      kTrigger_Left  = 0,
+      kTrigger_Right = 1,
    };
    enum OptionFlags {
       kOptionFlags_Honest = 1,

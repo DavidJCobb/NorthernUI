@@ -6,6 +6,7 @@ namespace CobbPatches {
       //
       bool IsOperator(UInt32 id);
       bool IsCustomOperator(UInt32 id);
+      bool IsOperatorWithStringOperand(UInt32 id);
       bool IsTile(UInt32 id);
       bool IsTrait(UInt32 id);
       bool IsCustomStringTrait(UInt32 id);

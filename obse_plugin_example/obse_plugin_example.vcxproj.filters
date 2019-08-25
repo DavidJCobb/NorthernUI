@@ -8035,6 +8035,8 @@
     <ClInclude Include="ScriptCommands\XInput.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Miscellaneous\templates.h" />
+    <ClInclude Include="ReverseEngineered\Forms\Components\TESModelList.h" />
+    <ClInclude Include="ReverseEngineered\Forms\Components\TESModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

@@ -318,6 +318,8 @@
     <ClInclude Include="ReverseEngineered\Files\BSFile.h" />
     <ClInclude Include="ReverseEngineered\Forms\Actor.h" />
     <ClInclude Include="ReverseEngineered\Forms\AlchemyItem.h" />
+    <ClInclude Include="ReverseEngineered\Forms\Components\TESModel.h" />
+    <ClInclude Include="ReverseEngineered\Forms\Components\TESModelList.h" />
     <ClInclude Include="ReverseEngineered\Forms\EffectItem.h" />
     <ClInclude Include="ReverseEngineered\Forms\hardcoded.h" />
     <ClInclude Include="ReverseEngineered\Forms\MobileObject.h" />

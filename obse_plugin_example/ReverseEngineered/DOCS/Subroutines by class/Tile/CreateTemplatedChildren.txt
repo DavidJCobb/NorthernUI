@@ -52,7 +52,7 @@ namespace MenuQue {
          eax = ebp->unk00;
          ebp08 = ebp08->next;
          char ebp08 = 0;
-         if (eax == 0x28) { // at $+1E87D
+         if (eax == kCode_TileStart) { // at $+1E87D
             ebp01 = 1;
             if (edx) { // at $+1E883
                if (ebp10) {
@@ -102,7 +102,7 @@ namespace MenuQue {
             if (!ebp1C)
                ebp1C = edi;
             continue;
-         } else if (eax == 0x2D) {
+         } else if (eax == kCode_TileEnd) {
             if (edx) {
                if (ecx) {
                   ebp08 = ecx->unk04;
@@ -116,7 +116,7 @@ namespace MenuQue {
                ebp0C = edx;
                continue;
             }
-         } else if (eax == 0x2A) { // at $+1E910
+         } else if (eax == kCode_TileMQAttribute) { // at $+1E910
             if (!edi)
                continue;
             ebp20 = edi;

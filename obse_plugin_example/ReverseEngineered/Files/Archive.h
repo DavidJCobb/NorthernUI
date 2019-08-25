@@ -4,6 +4,48 @@
 #include "ReverseEngineered/_BASE.h"
 
 namespace RE {
+   enum BSAFlags : UInt32 {
+      kBSAFlag_HasFolderNames  = 0x0001,
+      kBSAFlag_HasFileNames    = 0x0002,
+      kBSAFlag_Compressed      = 0x0004,
+      kBSAFlag_Unk0008         = 0x0008, // related to retaining directory strings/offsets
+      kBSAFlag_RetainFilenameStrings = 0x0010,
+      kBSAFlag_RetainFilenameOffsets = 0x0020,
+      kBSAFlag_IsXbox360Archive      = 0x0040,
+      kBSAFlag_Unk0080         = 0x0080, // related to retaining directory strings/offsets
+      kBSAFlag_Unk0100         = 0x0100,
+      kBSAFlag_Unk0200         = 0x0200,
+      kBSAFlag_Unk0400         = 0x0400,
+   };
+   enum BSAFiletype : UInt32 {
+      kBSAFiletype_Meshes   = 0,
+      kBSAFiletype_Textures = 1,
+      kBSAFiletype_Menus    = 2,
+      kBSAFiletype_Sounds   = 3,
+      kBSAFiletype_Voices   = 4,
+      kBSAFiletype_Shaders  = 5,
+      kBSAFiletype_Trees    = 6,
+      kBSAFiletype_Fonts    = 7,
+      kBSAFiletype_Misc     = 8,
+      //
+      kBSAFiletype_COUNT    = 9,
+   };
+   enum BSAFiletypeFlags : UInt32 {
+      kBSAFiletypeFlag_Meshes   = 0x0001,
+      kBSAFiletypeFlag_Textures = 0x0002,
+      kBSAFiletypeFlag_Menus    = 0x0004,
+      kBSAFiletypeFlag_Sounds   = 0x0008,
+      kBSAFiletypeFlag_Voices   = 0x0010,
+      kBSAFiletypeFlag_Shaders  = 0x0020,
+      kBSAFiletypeFlag_Trees    = 0x0040,
+      kBSAFiletypeFlag_Fonts    = 0x0080,
+      kBSAFiletypeFlag_Misc     = 0x0100,
+   };
+   enum BSAFileFlags : UInt32 { // consumes bits from the BSAEntry::size field
+      kBSAFileFlags_NonDefaultCompression = 0x40000000,
+      kBSAFileFlags_Unk80000000 = 0x80000000, // possibly "is invalid" // wait, is this in BSAEntry::size or BSAEntry::offset? 0042E4B3 has it in the latter
+   };
+
    struct BSHash {
       UInt64 data;
 
@@ -11,9 +53,11 @@ namespace RE {
       DEFINE_MEMBER_FN(Constructor,        BSHash&, 0x006FA2D0, const char* str, UInt32 type);
       DEFINE_MEMBER_FN(Subroutine0042BC10, UInt32,  0x0042BC10, const BSHash& other);
    };
-   DEFINE_SUBROUTINE_EXTERN(void, HashFilePath, 0x006FA1B0, const char* filename, BSHash& outFile, BSHash& outFolder);
+   DEFINE_SUBROUTINE_EXTERN(void, HashFilePath, 0x006FA1B0, const char* filename, BSHash& outFolder, BSHash& outFile);
 
    class Archive;
+   class ArchiveFile;
+
    constexpr UInt32 ce_bsaSignatureBSwapped = '\0ASB';
 
    extern LinkedPointerList<Archive>* const g_archiveList; // All loaded BSAs in this order: INI-specified archives; non-Oblivion.esm archives in the same order as the load order. Oblivion BSAs are specified by the INI (though Mod Organizer can override this in a way that looks confusing).
@@ -32,7 +76,9 @@ namespace RE {
    extern NiTArray<BSHash>* const g_archiveInvalidatedFilenames;
    extern NiTArray<BSHash>* const g_archiveInvalidatedDirectoryPaths;
 
+   DEFINE_SUBROUTINE_EXTERN(BSAFiletypeFlags, FileExtensionToBSAFiletypeFlags, 0x0042BA90, const char*);
    DEFINE_SUBROUTINE_EXTERN(void, FindBSAThatContainsFile, 0x0042EA60, const char* filepath, UInt32 filetypeFlags);
+   DEFINE_SUBROUTINE_EXTERN(ArchiveFile*, FindFileInBSA, 0x0042E8E0, const char* filepath, UInt32, UInt32 filetypeFlags);
    DEFINE_SUBROUTINE_EXTERN(void, InvalidateFileInAllLoadedBSAs, 0x0042EDF0, const BSHash& folder, const BSHash& file, UInt16 filetypeFlags); // only affects BSAs in g_archiveList, so Archives can use it while loading; in practice, none should
 
    // Not sure if LoadBSAFile is safe to call; others almost certainly aren't, or are already called during startup
@@ -40,35 +86,6 @@ namespace RE {
    DEFINE_SUBROUTINE_EXTERN(void, DiscardAllBSARetainedFilenames, 0x0042C970);
    DEFINE_SUBROUTINE_EXTERN(void, ReadArchiveInvalidationTxtFile, 0x0042D840, const char* filename);
    DEFINE_SUBROUTINE_EXTERN(void, RemoveFromTypeToBSAMap, 0x0042BE10, Archive*); // called when an Archive is deleted
-
-   enum BSAFlags : UInt32 {
-      kBSAFlag_HasFolderNames  = 0x0001,
-      kBSAFlag_HasFileNames    = 0x0002,
-      kBSAFlag_Compressed      = 0x0004,
-      kBSAFlag_Unk0008         = 0x0008, // related to retaining directory strings/offsets
-      kBSAFlag_RetainFilenameStrings = 0x0010,
-      kBSAFlag_RetainFilenameOffsets = 0x0020,
-      kBSAFlag_IsXbox360Archive      = 0x0040,
-      kBSAFlag_Unk0080         = 0x0080, // related to retaining directory strings/offsets
-      kBSAFlag_Unk0100         = 0x0100,
-      kBSAFlag_Unk0200         = 0x0200,
-      kBSAFlag_Unk0400         = 0x0400,
-   };
-   enum BSAFiletypeFlags : UInt32 {
-      kBSAFiletypeFlag_Meshes   = 0x0001,
-      kBSAFiletypeFlag_Textures = 0x0002,
-      kBSAFiletypeFlag_Menus    = 0x0004,
-      kBSAFiletypeFlag_Sounds   = 0x0008,
-      kBSAFiletypeFlag_Voices   = 0x0010,
-      kBSAFiletypeFlag_Shaders  = 0x0020,
-      kBSAFiletypeFlag_Trees    = 0x0040,
-      kBSAFiletypeFlag_Fonts    = 0x0080,
-      kBSAFiletypeFlag_Misc     = 0x0100,
-   };
-   enum BSAFileFlags : UInt32 { // consumes bits from the BSAEntry::size field
-      kBSAFileFlags_NonDefaultCompression = 0x40000000,
-      kBSAFileFlags_Unk80000000 = 0x80000000, // possibly "is invalid" // wait, is this in BSAEntry::size or BSAEntry::offset? 0042E4B3 has it in the latter
-   };
 
    struct BSAEntry { // "File Record" or "Folder Record" in UESP docs
       BSHash hash; // 00 // hash of the file/folder path
@@ -187,12 +204,12 @@ namespace RE {
          DEFINE_MEMBER_FN(ContainsFolder, bool, 0x0042CE40, const BSHash& folder, UInt32& outFolderIndex, const char* normalizedFilepath);
          DEFINE_MEMBER_FN(DiscardRetainedFilenames,   void, 0x0042C0D0, UInt32); // conditional on unk194 flag 0x04
          DEFINE_MEMBER_FN(FolderContainsFile, bool, 0x0042D000, UInt32 folderIndex, const BSHash& file, UInt32& outFileIndexInFolder, const char* normalizedFilepath, UInt32 zero); // file path is used for CheckFileIsOverridden
-         DEFINE_MEMBER_FN(GetFile,      ArchiveFile*, 0x0042E1A0, const BSAEntry& file, SInt32, const char* normalizedFilepath);
-         DEFINE_MEMBER_FN(GetFileEntry, BSAEntry*,    0x0042D240, const BSHash& folder, const BSHash& file, const char* normalizedFilepath);
+         DEFINE_MEMBER_FN(GetFileByEntry,   ArchiveFile*, 0x0042E1A0, const BSAEntry& file, SInt32, const char* normalizedFilepath); // only used for lazy lookups
+         DEFINE_MEMBER_FN(GetFileByIndices, ArchiveFile*, 0x0042E070, UInt32 folderIndex, UInt32 fileIndex, SInt32, const char* normalizedFilepath);
+         DEFINE_MEMBER_FN(GetFileEntry, BSAEntry*,    0x0042D240, const BSHash& folder, const BSHash& file, const char* normalizedFilepath); // only used by LazyFileLookup
          DEFINE_MEMBER_FN(RetainsFilenameStringTable, bool, 0x0042BD30);
          DEFINE_MEMBER_FN(RetainsFilenameOffsetTable, bool, 0x0042BD50);
          DEFINE_MEMBER_FN(Subroutine0042BD70, bool, 0x0042BD70);
-         DEFINE_MEMBER_FN(Subroutine0042E070, UInt32, 0x0042E070, UInt32, UInt32, UInt32, UInt32); // load a file?
          //
          DEFINE_MEMBER_FN(CheckDelete, void, 0x0042C910); // 
          DEFINE_MEMBER_FN(DecRef,      void, 0x0042C910); // Bethesda calls this "CheckDelete;" define it with both names
@@ -238,5 +255,5 @@ namespace RE {
    // only check that BSA, so if they fail, then what do their callers do? What calls 
    // QueuedTexture::Unk_01?
    //
-   DEFINE_SUBROUTINE_EXTERN(BSAEntry*, LazyFileLookup, 0x0042DB10, BSAFileFlags filetype, const BSHash& folder, const BSHash& file, const char* normalizedFilepath);
+   DEFINE_SUBROUTINE_EXTERN(BSAEntry*, LazyFileLookup, 0x0042DB10, BSAFiletype filetype, const BSHash& folder, const BSHash& file, const char* normalizedFilepath);
 };
