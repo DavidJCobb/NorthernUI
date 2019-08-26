@@ -162,6 +162,18 @@ namespace cobb {
          } else
             colNumber++;
          //
+         if (i == 0) { // XML declaration; spec heavily implies it must be at the start of the file
+            if (strncmp(data, "<?xml", 4) == 0) {
+               auto at = strstr(data, "?>");
+               if (!at) {
+                  _MESSAGE("XML parse error on line %d: The XML declaration is unterminated.", lineNumber);
+                  return false;
+               }
+               i = (at - data) + 2 - 1; // plus length of "?>", minus 1 since continue skips a char
+               continue;
+            }
+         }
+         //
          if (state != kState_InComment) {
             //
             // Handle CDATA.
@@ -248,15 +260,21 @@ namespace cobb {
                   i += 2; // continue will skip one more char
                   continue;
                }
-               if (strchr(">='\'&", c)) {
+               if (strchr(">=", c)) {
                   _MESSAGE("XML parse error on line %d column %d: opening tag with no tagname.", lineNumber, colNumber);
                   return false;
                }
+               if (strchr("'\"&", c)) {
+                  _MESSAGE("XML parse error on line %d column %d: unexpected '%c'.", lineNumber, colNumber, c);
+                  return false;
+               }
                if (c == '?') {
-                  //
-                  // TODO: could be an XML declaration
-                  //
-                  continue;
+                  if (strncmp(data + i - 1, "<?xml", 5) == 0) {
+                     _MESSAGE("XML parse error on line %d column %d: apparent XML declaration not at the very start of the file. There can't be anything before the declaration -- not even comments or whitespace.", lineNumber, colNumber);
+                     return false;
+                  }
+                  _MESSAGE("XML parse error on line %d column %d: unexpected '?'.", lineNumber, colNumber);
+                  return false;
                }
                if (!isspace(c))
                   name += c;

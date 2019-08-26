@@ -49,14 +49,12 @@ namespace cobb {
       //
       void addElementStart(UInt32 line, std::string& tagName); // uses std::swap to take ownership of the string
       void addElementEnd(UInt32 line, std::string& tagName); // uses std::swap to take ownership of the string
-      void addElementAttribute(UInt32 line, std::string& name, std::string& value); // uses std::swap to take ownership of the string
+      void addElementAttribute(UInt32 line, std::string& name, std::string& value); // uses std::swap to take ownership of the strings
       void addTextContent(UInt32 line, std::string& textContent); // uses std::swap to take ownership of the string
    };
 
    //
    // TODO:
-   //
-   //  - Add support for XML declarations at the start of the file
    //
    //  - Refactor slightly so that we just pass in the const char* 
    //    pointer and assume it's null-terminated; saves us the 

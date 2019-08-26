@@ -127,6 +127,7 @@
     <ClCompile Include="Miscellaneous\InGameDate.cpp" />
     <ClCompile Include="Miscellaneous\math.cpp" />
     <ClCompile Include="Miscellaneous\rotation.cpp" />
+    <ClCompile Include="Miscellaneous\xml.cpp" />
     <ClCompile Include="Patches\AudioMenu.cpp" />
     <ClCompile Include="Patches\ClassMenu.cpp" />
     <ClCompile Include="Patches\Compatibility\Dynamic Map\Types.cpp" />
@@ -253,6 +254,7 @@
     <ClInclude Include="Miscellaneous\rotation.h" />
     <ClInclude Include="Miscellaneous\strings.h" />
     <ClInclude Include="Miscellaneous\templates.h" />
+    <ClInclude Include="Miscellaneous\xml.h" />
     <ClInclude Include="Patches\AlchemyMenu.h" />
     <ClInclude Include="Patches\AudioMenu.h" />
     <ClInclude Include="Patches\ClassMenu.h" />

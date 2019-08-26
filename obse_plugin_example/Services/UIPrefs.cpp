@@ -22,6 +22,7 @@ void _RunPrefXMLParseTest() {
       "<root attr='value'>foo</<![CDATA[root]]>>",
       "<<![CDATA[ro!ot]]> attr='value'>foo</<![CDATA[ro!ot]]>>",
       "<ui> <trait>&true;</trait> <trait> &false; </trait> </ui>",
+      "<?xml version=\"1.0\" ?><root></root>",
       "<root attr='value\">\n   <foo />\n   <bar></bar>\n</root>", // mismatched quotes on the attribute value
       "<root", // unterminated opening tag
       "<", // lone angle bracket
@@ -37,6 +38,7 @@ void _RunPrefXMLParseTest() {
       "<!-- comment test", // unterminated comment
       "<!-->", // incorrect "compact" comment
       "<!-- -- -->", // "--" is not allowed in comments
+      " <?xml version=\"1.0\" ?><root></root>", // XML declaration is not at the very start of the file
    };
    _MESSAGE("== RUNNING PREF PARSE TESTS ==");
    for (UInt32 i = 0; i < std::extent<decltype(code)>::value; i++) {
