@@ -25,13 +25,32 @@ float UIPrefManager::getPrefFloatDefaultValue(const char* name) const {
 }
 //
 void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
-   Pref currentPref;
-   bool isInPref = false;
+   Pref   currentPref;
+   UInt32 nesting  = 0;
+   bool   isInPref = false;
    for (auto it = doc.tokens.begin(); it != doc.tokens.end(); ++it) {
       auto& token = *it;
       if (token.code == cobb::kXMLToken_ElementOpen) {
-         if (token.name == "pref")
+         if (nesting == 0) {
+            if (token.name != "prefset") {
+               _MESSAGE("ERROR: The root node must be a <prefset /> element.");
+               //
+               // TODO: decide on better error handling than just aborting.
+               //
+               return;
+            }
+         }
+         if (token.name == "pref") {
+            if (isInPref) {
+               _MESSAGE("ERROR: <pref /> elements cannot be nested.");
+               //
+               // TODO: decide on better error handling than just aborting.
+               //
+               return;
+            }
             isInPref = true;
+         }
+         ++nesting;
       } else if (token.code == cobb::kXMLToken_Attribute) {
          if (!isInPref)
             continue;
@@ -51,6 +70,7 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
             continue;
          }
       } else if (token.code == cobb::kXMLToken_ElementClose) {
+         --nesting;
          if (token.name != "pref")
             continue;
          if (currentPref.name.size())
