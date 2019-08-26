@@ -1,6 +1,66 @@
 #include "UIPrefs.h"
 #include "Miscellaneous/xml.h"
 
+UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) {
+   for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
+      auto& pref = *it;
+      if (pref.name == name)
+         return &pref;
+   }
+   return nullptr;
+}
+const UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) const {
+   for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
+      auto& pref = *it;
+      if (pref.name == name)
+         return &pref;
+   }
+   return nullptr;
+}
+float UIPrefManager::getPrefFloatDefaultValue(const char* name) const {
+   auto pref = this->getPrefByName(name);
+   if (pref)
+      return pref->defaultFloat;
+   return NAN;
+}
+//
+void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
+   Pref currentPref;
+   bool isInPref = false;
+   for (auto it = doc.tokens.begin(); it != doc.tokens.end(); ++it) {
+      auto& token = *it;
+      if (token.code == cobb::kXMLToken_ElementOpen) {
+         if (token.name == "pref")
+            isInPref = true;
+      } else if (token.code == cobb::kXMLToken_Attribute) {
+         if (!isInPref)
+            continue;
+         if (token.name == "name") {
+            currentPref.name = token.name;
+            continue;
+         } else if (token.name == "default") {
+            auto  val = token.value.c_str();
+            char* end = nullptr;
+            float f = strtof(val, &end);
+            if (end != val) {
+               currentPref.defaultFloat = f;
+               continue;
+            }
+            currentPref.defaultString = token.value;
+            currentPref.type = kPrefType_String;
+            continue;
+         }
+      } else if (token.code == cobb::kXMLToken_ElementClose) {
+         if (token.name != "pref")
+            continue;
+         if (currentPref.name.size())
+            this->prefs.push_back(currentPref);
+         currentPref = Pref();
+         isInPref = false;
+      }
+   }
+}
+
 void _RunPrefXMLParseTest() {
    const char* code[] = {
       "<root>\n   Foo\n</root>",
