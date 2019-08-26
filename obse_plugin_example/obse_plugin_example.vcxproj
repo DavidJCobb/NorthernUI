@@ -178,6 +178,7 @@
     <ClCompile Include="ScriptCommands\XInput.cpp" />
     <ClCompile Include="Services\PatchManagement.cpp" />
     <ClCompile Include="Services\TileDump.cpp" />
+    <ClCompile Include="Services\UIPrefs.cpp" />
     <ClCompile Include="shared.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\LoadgameMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\MapMenu.cpp" />
@@ -387,6 +388,7 @@
     <ClInclude Include="Services\PatchManagement.h" />
     <ClInclude Include="Services\TileDump.h" />
     <ClInclude Include="Services\Translations.h" />
+    <ClInclude Include="Services\UIPrefs.h" />
     <ClInclude Include="shared.h" />
     <ClInclude Include="Services\serialization.h" />
   </ItemGroup>

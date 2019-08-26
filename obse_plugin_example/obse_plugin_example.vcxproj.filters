@@ -118,6 +118,7 @@
     <ClCompile Include="Patches\SleepWaitMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\LoadingMenu.cpp" />
     <ClCompile Include="ScriptCommands\XInput.cpp" />
+    <ClCompile Include="Services\UIPrefs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -268,7 +269,6 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
-    <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\Commands_ActiveEffect.h" />
     <ClInclude Include="..\obse\obse\Commands_Actor.h" />
     <ClInclude Include="..\obse\obse\Commands_ActorValue.h" />
@@ -369,7 +369,6 @@
     <ClInclude Include="..\obse\obse\ThreadLocal.h" />
     <ClInclude Include="..\obse\obse\Utilities.h" />
     <ClInclude Include="..\obse\obse\VarMap.h" />
-    <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
@@ -8037,6 +8036,7 @@
     <ClInclude Include="Miscellaneous\templates.h" />
     <ClInclude Include="ReverseEngineered\Forms\Components\TESModelList.h" />
     <ClInclude Include="ReverseEngineered\Forms\Components\TESModel.h" />
+    <ClInclude Include="Services\UIPrefs.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

@@ -27,6 +27,7 @@
 #include "Services/INISettings.h"
 #include "Services/PatchManagement.h"
 #include "Services/Translations.h"
+#include "Services/UIPrefs.h"
 //#include "ScriptCommands/OBSESamples.h"
 //#include "ScriptCommands/HUDReticle.h"
 #include "ScriptCommands/XInput.h"
@@ -346,6 +347,11 @@ extern "C" {
          _MESSAGE("Couldn't read command table");
       }
       //*/
+
+
+      _RunPrefXMLParseTest();
+
+
       return true;
    }
 };
