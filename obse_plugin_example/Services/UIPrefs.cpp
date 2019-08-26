@@ -130,6 +130,7 @@ bool ParseBuffer(Document& doc, const char* data, UInt32 size) {
       kState_InComment     = 5,
       kState_SelfClosing   = 6,
    };
+   bool   isCDATA = false;
    State  state = kState_InContent;
    UInt32 stateChangeLine = 0;
    char   currentQuote     = '\0';
@@ -152,6 +153,52 @@ bool ParseBuffer(Document& doc, const char* data, UInt32 size) {
          colNumber = 0;
       } else
          colNumber++;
+      //
+      if (state != kState_InComment) {
+         //
+         // Handle CDATA.
+         //
+         if (!isCDATA) {
+            if (i + 9 < size && strncmp(data + i, "<![CDATA[", 9) == 0) {
+               isCDATA = true;
+               i += 8; // continue skips one more char
+               continue;
+            }
+         } else {
+            if (c == ']' && d == ']' && e == '>') {
+               isCDATA = false;
+               i += 2; // continue skips one more char
+               continue;
+            }
+            switch (state) {
+               case kState_InContent:
+                  value += c;
+                  break;
+               case kState_InOpenBracket:
+                  name += c;
+                  break;
+               case kState_InOpenTag:
+                  name += c;
+                  break;
+               case kState_InAttribute:
+                  if (!currentQuote) {
+                     _MESSAGE("XML parse error on line %d column %d: expected attribute value opening quote; got CDATA instead.", lineNumber, colNumber, c);
+                     return false;
+                  }
+                  value += c;
+                  break;
+               case kState_SelfClosing:
+                  break;
+               case kState_InCloseTag:
+                  name += c;
+                  break;
+            }
+            continue;
+         }
+      }
+      //
+      // Handle non-CDATA:
+      //
       if (state == kState_InContent) {
          if (c == '<') {
             name = "";
@@ -190,7 +237,7 @@ bool ParseBuffer(Document& doc, const char* data, UInt32 size) {
                stateChangeLine = lineNumber;
                name  = "";
                value = "";
-               i += 1; // continue will skip one more char
+               i += 2; // continue will skip one more char
                continue;
             }
             if (strchr(">='\'&", c)) {
@@ -240,11 +287,15 @@ bool ParseBuffer(Document& doc, const char* data, UInt32 size) {
          }
       }
       if (state == kState_InComment) {
-         if (c == '-' && d == '-' && e == '>') {
-            state = kState_InContent;
-            stateChangeLine = lineNumber;
-            i += 1; // continue will skip one more char
-            continue;
+         if (c == '-' && d == '-') {
+            if (e == '>') {
+               state = kState_InContent;
+               stateChangeLine = lineNumber;
+               i += 2; // continue will skip one more char
+               continue;
+            }
+            _MESSAGE("XML parse error on line %d column %d: for compatibility with SGML, XML does not allow the string \"--\" in comments.", lineNumber, colNumber);
+            return false;
          }
       }
       if (state == kState_InOpenTag) {
@@ -364,6 +415,10 @@ bool ParseBuffer(Document& doc, const char* data, UInt32 size) {
          }
       }
    }
+   if (isCDATA) {
+      _MESSAGE("XML parse error: unterminated CDATA.");
+      return false;
+   }
    if (currentQuote) {
       _MESSAGE("XML parse error: runaway attribute-value with opening quotation mark '%c', beginning on line %d, reached the end of the document.", currentQuote, currentQuoteLine);
       return false;
@@ -457,6 +512,14 @@ void _RunPrefXMLParseTest() {
       "<!-- comment test -->",
       "<!-- <root> -->",
       "<!-- & -->",
+      "<!---->",
+      "<!--<![CDATA[ test ]]>-->",
+      "<root><![CDATA[<nested>]]></root>",
+      "<<![CDATA[root]]> attr='value'>foo</root>",
+      "<root <![CDATA[attr]]>='value'>foo</root>",
+      "<root attr='<![CDATA[value]]>'>foo</root>",
+      "<root attr='value'>foo</<![CDATA[root]]>>",
+      "<<![CDATA[ro!ot]]> attr='value'>foo</<![CDATA[ro!ot]]>>",
       "<root attr='value\">\n   <foo />\n   <bar></bar>\n</root>", // mismatched quotes on the attribute value
       "<root", // unterminated opening tag
       "<", // lone angle bracket
@@ -471,7 +534,6 @@ void _RunPrefXMLParseTest() {
       "<root>&fake;</root>", // unrecognized entity
       "<!-- comment test", // unterminated comment
       "<!-->", // incorrect "compact" comment
-      "<!---->",
       "<!-- -- -->", // "--" is not allowed in comments
    };
    _MESSAGE("== RUNNING PREF PARSE TESTS ==");
