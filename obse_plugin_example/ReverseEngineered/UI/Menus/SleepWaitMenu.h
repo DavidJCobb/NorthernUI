@@ -45,4 +45,7 @@ namespace RE {
    };
 
    DEFINE_SUBROUTINE_EXTERN(bool, ShowSleepWaitMenu, 0x005D6D20); // handles text formatting for menu; format strings are hardcoded
+
+   DEFINE_SUBROUTINE_EXTERN(bool, OnSleepWaitMenuFrame, 0x005D7090); // called by the main loop on every frame the menu is open; do not call directly
+   DEFINE_SUBROUTINE_EXTERN(void, OnSleepWaitDone, 0x005D6A10); // called by above
 };

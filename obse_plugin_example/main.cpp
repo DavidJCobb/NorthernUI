@@ -347,11 +347,6 @@ extern "C" {
          _MESSAGE("Couldn't read command table");
       }
       //*/
-
-
-      _RunPrefXMLParseTest();
-
-
       return true;
    }
 };

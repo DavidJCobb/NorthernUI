@@ -790,7 +790,7 @@ namespace CobbPatches {
                return RE::InterfaceManager::GetInstance(); // reproduce patched-over call
             }
             void Apply() {
-               WriteRelCall(0x00585198, (UInt32)&Inner);
+               WriteRelCall(0x00585198, (UInt32)&Inner); // Menu::EnableMenu+8
             };
          };
 

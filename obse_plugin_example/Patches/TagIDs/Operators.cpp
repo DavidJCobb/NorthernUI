@@ -207,6 +207,13 @@ namespace CobbPatches {
                   if (operatorID == RE::kTagID_copy || (operatorID >= 0x7EC && operatorID <= 0x7F0))
                      return true;
                }
+               if (operatorID == 0xF) {
+                  //
+                  // Seen in LootMenu; causes the game to log an error about unrecognized action enumeration 15.
+                  //
+                  auto tile = kThis->owner;
+                  _MESSAGE("Stray 0xF operator in trait %s::%s. This can happen if a SRC operator is not self-closing, e.g. <copy src=\"foo\" trait=\"bar\"></copy>. This should be considered a syntax error.\nExpect the game to log an error about an unrecognized action enumeration.", tile->name.m_data, RE::TagIDToName(kThis->id));
+               }
                switch (operatorID) {
                   //
                   // Cases for custom operators should always return true.
