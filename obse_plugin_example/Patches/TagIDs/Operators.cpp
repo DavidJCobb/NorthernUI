@@ -17,9 +17,8 @@ namespace CobbPatches {
       namespace Operators {
          namespace StringOperandSupport {
             //
-            // The only way to do this without conflicting with MenuQue is to do it basically the 
-            // same way that MenuQue does it. We have to patch the same sites and do more or less 
-            // the same things, though obviously I've written my own code for the purpose.
+            // Add support for string operands in operators, i.e. the ability of an operator in 
+            // UI XML to hold a string value in-memory at run-time.
             //
             namespace ExpressionDestructor {
                //
@@ -50,7 +49,8 @@ namespace CobbPatches {
             namespace ExpressionRemove {
                //
                // Free strings from memory if their owning operators are removed. This typically 
-               // happens if a trait's value is overwritten with a constant at run-time.
+               // happens if a trait's value is overwritten with a constant at run-time. As above, 
+               // MenuQue doesn't do this.
                //
                void Inner(RE::Tile::Value::Expression* op) {
                   if (op->isString && op->operand.string) {
@@ -65,47 +65,55 @@ namespace CobbPatches {
                }
 
             }
-            namespace ParseXML {
-               //
-               // Modify ParseXML: have the text-content for a node use parse code 0xD (a MenuQue 
-               // extension) instead of the usual 0xBB9 (the game seems to treat text-content the 
-               // same as the value of an attribute named "value").
-               //
-               void Apply() {
-                  SafeWrite32(0x0058E14B + 1, RE::kTagID_MQTextContent);
-               }
-            }
             namespace UpdateTemplatedChildren {
                //
-               // Modify UpdateTemplatedChildren: when parsing a const operator, check whether the 
-               // parsed value is a string; if so, give the operator a string operand.
+               // MenuQue's approach to handling string operators during parsing is to patch 
+               // UpdateTemplatedChildren to handle the ConstOperator token differently: they 
+               // check if the token's float value is zero and if its string value has a non-
+               // zero length, and if so, they treat the ConstOperator as an operator with a 
+               // string operand; otherwise, they use the vanilla behavior.
+               //
+               // By contrast, we've created a new token for const operators with string 
+               // operands, and we assign this token in our replacement for TileTemplate's 
+               // AddTemplateItem method. We patch UpdateTemplatedChildren to handle the new 
+               // token as a totally separate branch from ConstOperator.
                //
                void _stdcall Inner(RE::Tile* tile, UInt32 traitID, RE::Tile::TileTemplateItem* item) {
+                  if (!traitID) {
+                     _MESSAGE("[UpdateTemplatedChildren] Const string operator defined outside of any trait.");
+                     return;
+                  }
                   auto trait = CALL_MEMBER_FN(tile, GetOrCreateTrait)(traitID);
-                  if (item->string.GetLength() && item->tagType == 0.0F) // tagType can be a tag type OR a float trait value; here, it's the latter
-                     trait->AppendStringOperator(item->result, item->string.m_data);
-                  else
-                     CALL_MEMBER_FN(trait, AppendConstOperator)(item->tagType, item->result);
+                  trait->AppendStringOperator(item->result, item->string.m_data);
                }
                __declspec(naked) void Outer() {
                   _asm {
+                     cmp  eax, 0x37; // kCode_ConstOperator
+                     je   lConstFloatOperator;
+                     cmp  eax, 0x38; // kCode_XXNConstStringOperator
+                     jne  lNextBranch;
                      push esi;
                      push ebx;
                      push ebp;
                      call Inner; // stdcall
-                     mov  eax, 0x0058D11A;
-                     jmp  eax;
+                     mov  ecx, 0x0058D1A0; // continue
+                     jmp  ecx;
+                  lConstFloatOperator:
+                     mov  ecx, 0x0058D0F4;
+                     jmp  ecx;
+                  lNextBranch:
+                     mov  ecx, 0x0058D126;
+                     jmp  ecx;
                   }
                }
                void Apply() {
-                  WriteRelJump(0x0058D0F8, (UInt32)&Outer);
+                  WriteRelJump(0x0058D0EF, (UInt32)&Outer);
                }
             }
             //
             void Apply() {
                ExpressionDestructor::Apply();
                ExpressionRemove::Apply();
-               ParseXML::Apply();
                UpdateTemplatedChildren::Apply();
             }
          };
@@ -119,6 +127,22 @@ namespace CobbPatches {
             // have to be MenuQue-compatible, and there's only so much room to 
             // work on that. I'd end up having to completely parrot MenuQue, and 
             // that's not fun.
+            //
+            // To be specific: as of NorthernUI v2.0.0 we have string operands, 
+            // but this isn't the same thing as string operators.
+            //
+            //  - If container operators didn't exist, then it would be sufficient 
+            //    to just write to the Tile::Value whose value is currently being 
+            //    computed, and so string operators e.g. append would be possible.
+            //
+            //  - However, container operators *do* exist, and the "current work-
+            //    ing value" differs for each level of nesting. The vanilla game 
+            //    handles this for floats by maintaining a list of floats per 
+            //    nesting depth; we'd need to patch the game to do the same thing 
+            //    for strings. MenuQue does that and I don't want to interfere, 
+            //    so we lose out on string operators. Fortunately we don't need 
+            //    them for NorthernUI proper; when necessary we can just smash 
+            //    multiple text tiles together.
             //
             namespace HandleMenuQue {
                //
@@ -191,6 +215,12 @@ namespace CobbPatches {
                   // we'd return true if we use the custom behavior, or return false to fall through to the 
                   // vanilla behavior.
                   //
+                  // To return a value, write it to kThis->num.
+                  //
+                  // The current wokring value is kThis->num, prior to your writing to it. The float operand 
+                  // for your operator (i.e. the argument) is (argument). To access a string operand, go 
+                  // through (current).
+                  //
                   case _traitOpAtan2:
                      kThis->num = cobb::radians_to_degrees(std::atan2(kThis->num, argument)); // <copy> y </copy> <xxnOpAtan2> x </xxnOpAtan2>
                      return true;
@@ -256,7 +286,8 @@ namespace CobbPatches {
                            //
                            // queue the pref to reset, and return the default value as the result of this operator
                            //
-                        }
+                        } else
+                           kThis->num = 0.0F;
                      }
                      return true;
                }

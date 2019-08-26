@@ -120,6 +120,7 @@ namespace RE {
                kCode_TileEnd               = 0x2D, // end   of a tile (or trait??)
                kCode_ConstTrait            = 0x32, // trait with const value
                kCode_ConstOperator         = 0x37, // operator with const value
+               kCode_XXNConstStringOperator = 0x38, // operator with const string value
                kCode_SrcOperator           = 0x3C, // operator with src: result is operator ID; string is operator SRC; tagType is containing trait's ID
                kCode_TextContent           = 0xBB9, // can this also be a 'value=""' attribute? // converted to something else in parse Stage 1.5
                kCode_AttributeName         = 0xBBA, // converted to something else in parse Stage 1.5

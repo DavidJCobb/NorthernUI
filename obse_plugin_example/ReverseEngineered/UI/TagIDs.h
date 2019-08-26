@@ -41,6 +41,7 @@ namespace RE {
       kTagID_TileEnd         = 0x2D, // end of a tile
       kTagID_ConstTrait      = 0x32, // trait with const value
       kTagID_ConstOperator   = 0x37, // operator with const value
+      kTagID_XXNConstStringOperator = 0x38, // operator with const string value
       kTagID_SrcOperator     = 0x3C, // operator with src: result is operator ID; string is operator SRC; tagType is containing trait's ID
       kTagID_OperatorNoOp    = 0x65, // used for no-op Expressions (which can retain semantic data, i.e. operand.ref)
       //

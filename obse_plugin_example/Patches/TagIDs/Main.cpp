@@ -385,7 +385,7 @@ namespace CobbPatches {
                      //
                   }
                   if ((aId == ParseCode::kCode_EndTag || g_menuQue.detected)
-                     && tItemZ && tItemZ->unk00 == ParseCode::kCode_MQTextContent
+                     && tItemZ && (tItemZ->unk00 == ParseCode::kCode_MQTextContent || tItemZ->unk00 == ParseCode::kCode_TextContent)
                      && tItemY && (tItemY->unk00 == ParseCode::kCode_NonConstTraitStart || tItemY->unk00 == ParseCode::kCode_ContainerOperatorStart)
                      && tItemY->tagType == tagIdOrTraitValue
                   ) {
@@ -405,9 +405,12 @@ namespace CobbPatches {
                      //
                      if (CobbPatches::TagIDs::IsTrait(tItemNew->tagType))
                         tItemY->unk00 = ParseCode::kCode_ConstTrait;
-                     else if (CobbPatches::TagIDs::IsOperator(tItemNew->tagType))
+                     else if (CobbPatches::TagIDs::IsOperator(tItemNew->tagType)) {
                         tItemY->unk00 = ParseCode::kCode_ConstOperator;
-                     else {
+                        if (tItemZ->string.GetLength() && tItemZ->tagType == 0.0F) {
+                           tItemY->unk00 = ParseCode::kCode_XXNConstStringOperator;
+                        }
+                     } else {
                         tItemY->unk00 = ParseCode::kCode_Invalid;
                         _MESSAGE("[AddTemplateItem] Bad trait/action type in XML");
                      } // at MQ+1E29D
