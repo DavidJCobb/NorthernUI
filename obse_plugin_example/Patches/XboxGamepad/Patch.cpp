@@ -950,8 +950,8 @@ namespace CobbPatches {
          };
          __declspec(naked) void Outer() {
             _asm {
-               mov  eax, 0x00403520;
-               call eax;
+               mov  eax, 0x00403520; // reproduce patched-over call to OSInputGlobals::QueryControlState
+               call eax;             //
                push eax; // preserve return value
                mov  ecx, esi;
                push ecx;

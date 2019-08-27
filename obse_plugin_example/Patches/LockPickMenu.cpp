@@ -6,6 +6,9 @@
 #include "ReverseEngineered/UI/InterfaceManager.h"
 #include "ReverseEngineered/UI/Menus/LockPickMenu.h"
 
+#include "ReverseEngineered/Systems/Timing.h"
+#include "Miscellaneous/strings.h"
+
 namespace CobbPatches {
    namespace LockPickMenu {
       //
@@ -32,6 +35,8 @@ namespace CobbPatches {
       // Of course, we also want to patch keyboard navigation into the minigame, so we 
       // don't just no-op HandleNavigationInput; we replace it entirely.
       //
+      constexpr bool ce_handleAButtonOnRelease = false;
+      //
       namespace MinigameKeynav {
          static bool s_userPressedUp = false;
          //
@@ -43,16 +48,22 @@ namespace CobbPatches {
                if (index < 0)
                   return false;
                switch (direction) {
-                  case RE::Menu::NavigationInput::kNavInput_Left:
+                  case RE::InterfaceManager::kNavigationKeypress_XboxA:
+                     if (ce_handleAButtonOnRelease) {
+                        menu->HandleMouseDown(0, nullptr);
+                        return true;
+                     } else
+                        return false;
+                  case RE::InterfaceManager::kNavigationKeypress_Left:
                      index--;
                      break;
-                  case RE::Menu::NavigationInput::kNavInput_Right:
+                  case RE::InterfaceManager::kNavigationKeypress_Right:
                      index++;
                      break;
-                  case RE::Menu::NavigationInput::kNavInput_Up:
+                  case RE::InterfaceManager::kNavigationKeypress_Up:
                      s_userPressedUp = true;
                      return true;
-                  case RE::Menu::NavigationInput::kNavInput_Down:
+                  case RE::InterfaceManager::kNavigationKeypress_Down:
                   default:
                      return false;
                }
@@ -70,7 +81,7 @@ namespace CobbPatches {
                   mov  eax, dword ptr [esp + 0x4];
                   push eax;
                   push ecx;
-                  call Inner;
+                  call Inner; // stdcall
                   retn 8;
                };
             };
@@ -123,10 +134,73 @@ namespace CobbPatches {
          void Apply() {
             SafeWrite32(RE::LockPickMenu::kVTBL + 0xC, (UInt32)&HandleMouseUp); // add a HandleMouseUp handler
          };
-      };
+      }
+      namespace Debugging {
+         void _stdcall Inner(RE::LockPickMenu* menu) {
+            RE::Tile* tiles[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
+            tiles[0] = RE::GetDescendantTileByName(menu->tile, "northernUI_debug_tumbler_1");
+            tiles[1] = RE::GetDescendantTileByName(menu->tile, "northernUI_debug_tumbler_2");
+            tiles[2] = RE::GetDescendantTileByName(menu->tile, "northernUI_debug_tumbler_3");
+            tiles[3] = RE::GetDescendantTileByName(menu->tile, "northernUI_debug_tumbler_4");
+            tiles[4] = RE::GetDescendantTileByName(menu->tile, "northernUI_debug_tumbler_5");
+            for (UInt32 i = 0; i < 5; i++) {
+               auto tile = tiles[i];
+               if (!tile)
+                  continue;
+               auto& tumbler = menu->tumblers[i];
+               //
+               std::string unk04;
+               {
+                  UInt32 time    = RE::g_timeInfo->unk10 - tumbler.unk04;
+                  UInt32 seconds = time / 1000;
+                  UInt32 milli   = time % 1000;
+                  cobb::snprintf(unk04, "%c%02d.%03ds", time < 0 ? '-' : ' ', seconds, milli);
+               }
+               std::string hangTime;
+               {
+                  UInt32 time    = tumbler.hangTime;
+                  UInt32 seconds = time / 1000;
+                  UInt32 milli   = time % 1000;
+                  cobb::snprintf(hangTime, "%c%02d.%03ds", time < 0 ? '-' : ' ', seconds, milli);
+               }
+               //
+               std::string output;
+               cobb::snprintf(output,
+                  "TUMBLER %d\nOffset: %f\nUnk04: %s\nHang time: %s\nUnk0C: %f\nUnk10: %f\nVelocity: %f\nMoving: %d\nSolved: %d\nUnk1A: %d\n",
+                  i,
+                  tumbler.heightOffset,
+                  unk04.c_str(),
+                  hangTime.c_str(),
+                  tumbler.unk0C,
+                  tumbler.unk10,
+                  tumbler.velocity,
+                  tumbler.isMoving,
+                  tumbler.isSolved,
+                  tumbler.unk1A
+               );
+               CALL_MEMBER_FN(tile, UpdateString)(RE::kTagID_string, output.c_str());
+            }
+         }
+         __declspec(naked) void Outer() {
+            _asm {
+               push esi;
+               call Inner; // stdcall
+               mov  eax, 0x0057C140; // reproduce patched-over call to MenuModeHasFocus
+               call eax;
+               mov  ecx, 0x005B11B0;
+               jmp  ecx;
+            }
+         }
+         void Apply() {
+            WriteRelJump(0x005B11AB, (UInt32)&Outer);
+         }
+      }
+      //
       void Apply() {
          MinigameKeynav::Apply();
-         GamepadMappingFixes::Apply();
+         if (!ce_handleAButtonOnRelease)
+            GamepadMappingFixes::Apply();
+         Debugging::Apply();
       };
    };
 };

@@ -33,15 +33,18 @@ namespace RE {
             // See notes on LockPickMenu::tumblers (0x7C) below.
             //
             float  heightOffset; // 00 // how far the tumbler has fallen; XML is expected to displace the tile's Y-coordinate downward by this value
-            SInt32 unk04;
+            SInt32 unk04; // timer in milliseconds
                // - starts off at -1 when the menu is opened
                // - set to -1 when the tumbler is reset as the result of the lockpick breaking on a different tumbler
-            UInt32 unk08;
+               // - set to current executable time in milliseconds whenever we play sound UILockClickNow
+               // - moving a tumbler briefly resets this to the current executable time, but it is then quickly reset 
+               //   to some value that LockPickMenu keeps and seems to retain across lockpick sessions
+            UInt32 hangTime; // time in milliseconds that the tumbler stays up before starting to fall; not initialized until the tumbler first moves
             float  unk0C; // related to how fast the tumbler falls (or rises?)
             float  unk10; // related to how fast the tumbler falls
-            float  unk14; // related to how fast the tumbler falls 
+            float  velocity; // how fast the tumbler moves; up is positive, down is negative
                // - if the tumbler is reset as the result of a lockpick breaking, this is set to -LockPickMenu::unk6C
-            UInt8  unk18 = 0;
+            bool   isMoving = false;
                // - set to 0 when the tumbler is solved
                // - set to 1 when the tumbler is reset as the result of the lockpick breaking on a different tumbler
                // - indicates that the tumbler is in motion?
@@ -49,14 +52,14 @@ namespace RE {
                //      requires that this be set to false before you get Security EXP. We 
                //      can solve a tumbler and query the Security stat while the tumbler 
                //      is still moving (unless the window for that is too small...).
-            bool   isSolved = 0; // 19
+            bool   isSolved = false; // 19
             UInt8  unk1A = 0;
                // - set to 1 when the tumbler is reset as the result of the lockpick breaking on a different tumbler
             UInt8  unk1B; // not used? haven't seen it yet
             SInt32 unk1C; // center of the tumbler; read from the XML when the menu is first opened
             Tile*  tile = nullptr; // 20 // ID#11, #12, #13, #14, #15 == nif#lockpick_tumbler_1, nif#lockpick_tumbler_2, etc.
             void*  unk24; // stores the result of a call to play UILockTumblerMoveLP, apparently
-               // - type is Singleton00B33398::BinkAudioManager::Sound*
+               // - type is OSSoundGlobals::Sound*?
          };
 
          Tile*  tileBackground = nullptr; // 28 // ID #1 // image#lockpick_background

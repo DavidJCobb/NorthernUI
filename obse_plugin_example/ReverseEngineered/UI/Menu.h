@@ -72,7 +72,7 @@ namespace RE {
             kNavInput_Down       = 2, // or newline key, if mouse cursor isn't active
             kNavInput_Left       = 4,
             kNavInput_Right      = 3,
-            kNavInput_Unk09      = 9,   // gamepad? LockPickMenu checks for it // possibly "A" button
+            kNavInput_XButtonA   = 9,   // gamepad? LockPickMenu checks for it // possibly "A" button
             kNavInput_Unk0B      = 0xB, // gamepad? LockPickMenu checks for it; triggers auto-attempt
             kNavInput_ShiftLeft  = 0xD, // or gamepad LT
             kNavInput_ShiftRight = 0xE, // or gamepad RT

@@ -65,9 +65,66 @@ _MESSAGE("ATTEMPTING TO FORMAT SLEEPWAITMENU... menu pointer is %08X", menu);
             DuringWait::Apply();
          }
       }
+      namespace FixSoftlockOnCancel {
+         //
+         // On every frame, the game's main loop checks if SleepWaitMenu is open; 
+         // if so, it calls OnSleepWaitMenuFrame, which is what allows the menu to 
+         // tick down while you're waiting. If OnSleepWaitMenuFrame determines that 
+         // the wait is over, it calls OnSleepWaitDone, which attempts to close the 
+         // menu using Menu::FadeOut.
+         //
+         // This is vulnerable to a softlock, which without this patch can be caused 
+         // with the following steps:
+         //
+         //    1. Start waiting.
+         //    2. Move the mouse.
+         //    3. While the wait is ticking down and the mouse is moving, press 
+         //       B on the gamepad to cancel the wait early.
+         //
+         // Follow those steps, and you'll find yourself trapped on a black screen, 
+         // with the cursor moving and a UI clicksound playing on an endless loop.
+         //
+         // Here's the cause:
+         //
+         // When you click the Cancel button in SleepWaitMenu, the menu receives a 
+         // click event specifying the ID of the cancel button, and a pointer to 
+         // the tile that generated the click event. Pay careful attention to my 
+         // wording there: I said "the tile that generated the click event." If 
+         // keyboard navigation sends a click to the cancel button, the menu will 
+         // receive a click event indicating the tile whose keyboard navigation 
+         // trait was processed.
+         //
+         // When SleepWaitMenu determines (based on the tile ID) that the click 
+         // was on the cancel button, it attempts to hide the tile that it received 
+         // as an argument, and then calls OnSleepWaitDone. This can lead to a soft-
+         // lock.
+         //
+         // If you define keyboard navigation on the root tile and use that to 
+         // close the menu, then the menu's root tile will be forcibly hidden. 
+         // However, this prevents Menu::FadeOut from doing anything (it only 
+         // acts on menus that are visible), which means that SleepWaitMenu cannot 
+         // close.
+         //
+         // But why does this only softlock if the cursor is being moved? I don't 
+         // know. Perhaps moving the cursor alters some aspect of how HandleMouseUp 
+         // is called.
+         //
+         __declspec(naked) void Outer() {
+            _asm {
+               mov  ecx, dword ptr [esi + 0x34];
+               push 0xFA1;
+               mov  eax, 0x005D6B71;
+               jmp  eax;
+            }
+         }
+         void Apply() {
+            WriteRelJump(0x005D6B6C, (UInt32)&Outer);
+         }
+      }
       //
       void Apply() {
          CustomDateTimeFormat::Apply();
+         FixSoftlockOnCancel::Apply();
       }
    };
 };
