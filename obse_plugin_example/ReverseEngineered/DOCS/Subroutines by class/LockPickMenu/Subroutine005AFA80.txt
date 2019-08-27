@@ -1,58 +1,62 @@
+inline float LockPickMenu::DistanceToTumbler() {
+   auto& currentTumbler = this->tumblers[this->unk160];
+   return abs(currentTumbler.unk1C - this->lockpickX);
+}
+
 void LockPickMenu::Subroutine005AFA80() {
    auto edi = OSInputGlobals::GetInstance();
    auto esi = this;
-   auto ebx = edi->GetMouseAxisMovement(2); // NorthernUI patches this for gamepad
+   auto yAxisMovement = edi->GetMouseAxisMovement(2); // NorthernUI patches this for gamepad
    edi = (std::min)(this->unk40 - this->unk44, 0x64); // security skill?
+   float distanceBetweenTumblers = this->tumblers[1].unk1C - this->tumblers[0].unk1C;
    if (0.0 == this->unk158 && 0.0 == this->lockpickY) { // at 0x005AFAD2
-      float a = this->tumblers[this->unk160].unk1C; // tumbler centerpoint
-      a -= this->lockpickX;
-      a = abs(a);
-      float esp0C = a;
+      SInt32& currentTumblerCenter = &this->tumblers[this->unk160].unk1C;
       float b;
-      if (esp0C > 4.0F) { // at 0x005AFB18
-         this->unk170 = 0; // byte
-         if (ecx > this->lockpickX) { // at 0x005AFB32
-            b = (this->unkC0 - this->unk08) / 300.0;
-            b *= (float)edi;
-            b += this->lockpickX;
+      //
+      // If we're more than 4 UI-pixels away from the tumbler, then we move 
+      // toward the tumbler three times as fast as we would if we were right 
+      // at the tumbler.
+      //
+      if (this->DistanceToTumbler() > 4.0F) { // at 0x005AFB18
+         this->pickIsUnderTumbler = false;
+         if (currentTumblerCenter > this->lockpickX) { // at 0x005AFB32
+            b = distanceBetweenTumblers / 300.0;
+            this->lockpickX += b * edi;
+         } else {
+            UInt32 esp0C = edi;
+            b = distanceBetweenTumblers / 300.0
+            // FPU: [esp0C, b, this->lockpickX]
+            // implicit jump to 0x005AFC1B
+            b *= edi; // FPU: [b, this->lockpickX]
+            b -= this->lockpickX; // FPU: [b]
             this->lockpickX = b;
-            // FPU: []
-            jump to 0x005AFC36;
          }
-         UInt32 esp0C = edi;
-         b = (this->unkC0 - this->unk98) / 300.0
-         // FPU: [esp0C, b, this->lockpickX]
+         // FPU: []
       } else {
-         if (1.0F < ?????) { // at 0x005AFB9F
+         if (1.0F < this->DistanceToTumbler()) { // at 0x005AFB9F
             // jumped to 0x005AFC2F
-            this->unk170 = 1; // byte
-            jump to 0x005AFC36; // implicit
+            this->pickIsUnderTumbler = true;
+         } else {
+            this->pickIsUnderTumbler = false;
+            if (currentTumblerCenter > this->lockpickX) { // at 0x005AFBBB
+               b = distanceBetweenTumblers / 900.0;
+               this->lockpickX += b * edi;
+            } else {
+               b = distanceBetweenTumblers / 900.0;
+               // FPU: [esp0C, b, this->lockpickX]
+               // implicit jump to 0x005AFC1B
+               b *= esp0C; // FPU: [b, this->lockpickX]
+               b -= this->lockpickX; // FPU: [b]
+               this->lockpickX = b;
+            }
          }
-         this->unk170 = 0; // byte
-         if (ecx > this->lockpickX) { // at 0x005AFBBB
-            b = (this->unkC0 - this->unk98) / 900.0;
-            this->lockpickX += b * esp0C;
-            jump to 0x005AFC36;
-         }
-         b = (this->unkC0 - this->unk98) / 900.0;
-         // FPU: [esp0C, b, this->lockpickX]
       }
-      // at 0x005AFC1B
-      b *= esp0C; // FPU: [b, this->lockpickX]
-      b -= this->lockpickX; // FPU: [b]
-      this->lockpickX = b;
-      // FPU: []
-      // jump to 0x005AFC36: skips one line
-      this->unk178->UpdateFloat(0xFB0, this->lockpickX);
+      // at 0x005AFC36
+      this->tileLockpick->UpdateFloat(0xFB0, this->lockpickX);
       // FPU: [0]
    }
    // FPU: [0]
-   if (ebx < -3 && 0.0 >= this->unk158) {
-      // distance from target tumbler's centerpoint to lockpick:
-      float esp0C = this->lockpickX - this->tumblers[this->unk160].unk1C;
-      esp0C = abs(esp0C);
-      if (esp0C > 3.0)
-         jump to 0x005AFCA9;
+   if (yAxisMovement < -3 && 0.0 >= this->unk158 && this->DistanceToTumbler() <= 3.0) {
       this->unk158 = this->unk154;
    } else {
       // at 0x005AFCA9
@@ -68,11 +72,11 @@ void LockPickMenu::Subroutine005AFA80() {
       // FPU: [b * a, 0]
       esp0C = (a * b) + this->lockpickY;
       this->lockpickY = esp0C;
-      if (esp0C ?? 0.0) {
-         this->unk158 = 0.0F;
+      if (esp0C < 0.0) {
+         this->unk158    = 0.0F;
          this->lockpickY = 0.0F;
       }
    }
-   ecx = 0x122 - (SInt32)this->lockpickY;
+   ecx = 290 - (SInt32)this->lockpickY;
    this->tileLockpick->UpdateFloat(0xFB1, ecx);
 }

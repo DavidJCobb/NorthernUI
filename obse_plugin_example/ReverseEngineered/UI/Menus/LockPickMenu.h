@@ -170,7 +170,8 @@ namespace RE {
          UInt32 unk164; // unk160 is written here when the menu is first opened
          SInt32 unk168 = -1; // tumbler index; tumbler that the pick is being moved toward? forced to -1 when a tumbler is in the air, which may prevent movement?
          UInt32 unk16C;
-         UInt32 unk170;
+         bool   pickIsUnderTumbler; // 170
+         UInt8  unk171[3];
          Tile*  unk174 = nullptr; // apparently set to the tile in a Tumbler
          Tile3D* tileLockpick; // 0178 // ID #3 // nif#lockpick_pick // filename is set by the executable based on whether the player has a Skeleton Key
          bool   sentTrespassAlarm = false; // 17C
