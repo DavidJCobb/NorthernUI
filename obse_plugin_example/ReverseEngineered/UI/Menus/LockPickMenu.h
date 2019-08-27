@@ -33,9 +33,9 @@ namespace RE {
             // See notes on LockPickMenu::tumblers (0x7C) below.
             //
             float  heightOffset; // 00 // how far the tumbler has fallen; XML is expected to displace the tile's Y-coordinate downward by this value
-            SInt32 hangStart; // 04 // time in milliseconds that the tumbler reached the top
-               // - starts off at -1 when the menu is opened
-               // - set to -1 when the tumbler is reset as the result of the lockpick breaking on a different tumbler
+            UInt32 hangStart; // 04 // time in milliseconds that the tumbler reached the top
+               // - starts off at UINT_MAX when the menu is opened
+               // - set to UINT_MAX when the tumbler is reset as the result of the lockpick breaking on a different tumbler
                // - set to current executable time in milliseconds whenever we play sound UILockClickNow
                // - doesn't get cleared when a tumbler is successfully locked into place, so it also indicates when that happened
             UInt32 hangTime; // 08 // time in milliseconds that the tumbler stays up before starting to fall; not initialized until the tumbler first moves

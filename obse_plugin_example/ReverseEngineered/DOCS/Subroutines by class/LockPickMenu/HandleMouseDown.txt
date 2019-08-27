@@ -40,13 +40,29 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
                   ebx = 1;
                   this->SendTrespassAlarm();
                   auto& t = this->tumblers[this->unk160]; // tumbler targeted by the lockpick
-                  if (t.hangStart == -1) { // jumps to 0x005B0CD3; preceeded by instruction in common with 0x005B0CD1
+                  if (t.hangStart == UINT_MAX) { // jumps to 0x005B0CD3; preceeded by instruction in common with 0x005B0CD1
+                     //
+                     // The (hangStart) value indicates the time in milliseconds when the 
+                     // tumbler was last pushed to the top. The basic idea is that you 
+                     // push the tumbler up, it reaches the top, it hangs there for a 
+                     // semi-random amount of time, and then after that time has elapsed 
+                     // it begins to fall.
+                     //
+                     // If (hangStart) is equal to UINT_MAX, then the tumbler isn't in a 
+                     // hang state. If the tumbler is also moving, then that means it 
+                     // must be falling... I think.
+                     //
                      if (!t.isSolved && t.hangStart == -1 && t.isMoving) { // yes, we check hangStart twice
+                        //
+                        // The player has attempted to lock a tumbler into place when it is 
+                        // moving and not already solved; this is a failure; reset some of 
+                        // the tumblers and prep for a tumbler failure.
+                        //
                         this->ResetSomeTumblersOnPickBreakage(); // at 0x005B0CEA
                         return;
                      }
                   }
-                  if (t.isSolved == false) {
+                  if (t.isSolved == true) { // at 0x005B0BE2; if true, jumps to 0x005B0CF7
                      this->PlaySoundByEditorID("UILockPickAttempt");
                      return;
                   }
