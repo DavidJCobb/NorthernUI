@@ -1,0 +1,85 @@
+void LockPickMenu::Subroutine005B0E70() {
+   auto esi = this;
+   auto ebp = InterfaceManager_GetSingleton(0, 1);
+   SInt32 edi = GetNormalizedScreenWidth() * 0.5 + ebp->cursorPos.x;
+   edi -= this->tileBackground.GetFloatTraitValue(kTagID_x);
+   SInt32 esp14 = edi;
+   float b = GetEffectiveMenuHeight() - (GetEffectiveMenuHeight() * 0.5 + ebp->cursorPos.z);
+   SInt32 ebp = (SInt32)b - this->tileBackground->GetFloatTraitValue(kTagID_y);
+   SetInterfaceManagerCursorAlpha(ebp < 650 ? 0 : 0xFF);
+   this->unk168 = -1;
+   float esp18 = this->tileBackground->GetFloatTraitValue(kTagID_width);
+   SInt32 eax = esp18;
+   auto tumblerSize = (esp18 /= 5.0);
+   bool esp13 = false; // "is any tumbler moving?"
+   for(UInt32 i = 0; i < 5; i++) // inlined
+      if (this->tumblers[i].isMoving)
+         esp13 = true;
+   auto ecx = edi < 0 ? 0 : edi;
+   if (ecx < eax)
+      esp14 = edi = 0;
+   else
+      esp14 = edi = eax;
+   ebp = 0;
+   double esp20 = esp18;
+   // FPU: [0, esp18]
+   do { // at 0x005B0FAC
+      float a = (ebp + 1) * tumblerSize;
+      float b = a - tumblerSize;
+      SInt32 eax = b; // FPU pop
+      if (edi >= eax) {
+         eax = a; // FPU pop
+         if (edi < eax)
+            jump to 0x005B1002; // edi is in the tumbler bounds
+      } // else FPU pop
+      if (ebp == 0) {
+         if (edi < 0)
+            jump to 0x005B1002; // edi is in the tumbler bounds
+         continue;
+      }
+      if (ebp != 4)
+         continue;
+      // FPU: [0, esp18]
+      float c = esp14;
+      float d = esp18 * 5.0;
+      if (d > esp14)
+         continue;
+      // FPU: [0, esp18]
+      // at 0x005B1002
+      if (!esp13) // no tumblers are in motion
+         this->unk168 = ebp;
+      if (0.0 < this->unk14C && this->unk160 >= 0) { // lockpick is moving up and we have a valid tumbler
+         Tumbler& x = this->tumbers[this->unk160];
+         if (0.0 == x.velocity && !x.isMoving && !x.isSolved) {
+            // FPU: []
+            this->PlaySoundByEditorID("UILockTumblerNudge");
+            this->sub005AFDA0(this->unk160);
+            ecx = x.unk24; // sound
+            if (ecx && !ecx->sub006B7260()) { // at 0x005B1098
+               //
+               // ...
+               //
+            }
+            float y = x.unk0C;
+            x.velocity = y;
+            x.unk1A = 1;
+            x.heightOffset = 0.0;
+            x.isMoving     = true;
+            x.tile->UpdateFloat(kTagID_user0, 1.0F); // "UP" animation
+            x.tile->sub0058FBA0(0); // update 3D
+            // FPU: [0, esp20]
+         }
+      }
+      eax = this->tumblers[ebp].tile;
+      if (this->unk174 != eax)
+         this->unk174 = eax;
+   } while (++ebp < 5);
+   // FPU: []
+   this->UpdateTumblerHeightOffsets();
+   auto i = 0;
+   do {
+      float esp18 = this->tumblers[i].heightOffset;
+      this->tumblers[i].tile->UpdateFloat(kTagID_user3, esp18);
+   } while (++i < 5);
+   return;
+}

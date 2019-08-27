@@ -33,18 +33,17 @@ namespace RE {
             // See notes on LockPickMenu::tumblers (0x7C) below.
             //
             float  heightOffset; // 00 // how far the tumbler has fallen; XML is expected to displace the tile's Y-coordinate downward by this value
-            SInt32 unk04; // timer in milliseconds
+            SInt32 hangStart; // 04 // time in milliseconds that the tumbler reached the top
                // - starts off at -1 when the menu is opened
                // - set to -1 when the tumbler is reset as the result of the lockpick breaking on a different tumbler
                // - set to current executable time in milliseconds whenever we play sound UILockClickNow
-               // - moving a tumbler briefly resets this to the current executable time, but it is then quickly reset 
-               //   to some value that LockPickMenu keeps and seems to retain across lockpick sessions
-            UInt32 hangTime; // time in milliseconds that the tumbler stays up before starting to fall; not initialized until the tumbler first moves
-            float  unk0C; // related to how fast the tumbler falls (or rises?)
+               // - doesn't get cleared when a tumbler is successfully locked into place, so it also indicates when that happened
+            UInt32 hangTime; // 08 // time in milliseconds that the tumbler stays up before starting to fall; not initialized until the tumbler first moves
+            float  unk0C; // initial rise speed? if the lockpick is moving up under a tumbler and the tumbler's velocity is zero, this is the new velocity
             float  unk10; // related to how fast the tumbler falls
-            float  velocity; // how fast the tumbler moves; up is positive, down is negative
+            float  velocity; // 14 // how fast the tumbler moves; up is positive, down is negative
                // - if the tumbler is reset as the result of a lockpick breaking, this is set to -LockPickMenu::unk6C
-            bool   isMoving = false;
+            bool   isMoving = false; // 18
                // - set to 0 when the tumbler is solved
                // - set to 1 when the tumbler is reset as the result of the lockpick breaking on a different tumbler
                // - indicates that the tumbler is in motion?
@@ -89,10 +88,6 @@ namespace RE {
             // 4: Hard
             // 5: All Others
             //
-            // UESP says that some tumblers will already be solved when you first start 
-            // picking the lock. Maybe this is a "remaining tumblers" count, or an 
-            // "index of the first initially-solved tumbler" variable.
-            //
          UInt32 unk50; // set to   5 when the menu is first opened
          UInt32 unk54; // set to 300 when the menu is first opened
          float  unk58; // set to 0.9 when the menu is first opened
@@ -103,8 +98,13 @@ namespace RE {
          float  unk6C; // set to 0.020000 when the menu is first opened
          UInt32 unk70; // set to 0.000001 when the menu is first opened
          float  unk74; // set to 15.0 when the menu is first opened
-         float  unk78; // set to 0.0 when the menu is first opened // maximum value for tumbler heightOffsets?
-         //
+         float  unk78; // maximum value for tumbler heightOffsets
+            //
+            // Default value is (2 / 3), set in ShowLockPickMenu. If any tumbler has a Tile3D and a 
+            // valid NiControllerSequence, then this is the Stop Time for that sequence. Based on 
+            // the vanilla XML, this would be the Stop Time for the "UP" sequence in Tumbler02.nif, 
+            // which is (2 / 3).
+            //
          Tumbler tumblers[5]; // 7C
             // 
             // It was hard to tell where the Tumbler instances begin and end, because the constructor 

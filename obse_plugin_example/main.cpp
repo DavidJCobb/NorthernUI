@@ -320,19 +320,19 @@ extern "C" {
 
          (NorthernUI::L10N::StrManager::GetInstance()).Update(); // load translatable strings from a file
       }
-      obse->SetOpcodeBase(0x2000); // FOR TESTING; CHANGE THIS BEFORE WE SHIP
+      obse->SetOpcodeBase(0x28D0); // We may use 0x28D0 to 0x28DF, inclusive
       {  // Register script commands.
-         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
-         obse->RegisterCommand(&kCommandInfo_DisableGamepadKey);
-         obse->RegisterCommand(&kCommandInfo_EnableGamepadKey);
-         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyDisabled);
-         obse->RegisterCommand(&kCommandInfo_GetGamepadControl);
-         obse->RegisterCommand(&kCommandInfo_IsGamepadConnected);
-         obse->RegisterCommand(&kCommandInfo_GetGamepadJoystickMagnitude);
-         obse->RegisterCommand(&kCommandInfo_GetGamepadTriggerMagnitude);
-         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
-         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
-         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed);
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed); // 28D0
+         obse->RegisterCommand(&kCommandInfo_DisableGamepadKey); // 28D1
+         obse->RegisterCommand(&kCommandInfo_EnableGamepadKey); // 28D2
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyDisabled); // 28D3
+         obse->RegisterCommand(&kCommandInfo_GetGamepadControl); // 28D4
+         obse->RegisterCommand(&kCommandInfo_IsGamepadConnected); // 28D5
+         obse->RegisterCommand(&kCommandInfo_GetGamepadJoystickMagnitude); // 28D6
+         obse->RegisterCommand(&kCommandInfo_GetGamepadTriggerMagnitude); // 28D7
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed); // 28D8
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed); // 28D9
+         obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed); // 28DA
       }
       /*//
       // get command table, if needed

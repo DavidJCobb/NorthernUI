@@ -151,10 +151,14 @@ namespace CobbPatches {
                //
                std::string unk04;
                {
-                  UInt32 time    = RE::g_timeInfo->unk10 - tumbler.unk04;
-                  UInt32 seconds = time / 1000;
-                  UInt32 milli   = time % 1000;
-                  cobb::snprintf(unk04, "%c%02d.%03ds", time < 0 ? '-' : ' ', seconds, milli);
+                  if (tumbler.hangStart == -1) {
+                     unk04 = "<NONE>";
+                  } else {
+                     UInt32 time = RE::g_timeInfo->unk10 - tumbler.hangStart;
+                     UInt32 seconds = time / 1000;
+                     UInt32 milli = time % 1000;
+                     cobb::snprintf(unk04, "%c%02d.%03ds", time < 0 ? '-' : ' ', seconds, milli);
+                  }
                }
                std::string hangTime;
                {
@@ -166,7 +170,7 @@ namespace CobbPatches {
                //
                std::string output;
                cobb::snprintf(output,
-                  "TUMBLER %d\nOffset: %f\nUnk04: %s\nHang time: %s\nUnk0C: %f\nUnk10: %f\nVelocity: %f\nMoving: %d\nSolved: %d\nUnk1A: %d\n",
+                  "TUMBLER %d\nOffset: %f\Hang timer: %s\nHang duration: %s\nUnk0C: %f\nUnk10: %f\nVelocity: %f\nMoving: %d\nSolved: %d\nUnk1A: %d\n",
                   i,
                   tumbler.heightOffset,
                   unk04.c_str(),
