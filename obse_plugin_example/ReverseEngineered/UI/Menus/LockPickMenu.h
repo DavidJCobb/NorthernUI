@@ -159,7 +159,7 @@ namespace RE {
          float  lockpickY; // 014C // positive = up; related to the Y-offset of the lockpick NIF; pick NIF user3 gets set to dec(290) - unk14C
          LockState state; // 150
          float  unk154 = 5.0; // gets set to 0.34 when the menu is first opened // same unit/type/etc. as unk158
-         float  unk158; // Y-axis offset, length, coordinate, etc., for something
+         float  unk158; // lockpick vertical velocity?
          float  unk15C; // gets set to 0.0014 when the menu is first opened
          SInt32 unk160 = 0; // tumbler index; negative means not a valid tumbler; otherwise not bounds-checked // tumbler the player is interacting with?
          UInt32 unk164; // unk160 is written here when the menu is first opened

@@ -35,8 +35,6 @@ namespace CobbPatches {
       // Of course, we also want to patch keyboard navigation into the minigame, so we 
       // don't just no-op HandleNavigationInput; we replace it entirely.
       //
-      constexpr bool ce_handleAButtonOnRelease = true;
-      //
       namespace MinigameKeynav {
          static bool s_userPressedUp = false;
          //
@@ -48,12 +46,6 @@ namespace CobbPatches {
                if (index < 0)
                   return false;
                switch (direction) {
-                  case RE::InterfaceManager::kNavigationKeypress_XboxA:
-                     if (ce_handleAButtonOnRelease) {
-                        menu->HandleMouseDown(0, nullptr);
-                        return true;
-                     } else
-                        return false;
                   case RE::InterfaceManager::kNavigationKeypress_Left:
                      index--;
                      break;
@@ -221,8 +213,7 @@ namespace CobbPatches {
       //
       void Apply() {
          MinigameKeynav::Apply();
-         if (!ce_handleAButtonOnRelease)
-            GamepadMappingFixes::Apply();
+         GamepadMappingFixes::Apply();
          Debugging::Apply();
       };
    };

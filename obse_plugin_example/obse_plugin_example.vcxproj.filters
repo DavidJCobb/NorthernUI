@@ -8057,6 +8057,10 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\FindBSAThatContainsFile.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Archive\Subroutine0042D000.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\HashFilePath.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\Subroutine005B0E70.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\HandleMouseDown.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\UpdateTumblerHeightOffsets.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\Subroutine005AFA80.txt" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NorthernUI.rc" />
