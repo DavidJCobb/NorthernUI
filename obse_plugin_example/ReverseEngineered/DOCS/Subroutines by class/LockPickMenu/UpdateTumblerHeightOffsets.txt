@@ -7,9 +7,11 @@ void LockPickMenu::UpdateTumblerHeightOffsets() {
    auto i = 0;
    do {
       auto& current = this->tumblers[i];
+      // FPU: [0, 47]
       if (current.unk18 == 1) {
          if (current.isSolved == false) {
             ecx = current.unk04;
+            float fpu_00 = 0.0F;
             if (ecx == -1) {
                float esp10;
                if (current.unk1A) {
@@ -17,6 +19,7 @@ void LockPickMenu::UpdateTumblerHeightOffsets() {
                } else {
                   esp10 = ebp;
                }
+               // FPU: [47, 0]
                float a = 47.0F;
                float b = 0.0F;
                float x = current.unk10 * esp10;
@@ -24,20 +27,24 @@ void LockPickMenu::UpdateTumblerHeightOffsets() {
                esp10 = y;
                float esp18 = esp10;
                current.velocity = esp10;
+               // FPU: [47, 0]
                if (current.unk1A != 1) { // at 0x005B08C8
                   a = 0.0F + ebp; // esp10 used as intermediate for UInt32->float cast
-               }
+                  // FPU: [0]
+               } else
+                  a = a; // implicit // FPU: [0]
                esp10 = a;
+               // FPU: [0]
                float x = this->unk78;
                current.unk1A = 0;
                x *= esp18;
                x *= esp10;
                x += current.heightOffset;
                current.heightOffset = x;
-            } // else FPU clear
-            if (this->unk78 < current.heightOffset) {
+            } // else FPU = [0]
+            if (this->unk78 < current.heightOffset) { // at 0x005B0909
                if (ecx == -1) {
-                  current.velocity = ?????;
+                  current.velocity = 0.0F;
                   current.unk04 = g_timeInfo->now;
                   this->PlaySoundByEditorID("UILockClickNow");
                } // else FPU pop 1 element
@@ -60,6 +67,7 @@ void LockPickMenu::UpdateTumblerHeightOffsets() {
                }
             }
          } else {
+            // FPU: []
             float x = current.unk0C;
             float y = ebp;
             x *= y;
@@ -69,8 +77,10 @@ void LockPickMenu::UpdateTumblerHeightOffsets() {
                current.heightOffset = this->unk78;
          }
       } else {
+         // FPU: [47]
          if (!current.isSolved)
-            current.unk14 = ?????;
+            current.unk14 = 47.0F;
+         // FPU: []
       }
       auto eax = OBLIVION_CAST(current.tile, Tile, Tile3D);
       if (!eax)
