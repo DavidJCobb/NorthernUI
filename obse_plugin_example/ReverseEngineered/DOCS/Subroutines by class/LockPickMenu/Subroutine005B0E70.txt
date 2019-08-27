@@ -11,7 +11,7 @@ void LockPickMenu::Subroutine005B0E70() {
    float tumblerSize   = (minigameWidth /= 5.0);
    bool esp13 = false; // "is any tumbler moving?"
    for(UInt32 i = 0; i < 5; i++) // inlined
-      if (this->tumblers[i].isMoving)
+      if (this->tumblers[i].isRaised)
          esp13 = true;
    SInt32 esp14;
    auto ecx = cursorXOffset < 0 ? 0 : cursorXOffset;
@@ -48,7 +48,7 @@ void LockPickMenu::Subroutine005B0E70() {
          this->unk168 = ebp; // set the tumbler index that the pick is moving toward?
       if (0.0 < this->lockpickY && this->unk160 >= 0) { // lockpick is moving vertically and we have a valid tumbler
          Tumbler& x = this->tumbers[this->unk160]; // current tumbler
-         if (0.0 == x.velocity && !x.isMoving && !x.isSolved) {
+         if (0.0 == x.velocity && !x.isRaised && !x.isSolved) {
             //
             // Push a tumbler up.
             //
@@ -65,7 +65,7 @@ void LockPickMenu::Subroutine005B0E70() {
             x.velocity = y;
             x.unk1A = 1;
             x.heightOffset = 0.0;
-            x.isMoving     = true;
+            x.isRaised     = true;
             x.tile->UpdateFloat(kTagID_user0, 1.0F); // "UP" animation
             x.tile->sub0058FBA0(0); // update 3D
             // FPU: [0, esp20]

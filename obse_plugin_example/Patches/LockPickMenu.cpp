@@ -142,13 +142,16 @@ namespace CobbPatches {
                if (tile) {
                   std::string output;
                   cobb::snprintf(output,
-                     "MENU\nPick coords: (%.2f, %.2f)\nState: %d\nUnk160: %d\nUnk164: %d\nUnk168: %d",
+                     "MENU\nPick coords: (%.2f, %.2f)\nState: %d\nUnk154: %f\nUnk158: %f\nUnk160: %d\nUnk164: %d\nUnk168: %d\nPick under tumbler? %d",
                      menu->lockpickX,
                      menu->lockpickY,
                      menu->state,
+                     menu->unk154,
+                     menu->unk158,
                      menu->unk160,
                      menu->unk164,
-                     menu->unk168
+                     menu->unk168,
+                     menu->pickIsUnderTumbler
                   );
                   CALL_MEMBER_FN(tile, UpdateString)(RE::kTagID_string, output.c_str());
                }
@@ -186,7 +189,7 @@ namespace CobbPatches {
                //
                std::string output;
                cobb::snprintf(output,
-                  "TUMBLER %d\nOffset: %f\nHang timer: %s\nHang duration: %s\nUnk0C: %f\nUnk10: %f\nVelocity: %f\nMoving: %d\nSolved: %d\nUnk1A: %d\n",
+                  "TUMBLER %d\nOffset: %f\nHang timer: %s\nHang duration: %s\nUnk0C: %f\nUnk10: %f\nVelocity: %f\Raised: %d\nSolved: %d\nUnk1A: %d\n",
                   i,
                   tumbler.heightOffset,
                   unk04.c_str(),
@@ -194,7 +197,7 @@ namespace CobbPatches {
                   tumbler.unk0C,
                   tumbler.unk10,
                   tumbler.velocity,
-                  tumbler.isMoving,
+                  tumbler.isRaised,
                   tumbler.isSolved,
                   tumbler.unk1A
                );

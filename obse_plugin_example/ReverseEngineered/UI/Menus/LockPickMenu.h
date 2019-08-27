@@ -55,14 +55,9 @@ namespace RE {
             float  unk10; // related to how fast the tumbler falls
             float  velocity; // 14 // how fast the tumbler moves; up is positive, down is negative
                // - if the tumbler is reset as the result of a lockpick breaking, this is set to -LockPickMenu::unk6C
-            bool   isMoving = false; // 18
+            bool   isRaised = false; // 18
                // - set to 0 when the tumbler is solved
                // - set to 1 when the tumbler is reset as the result of the lockpick breaking on a different tumbler
-               // - indicates that the tumbler is in motion?
-               //    - we can verify that. when you've successfully solved a tumbler, code 
-               //      requires that this be set to false before you get Security EXP. We 
-               //      can solve a tumbler and query the Security stat while the tumbler 
-               //      is still moving (unless the window for that is too small...).
             bool   isSolved = false; // 19
             UInt8  unk1A = 0;
                // - set to 1 when the tumbler is reset as the result of the lockpick breaking on a different tumbler
@@ -170,7 +165,7 @@ namespace RE {
          UInt32 unk164; // unk160 is written here when the menu is first opened
          SInt32 unk168 = -1; // tumbler index; tumbler that the pick is being moved toward? forced to -1 when a tumbler is in the air, which may prevent movement?
          UInt32 unk16C;
-         bool   pickIsUnderTumbler; // 170
+         bool   pickIsUnderTumbler; // 170 // looks like nothing ever actually reads this
          UInt8  unk171[3];
          Tile*  unk174 = nullptr; // apparently set to the tile in a Tumbler
          Tile3D* tileLockpick; // 0178 // ID #3 // nif#lockpick_pick // filename is set by the executable based on whether the player has a Skeleton Key

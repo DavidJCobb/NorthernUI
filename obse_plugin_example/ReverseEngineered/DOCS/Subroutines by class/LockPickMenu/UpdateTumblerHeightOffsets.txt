@@ -8,8 +8,8 @@ void LockPickMenu::UpdateTumblerHeightOffsets() {
    do {
       auto& current = this->tumblers[i];
       // FPU: [0, 47]
-      if (current.isMoving == 1) {
-         if (current.isSolved == false) {
+      if (current.isRaised == 1) { // at 0x005B086C
+         if (current.isSolved == false) { // at 0x005B0875
             if (current.hangStart == -1) { // tumbler isn't experiencing hang time
                //
                // Apply gravity:
@@ -47,10 +47,20 @@ void LockPickMenu::UpdateTumblerHeightOffsets() {
                current.heightOffset = z;
             } // else FPU = [0]
             if (this->unk78 < current.heightOffset) { // at 0x005B0909
+               //
+               // The ELSE for this branch definitely means that the tumbler is 
+               // falling, so this must be the code for if it's NOT falling. 
+               // Does that mean "hang time" or "rising?"
+               //
                if (current.hangStart == -1) {
                   current.velocity = 0.0F;
                   current.hangStart = g_timeInfo->now;
                   this->PlaySoundByEditorID("UILockClickNow");
+                  //
+                  // This sound plays if you click during any moment where 
+                  // clicking won't do anything, i.e. when the pick is under a 
+                  // tumbler that's fully down or already solved.
+                  //
                } // else FPU pop 1 element
                auto edx = g_timeInfo->now - current.hangStart;
                if (edx > current.hangTime) { // hang time is over
@@ -59,18 +69,24 @@ void LockPickMenu::UpdateTumblerHeightOffsets() {
                }
             } else {
                // at 0x005B094A
+               //
+               // Tumbler is falling.
+               //
                if (0.0 >= current.heightOffset) {
+                  //
+                  // Tumbler is done falling.
+                  //
                   auto ecx = current.unk24; // sound
                   if (ecx) {
                      if (ecx->sub006B7260())
                         ecx->sub006B7240();
                   }
                   current.heightOffset = 0.0F;
-                  current.isMoving = false;
+                  current.isRaised = false;
                   esp10 = 0.0F;
                }
             }
-         } else {
+         } else { // solved tumbler
             // FPU: []
             float x = current.unk0C;
             float y = ebp;

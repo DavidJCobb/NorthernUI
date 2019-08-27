@@ -40,7 +40,7 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
                   ebx = 1;
                   this->SendTrespassAlarm();
                   auto& t = this->tumblers[this->unk160]; // tumbler targeted by the lockpick
-                  if (t.hangStart == UINT_MAX) { // jumps to 0x005B0CD3; preceeded by instruction in common with 0x005B0CD1
+                  if (t.hangStart == UINT_MAX) { // at 0x005B0BD5; jumps to 0x005B0CD3; preceeded by instruction in common with 0x005B0CD1
                      //
                      // The (hangStart) value indicates the time in milliseconds when the 
                      // tumbler was last pushed to the top. The basic idea is that you 
@@ -49,14 +49,17 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
                      // it begins to fall.
                      //
                      // If (hangStart) is equal to UINT_MAX, then the tumbler isn't in a 
-                     // hang state. If the tumbler is also moving, then that means it 
-                     // must be falling... I think.
+                     // hang state. That means that this isn't the right time to try and 
+                     // lock it into place.
                      //
-                     if (!t.isSolved && t.hangStart == -1 && t.isMoving) { // yes, we check hangStart twice
+                     // Note: Causing the (t.hangStart == UINT_MAX) branch to always be 
+                     // false will allow you to lock tumblers in any position.
+                     //
+                     if (!t.isSolved && t.hangStart == -1 && t.isRaised) { // yes, we check hangStart twice
                         //
-                        // The player has attempted to lock a tumbler into place when it is 
-                        // moving and not already solved; this is a failure; reset some of 
-                        // the tumblers and prep for a tumbler failure.
+                        // NOTE: Forcing this branch to always run works if we press A. 
+                        // Seems like the former two conditions always fail if the tumbler 
+                        // is in motion.
                         //
                         this->ResetSomeTumblersOnPickBreakage(); // at 0x005B0CEA
                         return;
@@ -71,7 +74,7 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
                   // the tumbler in place during hang time, and the tumbler isn't already 
                   // solved.
                   //
-                  if (0.0 != t.heightOffset && t.isMoving == true) { // I checked twice; it's != 0.0
+                  if (0.0 != t.heightOffset && t.isRaised == true) { // tumbler is up
                      //
                      // BRANCH: Tumbler successfully solved.
                      //
@@ -87,7 +90,7 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
                      this->tileBackground->UpdateFloat(kTagID_user4, eax); // update displayed Security skill
                      this->state = kLockState_Success;
                      t.isSolved = true;
-                     t.isMoving = false;
+                     t.isRaised = false;
                      ecx = t.unk24; // stores the result of a call to play the sound with editor ID "UILockTumblerMoveLP"
                      if (ecx && ecx->TES4_006B7260()) { // stop the sound from looping?
                         ecx->TES4_006B7240(); // at 0x005B0CBA
@@ -95,13 +98,23 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
                      this->PlaySoundByEditorID("UILockTumblerLock");
                   } else {
                      //
-                     // BRANCH: Tumbler being attempted, or failing?
+                     // BRANCH: Tumbler isn't raised, OR is just starting or ending its 
+                     // movement (it's still at the bottom).
                      //
                      auto& t = this->tumblers[this->unk160]; // at 0x005B0CD1
-                     if (!t.isSolved && t.hangStart == -1 && t.isMoving) { // tumbler is moving and not in hang time; it must be falling
+                     if (!t.isSolved && t.hangStart == -1 && t.isRaised) {
+                        //
+                        // Tumbler is moving and not in hang time; trying to lock it in 
+                        // place now should fail.
+                        //
                         this->ResetSomeTumblersOnPickBreakage(); // at 0x005B0CEA
                         return;
                      }
+                     //
+                     // The next call is what plays a sound whenever you press the mouse 
+                     // while the current tumbler is already solved or while the tumbler 
+                     // is still all the way down.
+                     //
                      this->PlaySoundByEditorID("UILockPickAttempt");
                      return;
                   }
@@ -109,6 +122,9 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
                return;
             }
          }
+         //
+         // Code below does auto-attempting?
+         //
          this->tileLockpick->UpdateFloat(kTileValue_user0, 1.0); // set lockpick to idle animation (misnamed as "idol") // at 0x005B0AC1
          this->tileLockpick->TES4_0058FBA0(0); // probably updates tile's animations or something
          ebx = 1;
@@ -123,7 +139,7 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
             auto i = 0; // at 0x005B0B4F
             do {
                this->tumblers[i]->isSolved = true;
-               this->tumblers[i]->isMoving = true;
+               this->tumblers[i]->isRaised = true;
             } while (++i < 5);
             this->HandlePossibleSuccess();
             return;
