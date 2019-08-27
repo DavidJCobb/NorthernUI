@@ -1,0 +1,74 @@
+void LockPickMenu::Subroutine005AFA80() {
+   auto edi = OSInputGlobals::GetInstance();
+   auto esi = this;
+   auto ebx = edi->GetMouseAxisMovement(2); // NorthernUI patches this for gamepad
+   edi = (std::min)(this->unk40 - this->unk44, 0x64); // security skill?
+   if (0.0 == this->unk158 && 0.0 == this->lockpickY) { // at 0x005AFAD2
+      float a = this->tumblers[this->unk160].unk1C; // tumbler centerpoint
+      a -= this->lockpickX;
+      a = abs(a);
+      float esp0C = a;
+      float b;
+      if (esp0C ?? 4.0F) { // at 0x005AFB18
+         this->unk170 = 0; // byte
+         if (ecx ?? this->lockpickX) { // at 0x005AFB32
+            b = (this->unkC0 - this->unk08) / 300.0;
+            b *= (float)edi;
+            b += this->lockpickX;
+            this->lockpickX = b;
+            // FPU: []
+            jump to 0x005AFC36;
+         }
+         UInt32 esp0C = edi;
+         b = (this->unkC0 - this->unk98) / 300.0
+         // FPU: [esp0C, b, this->lockpickX]
+      } else {
+         if (1.0F ?? ?????) { // at 0x005AFB9F
+            // jumped to 0x005AFC2F
+            this->unk170 = 1; // byte
+            jump to 0x005AFC36; // implicit
+         }
+         this->unk170 = 0; // byte
+         if (ecx ?? this->lockpickX) { // at 0x005AFBBB
+            
+         }
+         b = (this->unkC0 - this->unk98) / 900.0;
+         // FPU: [esp0C, b, this->lockpickX]
+      }
+      // at 0x005AFC1B
+      b *= esp0C; // FPU: [b, this->lockpickX]
+      b -= this->lockpickX; // FPU: [b]
+      this->lockpickX = b;
+      // jump to 0x005AFC36: skips one line
+      this->unk178->UpdateFloat(0xFB0, this->lockpickX);
+   }
+   // FPU: [0]
+   if (ebx < -3 && 0.0 >= this->unk158) {
+      // distance from target tumbler's centerpoint to lockpick:
+      float esp0C = this->lockpickX - this->tumblers[this->unk160].unk1C;
+      esp0C = abs(esp0C);
+      if (esp0C > 3.0)
+         jump to 0x005AFCA9;
+      this->unk158 = this->unk154;
+   } else {
+      // at 0x005AFCA9
+      float esp0C = edi;
+      // FPU: [esp0C, esp0C, this->unk15C, 0]
+      // FPU: [esp0C, this->unk15C * esp0C, 0]
+      // FPU: [this->unk15C * esp0C, esp0C, 0]
+      // FPU: [this->unk158 - (this->unk15C * esp0C), esp0C, 0]
+      float a = esp0C;
+      float b = this->unk158 - (this->unk15C * a);
+      this->unk158 = b;
+      // FPU: [b, a, 0]
+      // FPU: [b * a, 0]
+      esp0C = (a * b) + this->lockpickY;
+      this->lockpickY = esp0C;
+      if (esp0C ?? 0.0) {
+         this->unk158 = 0.0F;
+         this->lockpickY = 0.0F;
+      }
+   }
+   ecx = 0x122 - (SInt32)this->lockpickY;
+   this->tileLockpick->UpdateFloat(0xFB1, ecx);
+}

@@ -46,7 +46,7 @@ void LockPickMenu::Subroutine005B0E70() {
       // at 0x005B1002
       if (!esp13) // no tumblers are in motion
          this->unk168 = ebp; // set the tumbler index that the pick is moving toward?
-      if (0.0 < this->unk14C && this->unk160 >= 0) { // lockpick is moving vertically and we have a valid tumbler
+      if (0.0 < this->lockpickY && this->unk160 >= 0) { // lockpick is moving vertically and we have a valid tumbler
          Tumbler& x = this->tumbers[this->unk160]; // current tumbler
          if (0.0 == x.velocity && !x.isMoving && !x.isSolved) {
             //

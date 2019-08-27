@@ -66,6 +66,11 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
                      this->PlaySoundByEditorID("UILockPickAttempt");
                      return;
                   }
+                  //
+                  // If the above branches haven't run, then the player attempted to lock 
+                  // the tumbler in place during hang time, and the tumbler isn't already 
+                  // solved.
+                  //
                   if (0.0 != t.heightOffset && t.isMoving == true) { // I checked twice; it's != 0.0
                      //
                      // BRANCH: Tumbler successfully solved.
@@ -93,7 +98,7 @@ void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
                      // BRANCH: Tumbler being attempted, or failing?
                      //
                      auto& t = this->tumblers[this->unk160]; // at 0x005B0CD1
-                     if (!t.isSolved && t.hangStart == -1 && t.isMoving) {
+                     if (!t.isSolved && t.hangStart == -1 && t.isMoving) { // tumbler is moving and not in hang time; it must be falling
                         this->ResetSomeTumblersOnPickBreakage(); // at 0x005B0CEA
                         return;
                      }

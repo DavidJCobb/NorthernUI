@@ -32,13 +32,25 @@ namespace RE {
             //
             // See notes on LockPickMenu::tumblers (0x7C) below.
             //
-            float  heightOffset; // 00 // how far the tumbler has fallen; XML is expected to displace the tile's Y-coordinate downward by this value
+            float  heightOffset; // 00 // how far the tumbler has fallen
+               //
+               // The unit of measurement for (heightOffset) appears to be seconds, with the 
+               // maximum (i.e. how far up the tumbler is) being the Stop Time of the tumbler 
+               // NIF's "UP" animation sequence. That maximum is cached in LockPickMenu's 
+               // unk78 field.
+               //
             UInt32 hangStart; // 04 // time in milliseconds that the tumbler reached the top
                // - starts off at UINT_MAX when the menu is opened
                // - set to UINT_MAX when the tumbler is reset as the result of the lockpick breaking on a different tumbler
                // - set to current executable time in milliseconds whenever we play sound UILockClickNow
                // - doesn't get cleared when a tumbler is successfully locked into place, so it also indicates when that happened
             UInt32 hangTime; // 08 // time in milliseconds that the tumbler stays up before starting to fall; not initialized until the tumbler first moves
+               //
+               // If (g_timeInfo->now - hangStart) is less than (hangTime), then the tumbler is 
+               // currently in hang time i.e. it's pushed fully up and it hasn't started to fall 
+               // yet. This is the only span of time during which you can successfully lock the 
+               // tumbler in place.
+               //
             float  unk0C; // initial rise speed? if the lockpick is moving up under a tumbler and the tumbler's velocity is zero, this is the new velocity
             float  unk10; // related to how fast the tumbler falls
             float  velocity; // 14 // how fast the tumbler moves; up is positive, down is negative
@@ -148,8 +160,8 @@ namespace RE {
             //        ...
          // //
          Tile*  tileBolt; // 0144 // ID#20 // nif#lockpick_bolt // game dynamic-casts to Tile3D*
-         float  lockpickX; // 0148 // gets set to the center of tumbler 1 when the menu is first opened // possibly lockpick x-position
-         float  lockpickY; // 014C // related to the Y-offset of the lockpick NIF; pick NIF user3 gets set to dec(290) - unk14C
+         float  lockpickX; // 0148 // gets set to the center of tumbler 1 when the menu is first opened
+         float  lockpickY; // 014C // positive = up; related to the Y-offset of the lockpick NIF; pick NIF user3 gets set to dec(290) - unk14C
          LockState state; // 150
          float  unk154 = 5.0; // gets set to 0.34 when the menu is first opened // same unit/type/etc. as unk158
          float  unk158; // Y-axis offset, length, coordinate, etc., for something
