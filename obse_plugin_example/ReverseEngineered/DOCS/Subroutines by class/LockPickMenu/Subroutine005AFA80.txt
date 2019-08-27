@@ -9,9 +9,9 @@ void LockPickMenu::Subroutine005AFA80() {
       a = abs(a);
       float esp0C = a;
       float b;
-      if (esp0C ?? 4.0F) { // at 0x005AFB18
+      if (esp0C > 4.0F) { // at 0x005AFB18
          this->unk170 = 0; // byte
-         if (ecx ?? this->lockpickX) { // at 0x005AFB32
+         if (ecx > this->lockpickX) { // at 0x005AFB32
             b = (this->unkC0 - this->unk08) / 300.0;
             b *= (float)edi;
             b += this->lockpickX;
@@ -23,14 +23,16 @@ void LockPickMenu::Subroutine005AFA80() {
          b = (this->unkC0 - this->unk98) / 300.0
          // FPU: [esp0C, b, this->lockpickX]
       } else {
-         if (1.0F ?? ?????) { // at 0x005AFB9F
+         if (1.0F < ?????) { // at 0x005AFB9F
             // jumped to 0x005AFC2F
             this->unk170 = 1; // byte
             jump to 0x005AFC36; // implicit
          }
          this->unk170 = 0; // byte
-         if (ecx ?? this->lockpickX) { // at 0x005AFBBB
-            
+         if (ecx > this->lockpickX) { // at 0x005AFBBB
+            b = (this->unkC0 - this->unk98) / 900.0;
+            this->lockpickX += b * esp0C;
+            jump to 0x005AFC36;
          }
          b = (this->unkC0 - this->unk98) / 900.0;
          // FPU: [esp0C, b, this->lockpickX]
@@ -39,8 +41,10 @@ void LockPickMenu::Subroutine005AFA80() {
       b *= esp0C; // FPU: [b, this->lockpickX]
       b -= this->lockpickX; // FPU: [b]
       this->lockpickX = b;
+      // FPU: []
       // jump to 0x005AFC36: skips one line
       this->unk178->UpdateFloat(0xFB0, this->lockpickX);
+      // FPU: [0]
    }
    // FPU: [0]
    if (ebx < -3 && 0.0 >= this->unk158) {
