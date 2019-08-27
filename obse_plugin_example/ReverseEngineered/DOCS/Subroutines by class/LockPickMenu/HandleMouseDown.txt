@@ -1,0 +1,114 @@
+void LockPickMenu::SendTrespassAlarm() { // gets inlined in Bethesda's code
+   auto owner = CALL_MEMBER_FN(this->lockedRef, GetOwner)();
+   if (owner && this->sentTrespassAlarm == 0) {
+      auto player = (RE::Actor*) *g_thePlayer;
+      SInt32 alarmResult = player->SendTrespassAlarm(this->lockedRef, owner, -1);
+      if (alarmResult != -1)
+         this->sentTrespassAlarm = 1;
+   }
+};
+
+void LockPickMenu::HandleMouseDown(UInt32 Arg1, Tile* Arg2) {
+   {  // Validate menu
+      auto tile = GetMenuByType(0x3F6);
+      if (!tile)
+         return;
+      auto menu = tile->GetContainingMenu();
+      if (!menu)
+         return;
+      if (!OBLIVION_CAST(menu, Menu, LockPickMenu))
+         return;
+   }
+   if (Arg1 != 2) { // if it's not the Exit button // at 0x005B0A56
+      eax = 1; // result of a no-op call
+      if (eax != 2) {
+         if (this->state == kLockState_Resetting) {
+            this->BreakLockpick();
+         }
+         {
+            bool bJumpTo005B0B69 = false;
+            auto tile = this->tileLockpick;
+            if ((!tile || tile->unk44) && (*g_thePlayer)->GetItemCount(*ptrSkeletonKeyForm) == 0)
+               //
+               // The Skeleton Key counts as auto-attempting, I guess.
+               //
+               bJumpTo005B0B69 = true;
+            else if (Arg1 != 5) // button was not Auto-Attempt
+               bJumpTo005B0B69 = true;
+            if (bJumpTo005B0B69) { // not auto-attempting
+               if (this->unk160 >= 0) { // is the lockpick under a tumbler? // at 0x005B0B69
+                  ebx = 1;
+                  this->SendTrespassAlarm();
+                  auto& t = this->tumblers[this->unk160]; // tumbler targeted by the lockpick
+                  if (t.hangStart == -1) { // jumps to 0x005B0CD3; preceeded by instruction in common with 0x005B0CD1
+                     if (!t.isSolved && t.hangStart == -1 && t.isMoving) { // yes, we check hangStart twice
+                        this->ResetSomeTumblersOnPickBreakage(); // at 0x005B0CEA
+                        return;
+                     }
+                  }
+                  if (t.isSolved == false) {
+                     this->PlaySoundByEditorID("UILockPickAttempt");
+                     return;
+                  }
+                  if (0.0 != t.heightOffset && t.isMoving == true) { // I checked twice; it's != 0.0
+                     //
+                     // BRANCH: Tumbler successfully solved.
+                     //
+                     (*g_thePlayer)->ModExperience(kActorVal_Security, 0, 0.0); // at 0x005B0C1A
+                     SInt32 eax = (*g_thePlayer)->GetActorValue(kActorVal_Security);
+                     if (eax > 0x64)
+                        //
+                        // Bethesda used a "max" compiler macro, so their compiled code 
+                        // repeats the getter if its return value is smaller than 0x64. 
+                        // The handwritten version is better.
+                        //
+                        eax = 0x64;
+                     this->tileBackground->UpdateFloat(kTagID_user4, eax); // update displayed Security skill
+                     this->state = kLockState_Success;
+                     t.isSolved = true;
+                     t.isMoving = false;
+                     ecx = t.unk24; // stores the result of a call to play the sound with editor ID "UILockTumblerMoveLP"
+                     if (ecx && ecx->TES4_006B7260()) { // stop the sound from looping?
+                        ecx->TES4_006B7240(); // at 0x005B0CBA
+                     }
+                     this->PlaySoundByEditorID("UILockTumblerLock");
+                  } else {
+                     //
+                     // BRANCH: Tumbler being attempted, or failing?
+                     //
+                     auto& t = this->tumblers[this->unk160]; // at 0x005B0CD1
+                     if (!t.isSolved && t.hangStart == -1 && t.isMoving) {
+                        this->ResetSomeTumblersOnPickBreakage(); // at 0x005B0CEA
+                        return;
+                     }
+                     this->PlaySoundByEditorID("UILockPickAttempt");
+                     return;
+                  }
+               }
+               return;
+            }
+         }
+         this->tileLockpick->UpdateFloat(kTileValue_user0, 1.0); // set lockpick to idle animation (misnamed as "idol") // at 0x005B0AC1
+         this->tileLockpick->TES4_0058FBA0(0); // probably updates tile's animations or something
+         ebx = 1;
+         if (this->state != kLockState_Success) {
+            this->SendTrespassAlarm();
+            *(byte*)(0x00B3B3F5) = 1;
+            this->sentTrespassAlarm = 1;
+            if (!this->AutoAttempt()) { // jumps to 0x005B0CEA
+               this->ResetSomeTumblersOnPickBreakage();
+               return;
+            }
+            auto i = 0; // at 0x005B0B4F
+            do {
+               this->tumblers[i]->isSolved = true;
+               this->tumblers[i]->isMoving = true;
+            } while (++i < 5);
+            this->HandlePossibleSuccess();
+            return;
+         }
+         return;
+      }
+   }
+   this->TES4_005B07E0(); // at 0x005B0D09
+}
