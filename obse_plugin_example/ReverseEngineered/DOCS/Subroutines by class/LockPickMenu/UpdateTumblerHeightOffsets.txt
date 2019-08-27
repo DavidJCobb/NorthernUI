@@ -1,0 +1,80 @@
+void LockPickMenu::UpdateTumblerHeightOffsets() {
+   auto edi = this;
+   auto eax = this->unk40;
+   UInt32 ebp = (std::min)(0x64, this->unk40 - this->unk44);
+   auto esp14 = 5;
+   ebx = 0;
+   auto i = 0;
+   do {
+      auto& current = this->tumblers[i];
+      if (current.unk18 == 1) {
+         if (current.isSolved == false) {
+            ecx = current.unk04;
+            if (ecx == -1) {
+               float esp10;
+               if (current.unk1A) {
+                  esp10 = 47.0F;
+               } else {
+                  esp10 = ebp;
+               }
+               float a = 47.0F;
+               float b = 0.0F;
+               float x = current.unk10 * esp10;
+               float y = current.velocity - x;
+               esp10 = y;
+               float esp18 = esp10;
+               current.velocity = esp10;
+               if (current.unk1A != 1) { // at 0x005B08C8
+                  a = 0.0F + ebp; // esp10 used as intermediate for UInt32->float cast
+               }
+               esp10 = a;
+               float x = this->unk78;
+               current.unk1A = 0;
+               x *= esp18;
+               x *= esp10;
+               x += current.heightOffset;
+               current.heightOffset = x;
+            } // else FPU clear
+            if (this->unk78 < current.heightOffset) {
+               if (ecx == -1) {
+                  current.velocity = ?????;
+                  current.unk04 = g_timeInfo->now;
+                  this->PlaySoundByEditorID("UILockClickNow");
+               } // else FPU pop 1 element
+               auto edx = g_timeInfo->now - current.unk04;
+               if (edx > current.hangTime) {
+                  current.unk04 = UINT_MAX;
+                  current.heightOffset = this->unk78;
+               }
+            } else {
+               // at 0x005B094A
+               if (0.0 >= current.heightOffset) {
+                  auto ecx = current.unk24; // sound
+                  if (ecx) {
+                     if (ecx->sub006B7260())
+                        ecx->sub006B7240();
+                  }
+                  current.heightOffset = 0.0F;
+                  current.isMoving = false;
+                  esp10 = 0.0F;
+               }
+            }
+         } else {
+            float x = current.unk0C;
+            float y = ebp;
+            x *= y;
+            x *= current.heightOffset;
+            current.heightOffset = x;
+            if (this->unk78 < x)
+               current.heightOffset = this->unk78;
+         }
+      } else {
+         if (!current.isSolved)
+            current.unk14 = ?????;
+      }
+      auto eax = OBLIVION_CAST(current.tile, Tile, Tile3D);
+      if (!eax)
+         continue;
+      eax->unk58 = current.heightOffset;
+   } while (++i < 5);
+}

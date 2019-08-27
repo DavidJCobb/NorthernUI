@@ -35,7 +35,7 @@ namespace CobbPatches {
       // Of course, we also want to patch keyboard navigation into the minigame, so we 
       // don't just no-op HandleNavigationInput; we replace it entirely.
       //
-      constexpr bool ce_handleAButtonOnRelease = false;
+      constexpr bool ce_handleAButtonOnRelease = true;
       //
       namespace MinigameKeynav {
          static bool s_userPressedUp = false;
@@ -137,6 +137,22 @@ namespace CobbPatches {
       }
       namespace Debugging {
          void _stdcall Inner(RE::LockPickMenu* menu) {
+            {
+               auto tile = RE::GetDescendantTileByName(menu->tile, "northernUI_debug_base");
+               if (tile) {
+                  std::string output;
+                  cobb::snprintf(output,
+                     "MENU\nPick coords: (%.2f, %.2f)\nState: %d\nUnk160: %d\nUnk164: %d\nUnk168: %d",
+                     menu->lockpickX,
+                     menu->lockpickY,
+                     menu->state,
+                     menu->unk160,
+                     menu->unk164,
+                     menu->unk168
+                  );
+                  CALL_MEMBER_FN(tile, UpdateString)(RE::kTagID_string, output.c_str());
+               }
+            }
             RE::Tile* tiles[5] = { nullptr, nullptr, nullptr, nullptr, nullptr };
             tiles[0] = RE::GetDescendantTileByName(menu->tile, "northernUI_debug_tumbler_1");
             tiles[1] = RE::GetDescendantTileByName(menu->tile, "northernUI_debug_tumbler_2");
@@ -151,7 +167,7 @@ namespace CobbPatches {
                //
                std::string unk04;
                {
-                  if (tumbler.hangStart == -1) {
+                  if (tumbler.hangStart == UINT_MAX) {
                      unk04 = "<NONE>";
                   } else {
                      UInt32 time = RE::g_timeInfo->unk10 - tumbler.hangStart;
@@ -170,7 +186,7 @@ namespace CobbPatches {
                //
                std::string output;
                cobb::snprintf(output,
-                  "TUMBLER %d\nOffset: %f\Hang timer: %s\nHang duration: %s\nUnk0C: %f\nUnk10: %f\nVelocity: %f\nMoving: %d\nSolved: %d\nUnk1A: %d\n",
+                  "TUMBLER %d\nOffset: %f\nHang timer: %s\nHang duration: %s\nUnk0C: %f\nUnk10: %f\nVelocity: %f\nMoving: %d\nSolved: %d\nUnk1A: %d\n",
                   i,
                   tumbler.heightOffset,
                   unk04.c_str(),

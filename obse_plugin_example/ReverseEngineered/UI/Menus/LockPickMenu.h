@@ -148,15 +148,15 @@ namespace RE {
             //        ...
          // //
          Tile*  tileBolt; // 0144 // ID#20 // nif#lockpick_bolt // game dynamic-casts to Tile3D*
-         float  unk148; // 0148 // gets set to the center of tumbler 1 when the menu is first opened // possibly lockpick x-position
-         float  unk14C; // 014C // related to the Y-offset of the lockpick NIF; pick NIF user3 gets set to dec(290) - unk14C
+         float  lockpickX; // 0148 // gets set to the center of tumbler 1 when the menu is first opened // possibly lockpick x-position
+         float  lockpickY; // 014C // related to the Y-offset of the lockpick NIF; pick NIF user3 gets set to dec(290) - unk14C
          LockState state; // 150
          float  unk154 = 5.0; // gets set to 0.34 when the menu is first opened // same unit/type/etc. as unk158
          float  unk158; // Y-axis offset, length, coordinate, etc., for something
          float  unk15C; // gets set to 0.0014 when the menu is first opened
          SInt32 unk160 = 0; // tumbler index; negative means not a valid tumbler; otherwise not bounds-checked // tumbler the player is interacting with?
          UInt32 unk164; // unk160 is written here when the menu is first opened
-         SInt32 unk168 = -1; // tumbler index; tumbler that the pick is being moved toward?
+         SInt32 unk168 = -1; // tumbler index; tumbler that the pick is being moved toward? forced to -1 when a tumbler is in the air, which may prevent movement?
          UInt32 unk16C;
          UInt32 unk170;
          Tile*  unk174 = nullptr; // apparently set to the tile in a Tumbler
