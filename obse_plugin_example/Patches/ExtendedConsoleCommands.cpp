@@ -144,11 +144,11 @@ namespace CobbPatches {
             SInt32      menuID = 0;
             const char* name   = args;
             RE::Tile*   tile   = nullptr;
-            if (stricmp(name, "northernui()") == 0) {
+            if (_stricmp(name, "northernui()") == 0) {
                tile = g_northernUIDatastore;
-            } else if (stricmp(name, "xxnstrings()") == 0) {
+            } else if (_stricmp(name, "xxnstrings()") == 0) {
                tile = g_northernUIStringstore;
-            } else if (stricmp(name, "xxnlocalization()") == 0) {
+            } else if (_stricmp(name, "xxnlocalization()") == 0) {
                tile = g_northernUILocConfigTile;
             } else {
                {
@@ -183,7 +183,7 @@ namespace CobbPatches {
       }
       namespace Hook {
          bool _startsWith(const char* a, const char* b) {
-            return !strnicmp(a, b, cobb::cstrlen(b));
+            return !_strnicmp(a, b, cobb::cstrlen(b));
          }
          //
          bool _stdcall Inner(const char* input) {

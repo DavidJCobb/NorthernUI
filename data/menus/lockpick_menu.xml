@@ -41,7 +41,8 @@
 	<xbuttonb><ref src="lockpick_exit"         trait="clicked" /></xbuttonb>
 	<xbuttonx><ref src="lockpick_auto_attempt" trait="clicked" /></xbuttonx>
 	
-   <rect name="northernui_minigame_click_shim">
+   <!-- Hooks for NorthernUI debug code; not currently used -->
+   <!--<rect name="northernui_minigame_click_shim">
       <id>9001</id>
 		<target>&true;</target>
 		<visible>&true;</visible>
@@ -95,6 +96,7 @@
       <y>600</y>
       <depth>10</depth>
    </text>
+   <!-- -->
    
 	<rect name="glass_window">
 		<id>4</id>

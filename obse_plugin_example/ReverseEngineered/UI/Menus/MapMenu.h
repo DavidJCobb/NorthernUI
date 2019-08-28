@@ -1,5 +1,6 @@
 #pragma once
 #include "ReverseEngineered/UI/Menu.h"
+#include "ReverseEngineered/UI/Tile.h"
 #include "ReverseEngineered/UI/MenuTextInputState.h"
 #include "obse/GameMenus.h"
 #include "obse/NiTypes.h"

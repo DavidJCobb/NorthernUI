@@ -81,6 +81,7 @@ void _tryPrintSources(RE::Tile::Value* source) {
    _MESSAGE("       - End of operator list.");
 };
 void TileDump(RE::Tile* tile) {
+   _MESSAGE(" - Tile address is 0x%08X.", tile);
    {  // Log traits.
       _MESSAGE(" - Traits:");
       auto node = tile->valueList.start;

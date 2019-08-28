@@ -270,7 +270,10 @@ namespace CobbPatches {
                         kThis->num = argument;
                      return true;
                   case _traitPrefSave:
-                     if (current->isString) {
+                     {
+                        const char* str = current->GetStringValue();
+                        if (!str)
+                           return true;
                         _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, current->operand.string); // TODO: REMOVE LOGGING
                         UInt32 menuID = 0;
                         {
@@ -281,30 +284,35 @@ namespace CobbPatches {
                                  menuID = menu->GetID();
                            }
                         }
-                        UIPrefManager::GetInstance().setPrefValue(current->operand.string, kThis->num, menuID);
+                        UIPrefManager::GetInstance().setPrefValue(str, kThis->num, menuID);
                      }
                      return true;
                   case _traitPrefLoad:
-                     if (current->isString) {
-                        _MESSAGE("XML has asked to load pref %s.", current->operand.string); // TODO: REMOVE LOGGING
-                        UInt32 menuID = 0;
-                        {
-                           auto tile = kThis->owner;
-                           if (tile) {
-                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
-                              if (menu)
-                                 menuID = menu->GetID();
-                           }
-                        }
-                        float result = UIPrefManager::GetInstance().getPrefCurrentValue(current->operand.string, menuID);
-                        kThis->num = isnan(result) ? 0.0F : result;
-                     } else
+                     {
+                        const char* str = current->GetStringValue();
                         kThis->num = 0.0F;
+                        if (str) {
+                           _MESSAGE("XML has asked to load pref %s.", current->operand.string); // TODO: REMOVE LOGGING
+                           UInt32 menuID = 0;
+                           {
+                              auto tile = kThis->owner;
+                              if (tile) {
+                                 auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+                                 if (menu)
+                                    menuID = menu->GetID();
+                              }
+                           }
+                           float result = UIPrefManager::GetInstance().getPrefCurrentValue(current->operand.string, menuID);
+                           kThis->num = isnan(result) ? 0.0F : result;
+                        }
+                     }
                      return true;
                   case _traitPrefReset:
-                     if (current->isString) {
-                        _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", current->operand.string, kThis->num); // TODO: REMOVE LOGGING
-                        if (kThis->num = RE::kEntityID_true) {
+                     {
+                        const char* str = current->GetStringValue();
+                        kThis->num = 0.0F;
+                        if (str) {
+                           _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", current->operand.string, kThis->num); // TODO: REMOVE LOGGING
                            UInt32 menuID = 0;
                            {
                               auto tile = kThis->owner;
@@ -316,9 +324,9 @@ namespace CobbPatches {
                            }
                            auto& manager = UIPrefManager::GetInstance();
                            manager.resetPrefValue(current->operand.string, menuID);
-                           kThis->num = UIPrefManager::GetInstance().getPrefCurrentValue(current->operand.string, menuID);
-                        } else
-                           kThis->num = 0.0F;
+                           float result = UIPrefManager::GetInstance().getPrefCurrentValue(current->operand.string, menuID);
+                           kThis->num = isnan(result) ? 0.0F : result;
+                        }
                      }
                      return true;
                }

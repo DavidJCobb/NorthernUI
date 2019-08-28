@@ -276,6 +276,24 @@ namespace RE {
       } else
          _MESSAGE("%s - End of operator-siblings.", i.c_str());
    };
+   const char* Tile::Value::Expression::GetStringValue() const {
+      if (this->isString)
+         return this->operand.string;
+      if (this->opcode == kTagID_copy) {
+         auto p = this->refPrev;
+         while (p) {
+            if (p->isString)
+               return p->operand.string;
+            if (p->opcode == 0x65) {
+               auto owner = p->operand.ref;
+               if (owner)
+                  return owner->str.m_data;
+            }
+            p = p->refPrev;
+         }
+      }
+      return nullptr;
+   }
 
    void Tile3D::SetAnimationTimePercentage(float percentage) {
       //

@@ -200,6 +200,34 @@ void XXNOptionsMenu::HandleMouseover(SInt32 tileID, RE::Tile* target) {
 };
 void XXNOptionsMenu::HandleMouseout(SInt32 tileID, RE::Tile* target) {
 };
+void XXNOptionsMenu::HandleFrameMouseDown(SInt32 tileID, RE::Tile* target) {
+   if (tileID == kTileID_GenericScrollbar || tileID == kTileID_GenericScrollThumb) {
+      if (!target)
+         return;
+      RE::Tile* bar   = nullptr;
+      RE::Tile* thumb = nullptr;
+      if (tileID == kTileID_GenericScrollbar) {
+         bar = target;
+         for (auto i = target->childList.start; i; i = i->next) {
+            auto tile = i->data;
+            if (!tile)
+               continue;
+            if (CALL_MEMBER_FN(tile, GetFloatTraitValue)(RE::kTagID_id) == (float)kTileID_GenericScrollThumb) {
+               thumb = tile;
+               break;
+            }
+         }
+         if (!thumb)
+            return;
+      } else {
+         thumb = target;
+         bar   = target->parent;
+         if (!bar)
+            return;
+      }
+      Menu::HandleScrollbarThumbDrag(bar, thumb, kScrollDragBehavior_ClickStep, true);
+   }
+}
 void XXNOptionsMenu::HandleFrameMouseWheel(SInt32 tileID, RE::Tile* target) {
    if (tileID == -1) { // tile is targetable but has no specific ID
       //

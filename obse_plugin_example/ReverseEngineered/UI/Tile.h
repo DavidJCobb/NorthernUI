@@ -1,6 +1,7 @@
 #pragma once
 #include "ReverseEngineered/_BASE.h"
 #include "ReverseEngineered/UI/TagIDs.h"
+#include "ReverseEngineered/UI/Menu.h"
 #include "obse/GameAPI.h"
 #include "obse/GameTiles.h"
 #include "obse/NiTypes.h"
@@ -67,9 +68,9 @@
 //    operators and values.
 //
 
-class Menu;
 class NiControllerManager;
 namespace RE {
+   class  Menu;
    struct TileParseState;
    struct TileTemplate;
    class  Tile;
@@ -153,7 +154,7 @@ namespace RE {
             };
             struct Expression { // sizeof == 0x18
                static Expression* CreateOnGameHeap();
-
+               //
                Expression* prev;    // 00
                Expression* next;    // 04
                Operand     operand; // 08 // first entry in any linked list is always ref; others are immediate
@@ -260,6 +261,8 @@ namespace RE {
                inline bool WasNukedDueToCircularReference() const { // see TileValueFormsCircularReference at 0x0058BAD0
                   return this->opcode == 0;
                }
+
+               const char* GetStringValue() const;
             };
 
             bool IsNum()    { return bIsNum == 1; }

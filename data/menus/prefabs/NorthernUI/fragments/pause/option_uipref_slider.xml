@@ -1,0 +1,330 @@
+<!--<rect name="option_uipref_slider">-->
+   <!-- args -->
+   <user2>10</user2> <!-- slider jump distance -->
+   <user3>1</user3> <!-- slider step distance -->
+   <user4>0</user4> <!-- slider min -->
+   <user5>100</user5> <!-- slider max -->
+   <user8>&false;</user8> <!-- slider shows numeric value? -->
+   <user10>200</user10> <!-- label column width -->
+   <user11></user11> <!-- label -->
+   <user12></user12> <!-- pref name -->
+
+   <id>&generic;</id>
+   <clips>&true;</clips>
+   <listindex>
+      <copy src="sibling()" trait="listindex" />
+      <add>1</add>
+   </listindex>
+   <locus>&true;</locus>
+   <x>0</x>
+   <y>
+      <copy   src="sibling()" trait="height" />
+      <onlyifnot>
+         <copy src="sibling()" trait="visible" /><eq>&false;</eq>
+      </onlyifnot>
+      <add    src="sibling()" trait="y" />
+   </y>
+   <width><copy src="parent()" trait="width" /></width>
+   <height>
+      <copy src="child(label)" trait="height" />
+      <add>8</add>
+   </height>
+   
+   <target>&true;</target>
+   <xdefault>&true;</xdefault>
+   <xlist>&xitem;</xlist>
+   <xup>  &prev;</xup>
+   <xdown>&next;</xdown>
+   <xleft>    <ref src="child(horizontal_scroll_left)"  trait="clicked" /></xleft>
+   <xright>   <ref src="child(horizontal_scroll_right)" trait="clicked" /></xright>
+   <xbuttonlb><ref src="child(horizontal_scroll_leftside)"  trait="clicked" /></xbuttonlb>
+   <xbuttonrb><ref src="child(horizontal_scroll_rightside)" trait="clicked" /></xbuttonrb>
+   <xscroll>
+      <copy src="me()" trait="listindex" />
+      <sub>
+         <copy src="parent()" trait="user8" />
+         <div> 2</div>
+         <ceil>0</ceil>
+      </sub>
+      <add>1</add>
+   </xscroll>
+   
+   <_mouseover_any>
+      <copy src="me()" trait="mouseover" />
+      <add  src="child(slider)" trait="_mouseover_any" />
+      <gt>0</gt>
+      <sub>1</sub>
+   </_mouseover_any>
+   
+   <depth>10</depth> <!-- The root element is what gets focus, so child elements need to be behind it. -->
+   
+   <text name="label">
+      <depth>-8</depth>
+      <clips>&true;</clips>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <string><copy src="parent()" trait="user11" /></string>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      <red>
+         <copy>140</copy>
+         <max>
+            <copy>255</copy>
+            <mult src="parent()" trait="mouseover" />
+         </max>
+         <max>
+            <copy>255</copy>
+            <mult src="sibling(slider)" trait="_mouseover_any" />
+         </max>
+      </red>
+      <green><copy src="me()" trait="red" /></green>
+      <blue> <copy src="me()" trait="red" /></blue>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <image name="slider">
+      <!-- Can't use the scrollbar prefab, because we need to integrate 
+           the pref operators into the thumb markup. -->
+   
+      <id>44</id>
+      <locus>&true;</locus>
+      <clips>&true;</clips>
+      <x>
+         <copy src="parent()" trait="user10" />
+         <add  src="child(horizontal_scroll_left)" trait="width" />
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <depth>3</depth>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="x" />
+         <sub  src="child(horizontal_scroll_right)" trait="width" />
+      </width>
+      <height><copy src="child(track)" trait="height" /></height>
+      <zoom>25</zoom>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      
+      <filename>Menus\Shared\shared_empty.dds</filename>
+      <user1><copy src="parent()" trait="user4" /></user1> <!-- minimum range value -->
+      <user2><copy src="parent()" trait="user5" /></user2> <!-- maximum range value -->
+      <user3><copy src="parent()" trait="user3" /></user3> <!-- step distance -->
+      <user4><copy src="parent()" trait="user2" /></user4> <!-- jump distance -->
+      <user5> <!-- starting value -->
+         <xxnPrefLoadValue><copy src="parent()" trait="user12" /></xxnPrefLoadValue>
+      </user5>
+      <user7><copy src="child(horizontal_scroll_marker)" trait="_value_scrolled_to"/> </user7>
+      <user8><copy src="parent()" trait="user8" /></user8> <!-- visibility of slider value -->
+      <user12><copy src="parent()" trait="user12" /></user12> <!-- pref name -->
+      <user15>1</user15> <!-- thumb style (0 = scrollbar; 1 = slider) -->
+      <user16><copy src="parent()" trait="mouseover" /></user16> <!-- force mouseover (0 = no; 1 = yes) -->
+      
+      <_scrollable_range>
+         <copy src="me()" trait="user2" />
+         <sub  src="me()" trait="user1" />
+      </_scrollable_range>
+      <_mouseover_any>
+         <copy src="child(horizontal_scroll_leftside)"  trait="mouseover" />
+         <add  src="child(horizontal_scroll_rightside)" trait="mouseover" />
+         <add  src="child(horizontal_scroll_left)"      trait="mouseover" />
+         <add  src="child(horizontal_scroll_right)"     trait="mouseover" />
+         <add  src="child(horizontal_scroll_marker)"    trait="mouseover" />
+         <add  src="me()" trait="user16" />
+         <gt> 0</gt>
+         <sub>1</sub>
+      </_mouseover_any>
+      
+      
+      <text name="quantity_display_text">
+         <include src="NorthernUI\fonts\normal.xml" />
+         <visible> <copy src="parent()" trait="user8"/> </visible>
+         <depth> 1 </depth>
+         <string> <copy src="sibling(horizontal_scroll_marker)" trait="_value_scrolled_to"/> </string>
+         <justify> &right; </justify>
+         <red>
+            <copy>140</copy>
+            <max>
+               <copy>255</copy>
+               <mult src="parent()" trait="_mouseover_any" />
+            </max>
+         </red>
+         <green><copy src="me()" trait="red" /></green>
+         <blue><copy src="me()" trait="red" /></blue>
+         <x>-32</x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+      </text>
+      
+      <!-- Hitboxes for clicking on the scrollbar track: -->
+      <rect name="horizontal_scroll_leftside">
+         <id>&generic;</id>
+         <target>&true;</target>
+         <clips><copy src="parent()" trait="clips" /></clips>
+         <depth>2</depth>
+         <width> <!-- make it long enough to stretch from the left arrow to the marker -->
+            <copy src="sibling(horizontal_scroll_marker)" trait="x" />
+         </width>
+         <height><copy src="sibling(track)" trait="height" /></height>
+         <x>0</x>
+         <y>0</y>
+         <clicksound>3</clicksound>
+      </rect>
+      <rect name="horizontal_scroll_rightside">
+         <id>&generic;</id>
+         <target>&true;</target>
+         <clips><copy src="parent()" trait="clips" /></clips>
+         <depth>2</depth>
+         <width>
+            <copy src="parent()" trait="width" />
+            <sub  src="sibling(horizontal_scroll_leftside)" trait="width" />
+            <sub  src="sibling(horizontal_scroll_marker)"   trait="width" />
+         </width>
+         <height><copy src="sibling(track)" trait="height" /></height>
+         <x>
+            <copy src="sibling(horizontal_scroll_leftside)" trait="width" />
+            <add  src="sibling(horizontal_scroll_marker)"   trait="width" />
+         </x>
+         <y>0</y>
+         <clicksound>3</clicksound>
+      </rect>
+      
+      <!-- Scrollbar graphics: -->
+      <image name="horizontal_scroll_left">
+         <id>&generic;</id>
+         <target>&true;</target>
+         <clips><copy src="parent()" trait="clips" /></clips>
+         <depth>4</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>Menus\NorthernUI\scrollbars\hd_h_endcaps.dds</filename>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <x>
+            <copy src="me()" trait="width" />
+            <mult>-1</mult>
+         </x>
+         <y>0</y>
+         <clicksound>3</clicksound>
+         <xdefault>-1</xdefault>
+      </image>
+      <image name="horizontal_scroll_right">
+         <id>&generic;</id>
+         <target>&true;</target>
+         <clips><copy src="parent()" trait="clips" /></clips>
+         <depth>4</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>Menus\NorthernUI\scrollbars\hd_h_endcaps.dds</filename>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <cropx> <copy src="me()" trait="width" /></cropx>
+         <x><copy src="parent()" trait="width" /></x>
+         <y>0</y>
+         <clicksound>3</clicksound>
+         <xdefault>-1</xdefault>
+      </image>
+      <image name="track">
+         <clips><copy src="parent()" trait="clips" /></clips>
+         <depth>1</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>Menus\NorthernUI\scrollbars\hd_h_track.dds</filename>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <width><copy src="parent()" trait="width" /></width>
+         <x>0</x>
+         <y>0</y>
+         <tile>&true;</tile>
+      </image>
+      <image name="horizontal_scroll_marker">
+         <id>45</id>
+         <target>&true;</target>
+         <clips><copy src="parent()" trait="clips" /></clips>
+         <depth>6</depth>
+         <zoom><copy src="parent()" trait="zoom" /></zoom>
+         <filename>Menus\NorthernUI\scrollbars\hd_h_thumb.dds</filename>
+         <width><copy src="me()" trait="filewidth" /></width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <x> <!-- set my position relative to the current scroll -->
+            <copy src="parent()" trait="width" />
+            <!-- == track length, so far -->
+            <sub  src="me()" trait="width" />
+            <mul>
+               <copy src="me()"     trait="_value_scrolled_to"/>
+               <sub  src="parent()" trait="user1"/>
+               <div  src="parent()" trait="_scrollable_range"/>
+            </mul>
+         </x>
+         <y>0</y>
+         
+         <_filename_0>Menus\NorthernUI\scrollbars\hd_h_thumb.dds</_filename_0>
+         <_filename_1>Menus\NorthernUI\scrollbars\slider_hd_h_thumb.dds</_filename_1>
+         <filename>
+            <copy src="parent()" trait="user15" />
+            <copy src="me()"     trait="_filename_" />
+         </filename>
+         
+         <!--
+            This code actually does compute the current scroll value, which is 
+            copied by the parent scrollbar's USER7 trait and (presumably) read 
+            by the executable. The executable "feeds" us inputs (see comment 
+            on USER9) and we're responsible for maintaining our scroll value 
+            ourselves.
+         -->
+         <_value_scrolled_to>
+            <!-- copy old value -->
+            <add>
+               <copy src="sibling(horizontal_scroll_right)" trait="clicked" />
+               <sub  src="sibling(horizontal_scroll_left)"  trait="clicked" />
+               <mult src="parent()" trait="user3" /> <!-- step distance -->
+            </add>
+            <add>
+               <copy src="sibling(horizontal_scroll_rightside)" trait="clicked"/>
+               <sub  src="sibling(horizontal_scroll_leftside)"  trait="clicked"/>
+               <mult src="parent()" trait="user4" /> <!-- jump distance -->
+            </add>
+            <add src="me()"     trait="user9" />
+            <add src="parent()" trait="user5" />
+            <onlyifnot>
+               <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
+            </onlyifnot>
+            <add>
+               <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
+               <xxnPrefResetValue><copy src="parent()" trait="user12" /></xxnPrefResetValue>
+            </add>
+            <max src="parent()" trait="user1" />
+            <min src="parent()" trait="user2" />
+            <xxnPrefSaveValue><copy src="parent()" trait="user12" /></xxnPrefSaveValue>
+         </_value_scrolled_to>
+         <user8>	<!-- for dragging - drag interval; ideally should compute to an integer -->
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div  src="parent()" trait="_scrollable_range" />
+         </user8>
+         <user9>0</user9> <!-- executable can use this to set the slider value using the thumb-tile only, provided user5 == 0 -->
+         <clicksound>3</clicksound>
+      </image>
+   </image>
+<!--</rect>-->

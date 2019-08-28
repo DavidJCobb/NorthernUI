@@ -3,7 +3,7 @@
 #include "obse/GameTypes.h"
 
 class BSScissorTriShape;
-class NiColorAlpha;
+struct NiColorAlpha;
 class NiD3DShaderConstantMapEntry;
 class NiPoint3;
 class NiTexturingProperty;

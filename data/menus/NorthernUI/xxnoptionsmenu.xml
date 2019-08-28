@@ -29,6 +29,10 @@
       <copy src="me()" trait="_labelColMinWidth" />
       <add  src="me()" trait="_controlColMaxWidth" />
    </_preferredTotalWidth>
+   
+   <_itemHeight>
+      <copy src="option_local_map_resolution" trait="height" />
+   </_itemHeight>
 
    <rect name="content_space">
       <include src="NorthernUI/fragments/pause/base.xml" />
@@ -71,8 +75,8 @@
                   <include src="vertical_scroll.xml" />
                   <include src="NorthernUI\scrollbars\wrapped_v.xml" />
                   <id>3</id>
-                  <user1>0</user1>					<!-- min -->
-                  <user2>
+                  <user1>0</user1> <!-- min -->
+                  <user2> <!-- max -->
                      <copy src="scrollable_pane" trait="childcount" />
                      <sub>
                         <copy src="column_right" trait="height" />
@@ -87,14 +91,14 @@
                            <neq>0</neq>
                         </onlyif>
                      </add>
-                  </user2>							<!-- max -->
-                  <user4>
+                  </user2>
+                  <user4> <!-- jump distance -->
                      <copy src="me()" trait="user8"/>
                      <sub>1</sub>
-                  </user4>							<!-- jump distance -->
-                  <user5> 0 </user5>					<!-- starting pos -->
-                  <user6>4</user6>					<!-- marker id -->
-                  <user8>								<!-- num visible -->
+                  </user4>
+                  <user5>0</user5> <!-- starting pos -->
+                  <user6>4</user6> <!-- marker id -->
+                  <user8> <!-- num visible -->
                      <copy src="column_right" trait="height" />
                      <div  src="menu()" trait="_itemHeight" />
                      <ceil>0</ceil>
@@ -296,6 +300,38 @@
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   <user11><copy src="xxnStrings()" trait="_optionEnhancedCameraInertia" /></user11> <!-- label -->
                </rect>
+               
+               <rect name="UI_PREF_TEST_R">
+                  <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user2>16</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>0</user4> <!-- slider min -->
+                  <user5>255</user5> <!-- slider max -->
+                  <user11>TEST TEST RED</user11> <!-- label -->
+                  <user12>TestR</user12> <!-- pref name -->
+               </rect>
+               <rect name="UI_PREF_TEST_G">
+                  <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user2>16</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>0</user4> <!-- slider min -->
+                  <user5>255</user5> <!-- slider max -->
+                  <user11>TEST TEST GREEN</user11> <!-- label -->
+                  <user12>TestG</user12> <!-- pref name -->
+               </rect>
+               <rect name="UI_PREF_TEST_B">
+                  <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user2>16</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>0</user4> <!-- slider min -->
+                  <user5>255</user5> <!-- slider max -->
+                  <user11>TEST TEST BLUE</user11> <!-- label -->
+                  <user12>TestB</user12> <!-- pref name -->
+               </rect>
+               
             </rect>
          </rect>
       </rect>
@@ -398,7 +434,7 @@
          </y>
          <height><copy src="child()" trait="height" /></height>
          
-         <rect name="video_defaults_button">
+         <rect name="xxn_defaults_button">
             <include src="NorthernUI\buttons\gamepad_control_or_button.xml"/>
             <_dxScanCode>279</_dxScanCode>
             <id>6</id>

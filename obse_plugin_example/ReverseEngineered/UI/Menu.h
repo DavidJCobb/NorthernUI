@@ -1,6 +1,5 @@
 #pragma once
 #include "obse/GameTiles.h"
-#include "Tile.h"
 #include "ReverseEngineered/_BASE.h"
 
 namespace RE {
@@ -35,6 +34,8 @@ namespace RE {
    };
 
    class Tile;
+   struct TileTemplate;
+   class TileMenu;
    class Menu { // sizeof == 0x28
       public:
          Menu();

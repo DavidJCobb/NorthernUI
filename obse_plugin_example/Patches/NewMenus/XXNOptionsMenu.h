@@ -59,6 +59,8 @@ class XXNOptionsMenu : public RE::Menu {
          kTileID_OptionCameraInertia_Left  = 41,
          kTileID_OptionCameraInertia_Right = 42,
          kTileID_OptionCameraInertia_Value = 43,
+         kTileID_GenericScrollbar   = 44,
+         kTileID_GenericScrollThumb = 45,
       };
       enum {
          kTraitID_CheckboxState = kTileValue_user20,
@@ -109,7 +111,7 @@ class XXNOptionsMenu : public RE::Menu {
       virtual void	HandleMouseUp(SInt32 tileID, RE::Tile* target);
       virtual void	HandleMouseover(SInt32 tileID, RE::Tile* target);
       virtual void	HandleMouseout(SInt32 tileID, RE::Tile* target);
-      //virtual void	HandleFrameMouseDown(SInt32 tileID, RE::Tile* target);
+      virtual void	HandleFrameMouseDown(SInt32 tileID, RE::Tile* target);
       virtual void	HandleFrameMouseWheel(SInt32 tileID, RE::Tile* target);
       //virtual void	HandleFrame();
       //virtual bool	HandleKeyboardInput(UInt32 inputChar);

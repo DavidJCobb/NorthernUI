@@ -1,5 +1,6 @@
 #include "VideoMenu.h"
 #include "ReverseEngineered/UI/Menus/VideoMenu.h"
+#include "ReverseEngineered/UI/Tile.h"
 #include "ReverseEngineered/GameSettings.h"
 #include "Services/Translations.h"
 #include "obse_common/SafeWrite.h"
