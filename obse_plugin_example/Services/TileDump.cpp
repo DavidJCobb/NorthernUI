@@ -4,53 +4,44 @@ void _traceOperator(RE::Tile::Value::Expression* op, const char* indent) {
    auto name = RE::TagIDToName(op->opcode);
    if (!name)
       name = "[UNKNOWN]";
-   switch (op->GetType()) {
-      case RE::Tile::Value::Expression::kType_Immediate:
-      case RE::Tile::Value::Expression::kType_Ref:
-         if (op->refPrev) {
-            auto p = op->refPrev;
-            while (p->prev)
-               p = p->prev;
-            if (p->opcode == 0x65) {
-               auto source = p->operand.ref;
-               if (source) {
-                  auto tile = source->owner->name.m_data;
-                  auto trait = RE::TagIDToName(source->id);
-                  if (trait)
-                     _MESSAGE("%s - %08X <%s src=\"%s\" trait=\"%s\" /> == %f", indent, op, name, tile, trait, op->operand.immediate);
-                  else
-                     _MESSAGE("%s - %08X <%s src=\"%s\" trait=\"0x%08X\" /> == %f", indent, op, name, tile, source->id, op->operand.immediate);
-               } else
-                  _MESSAGE("%s - %08X <%s src=\"?\" trait=\"?\" /> == %f", indent, op, name, op->operand.immediate);
-            } else {
-               _MESSAGE("%s - %08X <%s src=\"?\" trait=\"?\" /> == %f", indent, op, name, op->operand.immediate);
-            }
-         } else {
-            _MESSAGE("%s - %08X <%s>%f</%s>", indent, op, name, op->operand.immediate, name);
-         }
-         break;
+   RE::Tile::Value* source = nullptr;
+   {
+      auto p = op->refPrev;
+      if (p)
+         while (p->refPrev)
+            p = p->refPrev;
+      if (p->opcode == 0x65)
+         source = p->operand.ref;
    }
-   return;
-   //
-   // old code:
-   //
-   _MESSAGE("%s - (Expression*)%08X: opcode %03X (%s)", indent, op, op->opcode, RE::TagIDToName(op->opcode));
-   if (op->GetType() == op->kType_Immediate) {
-      _MESSAGE("%s    - const %f", indent, op->operand.immediate);
+   if (!source) {
+      if (op->isString) {
+         _MESSAGE("%s - %08X <%s>%s</%s>", indent, op, name, op->operand.string, name);
+      } else {
+         _MESSAGE("%s - %08X <%s>%f</%s>", indent, op, name, op->operand.immediate, name);
+      }
       return;
    }
-   auto root = op->GetRootExpression();
-   if (root && root->IsListHead()) {
-      auto value = root->operand.ref;
-      if (value) {
-         auto owner = value->owner;
-         if (owner) {
-            _MESSAGE("%s    - Root: Tile \"%s\" trait %s", indent, owner->name.m_data, RE::TagIDToName(value->id));
-            return;
-         }
-      }
+   auto tile  = source->owner->name.m_data;
+   auto trait = RE::TagIDToName(source->id);
+   if (source->bIsNum) {
+      if (trait)
+         _MESSAGE("%s - %08X <%s src=\"%s\" trait=\"%s\" /> == %f", indent, op, name, tile, trait, op->operand.immediate);
+      else
+         _MESSAGE("%s - %08X <%s src=\"%s\" trait=\"0x%08X\" /> == %f", indent, op, name, tile, source->id, op->operand.immediate);
+   } else if (source->num) {
+      if (trait)
+         _MESSAGE("%s - %08X <%s src=\"%s\" trait=\"%s\" /> == \"%s\" (with unused float %f on source trait)", indent, op, name, tile, trait, source->str.m_data, source->num);
+      else
+         _MESSAGE("%s - %08X <%s src=\"%s\" trait=\"0x%08X\" /> == \"%s\" (with unused float %f on source trait)", indent, op, name, tile, source->id, source->str.m_data, source->num);
+   } else {
+      if (trait)
+         _MESSAGE("%s - %08X <%s src=\"%s\" trait=\"%s\" /> == \"%s\"", indent, op, name, tile, trait, source->str.m_data);
+      else
+         _MESSAGE("%s - %08X <%s src=\"%s\" trait=\"0x%08X\" /> == \"%s\"", indent, op, name, tile, source->id, source->str.m_data);
    }
-   _MESSAGE("%s    - Unable to identify source.");
+   if (op->isString && op->operand.string) {
+      _MESSAGE("%s   ...and unused operator-side string \"%s\"", op->operand.string);
+   }
 }
 void _tryPrintSources(RE::Tile::Value* source) {
    auto e = source->operators;

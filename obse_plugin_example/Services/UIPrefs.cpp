@@ -70,6 +70,8 @@ float UIPrefManager::Pref::getValue(UInt32 askingMenuID) const {
 //
 
 UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) {
+   if (!name)
+      return nullptr;
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
       auto& pref = *it;
       if (pref.name == name)
@@ -78,6 +80,8 @@ UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) {
    return nullptr;
 }
 const UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) const {
+   if (!name)
+      return nullptr;
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
       auto& pref = *it;
       if (pref.name == name)

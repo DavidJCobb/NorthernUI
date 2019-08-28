@@ -128,7 +128,7 @@
       <user3><copy src="parent()" trait="user3" /></user3> <!-- step distance -->
       <user4><copy src="parent()" trait="user2" /></user4> <!-- jump distance -->
       <user5> <!-- starting value -->
-         <xxnPrefLoadValue><copy src="parent()" trait="user12" /></xxnPrefLoadValue>
+         <xxnPrefLoadValue src="parent()" trait="user12" />
       </user5>
       <user7><copy src="child(horizontal_scroll_marker)" trait="_value_scrolled_to"/> </user7>
       <user8><copy src="parent()" trait="user8" /></user8> <!-- visibility of slider value -->
@@ -312,11 +312,11 @@
             </onlyifnot>
             <add>
                <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
-               <xxnPrefResetValue><copy src="parent()" trait="user12" /></xxnPrefResetValue>
+               <xxnPrefResetValue src="parent()" trait="user12" />
             </add>
             <max src="parent()" trait="user1" />
             <min src="parent()" trait="user2" />
-            <xxnPrefSaveValue><copy src="parent()" trait="user12" /></xxnPrefSaveValue>
+            <xxnPrefSaveValue src="parent()" trait="user12" />
          </_value_scrolled_to>
          <user8>	<!-- for dragging - drag interval; ideally should compute to an integer -->
             <copy src="parent()" trait="width" />

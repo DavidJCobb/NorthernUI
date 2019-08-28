@@ -132,6 +132,8 @@ namespace CobbPatches {
             HACK_ForceLogAllCommandResults::s_enabled = flag;
          }
          void tileInfo(const char* args) {
+            constexpr char ce_selectorDescendant = '@';
+            //
             if (!args || args[0] != ' ') {
                _MESSAGE("tileInfo: You must specify a tile to search for, optionally preceded by a menu ID (decimal) and space.");
                return;
@@ -154,7 +156,7 @@ namespace CobbPatches {
                {
                   char* end = nullptr;
                   menuID = strtoul(args, &end, 10);
-                  if (!(end && *end == ' ')) {
+                  if (!(end && end != args && *end == ' ')) {
                      menuID = 0;
                   } else {
                      name = end + 1;
@@ -170,8 +172,46 @@ namespace CobbPatches {
                         tile = (RE::Tile*)menu;
                   }
                }
+               RE::Tile* target = nullptr;
+               std::string full = name;
+               std::string segment;
+               size_t from  = 0;
+               size_t until = std::string::npos;
+               while ((until = full.find(ce_selectorDescendant, from)) != std::string::npos) {
+                  segment = full.substr(from, until - from);
+                  if (!segment.size()) {
+                     _MESSAGE("tileInfo: bad path (blank component at char %d).", from);
+                     _MESSAGE("   %s", full.substr(0, from + 1));
+                     std::string line;
+                     line.resize(from, '-');
+                     line += '^';
+                     _MESSAGE("   %s", line.c_str());
+                     return;
+                  }
+                  if (strcmp(tile->name.m_data, segment.c_str()) == 0) {
+                     target = tile;
+                     break;
+                  }
+                  tile = RE::GetDescendantTileByName(tile, segment.c_str());
+                  from = until + 1;
+                  if (!tile)
+                     break;
+               }
+               if (tile && !target) { // handle string leftovers
+                  segment = full.substr(from);
+                  if (segment.size()) {
+                     if (strcmp(tile->name.m_data, segment.c_str()) == 0)
+                        target = tile;
+                     else
+                        target = RE::GetDescendantTileByName(tile, segment.c_str());
+                  } else
+                     target = tile;
+               }
+               tile = target;
+               /*// code for not allowing '@' to specify paths
                if (!tile->name.m_data || strcmp(tile->name.m_data, name) != 0)
                   tile = RE::GetDescendantTileByName(tile, name);
+               //*/
             }
             if (tile) {
                _MESSAGE("tileInfo: tile %s found.", tile->name.m_data);

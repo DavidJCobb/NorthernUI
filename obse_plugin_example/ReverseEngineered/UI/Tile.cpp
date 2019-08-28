@@ -279,18 +279,18 @@ namespace RE {
    const char* Tile::Value::Expression::GetStringValue() const {
       if (this->isString)
          return this->operand.string;
-      if (this->opcode == kTagID_copy) {
-         auto p = this->refPrev;
-         while (p) {
-            if (p->isString)
-               return p->operand.string;
-            if (p->opcode == 0x65) {
-               auto owner = p->operand.ref;
-               if (owner)
-                  return owner->str.m_data;
-            }
-            p = p->refPrev;
+      auto p = this->refPrev;
+      while (p) {
+         if (p->isString)
+            return p->operand.string;
+         if (p->opcode == 0x65) {
+            auto owner = p->operand.ref;
+            if (owner)
+               return owner->str.m_data;
          }
+         if (p->opcode != kTagID_copy) // check for any operators that can return a string -- but note: I'm not sure we can handle MenuQue ops without access to MenuQue string operator state
+            return nullptr;
+         p = p->refPrev;
       }
       return nullptr;
    }

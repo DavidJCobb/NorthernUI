@@ -274,7 +274,7 @@ namespace CobbPatches {
                         const char* str = current->GetStringValue();
                         if (!str)
                            return true;
-                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, current->operand.string); // TODO: REMOVE LOGGING
+                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, str); // TODO: REMOVE LOGGING
                         UInt32 menuID = 0;
                         {
                            auto tile = kThis->owner;
@@ -285,14 +285,29 @@ namespace CobbPatches {
                            }
                         }
                         UIPrefManager::GetInstance().setPrefValue(str, kThis->num, menuID);
+                        //
+                        // For some reason, our owning trait can end up having our argument as its 
+                        // string value. MenuQue shenanigans involving string operators, maybe? 
+                        // Force it to a number.
+                        //
+                        kThis->bIsNum = 1;
+                        CALL_MEMBER_FN(&kThis->str, Replace_MinBufLen)(nullptr, 0);
                      }
                      return true;
                   case _traitPrefLoad:
                      {
                         const char* str = current->GetStringValue();
                         kThis->num = 0.0F;
+                        //
+                        // For some reason, our owning trait can end up having our argument as its 
+                        // string value. MenuQue shenanigans involving string operators, maybe? 
+                        // Force it to a number.
+                        //
+                        kThis->bIsNum = 1;
+                        CALL_MEMBER_FN(&kThis->str, Replace_MinBufLen)(nullptr, 0);
+                        //
                         if (str) {
-                           _MESSAGE("XML has asked to load pref %s.", current->operand.string); // TODO: REMOVE LOGGING
+                           _MESSAGE("XML has asked to load pref %s.", str); // TODO: REMOVE LOGGING
                            UInt32 menuID = 0;
                            {
                               auto tile = kThis->owner;
@@ -302,7 +317,7 @@ namespace CobbPatches {
                                     menuID = menu->GetID();
                               }
                            }
-                           float result = UIPrefManager::GetInstance().getPrefCurrentValue(current->operand.string, menuID);
+                           float result = UIPrefManager::GetInstance().getPrefCurrentValue(str, menuID);
                            kThis->num = isnan(result) ? 0.0F : result;
                         }
                      }
@@ -310,9 +325,7 @@ namespace CobbPatches {
                   case _traitPrefReset:
                      {
                         const char* str = current->GetStringValue();
-                        kThis->num = 0.0F;
                         if (str) {
-                           _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", current->operand.string, kThis->num); // TODO: REMOVE LOGGING
                            UInt32 menuID = 0;
                            {
                               auto tile = kThis->owner;
@@ -322,11 +335,24 @@ namespace CobbPatches {
                                     menuID = menu->GetID();
                               }
                            }
-                           auto& manager = UIPrefManager::GetInstance();
-                           manager.resetPrefValue(current->operand.string, menuID);
-                           float result = UIPrefManager::GetInstance().getPrefCurrentValue(current->operand.string, menuID);
-                           kThis->num = isnan(result) ? 0.0F : result;
+                           if (kThis->num == (float)RE::kEntityID_true) {
+                              _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", str, kThis->num); // TODO: REMOVE LOGGING
+                              auto& manager = UIPrefManager::GetInstance();
+                              manager.resetPrefValue(current->operand.string, menuID);
+                              float result = UIPrefManager::GetInstance().getPrefCurrentValue(str, menuID);
+                              kThis->num = isnan(result) ? 0.0F : result;
+                           } else
+                              kThis->num = 0.0F;
+                        } else {
+                           kThis->num = 0.0F;
                         }
+                        //
+                        // For some reason, our owning trait can end up having our argument as its 
+                        // string value. MenuQue shenanigans involving string operators, maybe? 
+                        // Force it to a number.
+                        //
+                        kThis->bIsNum = 1;
+                        CALL_MEMBER_FN(&kThis->str, Replace_MinBufLen)(nullptr, 0);
                      }
                      return true;
                }

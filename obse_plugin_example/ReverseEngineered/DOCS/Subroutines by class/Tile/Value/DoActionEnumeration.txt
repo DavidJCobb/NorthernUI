@@ -434,20 +434,98 @@ void Tile::Value::DoActionEnumeration(bool forceUpdateInbound) {
          // at 0x0058C82B
          // inlined: esp20->~BSStringT(); // implicit anyway, or it should be, so don't uncomment it
       } while (current = current->next); // at 0x0058C859
-      if (nestedResults.numItems) {
-         do {
-            NiTListBase<float>::Node* eax = nestedResults.start;
-            NiTListBase<float>::Node* ecx = eax;
-            this->num = /*float*/ eax->data;
-            eax = eax->next;
-            nestedResults.start = eax;
-            if (eax)
-               eax->prev = nullptr;
-            else
-               nestedResults.end = nullptr;
-            nestedResults.FreeNode(ecx);
-         } while (--nestedResults.numItems);
-      }
+      #if MENUQUE_INSTALLED == 0
+         if (nestedResults.numItems) {
+            do {
+               NiTListBase<float>::Node* eax = nestedResults.start;
+               NiTListBase<float>::Node* ecx = eax;
+               this->num = /*float*/ eax->data;
+               eax = eax->next;
+               nestedResults.start = eax;
+               if (eax)
+                  eax->prev = nullptr;
+               else
+                  nestedResults.end = nullptr;
+               nestedResults.FreeNode(ecx);
+            } while (--nestedResults.numItems);
+         }
+      #else
+         // code here is the code for a call to MQ_129D0(this):
+         auto esi = &nestedResults; // was cached in a MQ static var earlier
+         if (esi && esi->numItems) {
+            assert(esi->unk04);
+            float ebp04;
+            do {
+               auto eax = esi->unk04;
+               esi->unk04 = eax->unk00;
+               if (ecx)
+                  ecx->prev = nullptr;
+               else
+                  esi->end = nullptr;
+               float ebp04 = eax->data;
+               esi->FreeNode(eax);
+               esi->numItems--;
+               MQ_512F0->unk00 = ebp04;
+               
+            } while (esi->unk04);
+         }
+         esi = *MQ_512F8;
+         if (esi && esi->numItems) {
+            assert(esi->unk04);
+            do {
+               auto eax = esi->unk04;
+               esi->unk04 = eax->unk00;
+               if (ecx)
+                  ecx->prev = nullptr;
+               else
+                  esi->end = nullptr;
+               auto edi = eax->data;
+               esi->FreeNode(eax);
+               esi->numItems--;
+               MQ_51304->MC_1CFB0(); // decltype(MQ_51304) == BSStringT*
+               if (edi) {
+                  edi->~BSStringT();
+                  delete edi;
+               }
+            } while (esi->unk04);
+         }
+         if (this) {
+            if (this->operators->next) {
+               if (this->id == 0xFDE && this->owner->GetTypeID() == 0x387) {
+                  if (/*bool*/MQ_11F30(this)) { // getter; doesn't modify (this)
+                     this->unk2C |= 2;
+                  }
+               } else if (this->id == 0xFE6 && this->owner->GetTypeID() == 0x386) {
+                  if (/*bool*/MQ_11F30(this)) { // getter; doesn't modify (this)
+                     this->unk2C |= 0x20;
+                  }
+               }
+               bool ebp0B = false;
+               bool bl    = true;
+               if (this->str.m_data == nullptr) {
+                  auto al = *(UInt8*)MQ_5130D;
+                  if (al == 2 || (al == 3 && /*bool*/MQ_11F30(this) && !this->bIsNum)) {
+                     this->str.Replace_MinBufLen(" ", 0);
+                     ebp0B = true;
+                     bl    = false;
+                  }
+               } else
+                  bl = false;
+               *(UInt8*)MQ_5130D = 0;
+               this->unk1B  = ebp0B; // unused byte in vanilla; co-opted by MenuQue; purpose unknown
+               this->bIsNum = bl;
+               MQ_11EB0(this); // deletes two static BSStringTs and MQ_512F8
+               edx = this->operators;
+               if (edx->next) {
+                  *MQ_512EC = 0;
+                  *MQ_512F0 = 0;
+                  *MQ_512F4 = 0;
+                  *MQ_512E4 = nullptr; // pointer to nestedResults
+               }
+            }
+         }
+         //
+      #endif
    }
    esi = this; // at 0x0058C898
    auto eax = this->operators;
