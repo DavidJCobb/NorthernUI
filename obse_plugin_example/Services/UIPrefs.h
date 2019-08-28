@@ -4,36 +4,28 @@ namespace cobb {
    struct XMLDocument;
 };
 
+#define XXN_UI_ALL_PREFS_ARE_FLOATS 1
+
 class UIPrefManager {
+   private:
+      UIPrefManager(); // patches the engine for a menu-close hook
    public:
       static UIPrefManager& GetInstance() {
          static UIPrefManager instance;
          return instance;
       };
 
-      enum PrefType {
-         kPrefType_Float,
-         kPrefType_String,
-      };
       struct Pref {
          std::string name;
          float       defaultFloat = 0.0F;
-         std::string defaultString;
          float       currentFloat = 0.0F;
-         std::string currentString;
-         PrefType type = kPrefType_Float;
+         float       pendingFloat = 0.0F;
+         UInt32      pendingChangesFromMenuID = 0; // what menu has written pending changes?
 
-         void initialize() {
-            switch (this->type) {
-               case kPrefType_Float:
-                  this->currentFloat  = this->defaultFloat;
-                  this->currentString = "";
-                  break;
-               case kPrefType_String:
-                  this->currentString = this->defaultString;
-                  this->currentFloat  = 0.0F;
-                  break;
-            }
+         void  commitPendingChanges(UInt32 closingMenuID);
+         float getValue(UInt32 askingMenuID) const;
+         void  initialize() {
+            this->currentFloat = this->defaultFloat;
          }
       };
       //
@@ -46,9 +38,17 @@ class UIPrefManager {
       void processDocument(cobb::XMLDocument&);
       //
    public:
-      float getPrefFloatCurrentValue(const char* name) const;
-      float getPrefFloatDefaultValue(const char* name) const;
+      float getPrefCurrentValue(const char* name, UInt32 askingMenuID = 0) const;
+      float getPrefDefaultValue(const char* name) const;
+
+      void resetPrefValue(const char* name, UInt32 menuID);
+      void setPrefValue(const char* name, float v, UInt32 menuID);
 
       void dumpDefinitions() const;
       void loadDefinitions();
+
+      void onMenuClose(UInt32 menuID);
+
+      void loadUserValues();
+      void saveUserValues() const;
 };

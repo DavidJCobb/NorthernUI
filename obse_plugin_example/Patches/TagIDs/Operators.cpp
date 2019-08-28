@@ -6,6 +6,7 @@
 #include "Fun/x86Reader.h"
 #include "Miscellaneous/math.h"
 #include "ReverseEngineered/NetImmerse/NiTypes.h"
+#include "ReverseEngineered/UI/Menu.h"
 #include "ReverseEngineered/UI/Tile.h"
 #include "Patches/CleanUpAfterMenuQue.h"
 #include "Services/INISettings.h"
@@ -270,31 +271,52 @@ namespace CobbPatches {
                      return true;
                   case _traitPrefSave:
                      if (current->isString) {
-                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, current->operand.string);
-                        //
-                        // save the pref.
-                        // the save should be carried out when this operator's owning menu is closed.
-                        //
+                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, current->operand.string); // TODO: REMOVE LOGGING
+                        UInt32 menuID = 0;
+                        {
+                           auto tile = kThis->owner;
+                           if (tile) {
+                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+                              if (menu)
+                                 menuID = menu->GetID();
+                           }
+                        }
+                        UIPrefManager::GetInstance().setPrefValue(current->operand.string, kThis->num, menuID);
                      }
                      return true;
                   case _traitPrefLoad:
                      if (current->isString) {
                         _MESSAGE("XML has asked to load pref %s.", current->operand.string); // TODO: REMOVE LOGGING
-                        float result = UIPrefManager::GetInstance().getPrefFloatCurrentValue(current->operand.string);
+                        UInt32 menuID = 0;
+                        {
+                           auto tile = kThis->owner;
+                           if (tile) {
+                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+                              if (menu)
+                                 menuID = menu->GetID();
+                           }
+                        }
+                        float result = UIPrefManager::GetInstance().getPrefCurrentValue(current->operand.string, menuID);
                         kThis->num = isnan(result) ? 0.0F : result;
                      } else
                         kThis->num = 0.0F;
                      return true;
                   case _traitPrefReset:
                      if (current->isString) {
-                        _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", current->operand.string, kThis->num);
+                        _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", current->operand.string, kThis->num); // TODO: REMOVE LOGGING
                         if (kThis->num = RE::kEntityID_true) {
-                           //
-                           // TODO
-                           //
-                           // queue the pref to reset, and return the default value as the result of this operator.
-                           // the reset should be carried out when this operator's owning menu is closed.
-                           //
+                           UInt32 menuID = 0;
+                           {
+                              auto tile = kThis->owner;
+                              if (tile) {
+                                 auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+                                 if (menu)
+                                    menuID = menu->GetID();
+                              }
+                           }
+                           auto& manager = UIPrefManager::GetInstance();
+                           manager.resetPrefValue(current->operand.string, menuID);
+                           kThis->num = UIPrefManager::GetInstance().getPrefCurrentValue(current->operand.string, menuID);
                         } else
                            kThis->num = 0.0F;
                      }

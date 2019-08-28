@@ -324,6 +324,7 @@ extern "C" {
             auto& prefs = UIPrefManager::GetInstance();
             prefs.loadDefinitions();
             prefs.dumpDefinitions(); // DEBUG DEBUG DEBUG
+            prefs.loadUserValues();
          }
       }
       obse->SetOpcodeBase(0x28D0); // We may use 0x28D0 to 0x28DF, inclusive

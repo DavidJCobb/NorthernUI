@@ -1,7 +1,10 @@
 #include "UIPrefs.h"
 #include "Miscellaneous/file.h"
+#include "Miscellaneous/strings.h"
 #include "Miscellaneous/xml.h"
 #include "obse/Utilities.h" // GetOblivionDirectory
+#include "obse_common/SafeWrite.h"
+#include "ReverseEngineered\UI\Menu.h"
 
 namespace {
    const std::string& GetPrefDirectory() {
@@ -28,6 +31,44 @@ namespace {
    }
 }
 
+namespace {
+   void _stdcall HookInner(RE::Menu* menu) {
+      if (menu)
+         UIPrefManager::GetInstance().onMenuClose(menu->GetID());
+   }
+   __declspec(naked) void HookOuter() {
+      _asm {
+         mov  eax, 0x00584300; // reproduce patched-over call to FadeMenu
+         call eax;
+         push esi;
+         call HookInner; // stdcall
+         mov  eax, 0x0058479F;
+         jmp  eax;
+      }
+   }
+}
+UIPrefManager::UIPrefManager() {
+   WriteRelJump(0x0058479A, (UInt32)&HookOuter);
+}
+
+//
+
+void UIPrefManager::Pref::commitPendingChanges(UInt32 closingMenuID) {
+   if (this->pendingChangesFromMenuID == closingMenuID) {
+      this->pendingChangesFromMenuID = 0;
+      this->currentFloat = this->pendingFloat;
+      this->pendingFloat = 0.0F;
+   }
+}
+float UIPrefManager::Pref::getValue(UInt32 askingMenuID) const {
+   if (askingMenuID)
+      if (this->pendingChangesFromMenuID == askingMenuID)
+         return this->pendingFloat;
+   return this->currentFloat;
+}
+
+//
+
 UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) {
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
       auto& pref = *it;
@@ -44,17 +85,32 @@ const UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) const 
    }
    return nullptr;
 }
-float UIPrefManager::getPrefFloatCurrentValue(const char* name) const {
+
+float UIPrefManager::getPrefCurrentValue(const char* name, UInt32 askingMenuID) const {
    auto pref = this->getPrefByName(name);
    if (pref)
-      return pref->currentFloat;
+      return pref->getValue(askingMenuID);
    return NAN;
 }
-float UIPrefManager::getPrefFloatDefaultValue(const char* name) const {
+float UIPrefManager::getPrefDefaultValue(const char* name) const {
    auto pref = this->getPrefByName(name);
    if (pref)
       return pref->defaultFloat;
    return NAN;
+}
+void UIPrefManager::resetPrefValue(const char* name, UInt32 menuID) {
+   auto pref = this->getPrefByName(name);
+   if (!pref)
+      return;
+   pref->pendingFloat = pref->defaultFloat;
+   pref->pendingChangesFromMenuID = menuID;
+}
+void UIPrefManager::setPrefValue(const char* name, float v, UInt32 menuID) {
+   auto pref = this->getPrefByName(name);
+   if (!pref)
+      return;
+   pref->pendingFloat = v;
+   pref->pendingChangesFromMenuID = menuID;
 }
 //
 void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
@@ -66,7 +122,7 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
       if (token.code == cobb::kXMLToken_ElementOpen) {
          if (nesting == 0) {
             if (token.name != "prefset") {
-               _MESSAGE("ERROR: The root node must be a <prefset /> element.");
+               _MESSAGE("ERROR: The root node must be a <prefset /> element. Aborting processing for this file.");
                //
                // TODO: decide on better error handling than just aborting.
                //
@@ -75,7 +131,7 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
          }
          if (token.name == "pref") {
             if (isInPref) {
-               _MESSAGE("ERROR: <pref /> elements cannot be nested.");
+               _MESSAGE("ERROR: <pref /> elements cannot be nested. Aborting processing for this file.");
                //
                // TODO: decide on better error handling than just aborting.
                //
@@ -98,8 +154,7 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
                currentPref.defaultFloat = f;
                continue;
             }
-            std::swap(currentPref.defaultString, token.value); // we're never gonna use these tokens again, so just steal the strings with swap instead of wasting overhead on a copy-assign
-            currentPref.type = kPrefType_String;
+            _MESSAGE("WARNING: Cannot assign value \"%s\" to pref \"%\". Values must be floats.", val, currentPref.name.c_str());
             continue;
          }
       } else if (token.code == cobb::kXMLToken_ElementClose) {
@@ -120,11 +175,7 @@ void UIPrefManager::dumpDefinitions() const {
    _MESSAGE("Dumping list of prefs in UIPrefManager...");
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
       auto& pref = *it;
-      if (pref.type == kPrefType_Float) {
-         _MESSAGE(" - %s=%f [default %f]", pref.name.c_str(), pref.currentFloat, pref.defaultFloat);
-      } else if (pref.type == kPrefType_String) {
-         _MESSAGE(" - %s=%s", pref.name.c_str(), pref.currentString.c_str());
-      }
+      _MESSAGE(" - %s=%f [default %f]", pref.name.c_str(), pref.currentFloat, pref.defaultFloat);
    }
    _MESSAGE(" - Done.");
 }
@@ -148,7 +199,10 @@ void UIPrefManager::loadDefinitions() {
    cobb::XMLDocument doc;
    {  // Configure the XML document.
       //
-      // TODO: add all UI XML entities
+      // TODO: add all UI XML entities; best if we don't do this manually but 
+      // instead iterate through all entities that have been registered in-
+      // memory; downside is we then need to delay this load process until 
+      // after the UI engine has set itself up
       //
       doc.stripWhitespace = true;
    }
@@ -159,6 +213,9 @@ void UIPrefManager::loadDefinitions() {
          //
       } else {
          {  // Filename check: *.xml
+            // Do the check ourselves: online searches say that FindFirstFile 
+            // calls with "*.txt" are treated the same as "*.txt*", so we can't 
+            // use that to do the filtering for us.
             size_t i = strlen(state.cFileName);
             if (i < 4)
                continue;
@@ -196,4 +253,127 @@ void UIPrefManager::loadDefinitions() {
    } while (FindNextFileA(handle, &state));
    FindClose(handle);
    _MESSAGE(" - Done.");
+}
+
+void UIPrefManager::onMenuClose(UInt32 menuID) {
+   bool needsSave = false;
+   for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
+      if (it->pendingChangesFromMenuID)
+         needsSave = true;
+      it->commitPendingChanges(menuID);
+   }
+   if (needsSave)
+      this->saveUserValues();
+}
+
+namespace {
+   constexpr char c_iniComment = ';';
+   constexpr char c_iniCategoryStart = '[';
+   constexpr char c_iniCategoryEnd   = ']';
+   constexpr char c_iniKeyValueDelim = '=';
+}
+void UIPrefManager::loadUserValues() {
+   _MESSAGE("Loading the user's UI prefs...");
+   const std::string& path = GetSavePath();
+   std::ifstream file;
+   file.open(path);
+   if (!file) {
+      _MESSAGE("Unable to open INI file for reading.");
+      return;
+   }
+   std::string category;
+   std::string key;
+   while (!file.bad() && !file.eof()) {
+      char buffer[1024];
+      file.getline(buffer, sizeof(buffer));
+      buffer[1023] = '\0';
+      //
+      bool   foundAny   = false; // found anything that isn't whitespace?
+      bool   isCategory = false;
+      bool   isValue    = false;
+      UInt32 i = 0;
+      char   c = buffer[0];
+      if (!c)
+         continue;
+      do {
+         if (!foundAny) {
+            if (c == ' ' || c == '\t')
+               continue;
+            if (c == c_iniComment) // lines starting with semicolons are comments
+               break;
+            foundAny = true;
+            if (c == c_iniCategoryStart) {
+               isCategory = true;
+               category   = "";
+               continue;
+            }
+            key = "";
+         }
+         if (isCategory) {
+            if (c == c_iniCategoryEnd)
+               break;
+            category += c;
+            continue;
+         }
+         if (c == c_iniKeyValueDelim) {
+            //
+            // Found the first '=' in the setting; the next char is the start of the value.
+            //
+            i++;
+            break;
+         }
+         key += c;
+      } while (++i < sizeof(buffer) && (c = buffer[i]));
+      if (!key.size())
+         continue;
+      auto pref = this->getPrefByName(key.c_str());
+      if (!pref) {
+         _MESSAGE("Discarding unrecognized pref \"%s\"...", key.c_str());
+         continue;
+      }
+      //
+      // Code from here on out assumes that (i) will not be modified -- it will always refer 
+      // either to the end of the line or to the first character after the '='.
+      //
+      {  // Allow comments on the same line as a setting (but make sure we change this if we add string settings!)
+         UInt32 j = i;
+         do {
+            if (buffer[j] == '\0')
+               break;
+            if (buffer[j] == ';') {
+               buffer[j] = '\0';
+               break;
+            }
+         } while (++j < sizeof(buffer));
+      }
+      float value;
+      if (cobb::string_to_float(buffer + i, value)) {
+         pref->currentFloat = value;
+         pref->pendingFloat = 0.0F;
+         pref->pendingChangesFromMenuID = 0;
+      } else {
+         _MESSAGE("Pref \"%s\" has an invalid value: \"%s\" is not a float.", key.c_str(), buffer + i);
+      }
+   }
+   file.close();
+   _MESSAGE("UI prefs loaded.");
+}
+void UIPrefManager::saveUserValues() const {
+   _MESSAGE("Saving the user's UI prefs...");
+   const std::string& path = GetSavePath();
+   std::fstream file;
+   file.open(path, std::ios_base::out | std::ios_base::trunc);
+   if (!file) {
+      _MESSAGE("Unable to open INI file for writing.");
+      return;
+   }
+   file.write("[PrefValues]\n", strlen("[PrefValues]\n"));
+   for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
+      auto& pref = *it;
+      std::string line;
+      cobb::snprintf(line, "%s=%f\n", pref.name, pref.currentFloat);
+      file.write(line.c_str(), line.size());
+   }
+   file.close();
+   _MESSAGE("UI prefs saved.");
 }
