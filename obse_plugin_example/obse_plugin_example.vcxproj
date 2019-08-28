@@ -124,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Fun\x86Reader.cpp" />
+    <ClCompile Include="Miscellaneous\file.cpp" />
     <ClCompile Include="Miscellaneous\InGameDate.cpp" />
     <ClCompile Include="Miscellaneous\math.cpp" />
     <ClCompile Include="Miscellaneous\rotation.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="Fun\x86Writer.h" />
     <ClInclude Include="Miscellaneous\CRC24.h" />
     <ClInclude Include="Miscellaneous\CRC32.h" />
+    <ClInclude Include="Miscellaneous\file.h" />
     <ClInclude Include="Miscellaneous\InGameDate.h" />
     <ClInclude Include="Miscellaneous\large_bitset.h" />
     <ClInclude Include="Miscellaneous\math.h" />

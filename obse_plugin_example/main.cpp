@@ -319,6 +319,12 @@ extern "C" {
          g_msg = msgIntfc;
 
          (NorthernUI::L10N::StrManager::GetInstance()).Update(); // load translatable strings from a file
+
+         {
+            auto& prefs = UIPrefManager::GetInstance();
+            prefs.loadDefinitions();
+            prefs.dumpDefinitions(); // DEBUG DEBUG DEBUG
+         }
       }
       obse->SetOpcodeBase(0x28D0); // We may use 0x28D0 to 0x28DF, inclusive
       {  // Register script commands.

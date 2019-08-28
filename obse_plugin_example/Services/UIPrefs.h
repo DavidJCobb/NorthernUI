@@ -19,7 +19,22 @@ class UIPrefManager {
          std::string name;
          float       defaultFloat = 0.0F;
          std::string defaultString;
+         float       currentFloat = 0.0F;
+         std::string currentString;
          PrefType type = kPrefType_Float;
+
+         void initialize() {
+            switch (this->type) {
+               case kPrefType_Float:
+                  this->currentFloat  = this->defaultFloat;
+                  this->currentString = "";
+                  break;
+               case kPrefType_String:
+                  this->currentString = this->defaultString;
+                  this->currentFloat  = 0.0F;
+                  break;
+            }
+         }
       };
       //
    private:
@@ -32,6 +47,9 @@ class UIPrefManager {
       //
    public:
       float getPrefFloatDefaultValue(const char* name) const;
+
+      void dumpDefinitions() const;
+      void loadDefinitions();
 };
 
 void _RunPrefXMLParseTest();

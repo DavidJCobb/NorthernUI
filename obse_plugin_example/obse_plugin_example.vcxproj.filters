@@ -120,6 +120,7 @@
     <ClCompile Include="ScriptCommands\XInput.cpp" />
     <ClCompile Include="Services\UIPrefs.cpp" />
     <ClCompile Include="Miscellaneous\xml.cpp" />
+    <ClCompile Include="Miscellaneous\file.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -8039,6 +8040,7 @@
     <ClInclude Include="ReverseEngineered\Forms\Components\TESModel.h" />
     <ClInclude Include="Services\UIPrefs.h" />
     <ClInclude Include="Miscellaneous\xml.h" />
+    <ClInclude Include="Miscellaneous\file.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

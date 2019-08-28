@@ -23,17 +23,19 @@ namespace CobbPatches {
       //  - Because there is no HandleMouseUp, clicks forwarded from keyboard navigation 
       //    do nothing.
       //
-      // Solution:
+      // Here's the solution:
       //
-      //  - Patch in a HandleMouseUp handler that recognizes the exit and auto-attempt 
-      //    buttons.
+      //  - We replace HandleNavigationInput with a function that teleports the cursor 
+      //    as needed in response to directional inputs; this allows gamepad users to 
+      //    move the lockpick.
       //
-      //  - Have that handler also recognize Tile ID #9001 as a minigame click.
+      //  - We add a HandleMouseUp handler that reacts to tile ID #9001, treating it as 
+      //    a minigame click. An XBUTTONA handler in the menu XML can leverage this to 
+      //    allow gamepad users to try to fix a tumbler in place.
       //
-      //  - No-op HandleNavigationInput.
-      //
-      // Of course, we also want to patch keyboard navigation into the minigame, so we 
-      // don't just no-op HandleNavigationInput; we replace it entirely.
+      //     - Our core gamepad support code forwards gamepad buttons to the UI on 
+      //       press, not on release, so HandleMouseUp, despite its name, is firing 
+      //       when the player presses A down, not when the player releases A.
       //
       namespace MinigameKeynav {
          static bool s_userPressedUp = false;
@@ -214,7 +216,7 @@ namespace CobbPatches {
       void Apply() {
          MinigameKeynav::Apply();
          GamepadMappingFixes::Apply();
-         Debugging::Apply();
+         //Debugging::Apply();
       };
    };
 };

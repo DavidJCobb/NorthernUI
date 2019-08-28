@@ -1,5 +1,32 @@
 #include "UIPrefs.h"
+#include "Miscellaneous/file.h"
 #include "Miscellaneous/xml.h"
+#include "obse/Utilities.h" // GetOblivionDirectory
+
+namespace {
+   const std::string& GetPrefDirectory() {
+      static std::string path;
+      if (path.empty()) {
+         std::string	runtimePath = GetOblivionDirectory();
+         if (!runtimePath.empty()) {
+            path = runtimePath;
+            path += "Data\\NorthernUI\\prefs\\";
+         }
+      }
+      return path;
+   }
+   const std::string& GetSavePath() {
+      static std::string path;
+      if (path.empty()) {
+         std::string	runtimePath = GetOblivionDirectory();
+         if (!runtimePath.empty()) {
+            path = runtimePath;
+            path += "Data\\NorthernUI\\prefs\\saved.ini";
+         }
+      }
+      return path;
+   }
+}
 
 UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) {
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
@@ -55,7 +82,7 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
          if (!isInPref)
             continue;
          if (token.name == "name") {
-            currentPref.name = token.name;
+            std::swap(currentPref.name, token.value); // we're never gonna use these tokens again, so just steal the strings with swap instead of wasting overhead on a copy-assign
             continue;
          } else if (token.name == "default") {
             auto  val = token.value.c_str();
@@ -65,7 +92,7 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
                currentPref.defaultFloat = f;
                continue;
             }
-            currentPref.defaultString = token.value;
+            std::swap(currentPref.defaultString, token.value); // we're never gonna use these tokens again, so just steal the strings with swap instead of wasting overhead on a copy-assign
             currentPref.type = kPrefType_String;
             continue;
          }
@@ -73,13 +100,93 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
          --nesting;
          if (token.name != "pref")
             continue;
-         if (currentPref.name.size())
+         if (currentPref.name.size()) {
+            currentPref.initialize();
             this->prefs.push_back(currentPref);
+         }
          currentPref = Pref();
          isInPref = false;
       }
    }
 }
+
+void UIPrefManager::dumpDefinitions() const {
+   _MESSAGE("Dumping list of prefs in UIPrefManager...");
+   for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
+      auto& pref = *it;
+      if (pref.type == kPrefType_Float) {
+         _MESSAGE(" - %s=%f [default %f]", pref.name.c_str(), pref.currentFloat, pref.defaultFloat);
+      } else if (pref.type == kPrefType_String) {
+         _MESSAGE(" - %s=%s", pref.name.c_str(), pref.currentString.c_str());
+      }
+   }
+   _MESSAGE(" - Done.");
+}
+void UIPrefManager::loadDefinitions() {
+   _MESSAGE("UIPrefManager::loadDefinitions()");
+   const std::string& root = GetPrefDirectory();
+   WIN32_FIND_DATA state;
+   HANDLE handle;
+   {
+      std::string a = root + '*';
+      handle = FindFirstFileA(a.c_str(), &state);
+   }
+   if (handle == INVALID_HANDLE_VALUE) {
+      auto e = GetLastError();
+      if (e != ERROR_FILE_NOT_FOUND) {
+         _MESSAGE("FindFirstFile failed (%d)", e);
+      }
+      _MESSAGE(" - Done.");
+      return;
+   }
+   do {
+      if (state.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+         //
+         // We do not currently support subfolders.
+         //
+      } else {
+         std::string path = root + state.cFileName;
+         if (state.nFileSizeHigh) {
+            _MESSAGE(" - File is too large: %s", path.c_str());
+            continue;
+         }
+         std::ifstream file;
+         file.open(path, std::ifstream::binary);
+         if (!file) {
+            _MESSAGE(" - Failed to open file: %s", path.c_str());
+            continue;
+         }
+         std::string data;
+         cobb::ifstream_to_string(data, file, state.nFileSizeLow);
+         if (file.bad() || file.fail()) {
+            file.close();
+            data.clear();
+            _MESSAGE(" - Failed to read file: %s", path.c_str());
+            continue;
+         }
+         file.close();
+         cobb::XMLDocument doc;
+         //
+         // TODO: add all UI XML entities
+         //
+         doc.stripWhitespace = true;
+         //
+         cobb::parseXML(doc, data.c_str(), data.size());
+         this->processDocument(doc);
+         data.clear();
+         _MESSAGE(" - Loaded: %s", path.c_str());
+      }
+   } while (FindNextFileA(handle, &state));
+   FindClose(handle);
+   _MESSAGE(" - Done.");
+}
+
+
+
+
+
+
+
 
 void _RunPrefXMLParseTest() {
    const char* code[] = {
