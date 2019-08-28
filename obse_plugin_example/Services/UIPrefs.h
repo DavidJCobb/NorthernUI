@@ -46,10 +46,9 @@ class UIPrefManager {
       void processDocument(cobb::XMLDocument&);
       //
    public:
+      float getPrefFloatCurrentValue(const char* name) const;
       float getPrefFloatDefaultValue(const char* name) const;
 
       void dumpDefinitions() const;
       void loadDefinitions();
 };
-
-void _RunPrefXMLParseTest();

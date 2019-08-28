@@ -34,6 +34,7 @@ namespace cobb {
       std::vector<CustomEntity> entities;
       bool stripWhitespace = false;
 
+      void clear(); // for looping over multiple files, it's better to create one XMLDocument outside of the loop and clear it every iteration; that way, you only need to configure it once
       void defineEntity(const char* entity, const char* substitution);
 
       //

@@ -74,6 +74,9 @@ namespace {
 };
 
 namespace cobb {
+   void XMLDocument::clear() {
+      this->tokens.clear();
+   }
    bool XMLDocument::meetsStrictRequirements() const {
       bool   foundRoot = false;
       UInt32 nesting = 0;

@@ -121,6 +121,7 @@
     <ClCompile Include="Services\UIPrefs.cpp" />
     <ClCompile Include="Miscellaneous\xml.cpp" />
     <ClCompile Include="Miscellaneous\file.cpp" />
+    <ClCompile Include="Miscellaneous\UnitTests\xml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -8041,6 +8042,7 @@
     <ClInclude Include="Services\UIPrefs.h" />
     <ClInclude Include="Miscellaneous\xml.h" />
     <ClInclude Include="Miscellaneous\file.h" />
+    <ClInclude Include="Miscellaneous\UnitTests\xml.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

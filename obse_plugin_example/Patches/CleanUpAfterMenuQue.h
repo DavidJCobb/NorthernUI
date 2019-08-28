@@ -31,7 +31,7 @@ struct MenuQueState {
    enum OBSEVersion : UInt32 { // version as reported by OBSE, though I don't yet know whether MQ actually updated it
       kOBSEVersion_16b = 0x00000010,
       //
-      kOBSEVersion_Unknown = -1,
+      kOBSEVersion_Unknown = 0xFFFFFFFF,
    };
    //
    bool   detected = false;

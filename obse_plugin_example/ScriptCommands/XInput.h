@@ -1,7 +1,7 @@
 #pragma once
 #include "obse/CommandTable.h"
 
-class OBSEInterface;
+struct OBSEInterface;
 
 extern CommandInfo kCommandInfo_IsGamepadKeyPressed;
 extern CommandInfo kCommandInfo_DisableGamepadKey;

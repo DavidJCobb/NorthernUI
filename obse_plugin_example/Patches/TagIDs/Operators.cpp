@@ -9,6 +9,7 @@
 #include "ReverseEngineered/UI/Tile.h"
 #include "Patches/CleanUpAfterMenuQue.h"
 #include "Services/INISettings.h"
+#include "Services/UIPrefs.h"
 
 #include <cmath>
 
@@ -271,16 +272,16 @@ namespace CobbPatches {
                      if (current->isString) {
                         _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, current->operand.string);
                         //
-                        // TODO
+                        // save the pref.
+                        // the save should be carried out when this operator's owning menu is closed.
                         //
                      }
                      return true;
                   case _traitPrefLoad:
                      if (current->isString) {
-                        _MESSAGE("XML has asked to load pref %s.", current->operand.string);
-                        //
-                        // TODO
-                        //
+                        _MESSAGE("XML has asked to load pref %s.", current->operand.string); // TODO: REMOVE LOGGING
+                        float result = UIPrefManager::GetInstance().getPrefFloatCurrentValue(current->operand.string);
+                        kThis->num = isnan(result) ? 0.0F : result;
                      } else
                         kThis->num = 0.0F;
                      return true;
@@ -291,7 +292,8 @@ namespace CobbPatches {
                            //
                            // TODO
                            //
-                           // queue the pref to reset, and return the default value as the result of this operator
+                           // queue the pref to reset, and return the default value as the result of this operator.
+                           // the reset should be carried out when this operator's owning menu is closed.
                            //
                         } else
                            kThis->num = 0.0F;
