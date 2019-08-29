@@ -4,6 +4,7 @@
 #include "Patches/XboxGamepad/Main.h"
 #include "ReverseEngineered/UI/Tile.h"
 #include "Services/INISettings.h"
+#include "Services/UIPrefs.h"
 
 #include "obse/GameData.h" // FileFinder
 #include "obse/GameTiles.h"
@@ -12,6 +13,7 @@
 extern RE::Tile* g_northernUIDatastore     = nullptr;
 extern RE::Tile* g_northernUIStringstore   = nullptr;
 extern RE::Tile* g_northernUILocConfigTile = nullptr;
+extern RE::Tile* g_northernUIPrefstore     = nullptr;
 
 namespace CobbPatches {
    namespace Selectors {
@@ -110,11 +112,20 @@ namespace CobbPatches {
                      CALL_MEMBER_FN(g_northernUIStringstore, AppendToTile)(nullptr, nullptr); // remove from Tile hierarchy
                }
                //
+               {  // prefs
+                  auto tile = RE::TileRect::CreateOnGameHeap();
+                  tile->Unk_01(nullptr, "NorthernUI Pref Storage and Synchronization", nullptr);
+                  g_northernUIPrefstore = tile;
+                  //
+                  UIPrefManager::GetInstance().pushAllPrefsToUIState();
+               }
+               //
                OnINIChange(nullptr, 0, 0); // apply traits that are drawn from INI settings, for initial load (we'd do this in the outermost Apply() but the tile doesn't exist then!)
                if (g_northernUIDatastore) {  // Apply initial-only traits.
                   UInt32 traitID = RE::GetOrCreateTempTagID("_xxnxinputpatchapplied", -1);
                   CALL_MEMBER_FN(g_northernUIDatastore, UpdateFloat)(traitID, g_xInputPatchApplied ? RE::kEntityID_true : RE::kEntityID_false);
                }
+               _MESSAGE("[Selectors] Special tiles have been set up.");
             };
             __declspec(naked) void Outer() { // patches an InterfaceManager member function
                _asm {

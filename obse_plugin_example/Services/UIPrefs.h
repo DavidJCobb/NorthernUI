@@ -23,7 +23,7 @@ class UIPrefManager {
          float       pendingFloat = 0.0F;
          UInt32      pendingChangesFromMenuID = 0; // what menu has written pending changes?
 
-         void  commitPendingChanges(UInt32 closingMenuID);
+         bool  commitPendingChanges(UInt32 closingMenuID); // returns true if there were changes to commit
          float getValue(UInt32 askingMenuID) const;
 
          Pref() {}
@@ -44,6 +44,8 @@ class UIPrefManager {
 
       void resetPrefValue(const char* name, UInt32 menuID);
       void setPrefValue(const char* name, float v, UInt32 menuID);
+      void modifyPrefValue(const char* name, float v, UInt32 menuID);
+      void clampPrefValue(const char* name, float v, bool toMin, UInt32 menuID);
 
       void dumpDefinitions() const;
       void loadDefinitions();
@@ -52,4 +54,7 @@ class UIPrefManager {
 
       void loadUserValues();
       void saveUserValues() const;
+
+      void pushPrefToUIState(const std::string& name);
+      void pushAllPrefsToUIState();
 };

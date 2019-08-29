@@ -309,7 +309,8 @@
                   <user4>0</user4> <!-- slider min -->
                   <user5>255</user5> <!-- slider max -->
                   <user11>TEST TEST RED</user11> <!-- label -->
-                  <user12>TestR</user12> <!-- pref name -->
+                  <user12>_TestR</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_TestR" /></user13> <!-- pref value -->
                </rect>
                <rect name="UI_PREF_TEST_G">
                   <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
@@ -319,7 +320,8 @@
                   <user4>0</user4> <!-- slider min -->
                   <user5>255</user5> <!-- slider max -->
                   <user11>TEST TEST GREEN</user11> <!-- label -->
-                  <user12>TestG</user12> <!-- pref name -->
+                  <user12>_TestG</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_TestG" /></user13> <!-- pref value -->
                </rect>
                <rect name="UI_PREF_TEST_B">
                   <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
@@ -329,7 +331,8 @@
                   <user4>0</user4> <!-- slider min -->
                   <user5>255</user5> <!-- slider max -->
                   <user11>TEST TEST BLUE</user11> <!-- label -->
-                  <user12>TestB</user12> <!-- pref name -->
+                  <user12>_TestB</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_TestB" /></user13> <!-- pref value -->
                </rect>
                
             </rect>

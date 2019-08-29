@@ -5,7 +5,9 @@
 #include "Miscellaneous/xml.h"
 #include "obse/Utilities.h" // GetOblivionDirectory
 #include "obse_common/SafeWrite.h"
-#include "ReverseEngineered\UI\Menu.h"
+#include "ReverseEngineered/UI/Menu.h"
+#include "ReverseEngineered/UI/Tile.h"
+#include "Patches/Selectors.h"
 
 namespace {
    const std::string& GetPrefDirectory() {
@@ -29,6 +31,23 @@ namespace {
          }
       }
       return path;
+   }
+
+   bool _validatePrefName(const std::string& s) {
+      if (!s.size())
+         return false;
+      if (s[0] == '_')
+         return false;
+      for (auto it = s.begin(); it != s.end(); ++it) {
+         if (strchr(" /\\\"@()", *it)) // make sure error message in UIPrefManager::processDocument matches this character set
+            return false;
+      }
+      return true;
+   }
+   std::string _prefNameToTraitName(const std::string& prefName) {
+      std::string out = "_";
+      out += prefName;
+      return out;
    }
 }
 
@@ -54,12 +73,14 @@ UIPrefManager::UIPrefManager() {
 
 //
 
-void UIPrefManager::Pref::commitPendingChanges(UInt32 closingMenuID) {
+bool UIPrefManager::Pref::commitPendingChanges(UInt32 closingMenuID) {
    if (this->pendingChangesFromMenuID == closingMenuID) {
       this->pendingChangesFromMenuID = 0;
       this->currentFloat = this->pendingFloat;
       this->pendingFloat = 0.0F;
+      return true;
    }
+   return false;
 }
 float UIPrefManager::Pref::getValue(UInt32 askingMenuID) const {
    /*//
@@ -110,6 +131,7 @@ void UIPrefManager::resetPrefValue(const char* name, UInt32 menuID) {
       return;
    pref->pendingFloat = pref->defaultFloat;
    pref->pendingChangesFromMenuID = menuID;
+   this->pushPrefToUIState(name);
 }
 void UIPrefManager::setPrefValue(const char* name, float v, UInt32 menuID) {
    auto pref = this->getPrefByName(name);
@@ -119,6 +141,37 @@ void UIPrefManager::setPrefValue(const char* name, float v, UInt32 menuID) {
    }
    pref->pendingFloat = v;
    pref->pendingChangesFromMenuID = menuID;
+   this->pushPrefToUIState(name);
+}
+void UIPrefManager::modifyPrefValue(const char* name, float v, UInt32 menuID) {
+   auto pref = this->getPrefByName(name);
+   if (!pref) {
+      _MESSAGE("WARNING: Unable to save changes to non-existent pref \"%s\".", name ? name : "");
+      return;
+   }
+   if (pref->pendingChangesFromMenuID) {
+      pref->pendingFloat += v;
+   } else
+      pref->pendingFloat = pref->currentFloat + v;
+   pref->pendingChangesFromMenuID = menuID;
+   this->pushPrefToUIState(name);
+}
+void UIPrefManager::clampPrefValue(const char* name, float v, bool toMin, UInt32 menuID) {
+   auto pref = this->getPrefByName(name);
+   if (!pref) {
+      _MESSAGE("WARNING: Unable to save changes to non-existent pref \"%s\".", name ? name : "");
+      return;
+   }
+   float base = pref->currentFloat;
+   if (pref->pendingChangesFromMenuID)
+      base = pref->pendingFloat;
+   if (toMin)
+      base = (std::max)(v, base);
+   else
+      base = (std::min)(v, base);
+   pref->pendingFloat = base;
+   pref->pendingChangesFromMenuID = menuID;
+   this->pushPrefToUIState(name);
 }
 //
 void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
@@ -173,7 +226,9 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
          if (token.name != "pref")
             continue;
          if (prefName.size()) {
-            if (this->getPrefByName(prefName.c_str())) {
+            if (!_validatePrefName(prefName)) {
+               _MESSAGE("WARNING: Pref name \"%s\" contains disallowed characters; discarding. Pref names cannot begin with underscores, and cannot contain spaces, slashes, parentheses, at-symbols, or double-quotes.", prefName.c_str());
+            } else if (this->getPrefByName(prefName.c_str())) {
                _MESSAGE("WARNING: Duplicate pref \"%s\" detected; discarding.", prefName.c_str());
             } else {
                this->prefs.emplace(prefName, prefDefault);
@@ -275,13 +330,43 @@ void UIPrefManager::loadDefinitions() {
 void UIPrefManager::onMenuClose(UInt32 menuID) {
    bool needsSave = false;
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
+      auto& name = it->first;
       auto& pref = it->second;
-      if (pref.pendingChangesFromMenuID == menuID)
+      if (pref.commitPendingChanges(menuID)) {
          needsSave = true;
-      pref.commitPendingChanges(menuID);
+         this->pushPrefToUIState(name);
+      }
    }
    if (needsSave)
       this->saveUserValues();
+}
+
+void UIPrefManager::pushPrefToUIState(const std::string& name) {
+   auto pref = this->getPrefByName(name);
+   if (!pref)
+      return;
+   if (!g_northernUIPrefstore)
+      return;
+   std::string tName = _prefNameToTraitName(name);
+   auto id = RE::GetOrCreateTempTagID(tName.c_str(), -1);
+   if (pref->pendingChangesFromMenuID)
+      CALL_MEMBER_FN(g_northernUIPrefstore, UpdateFloat)(id, pref->pendingFloat);
+   else
+      CALL_MEMBER_FN(g_northernUIPrefstore, UpdateFloat)(id, pref->currentFloat);
+}
+void UIPrefManager::pushAllPrefsToUIState() {
+   if (!g_northernUIPrefstore)
+      return;
+   for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
+      auto& name = it->first;
+      auto& pref = it->second;
+      std::string tName = _prefNameToTraitName(name);
+      auto id = RE::GetOrCreateTempTagID(tName.c_str(), -1);
+      if (pref.pendingChangesFromMenuID)
+         CALL_MEMBER_FN(g_northernUIPrefstore, UpdateFloat)(id, pref.pendingFloat);
+      else
+         CALL_MEMBER_FN(g_northernUIPrefstore, UpdateFloat)(id, pref.currentFloat);
+   }
 }
 
 namespace {

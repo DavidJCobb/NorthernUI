@@ -358,10 +358,10 @@ namespace CobbPatches {
                      if (kThis->num == 0.0F)
                         kThis->num = argument;
                      return true;
-                  case _traitPrefSave:
+                  case _traitOpPrefModify:
                      {
                         const char* str = current->GetStringValue();
-                        if (!str) {
+                        if (!str || !cobb::string_has_content(str))
                            //
                            // Expect this to happen sometimes. If you're using this operator, say, 
                            // at the end of a scrollbar thumb's _value_scrolled_to, then when the 
@@ -383,7 +383,8 @@ namespace CobbPatches {
                            // will have a nullptr string because its string hasn't been set up yet.
                            //
                            return true;
-                        }
+                        if (str[0] == '_')
+                           str++;
                         _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, str); // TODO: REMOVE LOGGING
                         UInt32 menuID = 0;
                         {
@@ -394,65 +395,17 @@ namespace CobbPatches {
                                  menuID = menu->GetID();
                            }
                         }
-                        UIPrefManager::GetInstance().setPrefValue(str, kThis->num, menuID);
+                        UIPrefManager::GetInstance().modifyPrefValue(str, kThis->num, menuID);
                      }
                      return true;
-                  case _traitPrefLoad:
-                     {
-                        const char* str = current->GetStringValue();
-                        kThis->num = 0.0F;
-                        kThis->bIsNum = 1;
-                        //
-                        if (str) {
-                           UInt32 menuID = 0;
-                           {
-                              auto tile = kThis->owner;
-                              if (tile) {
-                                 auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
-                                 if (menu)
-                                    menuID = menu->GetID();
-                              }
-                           }
-                           float result = UIPrefManager::GetInstance().getPrefCurrentValue(str, menuID);
-                           kThis->num = isnan(result) ? 0.0F : result;
-                        }
-                     }
-                     return true;
-                  case _traitPrefReset:
-                     {
-                        const char* str = current->GetStringValue();
-                        if (str) {
-                           UInt32 menuID = 0;
-                           {
-                              auto tile = kThis->owner;
-                              if (tile) {
-                                 auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
-                                 if (menu)
-                                    menuID = menu->GetID();
-                              }
-                           }
-                           if (kThis->num == (float)RE::kEntityID_true) {
-                              _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", str, kThis->num); // TODO: REMOVE LOGGING
-                              auto& manager = UIPrefManager::GetInstance();
-                              manager.resetPrefValue(current->operand.string, menuID);
-                              float result = UIPrefManager::GetInstance().getPrefCurrentValue(str, menuID);
-                              kThis->num = isnan(result) ? 0.0F : result;
-                           } else
-                              kThis->num = 0.0F;
-                        } else {
-                           kThis->num = 0.0F;
-                        }
-                        kThis->bIsNum = 1;
-                     }
-                     return true;
-                  case _traitPrefLoadOnce:
+                  case _traitOpPrefClampToMin:
                      {
                         const char* str = current->GetStringValue();
                         if (!str || !cobb::string_has_content(str))
                            return true;
-_MESSAGE("Running load-pref-once operator with string \"%s\"", str);
-                        kThis->num = 0.0F;
-                        kThis->bIsNum = 1;
+                        if (str[0] == '_')
+                           str++;
+                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, str); // TODO: REMOVE LOGGING
                         UInt32 menuID = 0;
                         {
                            auto tile = kThis->owner;
@@ -462,16 +415,49 @@ _MESSAGE("Running load-pref-once operator with string \"%s\"", str);
                                  menuID = menu->GetID();
                            }
                         }
-                        float result = UIPrefManager::GetInstance().getPrefCurrentValue(str, menuID);
-_MESSAGE(" - got result %f", result);
-                        kThis->num = isnan(result) ? 0.0F : result;
-                        //
-                        current->RemoveFromRefs();
-                        if (current->isString && current->operand.string) {
-                           FormHeap_Free((void*)current->operand.string);
-                           current->operand.string = nullptr;
+                        UIPrefManager::GetInstance().clampPrefValue(str, kThis->num, true, menuID);
+                     }
+                     return true;
+                  case _traitOpPrefClampToMax:
+                     {
+                        const char* str = current->GetStringValue();
+                        if (!str || !cobb::string_has_content(str))
+                           return true;
+                        if (str[0] == '_')
+                           str++;
+                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, str); // TODO: REMOVE LOGGING
+                        UInt32 menuID = 0;
+                        {
+                           auto tile = kThis->owner;
+                           if (tile) {
+                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+                              if (menu)
+                                 menuID = menu->GetID();
+                           }
                         }
-                        current->NukeContainerOperator();
+                        UIPrefManager::GetInstance().clampPrefValue(str, kThis->num, false, menuID);
+                     }
+                     return true;
+                  case _traitOpPrefReset:
+                     {
+                        const char* str = current->GetStringValue();
+                        if (!str || !cobb::string_has_content(str))
+                           return true;
+                        if (str[0] == '_')
+                           str++;
+                        UInt32 menuID = 0;
+                        {
+                           auto tile = kThis->owner;
+                           if (tile) {
+                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+                              if (menu)
+                                 menuID = menu->GetID();
+                           }
+                        }
+                        if (kThis->num == (float)RE::kEntityID_true) {
+                           _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", str, kThis->num); // TODO: REMOVE LOGGING
+                           UIPrefManager::GetInstance().resetPrefValue(str, menuID);
+                        }
                      }
                      return true;
                }

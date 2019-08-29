@@ -8,6 +8,7 @@
    <user10>200</user10> <!-- label column width -->
    <user11></user11> <!-- label -->
    <user12></user12> <!-- pref name -->
+   <user13></user13> <!-- pref value i.e. copy -->
 
    <id>&generic;</id>
    <clips>&true;</clips>
@@ -127,12 +128,13 @@
       <user2><copy src="parent()" trait="user5" /></user2> <!-- maximum range value -->
       <user3><copy src="parent()" trait="user3" /></user3> <!-- step distance -->
       <user4><copy src="parent()" trait="user2" /></user4> <!-- jump distance -->
-      <user5> <!-- starting value -->
-         <xxnPrefLoadValue src="parent()" trait="user12" />
-      </user5>
-      <user7><copy src="child(horizontal_scroll_marker)" trait="_value_scrolled_to"/> </user7>
+      <user5>0</user5>
+      <user7>
+         <copy src="child(horizontal_scroll_marker)" trait="_value_scrolled_to"/>
+      </user7>
       <user8><copy src="parent()" trait="user8" /></user8> <!-- visibility of slider value -->
       <user12><copy src="parent()" trait="user12" /></user12> <!-- pref name -->
+      <user13><copy src="parent()" trait="user13" /></user13> <!-- pref value -->
       <user15>1</user15> <!-- thumb style (0 = scrollbar; 1 = slider) -->
       <user16><copy src="parent()" trait="mouseover" /></user16> <!-- force mouseover (0 = no; 1 = yes) -->
       
@@ -150,7 +152,6 @@
          <gt> 0</gt>
          <sub>1</sub>
       </_mouseover_any>
-      
       
       <text name="quantity_display_text">
          <include src="NorthernUI\fonts\normal.xml" />
@@ -286,15 +287,8 @@
             <copy src="me()"     trait="_filename_" />
          </filename>
          
-         <!--
-            This code actually does compute the current scroll value, which is 
-            copied by the parent scrollbar's USER7 trait and (presumably) read 
-            by the executable. The executable "feeds" us inputs (see comment 
-            on USER9) and we're responsible for maintaining our scroll value 
-            ourselves.
-         -->
-         <_value_scrolled_to>
-            <!-- copy old value -->
+         <_setter>
+            <copy>0</copy>
             <add>
                <copy src="sibling(horizontal_scroll_right)" trait="clicked" />
                <sub  src="sibling(horizontal_scroll_left)"  trait="clicked" />
@@ -307,16 +301,17 @@
             </add>
             <add src="me()"     trait="user9" />
             <add src="parent()" trait="user5" />
-            <onlyifnot>
-               <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
-            </onlyifnot>
-            <add>
-               <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
-               <xxnPrefResetValue src="parent()" trait="user12" />
-            </add>
-            <max src="parent()" trait="user1" />
-            <min src="parent()" trait="user2" />
-            <xxnPrefSaveValue src="parent()" trait="user12" />
+            <xxnOpPrefModifyValue src="parent()" trait="user12" />
+            <xxnOpPrefClampToMin  src="parent()" trait="user1" />
+            <xxnOpPrefClampToMax  src="parent()" trait="user2" />
+         </_setter>
+         <_resetter>
+            <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
+            <xxnOpPrefResetValue src="parent()" trait="user12" />
+         </_resetter>
+         
+         <_value_scrolled_to>
+            <copy src="parent()" trait="user13" />
          </_value_scrolled_to>
          <user8>	<!-- for dragging - drag interval; ideally should compute to an integer -->
             <copy src="parent()" trait="width" />
