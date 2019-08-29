@@ -5,6 +5,7 @@
 
 #include "Fun/x86Reader.h"
 #include "Miscellaneous/math.h"
+#include "Miscellaneous/strings.h"
 #include "ReverseEngineered/NetImmerse/NiTypes.h"
 #include "ReverseEngineered/UI/Menu.h"
 #include "ReverseEngineered/UI/Tile.h"
@@ -154,15 +155,6 @@ namespace CobbPatches {
                // For the record: MenuQue doesn't account for this case, which 
                // would in theory potentially break its <length /> operator.
                //
-               bool _OpcodeReturnsString(UInt32 opcode) {
-                  switch (opcode) {
-                     case RE::kTagID_MenuQue_append:
-                     case RE::kTagID_MenuQue_prepend:
-                     case RE::kTagID_MenuQue_tostring:
-                        return true;
-                  }
-                  return false;
-               }
                bool _stdcall DoString(RE::Tile::Value::Expression* referring, const char* newString) {
                   auto opcode = referring->opcode;
                   if (CobbPatches::TagIDs::IsOperatorWithStringOperand(opcode)) {
@@ -181,7 +173,9 @@ namespace CobbPatches {
                      referring->isString = true;
                      return true;
                   }
-                  return false;
+                  if (opcode == 0) // make sure that killed-at-runtime operators can't damage their containing traits
+                     return true;
+                  return false; // return false to use vanilla handling
                }
                __declspec(naked) void Outer() {
                   _asm {
@@ -401,7 +395,6 @@ namespace CobbPatches {
                            }
                         }
                         UIPrefManager::GetInstance().setPrefValue(str, kThis->num, menuID);
-                        kThis->bIsNum = 1;
                      }
                      return true;
                   case _traitPrefLoad:
@@ -411,7 +404,6 @@ namespace CobbPatches {
                         kThis->bIsNum = 1;
                         //
                         if (str) {
-                           _MESSAGE("XML has asked to load pref %s.", str); // TODO: REMOVE LOGGING
                            UInt32 menuID = 0;
                            {
                               auto tile = kThis->owner;
@@ -453,71 +445,33 @@ namespace CobbPatches {
                         kThis->bIsNum = 1;
                      }
                      return true;
-                  case _traitOpOnlyOnce:
-                     /*//
-                     if (current->opcode == 0xA || current->opcode == 0xF) {
-                        _MESSAGE("The xxnOpCopyOnlyOnce operator can't be a container. Store the desired value elsewhere and use the SRC and TRAIT attributes on xxnOpCopyOnlyOnce to pull it.");
-                        return true;
-                     }
-                     //*/
-                     if (argument != 0.0F) {
-                        kThis->num    = argument;
+                  case _traitPrefLoadOnce:
+                     {
+                        const char* str = current->GetStringValue();
+                        if (!str || !cobb::string_has_content(str))
+                           return true;
+_MESSAGE("Running load-pref-once operator with string \"%s\"", str);
+                        kThis->num = 0.0F;
                         kThis->bIsNum = 1;
-                        if (!current->isString) {
-                           if (current->opcode != 0xF) {
-                              current->operand.immediate = 0.0F;
-                              current->RemoveFromRefs();
-                           } else {
-                              //
-                              // We are a container-end operator. The only way to guarantee that we 
-                              // only run once is to delete all of our contents. (With respect to the 
-                              // hook we use to implement our custom operators, container-end operators 
-                              // receive the computed value of their contents as the argument.)
-                              //
-                              UInt32 nesting = 0;
-                              RE::Tile::Value::Expression* until = nullptr;
-                              auto p = current->prev;
-                              if (p) {
-                                 do {
-                                    if (p->opcode == 0xF && p->operand.opcode == _traitOpOnlyOnce) {
-                                       ++nesting;
-                                       continue;
-                                    }
-                                    if (p->opcode == 0xA && p->operand.opcode == _traitOpOnlyOnce) {
-                                       if (nesting) {
-                                          --nesting;
-                                          continue;
-                                       }
-                                       until = p->prev;
-                                       break;
-                                    }
-                                 } while (p = p->prev);
-                                 //
-                                 // The (until) pointer now indicates the operator just before our 
-                                 // matching container-start operator.
-                                 //
-                                 if (until) {
-                                    p = current->prev;
-                                    RE::Tile::Value::Expression* prevprev;
-                                    do {
-                                       if (p == until)
-                                          break;
-                                       prevprev = p->prev;
-                                       p->~Expression(); // clears prev->prev, so we have to grab that first
-                                       FormHeap_Free(p);
-                                    } while (p = prevprev);
-                                    p = current->prev;
-                                    if (p && p->opcode == 0xA) {
-                                       p->opcode = 0;
-                                       current->opcode = 0;
-                                    }
-                                 }
-                              }
+                        UInt32 menuID = 0;
+                        {
+                           auto tile = kThis->owner;
+                           if (tile) {
+                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+                              if (menu)
+                                 menuID = menu->GetID();
                            }
-                           //
-                           // "Run once" operator has successfully self-terminated.
-                           //
                         }
+                        float result = UIPrefManager::GetInstance().getPrefCurrentValue(str, menuID);
+_MESSAGE(" - got result %f", result);
+                        kThis->num = isnan(result) ? 0.0F : result;
+                        //
+                        current->RemoveFromRefs();
+                        if (current->isString && current->operand.string) {
+                           FormHeap_Free((void*)current->operand.string);
+                           current->operand.string = nullptr;
+                        }
+                        current->NukeContainerOperator();
                      }
                      return true;
                }

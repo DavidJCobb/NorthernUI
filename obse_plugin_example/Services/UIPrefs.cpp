@@ -62,9 +62,11 @@ void UIPrefManager::Pref::commitPendingChanges(UInt32 closingMenuID) {
    }
 }
 float UIPrefManager::Pref::getValue(UInt32 askingMenuID) const {
+   /*//
    if (askingMenuID)
       if (this->pendingChangesFromMenuID == askingMenuID)
          return this->pendingFloat;
+   //*/
    return this->currentFloat;
 }
 UIPrefManager::Pref::Pref(float defaultFloat) {
@@ -93,6 +95,7 @@ float UIPrefManager::getPrefCurrentValue(const char* name, UInt32 askingMenuID) 
    auto pref = this->getPrefByName(name);
    if (pref)
       return pref->getValue(askingMenuID);
+   _MESSAGE("WARNING: Unable to load current value for non-existent pref \"%s\".", name ? name : "");
    return NAN;
 }
 float UIPrefManager::getPrefDefaultValue(const char* name) const {
@@ -110,8 +113,10 @@ void UIPrefManager::resetPrefValue(const char* name, UInt32 menuID) {
 }
 void UIPrefManager::setPrefValue(const char* name, float v, UInt32 menuID) {
    auto pref = this->getPrefByName(name);
-   if (!pref)
+   if (!pref) {
+      _MESSAGE("WARNING: Unable to save changes to non-existent pref \"%s\".", name ? name : "");
       return;
+   }
    pref->pendingFloat = v;
    pref->pendingChangesFromMenuID = menuID;
 }
