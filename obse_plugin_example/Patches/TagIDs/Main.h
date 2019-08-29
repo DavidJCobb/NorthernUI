@@ -51,6 +51,7 @@ namespace CobbPatches {
       constexpr UInt32 _traitPrefSave    = 0x1610; // operator (string operand)
       constexpr UInt32 _traitPrefLoad    = 0x1611; // operator (string operand)
       constexpr UInt32 _traitPrefReset   = 0x1612; // operator (string operand)
+      constexpr UInt32 _traitOpOnlyOnce  = 0x1613; // operator
       //
       // NOTE: ID 0x1771 is not registered, but the vanilla code sets it on the menu root.
       //
@@ -83,6 +84,7 @@ namespace CobbPatches {
          { XXN_NEW_TAG_ID(_traitPrefSave,    "xxnprefsavevalue", kType_Operator, 0, 1) },
          { XXN_NEW_TAG_ID(_traitPrefLoad,    "xxnprefloadvalue", kType_Operator, 0, 1) },
          { XXN_NEW_TAG_ID(_traitPrefReset,   "xxnprefresetvalue", kType_Operator, 0, 1) },
+         { XXN_NEW_TAG_ID(_traitOpOnlyOnce,  "xxnopcopyonlyonce", kType_Operator, 0, 0) },
       };
       constexpr UInt32 menuQueOperatorMin = 0x7EC;
       constexpr UInt32 menuQueOperatorMax = 0x7F0;

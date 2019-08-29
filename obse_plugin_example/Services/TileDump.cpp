@@ -7,11 +7,12 @@ void _traceOperator(RE::Tile::Value::Expression* op, const char* indent) {
    RE::Tile::Value* source = nullptr;
    {
       auto p = op->refPrev;
-      if (p)
+      if (p) {
          while (p->refPrev)
             p = p->refPrev;
-      if (p->opcode == 0x65)
-         source = p->operand.ref;
+         if (p->opcode == 0x65)
+            source = p->operand.ref;
+      }
    }
    if (!source) {
       if (op->isString) {
@@ -40,7 +41,7 @@ void _traceOperator(RE::Tile::Value::Expression* op, const char* indent) {
          _MESSAGE("%s - %08X <%s src=\"%s\" trait=\"0x%08X\" /> == \"%s\"", indent, op, name, tile, source->id, source->str.m_data);
    }
    if (op->isString && op->operand.string) {
-      _MESSAGE("%s   ...and unused operator-side string \"%s\"", op->operand.string);
+      _MESSAGE("%s   ...and operator-side string \"%s\"", indent, op->operand.string);
    }
 }
 void _tryPrintSources(RE::Tile::Value* source) {

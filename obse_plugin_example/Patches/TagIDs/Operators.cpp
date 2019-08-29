@@ -453,6 +453,73 @@ namespace CobbPatches {
                         kThis->bIsNum = 1;
                      }
                      return true;
+                  case _traitOpOnlyOnce:
+                     /*//
+                     if (current->opcode == 0xA || current->opcode == 0xF) {
+                        _MESSAGE("The xxnOpCopyOnlyOnce operator can't be a container. Store the desired value elsewhere and use the SRC and TRAIT attributes on xxnOpCopyOnlyOnce to pull it.");
+                        return true;
+                     }
+                     //*/
+                     if (argument != 0.0F) {
+                        kThis->num    = argument;
+                        kThis->bIsNum = 1;
+                        if (!current->isString) {
+                           if (current->opcode != 0xF) {
+                              current->operand.immediate = 0.0F;
+                              current->RemoveFromRefs();
+                           } else {
+                              //
+                              // We are a container-end operator. The only way to guarantee that we 
+                              // only run once is to delete all of our contents. (With respect to the 
+                              // hook we use to implement our custom operators, container-end operators 
+                              // receive the computed value of their contents as the argument.)
+                              //
+                              UInt32 nesting = 0;
+                              RE::Tile::Value::Expression* until = nullptr;
+                              auto p = current->prev;
+                              if (p) {
+                                 do {
+                                    if (p->opcode == 0xF && p->operand.opcode == _traitOpOnlyOnce) {
+                                       ++nesting;
+                                       continue;
+                                    }
+                                    if (p->opcode == 0xA && p->operand.opcode == _traitOpOnlyOnce) {
+                                       if (nesting) {
+                                          --nesting;
+                                          continue;
+                                       }
+                                       until = p->prev;
+                                       break;
+                                    }
+                                 } while (p = p->prev);
+                                 //
+                                 // The (until) pointer now indicates the operator just before our 
+                                 // matching container-start operator.
+                                 //
+                                 if (until) {
+                                    p = current->prev;
+                                    RE::Tile::Value::Expression* prevprev;
+                                    do {
+                                       if (p == until)
+                                          break;
+                                       prevprev = p->prev;
+                                       p->~Expression(); // clears prev->prev, so we have to grab that first
+                                       FormHeap_Free(p);
+                                    } while (p = prevprev);
+                                    p = current->prev;
+                                    if (p && p->opcode == 0xA) {
+                                       p->opcode = 0;
+                                       current->opcode = 0;
+                                    }
+                                 }
+                              }
+                           }
+                           //
+                           // "Run once" operator has successfully self-terminated.
+                           //
+                        }
+                     }
+                     return true;
                }
                return false;
             };
