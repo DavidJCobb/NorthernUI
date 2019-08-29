@@ -152,6 +152,8 @@ namespace CobbPatches {
                tile = g_northernUIStringstore;
             } else if (_stricmp(name, "xxnlocalization()") == 0) {
                tile = g_northernUILocConfigTile;
+            } else if (_stricmp(name, "xxnprefs()") == 0) {
+               tile = g_northernUIPrefstore;
             } else {
                {
                   char* end = nullptr;

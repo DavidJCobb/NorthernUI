@@ -67,7 +67,7 @@ void Tile::Value::DoActionEnumeration(bool forceUpdateInbound) {
    // [ ]
    //
    auto   nestedResults = NiTListBase<float>(); // esp34
-   #if MENUQUE_INSTALLED == 0
+   #if MENUQUE_INSTALLED == 0 // MQ patch at 0x0058BF92
       auto eax = this->operators->next; // MenuQue patches here
    #else
       *ptr_MQ_0512E4 = &esp34;

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 namespace cobb {
    struct XMLDocument;
@@ -32,6 +33,7 @@ class UIPrefManager {
       //
    private:
       std::unordered_map<std::string, Pref> prefs;
+      std::vector<std::string> prefsPendingPushToUI;
       //
       Pref* getPrefByName(std::string name);
       const Pref* getPrefByName(std::string name) const;
@@ -55,6 +57,8 @@ class UIPrefManager {
       void loadUserValues();
       void saveUserValues() const;
 
-      void pushPrefToUIState(const std::string& name);
-      void pushAllPrefsToUIState();
+      void queuePrefPushToUIState(const std::string& name);
+      void pushPrefToUIState(const std::string& name) const;
+      void pushQueuedPrefsToUIState();
+      void pushAllPrefsToUIState() const;
 };

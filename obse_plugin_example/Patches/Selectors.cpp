@@ -209,6 +209,9 @@ namespace CobbPatches {
             RE::Tile* XXNLocalization(const char* arg) {
                return g_northernUILocConfigTile;
             };
+            RE::Tile* XXNPrefs(const char* arg) {
+               return g_northernUIPrefstore;
+            };
          };
          __declspec(naked) void Outer() {
             //
@@ -225,8 +228,10 @@ namespace CobbPatches {
                je   lXXNStrings;
                cmp  eax, CobbPatches::TagIDs::_traitDescendant; // descendant(tilename)
                je   lDescendant;
-               cmp  eax, CobbPatches::TagIDs::_traitLocConfig; // descendant(tilename)
+               cmp  eax, CobbPatches::TagIDs::_traitLocConfig; // xxnLocalization()
                je   lXXNLocalization;
+               cmp  eax, CobbPatches::TagIDs::_traitPrefs; // xxnPrefs()
+               je   lXXNPrefs;
                jmp  lExitUnhandled;
             lDescendant:
                lea  eax, [esp + 0xC];
@@ -258,6 +263,12 @@ namespace CobbPatches {
                lea  eax, [esp + 0xC];
                push eax;
                call Inner::XXNLocalization;
+               add  esp, 4;
+               jmp  lExitHandled;
+            lXXNPrefs:
+               lea  eax, [esp + 0xC];
+               push eax;
+               call Inner::XXNPrefs;
                add  esp, 4;
                //
                // When adding new cases, make sure that all but the last end with the 

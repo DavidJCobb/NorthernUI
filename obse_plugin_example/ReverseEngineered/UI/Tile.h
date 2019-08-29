@@ -238,6 +238,10 @@ namespace RE {
                   return this->opcode == 0;
                }
 
+               // delete all contents of a container operator, including the container-start
+               // only does anything if (this) is an 0xF container-end; does not delete (this) but does set it to a no-op
+               void NukeContainerOperator();
+
                const char* GetStringValue() const;
             };
 
@@ -584,6 +588,8 @@ namespace RE {
          enum { kID = 0x0385 };
 
          UInt32 unk40; // 40
+
+         static TileRect* CreateOnGameHeap();
    };
    class TileImage : public Tile {
       public:

@@ -302,8 +302,10 @@
             <add src="me()"     trait="user9" />
             <add src="parent()" trait="user5" />
             <xxnOpPrefModifyValue src="parent()" trait="user12" />
-            <xxnOpPrefClampToMin  src="parent()" trait="user1" />
-            <xxnOpPrefClampToMax  src="parent()" trait="user2" />
+            <copy src="parent()" trait="user1" />
+            <xxnOpPrefClampToMin  src="parent()" trait="user12" />
+            <copy src="parent()" trait="user2" />
+            <xxnOpPrefClampToMax  src="parent()" trait="user12" />
          </_setter>
          <_resetter>
             <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>

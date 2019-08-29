@@ -22,9 +22,9 @@
       <y>-128</y>
       <font>3</font>
       <string>Pick a font color!</string>
-      <red>  <xxnPrefLoadValue>TestR</xxnPrefLoadValue></red>
-      <green><xxnPrefLoadValue>TestG</xxnPrefLoadValue></green>
-      <blue> <xxnPrefLoadValue>TestB</xxnPrefLoadValue></blue>
+      <red>  <copy src="xxnPrefs()" trait="_TestR" /></red>
+      <green><copy src="xxnPrefs()" trait="_TestG" /></green>
+      <blue> <copy src="xxnPrefs()" trait="_TestB" /></blue>
    </text>
    
 	<rect name="message_focus_box">

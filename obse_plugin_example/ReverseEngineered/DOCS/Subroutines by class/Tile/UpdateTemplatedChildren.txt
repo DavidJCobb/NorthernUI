@@ -40,7 +40,7 @@ void Tile::UpdateTemplatedChildren(Struct0058BCD0* Arg1) {
             Log004A7A60("Trait defined outside of any tile.");
             continue;
          }
-         if (0.0 == esi->num || !esi->str.m_dataLen) {
+         if (0.0 != esi->num || !esi->str.m_dataLen) {
             if (esi->id != kTagID_string && esi->id != kTagID_filename) { // NorthernUI patches this check
                float esp18 = esi->tagType;
                eax = ebp->GetOrCreateTrait(eax);

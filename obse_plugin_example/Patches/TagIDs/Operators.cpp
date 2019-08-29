@@ -208,6 +208,71 @@ namespace CobbPatches {
                UpdateInboundReferences::Apply();
             }
          };
+         namespace DoActionEnumerationTracking {
+            //
+            // MenuQue plugs a lot of static variables into DoActionEnumeration, 
+            // which means that we can't allow operators to take any action that 
+            // might change another trait's value; doing so causes MenuQue to 
+            // choke and crash the game.
+            //
+            // As such, we need to be able to track when we're no longer inside 
+            // of DoActionEnumeration -- bearing in mind that it can recurse 
+            // indirectly due to UpdateInboundReferences.
+            //
+            static UInt32 s_depth = 0;
+            static bool   s_handlingEnd = false;
+            namespace Start {
+               void Inner() {
+                  s_depth++;
+               }
+               __declspec(naked) void Outer() {
+                  _asm {
+                     lea  ebx, [esi + 4];         // reproduce patched-over instruction
+                     fstp dword ptr [esp + 0x48]; // reproduce patched-over instruction
+                     call Inner;
+                     mov  eax, 0x0058BF7E;
+                     jmp  eax;
+                  }
+               }
+               void Apply() {
+                  WriteRelJump(0x0058BF77, (UInt32)&Outer);
+                  SafeWrite16(0x0058BF77 + 5, 0x9090); // courtesy NOPs
+               }
+            }
+            namespace End {
+               void Inner() {
+                  if (!s_depth) {
+                     _MESSAGE("WARNING: DoActionEnumeration call tracking has gone wrong!");
+                     return;
+                  }
+                  s_depth--;
+                  if (!s_depth) {
+                     if (s_handlingEnd)
+                        return;
+                     s_handlingEnd = true; // pushQueuedPrefsToUIState changes trait values and can cause us to effectively recurse
+                     UIPrefManager::GetInstance().pushQueuedPrefsToUIState();
+                     s_handlingEnd = false;
+                  }
+               }
+               __declspec(naked) void Outer() {
+                  _asm {
+                     mov  eax, 0x00589690; // reproduce patched-over call
+                     call eax;             //
+                     call Inner;
+                     mov  eax, 0x0058C964;
+                     jmp  eax;
+                  }
+               }
+               void Apply() {
+                  WriteRelJump(0x0058C95F, (UInt32)&Outer);
+               }
+            }
+            //
+            void Apply() {
+               Start::Apply();
+               End::Apply();
+            }
+         }
          namespace DoActionEnumeration {
             //
             // NOTE: We haven't managed to fully implement string operators, so 
@@ -289,7 +354,7 @@ namespace CobbPatches {
                // This subroutine should generally only handle our custom operators, since we just 
                // jump back to the vanilla code for vanilla operators.
                //
-               if (HandleMenuQue::mqOperatorHandler) {
+               if (HandleMenuQue::mqOperatorHandler) { // MQ_12570 in v16b
                   //
                   // This call always has to be made, even if we're not executing a MenuQue operator. 
                   // I suspect it plays a role in managing MenuQue's "string stack" or somesuch.
@@ -318,6 +383,10 @@ namespace CobbPatches {
                   // The current wokring value is kThis->num, prior to your writing to it. The float operand 
                   // for your operator (i.e. the argument) is (argument). To access a string operand, go 
                   // through (current).
+                  //
+                  // OPERATORS CANNOT TAKE ACTIONS THAT IMMEDIATELY LEAD TO THE CHANGING OF ANY OTHER TRAIT. 
+                  // MenuQue patches in a ton of static vars into DoActionEnumeration, and it WILL CRASH if 
+                  // you try to change one trait while another trait is already changing!
                   //
                   case _traitOpAtan2:
                      kThis->num = cobb::radians_to_degrees(std::atan2(kThis->num, argument)); // <copy> y </copy> <xxnOpAtan2> x </xxnOpAtan2>
@@ -383,8 +452,11 @@ namespace CobbPatches {
                            // will have a nullptr string because its string hasn't been set up yet.
                            //
                            return true;
-                        if (str[0] == '_')
+                        if (str[0] == '_') {
                            str++;
+                           if (!str[0])
+                              return true;
+                        }
                         _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, str); // TODO: REMOVE LOGGING
                         UInt32 menuID = 0;
                         {
@@ -403,9 +475,12 @@ namespace CobbPatches {
                         const char* str = current->GetStringValue();
                         if (!str || !cobb::string_has_content(str))
                            return true;
-                        if (str[0] == '_')
+                        if (str[0] == '_') {
                            str++;
-                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, str); // TODO: REMOVE LOGGING
+                           if (!str[0])
+                              return true;
+                        }
+                        _MESSAGE("XML has asked to clamp pref %s to a minimum of %f.", str, kThis->num); // TODO: REMOVE LOGGING
                         UInt32 menuID = 0;
                         {
                            auto tile = kThis->owner;
@@ -423,9 +498,12 @@ namespace CobbPatches {
                         const char* str = current->GetStringValue();
                         if (!str || !cobb::string_has_content(str))
                            return true;
-                        if (str[0] == '_')
+                        if (str[0] == '_') {
                            str++;
-                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, str); // TODO: REMOVE LOGGING
+                           if (!str[0])
+                              return true;
+                        }
+                        _MESSAGE("XML has asked to clamp pref %s to a maximum of %f.", str, kThis->num); // TODO: REMOVE LOGGING
                         UInt32 menuID = 0;
                         {
                            auto tile = kThis->owner;
@@ -443,8 +521,11 @@ namespace CobbPatches {
                         const char* str = current->GetStringValue();
                         if (!str || !cobb::string_has_content(str))
                            return true;
-                        if (str[0] == '_')
+                        if (str[0] == '_') {
                            str++;
+                           if (!str[0])
+                              return true;
+                        }
                         UInt32 menuID = 0;
                         {
                            auto tile = kThis->owner;
@@ -503,6 +584,7 @@ namespace CobbPatches {
          void Apply() {
             StringOperandSupport::Apply();
             DoActionEnumeration::Apply();
+            DoActionEnumerationTracking::Apply();
          };
       };
    };

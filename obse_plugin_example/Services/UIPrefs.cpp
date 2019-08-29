@@ -131,7 +131,7 @@ void UIPrefManager::resetPrefValue(const char* name, UInt32 menuID) {
       return;
    pref->pendingFloat = pref->defaultFloat;
    pref->pendingChangesFromMenuID = menuID;
-   this->pushPrefToUIState(name);
+   this->queuePrefPushToUIState(name);
 }
 void UIPrefManager::setPrefValue(const char* name, float v, UInt32 menuID) {
    auto pref = this->getPrefByName(name);
@@ -141,7 +141,7 @@ void UIPrefManager::setPrefValue(const char* name, float v, UInt32 menuID) {
    }
    pref->pendingFloat = v;
    pref->pendingChangesFromMenuID = menuID;
-   this->pushPrefToUIState(name);
+   this->queuePrefPushToUIState(name);
 }
 void UIPrefManager::modifyPrefValue(const char* name, float v, UInt32 menuID) {
    auto pref = this->getPrefByName(name);
@@ -154,7 +154,7 @@ void UIPrefManager::modifyPrefValue(const char* name, float v, UInt32 menuID) {
    } else
       pref->pendingFloat = pref->currentFloat + v;
    pref->pendingChangesFromMenuID = menuID;
-   this->pushPrefToUIState(name);
+   this->queuePrefPushToUIState(name);
 }
 void UIPrefManager::clampPrefValue(const char* name, float v, bool toMin, UInt32 menuID) {
    auto pref = this->getPrefByName(name);
@@ -171,7 +171,7 @@ void UIPrefManager::clampPrefValue(const char* name, float v, bool toMin, UInt32
       base = (std::min)(v, base);
    pref->pendingFloat = base;
    pref->pendingChangesFromMenuID = menuID;
-   this->pushPrefToUIState(name);
+   this->queuePrefPushToUIState(name);
 }
 //
 void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
@@ -341,7 +341,17 @@ void UIPrefManager::onMenuClose(UInt32 menuID) {
       this->saveUserValues();
 }
 
-void UIPrefManager::pushPrefToUIState(const std::string& name) {
+void UIPrefManager::queuePrefPushToUIState(const std::string& name) {
+_MESSAGE("Queueing pref \"%s\" for push to UI...", name.c_str());
+   auto& list = this->prefsPendingPushToUI;
+   auto it = std::find(list.begin(), list.end(), name);
+if (it != list.end()) _MESSAGE("Pref is already queued.");
+   if (it != list.end())
+      return;
+   list.push_back(name);
+_MESSAGE("Queued.");
+}
+void UIPrefManager::pushPrefToUIState(const std::string& name) const {
    auto pref = this->getPrefByName(name);
    if (!pref)
       return;
@@ -354,7 +364,24 @@ void UIPrefManager::pushPrefToUIState(const std::string& name) {
    else
       CALL_MEMBER_FN(g_northernUIPrefstore, UpdateFloat)(id, pref->currentFloat);
 }
-void UIPrefManager::pushAllPrefsToUIState() {
+void UIPrefManager::pushQueuedPrefsToUIState() {
+   if (g_northernUIPrefstore) {
+      for (auto it = this->prefsPendingPushToUI.cbegin(); it != this->prefsPendingPushToUI.cend(); ++it) {
+         const auto& name = *it;
+         const auto  pref = this->getPrefByName(name);
+         if (!pref)
+            continue;
+         std::string tName = _prefNameToTraitName(name);
+         auto id = RE::GetOrCreateTempTagID(tName.c_str(), -1);
+         if (pref->pendingChangesFromMenuID)
+            CALL_MEMBER_FN(g_northernUIPrefstore, UpdateFloat)(id, pref->pendingFloat);
+         else
+            CALL_MEMBER_FN(g_northernUIPrefstore, UpdateFloat)(id, pref->currentFloat);
+      }
+   }
+   this->prefsPendingPushToUI.clear();
+}
+void UIPrefManager::pushAllPrefsToUIState() const {
    if (!g_northernUIPrefstore)
       return;
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {

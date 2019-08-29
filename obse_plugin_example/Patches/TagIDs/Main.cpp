@@ -403,9 +403,22 @@ namespace CobbPatches {
                      // copy tItemZ's float and string values (tagType and string) to tItemY, and destroy 
                      // tItemZ and tItemNew.
                      //
-                     if (CobbPatches::TagIDs::IsTrait(tItemNew->tagType))
+                     if (CobbPatches::TagIDs::IsTrait(tItemNew->tagType)) {
                         tItemY->unk00 = ParseCode::kCode_ConstTrait;
-                     else if (CobbPatches::TagIDs::IsOperator(tItemNew->tagType)) {
+                        //
+                        // The following codes a bug wherein this markup
+                        //
+                        //    <_trait> foo </_trait>
+                        //    <user0>_trait</user0>
+                        //
+                        // stores the internal ID of _trait to user0 as a float, instead of storing that 
+                        // string.
+                        //
+                        auto str = tItemZ->string.m_data;
+                        if (str && str[0] && str[0] != '&') { // exclude XML entities
+                           tItemZ->tagType = 0.0F;
+                        }
+                     } else if (CobbPatches::TagIDs::IsOperator(tItemNew->tagType)) {
                         tItemY->unk00 = ParseCode::kCode_ConstOperator;
                         if (tItemZ->string.GetLength() && tItemZ->tagType == 0.0F) {
                            tItemY->unk00 = ParseCode::kCode_XXNConstStringOperator;
@@ -427,7 +440,7 @@ namespace CobbPatches {
                   }
                   if (  tItemZ && tItemZ->unk00 == ParseCode::kCode_AttributeTrait
                      && tItemY && tItemY->unk00 == ParseCode::kCode_AttributeSrc
-                     && tItemX && tItemX->unk00 == ParseCode::kCode_NonConstNonSrcOperatorStart && tItemX->tagType == tagIdOrTraitValue
+                     && tItemX && tItemX->unk00 == ParseCode::kCode_ContainerOperatorStart && tItemX->tagType == tagIdOrTraitValue
                   ) {
                      //
                      // TERMINATING BRANCH #5: OPERATOR SRC/TRAIT CONSTRUCTION
@@ -472,9 +485,9 @@ namespace CobbPatches {
                      // We're currently handling an operator element.
                      //
                      if (tItemNew->unk00 == ParseCode::kCode_StartTag)
-                        tItemNew->unk00 = ParseCode::kCode_NonConstNonSrcOperatorStart;
+                        tItemNew->unk00 = ParseCode::kCode_ContainerOperatorStart;
                      else if (tItemNew->unk00 == ParseCode::kCode_EndTag)
-                        tItemNew->unk00 = ParseCode::kCode_NonConstNonSrcOperatorEnd;
+                        tItemNew->unk00 = ParseCode::kCode_ContainerOperatorEnd;
                         //
                   } else if (tItemNew->unk00 == ParseCode::kCode_EndTag) { // at 0x0058D8E7
                      if (CobbPatches::TagIDs::IsTile(tItemNew->tagType))

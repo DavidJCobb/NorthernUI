@@ -150,6 +150,46 @@ namespace RE {
       memset(mem, 0, sizeof(Expression));
       return (new (mem) Expression());
    }
+   void Tile::Value::Expression::NukeContainerOperator() {
+      if (this->opcode != 0xF)
+         return;
+      UInt32 opcode = this->operand.opcode;
+      UInt32 nested = 0;
+      Expression* open = nullptr;
+      auto prev = this->prev;
+      if (!prev) // should never happen
+         return;
+      if (prev) {
+         do {
+            if (prev->opcode == 0xF && prev->operand.opcode == opcode) {
+               ++nested;
+               continue;
+            }
+            if (prev->opcode == 0xA && prev->operand.opcode == opcode) {
+               if (nested) {
+                  --nested;
+                  continue;
+               }
+               open = prev;
+               break;
+            }
+         } while (prev = prev->prev);
+      }
+      if (open) {
+         Expression* x = nullptr;
+         prev = this->prev;
+         do {
+            x = prev->prev;
+            prev->~Expression();
+            FormHeap_Free(prev);
+            if (prev == open)
+               break;
+         } while (prev = x);
+      }
+      this->opcode = 0;
+      this->operand.immediate = 0.0F;
+      this->isString = false;
+   }
    Tile::Value::Expression::~Expression() {
       auto p = this->prev;
       auto n = this->next;
@@ -171,8 +211,6 @@ namespace RE {
       this->refNext = nullptr;
       //
       if (this->isString && this->operand.string) { // MenuQue and NorthernUI
-_MESSAGE("[DESTROY_INTERNAL] Freeing string operand at %08X", this->operand.string);
-_MESSAGE(" - Value was: \"%s\"", this->operand.string);
          FormHeap_Free((void*)this->operand.string);
          this->operand.string = nullptr;
       }
@@ -345,4 +383,8 @@ _MESSAGE(" - Value was: \"%s\"", this->operand.string);
          t = 0.0F;
       this->unk58 = t;
    };
+
+   /*static*/ TileRect* TileRect::CreateOnGameHeap() {
+      return (TileRect*) ThisStdCall(0x00590070, nullptr);
+   }
 }
