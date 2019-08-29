@@ -287,6 +287,18 @@
             <copy src="me()"     trait="_filename_" />
          </filename>
          
+         <!--
+            The _setter and _resetter traits don't hold meaningful values. 
+            Rather, they exist solely as a means to run code. The former 
+            trait reacts to mouse clicks on the slider and its buttons, 
+            computing by how much the current value should change; it then 
+            requests that the pref be changed by that value, and then it 
+            requests that the pref be clamped to the proper min and max.
+            
+            The _resetter trait is similar, listening for the user react-
+            ing to the Reset To Defaults confirmation prompt and triggering 
+            a reset of the pref to its default value at that time.
+         -->
          <_setter>
             <copy>0</copy>
             <add>
@@ -308,11 +320,76 @@
             <xxnOpPrefClampToMax  src="parent()" trait="user12" />
          </_setter>
          <_resetter>
+            <!--
+               TODO: CHANGE THIS CONDITION. Currently we react directly to 
+               Reset To Defaults being clicked, with no regard for its 
+               confirmation prompt!
+               
+               The menu needs to be coded to alert us when the user confirms 
+               a reset to defaults, and once we implement pure-XML sub-menus, 
+               we need to also check that our containing submenu is visible 
+               (actually, a prefab argument will have to run that latter check 
+               for us and we'll need to grab the result).
+            -->
             <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
             <xxnOpPrefResetValue src="parent()" trait="user12" />
          </_resetter>
          
          <_value_scrolled_to>
+            <!--
+               One of this prefab's arguments is a COPY operator grabbing the 
+               current value of the pref. Our _setter and _resetter traits 
+               allow us to modify the pref's value without having to handle 
+               state, which is good because UI XML can't actually initialize 
+               something like a scrollbar to a non-zero value -- it's just not 
+               possible due to how values are computed.
+               
+               (First, let me create a quick ad-hoc definition: for these next 
+               two paragraphs, an "accumulator" trait is any trait that avoids 
+               using the "copy" operator to overwrite its value, allowing it 
+               to maintain state. In normal scrollbars, the _value_scrolled_to 
+               trait would be an accumulator. These traits have an initial 
+               value of zero, which is obviously unusable for this pref system: 
+               the initial value needs to be the current value of the pref as 
+               of the scrollbar's containing menu being opened.
+               
+               (Here's the problem.
+               
+               (When you have a trait with multiple SRC operators inside of 
+               it, those operators don't all fill at once and they're not 
+               guaranteed to fill in any particular order. The trait recom-
+               putes its value -- executing all of those operators -- every 
+               time any operator fills, and the ones that haven't filled yet 
+               just use zero as their argument. This means that you can't 
+               create a "return this value once, and then do nothing" operator 
+               because its own argument may not have filled yet when it first 
+               executes, and so it would only ever return zero.
+               
+               (In short, there's no way to set the initial value of an XML 
+               "accumulator" trait to anything other than zero. The harder 
+               you try to work around this, the deeper into the weeds you'll 
+               get lost; take my word for it: it's literally impossible to 
+               work around this solely by patching new operators into the 
+               engine or doing anything else that takes place entirely inside 
+               of UI state.
+               
+               (In theory you could control the value that an accumulator 
+               initializes to at parse-time, but that would only allow you 
+               to use constants as initial values. This is a prefab: it needs 
+               to be able to get the pref to modify at run-time via a copy 
+               operator. But once we're actually computing any such copy 
+               operators, it's no longer possible to tell when we should 
+               set an initial value. There's no way to check that all 
+               operators in the trait have had their arguments resolved before 
+               allowing a specific one of those operators to execute.)
+               
+               So, we let the executable handle state for us, feed changes to 
+               it rather than actually *setting* its value, and receive the 
+               current value when the executable forwards it back to the hard-
+               coded xxnPrefs() tile as a trait value. This neatly side-steps 
+               the need to use accumulators in XML and therefore also the 
+               need to control what value an accumulator initializes to.
+            -->
             <copy src="parent()" trait="user13" />
          </_value_scrolled_to>
          <user8>	<!-- for dragging - drag interval; ideally should compute to an integer -->

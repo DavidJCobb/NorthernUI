@@ -213,11 +213,23 @@ namespace CobbPatches {
             // MenuQue plugs a lot of static variables into DoActionEnumeration, 
             // which means that we can't allow operators to take any action that 
             // might change another trait's value; doing so causes MenuQue to 
-            // choke and crash the game.
+            // choke and crash the game. (Changing one trait while we're process-
+            // ing changes for another trait causes DoActionEnumeration to recurse 
+            // in a way that breaks MenuQue's state -- things get deleted when 
+            // they're still needed.)
             //
             // As such, we need to be able to track when we're no longer inside 
             // of DoActionEnumeration -- bearing in mind that it can recurse 
             // indirectly due to UpdateInboundReferences.
+            //
+            // The (s_depth) variable keeps track of how many times we've ended 
+            // up in DoActionEnumeration i.e. how far we've recursed, with 0 
+            // indicating that we're outside of the "meat" of the function and 
+            // it's safe to recurse. The (s_handlingEnd) function prevents us 
+            // from recursing when we actually act on DoActionEnumeration being 
+            // over: when the function is over, we'll be taking actions that 
+            // alter trait values, which will make the function recurse; we need 
+            // to ensure that we don't react to *that* call stack ending.
             //
             static UInt32 s_depth = 0;
             static bool   s_handlingEnd = false;
