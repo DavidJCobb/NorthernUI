@@ -1,0 +1,106 @@
+void Tile::Value::UpdateInboundReferences() {
+   auto edi = this;
+   if (this->owner->unk05)
+      return;
+   //
+   // First, propagate our new value to all operators that are referencing it 
+   // via the SRC and TRAIT attributes.
+   //
+   Expression* ecx = this->incomingRefs;
+   if (auto ebx = ecx->refNext) { // at 0x0058BDE9
+      do {
+         if (this->HasStringValue()) {
+            auto eax = ebx->prev;
+            auto esi = ebx;
+            if (eax) {
+               do {
+                  esi = eax;
+               } while (eax = esi->next);
+            } 
+            // esi == list head for the trait that contains operator ebx
+            // esi->operand.ref  == the trait that contains operator ebx
+            auto ecx = this->str.m_data;
+            auto eax = &esi->operand.ref->str.m_data;
+            if (ecx && (auto eax = *eax)) {
+               ecx = sub0098262D(eax, ecx); // strcmp?
+            } else
+               eax = !ecx ? 1 : -1;
+            if (eax == 0) // string did not change
+               continue;
+            esi->operand.ref->str.Replace_MinBufLen(this->str.m_data, 0); // at 0x0058BE49
+            eax = esi->operand.ref;
+            eax->num = 0.0F;
+            if (eax->owner->GetTypeID() == 0x387) { // <text/> // at 0x0058BE67
+               eax->owner->flags |= 0x2;
+            }
+            if (esi->operand.ref->id == 0xFE6) { // filename
+               eax->owner->flags |= 0x20;
+            }
+         } else
+            ebx->operand.immediate = this->num;
+      } while (ebx = ebx->refNext);
+   }
+   //
+   // Next, tell all referencing operators' containing traits to recompute their 
+   // final values in full.
+   //
+   auto edx = nullptr;
+   if (auto esi = this->incomingRefs->refNext) { // at 0x0058BEA2
+      auto edx = nullptr;
+      do {
+         if (!esi->opcode)
+            continue;
+         auto eax = esi->prev;
+         auto ecx = esi;
+         if (eax)
+            do {
+               ecx = eax;
+            } while (eax = ecx->prev);
+         auto edi = ecx->operand.ref;
+         if (!edi)
+            continue;
+         if (edi == edx)
+            continue;
+         edi->DoActionEnumeration(0);
+         edx = edi;
+      } while (esi = esi->refNext);
+   }
+}
+//
+// When a trait gets updated and fully recomputes its value, it 
+// calls Tile::Value::UpdateInboundReferences, which does two 
+// things:
+//
+//  - First, the trait's new value is propagated to all operators 
+//    that pull from it via the SRC and TRAIT attributes.
+//
+//  - Then, all such operators are found and looped over: their 
+//    containing traits are told to recompute their own values 
+//    via a call to Tile::Value::DoActionEnumeration(0).
+//
+// That first step is very important.
+//
+//  - If the changed trait has a float value, then all incoming 
+//    operators have their operands set to that float.
+//
+//  - However, if the chaned trait has a string value, then all 
+//    incoming operators have their containing trait's string 
+//    value set to the new string (if it's changed).
+//
+// That means that in the vanilla engine, situations like this 
+// will behave undesirably:
+//
+//    <rect name="test">
+//       <foo> String! </foo>
+//       <bar> <copy src="me()" trait="foo" /> </bar>
+//       <baz>
+//          <someOperatorWithAStringOperandThatReturnsAFloat src="me()" trait="bar" />
+//       </baz>
+//    </rect>
+//
+// Even though someOperatorWithAStringOperandThatReturnsAFloat 
+// returns a float, it's still pulling a string value from the 
+// bar trait. Therefore, when the bar trait is updated and gains 
+// a string value, UpdateInboundReferences will directly set the 
+// value of the baz trait to that string. This is the behavior we 
+// want to change.

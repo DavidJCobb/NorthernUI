@@ -164,31 +164,7 @@ namespace RE {
                Expression* refPrev = nullptr; // 10
                Expression* refNext = nullptr; // 14
                //
-               ~Expression() {
-                  auto p = this->prev;
-                  auto n = this->next;
-                  if (p)
-                     p->next = n;
-                  if (n)
-                     n->prev = p;
-                  //
-                  auto s = this->refPrev;
-                  auto u = this->refNext;
-                  if (s)
-                     s->refNext = u;
-                  if (u)
-                     u->refPrev = s;
-                  //
-                  this->prev  = nullptr;
-                  this->next  = nullptr; 
-                  this->refPrev = nullptr;
-                  this->refNext = nullptr;
-                  //
-                  if (this->isString && this->operand.string) { // MenuQue and NorthernUI
-                     FormHeap_Free((void*)this->operand.string);
-                     this->operand.string = nullptr;
-                  }
-               };
+               ~Expression();
                //
                Expression() {};
                Expression(Value* v) {

@@ -150,6 +150,33 @@ namespace RE {
       memset(mem, 0, sizeof(Expression));
       return (new (mem) Expression());
    }
+   Tile::Value::Expression::~Expression() {
+      auto p = this->prev;
+      auto n = this->next;
+      if (p)
+         p->next = n;
+      if (n)
+         n->prev = p;
+      //
+      auto s = this->refPrev;
+      auto u = this->refNext;
+      if (s)
+         s->refNext = u;
+      if (u)
+         u->refPrev = s;
+      //
+      this->prev = nullptr;
+      this->next = nullptr;
+      this->refPrev = nullptr;
+      this->refNext = nullptr;
+      //
+      if (this->isString && this->operand.string) { // MenuQue and NorthernUI
+_MESSAGE("[DESTROY_INTERNAL] Freeing string operand at %08X", this->operand.string);
+_MESSAGE(" - Value was: \"%s\"", this->operand.string);
+         FormHeap_Free((void*)this->operand.string);
+         this->operand.string = nullptr;
+      }
+   };
 
    void Tile::Value::AppendStringOperator(UInt32 operatorID, const char* str) {
       //if (!CobbPatches::TagIDs::IsOperatorWithStringOperand(operatorID))
@@ -160,20 +187,20 @@ namespace RE {
             last = last->next;
          } while (last->next);
       auto op = Tile::Value::Expression::CreateOnGameHeap();
-      op->prev     = last;
-      op->next     = nullptr;
+      op->prev    = last;
+      op->next    = nullptr;
       {
          auto length = strlen(str) + 1;
          auto buffer = (char*) FormHeap_Allocate(length);
-         buffer[length - 1] = '\0';
          memcpy(buffer, str, length - 1);
+         buffer[length - 1] = '\0';
          op->operand.string = buffer;
+         op->isString = true;
       }
-      op->opcode   = operatorID;
-      op->isString = true;
-      op->refPrev  = nullptr;
-      op->refNext  = nullptr;
-      last->next = op;
+      op->opcode  = operatorID;
+      op->refPrev = nullptr;
+      op->refNext = nullptr;
+      last->next  = op;
    }
 
    //

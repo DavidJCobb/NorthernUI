@@ -451,7 +451,7 @@ void Tile::Value::DoActionEnumeration(bool forceUpdateInbound) {
          }
       #else
          // code here is the code for a call to MQ_129D0(this):
-         auto esi = &nestedResults; // was cached in a MQ static var earlier
+         NiTListBase<float>* esi = &nestedResults; // was cached in a MQ static var earlier
          if (esi && esi->numItems) {
             assert(esi->unk04);
             float ebp04;
@@ -466,10 +466,9 @@ void Tile::Value::DoActionEnumeration(bool forceUpdateInbound) {
                esi->FreeNode(eax);
                esi->numItems--;
                MQ_512F0->unk00 = ebp04;
-               
             } while (esi->unk04);
          }
-         esi = *MQ_512F8;
+         NiTListBase<BSStringT*>* esi = *MQ_512F8;
          if (esi && esi->numItems) {
             assert(esi->unk04);
             do {
@@ -479,7 +478,7 @@ void Tile::Value::DoActionEnumeration(bool forceUpdateInbound) {
                   ecx->prev = nullptr;
                else
                   esi->end = nullptr;
-               auto edi = eax->data;
+               BSStringT* edi = eax->data;
                esi->FreeNode(eax);
                esi->numItems--;
                MQ_51304->MC_1CFB0(); // decltype(MQ_51304) == BSStringT*
