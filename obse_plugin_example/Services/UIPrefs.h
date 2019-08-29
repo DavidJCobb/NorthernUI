@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <unordered_map>
 
 namespace cobb {
    struct XMLDocument;
@@ -16,7 +18,6 @@ class UIPrefManager {
       };
 
       struct Pref {
-         std::string name;
          float       defaultFloat = 0.0F;
          float       currentFloat = 0.0F;
          float       pendingFloat = 0.0F;
@@ -24,16 +25,16 @@ class UIPrefManager {
 
          void  commitPendingChanges(UInt32 closingMenuID);
          float getValue(UInt32 askingMenuID) const;
-         void  initialize() {
-            this->currentFloat = this->defaultFloat;
-         }
+
+         Pref() {}
+         Pref(float defaultFloat);
       };
       //
    private:
-      std::vector<Pref> prefs;
+      std::unordered_map<std::string, Pref> prefs;
       //
-      Pref* getPrefByName(const char* name);
-      const Pref* getPrefByName(const char* name) const;
+      Pref* getPrefByName(std::string name);
+      const Pref* getPrefByName(std::string name) const;
       //
       void processDocument(cobb::XMLDocument&);
       //

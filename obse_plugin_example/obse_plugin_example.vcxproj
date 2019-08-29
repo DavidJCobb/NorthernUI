@@ -128,6 +128,7 @@
     <ClCompile Include="Miscellaneous\InGameDate.cpp" />
     <ClCompile Include="Miscellaneous\math.cpp" />
     <ClCompile Include="Miscellaneous\rotation.cpp" />
+    <ClCompile Include="Miscellaneous\debug.cpp" />
     <ClCompile Include="Miscellaneous\UnitTests\xml.cpp" />
     <ClCompile Include="Miscellaneous\xml.cpp" />
     <ClCompile Include="Patches\AudioMenu.cpp" />
@@ -250,6 +251,7 @@
     <ClInclude Include="Fun\x86Writer.h" />
     <ClInclude Include="Miscellaneous\CRC24.h" />
     <ClInclude Include="Miscellaneous\CRC32.h" />
+    <ClInclude Include="Miscellaneous\debug.h" />
     <ClInclude Include="Miscellaneous\file.h" />
     <ClInclude Include="Miscellaneous\InGameDate.h" />
     <ClInclude Include="Miscellaneous\large_bitset.h" />
@@ -417,6 +419,7 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\PlayerCharacter\Subroutine00671620.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\CreateTemplatedChildren.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\UpdateTemplatedChildren.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\Value\UpdateInboundReferences.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\FindBSAThatContainsFile.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\HashFilePath.txt" />
   </ItemGroup>

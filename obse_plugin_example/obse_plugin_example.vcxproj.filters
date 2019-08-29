@@ -122,6 +122,7 @@
     <ClCompile Include="Miscellaneous\xml.cpp" />
     <ClCompile Include="Miscellaneous\file.cpp" />
     <ClCompile Include="Miscellaneous\UnitTests\xml.cpp" />
+    <ClCompile Include="Miscellaneous\debug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -8043,6 +8044,7 @@
     <ClInclude Include="Miscellaneous\xml.h" />
     <ClInclude Include="Miscellaneous\file.h" />
     <ClInclude Include="Miscellaneous\UnitTests\xml.h" />
+    <ClInclude Include="Miscellaneous\debug.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
@@ -8065,6 +8067,7 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\HandleMouseDown.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\UpdateTumblerHeightOffsets.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\Subroutine005AFA80.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\Value\UpdateInboundReferences.txt" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NorthernUI.rc" />

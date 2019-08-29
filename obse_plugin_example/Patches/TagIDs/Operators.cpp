@@ -65,7 +65,6 @@ namespace CobbPatches {
                void Apply() {
                   WriteRelCall(0x0058898A, (UInt32)&Inner);
                }
-
             }
             namespace UpdateTemplatedChildren {
                //
@@ -112,11 +111,107 @@ namespace CobbPatches {
                   WriteRelJump(0x0058D0EF, (UInt32)&Outer);
                }
             }
+            namespace UpdateInboundReferences {
+               //
+               // When a trait gets updated and fully recomputes its value, it 
+               // calls Tile::Value::UpdateInboundReferences, which does two 
+               // things:
+               //
+               //  - First, the trait's new value is propagated to all operators 
+               //    that pull from it via the SRC and TRAIT attributes.
+               //
+               //  - Then, all such operators are found and looped over: their 
+               //    containing traits are told to recompute their own values 
+               //    via a call to Tile::Value::DoActionEnumeration(0).
+               //
+               // That first step is very important.
+               //
+               //  - If the changed trait has a float value, then all incoming 
+               //    operators have their operands set to that float.
+               //
+               //  - However, if the chaned trait has a string value, then all 
+               //    incoming operators have their containing trait's string 
+               //    value set to the new string (if it's changed).
+               //
+               // That means that in the vanilla engine, situations like this 
+               // will behave undesirably:
+               //
+               //    <rect name="test">
+               //       <foo> String! </foo>
+               //       <bar> <copy src="me()" trait="foo" /> </bar>
+               //       <baz>
+               //          <someOperatorWithAStringOperandThatReturnsAFloat src="me()" trait="bar" />
+               //       </baz>
+               //    </rect>
+               //
+               // Even though someOperatorWithAStringOperandThatReturnsAFloat 
+               // returns a float, it's still pulling a string value from the 
+               // bar trait. Therefore, when the bar trait is updated and gains 
+               // a string value, UpdateInboundReferences will directly set the 
+               // value of the baz trait to that string. This is the behavior we 
+               // want to change.
+               //
+               // For the record: MenuQue doesn't account for this case, which 
+               // would in theory potentially break its <length /> operator.
+               //
+               bool _OpcodeReturnsString(UInt32 opcode) {
+                  switch (opcode) {
+                     case RE::kTagID_MenuQue_append:
+                     case RE::kTagID_MenuQue_prepend:
+                     case RE::kTagID_MenuQue_tostring:
+                        return true;
+                  }
+                  return false;
+               }
+               bool _stdcall DoString(RE::Tile::Value::Expression* referring, const char* newString) {
+                  auto opcode = referring->opcode;
+                  if (CobbPatches::TagIDs::IsOperatorWithStringOperand(opcode)) {
+                     //
+                     // Propagate the new computed string to the operator's operand, just as 
+                     // the vanilla game would a float operand.
+                     //
+                     if (referring->isString && referring->operand.string) {
+                        FormHeap_Free((void*)referring->operand.string);
+                     }
+                     auto length = strlen(newString) + 1;
+                     auto buffer = (char*)FormHeap_Allocate(length);
+                     memcpy(buffer, newString, length - 1);
+                     buffer[length - 1] = '\0';
+                     referring->operand.string = buffer;
+                     referring->isString = true;
+                     return true;
+                  }
+                  return false;
+               }
+               __declspec(naked) void Outer() {
+                  _asm {
+                     push ecx; // protect
+                     push edx;
+                     push ebx;
+                     call DoString; // stdcall
+                     pop  ecx; // restore
+                     test al, al;
+                     jnz  lHandled;
+                     mov  eax, 0x004028D0; // reproduce patchedover call to BSStringT::Replace_MinBufLen(const char*, UInt32)
+                     call eax;             // 
+                     jmp  lExit;
+                  lHandled:
+                     add  esp, 8; // cancel patched-over call
+                  lExit:
+                     mov  eax, 0x0058BE4E;
+                     jmp  eax;
+                  }
+               }
+               void Apply() {
+                  WriteRelJump(0x0058BE49, (UInt32)&Outer);
+               }
+            }
             //
             void Apply() {
                ExpressionDestructor::Apply();
                ExpressionRemove::Apply();
                UpdateTemplatedChildren::Apply();
+               UpdateInboundReferences::Apply();
             }
          };
          namespace DoActionEnumeration {
@@ -272,8 +367,29 @@ namespace CobbPatches {
                   case _traitPrefSave:
                      {
                         const char* str = current->GetStringValue();
-                        if (!str)
+                        if (!str) {
+                           //
+                           // Expect this to happen sometimes. If you're using this operator, say, 
+                           // at the end of a scrollbar thumb's _value_scrolled_to, then when the 
+                           // scrollbar is first instantiated, all of the prior outgoing refs from 
+                           // that trait will cause the trait to be recomputed, so this operator 
+                           // will be called with a nullptr string several times in a row until 
+                           // the operator itself is resolved.
+                           //
+                           // e.g.
+                           //
+                           //    <someTrait>
+                           //       <copy src="foo" trait="bar" />
+                           //       <xxnPrefSaveValue src="foo" trait="baz" />
+                           //    </someTrait>
+                           //
+                           // will cause (someTrait) to be recomputed twice: once to get the value 
+                           // of the copy operator, and once to get the value of the pref-save 
+                           // operator; and during that first recomputation, the pref-save operator 
+                           // will have a nullptr string because its string hasn't been set up yet.
+                           //
                            return true;
+                        }
                         _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, str); // TODO: REMOVE LOGGING
                         UInt32 menuID = 0;
                         {
@@ -285,26 +401,14 @@ namespace CobbPatches {
                            }
                         }
                         UIPrefManager::GetInstance().setPrefValue(str, kThis->num, menuID);
-                        //
-                        // For some reason, our owning trait can end up having our argument as its 
-                        // string value. MenuQue shenanigans involving string operators, maybe? 
-                        // Force it to a number.
-                        //
                         kThis->bIsNum = 1;
-                        CALL_MEMBER_FN(&kThis->str, Replace_MinBufLen)(nullptr, 0);
                      }
                      return true;
                   case _traitPrefLoad:
                      {
                         const char* str = current->GetStringValue();
                         kThis->num = 0.0F;
-                        //
-                        // For some reason, our owning trait can end up having our argument as its 
-                        // string value. MenuQue shenanigans involving string operators, maybe? 
-                        // Force it to a number.
-                        //
                         kThis->bIsNum = 1;
-                        CALL_MEMBER_FN(&kThis->str, Replace_MinBufLen)(nullptr, 0);
                         //
                         if (str) {
                            _MESSAGE("XML has asked to load pref %s.", str); // TODO: REMOVE LOGGING
@@ -346,13 +450,7 @@ namespace CobbPatches {
                         } else {
                            kThis->num = 0.0F;
                         }
-                        //
-                        // For some reason, our owning trait can end up having our argument as its 
-                        // string value. MenuQue shenanigans involving string operators, maybe? 
-                        // Force it to a number.
-                        //
                         kThis->bIsNum = 1;
-                        CALL_MEMBER_FN(&kThis->str, Replace_MinBufLen)(nullptr, 0);
                      }
                      return true;
                }

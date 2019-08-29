@@ -1,4 +1,5 @@
 #include "UIPrefs.h"
+#include "Miscellaneous/debug.h"
 #include "Miscellaneous/file.h"
 #include "Miscellaneous/strings.h"
 #include "Miscellaneous/xml.h"
@@ -66,28 +67,26 @@ float UIPrefManager::Pref::getValue(UInt32 askingMenuID) const {
          return this->pendingFloat;
    return this->currentFloat;
 }
+UIPrefManager::Pref::Pref(float defaultFloat) {
+   this->defaultFloat = defaultFloat;
+   this->currentFloat = defaultFloat;
+}
 
 //
 
-UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) {
-   if (!name)
+UIPrefManager::Pref* UIPrefManager::getPrefByName(std::string name) {
+   try {
+      return &this->prefs.at(name);
+   } catch (std::out_of_range) {
       return nullptr;
-   for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
-      auto& pref = *it;
-      if (pref.name == name)
-         return &pref;
    }
-   return nullptr;
 }
-const UIPrefManager::Pref* UIPrefManager::getPrefByName(const char* name) const {
-   if (!name)
+const UIPrefManager::Pref* UIPrefManager::getPrefByName(std::string name) const {
+   try {
+      return &this->prefs.at(name);
+   } catch (std::out_of_range) {
       return nullptr;
-   for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
-      auto& pref = *it;
-      if (pref.name == name)
-         return &pref;
    }
-   return nullptr;
 }
 
 float UIPrefManager::getPrefCurrentValue(const char* name, UInt32 askingMenuID) const {
@@ -118,9 +117,12 @@ void UIPrefManager::setPrefValue(const char* name, float v, UInt32 menuID) {
 }
 //
 void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
-   Pref   currentPref;
    UInt32 nesting  = 0;
    bool   isInPref = false;
+   //
+   std::string prefName;
+   float       prefDefault = 0.0F;
+   //
    for (auto it = doc.tokens.begin(); it != doc.tokens.end(); ++it) {
       auto& token = *it;
       if (token.code == cobb::kXMLToken_ElementOpen) {
@@ -148,28 +150,33 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
          if (!isInPref)
             continue;
          if (token.name == "name") {
-            std::swap(currentPref.name, token.value); // we're never gonna use these tokens again, so just steal the strings with swap instead of wasting overhead on a copy-assign
+            std::swap(prefName, token.value); // we're never gonna use these tokens again, so just steal the strings with swap instead of wasting overhead on a copy-assign
             continue;
          } else if (token.name == "default") {
             auto  val = token.value.c_str();
             char* end = nullptr;
             float f = strtof(val, &end);
             if (end != val) {
-               currentPref.defaultFloat = f;
+               prefDefault = f;
                continue;
             }
-            _MESSAGE("WARNING: Cannot assign value \"%s\" to pref \"%\". Values must be floats.", val, currentPref.name.c_str());
+            _MESSAGE("WARNING: Cannot assign value \"%s\" to pref \"%\". Values must be floats.", val, prefName.c_str()); // TODO: this message won't work if the default comes before the name
             continue;
          }
       } else if (token.code == cobb::kXMLToken_ElementClose) {
          --nesting;
          if (token.name != "pref")
             continue;
-         if (currentPref.name.size()) {
-            currentPref.initialize();
-            this->prefs.push_back(currentPref);
+         if (prefName.size()) {
+            if (this->getPrefByName(prefName.c_str())) {
+               _MESSAGE("WARNING: Duplicate pref \"%s\" detected; discarding.", prefName.c_str());
+            } else {
+               this->prefs.emplace(prefName, prefDefault);
+            }
+            //this->prefs.emplace_back(std::string("TEST NAME TEST NAME"), 12345.0F);
+            prefName = "";
          }
-         currentPref = Pref();
+         prefDefault = 0.0F;
          isInPref = false;
       }
    }
@@ -178,8 +185,9 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
 void UIPrefManager::dumpDefinitions() const {
    _MESSAGE("Dumping list of prefs in UIPrefManager...");
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
-      auto& pref = *it;
-      _MESSAGE(" - %s=%f [default %f]", pref.name.c_str(), pref.currentFloat, pref.defaultFloat);
+      auto& name = it->first;
+      auto& pref = it->second;
+      _MESSAGE(" - %s=%f [default %f]", name.c_str(), pref.currentFloat, pref.defaultFloat);
    }
    _MESSAGE(" - Done.");
 }
@@ -248,10 +256,10 @@ void UIPrefManager::loadDefinitions() {
          file.close();
          //
          cobb::parseXML(doc, data.c_str(), data.size());
+         data.clear();
          this->processDocument(doc);
          doc.clear();
          //
-         data.clear();
          _MESSAGE(" - Loaded: %s", path.c_str());
       }
    } while (FindNextFileA(handle, &state));
@@ -262,9 +270,10 @@ void UIPrefManager::loadDefinitions() {
 void UIPrefManager::onMenuClose(UInt32 menuID) {
    bool needsSave = false;
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
-      if (it->pendingChangesFromMenuID)
+      auto& pref = it->second;
+      if (pref.pendingChangesFromMenuID == menuID)
          needsSave = true;
-      it->commitPendingChanges(menuID);
+      pref.commitPendingChanges(menuID);
    }
    if (needsSave)
       this->saveUserValues();
@@ -278,9 +287,8 @@ namespace {
 }
 void UIPrefManager::loadUserValues() {
    _MESSAGE("Loading the user's UI prefs...");
-   const std::string& path = GetSavePath();
    std::ifstream file;
-   file.open(path);
+   file.open(GetSavePath());
    if (!file) {
       _MESSAGE("Unable to open INI file for reading.");
       return;
@@ -364,18 +372,18 @@ void UIPrefManager::loadUserValues() {
 }
 void UIPrefManager::saveUserValues() const {
    _MESSAGE("Saving the user's UI prefs...");
-   const std::string& path = GetSavePath();
-   std::fstream file;
-   file.open(path, std::ios_base::out | std::ios_base::trunc);
+   std::ofstream file;
+   file.open(GetSavePath(), std::ios_base::out | std::ios_base::trunc);
    if (!file) {
       _MESSAGE("Unable to open INI file for writing.");
       return;
    }
-   file.write("[PrefValues]\n", strlen("[PrefValues]\n"));
+   file << "[PrefValues]\n";
    for (auto it = this->prefs.begin(); it != this->prefs.end(); ++it) {
-      auto& pref = *it;
+      auto& name = it->first;
+      auto& pref = it->second;
       std::string line;
-      cobb::snprintf(line, "%s=%f\n", pref.name, pref.currentFloat);
+      cobb::snprintf(line, "%s=%f\n", name.c_str(), pref.currentFloat);
       file.write(line.c_str(), line.size());
    }
    file.close();
