@@ -83,11 +83,8 @@ bool UIPrefManager::Pref::commitPendingChanges(UInt32 closingMenuID) {
    return false;
 }
 float UIPrefManager::Pref::getValue(UInt32 askingMenuID) const {
-   /*//
-   if (askingMenuID)
-      if (this->pendingChangesFromMenuID == askingMenuID)
-         return this->pendingFloat;
-   //*/
+   if (this->pendingChangesFromMenuID)
+      return this->pendingFloat;
    return this->currentFloat;
 }
 UIPrefManager::Pref::Pref(float defaultFloat) {
@@ -351,14 +348,11 @@ void UIPrefManager::onMenuClose(UInt32 menuID) {
 }
 
 void UIPrefManager::queuePrefPushToUIState(const std::string& name) {
-_MESSAGE("Queueing pref \"%s\" for push to UI...", name.c_str());
    auto& list = this->prefsPendingPushToUI;
    auto it = std::find(list.begin(), list.end(), name);
-if (it != list.end()) _MESSAGE("Pref is already queued.");
    if (it != list.end())
       return;
    list.push_back(name);
-_MESSAGE("Queued.");
 }
 void UIPrefManager::pushPrefToUIState(const std::string& name) const {
    auto pref = this->getPrefByName(name);

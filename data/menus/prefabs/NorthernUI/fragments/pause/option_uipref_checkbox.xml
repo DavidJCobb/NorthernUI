@@ -1,6 +1,5 @@
 <!--<rect name="option_button">-->
    <!-- args -->
-   <user0>&generic;</user0> <!-- button ID -->
    <user1>&true;</user1> <!-- enabled -->
    <user10>200</user10> <!-- label column width -->
    <user11></user11> <!-- label -->
@@ -35,7 +34,7 @@
       <sub>1</sub>
    </_mouseover_any>
    
-   <id><copy src="me()" trait="user0" /></id>
+   <id>&generic;</id>
    <user20>&false;</user20> <!-- button state, set by executable -->
    
    <target><copy src="me()" trait="user1" /></target>
@@ -57,6 +56,40 @@
    <_mouseover_any>
       <copy src="me()" trait="mouseover" />
    </_mouseover_any>
+   
+   <!--
+      The _setter and _resetter traits don't hold meaningful values. 
+      Rather, they exist solely as a means to run code. The former 
+      trait reacts to mouse clicks on the slider and its buttons, 
+      computing by how much the current value should change; it then 
+      requests that the pref be changed by that value, and then it 
+      requests that the pref be clamped to the proper min and max.
+      
+      The _resetter trait is similar, listening for the user react-
+      ing to the Reset To Defaults confirmation prompt and triggering 
+      a reset of the pref to its default value at that time.
+   -->
+   <_setter>
+      <copy src="me()" trait="clicked" />
+      <xxnOpPrefModifyValue src="me()" trait="user12" />
+      <copy>2</copy>
+      <xxnOpPrefCarousel src="me()" trait="user12" />
+   </_setter>
+   <_resetter>
+      <!--
+         TODO: CHANGE THIS CONDITION. Currently we react directly to 
+         Reset To Defaults being clicked, with no regard for its 
+         confirmation prompt!
+         
+         The menu needs to be coded to alert us when the user confirms 
+         a reset to defaults, and once we implement pure-XML sub-menus, 
+         we need to also check that our containing submenu is visible 
+         (actually, a prefab argument will have to run that latter check 
+         for us and we'll need to grab the result).
+      -->
+      <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
+      <xxnOpPrefResetValue src="parent()" trait="user12" />
+   </_resetter>
    
    <text name="label">
       <depth>-3</depth>
@@ -92,47 +125,6 @@
       <zoom>40</zoom>
       <_filename_1>NorthernUI\checkbox\checkbox_cleared.dds</_filename_1>
       <_filename_2>NorthernUI\checkbox\checkbox_checked.dds</_filename_2>
-      
-      <!--
-         The _setter and _resetter traits don't hold meaningful values. 
-         Rather, they exist solely as a means to run code. The former 
-         trait reacts to mouse clicks on the slider and its buttons, 
-         computing by how much the current value should change; it then 
-         requests that the pref be changed by that value, and then it 
-         requests that the pref be clamped to the proper min and max.
-         
-         The _resetter trait is similar, listening for the user react-
-         ing to the Reset To Defaults confirmation prompt and triggering 
-         a reset of the pref to its default value at that time.
-      -->
-      <_setter>
-         <copy src="parent()" trait="user13" />
-         <sub>
-            <not  src="parent()" trait="user13" />
-         </sub>
-         <abs>0</abs>
-         <mult src="me()" trait="clicked" />
-         <xxnOpPrefModifyValue src="parent()" trait="user12" />
-         <copy>&false;</copy>
-         <xxnOpPrefClampToMin  src="parent()" trait="user12" />
-         <copy>&true;</copy>
-         <xxnOpPrefClampToMax  src="parent()" trait="user12" />
-      </_setter>
-      <_resetter>
-         <!--
-            TODO: CHANGE THIS CONDITION. Currently we react directly to 
-            Reset To Defaults being clicked, with no regard for its 
-            confirmation prompt!
-            
-            The menu needs to be coded to alert us when the user confirms 
-            a reset to defaults, and once we implement pure-XML sub-menus, 
-            we need to also check that our containing submenu is visible 
-            (actually, a prefab argument will have to run that latter check 
-            for us and we'll need to grab the result).
-         -->
-         <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
-         <xxnOpPrefResetValue src="parent()" trait="user12" />
-      </_resetter>
       
       <filename>
          <copy src="parent()" trait="user13" /><eq>&true;</eq>

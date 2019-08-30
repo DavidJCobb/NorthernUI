@@ -361,6 +361,31 @@ namespace CobbPatches {
                };
             };
             //
+            namespace {
+               namespace Helpers {
+                  const char* getStringOperandAsPrefName(RE::Tile::Value::Expression* const op) {
+                     const char* str = op->GetStringValue();
+                     if (!str || !cobb::string_has_content(str))
+                        return nullptr;
+                     if (str[0] == '_') {
+                        str++;
+                        if (!str[0])
+                           return nullptr;
+                     }
+                     return str;
+                  }
+                  UInt32 getValueContainingMenuID(RE::Tile::Value* const value) {
+                     auto tile = value->owner;
+                     if (tile) {
+                        auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+                        if (menu)
+                           return menu->GetID();
+                     }
+                     return 0;
+                  }
+               }
+            }
+            //
             bool Inner(const UInt16 operatorID, RE::Tile::Value* const kThis, RE::Tile::Value* const esp44, const float argument, RE::Tile::Value::Expression* const current) {
                //
                // This subroutine should generally only handle our custom operators, since we just 
@@ -441,8 +466,8 @@ namespace CobbPatches {
                      return true;
                   case _traitOpPrefModify:
                      {
-                        const char* str = current->GetStringValue();
-                        if (!str || !cobb::string_has_content(str))
+                        const char* str = Helpers::getStringOperandAsPrefName(current);
+                        if (!str)
                            //
                            // Expect this to happen sometimes. If you're using this operator, say, 
                            // at the end of a scrollbar thumb's _value_scrolled_to, then when the 
@@ -464,93 +489,90 @@ namespace CobbPatches {
                            // will have a nullptr string because its string hasn't been set up yet.
                            //
                            return true;
-                        if (str[0] == '_') {
-                           str++;
-                           if (!str[0])
-                              return true;
-                        }
                         _MESSAGE("XML has asked to modify pref %s by %f.", str, kThis->num); // TODO: REMOVE LOGGING
-                        UInt32 menuID = 0;
-                        {
-                           auto tile = kThis->owner;
-                           if (tile) {
-                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
-                              if (menu)
-                                 menuID = menu->GetID();
-                           }
-                        }
+                        if (kThis->num)
+                           _MESSAGE(" - Old value is %f", UIPrefManager::GetInstance().getPrefCurrentValue(str)); // TODO: REMOVE LOGGING
+                        UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                         UIPrefManager::GetInstance().modifyPrefValue(str, kThis->num, menuID);
+                        if (kThis->num)
+                           _MESSAGE(" - New value is %f", UIPrefManager::GetInstance().getPrefCurrentValue(str)); // TODO: REMOVE LOGGING
                      }
                      return true;
                   case _traitOpPrefClampToMin:
                      {
-                        const char* str = current->GetStringValue();
-                        if (!str || !cobb::string_has_content(str))
+                        const char* str = Helpers::getStringOperandAsPrefName(current);
+                        if (!str)
                            return true;
-                        if (str[0] == '_') {
-                           str++;
-                           if (!str[0])
-                              return true;
-                        }
                         _MESSAGE("XML has asked to clamp pref %s to a minimum of %f.", str, kThis->num); // TODO: REMOVE LOGGING
-                        UInt32 menuID = 0;
-                        {
-                           auto tile = kThis->owner;
-                           if (tile) {
-                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
-                              if (menu)
-                                 menuID = menu->GetID();
-                           }
-                        }
+                        UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                         UIPrefManager::GetInstance().clampPrefValue(str, kThis->num, true, menuID);
                      }
                      return true;
                   case _traitOpPrefClampToMax:
                      {
-                        const char* str = current->GetStringValue();
-                        if (!str || !cobb::string_has_content(str))
+                        const char* str = Helpers::getStringOperandAsPrefName(current);
+                        if (!str)
                            return true;
-                        if (str[0] == '_') {
-                           str++;
-                           if (!str[0])
-                              return true;
-                        }
                         _MESSAGE("XML has asked to clamp pref %s to a maximum of %f.", str, kThis->num); // TODO: REMOVE LOGGING
-                        UInt32 menuID = 0;
-                        {
-                           auto tile = kThis->owner;
-                           if (tile) {
-                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
-                              if (menu)
-                                 menuID = menu->GetID();
-                           }
-                        }
+                        UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                         UIPrefManager::GetInstance().clampPrefValue(str, kThis->num, false, menuID);
                      }
                      return true;
                   case _traitOpPrefReset:
                      {
-                        const char* str = current->GetStringValue();
-                        if (!str || !cobb::string_has_content(str))
+                        const char* str = Helpers::getStringOperandAsPrefName(current);
+                        if (!str)
                            return true;
-                        if (str[0] == '_') {
-                           str++;
-                           if (!str[0])
-                              return true;
-                        }
-                        UInt32 menuID = 0;
-                        {
-                           auto tile = kThis->owner;
-                           if (tile) {
-                              auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
-                              if (menu)
-                                 menuID = menu->GetID();
-                           }
-                        }
+                        UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                         if (kThis->num == (float)RE::kEntityID_true) {
                            _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", str, kThis->num); // TODO: REMOVE LOGGING
                            UIPrefManager::GetInstance().resetPrefValue(str, menuID);
                         }
+                     }
+                     return true;
+                  case _traitOpPrefModulo:
+                     {
+                        if (!kThis->num)
+                           return true;
+                        const char* str = Helpers::getStringOperandAsPrefName(current);
+                        if (!str)
+                           return true;
+                        _MESSAGE("XML has asked to modulo pref %s by %f.", str, kThis->num); // TODO: REMOVE LOGGING
+                        UInt32 menuID  = Helpers::getValueContainingMenuID(kThis);
+                        auto&  manager = UIPrefManager::GetInstance();
+                        SInt32 value   = (SInt32)manager.getPrefCurrentValue(str, menuID) % (SInt32)kThis->num;
+                        manager.setPrefValue(str, value, menuID);
+                     }
+                     return true;
+                  case _traitOpPrefCarousel:
+                     //
+                     // Same as modulo, except that if the pref == the current working value, we make no changes.
+                     //
+                     // Consider:
+                     //
+                     //    <copy src="me()" trait="clicked" />
+                     //    <xxnOpPrefModifyValue>PrefName</xxnOpPrefModifyValue>
+                     //    <copy>2</copy>
+                     //    <OPERATOR_HERE>PrefName</OPERATOR_HERE>
+                     //
+                     // For modulo, given an initial value of 2, you'd see this sequence: 2, 1, 0, 1, 0
+                     // For carousel, you'd see this sequence: 2, 1, 2, 1, 2
+                     //
+                     {
+                        if (!kThis->num)
+                           return true;
+                        const char* str = Helpers::getStringOperandAsPrefName(current);
+                        if (!str)
+                           return true;
+                        _MESSAGE("XML has asked to carousel pref %s by %f.", str, kThis->num); // TODO: REMOVE LOGGING
+                        auto&  manager = UIPrefManager::GetInstance();
+                        _MESSAGE(" - Old value is %f", manager.getPrefCurrentValue(str)); // TODO: REMOVE LOGGING
+                        UInt32 menuID  = Helpers::getValueContainingMenuID(kThis);
+                        SInt32 value   = manager.getPrefCurrentValue(str, menuID);
+                        SInt32 operand = kThis->num;
+                        if (value != operand)
+                           manager.setPrefValue(str, (value % operand), menuID);
+                       _MESSAGE(" - New value is %f", manager.getPrefCurrentValue(str)); // TODO: REMOVE LOGGING
                      }
                      return true;
                }

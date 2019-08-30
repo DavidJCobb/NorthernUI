@@ -53,6 +53,8 @@ namespace CobbPatches {
       constexpr UInt32 _traitOpPrefClampToMax = 0x1612; // operator (string operand)
       constexpr UInt32 _traitOpPrefReset      = 0x1613; // operator (string operand)
       constexpr UInt32 _traitPrefs       = 0x1614; // selector
+      constexpr UInt32 _traitOpPrefModulo     = 0x1615; // operator (string operand)
+      constexpr UInt32 _traitOpPrefCarousel   = 0x1616; // operator (string operand)
       //
       // NOTE: ID 0x1771 is not registered, but the vanilla code sets it on the menu root.
       //
@@ -87,6 +89,8 @@ namespace CobbPatches {
          { XXN_NEW_TAG_ID(_traitOpPrefClampToMax, "xxnopprefclamptomax", kType_Operator, 0, 1) },
          { XXN_NEW_TAG_ID(_traitOpPrefReset,      "xxnopprefresetvalue", kType_Operator, 0, 1) },
          { XXN_NEW_TAG_ID(_traitPrefs,       "xxnprefs",     kType_Selector, 0, 0) },
+         { XXN_NEW_TAG_ID(_traitOpPrefModulo,     "xxnopprefmodulo", kType_Operator, 0, 1) },
+         { XXN_NEW_TAG_ID(_traitOpPrefCarousel,   "xxnopprefcarousel", kType_Operator, 0, 1) },
       };
       constexpr UInt32 menuQueOperatorMin = 0x7EC;
       constexpr UInt32 menuQueOperatorMax = 0x7F0;
