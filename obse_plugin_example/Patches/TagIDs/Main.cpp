@@ -162,7 +162,7 @@ namespace CobbPatches {
          };
          //
          void Apply() {
-            WriteRelCall(0x0058A1CA, (UInt32)&Outer);
+            WriteRelCall(0x0058A1CA, (UInt32)&Outer); // patch static Tile::DefineTileValuesAndTraits
          };
       };
       namespace TileTemplate_AddTemplateItem { // we have to replace a vanilla subroutine since MenuQue does it

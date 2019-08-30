@@ -174,6 +174,23 @@ void UIPrefManager::clampPrefValue(const char* name, float v, bool toMin, UInt32
    this->queuePrefPushToUIState(name);
 }
 //
+void UIPrefManager::setupDocument(cobb::XMLDocument& doc) {
+   doc.stripWhitespace = true;
+   //
+   // Define all XML entities that exist in Oblivion XML.
+   //
+   auto& entities = RE::g_tagIDLists[27];
+   for (auto node = entities.start; node; node = node->next) {
+      auto entity = node->data;
+      if (!entity)
+         continue;
+      if (entity->name.m_data[0] != '&') {
+         _MESSAGE("[UIPrefManager::setupDocument] WARNING: Bad entity encountered.");
+      }
+      std::string value = std::to_string(entity->traitID);
+      doc.defineEntity(entity->name.m_data, value.c_str());
+   }
+}
 void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
    UInt32 nesting  = 0;
    bool   isInPref = false;
@@ -269,15 +286,7 @@ void UIPrefManager::loadDefinitions() {
       return;
    }
    cobb::XMLDocument doc;
-   {  // Configure the XML document.
-      //
-      // TODO: add all UI XML entities; best if we don't do this manually but 
-      // instead iterate through all entities that have been registered in-
-      // memory; downside is we then need to delay this load process until 
-      // after the UI engine has set itself up
-      //
-      doc.stripWhitespace = true;
-   }
+   this->setupDocument(doc);
    do {
       if (state.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
          //
@@ -505,4 +514,11 @@ void UIPrefManager::saveUserValues() const {
    }
    file.close();
    _MESSAGE("UI prefs saved.");
+}
+
+void UIPrefManager::initialize() {
+   auto& prefs = UIPrefManager::GetInstance();
+   prefs.loadDefinitions();
+   prefs.dumpDefinitions(); // DEBUG DEBUG DEBUG
+   prefs.loadUserValues();
 }

@@ -5,6 +5,7 @@
 #include "ReverseEngineered/UI/Tile.h"
 #include "Services/INISettings.h"
 #include "Services/UIPrefs.h"
+#include "Services/PatchManagement.h"
 
 #include "obse/GameData.h" // FileFinder
 #include "obse/GameTiles.h"
@@ -88,6 +89,14 @@ namespace CobbPatches {
             constexpr char* pathStrings   = "Data\\Menus\\NorthernUI\\strings.xml";
             constexpr char* pathLocCfg    = "Data\\Menus\\NorthernUI\\localizationconfig.xml";
             void Inner(RE::Tile* menuRoot) {
+               {  // prefs
+                  auto tile = RE::TileRect::CreateOnGameHeap();
+                  tile->Unk_01(nullptr, "NorthernUI Pref Storage and Synchronization", nullptr);
+                  g_northernUIPrefstore = tile;
+                  //
+                  UIPrefManager::GetInstance().pushAllPrefsToUIState();
+               }
+               //
                if ((*g_FileFinder)->FindFile(pathLocCfg, 0, 0, -1) == FileFinder::kFileStatus_NotFound) {
                   _MESSAGE("XXNLocalization file is missing. The xxnLocalization tile will be nullptr.");
                } else {
@@ -112,20 +121,14 @@ namespace CobbPatches {
                      CALL_MEMBER_FN(g_northernUIStringstore, AppendToTile)(nullptr, nullptr); // remove from Tile hierarchy
                }
                //
-               {  // prefs
-                  auto tile = RE::TileRect::CreateOnGameHeap();
-                  tile->Unk_01(nullptr, "NorthernUI Pref Storage and Synchronization", nullptr);
-                  g_northernUIPrefstore = tile;
-                  //
-                  UIPrefManager::GetInstance().pushAllPrefsToUIState();
-               }
-               //
                OnINIChange(nullptr, 0, 0); // apply traits that are drawn from INI settings, for initial load (we'd do this in the outermost Apply() but the tile doesn't exist then!)
                if (g_northernUIDatastore) {  // Apply initial-only traits.
                   UInt32 traitID = RE::GetOrCreateTempTagID("_xxnxinputpatchapplied", -1);
                   CALL_MEMBER_FN(g_northernUIDatastore, UpdateFloat)(traitID, g_xInputPatchApplied ? RE::kEntityID_true : RE::kEntityID_false);
                }
                _MESSAGE("[Selectors] Special tiles have been set up.");
+               //
+               PatchManager::GetInstance().FireEvent(PatchManager::Req::P_Selectors);
             };
             __declspec(naked) void Outer() { // patches an InterfaceManager member function
                _asm {
@@ -141,7 +144,7 @@ namespace CobbPatches {
                };
             };
             void Apply() {
-               WriteRelJump(0x00581E97, (UInt32)&Outer);
+               WriteRelJump(0x00581E97, (UInt32)&Outer); // InterfaceManager::InitializeMenuRootAndStrings+0x1D7
             };
          };
          namespace Teardown { // Patch InterfaceManager::~InterfaceManager

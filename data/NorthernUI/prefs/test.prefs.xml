@@ -6,4 +6,5 @@
    <pref name="TestR" default="255" />
    <pref name="TestG" default="0" />
    <pref name="TestB" default="64" />
+   <pref name="TestBool" default="&true;" />
 </prefset>

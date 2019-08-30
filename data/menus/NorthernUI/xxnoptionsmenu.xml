@@ -334,6 +334,13 @@
                   <user12>_TestB</user12> <!-- pref name -->
                   <user13><copy src="xxnPrefs()" trait="_TestB" /></user13> <!-- pref value -->
                </rect>
+               <rect name="UI_PREF_TEST_BOOL">
+                  <include src="NorthernUI/fragments/pause/option_uipref_checkbox.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11>TEST TEST BOOL</user11> <!-- label -->
+                  <user12>_TestBool</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_TestBool" /></user13> <!-- pref value -->
+               </rect>
                
             </rect>
          </rect>

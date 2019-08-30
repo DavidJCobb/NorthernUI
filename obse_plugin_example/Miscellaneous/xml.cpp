@@ -53,9 +53,9 @@ namespace {
          return end - ampersand;
       }
       for (auto it = doc.entities.begin(); it != doc.entities.end(); ++it) {
-         auto entity = it->entity;
-         auto length = strlen(entity);
-         if (strncmp(ampersand, entity, length) == 0) {
+         auto& entity = it->entity;
+         auto  length = entity.size();
+         if (strncmp(ampersand, entity.c_str(), length) == 0) {
             writeTo += it->substitution;
             return length;
          }

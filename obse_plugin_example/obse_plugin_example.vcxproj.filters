@@ -8068,6 +8068,7 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\UpdateTumblerHeightOffsets.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\Subroutine005AFA80.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\Value\UpdateInboundReferences.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\RegisterTrait.txt" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NorthernUI.rc" />

@@ -469,7 +469,7 @@ namespace CobbPatches {
                            if (!str[0])
                               return true;
                         }
-                        _MESSAGE("XML has asked to save value %f to pref %s.", kThis->num, str); // TODO: REMOVE LOGGING
+                        _MESSAGE("XML has asked to modify pref %s by %f.", str, kThis->num); // TODO: REMOVE LOGGING
                         UInt32 menuID = 0;
                         {
                            auto tile = kThis->owner;

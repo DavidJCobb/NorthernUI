@@ -38,6 +38,7 @@ class UIPrefManager {
       Pref* getPrefByName(std::string name);
       const Pref* getPrefByName(std::string name) const;
       //
+      void setupDocument(cobb::XMLDocument&);
       void processDocument(cobb::XMLDocument&);
       //
    public:
@@ -61,4 +62,6 @@ class UIPrefManager {
       void pushPrefToUIState(const std::string& name) const;
       void pushQueuedPrefsToUIState();
       void pushAllPrefsToUIState() const;
+
+      static void initialize(); // call this on startup when the game's UI engine has registered all XML entities
 };

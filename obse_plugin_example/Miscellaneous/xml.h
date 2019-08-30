@@ -24,8 +24,8 @@ namespace cobb {
    };
    struct XMLDocument {
       struct CustomEntity {
-         const char* entity; // "&name;"
-         const char* substitution;
+         std::string entity; // "&name;"
+         std::string substitution;
 
          CustomEntity(const char* a, const char* b) : entity(a), substitution(b) {};
       };
@@ -36,6 +36,7 @@ namespace cobb {
 
       void clear(); // for looping over multiple files, it's better to create one XMLDocument outside of the loop and clear it every iteration; that way, you only need to configure it once
       void defineEntity(const char* entity, const char* substitution);
+      void defineEntity(const char* entity, const std::string& substitution);
 
       //
       // meetsStrictRequirements

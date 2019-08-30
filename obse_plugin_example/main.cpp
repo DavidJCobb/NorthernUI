@@ -259,6 +259,7 @@ extern "C" {
          (NorthernUI::INI::INISettingManager::GetInstance()).Load(); // load and cache INI settings from a file (NOTE: must be done before patches are applied)
          {
             auto& man = PatchManager::GetInstance();
+            man.Expect(42);
             man.RegisterPatch("Miscellaneous", &CobbPatches::Miscellaneous::Apply, {});
             man.RegisterPatch("Exploratory",   &CobbPatches::Exploratory::Apply,   {});
             man.RegisterPatch("Logging",       &CobbPatches::Logging::Apply,       {});
@@ -311,6 +312,10 @@ extern "C" {
             //
             man.RegisterPatch("DynamicMapEmulation", &CobbPatches::DynamicMapEmulation::Apply, { PatchManager::Req::G_MainMenu });
             man.RegisterPatch("DynamicTrainingCost", &CobbPatches::DynamicTrainingCost::Apply, { PatchManager::Req::G_MainMenu });
+            //
+            // services that need to init after certain patches have run:
+            //
+            PatchManager::GetInstance().RegisterPatch("UIPrefManager:Load", &UIPrefManager::initialize, { PatchManager::Req::P_Selectors });
          }
 
          // register to receive messages from OBSE
@@ -319,13 +324,6 @@ extern "C" {
          g_msg = msgIntfc;
 
          (NorthernUI::L10N::StrManager::GetInstance()).Update(); // load translatable strings from a file
-
-         {
-            auto& prefs = UIPrefManager::GetInstance();
-            prefs.loadDefinitions();
-            prefs.dumpDefinitions(); // DEBUG DEBUG DEBUG
-            prefs.loadUserValues();
-         }
       }
       obse->SetOpcodeBase(0x28D0); // We may use 0x28D0 to 0x28DF, inclusive
       {  // Register script commands.
