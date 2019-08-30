@@ -74,6 +74,8 @@
       <xxnOpPrefModifyValue src="me()" trait="user12" />
       <copy>2</copy>
       <xxnOpPrefCarousel src="me()" trait="user12" />
+      <!-- Refer to NorthernUI source - UIPrefs.h - for information 
+      on why this "carousel" operator exists and is used. -->
    </_setter>
    <_resetter>
       <!--
