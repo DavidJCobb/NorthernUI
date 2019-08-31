@@ -846,6 +846,28 @@ namespace CobbPatches {
             WriteRelJump(0x0043E6A5, (UInt32)&Outer);
          };
       };
+      namespace ChangeKeynavEventTarget {
+         //
+         // When keyboard navigation triggers a mouse click using traits like 
+         // XBUTTONA and so on, these traits fire HandleMouseUp on the target 
+         // menu, supplying the target tile's ID and a pointer... to the source 
+         // tile? Yeah -- the tile pointer given to the menu isn't the tile 
+         // actually targeted by the navigation trait, but the tile that HAS 
+         // the navigation trait.
+         //
+         // This causes MenuQue's SetMenuEventHandler function to break some 
+         // menus, and it also risks softlocks in SleepWaitMenu (we actually 
+         // patch that menu specifically to dodge the softlock). There's not 
+         // a single situation where receiving the source instead of the 
+         // target would actually beneficial, but there are clearly plenty 
+         // when it can trip a coder up.
+         //
+         // This patch forces the code to always send the target.
+         //
+         void Apply() {
+            SafeWrite8(0x00580EE8, 0x57); // PUSH ESI -> PUSH EDI // InterfaceManager::HandleNavigationKeypress
+         }
+      }
       
       void Apply() {
          //
@@ -863,6 +885,7 @@ namespace CobbPatches {
          SuppressQuantityMenu::Apply();
          ZoomTraitUpdatesChangeFlags::Apply();
          FixReloadHUDCrash::Apply();
+         ChangeKeynavEventTarget::Apply();
       };
    };
 };

@@ -337,6 +337,7 @@
     <ClInclude Include="ReverseEngineered\Forms\TESWorldSpace.h" />
     <ClInclude Include="ReverseEngineered\GameSettings.h" />
     <ClInclude Include="ReverseEngineered\INISettings.h" />
+    <ClInclude Include="ReverseEngineered\MenuQue\MenuInfo.h" />
     <ClInclude Include="ReverseEngineered\Miscellaneous.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\BSPlayerDistanceCheckController.h" />
     <ClInclude Include="ReverseEngineered\NetImmerse\NiControllerManager.h" />
@@ -360,6 +361,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\AlchemyMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\AudioMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\BookMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\ContainerMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\DialogMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\EnchantmentMenu.h" />
@@ -405,6 +407,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReverseEngineered\DOCS\GetOrCreateTempTraitID.txt" />
+    <Text Include="ReverseEngineered\DOCS\MenuQue\SetMenuEventHandler.txt" />
     <Text Include="ReverseEngineered\DOCS\ParseXML.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00470D20.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine004723A0.txt" />

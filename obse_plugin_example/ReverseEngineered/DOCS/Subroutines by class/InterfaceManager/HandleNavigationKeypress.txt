@@ -1,6 +1,6 @@
 void InterfaceManager::HandleNavigationKeypress(UInt32 keypress) {
    auto  edi   = this;
-   auto  input = Singleton00B33398::GetInstance()->unk20;
+   auto  input = OSInputGlobals::GetInstance();
    auto  esp10 = this;  // later esp14 due to a push
    auto  esp0C = input; // later esp10 due to a push
    Menu* ebx   = Unknown00B3A708::GetInstance()->GetTopmostMenuByDepth();
@@ -129,7 +129,7 @@ void InterfaceManager::HandleNavigationKeypress(UInt32 keypress) {
                edi->UpdateFloat(kTileValue_clicked, 0.0);
                auto b = edi->GetContainingMenu();
                SInt32 eax = edi->GetFloatTraitValue(kTileValue_id);
-               b->HandleMouseUp(eax, esi);
+               b->HandleMouseUp(eax, esi); // at 0x00580F08
                if (targetTrait == kTileValue_shiftclicked)
                   this->unk118 &= ~4; // clear modifier key state
                esi = esp10;
@@ -261,8 +261,8 @@ void InterfaceManager::HandleNavigationKeypress(UInt32 keypress) {
          // Play mouseover sound:
          //
          if (targetTrait == kTileValue_mouseover) {
-            if (Singleton00B33398::Unk24* ecx = Singleton00B33398::GetInstance()->unk24) { // sound manager
-               Singleton00B33398::Unk24::Sound* esi = ecx->TES4_006ADE50("UIMenuFocus", 0x121, 1);
+            if (auto ecx = OSSoundGlobals::GetInstance()) { // sound manager
+               OSSoundGlobals::Sound* esi = ecx->TES4_006ADE50("UIMenuFocus", 0x121, 1);
                if (esi) { // at 0x00581327
                   esi->TES4_006B7190(0);
                   esi->~Sound();
@@ -271,8 +271,8 @@ void InterfaceManager::HandleNavigationKeypress(UInt32 keypress) {
             }
          }
       }
-      this->TES4_0057F9F0(edi, targetTrait, keynavTrait);
+      this->SendKeynavEventTo(edi, targetTrait, keynavTrait);
       return;
    }
-   this->TES4_0057F9F0(currentKeynav, targetTrait, keynavTrait);
+   this->SendKeynavEventTo(currentKeynav, targetTrait, keynavTrait);
 }

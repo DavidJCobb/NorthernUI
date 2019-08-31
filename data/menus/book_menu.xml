@@ -246,9 +246,6 @@
 		<locus> &true; </locus>
 		<user0> 0 </user0>			<!-- number of lines - set by code -->
 		
-		<xbuttonb> <ref src="book_scroll_exit" trait="clicked"/> </xbuttonb>
-		<xbuttonx> <ref src="book_scroll_take" trait="clicked"/> </xbuttonx>
-		
 		<image name="book_scroll_roller">
 			<filename> Menus\Book\scroll_roll.dds </filename>
 			<width> 1171 </width>

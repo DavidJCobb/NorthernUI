@@ -8045,6 +8045,8 @@
     <ClInclude Include="Miscellaneous\file.h" />
     <ClInclude Include="Miscellaneous\UnitTests\xml.h" />
     <ClInclude Include="Miscellaneous\debug.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\BookMenu.h" />
+    <ClInclude Include="ReverseEngineered\MenuQue\MenuInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
@@ -8069,6 +8071,7 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\Subroutine005AFA80.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\Value\UpdateInboundReferences.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\RegisterTrait.txt" />
+    <Text Include="ReverseEngineered\DOCS\MenuQue\SetMenuEventHandler.txt" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NorthernUI.rc" />

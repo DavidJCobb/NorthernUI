@@ -250,6 +250,8 @@ void InterfaceManager::Update() {
          }
       }
       // at 0x0058368C
+      // NorthernUI patches gamepad HandleNavigationKeypress calls at the next function call
+      //
       eax = esp50->QueryControlState(0x1A, kKeyQuery_Down); // quicksave
       ebx = 0x2B;
       if (eax) {

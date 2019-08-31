@@ -103,7 +103,7 @@ namespace RE {
          virtual void	Dispose(bool); // 00 // destructor
          virtual void	HandleTileIDChange(SInt32 newID, RE::Tile* tile); // 01 // fired by Tile::HandleTraitChange
          virtual void	HandleMouseDown(SInt32 tileID, RE::Tile* target); // 02 // fired when LMB is first pressed down
-         virtual void	HandleMouseUp  (SInt32 tileID, RE::Tile* target); // 03 // fired when LMB is released // target can be nullptr
+         virtual void	HandleMouseUp  (SInt32 tileID, RE::Tile* target); // 03 // fired when LMB is released // target can be nullptr; for keyboard navigation, it's the tile that HAD the <ref/> operator as opposed to the tile TARGETED BY the <ref/> operator
          virtual void	HandleMouseover(SInt32 tileID, RE::Tile* target); // 04
          virtual void	HandleMouseout (SInt32 tileID, RE::Tile* target); // 05 // not sure whether target is the Tile that lost the mouse or the Tile that took it
          virtual void	Unk_06(SInt32 tileID, RE::Tile* tileMain, RE::Tile* tileOther); // 06

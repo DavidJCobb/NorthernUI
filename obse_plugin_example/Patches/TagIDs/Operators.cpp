@@ -519,7 +519,6 @@ namespace CobbPatches {
                         if (!str)
                            return true;
                         if (kThis->num == (float)RE::kEntityID_true) {
-                           _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", str, kThis->num); // TODO: REMOVE LOGGING
                            UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                            UIPrefManager::GetInstance().resetPrefValue(str, menuID);
                         }

@@ -1,0 +1,192 @@
+enum {
+   kEvent_MouseUp   = 0,
+   kEvent_MouseOver = 1,
+   kEvent_MouseWheelFrame = 8,
+   kEvent_MouseDownFrame  = 9,
+   kEvent_KeyboardInput   = 10,
+   kEvent_Frame           = 11,
+}
+
+void ShimMenuEventHandler(Arg1, UInt32 menuID) { // at $+10CF0
+   // auto edx = menuID;
+   if (menuID < 0x3E9 || menuID > (0x3E9 + 0x32))
+      return;
+   for(UInt32 i = 0; i < 0x2F; i++) {
+      if (mq_g_menuInfo[i].id == menuID) {
+         auto& info = mq_g_menuInfo[i]; // ecx
+         if (!&info) // boilerplate?
+            return;
+         auto edx = Arg1;
+         auto eax = info.vtbl;
+         Arg2 = info.vtbl; // vtbl
+         if (Arg1 == kEvent_MouseUp) {
+            if (info.originalHandleMouseUp)
+               return;
+            if (!eax) {
+               info.originalHandleMouseUp = eax; // ??
+               info.vtbl.SetFunction(0xC, Menu::ShimmedHandleMouseUp);
+               return;
+            }
+            info.vtbl.SetFunction(0xC, Menu::ShimmedHandleMouseUp);
+            return;
+         }
+         // at $+10D79
+         
+         
+         return;
+      }
+   }
+   return;
+}
+
+
+struct MenuEventArgs {
+   SInt32 id;
+   Tile*  tile;
+}
+
+void Menu::ShimmedHandleMouseUp(MenuEventArgs args) {
+   MenuInfo* ebp0C = MenuIDToMenuInfo(this->id);
+   MQ_10020(0, ebp0C, &args);
+   eax = ebp0C;
+   if (eax)
+      eax = ebp0C->unk10;
+   if (eax)
+      return eax(args); // calls original event handler
+}
+
+void MQ_10020(UInt32 Arg1, MenuInfo* Arg2, MenuEventArgs* Arg3) {
+   if (!Arg2)
+      return;
+   switch (Arg1) {
+      case kEvent_MouseUp:
+         Arg2->unk10 = Arg2->originalHandleMouseUp;
+         if (!Arg3->tile)
+            break;
+         if (!Arg3->tile->GetTrait(kTagID_id))
+            Arg2->unk10 = nullptr;
+         break;
+      case 1:
+         Arg2->unk10 = Arg2->unk20;
+         break;
+      case 8:
+         Arg2->unk10 = Arg2->unk24;
+         break;
+      case 9:
+         Arg2->unk10 = Arg2->unk28;
+         break;
+      case 10:
+         Arg2->unk10 = Arg2->unk2C;
+         break;
+      case 6:
+         Arg2->unk10 = Arg2->unk14;
+         break
+      case 11:
+         Arg2->unk10 = Arg2->unk18;
+   }
+   if (MQ_513E4->MQ_14B80(Arg1, Arg2, Arg3))
+      Arg2->unk10 = nullptr;
+   if (Arg1 <= 7) {
+      MQ_0F370(Arg1, Arg2, Arg3); // fires script event
+   }
+}
+
+struct UnkStruct {
+   UInt32 unk00; // 00 // actually an int
+   Tile*  tile;  // 04
+   Menu*  menu;  // 08
+   UInt32 flags; // 0C
+   
+   bool MQ_13FB0(Arg1) {
+      esi = this;
+      auto eax = this->unk00;
+      auto edi = Arg1;
+      if (Arg1->unk08 != this->unk00) {
+         if (!this->unk00)
+            return false;
+      }
+      if (eax = this->tile) {
+         ecx = Arg1->tile;
+         if (eax != ecx) {
+            if (!(this->flags & 1) || ecx->unk10 != eax)
+               return false;
+         }
+      }
+      if (this->menu) {
+         eax = Arg1->tile->GetContainingMenu();
+         if (this->menu != eax)
+            return false;
+      }
+      if (this->flags & 2) {
+         if (!Arg1->tile->MQ_1D310())
+            return false;
+      }
+      if (this->flags & 4) {
+         if (!Arg1->tile->IsTileTargetable())
+            return false;
+      }
+      if (this->flags & 8) {
+         if (Arg1->unk0C == 0) // byte
+            return false;
+      }
+      return true;
+   }
+}
+
+bool MQ_513E4::MQ_14B80(UInt32 Arg1, MenuInfo* Arg2, MenuEventArgs* Arg3) {
+   // return (true) to prevent the original listener from firing
+   // (why?!)
+   switch (Arg1) {
+      case kEvent_MouseUp:
+         if (!Arg3->tile)
+            return false;
+         UnkStruct ebp10 = { 3, Arg3->tile, Arg2->currentInstance, 1 };
+         if (edi == this->unk04) {
+            do {
+               if (ebp10.MQ_13FD0(this->unk00)) {
+                  ebp0C = eax = this->unk00;
+                  jump to $+14BF1;
+               }
+            } while ((edi += 4) < this->unk04);
+         }
+         eax = ebp0C = 0;
+         // at $+14BF1
+         UnkStruct ebp10 = { 3, nullptr, Arg2->currentInstance, 8 };
+         if (edi == this->unk04) {
+            do {
+               if (ebp10.MQ_13FD0(this->unk00)) {
+                  ebp0C = eax = this->unk00;
+                  jump to $+14C2F;
+               }
+            } while ((edi += 4) < this->unk04);
+         }
+         eax = ebp0C;
+         ecx = 0;
+         // at $+14C2F
+         if (!eax) {
+            if (ecx)
+               ecx->MQ_14440(0);
+            return false;
+         }
+         if (ecx && eax != ecx) {
+            ecx->MQ_14510(eax);
+            return false;
+         }
+         bool cl = /*byte*/eax->unk0C == 0;
+         eax->MQ_14440(cl);
+         return false;
+      case kEvent_MouseOver:
+         UnkStruct ebp10 = { 2, nullptr, Arg2->currentInstance, 0 };
+         if (edi == this->unk04) {
+            do {
+               if (ebp10.MQ_13FD0(this->unk00)) {
+                  ecx = this->unk00;
+                  if (!ecx)
+                     return false;
+                  return ecx->MQ_14280(Arg3->tile);
+               }
+            } while ((edi += 4) < this->unk04);
+         }
+   }
+   return false;
+}
