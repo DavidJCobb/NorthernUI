@@ -7,7 +7,10 @@
 	<menufade>0</menufade>
 	<explorefade>0</explorefade>
 
-	<xbuttonb><ref src="button_exit" trait="clicked" /></xbuttonb>
+	<xbuttonb>
+      <ref src="hitbox_back_out_of_submenu" trait="clicked" />
+      <ref src="button_exit" trait="clicked" />
+   </xbuttonb>
 	<xbuttony><ref src="video_defaults_button" trait="clicked" /></xbuttony>
    
    <user10><copy src="xxnStrings()" trait="_optEnumQuantityHandlerDefault" /></user10>
@@ -23,6 +26,8 @@
    <user20><copy src="xxnStrings()" trait="_optEnumEnhancedCameraInertiaFixed" /></user20>
    <user21><copy src="xxnStrings()" trait="_optEnumEnhancedCameraInertiaDisabled" /></user21>
    
+   <user24>0</user24> <!-- set to 1 if the user confirms a reset-to-defaults -->
+   
    <_labelColMinWidth>  300</_labelColMinWidth>
    <_controlColMaxWidth>200</_controlColMaxWidth>
    <_preferredTotalWidth>
@@ -33,6 +38,43 @@
    <_itemHeight>
       <copy src="option_local_map_resolution" trait="height" />
    </_itemHeight>
+   
+   <!-- ALL CHANGES NEEDED FOR SUBMENUS ARE MARKED WITH "TODO" -->
+   <_usesSubmenus>&true;</_usesSubmenus>
+   <_onSubmenuChanged>
+      <copy src="hitbox_back_out_of_submenu" trait="clicked" />
+      <add  src="submenu_trigger_01" trait="clicked" />
+      <!-- TODO: add  "clicked" trait on submenu 2 -->
+      <!-- ... -->
+      <gt>0</gt>
+   </_onSubmenuChanged>
+   <_currentSubmenuID>
+      <add>
+         <copy>-999999</copy>
+         <onlyif src="menu()" trait="_onSubmenuChanged" />
+      </add>
+      <max>0</max>
+      <add>
+         <copy>1</copy>
+         <mult src="submenu_trigger_01" trait="clicked" />
+      </add>
+      <!-- ... -->
+   </_currentSubmenuID>
+   <_currentSubmenuChildcount>
+      <copy>
+         <copy src="scrollable_pane" trait="childcount" />
+         <onlyif>
+            <copy src="me()" trait="_currentSubmenuID" /><eq>0</eq>
+         </onlyif>
+      </copy>
+      <add>
+         <copy src="submenu_trigger_01" trait="childcount" />
+         <onlyif>
+            <copy src="me()" trait="_currentSubmenuID" /><eq>1</eq>
+         </onlyif>
+      </add>
+      <!-- ... -->
+   </_currentSubmenuChildcount>
 
    <rect name="content_space">
       <include src="NorthernUI/fragments/pause/base.xml" />
@@ -77,7 +119,7 @@
                   <id>3</id>
                   <user1>0</user1> <!-- min -->
                   <user2> <!-- max -->
-                     <copy src="scrollable_pane" trait="childcount" />
+                     <copy src="menu()" trait="_currentSubmenuChildcount" /> <!-- TODO: TEST TO MAKE SURE THIS CHANGE DIDN'T BREAK THE SCROLLBAR -->
                      <sub>
                         <copy src="column_right" trait="height" />
                         <div  src="menu()" trait="_itemHeight" />
@@ -103,49 +145,43 @@
                      <div  src="menu()" trait="_itemHeight" />
                      <ceil>0</ceil>
                   </user8>
+                  <!--
+                     TODO: Give scrollbar prefabs an additional trait that 
+                     gets added into the _value_scrolled_to. Then, here, 
+                     set that trait to:
+                     
+                     <copy>-999999</copy>
+                     <onlyif src="menu()" trait="_onSubmenuChanged" />
+                     
+                     Goal is to reset the scrollbar to the top whenever you 
+                     change submenus.
+                  -->
                </rect>
             </rect>
             <!-- Menu items: -->
+            <!--
+               TODO: Each submenu should have its own pane. Set the panes 
+               to be visible based on what submenu we're in, with the top-
+               level submenu (scrollable_pane) being submenu ID 0.
+            -->
             <rect name="scrollable_pane">
-               <locus>&true;</locus>
-               <width>
-                  <copy src="parent()"  trait="width" />
-                  <sub>
-                     <copy src="pause_submenu_scrollbar" trait="width" />
-                     <add>16</add>
-                     <onlyif src="pause_submenu_scrollbar" trait="visible" />
-                  </sub>
-                  <min>
-                     <copy src="menu()" trait="_preferredTotalWidth" />
-                     <add src="xxnLocalization()" trait="_xxnOptionsLabelWidthAdjust" />
-                     <add src="xxnLocalization()" trait="_xxnOptionsControlWidthAdjust" />
-                  </min>
-               </width>
-               <height><copy src="parent()" trait="height" /></height>
-               <x>0</x>
-               <y>
-                  <copy src="pause_submenu_scrollbar" trait="user7" />
-                  <mult src="menu()" trait="_itemHeight" />
-                  <mult>-1</mult>
-               </y>
-               
-               <user8>
-                  <copy src="pause_submenu_scrollbar" trait="user8" />
-               </user8>
-               <target>&false;</target>
-               <xdefault>&true;</xdefault>
-               <xlist>&xlist;</xlist>
-               <xscroll><ref src="pause_submenu_scrollbar" trait="user5" /></xscroll>
-               
-               <user10>
-                  <copy src="menu()" trait="_labelColMinWidth" />
-                  <add src="xxnLocalization()" trait="_xxnOptionsLabelWidthAdjust" />
-               </user10>
+               <include src="NorthernUI/fragments/pause/xxnoptionsmenu_scrollable_pane.xml" />
+               <_submenuID>0</_submenuID>
                
                <rect name="option_local_map_resolution">
                   <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
-                  <listindex><copy>0</copy></listindex> <!-- for some reason, this breaks if we don't use COPY -->
-                  <y><copy>0</copy></y> <!-- for some reason, this breaks if we don't use COPY -->
+                  <!--
+                     The default LISTINDEX is sibling() + 1, but if you use 
+                     that from the first option in the list, then sibling() 
+                     selects the last sibling -- creating a cyclical refer-
+                     ence. Specifying a const 0 won't fix it, but specifying 
+                     a COPY operator with a const 0 will.
+                     
+                     A similar problem exists for the Y trait.
+                  -->
+                  <listindex><copy>0</copy></listindex>
+                  <y><copy>0</copy></y>
+                  <!-- end of first-child traits -->
                   <user0>12</user0> <!-- enumpicker text ID -->
                   <user1>10</user1> <!-- enumpicker left ID -->
                   <user2>11</user2> <!-- enumpicker right ID -->
@@ -301,8 +337,43 @@
                   <user11><copy src="xxnStrings()" trait="_optionEnhancedCameraInertia" /></user11> <!-- label -->
                </rect>
                
+               <rect name="UI_PREF_TEST_BOOL">
+                  <include src="NorthernUI/fragments/pause/option_uipref_checkbox.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11>TEST TEST BOOL</user11> <!-- label -->
+                  <user12>_TestBool</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_TestBool" /></user13> <!-- pref value -->
+               </rect>
+               <rect name="submenu_trigger_01">
+                  <include src="NorthernUI/fragments/pause/option_submenu.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11>Test Submenu</user11> <!-- label -->
+               </rect>
+               
+               <!--
+                  TODO: prefab for submenus, and then put a few here to 
+                  test
+               -->
+               
+            </rect> <!-- end of top-level menu's pane -->
+            <rect name="pane_submenu_01">
+               <include src="NorthernUI/fragments/pause/xxnoptionsmenu_scrollable_pane.xml" />
+               <_submenuID>1</_submenuID>
+               
                <rect name="UI_PREF_TEST_R">
                   <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
+                  <!--
+                     The default LISTINDEX is sibling() + 1, but if you use 
+                     that from the first option in the list, then sibling() 
+                     selects the last sibling -- creating a cyclical refer-
+                     ence. Specifying a const 0 won't fix it, but specifying 
+                     a COPY operator with a const 0 will.
+                     
+                     A similar problem exists for the Y trait.
+                  -->
+                  <listindex><copy>0</copy></listindex>
+                  <y><copy>0</copy></y>
+                  <!-- end of first-child traits -->
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   <user2>16</user2> <!-- slider jump distance -->
                   <user3>1</user3> <!-- slider step distance -->
@@ -334,15 +405,7 @@
                   <user12>_TestB</user12> <!-- pref name -->
                   <user13><copy src="xxnPrefs()" trait="_TestB" /></user13> <!-- pref value -->
                </rect>
-               <rect name="UI_PREF_TEST_BOOL">
-                  <include src="NorthernUI/fragments/pause/option_uipref_checkbox.xml" />
-                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  <user11>TEST TEST BOOL</user11> <!-- label -->
-                  <user12>_TestBool</user12> <!-- pref name -->
-                  <user13><copy src="xxnPrefs()" trait="_TestBool" /></user13> <!-- pref value -->
-               </rect>
-               
-            </rect>
+            </rect> <!-- end of submenu 01 pane -->
          </rect>
       </rect>
       <rect name="bolt_on">
@@ -472,6 +535,35 @@
             <_useHoverBehavior>&true;</_useHoverBehavior>
             <target>&true;</target>
             <clicksound>2</clicksound>
+            
+            <_labels_1><copy src="strings()" trait="_exit" /></_labels_1>
+            <_labels_2><copy src="strings()" trait="_back" /></_labels_2>
+            <string>
+               <copy>0</copy>
+               <neq src="menu()" trait="_currentSubmenuID" />
+               <copy src="me()" trait="_labels_" />
+            </string>
+         </rect>
+         <rect name="hitbox_back_out_of_submenu">
+            <visible>
+               <copy src="menu()" trait="_currentSubmenuID" />
+               <neq>0</neq>
+            </visible>
+            <target>
+               <copy src="menu()" trait="_currentSubmenuID" />
+               <neq>0</neq>
+            </target>
+            <id>&generic;</id>
+            <xdefault>&true;</xdefault>
+            <x><copy src="button_exit" trait="x" /></x>
+            <y><copy src="button_exit" trait="y" /></y>
+            <width><copy src="button_exit" trait="width" /></width>
+            <height><copy src="button_exit" trait="height" /></height>
+            <depth>
+               <copy src="button_exit" trait="depth" />
+               <add>1</add>
+            </depth>
+            <clicksound><copy src="button_exit" trait="clicksound" /></clicksound>
          </rect>
       </rect>
    </rect>

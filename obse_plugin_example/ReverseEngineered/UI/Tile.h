@@ -731,8 +731,8 @@ namespace RE {
    };
 
    /*
-   auto traitList = (NiTArray<Tile::StringListElement>*) 0x00B13BC4; // used for underscore-prefixed trait definitions (why?)
-   auto traitLists = (NiTListBase<Tile::StringListElement>*) 0x00B3B0B0; // used for XML entities, traits, etc. // actually NiTList<Tile::StringListElement>*
+   auto g_tempTraitList = (NiTArray<Tile::StringListElement>*) 0x00B13BC4; // used for underscore-prefixed trait definitions (why?)
+   auto g_tagIDLists = (NiTListBase<Tile::StringListElement>*) 0x00B3B0B0; // used for XML entities, traits, etc. // actually NiTList<Tile::StringListElement>*
 
    NiTListBase<Tile::StringListElement>* getTraitList(char firstCharOfTrait) {
       firstCharOfTrait -= '@';
@@ -746,6 +746,9 @@ namespace RE {
       return (&traitLists)[firstCharOfTrait]; // ??? i think ???
    }
    */
+
+   extern NiTArray<Tile::StringListElement>* const g_tempTraitList;
+   extern NiTListBase<Tile::StringListElement>* const g_tagIDLists; // array; if a tag ID's first char is alphabetical, then it's in g_tagIDLists[toupper(firstChar) - ('A' - 1)]; entities are in index 27; all others are in index 0
 
    void RegisterTrait(const char* trait, SInt32 code); // Registers the trait as a Tile::StringListElement
    //

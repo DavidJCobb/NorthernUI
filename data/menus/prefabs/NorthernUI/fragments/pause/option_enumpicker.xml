@@ -6,6 +6,14 @@
    <user10>200</user10> <!-- label column width -->
    <user11></user11> <!-- label -->
    <string></string> <!-- enumpicker value -->
+   
+   <user24> <!-- NorthernUI: XXNOptionsMenu: allow reset -->
+      <copy src="menu()"   trait="_currentSubmenuID" />
+      <eq   src="parent()" trait="_submenuID" />
+      <or>
+         <copy src="menu()" trait="_usesSubmenus" /><neq>&true;</neq>
+      </or>
+   </user24>
 
    <id>&generic;</id>
    <clips>&true;</clips>
@@ -103,6 +111,8 @@
          </max>
       </user3>
       <string><copy src="parent()" trait="string" /></string> <!-- displayed value -->
+      
+      <user24><copy src="parent()" trait="user24" /></user24> <!-- for XXNOptionsMenu -->
       
       <x><copy src="parent()" trait="user10" /></x>
       <y>

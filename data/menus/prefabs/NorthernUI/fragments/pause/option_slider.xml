@@ -9,6 +9,14 @@
    <user8>&false;</user8> <!-- slider shows numeric value? -->
    <user10>200</user10> <!-- label column width -->
    <user11></user11> <!-- label -->
+   
+   <user24> <!-- NorthernUI: XXNOptionsMenu: allow reset -->
+      <copy src="menu()"   trait="_currentSubmenuID" />
+      <eq   src="parent()" trait="_submenuID" />
+      <or>
+         <copy src="menu()" trait="_usesSubmenus" /><neq>&true;</neq>
+      </or>
+   </user24>
 
    <id>&generic;</id>
    <clips>&true;</clips>

@@ -489,13 +489,10 @@ namespace CobbPatches {
                            // will have a nullptr string because its string hasn't been set up yet.
                            //
                            return true;
-                        _MESSAGE("XML has asked to modify pref %s by %f.", str, kThis->num); // TODO: REMOVE LOGGING
-                        if (kThis->num)
-                           _MESSAGE(" - Old value is %f", UIPrefManager::GetInstance().getPrefCurrentValue(str)); // TODO: REMOVE LOGGING
+                        if (!kThis->num) // skip changes-by-zero
+                           return true;
                         UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                         UIPrefManager::GetInstance().modifyPrefValue(str, kThis->num, menuID);
-                        if (kThis->num)
-                           _MESSAGE(" - New value is %f", UIPrefManager::GetInstance().getPrefCurrentValue(str)); // TODO: REMOVE LOGGING
                      }
                      return true;
                   case _traitOpPrefClampToMin:
@@ -503,7 +500,6 @@ namespace CobbPatches {
                         const char* str = Helpers::getStringOperandAsPrefName(current);
                         if (!str)
                            return true;
-                        _MESSAGE("XML has asked to clamp pref %s to a minimum of %f.", str, kThis->num); // TODO: REMOVE LOGGING
                         UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                         UIPrefManager::GetInstance().clampPrefValue(str, kThis->num, true, menuID);
                      }
@@ -513,7 +509,6 @@ namespace CobbPatches {
                         const char* str = Helpers::getStringOperandAsPrefName(current);
                         if (!str)
                            return true;
-                        _MESSAGE("XML has asked to clamp pref %s to a maximum of %f.", str, kThis->num); // TODO: REMOVE LOGGING
                         UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                         UIPrefManager::GetInstance().clampPrefValue(str, kThis->num, false, menuID);
                      }
@@ -523,9 +518,9 @@ namespace CobbPatches {
                         const char* str = Helpers::getStringOperandAsPrefName(current);
                         if (!str)
                            return true;
-                        UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                         if (kThis->num == (float)RE::kEntityID_true) {
                            _MESSAGE("XML has asked to reset pref %s. Current working value is %f.", str, kThis->num); // TODO: REMOVE LOGGING
+                           UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                            UIPrefManager::GetInstance().resetPrefValue(str, menuID);
                         }
                      }
@@ -537,7 +532,6 @@ namespace CobbPatches {
                         const char* str = Helpers::getStringOperandAsPrefName(current);
                         if (!str)
                            return true;
-                        _MESSAGE("XML has asked to modulo pref %s by %f.", str, kThis->num); // TODO: REMOVE LOGGING
                         UInt32 menuID  = Helpers::getValueContainingMenuID(kThis);
                         auto&  manager = UIPrefManager::GetInstance();
                         SInt32 value   = (SInt32)manager.getPrefCurrentValue(str, menuID) % (SInt32)kThis->num;
@@ -564,15 +558,12 @@ namespace CobbPatches {
                         const char* str = Helpers::getStringOperandAsPrefName(current);
                         if (!str)
                            return true;
-                        _MESSAGE("XML has asked to carousel pref %s by %f.", str, kThis->num); // TODO: REMOVE LOGGING
                         auto&  manager = UIPrefManager::GetInstance();
-                        _MESSAGE(" - Old value is %f", manager.getPrefCurrentValue(str)); // TODO: REMOVE LOGGING
                         UInt32 menuID  = Helpers::getValueContainingMenuID(kThis);
                         SInt32 value   = manager.getPrefCurrentValue(str, menuID);
                         SInt32 operand = kThis->num;
                         if (value != operand)
                            manager.setPrefValue(str, (value % operand), menuID);
-                       _MESSAGE(" - New value is %f", manager.getPrefCurrentValue(str)); // TODO: REMOVE LOGGING
                      }
                      return true;
                }

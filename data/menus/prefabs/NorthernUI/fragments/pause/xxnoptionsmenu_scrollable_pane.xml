@@ -1,0 +1,43 @@
+<!--<rect name="scrollable_pane">-->
+   <_submenuID>-1</_submenuID>
+   
+   <visible>
+      <copy src="me()" trait="_submenuID" />
+      <eq   src="menu()" trait="_currentSubmenuID" />
+   </visible>
+   
+   <locus>&true;</locus>
+   <width>
+      <copy src="parent()"  trait="width" />
+      <sub>
+         <copy src="pause_submenu_scrollbar" trait="width" />
+         <add>16</add>
+         <onlyif src="pause_submenu_scrollbar" trait="visible" />
+      </sub>
+      <min>
+         <copy src="menu()" trait="_preferredTotalWidth" />
+         <add src="xxnLocalization()" trait="_xxnOptionsLabelWidthAdjust" />
+         <add src="xxnLocalization()" trait="_xxnOptionsControlWidthAdjust" />
+      </min>
+   </width>
+   <height><copy src="parent()" trait="height" /></height>
+   <x>0</x>
+   <y>
+      <copy src="pause_submenu_scrollbar" trait="user7" />
+      <mult src="menu()" trait="_itemHeight" />
+      <mult>-1</mult>
+   </y>
+   
+   <user8>
+      <copy src="pause_submenu_scrollbar" trait="user8" />
+   </user8>
+   <target>&false;</target>
+   <xdefault>&true;</xdefault>
+   <xlist>&xlist;</xlist>
+   <xscroll><ref src="pause_submenu_scrollbar" trait="user5" /></xscroll>
+   
+   <user10>
+      <copy src="menu()" trait="_labelColMinWidth" />
+      <add src="xxnLocalization()" trait="_xxnOptionsLabelWidthAdjust" />
+   </user10>
+<!--</rect>-->

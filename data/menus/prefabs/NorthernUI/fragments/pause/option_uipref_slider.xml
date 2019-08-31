@@ -9,6 +9,23 @@
    <user11></user11> <!-- label -->
    <user12></user12> <!-- pref name -->
    <user13></user13> <!-- pref value i.e. copy -->
+   
+   <!--
+      The default LISTINDEX is sibling() + 1, but if you use 
+      that from the first option in the list, then sibling() 
+      selects the last sibling -- creating a cyclical refer-
+      ence. Specifying a const 0 won't fix it, but specifying 
+      a COPY operator with a const 0 will.
+      
+      A similar problem exists for the Y trait.
+      
+      So, the first option in the list must have:
+      
+         <listindex><copy>0</copy></listindex>
+         <y><copy>0</copy></y>
+      
+      AFTER the INCLUDE tag.
+   -->
 
    <id>&generic;</id>
    <clips>&true;</clips>
@@ -30,7 +47,7 @@
       <copy src="child(label)" trait="height" />
       <add>8</add>
    </height>
-   
+      
    <target>&true;</target>
    <xdefault>&true;</xdefault>
    <xlist>&xitem;</xlist>
@@ -56,6 +73,14 @@
       <gt>0</gt>
       <sub>1</sub>
    </_mouseover_any>
+   
+   <_submenuIsVisible>
+      <copy src="menu()"   trait="_currentSubmenuID" />
+      <eq   src="parent()" trait="_submenuID" />
+      <or>
+         <copy src="menu()" trait="_usesSubmenus" /><neq>&true;</neq>
+      </or>
+   </_submenuIsVisible>
    
    <depth>10</depth> <!-- The root element is what gets focus, so child elements need to be behind it. -->
    
@@ -152,6 +177,8 @@
          <gt> 0</gt>
          <sub>1</sub>
       </_mouseover_any>
+      
+      <_submenuIsVisible><copy src="parent()" trait="_submenuIsVisible" /></_submenuIsVisible>
       
       <text name="quantity_display_text">
          <include src="NorthernUI\fonts\normal.xml" />
@@ -320,18 +347,8 @@
             <xxnOpPrefClampToMax  src="parent()" trait="user12" />
          </_setter>
          <_resetter>
-            <!--
-               TODO: CHANGE THIS CONDITION. Currently we react directly to 
-               Reset To Defaults being clicked, with no regard for its 
-               confirmation prompt!
-               
-               The menu needs to be coded to alert us when the user confirms 
-               a reset to defaults, and once we implement pure-XML sub-menus, 
-               we need to also check that our containing submenu is visible 
-               (actually, a prefab argument will have to run that latter check 
-               for us and we'll need to grab the result).
-            -->
-            <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
+            <copy src="menu()"   trait="user24" /><eq>1</eq>
+            <and  src="parent()" trait="_submenuIsVisible" />
             <xxnOpPrefResetValue src="parent()" trait="user12" />
          </_resetter>
          

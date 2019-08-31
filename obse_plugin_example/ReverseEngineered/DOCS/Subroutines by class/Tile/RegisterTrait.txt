@@ -1,0 +1,31 @@
+const NiTList<Tile::StringListElement>* sortedTraits = 0x00B3B0B0; // array of TLists
+
+static void Tile::RegisterTrait(const char* valueName, SInt32 code) {
+   if (!valueName || !valueName[0])
+      return;
+   auto esi;
+   auto esp14;
+   if (valueName[0] == '&') {
+      esi   = 27;
+      // at 0x0058A0E1
+      esp14 = 1;
+      auto esp20 = new Tile::StringListElement(Arg2, Arg1);
+   } else {
+      if (valueName[0] != '_') {
+         esi = ((UInt32) valueName[0]) - ('A' - 1);
+         if (esi > 0x20)
+            esi -= 0x20; // toupper()
+         if (esi < 0 || esi > 26)
+            esi = 0;
+      } else {
+         auto esp20 = new Tile::StringListElement(Arg2, Arg1);
+         g_tempTraitList->sub0042D800(&esp20);
+         return;
+      }
+      // jumped to 0x0058A0E1
+      esp14 = 1;
+      auto esp20 = new Tile::StringListElement(Arg2, Arg1);
+   }
+   auto& list = sortedTraits[esi];
+   list.PrependValue(&esp20);
+}

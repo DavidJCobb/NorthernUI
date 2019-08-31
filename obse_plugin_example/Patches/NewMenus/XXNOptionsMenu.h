@@ -65,6 +65,8 @@ class XXNOptionsMenu : public RE::Menu {
       enum {
          kTraitID_CheckboxState = kTileValue_user20,
          //
+         kTraitID_OptionAllowsReset = kTileValue_user24,
+         //
          kRootTrait_QuantityHandlerDefault = kTileValue_user10,
          kRootTrait_QuantityHandlerTakeOne = kTileValue_user11,
          kRootTrait_QuantityHandlerTakeAll = kTileValue_user12,
@@ -77,6 +79,8 @@ class XXNOptionsMenu : public RE::Menu {
          kRootTrait_EnhancedCameraInertiaStandard = kTileValue_user19,
          kRootTrait_EnhancedCameraInertiaFixed    = kTileValue_user20,
          kRootTrait_EnhancedCameraInertiaDisabled = kTileValue_user21,
+         //
+         kRootTrait_DidResetToDefaults = kTileValue_user24,
       };
       enum Confirmation : UInt8 {
          kConfirmationBox_None = 0,

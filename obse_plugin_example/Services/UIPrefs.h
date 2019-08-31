@@ -147,9 +147,9 @@
             <mult src="otherTile" trait="clicked" />
             <xxnOpPrefModifyValue>_Pref</xxnOpPrefModifyValue>
          </_setter>
-         <trait>
+         <user0> <!-- some trait to display the current state -->
             <copy src="xxnPrefs()" trait="_Pref" />
-         </trait>
+         </user0>
 
       In theory, that should achieve what we want, right? That should toggle 
       the value between 2 and 1, by subtracting 1 whenever the current pref 
@@ -197,7 +197,16 @@
       So prefs can only be modified with hardcoded operators: if the same 
       trait that tries to modify a pref's value also pulls that pref's 
       value (however directly or indirectly), then the modification goes 
-      wrong.
+      wrong. Which is why we...
+
+         <_setter>
+            <copy src="me()" trait="clicked" />
+            <xxnOpPrefModifyValue>_Pref</xxnOpPrefModifyValue>
+            <copy>2</copy>
+            <xxnOpPrefCarousel>_Pref</xxnOpPrefCarousel>
+         </_setter>
+
+      There. A working checkbox that alternates between &false; and &true;.
 
 //*/
 

@@ -10,6 +10,30 @@
 
 #include <sstream>
 
+namespace {
+   inline bool __canReset(RE::Tile* tile) {
+      return CALL_MEMBER_FN(tile, GetFloatTraitValue)(XXNOptionsMenu::kTraitID_OptionAllowsReset) != (float)RE::kEntityID_true;
+   }
+   // helper function to reset an option only if XML wants to (needed for XML-based submenus)
+   void _resetCheckbox(Checkbox& widget, bool value) {
+      if (__canReset(widget.tile))
+         return;
+      widget.Set(value);
+   }
+   // helper function to reset an option only if XML wants to (needed for XML-based submenus)
+   void _resetEnumUInt(EnumpickerUInt& widget, UInt32 value) {
+      if (__canReset(widget.tileValue))
+         return;
+      widget.Set(value);
+   }
+   // helper function to reset an option only if XML wants to (needed for XML-based submenus)
+   void _resetEnumStrI(EnumpickerStr& widget, UInt32 index) {
+      if (__canReset(widget.tileValue))
+         return;
+      widget.SetByIndex(index);
+   }
+}
+
 XXNOptionsMenu* XXNOptionsMenu::Create() {
    void* memory = FormHeap_Allocate(sizeof(XXNOptionsMenu));
    if (memory) {
@@ -240,6 +264,9 @@ void XXNOptionsMenu::HandleFrameMouseWheel(SInt32 tileID, RE::Tile* target) {
       //  - Check if the parent tile has an ID.
       //  - If so, react as though the event were fired on that tile.
       //
+      // TODO: The mousewheel doesn't scroll the pane if the mouse is above any targetable 
+      // option tile inside of the pane
+      //
       if ((target = target->parent) == nullptr)
          return;
       float o;
@@ -317,22 +344,28 @@ void XXNOptionsMenu::Commit() {
    NorthernUI::INI::SendChangeEvent();
 };
 void XXNOptionsMenu::ResetDefaults() {
-   this->optionLocalMapRes.Set(NorthernUI::INI::Display::uLocalMapResolutionPerCell.iDefault, true);
-   this->optionSuppressDLCPopups.Set(NorthernUI::INI::Features::bSuppressDLCStartup.bDefault);
-   this->optionUseXXNAlchemyMenu.Set(NorthernUI::INI::Menus::bUseXXNAlchemyMenu.bDefault);
-   this->optionShowHUDClock.Set(NorthernUI::INI::Features::bShowHUDClock.bDefault);
-   this->optionShowHUDInputViewer.Set(NorthernUI::INI::Features::bShowHUDInputViewer.bDefault);
-   this->optionUseXInputIfPatched.Set(!NorthernUI::INI::XInput::bDontUseEvenWhenPatched.bDefault); // NOTE: UI shows opposite!
-   this->optionQuantityHandlerDefault.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iDefault);
-   this->optionQuantityHandlerAlt.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iDefault);
-   this->optionQuantityHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iDefault);
-   this->optionBarterConfirmHandlerDefault.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iDefault);
-   this->optionBarterConfirmHandlerAlt.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iDefault);
-   this->optionBarterConfirmHandlerCtrl.SetByIndex(NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iDefault);
-   this->optionUsePlaystationButtonIcons.Set(NorthernUI::INI::Features::bUsePlaystationButtonIcons.bDefault);
-   this->optionEnhancedMovement.Set(NorthernUI::INI::Features::bEnhancedMovement360Movement.bDefault);
-   this->optionEnhancedCamera.SetByIndex(NorthernUI::INI::Features::iEnhancedMovementCameraMode.iDefault);
-   this->optionCameraInertia.SetByIndex(NorthernUI::INI::Features::iCameraInertiaMode.iDefault);
+   _resetEnumUInt(this->optionLocalMapRes,        NorthernUI::INI::Display::uLocalMapResolutionPerCell.iDefault);
+   _resetCheckbox(this->optionSuppressDLCPopups,  NorthernUI::INI::Features::bSuppressDLCStartup.bDefault);
+   _resetCheckbox(this->optionUseXXNAlchemyMenu,  NorthernUI::INI::Menus::bUseXXNAlchemyMenu.bDefault);
+   _resetCheckbox(this->optionShowHUDClock,       NorthernUI::INI::Features::bShowHUDClock.bDefault);
+   _resetCheckbox(this->optionShowHUDInputViewer, NorthernUI::INI::Features::bShowHUDInputViewer.bDefault);
+   _resetCheckbox(this->optionUseXInputIfPatched, !NorthernUI::INI::XInput::bDontUseEvenWhenPatched.bDefault); // NOTE: UI shows opposite!
+   _resetEnumStrI(this->optionQuantityHandlerDefault, NorthernUI::INI::Features::iQuantityMenuHandlerDefault.iDefault);
+   _resetEnumStrI(this->optionQuantityHandlerAlt,     NorthernUI::INI::Features::iQuantityMenuHandlerAlt.iDefault);
+   _resetEnumStrI(this->optionQuantityHandlerCtrl,    NorthernUI::INI::Features::iQuantityMenuHandlerCtrl.iDefault);
+   _resetEnumStrI(this->optionBarterConfirmHandlerDefault, NorthernUI::INI::Features::iBarterConfirmHandlerDefault.iDefault);
+   _resetEnumStrI(this->optionBarterConfirmHandlerAlt,     NorthernUI::INI::Features::iBarterConfirmHandlerAlt.iDefault);
+   _resetEnumStrI(this->optionBarterConfirmHandlerCtrl,    NorthernUI::INI::Features::iBarterConfirmHandlerCtrl.iDefault);
+   _resetCheckbox(this->optionUsePlaystationButtonIcons,   NorthernUI::INI::Features::bUsePlaystationButtonIcons.bDefault);
+   _resetCheckbox(this->optionEnhancedMovement,            NorthernUI::INI::Features::bEnhancedMovement360Movement.bDefault);
+   _resetEnumStrI(this->optionEnhancedCamera, NorthernUI::INI::Features::iEnhancedMovementCameraMode.iDefault);
+   _resetEnumStrI(this->optionCameraInertia,  NorthernUI::INI::Features::iCameraInertiaMode.iDefault);
+   //
+   // signal to XML that we confirmed a reset-to-defaults, so that pure-XML-based 
+   // stuff can follow suit
+   //
+   CALL_MEMBER_FN(this->tile, UpdateFloat)(kRootTrait_DidResetToDefaults, 1.0F);
+   CALL_MEMBER_FN(this->tile, UpdateFloat)(kRootTrait_DidResetToDefaults, 0.0F);
 };
 void XXNOptionsMenu::Setup() {
    //

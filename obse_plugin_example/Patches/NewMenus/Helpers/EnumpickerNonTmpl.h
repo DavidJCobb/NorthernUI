@@ -7,18 +7,6 @@
 #include <vector>
 
 namespace XXNMenuHelpers {
-   //
-   // Deliberately avoiding templating this class, because all attempts produce 
-   // C2988 errors without any explanation. The compiler literally considers 
-   // lines like the following malformed and I've wasted enough time trying to 
-   // clean the crap off its legs:
-   //
-   //    template<typename T> struct Enumpicker<T> { /* ... */ }; // C2988
-   //    template<typename T> struct Enumpicker    { /* ... */ }; // C2988
-   //
-   // The resulting code will be no less efficient. Templating just automates 
-   // the process of creating copies of the class with minor variations.
-   //
    struct EnumpickerUInt {
       EnumpickerUInt() {};
       EnumpickerUInt(bool sorted, std::initializer_list<UInt32> v) {

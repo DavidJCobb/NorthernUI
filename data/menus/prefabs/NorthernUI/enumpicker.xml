@@ -54,6 +54,8 @@
          <div>2</div>
       </y>
       <string><copy src="parent()" trait="string" /></string>
+      
+      <user24><copy src="parent()" trait="user24" /></user24> <!-- for XXNOptionsMenu -->
    </text>
    <image name="button_left">
       <clicksound>3</clicksound>

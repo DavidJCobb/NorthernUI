@@ -14,6 +14,9 @@ namespace RE {
    DEFINE_SUBROUTINE(SInt32,      TagNameToID,             0x00588EF0, const char* tagName);
    DEFINE_SUBROUTINE(bool,        TileValueFormsCircularReference, 0x0058BAD0, Tile::Value*); // this also updates the values list in g_tileParseState
 
+   NiTArray<Tile::StringListElement>* const g_tempTraitList = (NiTArray<Tile::StringListElement>*)0x00B13BC4;
+   NiTListBase<Tile::StringListElement>* const g_tagIDLists = (NiTListBase<Tile::StringListElement>*)0x00B3B0B0;
+
    Tile::TileTemplateItem* Tile::TileTemplateItem::Create(UInt32 code, float tagIdOrValue, const char* string, SInt32 result, UInt32 lineNumber) {
       auto memory = (Tile::TileTemplateItem*) FormHeap_Allocate(sizeof(Tile::TileTemplateItem));
       if (memory)

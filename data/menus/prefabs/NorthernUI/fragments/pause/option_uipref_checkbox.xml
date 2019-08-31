@@ -78,19 +78,15 @@
       on why this "carousel" operator exists and is used. -->
    </_setter>
    <_resetter>
-      <!--
-         TODO: CHANGE THIS CONDITION. Currently we react directly to 
-         Reset To Defaults being clicked, with no regard for its 
-         confirmation prompt!
-         
-         The menu needs to be coded to alert us when the user confirms 
-         a reset to defaults, and once we implement pure-XML sub-menus, 
-         we need to also check that our containing submenu is visible 
-         (actually, a prefab argument will have to run that latter check 
-         for us and we'll need to grab the result).
-      -->
-      <copy src="xxn_defaults_button" trait="clicked" /><eq>1</eq>
-      <xxnOpPrefResetValue src="parent()" trait="user12" />
+      <copy src="menu()" trait="user24" /><eq>1</eq>
+      <and>
+         <copy src="menu()"   trait="_currentSubmenuID" />
+         <eq   src="parent()" trait="_submenuID" />
+         <or>
+            <copy src="menu()" trait="_usesSubmenus" /><neq>&true;</neq>
+         </or>
+      </and>
+      <xxnOpPrefResetValue src="me()" trait="user12" />
    </_resetter>
    
    <text name="label">
