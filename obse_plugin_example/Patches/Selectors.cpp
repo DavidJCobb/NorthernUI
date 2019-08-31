@@ -93,8 +93,6 @@ namespace CobbPatches {
                   auto tile = RE::TileRect::CreateOnGameHeap();
                   tile->Unk_01(nullptr, "NorthernUI Pref Storage and Synchronization", nullptr);
                   g_northernUIPrefstore = tile;
-                  //
-                  UIPrefManager::GetInstance().pushAllPrefsToUIState();
                }
                //
                if ((*g_FileFinder)->FindFile(pathLocCfg, 0, 0, -1) == FileFinder::kFileStatus_NotFound) {

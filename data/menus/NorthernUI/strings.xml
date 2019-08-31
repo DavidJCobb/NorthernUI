@@ -425,6 +425,16 @@
    <_optEnumEnhancedCameraInertiaFixed>Fixed</_optEnumEnhancedCameraInertiaFixed> <!-- "fixed" as in "I fixed a bug," not as in "fixed into place" -->
    <_optEnumEnhancedCameraInertiaDisabled>Disabled</_optEnumEnhancedCameraInertiaDisabled>
    
+   <_optionSubmenuInventoryAndBarter>Inventory and Bartering</_optionSubmenuInventoryAndBarter>
+   <_optionSubmenuHUDScaling>HUD Scaling</_optionSubmenuHUDScaling>
+   
+   <_optionPrefHUDScaleCompass>Compass Scale:</_optionPrefHUDScaleCompass>
+   <_optionPrefHUDScaleCorestats>Health/Magicka/Stamina:</_optionPrefHUDScaleCorestats>
+   <_optionPrefHUDScaleEquipIcons>Equipped Weapon/Spell Icons:</_optionPrefHUDScaleEquipIcons>
+   <_optionPrefHUDScaleWeaponCondition>Weapon Condition Meter:</_optionPrefHUDScaleWeaponCondition>
+   <_optionPrefHUDScaleWeaponCharge>Weapon Charge Meter:</_optionPrefHUDScaleWeaponCharge>
+   <_optionPrefHUDScaleXXNClock>HUD Clock:</_optionPrefHUDScaleXXNClock>
+   
    <_optDescLocalMapRes>Adjust the render resolution of the Local Map. Oblivion's world is divided into grid cells, and this option is measured in pixels per grid cell.</_optDescLocalMapRes>
    <_optDescShowHUDClock>Control whether the in-game time of day is displayed on the HUD.</_optDescShowHUDClock>
    <_optDescShowHUDInputViewer>Control whether your gamepad button presses and joystick input are displayed on the HUD.</_optDescShowHUDInputViewer>

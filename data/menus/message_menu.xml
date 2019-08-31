@@ -17,16 +17,6 @@
 		<div>2</div>
 	</y>
    
-   <text name="UI_PREF_TEST">
-      <x>0</x>
-      <y>-128</y>
-      <font>3</font>
-      <string>Pick a font color!</string>
-      <red>  <copy src="xxnPrefs()" trait="_TestR" /></red>
-      <green><copy src="xxnPrefs()" trait="_TestG" /></green>
-      <blue> <copy src="xxnPrefs()" trait="_TestB" /></blue>
-   </text>
-   
 	<rect name="message_focus_box">
       <!--
          Unlike most focus boxes, the MessageMenu focus box blindly copies the X and 

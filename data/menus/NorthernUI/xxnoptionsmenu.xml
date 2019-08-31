@@ -44,7 +44,7 @@
    <_onSubmenuChanged>
       <copy src="hitbox_back_out_of_submenu" trait="clicked" />
       <add  src="submenu_trigger_01" trait="clicked" />
-      <!-- TODO: add  "clicked" trait on submenu 2 -->
+      <add  src="submenu_trigger_02" trait="clicked" />
       <!-- ... -->
       <gt>0</gt>
    </_onSubmenuChanged>
@@ -57,6 +57,10 @@
       <add>
          <copy>1</copy>
          <mult src="submenu_trigger_01" trait="clicked" />
+      </add>
+      <add>
+         <copy>2</copy>
+         <mult src="submenu_trigger_02" trait="clicked" />
       </add>
       <!-- ... -->
    </_currentSubmenuID>
@@ -71,6 +75,12 @@
          <copy src="submenu_trigger_01" trait="childcount" />
          <onlyif>
             <copy src="me()" trait="_currentSubmenuID" /><eq>1</eq>
+         </onlyif>
+      </add>
+      <add>
+         <copy src="submenu_trigger_02" trait="childcount" />
+         <onlyif>
+            <copy src="me()" trait="_currentSubmenuID" /><eq>2</eq>
          </onlyif>
       </add>
       <!-- ... -->
@@ -168,8 +178,8 @@
                <include src="NorthernUI/fragments/pause/xxnoptionsmenu_scrollable_pane.xml" />
                <_submenuID>0</_submenuID>
                
-               <rect name="option_local_map_resolution">
-                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+               <rect name="submenu_trigger_02">
+                  <include src="NorthernUI/fragments/pause/option_submenu.xml" />
                   <!--
                      The default LISTINDEX is sibling() + 1, but if you use 
                      that from the first option in the list, then sibling() 
@@ -182,6 +192,16 @@
                   <listindex><copy>0</copy></listindex>
                   <y><copy>0</copy></y>
                   <!-- end of first-child traits -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionSubmenuHUDScaling" /></user11> <!-- label -->
+               </rect>
+               <rect name="submenu_trigger_01">
+                  <include src="NorthernUI/fragments/pause/option_submenu.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionSubmenuInventoryAndBarter" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_local_map_resolution">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
                   <user0>12</user0> <!-- enumpicker text ID -->
                   <user1>10</user1> <!-- enumpicker left ID -->
                   <user2>11</user2> <!-- enumpicker right ID -->
@@ -266,8 +286,47 @@
                      <string><copy src="xxnStrings()" trait="_optionHintRequiresRestart" /></string> <!-- label -->
                   </text>
                </rect>
+               <rect name="option_enhanced_movement">
+                  <include src="NorthernUI/fragments/pause/option_checkbox.xml" />
+                  <user0>37</user0> <!-- checkbox ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionEnhancedMovementBehavior" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_enhanced_camera">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>40</user0> <!-- enumpicker text ID -->
+                  <user1>38</user1> <!-- enumpicker left ID -->
+                  <user2>39</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionEnhancedCameraBehavior" /></user11> <!-- label -->
+               </rect>
+               <rect name="option_camera_inertia">
+                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <user0>43</user0> <!-- enumpicker text ID -->
+                  <user1>41</user1> <!-- enumpicker left ID -->
+                  <user2>42</user2> <!-- enumpicker right ID -->
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionEnhancedCameraInertia" /></user11> <!-- label -->
+               </rect>
+            </rect> <!-- end of top-level menu's pane -->
+            <rect name="pane_submenu_01">
+               <include src="NorthernUI/fragments/pause/xxnoptionsmenu_scrollable_pane.xml" />
+               <_submenuID>1</_submenuID>
+               
                <rect name="option_quantity_default">
                   <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
+                  <!--
+                     The default LISTINDEX is sibling() + 1, but if you use 
+                     that from the first option in the list, then sibling() 
+                     selects the last sibling -- creating a cyclical refer-
+                     ence. Specifying a const 0 won't fix it, but specifying 
+                     a COPY operator with a const 0 will.
+                     
+                     A similar problem exists for the Y trait.
+                  -->
+                  <listindex><copy>0</copy></listindex>
+                  <y><copy>0</copy></y>
+                  <!-- end of first-child traits -->
                   <user0>20</user0> <!-- enumpicker text ID -->
                   <user1>18</user1> <!-- enumpicker left ID -->
                   <user2>19</user2> <!-- enumpicker right ID -->
@@ -314,53 +373,12 @@
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   <user11><copy src="xxnStrings()" trait="_optionBarterConfirmHandlerCtrl" /></user11> <!-- label -->
                </rect>
-               <rect name="option_enhanced_movement">
-                  <include src="NorthernUI/fragments/pause/option_checkbox.xml" />
-                  <user0>37</user0> <!-- checkbox ID -->
-                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  <user11><copy src="xxnStrings()" trait="_optionEnhancedMovementBehavior" /></user11> <!-- label -->
-               </rect>
-               <rect name="option_enhanced_camera">
-                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
-                  <user0>40</user0> <!-- enumpicker text ID -->
-                  <user1>38</user1> <!-- enumpicker left ID -->
-                  <user2>39</user2> <!-- enumpicker right ID -->
-                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  <user11><copy src="xxnStrings()" trait="_optionEnhancedCameraBehavior" /></user11> <!-- label -->
-               </rect>
-               <rect name="option_camera_inertia">
-                  <include src="NorthernUI/fragments/pause/option_enumpicker.xml" />
-                  <user0>43</user0> <!-- enumpicker text ID -->
-                  <user1>41</user1> <!-- enumpicker left ID -->
-                  <user2>42</user2> <!-- enumpicker right ID -->
-                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  <user11><copy src="xxnStrings()" trait="_optionEnhancedCameraInertia" /></user11> <!-- label -->
-               </rect>
-               
-               <rect name="UI_PREF_TEST_BOOL">
-                  <include src="NorthernUI/fragments/pause/option_uipref_checkbox.xml" />
-                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  <user11>TEST TEST BOOL</user11> <!-- label -->
-                  <user12>_TestBool</user12> <!-- pref name -->
-                  <user13><copy src="xxnPrefs()" trait="_TestBool" /></user13> <!-- pref value -->
-               </rect>
-               <rect name="submenu_trigger_01">
-                  <include src="NorthernUI/fragments/pause/option_submenu.xml" />
-                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  <user11>Test Submenu</user11> <!-- label -->
-               </rect>
-               
-               <!--
-                  TODO: prefab for submenus, and then put a few here to 
-                  test
-               -->
-               
-            </rect> <!-- end of top-level menu's pane -->
-            <rect name="pane_submenu_01">
+            </rect> <!-- end of submenu 01 pane -->
+            <rect name="pane_submenu_02">
                <include src="NorthernUI/fragments/pause/xxnoptionsmenu_scrollable_pane.xml" />
-               <_submenuID>1</_submenuID>
+               <_submenuID>2</_submenuID>
                
-               <rect name="UI_PREF_TEST_R">
+               <rect name="option_hud_scale_compass">
                   <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
                   <!--
                      The default LISTINDEX is sibling() + 1, but if you use 
@@ -375,37 +393,76 @@
                   <y><copy>0</copy></y>
                   <!-- end of first-child traits -->
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  <user2>16</user2> <!-- slider jump distance -->
+                  <user2>25</user2> <!-- slider jump distance -->
                   <user3>1</user3> <!-- slider step distance -->
-                  <user4>0</user4> <!-- slider min -->
-                  <user5>255</user5> <!-- slider max -->
-                  <user11>TEST TEST RED</user11> <!-- label -->
-                  <user12>_TestR</user12> <!-- pref name -->
-                  <user13><copy src="xxnPrefs()" trait="_TestR" /></user13> <!-- pref value -->
+                  <user4>25</user4> <!-- slider min -->
+                  <user5>200</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows numeric value? -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDScaleCompass" /></user11> <!-- label -->
+                  <user12>_NorthernUISkyHUDScaleCompass</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCompass" /></user13> <!-- pref value -->
                </rect>
-               <rect name="UI_PREF_TEST_G">
+               <rect name="option_hud_scale_corestats">
                   <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  <user2>16</user2> <!-- slider jump distance -->
+                  <user2>25</user2> <!-- slider jump distance -->
                   <user3>1</user3> <!-- slider step distance -->
-                  <user4>0</user4> <!-- slider min -->
-                  <user5>255</user5> <!-- slider max -->
-                  <user11>TEST TEST GREEN</user11> <!-- label -->
-                  <user12>_TestG</user12> <!-- pref name -->
-                  <user13><copy src="xxnPrefs()" trait="_TestG" /></user13> <!-- pref value -->
+                  <user4>50</user4> <!-- slider min -->
+                  <user5>200</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows numeric value? -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDScaleCorestats" /></user11> <!-- label -->
+                  <user12>_NorthernUISkyHUDScaleCorestats</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" /></user13> <!-- pref value -->
                </rect>
-               <rect name="UI_PREF_TEST_B">
+               <rect name="option_hud_scale_equip_icons">
                   <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  <user2>16</user2> <!-- slider jump distance -->
+                  <user2>25</user2> <!-- slider jump distance -->
                   <user3>1</user3> <!-- slider step distance -->
-                  <user4>0</user4> <!-- slider min -->
-                  <user5>255</user5> <!-- slider max -->
-                  <user11>TEST TEST BLUE</user11> <!-- label -->
-                  <user12>_TestB</user12> <!-- pref name -->
-                  <user13><copy src="xxnPrefs()" trait="_TestB" /></user13> <!-- pref value -->
+                  <user4>25</user4> <!-- slider min -->
+                  <user5>200</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows numeric value? -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDScaleEquipIcons" /></user11> <!-- label -->
+                  <user12>_NorthernUISkyHUDScaleWpnSplIcon</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleWpnSplIcon" /></user13> <!-- pref value -->
                </rect>
-            </rect> <!-- end of submenu 01 pane -->
+               <rect name="option_hud_scale_weapon_condition">
+                  <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>50</user4> <!-- slider min -->
+                  <user5>200</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows numeric value? -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDScaleWeaponCondition" /></user11> <!-- label -->
+                  <user12>_NorthernUISkyHUDScaleWpnCndMeter</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleWpnCndMeter" /></user13> <!-- pref value -->
+               </rect>
+               <rect name="option_hud_scale_weapon_charge">
+                  <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>50</user4> <!-- slider min -->
+                  <user5>200</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows numeric value? -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDScaleWeaponCharge" /></user11> <!-- label -->
+                  <user12>_NorthernUISkyHUDScaleWpnChgMeter</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleWpnChgMeter" /></user13> <!-- pref value -->
+               </rect>
+               <rect name="option_hud_scale_xxn_clock">
+                  <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>25</user4> <!-- slider min -->
+                  <user5>200</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows numeric value? -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDScaleXXNClock" /></user11> <!-- label -->
+                  <user12>_NorthernUISkyHUDScaleXXNClock</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleXXNClock" /></user13> <!-- pref value -->
+               </rect>
+            </rect> <!-- end of submenu 02 pane -->
          </rect>
       </rect>
       <rect name="bolt_on">

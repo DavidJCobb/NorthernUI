@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<prefset name="test">
+   <!--
+      HUD SCALING OPTIONS
+      
+      Current design is for "100%" in these options to line up to 
+      the scaling values that we were using before we implemented 
+      these. Many of NorthernUI's graphics were designed at higher 
+      resolutions than they are displayed at, and the menu XML was 
+      set up to downscale them. As an example, the compass was set 
+      to display at 58% of the texture file's actual size.
+      
+      So, the compass XML is now set to translate 100% scale from 
+      here to 58% "effective" scale. Basically all of these options 
+      work the same way, normalizing 100% to the scaling we were 
+      using before.
+   -->
+   <pref name="NorthernUISkyHUDScaleCorestats"   default="100" /> <!-- health/magicka/stamina bars -->
+   <pref name="NorthernUISkyHUDScaleWpnSplIcon"  default="100" /> <!-- weapon and spell icons -->
+   <pref name="NorthernUISkyHUDScaleWpnCndMeter" default="100" /> <!-- weapon charge meter -->
+   <pref name="NorthernUISkyHUDScaleWpnChgMeter" default="100" /> <!-- weapon enchantment charge meter -->
+   <pref name="NorthernUISkyHUDScaleCompass"     default="100" />
+   <pref name="NorthernUISkyHUDScaleXXNClock"    default="100" /> <!-- applied in datastore.xml, not XXNHUDClockMenu.xml -->
+</prefset>

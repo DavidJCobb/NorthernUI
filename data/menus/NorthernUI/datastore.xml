@@ -24,7 +24,12 @@
    <_xxnBottomBarHeight>  96</_xxnBottomBarHeight> <!-- note: top border lies inside the menu bounds -->
    <_xxnBottomBarPadX>    32</_xxnBottomBarPadX> <!---- bottombar's inner horizontal padding -->
    <_xxnClockImageFile>Menus\NorthernUI\clocks\hemi\hd_background.dds</_xxnClockImageFile>
-   <_xxnClockImageScale>  50</_xxnClockImageScale> <!-- out of 100 -->
+   <_xxnClockImageScale> <!-- out of 100 -->
+      <copy>100</copy>
+      <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleXXNClock" />
+      <max>50</max>
+      <div>2</div> <!-- 100% scale -> 50% zoom -->
+   </_xxnClockImageScale>
    <_xxnColorTextLess>   140</_xxnColorTextLess> <!---- accent/de-emphasized text -->
    <_xxnColorTextMain>   255</_xxnColorTextMain> <!---- most text -->
    <_xxnItemCardYOffset>  32</_xxnItemCardYOffset> <!-- offset from the bottom bar's top edge -->

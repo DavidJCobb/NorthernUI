@@ -156,7 +156,12 @@
                <user2><copy src="graphic_hemi" trait="user2" /></user2>
                <user3><copy src="graphic_hemi" trait="user3" /></user3>
                
-               <zoom>50</zoom>
+               <zoom>
+                  <copy>100</copy>
+                  <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleXXNClock" />
+                  <max>50</max>
+                  <div>2</div> <!-- 100% scale -> 50% zoom -->
+               </zoom>
                <filename>Menus\NorthernUI\clocks\hemi\hd_icon_sun.dds</filename>
                <width> <copy src="me()" trait="filewidth" /></width>
                <height><copy src="me()" trait="fileheight" /></height>
@@ -169,7 +174,12 @@
                <user2><copy src="graphic_hemi" trait="user2" /></user2>
                <user3><copy src="graphic_hemi" trait="user3" /></user3>
                
-               <zoom>50</zoom>
+               <zoom>
+                  <copy>100</copy>
+                  <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleXXNClock" />
+                  <max>50</max>
+                  <div>2</div> <!-- 100% scale -> 50% zoom -->
+               </zoom>
                <filename>Menus\NorthernUI\clocks\hemi\hd_icon_moon.dds</filename>
                <width> <copy src="me()" trait="filewidth" /></width>
                <height><copy src="me()" trait="fileheight" /></height>

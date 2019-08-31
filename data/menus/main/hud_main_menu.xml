@@ -70,6 +70,21 @@
          <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
          
          <user0>1.0</user0> <!-- executable: meter percent -->
+         <zoom>
+            <copy>100</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
+            <max>50</max>
+            <div>2</div> <!-- 100% scale -> 50% zoom -->
+         </zoom>
+         <width>
+            <copy>320</copy>
+            <mult>
+               <copy>100</copy>
+               <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
+               <max>50</max>
+            </mult>
+            <div>100</div>
+         </width>
       </rect>
       <rect name="hudmain_magic">
          <id>3</id>
@@ -82,6 +97,21 @@
          <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
          
          <user0>1.0</user0> <!-- executable: meter percent -->
+         <zoom>
+            <copy>100</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
+            <max>50</max>
+            <div>2</div> <!-- 100% scale -> 50% zoom -->
+         </zoom>
+         <width>
+            <copy>320</copy>
+            <mult>
+               <copy>50</copy>
+               <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
+               <max>50</max>
+            </mult>
+            <div>100</div>
+         </width>
       </rect>
       <rect name="hudmain_fatigue">
          <id>4</id>
@@ -98,6 +128,21 @@
          <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
          
          <user0>1.0</user0> <!-- executable: meter percent -->
+         <zoom>
+            <copy>100</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
+            <max>50</max>
+            <div>2</div> <!-- 100% scale -> 50% zoom -->
+         </zoom>
+         <width>
+            <copy>320</copy>
+            <mult>
+               <copy>50</copy>
+               <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
+               <max>50</max>
+            </mult>
+            <div>100</div>
+         </width>
       </rect>
       <!-- -->
       <image name="hudmain_Magic_Icon"> <!-- equipped spell -->
@@ -105,8 +150,18 @@
 			<filename>Menus\Icons\icon_hud_default_magic.dds</filename>
 			<depth>1</depth>
 			<locus>&true;</locus>
-			<width>63</width>
-			<height>63</height>
+         <zoom>
+            <copy>100</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleWpnSplIcon" />
+            <max>25</max>
+         </zoom>
+         <_size>
+            <copy>63</copy>
+            <mult src="me()" trait="zoom" />
+            <div>100</div>
+         </_size>
+			<width> <copy src="me()" trait="_size" /></width>
+			<height><copy src="me()" trait="_size" /></height>
 			<x> <!-- align with left edge of magicka bar -->
 				<copy src="sibling(hudmain_magic)" trait="x"/>
 			</x>
@@ -128,8 +183,18 @@
 			<filename> Menus\Icons\icon_hud_default_weapon.dds </filename>
 			<locus> &true; </locus>
 			<depth> 1 </depth>
-			<width> 63 </width>
-			<height> 63 </height>
+         <zoom>
+            <copy>100</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleWpnSplIcon" />
+            <max>25</max>
+         </zoom>
+         <_size>
+            <copy>63</copy>
+            <mult src="me()" trait="zoom" />
+            <div>100</div>
+         </_size>
+			<width> <copy src="me()" trait="_size" /></width>
+			<height><copy src="me()" trait="_size" /></height>
 			<x> <!-- align with right edge of fatigue bar -->
 				<copy src="sibling(hudmain_fatigue)" trait="x" />
 				<add  src="sibling(hudmain_fatigue)" trait="width" />
@@ -164,6 +229,7 @@
 					<copy src="parent()" trait="user0"/>
 					<gt> 0 </gt>
 				</visible>
+            <zoom><copy src="parent()" trait="zoom" /></zoom>
 				<x>0</x>
 				<y> <!-- vertically center -->
 					<copy src="parent()" trait="height"/>
@@ -175,6 +241,8 @@
 					<add>
 						<copy>24</copy>	<onlyifnot src="me()" trait="_handonly"/>
 					</add>
+               <mult src="me()" trait="zoom" />
+               <div>100</div>
 				</height>
 				<width>
 					<copy>64</copy>
@@ -190,6 +258,8 @@
 							<or> <copy src="parent()" trait="user0"/> <eq>8</eq> </or>
 						</onlyif>
 					</sub>
+               <mult src="me()" trait="zoom" />
+               <div>100</div>
 				</width>
 				<red>
 					<copy> 47 </copy>
@@ -282,6 +352,12 @@
             <copy src="hudmain_weapon" trait="user2" />
             <div>100</div>
          </user0>
+         <zoom>
+            <copy>100</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleWpnCndMeter" />
+            <max>50</max>
+            <div>3</div> <!-- 100% scale -> 33% zoom -->
+         </zoom>
       </rect>
       <rect name="hudmain_weapon_charge">
          <include src="NorthernUI\meters\generic_upward.xml" />
@@ -322,6 +398,12 @@
                <gt>0</gt>
             </onlyif>
          </user0>
+         <zoom>
+            <copy>100</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleWpnChgMeter" />
+            <max>50</max>
+            <div>3</div> <!-- 100% scale -> 33% zoom -->
+         </zoom>
       </rect>
    </rect>
    <rect name="hudmain_compass">
@@ -337,7 +419,15 @@
          <div>2</div>
       </x>
       <y>32</y>
-      <zoom>58</zoom> <!-- graphics scale -->
+      <zoom> <!-- graphics scale -->
+         <copy>100</copy>
+         <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCompass" />
+         <max>25</max>
+         <div> <!-- 100% scale -> 58% zoom -->
+            <copy>100</copy>
+            <div>58</div>
+         </div>
+      </zoom>
       
       <user0> <!-- width of the "mid" portion of the flex-image -->
          <copy src="child(compass_mid)" trait="width" />
@@ -400,6 +490,7 @@
             <div>2</div>
          </y>
          <clipwindow>&true;</clipwindow>
+         
          <user0>0</user0>		<!-- set by code - heading in degrees, N is 0/360 -->
          <user20>					<!-- pixel-width of a 360-degree span -->
             <copy>768</copy>
@@ -463,6 +554,11 @@
                      </max>
                      <copy src="parent()" trait="_filename_"/>
                   </filename>
+                  <zoom>
+                     <copy>100</copy>
+                     <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCompass" />
+                     <max>25</max>
+                  </zoom>
                   <cropx>
                      <copy src="me()" trait="user5" /> <!-- X: location type -->
                      <sub> 1</sub>
@@ -470,6 +566,8 @@
                      <onlyif> <!-- exclude special-case locations -->
                         <copy src="me()" trait="user5"/><lt>90</lt>
                      </onlyif>
+                     <mult src="me()" trait="zoom" />
+                     <div>100</div>
                   </cropx>
                   <cropy>
                      <copy src="me()" trait="user6" /> <!-- Y: fast-travel -->
@@ -478,6 +576,8 @@
                      <onlyif> <!-- exclude special-case locations -->
                         <copy src="me()" trait="user5"/><lt>90</lt>
                      </onlyif>
+                     <mult src="me()" trait="zoom" />
+                     <div>100</div>
                   </cropy>
                   <depth>2</depth>
                   <alpha>
@@ -502,6 +602,8 @@
                         <copy>4</copy>
                         <onlyif src="me()" trait="user9"/>
                      </add>
+                     <mult src="me()" trait="zoom" />
+                     <div>100</div>
                   </width>
                   <height>
                      <copy>32</copy>
@@ -509,6 +611,8 @@
                         <copy>10</copy>
                         <onlyifnot src="me()" trait="user9"/>
                      </add>
+                     <mult src="me()" trait="zoom" />
+                     <div>100</div>
                   </height>
 
                   <_distance>

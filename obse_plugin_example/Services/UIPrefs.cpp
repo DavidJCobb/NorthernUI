@@ -515,4 +515,5 @@ void UIPrefManager::initialize() {
    prefs.loadDefinitions();
    prefs.dumpDefinitions(); // DEBUG DEBUG DEBUG
    prefs.loadUserValues();
+   prefs.pushAllPrefsToUIState();
 }
