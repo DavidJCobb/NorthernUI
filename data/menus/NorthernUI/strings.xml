@@ -435,6 +435,9 @@
    <_optionPrefHUDScaleWeaponCharge>Weapon Charge Meter:</_optionPrefHUDScaleWeaponCharge>
    <_optionPrefHUDScaleXXNClock>HUD Clock:</_optionPrefHUDScaleXXNClock>
    
+   <_optionPrefHUDFadeCorestats>Fade HUD Stats:</_optionPrefHUDFadeCorestats>
+   <_optionPrefHUDFadeEquipInfo>Fade HUD Equip Info:</_optionPrefHUDFadeEquipInfo>
+   
    <_optDescLocalMapRes>Adjust the render resolution of the Local Map. Oblivion's world is divided into grid cells, and this option is measured in pixels per grid cell.</_optDescLocalMapRes>
    <_optDescShowHUDClock>Control whether the in-game time of day is displayed on the HUD.</_optDescShowHUDClock>
    <_optDescShowHUDInputViewer>Control whether your gamepad button presses and joystick input are displayed on the HUD.</_optDescShowHUDInputViewer>
@@ -451,6 +454,9 @@
    <_optDescEnhancedMovementBehavior>If this option is enabled, your character's angle of movement will exactly match your joystick direction. If this option is disabled, the joystick works the same as WASD.</_optDescEnhancedMovementBehavior>
    <_optDescEnhancedCameraBehavior>Control the behavior of the third-person camera. You can use the camera behaviors seen in Oblivion or Skyrim, or a "Free" behavior that allows you to move totally independently of the camera direction.</_optDescEnhancedCameraBehavior>
    <_optDescEnhancedCameraInertia>By default, Oblivion applies inertia to the third-person camera and tilts it to accentuate your movement. This functionality has a bug that causes the camera to swing wildly when you go in and out of some buildings.</_optDescEnhancedCameraInertia>
+   
+   <_optPrefDescHUDFadeCorestats>If enabled, your Health, Magicka, and Stamina meters will fade away when all three stats are full.</_optPrefDescHUDFadeCorestats>
+   <_optPrefDescHUDFadeEquipInfo>If enabled, the icons for your equipped weapon and spell, and the meters for your weapon's charge and condition, will fade away when your Health, Magicka, and Stamina are full.</_optPrefDescHUDFadeEquipInfo>
    
    <!----- XXNCONTROLSMENU ------------------------------------------------->
    <_optCtrlGStick>Gameplay Sticks:</_optCtrlGStick>

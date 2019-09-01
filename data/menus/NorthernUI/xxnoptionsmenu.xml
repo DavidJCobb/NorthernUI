@@ -308,6 +308,20 @@
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   <user11><copy src="xxnStrings()" trait="_optionEnhancedCameraInertia" /></user11> <!-- label -->
                </rect>
+               <rect name="option_hud_fade_corestats">
+                  <include src="NorthernUI/fragments/pause/option_uipref_checkbox.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDFadeCorestats" /></user11> <!-- label -->
+                  <user12>_NorthernUIFadeHUDCorestatsWhenFull</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUIFadeHUDCorestatsWhenFull" /></user13> <!-- pref value -->
+               </rect>
+               <rect name="option_hud_fade_equip">
+                  <include src="NorthernUI/fragments/pause/option_uipref_checkbox.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDFadeEquipInfo" /></user11> <!-- label -->
+                  <user12>_NorthernUIFadeHUDEquipWidgetsWhenFull</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUIFadeHUDEquipWidgetsWhenFull" /></user13> <!-- pref value -->
+               </rect>
             </rect> <!-- end of top-level menu's pane -->
             <rect name="pane_submenu_01">
                <include src="NorthernUI/fragments/pause/xxnoptionsmenu_scrollable_pane.xml" />
@@ -506,6 +520,8 @@
                <_strings_37><copy src="xxnStrings()" trait="_optDescEnhancedMovementBehavior" /></_strings_37>
                <_strings_38><copy src="xxnStrings()" trait="_optDescEnhancedCameraBehavior" /></_strings_38>
                <_strings_41><copy src="xxnStrings()" trait="_optDescEnhancedCameraInertia" /></_strings_41>
+               <_strings_1001><copy src="xxnStrings()" trait="_optPrefDescHUDFadeCorestats" /></_strings_1001>
+               <_strings_1002><copy src="xxnStrings()" trait="_optPrefDescHUDFadeEquipInfo" /></_strings_1002>
                <user24>
                   <copy src="option_local_map_resolution"        trait="_mouseover_any" /><mult>10</mult>
                   <add><copy src="option_use_xinput_if_patched"  trait="_mouseover_any" /><mult>17</mult></add>
@@ -523,6 +539,8 @@
                   <add><copy src="option_enhanced_movement"      trait="_mouseover_any" /><mult>37</mult></add>
                   <add><copy src="option_enhanced_camera"        trait="_mouseover_any" /><mult>38</mult></add>
                   <add><copy src="option_camera_inertia"         trait="_mouseover_any" /><mult>41</mult></add>
+                  <add><copy src="option_hud_fade_corestats"     trait="_mouseover_any" /><mult>1001</mult></add>
+                  <add><copy src="option_hud_fade_equip"         trait="_mouseover_any" /><mult>1002</mult></add>
                </user24>
                
                <include src="NorthernUI\fonts\normal.xml" />

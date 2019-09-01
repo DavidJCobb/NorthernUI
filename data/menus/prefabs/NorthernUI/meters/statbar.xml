@@ -12,6 +12,7 @@
    <_fillPercent>1.0</_fillPercent>
    <clips>&false;</clips>
    <zoom>50</zoom>
+   <_alpha>255</_alpha>
    
    <!-- START OF ELEMENT DEFINITION -------------------------------- >
       What follows is the actual content of the element.
@@ -32,6 +33,7 @@
       <height><copy src="me()" trait="fileheight" /></height>
       <x>0</x>
       <y>0</y>
+      <alpha><copy src="parent()" trait="_alpha" /></alpha>
    </image>
    <image name="endcap_r">
       <clips><copy src="parent()" trait="clips" /></clips>
@@ -49,6 +51,7 @@
       </x>
       <y>0</y>
       <cropx><copy src="me()" trait="width" /></cropx>
+      <alpha><copy src="parent()" trait="_alpha" /></alpha>
    </image>
    <image name="mid">
       <clips><copy src="parent()" trait="clips" /></clips>
@@ -63,6 +66,7 @@
       <x><copy src="sibling(endcap_l)" trait="width" /></x>
       <y>0</y>
       <tile>&true;</tile>
+      <alpha><copy src="parent()" trait="_alpha" /></alpha>
    </image>
    
    <image name="contents">
@@ -84,5 +88,6 @@
       </width>
       <height><copy src="me()" trait="fileheight" /></height>
       <tile>&true;</tile>
+      <alpha><copy src="parent()" trait="_alpha" /></alpha>
    </image>
 <!--</rect>-->

@@ -1,0 +1,48 @@
+void Tile::AnimateTrait(UInt32 traitID, float currentValue, float endValue, float timeInSeconds) {
+   auto ebp = this;
+   auto ecx = this->unk28;
+   auto ebx = traitID;
+   if (ecx) {
+      do {
+         if (ecx->unk04 != this) {
+            ecx = ecx->unk14;
+            continue;
+         }
+         float esp24 = ecx->unk0C;
+         if (esp24 == endValue) {
+            return;
+         }
+         auto esi = ecx->unk00;
+         auto edi = esi->unk28;
+         auto edx = nullptr;
+         if (auto eax = edi) {
+            do {
+               if (eax == ecx) {
+                  goto lFound; // jump to 0x005899F1;
+               }
+               edx = eax;
+            } while (eax = eax->unk14);
+         }
+         ecx = edi;
+         continue;
+      lFound:
+         if (!eax) {
+            ecx = edi;
+            continue;
+         }
+         if (edx) {
+            edx->unk14 = eax;
+            delete eax;
+            continue;
+         }
+         esi->unk28 = eax->unk14;
+         esi = ecx->unk00->unk28;
+         delete eax;
+         ecx = esi;
+      } while (ecx = ecx->unk14);
+   }
+   if (this->GetFloatTraitValue(traitID) != endValue) {
+      new Struct00588A70(this, traitID, currentValue, endValue, timeInSeconds);
+   }
+   return;
+}

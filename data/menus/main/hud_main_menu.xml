@@ -20,6 +20,13 @@
 	<user8> Region name text </user8>
    
    <!-- NorthernUI by DavidJCobb: a Skyrim look-alike UI redesign for Oblivion. -->
+   
+   <!-- NorthernUI-suggested opacity for HUD.
+      Use this to tell when the bars are fading out due to them being full.
+      NorthernUI just blindly animates this and we can choose whether and 
+      when to use it.
+   -->
+   <user24>255</user24>
 	
 	<rect name="player_grab_zone">
 		<id> 91 </id>
@@ -55,6 +62,38 @@
       </height>
       <_marginX>32</_marginX>
       <!-- -->
+      <_meterAlpha>
+         <copy>255</copy>
+         <onlyifnot src="xxnPrefs()" trait="_NorthernUIFadeHUDCorestatsWhenFull" />
+         <add>
+            <copy src="menu()" trait="user24" />
+            <onlyif src="xxnPrefs()" trait="_NorthernUIFadeHUDCorestatsWhenFull" />
+         </add>
+      </_meterAlpha>
+      <_meterZoom>
+         <copy>100</copy>
+         <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
+         <max>50</max>
+         <div>2</div> <!-- 100% scale -> 50% zoom -->
+      </_meterZoom>
+      <_meterWidth>
+         <copy>320</copy>
+         <mult>
+            <copy>100</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
+            <max>50</max>
+         </mult>
+         <div>100</div>
+      </_meterWidth>
+      <_equipWidgetAlpha>
+         <copy>255</copy>
+         <onlyifnot src="xxnPrefs()" trait="_NorthernUIFadeHUDEquipWidgetsWhenFull" />
+         <add>
+            <copy src="menu()" trait="user24" />
+            <onlyif src="xxnPrefs()" trait="_NorthernUIFadeHUDEquipWidgetsWhenFull" />
+         </add>
+      </_equipWidgetAlpha>
+      <!-- -->
       <rect name="hudmain_health">
          <id>2</id>
          <include src="NorthernUI\meters\statbar.xml" />
@@ -70,21 +109,9 @@
          <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
          
          <user0>1.0</user0> <!-- executable: meter percent -->
-         <zoom>
-            <copy>100</copy>
-            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
-            <max>50</max>
-            <div>2</div> <!-- 100% scale -> 50% zoom -->
-         </zoom>
-         <width>
-            <copy>320</copy>
-            <mult>
-               <copy>100</copy>
-               <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
-               <max>50</max>
-            </mult>
-            <div>100</div>
-         </width>
+         <_alpha><copy src="parent()" trait="_meterAlpha" /></_alpha>
+         <zoom> <copy src="parent()" trait="_meterZoom" /></zoom>
+         <width><copy src="parent()" trait="_meterWidth" /></width>
       </rect>
       <rect name="hudmain_magic">
          <id>3</id>
@@ -97,21 +124,9 @@
          <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
          
          <user0>1.0</user0> <!-- executable: meter percent -->
-         <zoom>
-            <copy>100</copy>
-            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
-            <max>50</max>
-            <div>2</div> <!-- 100% scale -> 50% zoom -->
-         </zoom>
-         <width>
-            <copy>320</copy>
-            <mult>
-               <copy>50</copy>
-               <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
-               <max>50</max>
-            </mult>
-            <div>100</div>
-         </width>
+         <_alpha><copy src="parent()" trait="_meterAlpha" /></_alpha>
+         <zoom> <copy src="parent()" trait="_meterZoom" /></zoom>
+         <width><copy src="parent()" trait="_meterWidth" /></width>
       </rect>
       <rect name="hudmain_fatigue">
          <id>4</id>
@@ -128,21 +143,9 @@
          <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
          
          <user0>1.0</user0> <!-- executable: meter percent -->
-         <zoom>
-            <copy>100</copy>
-            <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
-            <max>50</max>
-            <div>2</div> <!-- 100% scale -> 50% zoom -->
-         </zoom>
-         <width>
-            <copy>320</copy>
-            <mult>
-               <copy>50</copy>
-               <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
-               <max>50</max>
-            </mult>
-            <div>100</div>
-         </width>
+         <_alpha><copy src="parent()" trait="_meterAlpha" /></_alpha>
+         <zoom> <copy src="parent()" trait="_meterZoom" /></zoom>
+         <width><copy src="parent()" trait="_meterWidth" /></width>
       </rect>
       <!-- -->
       <image name="hudmain_Magic_Icon"> <!-- equipped spell -->
@@ -170,11 +173,15 @@
             <sub  src="me()" trait="height"/>
          </y>
 			<alpha> <!-- dim when the player can't cast -->
-				<copy>100</copy>
-            <max>
-               <copy>255</copy>
-               <onlyif src="me()" trait="user2" />
-            </max>
+            <copy src="parent()" trait="_equipWidgetAlpha" />
+            <mult>
+               <copy>100</copy>
+               <div> 255</div>
+               <max>
+                  <copy>1</copy>
+                  <onlyif src="me()" trait="user2" />
+               </max>
+            </mult>
 			</alpha>
 			<user2>&true;</user2>		<!-- can cast -->
       </image>
@@ -204,15 +211,19 @@
             <copy>-16</copy>
             <sub  src="me()" trait="height" />
          </y>
-			<alpha>
-				<copy>100</copy>
-            <max>
-               <copy>255</copy>
-               <onlyif>
-                  <copy src="me()" trait="user2" />
-                  <gte>50</gte>	<!-- weapon health minimum before weapon icon partially alphas out -->
-               </onlyif>
-            </max>
+         <alpha> <!-- dim when the weapon is badly damaged -->
+            <copy src="parent()" trait="_equipWidgetAlpha" />
+            <mult>
+               <copy>100</copy>
+               <div> 255</div>
+               <max>
+                  <copy>1</copy>
+                  <onlyif>
+                     <copy src="me()" trait="user2" />
+                     <gte>50</gte>	<!-- weapon health minimum before weapon icon partially alphas out -->
+                  </onlyif>
+               </max>
+            </mult>
 			</alpha>
 			<!-- Possible item statuses are broken, stolen, enchanted, and poisoned -->
 			<user0> 0 </user0>		<!-- status combination -->
@@ -296,10 +307,12 @@
 				<depth> 3 </depth>
 				<justify> &right; </justify>
 				<font> 3 </font>
-				<red>255</red><green>255</green><blue>255</blue><alpha>255</alpha>
+				<red>255</red><green>255</green><blue>255</blue><!-- <alpha>255</alpha> -->
 				<wrapwidth>55</wrapwidth>
 				<wraplines> 1</wraplines>
 				<string><copy src="parent()" trait="user3" /></string>
+            
+            <alpha><copy src="parent()" trait="_equipWidgetAlpha" /></alpha>
 			</text>
 			<text name="hudmain_weapon_ammo_shadow"> <!-- overlaid on weapon icon -->
             <include src="NorthernUI\fonts\normal.xml" />
@@ -318,10 +331,15 @@
 				<red> 0 </red>
 				<green> 0 </green>
 				<blue> 0  </blue>
-				<alpha> 192 </alpha>
+				<!-- <alpha> 192 </alpha> -->
 				<wrapwidth> 55 </wrapwidth>
 				<wraplines> 1 </wraplines>
 				<string><copy src="parent()" trait="user3" /></string>
+            
+            <alpha>
+               <copy src="parent()" trait="_equipWidgetAlpha" />
+               <mult>0.75</mult>
+            </alpha>
 			</text>
 		</image>
       <rect name="hudmain_weapon_condition">
@@ -358,6 +376,7 @@
             <max>50</max>
             <div>3</div> <!-- 100% scale -> 33% zoom -->
          </zoom>
+         <_alpha><copy src="parent()" trait="_equipWidgetAlpha" /></_alpha>
       </rect>
       <rect name="hudmain_weapon_charge">
          <include src="NorthernUI\meters\generic_upward.xml" />
@@ -404,6 +423,7 @@
             <max>50</max>
             <div>3</div> <!-- 100% scale -> 33% zoom -->
          </zoom>
+         <_alpha><copy src="parent()" trait="_equipWidgetAlpha" /></_alpha>
       </rect>
    </rect>
    <rect name="hudmain_compass">

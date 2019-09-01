@@ -8072,6 +8072,7 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\Value\UpdateInboundReferences.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\RegisterTrait.txt" />
     <Text Include="ReverseEngineered\DOCS\MenuQue\SetMenuEventHandler.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\AnimateTrait.txt" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NorthernUI.rc" />

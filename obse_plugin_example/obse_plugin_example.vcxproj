@@ -420,6 +420,7 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\Subroutine005B0E70.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\UpdateTumblerHeightOffsets.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\PlayerCharacter\Subroutine00671620.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\AnimateTrait.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\CreateTemplatedChildren.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\RegisterTrait.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\UpdateTemplatedChildren.txt" />

@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <prefset name="test">
+   <!-- FEATURES -->
+   <pref name="NorthernUIFadeHUDCorestatsWhenFull"    default="&false;" />
+   <pref name="NorthernUIFadeHUDEquipWidgetsWhenFull" default="&false;" />
    <!--
       HUD SCALING OPTIONS
       

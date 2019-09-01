@@ -47,10 +47,73 @@ namespace CobbPatches {
             }
          };
          void Apply() {
-            WriteRelJump(0x005A7C0E, (UInt32)&Outer);
+            WriteRelJump(0x005A7C0E, (UInt32)&Outer); // HUDMainMenu::HandleFrame
          };
-      };
+      }
+      namespace HUDFadeOnFull {
+         //
+         // Allow HUDMainMenu's XML to fade out the health, magicka, and stamina bars 
+         // when they're full, if desired.
+         //
+         constexpr float  ce_fadeOutTimeInSeconds = 0.25F;
+         constexpr float  ce_fadeInTimeInSeconds  = 0.08F;
+         constexpr UInt32 ce_fadeTrait = RE::kTagID_user24;
+         constexpr float  ce_maxAlpha  = 255.0F;
+         constexpr UInt32 ce_fadeDelayInSeconds = 4 * 1000;
+         //
+         constexpr UInt32 ce_noFadeQueued = UINT_MAX;
+         static    UInt32 s_lastMeterFill = ce_noFadeQueued;
+         //
+         void _stdcall Inner(RE::HUDMainMenu* menu) {
+            //
+            // Slower but much easier to just check the values already in the meters; 
+            // also ensures we're consistent with display.
+            //
+            bool isFull = true;
+            if (CALL_MEMBER_FN(menu->tileHealthBar,  GetFloatTraitValue)(RE::kTagID_user0) < 1.0F
+             || CALL_MEMBER_FN(menu->tileMagickaBar, GetFloatTraitValue)(RE::kTagID_user0) < 1.0F
+             || CALL_MEMBER_FN(menu->tileStaminaBar, GetFloatTraitValue)(RE::kTagID_user0) < 1.0F
+            )
+               isFull = false;
+            if (isFull) {
+               if (s_lastMeterFill == ce_noFadeQueued)
+                  s_lastMeterFill = RE::g_timeInfo->unk10;
+            }
+            //
+            auto tile   = menu->tile;
+            auto alpha  = CALL_MEMBER_FN(tile, GetFloatTraitValue)(ce_fadeTrait);
+            auto target = CALL_MEMBER_FN(tile, GetAnimatingTraitEndValue)(ce_fadeTrait);
+            if (isFull) {
+               if (s_lastMeterFill != ce_noFadeQueued && RE::g_timeInfo->unk10 - s_lastMeterFill > ce_fadeDelayInSeconds) {
+                  if (alpha != 0.0F || target != 0.0F)
+                     CALL_MEMBER_FN(tile, AnimateTrait)(ce_fadeTrait, alpha, 0.0F, ce_fadeOutTimeInSeconds);
+                  s_lastMeterFill = ce_noFadeQueued;
+               }
+            } else {
+               s_lastMeterFill = ce_noFadeQueued;
+               if (alpha != ce_maxAlpha || target != ce_maxAlpha)
+                  CALL_MEMBER_FN(tile, AnimateTrait)(ce_fadeTrait, alpha, ce_maxAlpha, ce_fadeInTimeInSeconds);
+            }
+         }
+         __declspec(naked) void Outer() {
+            _asm {
+               mov  eax, 0x0058CEB0; // reproduce patched-over call to UpdateFloat
+               call eax;             // 
+               push edi;
+               call Inner; // stdcall
+               mov  eax, 0x005A7BCD;
+               jmp  eax;
+            }
+         }
+         void Apply() {
+            WriteRelJump(0x005A7BC8, (UInt32)&Outer);
+         }
+      }
       namespace XInputPlayerMenuModelRotate {
+         //
+         // Allow use of the gamepad controls to rotate the player model in the Big Four 
+         // menus. The vanilla game handles that in HUDMainMenu.
+         //
          void _stdcall Inner(RE::HUDMainMenu* menu) {
             static UInt32 lastUpdate = 0;
             //
@@ -91,13 +154,14 @@ namespace CobbPatches {
             }
          };
          void Apply() {
-            WriteRelJump(0x005A6E19, (UInt32)&Outer);
+            WriteRelJump(0x005A6E19, (UInt32)&Outer); // HUDMainMenu::HandleFrame+0x39
          };
-      };
+      }
 
       void Apply() {
          ShowWeaponCharge::Apply();
+         HUDFadeOnFull::Apply();
          XInputPlayerMenuModelRotate::Apply();
       };
-   };
-};
+   }
+}
