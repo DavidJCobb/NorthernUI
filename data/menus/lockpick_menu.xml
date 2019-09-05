@@ -41,14 +41,14 @@
 	<xbuttonb><ref src="lockpick_exit"         trait="clicked" /></xbuttonb>
 	<xbuttonx><ref src="lockpick_auto_attempt" trait="clicked" /></xbuttonx>
 	
-   <!-- Hooks for NorthernUI debug code; not currently used -->
-   <!--<rect name="northernui_minigame_click_shim">
+   <rect name="northernui_minigame_click_shim">
       <id>9001</id>
 		<target>&true;</target>
 		<visible>&true;</visible>
 		<xdefault>&true;</xdefault>
    </rect>
-   <text name="northernUI_debug_tumbler_1">
+   <!-- Hooks for NorthernUI debug code; not currently used -->
+   <!--<text name="northernUI_debug_tumbler_1">
       <id>9010</id>
       <include src="NorthernUI\fonts\normal.xml" />
       <red>255</red><green>255</green><blue>255</blue>

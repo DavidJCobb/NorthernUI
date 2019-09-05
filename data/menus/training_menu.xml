@@ -479,7 +479,7 @@
       </text>
       <text name="skill_Text"> <!-- modified by migTrainingQ.bDisplayTrainAdjust -->
          <id>4</id>
-         <string><copy src="skill_description" trait="string" /></string>
+         <string></string>
       </text>
       <text name="Player_Level_Text"> <!-- modified by migTrainingQ.bDisplaySkillNumbers and migTrainingQ.bTrainTakesTime -->
          <!--
