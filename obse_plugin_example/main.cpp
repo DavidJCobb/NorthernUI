@@ -71,14 +71,17 @@
 #include "Patches/XboxGamepad/Patch.h"
 #include "Patches/Compatibility/Dynamic Map/Main.h"
 #include "Patches/Compatibility/Dynamic Training Cost/Main.h"
+#include "Patches/OBSE/GetActiveUIComponent.h"
 #include "shared.h"
 
 IDebugLog gLog("Data\\OBSE\\Plugins\\NorthernUI.log");
 
-PluginHandle                g_pluginHandle    = kPluginHandle_Invalid;
-OBSESerializationInterface* g_serialization   = nullptr;
-OBSEArrayVarInterface*      g_arrayIntfc      = nullptr;
-OBSEScriptInterface*        g_scriptInterface = nullptr;
+PluginHandle                g_pluginHandle     = kPluginHandle_Invalid;
+OBSESerializationInterface* g_serialization    = nullptr;
+OBSEArrayVarInterface*      g_arrayIntfc       = nullptr;
+OBSEScriptInterface*        g_scriptInterface  = nullptr;
+OBSECommandTableInterface*  g_commandInterface = nullptr;
+OBSEStringVarInterface*     g_Str              = nullptr;
 const OBSEInterface* g_obse = nullptr;
 
 #define COBB_USING_SERIALIZATION 0
@@ -250,12 +253,14 @@ extern "C" {
          #endif
          {  // Register for string var interface.
             // This allows plugin commands to support '%z' format specifier in format string arguments.
-            OBSEStringVarInterface* g_Str = (OBSEStringVarInterface*) obse->QueryInterface(kInterface_StringVar);
-            g_Str->Register(g_Str);
+            g_Str = (OBSEStringVarInterface*) obse->QueryInterface(kInterface_StringVar);
+            RegisterStringVarInterface(g_Str);
+            if (!g_Str) {
+               _MESSAGE("WARNING: Unable to get OBSE string-var interface. Commands that use it will CTD!");
+            }
          }
-         {  // Get an OBSEScriptInterface to use for argument extraction.
-            g_scriptInterface = (OBSEScriptInterface*) obse->QueryInterface(kInterface_Script);
-         }
+         g_scriptInterface  = (OBSEScriptInterface*)obse->QueryInterface(kInterface_Script);
+         g_commandInterface = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
          (NorthernUI::INI::INISettingManager::GetInstance()).Load(); // load and cache INI settings from a file (NOTE: must be done before patches are applied)
          {
             auto& man = PatchManager::GetInstance();
@@ -317,13 +322,19 @@ extern "C" {
             //
             PatchManager::GetInstance().RegisterPatch("UIPrefManager:Load", &UIPrefManager::initialize, { PatchManager::Req::P_Selectors });
          }
-
+         //
          // register to receive messages from OBSE
          OBSEMessagingInterface* msgIntfc = (OBSEMessagingInterface*)obse->QueryInterface(kInterface_Messaging);
          msgIntfc->RegisterListener(g_pluginHandle, "OBSE", MessageHandler);
          g_msg = msgIntfc;
-
+         //
          (NorthernUI::L10N::StrManager::GetInstance()).Update(); // load translatable strings from a file
+         //
+         if (g_commandInterface) {
+            CobbPatches::OBSE::GetActiveUIComponent::Apply();
+         } else {
+            _MESSAGE("Unable to access OBSE's command table. Some patches could not be applied.");
+         }
       }
       obse->SetOpcodeBase(0x28D0); // We may use 0x28D0 to 0x28DF, inclusive
       {  // Register script commands.
@@ -339,19 +350,6 @@ extern "C" {
          obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed); // 28D9
          obse->RegisterCommand(&kCommandInfo_IsGamepadKeyPressed); // 28DA
       }
-      /*//
-      // get command table, if needed
-      OBSECommandTableInterface* cmdIntfc = (OBSECommandTableInterface*)obse->QueryInterface(kInterface_CommandTable);
-      if (cmdIntfc) {
-         #if 0	// enable the following for loads of log output
-         for (const CommandInfo* cur = cmdIntfc->Start(); cur != cmdIntfc->End(); ++cur) {
-            _MESSAGE("%s",cur->longName);
-         }
-         #endif
-      } else {
-         _MESSAGE("Couldn't read command table");
-      }
-      //*/
       return true;
    }
 };

@@ -10,6 +10,7 @@ extern const UInt32 g_pluginVersion;
    extern OBSESerializationInterface* g_serialization;
    extern OBSEArrayVarInterface*      g_arrayIntfc;
    extern OBSEScriptInterface*        g_scriptInterface;
+   extern OBSECommandTableInterface*  g_commandInterface;
    extern OBSEStringVarInterface*     g_Str;
 #else
 #endif

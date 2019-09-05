@@ -360,11 +360,20 @@ void InterfaceManager::Update() {
          }
       }
    }
-   if (ebx->QueryControlState(DIK_TAB, kKeyQuery_Down) || edi) { // at 0x00583AA6
+   if (
+      (ebx->QueryControlState(DIK_TAB, kKeyQuery_Down) || edi)
+      && !(*g_thePlayer)->unk5C0 && !(*g_thePlayer)->IsDead(0)
+      && this->sub0057D240(0)
+      && this->unk08 != 1
+      && !this->activeMenuIDs[0]
+   ) { // at 0x00583AD2
+      //
+      // ... MENUQUE HOOK HERE ...
       //
       // ...
       //
-   } else { // at 0x00583B15
+   } else {
+      // at 0x00583B1A
       eax = ebx->QueryControlState(DIK_TAB, kKeyQuery_Down);
       if (eax || (edi && edi == esp2C)) { // at 0x00583B35
          //

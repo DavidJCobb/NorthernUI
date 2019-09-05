@@ -4,6 +4,21 @@ namespace RE {
    class Menu;
 
    namespace MQ {
+      enum MenuEventHandlers {
+         kMenuEventHandler_Click     = 0, // Menu::HandleMouseUp
+         kMenuEventHandler_Mouseover = 1, // Menu::HandleMouseover
+         kMenuEventHandler_TextEdit  = 2,
+         kMenuEventHandler_TextEditDone = 3,
+         kMenuEventHandler_TextEditInput = 4,
+         kMenuEventHandler_Open = 5, // relies on shimming Menu::EnableMenu
+         kMenuEventHandler_Close = 6,
+         kMenuEventHandler_Reload = 7,
+         kMenuEventHandler_Scroll = 8, // Menu::HandleMouseWheelFrame
+         kMenuEventHandler_Drag = 9, // Menu::HandleMouseDownFrame
+         kMenuEventHandler_Input = 10, // Menu::HandleKeyboardInput
+         kMenuEventHandler_Update = 11, // Menu::HandleFrame
+      };
+
       // Accessor for a vanilla VTBL; cast a pointer to the VTBL to a pointer to this
       struct MQVtbl {
          void* data;

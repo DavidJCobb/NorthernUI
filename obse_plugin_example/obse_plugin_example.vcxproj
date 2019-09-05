@@ -152,6 +152,7 @@
     <ClCompile Include="Patches\NewMenus\XXNControlsMenu.cpp" />
     <ClCompile Include="Patches\NewMenus\XXNHUDInputViewerMenu.cpp" />
     <ClCompile Include="Patches\NewMenus\XXNOptionsMenu.cpp" />
+    <ClCompile Include="Patches\OBSE\GetActiveUIComponent.cpp" />
     <ClCompile Include="Patches\OptionsMenu.cpp" />
     <ClCompile Include="Patches\PersuasionMenu.cpp" />
     <ClCompile Include="Patches\QuestAddedMenu.cpp" />
@@ -292,6 +293,7 @@
     <ClInclude Include="Patches\NewMenus\XXNControlsMenu.h" />
     <ClInclude Include="Patches\NewMenus\XXNHUDInputViewerMenu.h" />
     <ClInclude Include="Patches\NewMenus\XXNOptionsMenu.h" />
+    <ClInclude Include="Patches\OBSE\GetActiveUIComponent.h" />
     <ClInclude Include="Patches\OptionsMenu.h" />
     <ClInclude Include="Patches\PersuasionMenu.h" />
     <ClInclude Include="Patches\QuestAddedMenu.h" />

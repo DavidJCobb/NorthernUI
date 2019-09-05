@@ -55,7 +55,7 @@ void Menu::ShimmedHandleMouseUp(MenuEventArgs args) {
       return eax(args); // calls original event handler
 }
 
-void MQ_10020(UInt32 Arg1, MenuInfo* Arg2, MenuEventArgs* Arg3) {
+void MQ_10020(UInt32 Arg1, MenuInfo* Arg2, MenuEventArgs* Arg3) { // used for all MQ menu events
    if (!Arg2)
       return;
    switch (Arg1) {

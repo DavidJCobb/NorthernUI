@@ -123,6 +123,7 @@
     <ClCompile Include="Miscellaneous\file.cpp" />
     <ClCompile Include="Miscellaneous\UnitTests\xml.cpp" />
     <ClCompile Include="Miscellaneous\debug.cpp" />
+    <ClCompile Include="Patches\OBSE\GetActiveUIComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -272,7 +273,6 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
-    <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\Commands_ActiveEffect.h" />
     <ClInclude Include="..\obse\obse\Commands_Actor.h" />
     <ClInclude Include="..\obse\obse\Commands_ActorValue.h" />
@@ -373,7 +373,6 @@
     <ClInclude Include="..\obse\obse\ThreadLocal.h" />
     <ClInclude Include="..\obse\obse\Utilities.h" />
     <ClInclude Include="..\obse\obse\VarMap.h" />
-    <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
@@ -8047,6 +8046,7 @@
     <ClInclude Include="Miscellaneous\debug.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\BookMenu.h" />
     <ClInclude Include="ReverseEngineered\MenuQue\MenuInfo.h" />
+    <ClInclude Include="Patches\OBSE\GetActiveUIComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />
