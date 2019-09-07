@@ -89,6 +89,10 @@
                   <string><copy src="xxnStrings()" trait="_controlsClickToSwapSticks" /></string>
                   <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  
+                  <xdown> <!-- override so we aren't trying to keynav to the separator -->
+                     <ref src="option_readout_leftstick" trait="mouseover" />
+                  </xdown>
                </rect>
                <rect name="separator">
                   <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>

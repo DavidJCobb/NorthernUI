@@ -124,6 +124,8 @@
     <ClCompile Include="Miscellaneous\UnitTests\xml.cpp" />
     <ClCompile Include="Miscellaneous\debug.cpp" />
     <ClCompile Include="Patches\OBSE\GetActiveUIComponent.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\PauseMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\ControlsMenu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Services\serialization.h" />
@@ -8047,6 +8049,9 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\BookMenu.h" />
     <ClInclude Include="ReverseEngineered\MenuQue\MenuInfo.h" />
     <ClInclude Include="Patches\OBSE\GetActiveUIComponent.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\SaveMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\PauseMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\ControlsMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="exports.def" />

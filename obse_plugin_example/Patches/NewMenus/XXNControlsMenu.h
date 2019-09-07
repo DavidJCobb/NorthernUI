@@ -172,5 +172,7 @@ class XXNControlsMenu : public RE::Menu {
       void ModalCallback_CreateNew();
       void ModalCallback_Rename();
       void ModalCallback_SaveAsNewAndExit();
+      //
+      void HandleEscapeKey(); // for the Miscellaneous patch EscKeyInMenus
 };
 RE::Tile* ShowXXNControlsMenu();

@@ -226,23 +226,6 @@ extern "C" {
 
       g_pluginHandle = obse->GetPluginHandle();
 
-      /***************************************************************************
-       *	
-       *	READ THIS!
-       *	
-       *	Before releasing your plugin, you need to request an opcode range from
-       *	the OBSE team and set it in your first SetOpcodeBase call. If you do not
-       *	do this, your plugin will create major compatibility issues with other
-       *	plugins, and may not load in future versions of OBSE. See
-       *	obse_readme.txt for more information.
-       *	
-       **************************************************************************/
-      // register commands
-      //obse->SetOpcodeBase(0x2000);
-      //ScriptCommands::HUDReticle::RegisterCommands(obse);
-      //ScriptCommands::OBSESamples::RegisterCommands(obse);
-
-
       // set up serialization callbacks when running in the runtime
       if (!obse->isEditor) {
          #if COBB_USING_SERIALIZATION == 1

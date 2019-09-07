@@ -103,6 +103,10 @@ namespace RE {
 
          void ResetDefaults();
 
+         inline Tile* getTile(UInt32 a) {
+            return this->tiles[a - 1];
+         }
+
          MEMBER_FN_PREFIX(VideoMenu);
          DEFINE_MEMBER_FN(Subroutine005DE2E0, void, 0x005DE2E0);
          DEFINE_MEMBER_FN(Subroutine005DE920, void, 0x005DE920);

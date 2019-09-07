@@ -812,6 +812,18 @@ void XXNControlsMenu::Save(bool prefs, bool scheme) {
    manager.ApplySelectedProfile();
 }
 
+void XXNControlsMenu::HandleEscapeKey() {
+   if (this->modal != kModal_None)
+      return;
+   if (this->confirmation != kConfirmationBox_None)
+      return;
+   if (this->isAssigning != kAssignmentState_No)
+      return;
+   if (this->pendingSchemeSwitchInc)
+      return;
+   this->HandleMouseUp(kTileID_ButtonExit, this->tileButtonExit);
+}
+
 RE::Tile* ShowXXNControlsMenu() {
    if (auto existing = GetMenuByType(XXNControlsMenu::kID)) {
       ((XXNControlsMenu*)existing)->Dispose(true);

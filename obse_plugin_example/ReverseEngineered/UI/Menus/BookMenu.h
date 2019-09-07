@@ -14,8 +14,6 @@ namespace RE {
             kTileID_ButtonTake = 32,
          };
 
-         // NOTE: MenuQue replaces BookMenu::HandleMouseUp
-         
          Tile*  unk28 = nullptr; // 28 // these two tiles are the scrollbar and its thumb
          Tile*  unk2C = nullptr; // 2C
          UInt32 unk30;

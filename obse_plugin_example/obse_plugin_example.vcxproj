@@ -174,11 +174,13 @@
     <ClCompile Include="ReverseEngineered\Systems\Core.cpp" />
     <ClCompile Include="ReverseEngineered\Systems\Input.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\AudioMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\ControlsMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\GameplayMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\InventoryMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\LoadingMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\LockPickMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\OptionsMenu.cpp" />
+    <ClCompile Include="ReverseEngineered\UI\Menus\PauseMenu.cpp" />
     <ClCompile Include="ReverseEngineered\UI\Menus\TextEditMenu.cpp" />
     <ClCompile Include="ScriptCommands\XInput.cpp" />
     <ClCompile Include="Services\PatchManagement.cpp" />
@@ -365,6 +367,7 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\AudioMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\BookMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\ContainerMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\ControlsMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\DialogMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\EnchantmentMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\GameplayMenu.h" />
@@ -379,10 +382,12 @@
     <ClInclude Include="ReverseEngineered\UI\Menus\MessageMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\NegotiateMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\OptionsMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\PauseMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\PersuasionMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\QuickKeysMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\RaceSexMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\RepairMenu.h" />
+    <ClInclude Include="ReverseEngineered\UI\Menus\SaveMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\SigilStoneMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\SleepWaitMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\SpellMakingMenu.h" />

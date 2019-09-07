@@ -269,6 +269,7 @@ void InterfaceManager::Update() {
       delete esp3C;
       ebx = esp50;
    }
+   //
    eax = esp50->QueryControlState(kControl_SpecialConsole, kKeyQuery_Down); // 1E
    if (eax && TES4_00579060() != 0x414) { // MainMenu
       //
@@ -282,21 +283,63 @@ void InterfaceManager::Update() {
          this->TES4_0057CFE0(kMenuMode_Console, 0);
       }
    }
+   //
+   // Handle the pause key, with different branches depending on whether the 
+   // main menu is open. The first branch mostly just jumps to the second, 
+   // so either Bethesda wrote some hella redundant code, or they had a 
+   // single function to do most of this behavior and it got inlined.
+   //
    eax = esp50->QueryControlState(kControl_SpecialPause, kKeyQuery_Down); // 1D
    if (eax) {
-      UInt8 eax = Unknown00B3A708_GetSingleton(1)->TES4_005878B0(0x414); // MainMenu ID
+      UInt8 eax = Unknown00B3A708_GetSingleton(1)->sub005878B0(0x414); // MainMenu ID
       if (!eax) { // at 0x005837A7
-         //
-         // ...
-         //
+         auto singleton = Unknown00B3A708_GetSingleton(1);
+         if (!singleton->sub005878B0(0x3EF)) { // LoadingMenu
+            if (singleton->sub005878B0(0x40F)) // SaveMenu
+               jump to 0x00583889;
+            if (singleton->sub005878B0(0x40E)) // LoadMenu
+               jump to 0x00583889;
+            if (singleton->sub005878B0(0x3F5))
+               sub005BDCD0();
+            else {
+               if (*(byte*)0x00B143AE)
+                  ShowPauseMenuIfPermitted();
+            }
+            jump to 0x0058392B;
+         }
       }
    }
    eax = esp50->QueryControlState(kControl_SpecialPause, kKeyQuery_Down);
    if (eax) { // at 0x0058384B
-      //
-      // ...
-      //
+      auto singleton = Unknown00B3A708_GetSingleton(1);
+      if (singleton->sub005878B0(0x40F) || singleton->sub005878B0(0x40E)) { // SaveMenu, LoadMenu
+         // at 0x00583889
+         if (singleton->sub005878B0(0x40F)) {
+            Menu* edi = GetMenuByType(0x40F)->GetContainingMenu();
+            if (!edi || edi->GetID() != 0x40F)
+               jump to 0x0058392B;
+         } else {
+            // at 0x005838CF
+            if (!singleton->sub005878B0(0x40E)) // LoadMenu
+               jump to 0x0058392B;
+            Menu* edi = GetMenuByType(0x40E)->GetContainingMenu();
+            if (!edi || edi->GetID() != 0x40E)
+               jump to 0x0058392B;
+            if (!edi->TileUnk28IsVisible()) // exit button
+               jump to 0x0058392B;
+         }
+         // at 0x0058391E
+         #if MENUQUE_INSTALLED == 1
+            edi->HandleClick(1, edi->tileButtonExit);
+         #else
+            edi->HandleClick(1, nullptr);
+         #endif
+      }
    }
+   //
+   // Pause key done.
+   //
+   // at 0x0058392B
    edi = GetMenuByType(0x3EA); // InventoryMenu
    ebx = GetMenuByType(0x3FE); // MagicMenu
    if (!edi && edi->GetFloatTraitValue(kTileValue_visible) >= 1.0) {
