@@ -75,6 +75,10 @@
                   <user0>5</user0> <!-- slider ID -->
                   <user1>6</user1> <!-- slider thumb ID -->
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <!-- FIRST-CHILD FIXES -->
+                  <y><copy>0</copy></y>
+                  <listindex><copy>0</copy></listindex>
+                  <!-- END OF FIRST-CHILD FIXES -->
                </rect>
                <rect name="option_invert_y">
                   <include src="NorthernUI/fragments/pause/option_button.xml" />
@@ -89,10 +93,6 @@
                   <string><copy src="xxnStrings()" trait="_controlsClickToSwapSticks" /></string>
                   <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
-                  
-                  <xdown> <!-- override so we aren't trying to keynav to the separator -->
-                     <ref src="option_readout_leftstick" trait="mouseover" />
-                  </xdown>
                </rect>
                <rect name="separator">
                   <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
@@ -134,6 +134,11 @@
                   <target>&false;</target>
                   <visible><not src="NorthernUI()" trait="_xxnXInputPatchApplied" /></visible>
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  
+                  <listindex>
+                     <copy src="option_swap_sticks" trait="listindex" />
+                     <add>1</add>
+                  </listindex>
                </rect>
                <rect name="option_readout_rightstick">
                   <!-- not a real button -->
@@ -182,6 +187,11 @@
                   <string>»</string>
                   <user0>9</user0> <!-- button ID -->
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  
+                  <listindex>
+                     <copy src="option_readout_rightstick" trait="listindex" />
+                     <add>1</add>
+                  </listindex>
                </rect>
             </rect>
             <rect name="page_bindings">

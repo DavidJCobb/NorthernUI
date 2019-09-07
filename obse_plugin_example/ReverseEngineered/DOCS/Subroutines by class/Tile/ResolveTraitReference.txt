@@ -1,0 +1,80 @@
+Tile* Tile::ResolveTraitReference(UInt32 keynavTrait, UInt32& outTraitID) {
+   auto esi = this;
+   // at 0x0058E3B9
+   do {
+      auto eax = this->valueList.start;
+      if (!eax)
+         continue;
+      do {
+         ecx = eax->data;
+         edx = ecx->id;
+         eax = eax->next;
+         if (edx == Arg1) {
+            // jumped to 0x0058E3EF
+            if (ecx->value == 105.0) { // &next;
+               esp14 = 0;
+               ebp   = MAX_INT;
+               esi   = esi->parent;
+               SInt32 esp1C = esi->GetFloatTraitValue(kTagID_listindex);
+               esp10 = esi;
+               for(auto ebx = esi->childList.start; ebx; ebx = ebx->next) {
+                  esi = ebx->data;
+                  auto edi = esi->unk18;
+                  auto eax = edi;
+                  float esp18 = esi->GetFloatTraitValue(kTagID_visible); // inlined
+                  if (/*(the trait does not exist) || */esp18 != 1.0F) {
+                     if (!esi->GetTrait(kTagID_xdefault))
+                        continue;
+                     SInt32 eax = esi->GetFloatTraitValue(kTagID_listindex);
+                     if (eax <= esp1C)
+                        continue;
+                     if (eax >= ebp)
+                        continue;
+                     esp14 = esi;
+                     ebp   = eax;
+                  }
+               }
+               if (esi = esp14) {
+                  esi->XScrollIntoView();
+                  return;
+               }
+               esi = esp10;
+               jump to 0x0058E3B9; // recurse up the tree
+            } else if (ecx->value == 104.0) { // &prev;
+               //
+               // ...
+               //
+               jump to 0x0058E3B9; // recurse up the tree
+            } else if (ecx->value == 106.0) { // &first;
+               //
+               // ...
+               //
+            } else if (ecx->value == 107.0) { // &last;
+               //
+               // ...
+               //
+            }
+            auto ecx = ecx->operators;
+            if (!ecx)
+               return nullptr;
+            do {
+               if (ecx->opcode == kTagID_ref) {
+                  // jumped to 0x0058E79A
+                  auto eax = ecx->refPrev;
+                  if (eax) {
+                     do {
+                        ecx = eax;
+                     } while (eax = eax->refPrev);
+                  }
+                  outTraitID = ecx->operand.ref->id;
+                  return ecx->operand.ref->owner;
+               }
+            } while (ecx = ecx->next);
+            return nullptr;
+         }
+         if (edx > Arg1)
+            break;
+      } while (eax);
+   } while (esi = esi->parent);
+   return nullptr;
+}

@@ -172,7 +172,7 @@ void InterfaceManager::HandleNavigationKeypress(UInt32 keypress) {
       // No tile has focus from keyboard navigation.
       //
       Tile* esi = this->TES4_0057DA90(&currentKeynav, nullptr);
-      this->TES4_0057F9F0(esi, kTileValue_mouseover, 0);
+      this->SendKeynavEventTo(esi, kTileValue_mouseover, 0);
       if (esi)
          return;
       esi = esp18->ResolveTraitReference(keynavTrait, &targetTrait);
