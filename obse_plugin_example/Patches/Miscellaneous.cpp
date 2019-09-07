@@ -894,70 +894,70 @@ namespace CobbPatches {
             auto root  = ui->menuRoot;
             bool isTitleScreen = false;
             UInt32 topmost = CALL_MEMBER_FN(ui, GetTopmostMenuID)();
-            if (!topmost)
-               return;
-            for (auto node = root->childList.start; node; node = node->next) {
-               auto tile = node->data;
-               if (!tile)
-                  continue;
-               auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
-               if (!menu)
-                  continue;
-               if (menu->GetID() == RE::kMenuID_MainMenu) {
-                  isTitleScreen = true;
-                  break;
+            if (topmost) {
+               for (auto node = root->childList.start; node; node = node->next) {
+                  auto tile = node->data;
+                  if (!tile)
+                     continue;
+                  auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+                  if (!menu)
+                     continue;
+                  if (menu->GetID() == RE::kMenuID_MainMenu) {
+                     isTitleScreen = true;
+                     break;
+                  }
                }
-            }
-            auto tile = (RE::Tile*) g_TileMenuArray->data[topmost - 0x3E9];
-            auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
-            switch (topmost) {
-               case RE::kMenuID_PauseMenu: // vanilla
-                  RE::ClosePauseMenu();
-                  return;
-               case RE::kMenuID_LoadMenu: // vanilla
-                  {
-                     auto button = ((RE::LoadgameMenu*)menu)->tileButtonExit;
-                     if (CALL_MEMBER_FN(button, GetFloatTraitValue)(RE::kTagID_visible) == 2.0F)
-                        menu->HandleMouseUp(1, button);
-                  }
-                  return;
-               case RE::kMenuID_SaveMenu: // vanilla
-                  menu->HandleMouseUp(1, ((RE::SaveMenu*)menu)->tileButtonExit);
-                  return;
-                  //
-                  // Modded cases below:
-                  //
-               case RE::kMenuID_OptionsMenu:
-                  menu->HandleMouseUp(RE::OptionsMenu::kTileID_ButtonExit, ((RE::OptionsMenu*)menu)->tileButtonExit);
-                  return;
-               case RE::kMenuID_AudioMenu:
-                  menu->HandleMouseUp(RE::AudioMenu::kTileID_ButtonExit, ((RE::AudioMenu*)menu)->tileButtonExit);
-                  return;
-               case RE::kMenuID_VideoMenu:
-                  menu->HandleMouseUp(RE::VideoMenu::kTileID_ButtonReturn, ((RE::VideoMenu*)menu)->getTile(RE::VideoMenu::kTileID_ButtonReturn));
-                  return;
-               case RE::kMenuID_GameplayMenu:
-                  menu->HandleMouseUp(RE::GameplayMenu::kTileID_ButtonExit, ((RE::GameplayMenu*)menu)->tileButtonExit);
-                  return;
-               case RE::kMenuID_ControlsMenu:
-                  {
-                     auto cm = (RE::ControlsMenu*)menu;
-                     if (cm->isRemapping())
-                        return;
-                     auto page = cm->getMenuPage();
-                     if (page == RE::ControlsMenu::kMenuPage_Base) {
-                        cm->HandleMouseUp(RE::ControlsMenu::kTileID_ButtonExit, cm->tileButtonExit);
-                     } else if (page == RE::ControlsMenu::kMenuPage_Remapping) {
-                        cm->backOutOfMapping();
+               auto tile = (RE::Tile*) g_TileMenuArray->data[topmost - 0x3E9];
+               auto menu = CALL_MEMBER_FN(tile, GetContainingMenu)();
+               switch (topmost) {
+                  case RE::kMenuID_PauseMenu: // vanilla
+                     RE::ClosePauseMenu();
+                     return;
+                  case RE::kMenuID_LoadMenu: // vanilla
+                     {
+                        auto button = ((RE::LoadgameMenu*)menu)->tileButtonExit;
+                        if (CALL_MEMBER_FN(button, GetFloatTraitValue)(RE::kTagID_visible) == 2.0F)
+                           menu->HandleMouseUp(1, button);
                      }
-                  }
-                  return;
-               case XXNControlsMenu::kID:
-                  ((XXNControlsMenu*)menu)->HandleEscapeKey();
+                     return;
+                  case RE::kMenuID_SaveMenu: // vanilla
+                     menu->HandleMouseUp(1, ((RE::SaveMenu*)menu)->tileButtonExit);
+                     return;
+                     //
+                     // Modded cases below:
+                     //
+                  case RE::kMenuID_OptionsMenu:
+                     menu->HandleMouseUp(RE::OptionsMenu::kTileID_ButtonExit, ((RE::OptionsMenu*)menu)->tileButtonExit);
+                     return;
+                  case RE::kMenuID_AudioMenu:
+                     menu->HandleMouseUp(RE::AudioMenu::kTileID_ButtonExit, ((RE::AudioMenu*)menu)->tileButtonExit);
+                     return;
+                  case RE::kMenuID_VideoMenu:
+                     menu->HandleMouseUp(RE::VideoMenu::kTileID_ButtonReturn, ((RE::VideoMenu*)menu)->getTile(RE::VideoMenu::kTileID_ButtonReturn));
+                     return;
+                  case RE::kMenuID_GameplayMenu:
+                     menu->HandleMouseUp(RE::GameplayMenu::kTileID_ButtonExit, ((RE::GameplayMenu*)menu)->tileButtonExit);
+                     return;
+                  case RE::kMenuID_ControlsMenu:
+                     {
+                        auto cm = (RE::ControlsMenu*)menu;
+                        if (cm->isRemapping())
+                           return;
+                        auto page = cm->getMenuPage();
+                        if (page == RE::ControlsMenu::kMenuPage_Base) {
+                           cm->HandleMouseUp(RE::ControlsMenu::kTileID_ButtonExit, cm->tileButtonExit);
+                        } else if (page == RE::ControlsMenu::kMenuPage_Remapping) {
+                           cm->backOutOfMapping();
+                        }
+                     }
+                     return;
+                  case XXNControlsMenu::kID:
+                     ((XXNControlsMenu*)menu)->HandleEscapeKey();
+                     return;
+               }
+               if (isTitleScreen)
                   return;
             }
-            if (isTitleScreen)
-               return;
             RE::ShowPauseMenuIfPermitted();
          }
          __declspec(naked) void Outer() {
