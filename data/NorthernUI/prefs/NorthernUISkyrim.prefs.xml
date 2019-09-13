@@ -24,4 +24,6 @@
    <pref name="NorthernUISkyHUDScaleWpnChgMeter" default="100" /> <!-- weapon enchantment charge meter -->
    <pref name="NorthernUISkyHUDScaleCompass"     default="100" />
    <pref name="NorthernUISkyHUDScaleXXNClock"    default="100" /> <!-- applied in datastore.xml, not XXNHUDClockMenu.xml -->
+   <!-- -->
+   <pref name="NorthernUISkyHUDWidthModCompass"  default="0" />
 </prefset>

@@ -10,6 +10,7 @@
    <!-- _xxnShowHUDClock       == Boolean: Show the HUD clock? -->
    <!-- _xxnShowHUDInputViewer == Boolean: Show the HUD input viewer? -->
    <!-- _xxnXInputPatchApplied == Boolean: Has NorthernUI taken over all gamepad handling? -->
+   <!-- _xxnUIPixelScale       == Float:   Hardcoded scaling factor applied to entire UI i.e. absolute pixels / relative pixels -->
    
    <_xxnDLLLoaded>&true;</_xxnDLLLoaded>
    <!-- Set hardcoded traits to defaults in case the DLL forgets to set them: -->
@@ -18,6 +19,7 @@
    <_xxnShowHUDInputViewer>&false;</_xxnShowHUDInputViewer>
    <_xxnUsePlaystationButtonIcons>&false;</_xxnUsePlaystationButtonIcons>
    <_xxnXInputPatchApplied>&false;</_xxnXInputPatchApplied>
+   <_xxnUIPixelScale>1</_xxnUIPixelScale>
    
    <!-- Vars we just want to be able to access from anywhere: -->
    <_xxnAlpha>           200</_xxnAlpha> <!------------ alpha for menu background graphics -->

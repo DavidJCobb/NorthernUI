@@ -422,6 +422,7 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\ActorAnimData\Subroutine00476D10.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Archive\InvalidateAgainstLooseFiles.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Archive\Subroutine0042D000.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\HUDMainMenu\HandleFrame.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\HandleMouseDown.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\Subroutine005AFA80.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\LockPickMenu\Subroutine005B0E70.txt" />
@@ -430,6 +431,7 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\AnimateTrait.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\CreateTemplatedChildren.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\RegisterTrait.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\ResolveTraitReference.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\UpdateTemplatedChildren.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\Value\UpdateInboundReferences.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by topic\BSAs\FindBSAThatContainsFile.txt" />

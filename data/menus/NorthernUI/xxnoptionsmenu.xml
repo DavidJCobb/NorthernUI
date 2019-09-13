@@ -416,6 +416,18 @@
                   <user12>_NorthernUISkyHUDScaleCompass</user12> <!-- pref name -->
                   <user13><copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCompass" /></user13> <!-- pref value -->
                </rect>
+               <rect name="option_hud_width_compass">
+                  <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user2>25</user2> <!-- slider jump distance -->
+                  <user3>1</user3> <!-- slider step distance -->
+                  <user4>-100</user4> <!-- slider min -->
+                  <user5>600</user5> <!-- slider max -->
+                  <user8>&true;</user8> <!-- slider shows numeric value? -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDWidthCompass" /></user11> <!-- label -->
+                  <user12>_NorthernUISkyHUDWidthModCompass</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUISkyHUDWidthModCompass" /></user13> <!-- pref value -->
+               </rect>
                <rect name="option_hud_scale_corestats">
                   <include src="NorthernUI/fragments/pause/option_uipref_slider.xml" />
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->

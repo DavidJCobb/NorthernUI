@@ -2,6 +2,7 @@
 //
 #include "Patches/TagIDs/Main.h"
 #include "Patches/XboxGamepad/Main.h"
+#include "ReverseEngineered/UI/InterfaceManager.h"
 #include "ReverseEngineered/UI/Tile.h"
 #include "Services/INISettings.h"
 #include "Services/UIPrefs.h"
@@ -104,7 +105,10 @@ namespace CobbPatches {
                }
                //
                if ((*g_FileFinder)->FindFile(pathDatastore, 0, 0, -1) == FileFinder::kFileStatus_NotFound) {
-                  _MESSAGE("Datastore file is missing. The datastore will be nullptr.");
+                  _MESSAGE("Datastore file is missing.");
+                  auto tile = RE::TileRect::CreateOnGameHeap();
+                  tile->Unk_01(nullptr, "NorthernUIDatastore", nullptr);
+                  g_northernUIDatastore = tile;
                } else {
                   g_northernUIDatastore = CALL_MEMBER_FN(menuRoot, ReadXML)(pathDatastore);
                   if (g_northernUIDatastore)
@@ -297,6 +301,7 @@ namespace CobbPatches {
          // Update the datastore tile (selector northernui()) on every frame, to allow menus to see 
          // certain bits of application state.
          //
+         //
          void Inner() {
             auto tile = g_northernUIDatastore;
             if (!tile)
@@ -307,6 +312,25 @@ namespace CobbPatches {
                bool  trait = CALL_MEMBER_FN(tile, GetFloatTraitValue)(traitID) == 2.0F;
                if (core->anyConnected != trait)
                   CALL_MEMBER_FN(tile, UpdateFloat)(traitID, core->anyConnected ? 2.0F : 1.0F);
+            }
+            //
+            // _xxnUIPixelScale
+            static bool s_didScaling = false;
+            if (!s_didScaling) {
+               s_didScaling = true;
+               UInt32 traitID = RE::GetOrCreateTempTagID("_xxnuipixelscale", -1);
+               SInt32 absW = *RE::SInt32ScreenWidth;
+               SInt32 absH = *RE::SInt32ScreenHeight;
+               SInt32 absolute;
+               float  normalized;
+               if (absW > absH) {
+                  absolute   = absH;
+                  normalized = *RE::fNormalizedScreenHeightF;
+               } else {
+                  absolute   = absW;
+                  normalized = *RE::fNormalizedScreenWidthF;
+               }
+               CALL_MEMBER_FN(tile, UpdateFloat)(traitID, (float)absolute / normalized);
             }
          };
          __declspec(naked) void Outer() {

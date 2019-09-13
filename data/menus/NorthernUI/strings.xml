@@ -429,6 +429,7 @@
    <_optionSubmenuHUDScaling>HUD Scaling</_optionSubmenuHUDScaling>
    
    <_optionPrefHUDScaleCompass>Compass Scale:</_optionPrefHUDScaleCompass>
+   <_optionPrefHUDWidthCompass>Compass Width Adjust:</_optionPrefHUDWidthCompass>
    <_optionPrefHUDScaleCorestats>Health/Magicka/Stamina:</_optionPrefHUDScaleCorestats>
    <_optionPrefHUDScaleEquipIcons>Equipped Weapon/Spell Icons:</_optionPrefHUDScaleEquipIcons>
    <_optionPrefHUDScaleWeaponCondition>Weapon Condition Meter:</_optionPrefHUDScaleWeaponCondition>
