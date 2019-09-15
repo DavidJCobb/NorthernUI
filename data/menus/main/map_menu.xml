@@ -43,27 +43,43 @@
    -->
    <user22>1</user22>
    
-   <_mapicon_1>Menus\NorthernUI\icons\map.dds              </_mapicon_1> <!-- all map markers -->
-   <_mapicon_2>Menus\NorthernUI\icons\objective_marker.dds </_mapicon_2> <!-- quest marker icon -->
-   <_mapicon_3>Menus\NorthernUI\icons\custom_marker.dds    </_mapicon_3> <!-- marker icon -->
-   <_mapicon_4>Menus\Map\world_map_arrow_icon.dds          </_mapicon_4> <!-- you are here icon -->
-   <_mapicon_5>Menus\NorthernUI\icons\objective_door_marker.dds</_mapicon_5> <!-- quest door -->
+   <!-- 01: Map marker icons, 32px -->
+   <_mapicon_1>Menus\NorthernUI\icons\map.dds</_mapicon_1>
+   <!-- 02: Quest objective marker, 64px -->
+   <_mapicon_2>Menus\NorthernUI\icons\hd_objective_marker.dds</_mapicon_2>
+   <!-- 03: Player custom marker, 64px -->
+   <_mapicon_3>Menus\NorthernUI\icons\hd_custom_marker.dds</_mapicon_3>
+   <!-- 04: You Are Here icon, 64px -->
+   <_mapicon_4>Menus\Map\world_map_arrow_icon.dds</_mapicon_4>
+   <!-- 05: Quest objective door marker, 64px -->
+   <_mapicon_5>Menus\NorthernUI\icons\hd_objective_door_marker.dds</_mapicon_5>
+   <!-- 11: Map marker icons, 64px -->
+   <_mapicon_11>Menus\NorthernUI\icons\hd_map.dds</_mapicon_11>
+   
+   <!-- final rendered size at which we should switch to the HD icons -->
+   <_hdThreshold>1</_hdThreshold>
 
 	<!-- PRE-LOAD MAP ICONS ==========================================================================-->
 	<image name="map_preload_map_icons_1">
-		<filename> Menus\Icons\Map\map_icons_all.dds </filename>
-		<width> 1 </width>
-		<height> 1 </height>
-		<x> -100 </x>
+		<filename>Menus\NorthernUI\icons\map.dds</filename>
+		<width>1</width>
+		<height>1</height>
+		<x>-100</x>
 	</image>
 	<image name="map_preload_map_icons_2">
-		<filename> Menus\HUD\hud_compass_goal.dds </filename>
+		<filename>Menus\NorthernUI\icons\hd_objective_marker.dds</filename>
+		<width>1</width>
+		<height>1</height>
+		<x>-100</x>
+	</image>
+	<image name="map_preload_map_icons_3">
+		<filename>Menus\NorthernUI\icons\hd_custom_marker.dds</filename>
 		<width> 1 </width>
 		<height> 1 </height>
 		<x> -100 </x>
 	</image>
-	<image name="map_preload_map_icons_3">
-		<filename> Menus\Map\world_map_arrow_icon.dds </filename>
+	<image name="map_preload_map_icons_11">
+		<filename>Menus\NorthernUI\icons\hd_map.dds</filename>
 		<width> 1 </width>
 		<height> 1 </height>
 		<x> -100 </x>
@@ -2179,11 +2195,8 @@
          <_isCustom>    <copy src="me()" trait="user5" /><eq>99</eq></_isCustom>
          <_isYouAreHere><copy src="me()" trait="user5" /><eq>98</eq></_isYouAreHere>
          
-			<target>
-				<not src="me()" trait="_isSpecial" />
-				<and src="me()" trait="user8" />
-			</target>
-			<filename>
+         <_fileBaseIndex>
+            <!-- base index to use -->
             <copy>1</copy>
             <max> <!-- force file 2 for quest objective markers in the same cell -->
                <copy>2</copy>
@@ -2204,20 +2217,84 @@
                <onlyif src="me()" trait="user11" />
                <onlyif src="me()" trait="user10" />
             </max>
+         </_fileBaseIndex>
+         <_renderedWidth>
+            <copy src="me()" trait="width" />
+            <mult> <!-- convert from UI pixels to absolute pixels -->
+               <copy src="NorthernUI()" trait="_xxnUIPixelScale" />
+               <add> <!-- failsafe if scale value is undefined -->
+                  <copy>1</copy>
+                  <onlyif>
+                     <copy src="NorthernUI()" trait="_xxnUIPixelScale" /><eq>0</eq>
+                  </onlyif>
+               </add>
+            </mult>
+         </_renderedWidth>
+         <_fileIndex>
+            <!-- index with modifiers -->
+            <!-- if an icon comes in SD and HD variants and we decide
+                 to use the HD variant, then this is the base index 
+                 plus 10 -->
+            <copy src="me()" trait="_fileBaseIndex" />
+            <add>
+               <copy>10</copy>
+               <onlyif>
+                  <copy src="me()" trait="_fileBaseIndex" /><eq>1</eq>
+                  <and>
+                     <copy src="me()"   trait="_renderedWidth" />
+                     <gt   src="menu()" trait="_hdThreshold" />
+                  </and>
+               </onlyif>
+            </add>
+         </_fileIndex>
+         <_iconSourceSize>
+            <!-- pixel size of the icon within its file -->
+            <copy>32</copy>
+            <max>
+               <copy>64</copy>
+               <onlyif> <!-- all non-map-marker icons are HD now -->
+                  <copy src="me()" trait="_fileIndex" /><gt>1</gt>
+                  <!-- GT 1 also covers case 11, the HD map marker file -->
+               </onlyif>
+            </max>
+         </_iconSourceSize>
+         <_iconDisplaySize>
+            <copy>32</copy>
+            <max>
+					<copy>64</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+            </max>
+         </_iconDisplaySize>
+         
+			<target>
+				<not src="me()" trait="_isSpecial" />
+				<and src="me()" trait="user8" />
+			</target>
+			<filename>
+            <copy src="me()"    trait="_fileIndex" />
 				<copy src="MapMenu" trait="_mapicon_" />
 			</filename>
 			<cropx>
-				<copy src="me()" trait="user5" />
-				<sub> 1</sub>
-				<mul>32</mul>
-				<onlyifnot src="me()" trait="_isSpecial" />
+            <copy src="me()" trait="user5" /> <!-- X: location type -->
+            <sub>1</sub>
+            <mult src="me()" trait="_iconSourceSize" />
+            <onlyifnot src="me()" trait="_isSpecial" />
+            <mult src="me()" trait="zoom" />
+            <div>100</div>
 			</cropx>
 			<cropy>
-				<copy src="me()" trait="user6" />
-				<sub> 1</sub>
-				<mul>32</mul>
-				<onlyifnot src="me()" trait="_isSpecial" />
+            <copy src="me()" trait="user6" /> <!-- Y: fast-travel -->
+            <sub>1</sub>
+            <mult src="me()" trait="_iconSourceSize" />
+            <onlyifnot src="me()" trait="_isSpecial" />
+            <mult src="me()" trait="zoom" />
+            <div>100</div>
 			</cropy>
+         <zoom>
+            <copy src="me()" trait="_iconDisplaySize" />
+            <div  src="me()" trait="_iconSourceSize" />
+            <mult>100</mult>
+         </zoom>
 			<depth>
 				<copy src="me()" trait="_random_depth" />
 				<max>
@@ -2227,36 +2304,25 @@
 				<max src="me()" trait="user7" />
 				<add>1</add>
 			</depth>
-			<width>
-            <copy>32</copy>
-            <max>
-					<copy>64</copy>
-					<onlyif src="me()" trait="_isYouAreHere" />
-            </max>
-			</width>
-			<height>
-            <copy>32</copy>
-            <max>
-					<copy>64</copy>
-					<onlyif src="me()" trait="_isYouAreHere" />
-            </max>
-			</height>
+			<width> <copy src="me()" trait="_iconDisplaySize" /></width>
+			<height><copy src="me()" trait="_iconDisplaySize" /></height>
 			<x>
 				<copy src="me()" trait="user1" />
-				<sub>15.5</sub>
-				<sub>
-					<copy>15.5</copy>
-					<onlyif src="me()" trait="_isYouAreHere" />
-				</sub>
+            <sub>
+               <copy src="me()" trait="_iconDisplaySize" />
+               <sub>1</sub>
+               <div>2</div>
+            </sub>
+            <floor>0.5</floor>
 			</x>
 			<y>
 				<copy src="me()" trait="user2" />
-				<sub>15.5</sub>
-				<sub>
-					<copy>15.5</copy>
-					<onlyif    src="me()" trait="_isSpecial" />
-					<onlyifnot src="me()" trait="user10" /> <!-- through load door? -->
-				</sub>
+            <sub>
+               <copy src="me()" trait="_iconDisplaySize" />
+               <sub>1</sub>
+               <div>2</div>
+            </sub>
+            <floor>0.5</floor>
 			</y>
 			<clips> &true; </clips>
 			<locus> &true; </locus>		<!-- needs to be a locus in case it needs to be rotated -->
@@ -2295,12 +2361,8 @@
          <_isCustom>    <copy src="me()" trait="user5" /><eq>99</eq></_isCustom>
          <_isYouAreHere><copy src="me()" trait="user5" /><eq>98</eq></_isYouAreHere>
          
-			<visible> &true; </visible>
-			<target>
-				<not src="me()" trait="_isSpecial" />
-				<and src="me()" trait="user8"/>
-			</target>
-			<filename>
+         <_fileBaseIndex>
+            <!-- base index to use -->
             <copy>1</copy>
             <max> <!-- force file 2 for quest objective markers in the same cell -->
                <copy>2</copy>
@@ -2321,21 +2383,106 @@
                <onlyif src="me()" trait="user11" />
                <onlyif src="me()" trait="user10" />
             </max>
+         </_fileBaseIndex>
+         <_renderedWidth>
+            <copy src="me()" trait="width" />
+            <mult> <!-- convert from UI pixels to absolute pixels -->
+               <copy src="NorthernUI()" trait="_xxnUIPixelScale" />
+               <add> <!-- failsafe if scale value is undefined -->
+                  <copy>1</copy>
+                  <onlyif>
+                     <copy src="NorthernUI()" trait="_xxnUIPixelScale" /><eq>0</eq>
+                  </onlyif>
+               </add>
+            </mult>
+         </_renderedWidth>
+         <_fileIndex>
+            <!-- index with modifiers -->
+            <!-- if an icon comes in SD and HD variants and we decide
+                 to use the HD variant, then this is the base index 
+                 plus 10 -->
+            <copy src="me()" trait="_fileBaseIndex" />
+            <add>
+               <copy>10</copy>
+               <onlyif>
+                  <copy src="me()" trait="_fileBaseIndex" /><eq>1</eq>
+                  <and>
+                     <copy src="me()"   trait="_renderedWidth" />
+                     <gt   src="menu()" trait="_hdThreshold" />
+                  </and>
+               </onlyif>
+            </add>
+         </_fileIndex>
+         <_iconSourceSize>
+            <!-- pixel size of the icon within its file -->
+            <copy>32</copy>
+            <max>
+               <copy>64</copy>
+               <onlyif> <!-- all non-map-marker icons are HD now -->
+                  <copy src="me()" trait="_fileIndex" /><gt>1</gt>
+                  <!-- GT 1 also covers case 11, the HD map marker file -->
+               </onlyif>
+            </max>
+         </_iconSourceSize>
+         <_iconDisplaySize>
+            <copy>32</copy>
+            <max>
+					<copy>64</copy>
+					<onlyif src="me()" trait="_isYouAreHere" />
+            </max>
+            <max>
+               <!--
+                  We ran into an unexpected design issue at the last minute: 
+                  if a quest objective is through a door, then the menu builds 
+                  an icon for the door-objective marker *and* an icon for the 
+                  door itself, and these overlap.
+                  
+                  In NorthernUI, the door-objective marker is an edited version 
+                  of the door marker with the "door" portion resized to 75%, so 
+                  we can just adjust its size and position so that it covers the 
+                  "real" door marker except when hovered.
+                  
+                  We only need to do this for the local map, since the world map 
+                  doesn't render doors.
+               -->
+               <copy>32</copy>
+               <div>0.75</div>
+               <onlyif src="me()" trait="user10" />
+               <onlyif src="me()" trait="user11" />
+            </max>
+         </_iconDisplaySize>
+         
+			<visible> &true; </visible>
+			<target>
+				<not src="me()" trait="_isSpecial" />
+				<and src="me()" trait="user8"/>
+			</target>
+			<filename>
+            <copy src="me()"    trait="_fileIndex" />
 				<copy src="MapMenu" trait="_mapicon_" />
 			</filename>
 			<cropx>
-				<copy src="me()" trait="user5" />
-				<sub> 1</sub>
-				<mul>32</mul>
-				<onlyifnot src="me()" trait="_isSpecial" />
+            <copy src="me()" trait="user5" /> <!-- X: location type -->
+            <sub>1</sub>
+            <mult src="me()" trait="_iconSourceSize" />
+            <onlyifnot src="me()" trait="_isSpecial" />
+            <mult src="me()" trait="zoom" />
+            <div>100</div>
 			</cropx>
 			<cropy>
-				<copy src="me()" trait="user6" />
-				<sub> 1</sub>
-				<mul>32</mul>
-				<onlyifnot src="me()" trait="_isSpecial" />
+            <copy src="me()" trait="user6" /> <!-- Y: fast-travel -->
+            <sub>1</sub>
+            <mult src="me()" trait="_iconSourceSize" />
+            <onlyifnot src="me()" trait="_isSpecial" />
+            <mult src="me()" trait="zoom" />
+            <div>100</div>
 			</cropy>
-			<depth>
+			<zoom>
+            <copy src="me()" trait="_iconDisplaySize" />
+            <div  src="me()" trait="_iconSourceSize" />
+            <mult>100</mult>
+         </zoom>
+         <depth>
 				<copy src="me()" trait="_random_depth" />
 				<max>
 					<copy>90</copy>
@@ -2344,36 +2491,42 @@
 				<max src="me()" trait="user7" />
 				<add>1</add>
 			</depth>
-			<width>
-            <copy>32</copy>
-            <max>
-					<copy>64</copy>
-					<onlyif src="me()" trait="_isYouAreHere" />
-            </max>
-			</width>
-			<height>
-            <copy>32</copy>
-            <max>
-					<copy>64</copy>
-					<onlyif src="me()" trait="_isYouAreHere" />
-            </max>
-			</height>
+			<width> <copy src="me()" trait="_iconDisplaySize" /></width>
+			<height><copy src="me()" trait="_iconDisplaySize" /></height>
 			<x>
 				<copy src="me()" trait="user1" />
-				<sub>15.5</sub>
-				<sub>
-					<copy>15.5</copy>
-					<onlyif src="me()" trait="_isYouAreHere" />
-				</sub>
+            <sub>
+               <copy src="me()" trait="_iconDisplaySize" />
+               <div>2</div>
+            </sub>
 			</x>
 			<y>
 				<copy src="me()" trait="user2" />
-				<sub>15.5</sub>
-				<sub>
-					<copy>15.5</copy>
-					<onlyif    src="me()" trait="_isSpecial" />
-					<onlyifnot src="me()" trait="user10" /> <!-- through load door? -->
-				</sub>
+            <sub>
+               <copy src="me()" trait="_iconDisplaySize" />
+               <div>2</div>
+            </sub>
+            <sub>
+               <!--
+                  We ran into an unexpected design issue at the last minute: 
+                  if a quest objective is through a door, then the menu builds 
+                  an icon for the door-objective marker *and* an icon for the 
+                  door itself, and these overlap.
+                  
+                  In NorthernUI, the door-objective marker is an edited version 
+                  of the door marker with the "door" portion resized to 75%, so 
+                  we can just adjust its size and position so that it covers the 
+                  "real" door marker except when hovered.
+                  
+                  We only need to do this for the local map, since the world map 
+                  doesn't render doors.
+               -->
+               <copy>32</copy>
+               <mult>0.25</mult>
+               <sub>1</sub>
+               <onlyif src="me()" trait="user10" />
+               <onlyif src="me()" trait="user11" />
+            </sub>
 			</y>
 			<clips> &true; </clips>
 			

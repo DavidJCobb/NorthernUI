@@ -669,13 +669,12 @@
                   </cropy>
                   <depth>2</depth>
                   <alpha>
-                     <copy> 255 </copy>
-                     <mult   src="me()" trait="_distance"/>
-                     <onlyif src="me()" trait="user9"/>
-                     <add>
-                        <copy> 255 </copy>
-                        <onlyifnot src="me()" trait="user9"/>
-                     </add>
+                     <copy>255</copy>
+                     <mult src="me()" trait="_distance" />
+                     <max>
+                        <copy>255</copy>
+                        <onlyifnot src="me()" trait="user9" />
+                     </max>
                      <max> <!-- force full opacity for quest and custom waypoints -->
                         <copy>255</copy>
                         <onlyif>
@@ -696,12 +695,13 @@
                   </height>
 
                   <_distance>
-                     <copy> 1 </copy>
+                     <copy>1</copy>
                      <sub>
-                        <copy src="me()" trait="user1"/>
-                        <sub src="parent()" trait="user2"/>		<!-- min reveal distance -->
-                        <div src="parent()" trait="user3"/>		<!-- max visible distance -->
-                        <min> 1.0 </min>
+                        <copy src="me()"     trait="user1" />
+                        <sub  src="parent()" trait="user2" /> <!-- min reveal distance -->
+                        <div  src="parent()" trait="user3" /> <!-- max visible distance -->
+                        <min>1</min>
+                        <max>0</max>
                      </sub>
                   </_distance>
                   <user0>       0 </user0> <!-- heading to icon (0-360) -->
