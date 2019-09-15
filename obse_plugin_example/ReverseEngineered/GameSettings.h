@@ -7,6 +7,8 @@ namespace RE {
       extern SettingInfo* const fVanityModeXMult;
       extern SettingInfo* const fVanityModeYMult;
       //
+      extern SettingInfo* const iMapMarkerRevealDistance;
+      extern SettingInfo* const iMapMarkerVisibleDistance;
       extern SettingInfo* const iInventoryAskQuantityAt;
       //
       extern SettingInfo* const sAddedEffects;   // "Added Effects"

@@ -546,8 +546,8 @@
                <sub  src="me()"     trait="height" />
             </y>
             <user1>0</user1>	<!-- max icon depth -->
-            <user2>0</user2>	<!-- set by code - min reveal distance -->
-            <user3>0</user3>	<!-- set by code - max visible distance -->
+            <user2>0</user2>	<!-- iMapMarkerRevealDistance  (set only when HUDMainMenu is first opened) -->
+            <user3>0</user3>	<!-- iMapMarkerVisibleDistance (set only when HUDMainMenu is first opened) -->
             
             <!-- size of the icon in normalized/UI pixels -->
             <_iconDisplaySize>32</_iconDisplaySize>
@@ -562,6 +562,28 @@
             <_filename_4>Menus\Map\world_map_arrow_icon.dds</_filename_4>
             <!-- 05: Quest objective door marker, 64px -->
             <_filename_5>Menus\NorthernUI\icons\hd_objective_door_marker.dds</_filename_5>
+
+            <!--
+               NOTE:
+               
+               HUDMainMenu regenerates the compass icons every frame. It does not 
+               destroy all tiles and then create new ones; rather, it recycles 
+               existing tiles until it has exhausted all of them; if at that point 
+               there are still map markers to render, then it starts creating new 
+               tiles. The menu never deletes tiles from the compass; if there are 
+               more tiles than there are map markers to display, then the extra 
+               tiles have their <visible/> trait set to false.
+               
+               As far as HUDMainMenu is concerned, every child of the tile with 
+               ID #14 (hudmain_compass_heading in this file) is a map marker. Any 
+               XML elements preplaced in this tile will therefore be cannibalized 
+               and repurposed as a map marker if there are enough map markers to 
+               warrant doing so, or be forcibly hidden otherwise.
+               
+               If you wish to put content in the compass and have it display 
+               inline with map markers, that content therefore cannot be inside 
+               of this specific tile.
+            -->
 
             <template name="hudmain_compass_icon">
                <image name="hudmain_compass_icon">
@@ -634,6 +656,12 @@
                   </cropy>
                   <depth>2</depth>
                   <alpha>
+                     <!--
+                        The vanilla executable overwrites this for quest markers, but 
+                        that's a bug and can break the tile's alpha if it later gets 
+                        repurposed as a non-quest marker. NorthernUI patches the game 
+                        to avoid overwriting the alpha trait directly.
+                     -->
                      <copy>255</copy>
                      <mult src="me()" trait="_distance" />
                      <max>
@@ -664,13 +692,16 @@
                      <sub>
                         <copy src="me()"     trait="user1" />
                         <sub  src="parent()" trait="user2" /> <!-- min reveal distance -->
-                        <div  src="parent()" trait="user3" /> <!-- max visible distance -->
+                        <div>
+                           <copy src="parent()" trait="user3" /> <!-- max visible distance -->
+                           <sub  src="parent()" trait="user2" /> <!-- min reveal distance -->
+                        </div>
                         <min>1</min>
                         <max>0</max>
                      </sub>
                   </_distance>
                   <user0>       0 </user0> <!-- heading to icon (0-360) -->
-                  <user1>      30 </user1> <!-- distance to icon in feet -->
+                  <user1>      30 </user1> <!-- distance to icon in feet; not set for quest markers or player custom markers -->
                   <user2>  &true; </user2> <!-- unused if true -->
                   <user5>       0 </user5> <!-- location type; types >= 90 are sentinel values -->
                   <user6> &false; </user6> <!-- fast travel enabled -->
@@ -700,14 +731,6 @@
                </image>
             </template>
          </rect>
-         <!-- 
-            For some reason, if we put compass lettering in the same clipwindow as the 
-            generated icons, we experience issues with letters and icons vanishing 
-            randomly as the player's position (yes, position, not rotation) changes. 
-            Easiest fix is to just use a separate clipwindow.
-            
-            Weird...
-         -->
          <rect name="compass_markings_clip">
             <clips>&true;</clips>
             <locus>&true;</locus>

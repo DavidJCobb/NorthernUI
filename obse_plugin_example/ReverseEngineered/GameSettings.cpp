@@ -6,7 +6,9 @@ namespace RE {
       SettingInfo* const fVanityModeXMult     = (SettingInfo*) 0x00B36B88;
       SettingInfo* const fVanityModeYMult     = (SettingInfo*) 0x00B36B90;
       //
-      SettingInfo* const iInventoryAskQuantityAt = (SettingInfo*) 0x00B38688;
+      SettingInfo* const iMapMarkerRevealDistance  = (SettingInfo*) 0x00B37BC0;
+      SettingInfo* const iMapMarkerVisibleDistance = (SettingInfo*) 0x00B37BC8;
+      SettingInfo* const iInventoryAskQuantityAt   = (SettingInfo*) 0x00B38688;
       //
       SettingInfo* const sAddedEffects   = (SettingInfo*) 0x00B38918;
       SettingInfo* const sAll            = (SettingInfo*) 0x00B388A8;

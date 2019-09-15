@@ -54,9 +54,6 @@
    <!-- 05: Quest objective door marker, 64px -->
    <_mapicon_5>Menus\NorthernUI\icons\hd_objective_door_marker.dds</_mapicon_5>
    
-   <!-- final rendered size at which we should switch to the HD icons -->
-   <_hdThreshold>1</_hdThreshold>
-
 	<!-- PRE-LOAD MAP ICONS ==========================================================================-->
 	<image name="map_preload_map_icons_1">
 		<filename>Menus\NorthernUI\icons\map.dds</filename>

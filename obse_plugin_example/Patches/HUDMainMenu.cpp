@@ -1,5 +1,6 @@
 #include "Patches/HUDMainMenu.h"
 
+#include "ReverseEngineered/GameSettings.h"
 #include "ReverseEngineered/ExtraData/ExtraContainerChanges.h"
 #include "ReverseEngineered/UI/InterfaceManager.h"
 #include "ReverseEngineered/UI/Tile.h"
@@ -157,11 +158,99 @@ namespace CobbPatches {
             WriteRelJump(0x005A6E19, (UInt32)&Outer); // HUDMainMenu::HandleFrame+0x39
          };
       }
+      namespace CompassVisibleDistanceUpdate {
+         //
+         // The game writes iMapMarkerRevealDistance and iMapMarkerVisibleDistance 
+         // to HUDMainMenu's tiles in ShowHUDMainMenu so that the compass can use 
+         // these values to control icon opacity; however, if the settings have 
+         // their values changed at run-time, no updates will be made to the menu. 
+         // The only real way to catch this is to update those tiles on every 
+         // frame -- wasteful, but necessary.
+         //
+         void _stdcall Inner(RE::HUDMainMenu* menu) {
+            auto tile = menu->tileCompassHeading;
+            auto tMin = CALL_MEMBER_FN(tile, GetOrCreateTrait)(RE::kTagID_user2);
+            auto tMax = CALL_MEMBER_FN(tile, GetOrCreateTrait)(RE::kTagID_user3);
+            auto iMin = RE::GMST::iMapMarkerRevealDistance->i;
+            auto iMax = RE::GMST::iMapMarkerVisibleDistance->i;
+            if (tMin->num != iMin)
+               CALL_MEMBER_FN(tMin, SetFloatValue)(iMin);
+            if (tMax->num != iMax)
+               CALL_MEMBER_FN(tMax, SetFloatValue)(iMax);
+         }
+         __declspec(naked) void Outer() {
+            _asm {
+               push ecx; // protect
+               push ebp;
+               call Inner; // stdcall
+               pop  ecx; // restore
+               mov  eax, 0x006ECC80; // restore patched-over call to TESObjectREFR::GetParentCell
+               call eax;             //
+               mov  ecx, 0x005A6EFA;
+               jmp  ecx;
+            }
+         }
+         void Apply() {
+            WriteRelJump(0x005A6EF5, (UInt32)&Outer);
+         }
+      }
+      namespace CompassIconAlphaFix {
+         //
+         // HUDMainMenu regenerates the compass icons every frame. It does not 
+         // destroy all tiles and then create new ones; rather, it recycles
+         // existing tiles until it has exhausted all of them; if at that point
+         // there are still map markers to render, then it starts creating new
+         // tiles.The menu never deletes tiles from the compass; if there are
+         // more tiles than there are map markers to display, then the extra
+         // tiles have their <visible /> trait set to false.
+         //
+         // As far as HUDMainMenu is concerned, every child of the tile with
+         // ID #14 (hudmain_compass_heading in this file) is a map marker. Any
+         // XML elements preplaced in this tile will therefore be cannibalized
+         // and repurposed as a map marker if there are enough map markers to
+         // warrant doing so, or be forcibly hidden otherwise.
+         //
+         // This gives rise to a bug:
+         //
+         // Bethesda's design calls for standard map markers to compute their 
+         // alpha using XML: Bethesda supplies the tile with the distance 
+         // between the player and the marker, the parent tile gets the compass 
+         // min and max distances for visibility, and XML operators compute the 
+         // final alpha. HOWEVER, quest marker tiles have their alpha set by 
+         // the executable.
+         //
+         // Here's the bug, then: once a tile is used as a quest marker, its 
+         // alpha trait is hosed: all operators and whatnot have been clobbered 
+         // by the constant that the executable wrote to it, so if that tile is 
+         // then repurposed for use as a standard map icon, then it won't have 
+         // the correct alpha anymore.
+         //
+         // The solution? Bethesda doesn't use the user1 trait on quest markers, 
+         // but we can still put it to use: just force user1 on those tiles to 
+         // 0 (which will compute to max alpha for typical XML) instead of 
+         // forcing the alpha ourselves.
+         //
+         void _stdcall Inner(RE::Tile* tile) {
+            CALL_MEMBER_FN(tile, UpdateFloat)(RE::kTagID_user1, 0.0F);
+         }
+         __declspec(naked) void Outer() {
+            _asm {
+               push ecx;
+               call Inner; // stdcall
+               retn 8; // we're replacing a call to void Tile::UpdateFloat(UInt32, float)
+            }
+         }
+         void Apply() {
+            WriteRelCall(0x005A759B, (UInt32)&Outer);
+         }
+      }
 
       void Apply() {
          ShowWeaponCharge::Apply();
          HUDFadeOnFull::Apply();
          XInputPlayerMenuModelRotate::Apply();
+         CompassVisibleDistanceUpdate::Apply();
+         CompassIconAlphaFix::Apply();
       };
    }
 }

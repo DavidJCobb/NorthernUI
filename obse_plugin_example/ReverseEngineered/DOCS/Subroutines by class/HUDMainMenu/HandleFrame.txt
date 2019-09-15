@@ -9,15 +9,15 @@ void HUDMainMenu::HandleFrame() {
    if (auto ecx = this->tileLevelUpIcon) {
       ecx->UpdateFloat(kTagID_visible, (*g_thePlayer)->unk1DC ? 1.0F : 2.0F);
    }
-   if (this->unk4C) { // at 0x005A6E57
+   if (this->tileGrabZone) { // at 0x005A6E57
       //
       // ... big four ...
       //
    }
    // at 0x005A6EBC
-   if (this->unk44) { // at 0x005A6EC5
+   if (this->tileCompassHeading) { // at 0x005A6EC5
       NiVector3& eax = (*g_thePlayer)->GetPos();
-      NiVector3  esp5C = eax;
+      NiVector3  playerPos = eax; // esp5C
       float esp4C = (*g_thePlayer)->GetParentCell()->sub004CCE00();
       float esp2C = (*g_thePlayer)->GetYaw() + esp4C * 57.295776367178750;
       float a = esp2C;
@@ -28,7 +28,7 @@ void HUDMainMenu::HandleFrame() {
       float esp30 = a - (float)esp2C;
       this->tileCompassWindow->UpdateFloat(kTagID_user0, esp30); // heading, in degrees
       auto eax = (*g_thePlayer)->sub0065D260();
-      esp18 = esi->unk34;
+      NiTList<Tile*>::Node* compassChild = esi->childList.start; // esp18 // compass heading children
       esp1C = 1; // icon depth
       if (eax) {
          do {
@@ -39,17 +39,17 @@ void HUDMainMenu::HandleFrame() {
             edx   = ecx->unk04;
             esp2C = edx;
             TESObjectREFR* eax = edi->unk04;
-            if (eax->flags & 0x800)
+            if (eax->flags & 0x800) // if marker is disabled
                continue;
             NiVector3& eax = eax->GetPos();
-            float esp34 = distance between eax and esp5C; // inlined // at 0x005A700F
+            float esp34 = distance between eax and playerPos; // inlined // at 0x005A700F
             esp34 = esp34; // m'kay
             ExtraMapMarker::Data* ecx = edi->unk00;
             bool esp17 = false;
             esp34 = fabs(esp34);
             float esp24 = esp34;
             if (!ecx->IsVisible()) {
-               if (GMST:iMapMarkerRevealDistance ?? esp24) {
+               if (GMST:iMapMarkerRevealDistance > esp24) {
                   edi->unk00->sub0042B320();
                   edi->unk04->Unk_10(0x400);
                   esp17 = true;
@@ -57,7 +57,7 @@ void HUDMainMenu::HandleFrame() {
             }
             // at 0x005A706C
             if (!edi->unk00->AllowsFastTravel()) {
-               if (GMST:iMapMarkerRevealDistance ?? esp24) {
+               if (GMST:iMapMarkerRevealDistance > esp24) {
                   edi->unk00->sub0042B350();
                   edi->unk04->Unk_10(0x400);
                   esp17 = true;
@@ -70,10 +70,10 @@ void HUDMainMenu::HandleFrame() {
                QueueUIMessage(esp38.m_data, 0, 1, 5.0F);
                (*g_thePlayer)->unk674++;
                edx = edi->unk04;
-               esp5C.unk00 = edx;
-               esp5C.unk04 = false;
-               esp5C.unk05 = true;
-               sub005A65B0(&esp5C);
+               esp50.unk00 = edx;
+               esp50.unk04 = false;
+               esp50.unk05 = true;
+               sub005A65B0(&esp50); // show region name?
                // esp38 destructor
             } else {
                // at 0x005A7160
@@ -84,27 +84,30 @@ void HUDMainMenu::HandleFrame() {
                      esp44.unk04 = false;
                   }
                   esp44.unk08 = false;
-                  sub005A65B0(&esp40);
+                  sub005A65B0(&esp40); // show region name?
                }
             }
             // at 0x005A71B4
-            if (GMST:iMapMarkerRevealDistance ?? esp24)
+            if (GMST:iMapMarkerVisibleDistance >= esp24)
                continue;
-            if (esp18) {
-               ecx = esp18;
-               esi = ecx->unk08;
-               eax = &ecx->unk08;
-               ecx = ecx->unk00;
-               esp18 = ecx;
+            //
+            // Recycle existing child nodes, and create more nodes as necessary.
+            //
+            Tile* esi;
+            if (compassChild) { // NiTList<Tile*>::Node*
+               // ecx = compassChild;
+               esi = compassChild->data;
+               // eax = &ecx->data; // not used; probably compiler junk
+               compassChild = compassChild->next;
             } else {
-               edx = esp28;
+               edx = esp28; // == this->tileCompassHeading
                esi = this->CreateTemplatedTile(esp28, "hudmain_compass_icon", 0);
             }
             if (!esi)
                continue;
             esp17 |= edi->unk00->IsVisible();
             NiVector3& eax = edi->unk04->GetPos();
-            float esp3C = sub005A62D0(&esp5C, eax);
+            float esp34 = sub005A62D0(&esp5C, eax);
             esi->name.Replace_MinBufLen(edi->unk00->GetName(), 0); // at 0x005A7235
             esi->UpdateFloat(kTagID_user0, esp34);
             esi->UpdateFloat(kTagID_user1, esp24);
@@ -157,10 +160,9 @@ void HUDMainMenu::HandleFrame() {
             // FPU: [esp24, 255]
             // FPU: [255 - (esp24 * 0.5)]
             esp24 = 255.0 - (esp24 * 0.5); // at 0x005A744A
-            if (esp18) { // at 0x005A744E
-               esi = esp18->unk08;
-               ecx = &esp18->unk08;
-               esp18 = eax->unk00;
+            if (compassChild) { // NiTList<Tile*>::Node* // at 0x005A744E
+               esi = compassChild->data;
+               compassChild = compassChild->next;
             } else {
                esi = this->CreateTemplatedTile(esp28, "hudmain_compass_icon", 0);
             }
@@ -190,10 +192,9 @@ void HUDMainMenu::HandleFrame() {
       }
       // at 00x05A7615
       if ((*g_thePlayer)->unk638) {
-         if (esp18) {
-            esi = esp18->unk08;
-            ecx = &esp18->unk08;
-            esp18 = esp18->unk00;
+         if (compassChild) { // NiTList<Tile*>::Node*
+            esi = compassChild->data;
+            compassChild = compassChild->next;
          } else {
             esi = this->CreateTemplatedTile(esp28, "hudmain_compass_icon", 0);
             edi = *g_thePlayer;
@@ -231,8 +232,12 @@ void HUDMainMenu::HandleFrame() {
       }
       // at 0x005A77E6
       this->tileCompassHeading->UpdateFloat(kTagID_user1, esp1C);
-      if (esp18) { // at 0x005A7803
-         esi = esp18;
+      if (compassChild) { // at 0x005A7803
+         //
+         // Don't delete child nodes from the compass; just hide them when they're 
+         // unused.
+         //
+         esi = compassChild;
          do {
             eax = esi->data;
             esi = esi->next;
