@@ -549,13 +549,11 @@
             <user2>0</user2>	<!-- set by code - min reveal distance -->
             <user3>0</user3>	<!-- set by code - max visible distance -->
             
-            <!-- final rendered size at which we should switch to the HD assets -->
-            <_hdThreshold>36</_hdThreshold>
             <!-- size of the icon in normalized/UI pixels -->
             <_iconDisplaySize>32</_iconDisplaySize>
             
-            <!-- 01: Map marker icons, 32px -->
-            <_filename_1>Menus\NorthernUI\icons\map.dds</_filename_1>
+            <!-- 01: Map marker icons, 64px -->
+            <_filename_1>Menus\NorthernUI\icons\hd_map.dds</_filename_1>
             <!-- 02: Quest objective marker, 64px -->
             <_filename_2>Menus\NorthernUI\icons\hd_objective_marker.dds</_filename_2>
             <!-- 03: Player custom marker, 64px -->
@@ -564,13 +562,22 @@
             <_filename_4>Menus\Map\world_map_arrow_icon.dds</_filename_4>
             <!-- 05: Quest objective door marker, 64px -->
             <_filename_5>Menus\NorthernUI\icons\hd_objective_door_marker.dds</_filename_5>
-            <!-- 11: Map marker icons, 64px -->
-            <_filename_11>Menus\NorthernUI\icons\hd_map.dds</_filename_11>
 
             <template name="hudmain_compass_icon">
                <image name="hudmain_compass_icon">
-                  <_fileBaseIndex>
-                     <!-- base index to use -->
+                  <_renderedWidth>
+                     <copy src="me()" trait="width" />
+                     <mult> <!-- convert from UI pixels to absolute pixels -->
+                        <copy src="NorthernUI()" trait="_xxnUIPixelScale" />
+                        <add> <!-- failsafe if scale value is undefined -->
+                           <copy>1</copy>
+                           <onlyif>
+                              <copy src="NorthernUI()" trait="_xxnUIPixelScale" /><eq>0</eq>
+                           </onlyif>
+                        </add>
+                     </mult>
+                  </_renderedWidth>
+                  <_fileIndex>
                      <copy src="me()" trait="user6"/>
                      <onlyif>
                         <copy src="me()" trait="user5"/><eq>99</eq>
@@ -587,50 +594,8 @@
                         <onlyif src="me()" trait="user11" />
                         <onlyif src="me()" trait="user10" />
                      </max>
-                  </_fileBaseIndex>
-                  <_renderedWidth>
-                     <copy src="me()" trait="width" />
-                     <mult> <!-- convert from UI pixels to absolute pixels -->
-                        <copy src="NorthernUI()" trait="_xxnUIPixelScale" />
-                        <add> <!-- failsafe if scale value is undefined -->
-                           <copy>1</copy>
-                           <onlyif>
-                              <copy src="NorthernUI()" trait="_xxnUIPixelScale" /><eq>0</eq>
-                           </onlyif>
-                        </add>
-                     </mult>
-                  </_renderedWidth>
-                  <_fileIndex>
-                     <!-- index with modifiers -->
-                     <!-- if an icon comes in SD and HD variants and we decide
-                          to use the HD variant, then this is the base index 
-                          plus 10 -->
-                     <copy src="me()" trait="_fileBaseIndex" />
-                     <add>
-                        <copy>10</copy>
-                        <onlyif>
-                           <copy src="me()" trait="_fileBaseIndex" /><eq>1</eq>
-                           <and>
-                              <copy src="me()"     trait="_renderedWidth" />
-                              <gt   src="parent()" trait="_hdThreshold" />
-                           </and>
-                        </onlyif>
-                     </add>
                   </_fileIndex>
-                  <_iconSourceSize>
-                     <!-- pixel size of the icon within its file -->
-                     <copy>32</copy>
-                     <max>
-                        <copy>64</copy>
-                        <onlyif> <!-- the "you are here" marker is not HD -->
-                           <copy src="me()" trait="_fileIndex" /><neq>4</neq>
-                        </onlyif>
-                        <onlyif> <!-- all non-map-marker icons are HD now -->
-                           <copy src="me()" trait="_fileIndex" /><gt>1</gt>
-                           <!-- GT 1 also covers case 11, the HD map marker file -->
-                        </onlyif>
-                     </max>
-                  </_iconSourceSize>
+                  <_iconSourceSize>64</_iconSourceSize> <!-- pixel size of the icon within its file -->
                   <_prefScale>
                      <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCompass" />
                      <max>25</max>
