@@ -172,6 +172,7 @@ void UIPrefManager::clampPrefValue(const char* name, float v, bool toMin, UInt32
 }
 //
 void UIPrefManager::setupDocument(cobb::XMLDocument& doc) {
+   doc.caseInsensitive = true;
    doc.stripWhitespace = true;
    //
    // Define all XML entities that exist in Oblivion XML.
@@ -194,25 +195,20 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
    //
    std::string prefName;
    float       prefDefault = 0.0F;
+   bool        hasDefault = false;
    //
    for (auto it = doc.tokens.begin(); it != doc.tokens.end(); ++it) {
       auto& token = *it;
       if (token.code == cobb::kXMLToken_ElementOpen) {
          if (nesting == 0) {
             if (token.name != "prefset") {
-               _MESSAGE("ERROR: The root node must be a <prefset /> element. Aborting processing for this file.");
-               //
-               // TODO: decide on better error handling than just aborting.
-               //
+               _MESSAGE("ERROR: Line %d: The root node must be a <prefset /> element. Aborting processing for this file.", token.line);
                return;
             }
          }
          if (token.name == "pref") {
             if (isInPref) {
-               _MESSAGE("ERROR: <pref /> elements cannot be nested. Aborting processing for this file.");
-               //
-               // TODO: decide on better error handling than just aborting.
-               //
+               _MESSAGE("ERROR: Line %d: <pref /> elements cannot be nested. Aborting processing for this file.", token.line);
                return;
             }
             isInPref = true;
@@ -222,9 +218,19 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
          if (!isInPref)
             continue;
          if (token.name == "name") {
+            if (prefName.size())
+               _MESSAGE("WARNING: Line %d: Loaded pref name \"%s\", but the current pref already has name \"%s\". The newly-loaded name is the name that will be retained.", token.line, token.value.c_str(), prefName.c_str());
             std::swap(prefName, token.value); // we're never gonna use these tokens again, so just steal the strings with swap instead of wasting overhead on a copy-assign
             continue;
          } else if (token.name == "default") {
+            if (hasDefault) {
+               if (prefName.size())
+                  _MESSAGE("WARNING: Line %d: Pref \"%s\" has multiple default values; only the last one to load will be kept.", token.line, prefName.c_str());
+               else
+                  _MESSAGE("WARNING: Line %d: Pref, whose name has not yet loaded, has multiple default values; only the last one to load will be kept.", token.line);
+            }
+            hasDefault = true;
+            //
             auto  val = token.value.c_str();
             char* end = nullptr;
             float f = strtof(val, &end);
@@ -232,7 +238,10 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
                prefDefault = f;
                continue;
             }
-            _MESSAGE("WARNING: Cannot assign value \"%s\" to pref \"%\". Values must be floats.", val, prefName.c_str()); // TODO: this message won't work if the default comes before the name
+            if (prefName.size())
+               _MESSAGE("WARNING: Line %d: Cannot assign value \"%s\" to pref \"%s\". Values must be floats.", token.line, val, prefName.c_str());
+            else
+               _MESSAGE("WARNING: Line %d: Cannot assign value \"%s\" to pref (whose name has not yet loaded). Values must be floats.", token.line, val);
             continue;
          }
       } else if (token.code == cobb::kXMLToken_ElementClose) {
@@ -241,16 +250,20 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
             continue;
          if (prefName.size()) {
             if (!_validatePrefName(prefName)) {
-               _MESSAGE("WARNING: Pref name \"%s\" contains disallowed characters; discarding. Pref names cannot begin with underscores, and cannot contain spaces, slashes, parentheses, at-symbols, or double-quotes.", prefName.c_str());
+               _MESSAGE("WARNING: Line %d: Pref name \"%s\" contains disallowed characters; discarding. Pref names cannot begin with underscores, and cannot contain spaces, slashes, parentheses, at-symbols, or double-quotes.", token.line, prefName.c_str());
             } else if (this->getPrefByName(prefName.c_str())) {
-               _MESSAGE("WARNING: Duplicate pref \"%s\" detected; discarding.", prefName.c_str());
+               _MESSAGE("WARNING: Line %d: Duplicate pref \"%s\" detected; discarding.", token.line, prefName.c_str());
             } else {
+               if (!hasDefault)
+                  _MESSAGE("WARNING: Line %d: Loaded pref \"%s\" with no default value specified. Pref has been given the default value 0, but if that's what you want, then you really should specify it explicitly e.g. <pref name=\"%s\" default=\"0\" />.", token.line, prefName.c_str(), prefName.c_str());
                this->prefs.emplace(prefName, prefDefault);
             }
-            //this->prefs.emplace_back(std::string("TEST NAME TEST NAME"), 12345.0F);
             prefName = "";
+         } else {
+            _MESSAGE("WARNING: Discarding pref lacking a name attribute. Element was closed on line %d.", token.line);
          }
          prefDefault = 0.0F;
+         hasDefault = false;
          isInPref = false;
       }
    }
@@ -513,7 +526,7 @@ void UIPrefManager::saveUserValues() const {
 void UIPrefManager::initialize() {
    auto& prefs = UIPrefManager::GetInstance();
    prefs.loadDefinitions();
-   prefs.dumpDefinitions(); // DEBUG DEBUG DEBUG
    prefs.loadUserValues();
+   prefs.dumpDefinitions(); // DEBUG DEBUG DEBUG
    prefs.pushAllPrefsToUIState();
 }

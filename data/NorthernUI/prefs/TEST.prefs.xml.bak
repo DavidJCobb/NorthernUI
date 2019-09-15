@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<prefset name="test">
+   <pRef name="TEST_CI_tagname" default="&false;" />
+   <pref nAme="TEST_CI_attrname" defAult="&false;" />
+   <pref name="TEST_CI_entity" default="&fAlse;" />
+   <pref default="2" />
+   <pref name="TEST_BadDefaultAfterName" default="foo" />
+   <pref default="foo" name="TEST_BadDefaultBeforeName" />
+   <pref name="TEST_NoDefault" />
+   <pref name="TEST_TwoNamesasdfasdfasdf" name="TEST_TwoNames" default="0" />
+   <pref name="TEST_TwoDefaults" default="1" default="2" />
+</prefset>

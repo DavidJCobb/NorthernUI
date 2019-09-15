@@ -52,10 +52,13 @@ namespace {
          }
          return end - ampersand;
       }
+      auto _compare = &strncmp;
+      if (doc.caseInsensitive)
+         _compare = &strnicmp;
       for (auto it = doc.entities.begin(); it != doc.entities.end(); ++it) {
          auto& entity = it->entity;
          auto  length = entity.size();
-         if (strncmp(ampersand, entity.c_str(), length) == 0) {
+         if (_compare(ampersand, entity.c_str(), length) == 0) {
             writeTo += it->substitution;
             return length;
          }
@@ -63,7 +66,7 @@ namespace {
       for (UInt32 i = 0; i < std::extent<decltype(entities)>::value; i++) {
          auto entity = entities[i];
          auto length = strlen(entity);
-         if (strncmp(ampersand, entity, length) == 0) {
+         if (_compare(ampersand, entity, length) == 0) {
             writeTo += results[i];
             return length;
          }
@@ -108,16 +111,25 @@ namespace cobb {
    void XMLDocument::addElementStart(UInt32 line, std::string& tagName) {
       this->tokens.emplace_back(line, kXMLToken_ElementOpen);
       auto last = this->tokens.rbegin();
+      if (this->caseInsensitive) {
+         std::transform(tagName.begin(), tagName.end(), tagName.begin(), tolower);
+      }
       std::swap(last->name, tagName);
    }
    void XMLDocument::addElementEnd(UInt32 line, std::string& tagName) {
       this->tokens.emplace_back(line, kXMLToken_ElementClose);
       auto last = this->tokens.rbegin();
+      if (this->caseInsensitive) {
+         std::transform(tagName.begin(), tagName.end(), tagName.begin(), tolower);
+      }
       std::swap(last->name, tagName);
    }
    void XMLDocument::addElementAttribute(UInt32 line, std::string& name, std::string& value) {
       this->tokens.emplace_back(line, kXMLToken_Attribute);
       auto last = this->tokens.rbegin();
+      if (this->caseInsensitive) {
+         std::transform(name.begin(), name.end(), name.begin(), tolower);
+      }
       std::swap(last->name, name);
       std::swap(last->value, value);
    }
@@ -151,8 +163,8 @@ namespace cobb {
       std::string lastTagName; // used for self-closing tags
       bool hasSpaces = false;
       //
-      UInt32 lineNumber = 0;
-      UInt32 colNumber  = 0;
+      UInt32 lineNumber = 1;
+      UInt32 colNumber  = 1;
       for (UInt32 i = 0; i < size; ++i) {
          char b = i > 0 ? data[i - 1] : '\0';
          char c = data[i];
@@ -161,7 +173,7 @@ namespace cobb {
          char f = i + 3 < size ? data[i + 3] : '\0';
          if (c == '\n') {
             lineNumber++;
-            colNumber = 0;
+            colNumber = 1;
          } else
             colNumber++;
          //
