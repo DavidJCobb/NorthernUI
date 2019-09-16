@@ -308,6 +308,18 @@
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
                   <user11><copy src="xxnStrings()" trait="_optionEnhancedCameraInertia" /></user11> <!-- label -->
                </rect>
+               <rect name="option_hud_layout">
+                  <include src="NorthernUI/fragments/pause/option_uipref_enumpicker.xml" />
+                  <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->
+                  <user11><copy src="xxnStrings()" trait="_optionPrefHUDLayout" /></user11> <!-- label -->
+                  <user12>_NorthernUIHUDLayout</user12> <!-- pref name -->
+                  <user13><copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /></user13> <!-- pref value -->
+                  <_optionCount>4</_optionCount>
+                  <_options_1><copy src="xxnStrings()" trait="_optionPrefHUDLayoutValue00" /></_options_1>
+                  <_options_2><copy src="xxnStrings()" trait="_optionPrefHUDLayoutValue01" /></_options_2>
+                  <_options_3><copy src="xxnStrings()" trait="_optionPrefHUDLayoutValue02" /></_options_3>
+                  <_options_4><copy src="xxnStrings()" trait="_optionPrefHUDLayoutValue03" /></_options_4>
+               </rect>
                <rect name="option_hud_fade_corestats">
                   <include src="NorthernUI/fragments/pause/option_uipref_checkbox.xml" />
                   <user10><copy src="parent()" trait="user10" /></user10> <!-- label col width -->

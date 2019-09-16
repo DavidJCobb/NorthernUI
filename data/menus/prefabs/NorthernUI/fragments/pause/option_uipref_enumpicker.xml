@@ -1,0 +1,246 @@
+<!--<rect name="option_enumpicker">-->
+   <!-- args -->
+   <user10>200</user10> <!-- label column width -->
+   <user11></user11> <!-- label -->
+   <user12></user12> <!-- pref name -->
+   <user13></user13> <!-- pref value i.e. copy -->
+   <_optionCount>1</_optionCount> <!-- number of possible options -->
+   
+   <_options_1>&lt;MISSING TEXT&gt;</_options_1>
+   <_options_2>&lt;MISSING TEXT&gt;</_options_2>
+   
+   <string>
+      <copy src="me()" trait="user13" />
+      <max>1</max>
+      <copy src="me()" trait="_options_" />
+   </string>
+   
+   <user24> <!-- NorthernUI: XXNOptionsMenu: allow reset -->
+      <copy src="menu()"   trait="_currentSubmenuID" />
+      <eq   src="parent()" trait="_submenuID" />
+      <or>
+         <copy src="menu()" trait="_usesSubmenus" /><neq>&true;</neq>
+      </or>
+   </user24>
+
+   <id>&generic;</id>
+   <clips>&true;</clips>
+   <listindex>
+      <copy src="sibling()" trait="listindex" />
+      <add>1</add>
+   </listindex>
+   <locus>&true;</locus>
+   <x>0</x>
+   <y>
+      <copy src="sibling()" trait="height" />
+      <onlyifnot>
+         <copy src="sibling()" trait="visible" /><eq>&false;</eq>
+      </onlyifnot>
+      <add  src="sibling()" trait="y" />
+   </y>
+   <width><copy src="parent()" trait="width" /></width>
+   <height>
+      <copy src="child(label)" trait="height" />
+      <add>8</add>
+   </height>
+   
+   <target>&true;</target>
+   <xdefault>&true;</xdefault>
+   <xlist>&xitem;</xlist>
+   <xup>  &prev;</xup>
+   <xdown>&next;</xdown>
+   <xleft>    <ref src="child(button_left)"  trait="clicked" /></xleft>
+   <xright>   <ref src="child(button_right)" trait="clicked" /></xright>
+   <xbuttonlb><ref src="child(button_left)"  trait="clicked" /></xbuttonlb>
+   <xbuttonrb><ref src="child(button_right)" trait="clicked" /></xbuttonrb>
+   <xscroll>
+      <copy src="me()" trait="listindex" />
+      <sub>
+         <copy src="parent()" trait="user8" />
+         <div> 2</div>
+         <ceil>0</ceil>
+      </sub>
+      <add>1</add>
+   </xscroll>
+   
+   <_mouseover_any>
+      <copy src="me()" trait="mouseover" />
+      <add  src="child(enumpicker)" trait="_mouseover_any" />
+      <gt>0</gt>
+      <sub>1</sub>
+   </_mouseover_any>
+   
+   <depth>10</depth> <!-- The root element is what gets focus, so child elements need to be behind it. -->
+   
+   <_setter>
+      <copy>0</copy>
+      <add>
+         <copy src="child(button_right)" trait="clicked" />
+         <sub  src="child(button_left)"  trait="clicked" />
+      </add>
+      <xxnOpPrefModifyValue src="me()" trait="user12" />
+      <copy src="me()" trait="_optionCount" />
+      <xxnOpPrefCarousel src="me()" trait="user12" />
+   </_setter>
+   <_resetter>
+      <copy src="menu()"   trait="user24" /><eq>1</eq>
+      <and  src="parent()" trait="_submenuIsVisible" />
+      <xxnOpPrefResetValue src="me()" trait="user12" />
+   </_resetter>
+   
+   <text name="label">
+      <depth>-8</depth>
+      <clips>&true;</clips>
+      <include src="NorthernUI\fonts\normal.xml" />
+      <string><copy src="parent()" trait="user11" /></string>
+      <alpha>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </alpha>
+      <red>
+         <copy>140</copy>
+         <max>
+            <copy>255</copy>
+            <mult src="parent()" trait="mouseover" />
+         </max>
+         <max>
+            <copy>255</copy>
+            <mult src="sibling(enumpicker)" trait="_mouseover_any" />
+         </max>
+      </red>
+      <green><copy src="me()" trait="red" /></green>
+      <blue> <copy src="me()" trait="red" /></blue>
+      <x>0</x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <rect name="enumpicker">
+      <depth>-4</depth>
+      <clips>&true;</clips>
+      <include src="NorthernUI/enumpicker.xml" />
+      <user0><copy src="parent()" trait="user0" /></user0>  <!-- tile ID: value -->
+      <user1><copy src="parent()" trait="user1" /></user1>  <!-- tile ID: button, left -->
+      <user2><copy src="parent()" trait="user2" /></user2> <!-- tile ID: button, right -->
+      <user3>
+         <copy>128</copy>
+         <max>
+            <copy>255</copy>
+            <onlyif src="parent()" trait="target" />
+         </max>
+      </user3>
+      <string><copy src="parent()" trait="string" /></string> <!-- displayed value -->
+      
+      <user24><copy src="parent()" trait="user24" /></user24> <!-- for XXNOptionsMenu -->
+      
+      <x><copy src="parent()" trait="user10" /></x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+      <width>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="x" />
+      </width>
+      
+      <locus>&true;</locus>
+      <height>
+         <copy src="child(value)" trait="height" />
+         <max  src="child(button_left)" trait="height" />
+         <max  src="child(button_right)" trait="height" />
+      </height>
+      <_mouseover_any>
+         <copy src="child(button_left)"  trait="mouseover" />
+         <add  src="child(button_right)" trait="mouseover" />
+         <add  src="me()" trait="mouseover" />
+         <gt> 0</gt>
+         <sub>1</sub>
+      </_mouseover_any>
+      
+      <text name="value">
+         <depth>0</depth>
+         <clips><copy src="parent()" trait="clips" /></clips>
+         <include src="NorthernUI\fonts\normal.xml" />
+         <id>&generic;</id>
+         <justify>&center;</justify>
+         <alpha><copy src="parent()" trait="user3" /></alpha>
+         <red>
+            <copy>140</copy>
+            <max>
+               <copy>255</copy>
+               <onlyif>
+                  <copy src="parent()" trait="_mouseover_any" />
+                  <add  src="parent()" trait="user4" />
+                  <gt>0</gt>
+               </onlyif>
+            </max>
+         </red>
+         <green><copy src="me()" trait="red" /></green>
+         <blue> <copy src="me()" trait="red" /></blue>
+         <x>
+            <copy src="parent()" trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <string><copy src="parent()" trait="string" /></string>
+         
+         <user24><copy src="parent()" trait="user24" /></user24> <!-- for XXNOptionsMenu -->
+      </text>
+      <image name="button_left">
+         <clicksound>3</clicksound>
+         <depth>5</depth>
+         <clips><copy src="parent()" trait="clips" /></clips>
+         <id>&generic;</id>
+         <target>&true;</target>
+         <filename>\Menus\NorthernUI\buttons\hd_arrow_h.dds</filename>
+         <zoom>25</zoom>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <x>0</x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <alpha><copy src="parent()" trait="user3" /></alpha>
+      </image>
+      <image name="button_right">
+         <clicksound>3</clicksound>
+         <clips><copy src="parent()" trait="clips" /></clips>
+         <id>&generic;</id>
+         <target>&true;</target>
+         <filename>\Menus\NorthernUI\buttons\hd_arrow_h.dds</filename>
+         <zoom>25</zoom>
+         <width>
+            <copy src="me()" trait="filewidth" />
+            <div>2</div>
+         </width>
+         <height><copy src="me()" trait="fileheight" /></height>
+         <cropX><copy src="me()" trait="width" /></cropX>
+         <depth>5</depth>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <alpha><copy src="parent()" trait="user3" /></alpha>
+      </image>
+   </rect>
+<!--</rect>-->

@@ -4,6 +4,23 @@
    <pref name="NorthernUIFadeHUDCorestatsWhenFull"    default="&false;" />
    <pref name="NorthernUIFadeHUDEquipWidgetsWhenFull" default="&false;" />
    <!--
+      HUD LAYOUT OPTION
+      
+      0 = VALUE NOT SET
+          Treat this the same as "spread across."
+      
+      1 = SPREAD ACROSS
+          Meters are spread across the width of the screen.
+      
+      2 = STACK ON LEFT
+          Meters are arranged vertically in the lower-left.
+      
+      3 = STACK AT CENTER
+      
+      4 = STACK ON RIGHT
+   -->
+   <pref name="NorthernUIHUDLayout" default="1" />
+   <!--
       HUD SCALING OPTIONS
       
       Current design is for "100%" in these options to line up to 

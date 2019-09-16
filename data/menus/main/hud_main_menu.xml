@@ -56,11 +56,26 @@
          </sub>
       </width>
       <height>
+         <!-- height if meters are not stacked -->
          <copy src="hudmain_health"  trait="height" />
          <max  src="hudmain_magic"   trait="height" />
          <max  src="hudmain_fatigue" trait="height" />
+         <max> <!-- height if meters are stacked -->
+            <copy src="hudmain_health"  trait="height" />
+            <add  src="hudmain_magic"   trait="height" />
+            <add  src="hudmain_fatigue" trait="height" />
+            <add>
+               <copy src="me()" trait="_spacingY" />
+               <mult>2</mult>
+            </add>
+            <onlyif src="me()" trait="_metersShouldStack" />
+         </max>
       </height>
       <_marginX>32</_marginX>
+      <_spacingY> <!-- space between meters, if they're stacked -->
+         <copy src="hudmain_health"  trait="height" />
+         <div>2</div>
+      </_spacingY>
       <!-- -->
       <_meterAlpha>
          <copy>255</copy>
@@ -94,6 +109,37 @@
          </add>
       </_equipWidgetAlpha>
       <!-- -->
+      <_meterStackX>
+         <!-- Stack on Left -->
+         <copy src="parent()" trait="_marginX" />
+         <onlyif>
+            <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+         </onlyif>
+         <add> <!-- Stack at Center -->
+            <copy src="me()" trait="width" />
+            <sub  src="hudmain_health" trait="width" />
+            <div>2</div>
+            <onlyif>
+               <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>3</eq>
+            </onlyif>
+         </add>
+         <add> <!-- Stack on Right -->
+            <copy src="me()" trait="width" />
+            <sub  src="hudmain_health" trait="width" />
+            <sub  src="me()" trait="_marginX" />
+            <onlyif>
+               <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+            </onlyif>
+         </add>
+         <!-- and just for future maintainability's sake: -->
+         <onlyif src="me()" trait="_metersShouldStack" />
+      </_meterStackX>
+      <_metersShouldStack>
+         <copy>0</copy>
+         <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+         <gt>1</gt>
+      </_metersShouldStack>
+      <!-- -->
       <rect name="hudmain_health">
          <id>2</id>
          <include src="NorthernUI\meters\statbar.xml" />
@@ -102,6 +148,8 @@
             <copy src="parent()" trait="width" />
             <sub  src="me()"     trait="width" />
             <div>2</div>
+            <onlyifnot src="parent()" trait="_metersShouldStack" />
+            <add       src="parent()" trait="_meterStackX" />
          </x>
          <y>0</y>
          <visible><copy src="me()" trait="user0"/><gt>0</gt></visible>
@@ -117,8 +165,20 @@
          <id>3</id>
          <include src="NorthernUI\meters\statbar.xml" />
          <depth>1</depth>
-         <x><copy src="parent()" trait="_marginX" /></x>
-         <y>0</y>
+         <x>
+            <copy src="parent()" trait="_marginX" />
+            <onlyifnot src="parent()" trait="_metersShouldStack" />
+            <add       src="parent()" trait="_meterStackX" />
+         </x>
+         <y>
+            <copy>0</copy>
+            <add>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add  src="parent()"  trait="_spacingY" />
+               <onlyif src="parent()" trait="_metersShouldStack" />
+            </add>
+         </y>
          <visible><copy src="hudmain_health" trait="user0"/><gt>0</gt></visible>
          <_fillImage>Menus\NorthernUI\meters\statbar\hd_fill_magicka.dds</_fillImage>
          <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
@@ -136,8 +196,18 @@
             <copy src="parent()" trait="width" />
             <sub  src="me()"     trait="width" />
             <sub  src="parent()" trait="_marginX" />
+            <onlyifnot src="parent()" trait="_metersShouldStack" />
+            <add       src="parent()" trait="_meterStackX" />
          </x>
-         <y>0</y>
+         <y>
+            <copy>0</copy>
+            <add>
+               <copy src="sibling()" trait="y" />
+               <add  src="sibling()" trait="height" />
+               <add  src="parent()"  trait="_spacingY" />
+               <onlyif src="parent()" trait="_metersShouldStack" />
+            </add>
+         </y>
          <visible><copy src="hudmain_health" trait="user0"/><gt>0</gt></visible>
          <_fillImage>Menus\NorthernUI\meters\statbar\hd_fill_stamina.dds</_fillImage>
          <_fillPercent><copy src="me()" trait="user0" /></_fillPercent>
@@ -165,12 +235,36 @@
          </_size>
 			<width> <copy src="me()" trait="_size" /></width>
 			<height><copy src="me()" trait="_size" /></height>
-			<x> <!-- align with left edge of magicka bar -->
+			<x>
+            <!-- Spread Across: align with left edge of magicka bar -->
 				<copy src="sibling(hudmain_magic)" trait="x"/>
+            <onlyifnot src="parent()" trait="_metersShouldStack" />
+            <add> <!-- Stack on Left -->
+               <copy src="hudmain_health" trait="x" />
+               <add  src="hudmain_health" trait="width" />
+               <onlyif>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+               </onlyif>
+            </add>
+            <add> <!-- Stack at Center / Stack On Right -->
+               <copy src="hudmain_health" trait="x" />
+               <sub  src="me()" trait="width" />
+               <onlyif>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><gte>3</gte>
+               </onlyif>
+            </add>
 			</x>
-			<y> <!-- 16 units above baseline -->
+			<y>
+            <!-- Spread Across: 16 units above baseline -->
             <copy>-16</copy>
-            <sub  src="me()" trait="height"/>
+            <sub  src="me()" trait="height" />
+            <onlyifnot src="parent()" trait="_metersShouldStack" />
+            <add> <!-- Stack on Left / Stack at Center / Stack On Right -->
+               <copy src="hudmain_fatigue" trait="y" />
+               <add  src="hudmain_fatigue" trait="height" />
+               <sub  src="me()" trait="height" />
+               <onlyif src="parent()" trait="_metersShouldStack" />
+            </add>
          </y>
 			<alpha> <!-- dim when the player can't cast -->
             <copy src="parent()" trait="_equipWidgetAlpha" />
@@ -183,12 +277,12 @@
                </max>
             </mult>
 			</alpha>
-			<user2>&true;</user2>		<!-- can cast -->
+			<user2>&true;</user2> <!-- can cast -->
       </image>
       <image name="hudmain_weapon"> <!-- equipped weapon; tile is referenced by name elsewhere -->
 			<id> 5 </id>
 			<filename> Menus\Icons\icon_hud_default_weapon.dds </filename>
-			<locus> &true; </locus>
+			<locus>&true;</locus>
 			<depth> 1 </depth>
          <zoom>
             <copy>100</copy>
@@ -202,14 +296,45 @@
          </_size>
 			<width> <copy src="me()" trait="_size" /></width>
 			<height><copy src="me()" trait="_size" /></height>
-			<x> <!-- align with right edge of fatigue bar -->
+			<x>
+            <!-- Spread Across: align with right edge of fatigue bar -->
 				<copy src="sibling(hudmain_fatigue)" trait="x" />
 				<add  src="sibling(hudmain_fatigue)" trait="width" />
 				<sub  src="me()" trait="width" />
+            <onlyifnot src="parent()" trait="_metersShouldStack" />
+            <add> <!-- Stack on Left -->
+               <copy src="hudmain_Magic_Icon" trait="x" />
+               <add  src="hudmain_Magic_Icon" trait="width" />
+               <onlyif>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+               </onlyif>
+            </add>
+            <add> <!-- Stack at Center -->
+               <copy src="hudmain_fatigue" trait="x" />
+               <add  src="hudmain_fatigue" trait="width" />
+               <onlyif>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>3</eq>
+               </onlyif>
+            </add>
+            <add> <!-- Stack on Right -->
+               <copy src="hudmain_Magic_Icon" trait="x" />
+               <sub  src="me()" trait="width" />
+               <onlyif>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+               </onlyif>
+            </add>
 			</x>
-			<y> <!-- 16 units above baseline -->
+			<y>
+            <!-- Spread Across: 16 units above baseline -->
             <copy>-16</copy>
             <sub  src="me()" trait="height" />
+            <onlyifnot src="parent()" trait="_metersShouldStack" />
+            <add> <!-- Stack on Left / Stack at Center / Stack On Right -->
+               <copy src="hudmain_fatigue" trait="y" />
+               <add  src="hudmain_fatigue" trait="height" />
+               <sub  src="me()" trait="height" />
+               <onlyif src="parent()" trait="_metersShouldStack" />
+            </add>
          </y>
          <alpha> <!-- dim when the weapon is badly damaged -->
             <copy src="parent()" trait="_equipWidgetAlpha" />
@@ -346,16 +471,43 @@
          <include src="NorthernUI\meters\generic_upward.xml" />
          <depth>2</depth>
          <x>
+            <!-- Spread Across: position with stamina bar -->
             <copy src="hudmain_fatigue" trait="x" />
             <add> <!-- size of a statbar endcap -->
                <copy>55</copy>
                <mult src="hudmain_fatigue" trait="zoom" />
                <div>100</div>
             </add>
+            <onlyifnot src="parent()" trait="_metersShouldStack" />
+            <add> <!-- Stack on Left / Stack at Center -->
+               <copy src="hudmain_weapon" trait="x" />
+               <add  src="hudmain_weapon" trait="width" />
+               <onlyif>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+                  <or>
+                     <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>3</eq>
+                  </or>
+               </onlyif>
+            </add>
+            <add> <!-- Stack on Right -->
+               <copy src="hudmain_weapon" trait="x" />
+               <sub  src="me()" trait="width" />
+               <onlyif>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+               </onlyif>
+            </add>
          </x>
-			<y> <!-- 16 units above baseline -->
+			<y>
+            <!-- Spread Across: 16 units above baseline -->
             <copy>-16</copy>
             <sub  src="me()" trait="height" />
+            <onlyifnot src="parent()" trait="_metersShouldStack" />
+            <add> <!-- Stack on Left / Stack at Center / Stack On Right -->
+               <copy src="hudmain_fatigue" trait="y" />
+               <add  src="hudmain_fatigue" trait="height" />
+               <sub  src="me()" trait="height" />
+               <onlyif src="parent()" trait="_metersShouldStack" />
+            </add>
          </y>
          <visible><copy src="hudmain_health" trait="user0"/><gt>0</gt></visible>
          <_fillImage>Menus\NorthernUI\meters\generic_upward\hd_fill_health.dds</_fillImage>
@@ -516,22 +668,13 @@
          <clipwindow>&true;</clipwindow>
          
          <user0>0</user0>		<!-- set by code - heading in degrees, N is 0/360 -->
-         <user20>					<!-- pixel-width of a 360-degree span -->
-            <copy>768</copy>
-            <div>   2</div>
-         </user20>
-         <user3>					<!-- degree-to-pixel conversion factor -->
-            <copy src="me()" trait="user20" />
-            <div>360</div>
-         </user3>
-         <user4>					<!-- heading in pixels -->
-            <copy src="me()" trait="user0" />	<!-- heading in degrees -->
-            <mult src="me()" trait="user3" />	<!-- convert to pixels -->
-         </user4>
-         <user5>					<!-- offset heading in pixels -->
-            <copy src="me()" trait="user4" />	<!-- heading in pixels -->
-            <add  src="me()" trait="user20" />
-         </user5>
+         
+         <!--
+            Bethesda used XML-side math to determine the precise relationship 
+            between pixels and degrees. We don't do that; rather, the prefab 
+            that we use to position items within the compass just assumes 
+            that the entire compass span is 180 degrees.
+         -->
          
          <rect name="hudmain_compass_heading">
             <id>14</id>
@@ -725,7 +868,6 @@
                   
                   <!-- This prefab handles the position of the icon. -->
                   <include src="NorthernUI\hud_compass_entity.xml" />
-                  <user3> <copy src="hudmain_compass_window" trait="user3" /> </user3>
                   <user16><copy src="hudmain_compass_window" trait="user0" /> </user16>
                   <user18><copy src="hudmain_compass_window" trait="width" /> </user18>
                </image>
@@ -740,7 +882,6 @@
             <width> <copy src="sibling()" trait="width" /></width>
             <height><copy src="parent()" trait="height" /></height>
             
-            <user3> <copy src="hudmain_compass_window" trait="user3" /> </user3>
             <user16><copy src="hudmain_compass_window" trait="user0" /> </user16>
             <user18><copy src="hudmain_compass_window" trait="width" /> </user18>
             
@@ -748,7 +889,6 @@
                <include src="NorthernUI\fonts\normal.xml" />
                <red>255</red><green>255</green><blue>255</blue>
                <include src="NorthernUI\hud_compass_entity.xml" />
-               <user3> <copy src="parent()" trait="user3" /> </user3>
                <user16><copy src="parent()" trait="user16" /></user16>
                <user18><copy src="parent()" trait="user18" /></user18>
                <string>N</string>
@@ -758,7 +898,6 @@
                <include src="NorthernUI\fonts\normal.xml" />
                <red>255</red><green>255</green><blue>255</blue>
                <include src="NorthernUI\hud_compass_entity.xml" />
-               <user3> <copy src="parent()" trait="user3" /> </user3>
                <user16><copy src="parent()" trait="user16" /></user16>
                <user18><copy src="parent()" trait="user18" /></user18>
                <string>NE</string>
@@ -768,7 +907,6 @@
                <include src="NorthernUI\fonts\normal.xml" />
                <red>255</red><green>255</green><blue>255</blue>
                <include src="NorthernUI\hud_compass_entity.xml" />
-               <user3> <copy src="parent()" trait="user3" /> </user3>
                <user16><copy src="parent()" trait="user16" /></user16>
                <user18><copy src="parent()" trait="user18" /></user18>
                <string>E</string>
@@ -778,7 +916,6 @@
                <include src="NorthernUI\fonts\normal.xml" />
                <red>255</red><green>255</green><blue>255</blue>
                <include src="NorthernUI\hud_compass_entity.xml" />
-               <user3> <copy src="parent()" trait="user3" /> </user3>
                <user16><copy src="parent()" trait="user16" /></user16>
                <user18><copy src="parent()" trait="user18" /></user18>
                <string>SE</string>
@@ -788,7 +925,6 @@
                <include src="NorthernUI\fonts\normal.xml" />
                <red>255</red><green>255</green><blue>255</blue>
                <include src="NorthernUI\hud_compass_entity.xml" />
-               <user3> <copy src="parent()" trait="user3" /> </user3>
                <user16><copy src="parent()" trait="user16" /></user16>
                <user18><copy src="parent()" trait="user18" /></user18>
                <string>S</string>
@@ -798,7 +934,6 @@
                <include src="NorthernUI\fonts\normal.xml" />
                <red>255</red><green>255</green><blue>255</blue>
                <include src="NorthernUI\hud_compass_entity.xml" />
-               <user3> <copy src="parent()" trait="user3" /> </user3>
                <user16><copy src="parent()" trait="user16" /></user16>
                <user18><copy src="parent()" trait="user18" /></user18>
                <string>SW</string>
@@ -808,7 +943,6 @@
                <include src="NorthernUI\fonts\normal.xml" />
                <red>255</red><green>255</green><blue>255</blue>
                <include src="NorthernUI\hud_compass_entity.xml" />
-               <user3> <copy src="parent()" trait="user3" /> </user3>
                <user16><copy src="parent()" trait="user16" /></user16>
                <user18><copy src="parent()" trait="user18" /></user18>
                <string>W</string>
@@ -818,7 +952,6 @@
                <include src="NorthernUI\fonts\normal.xml" />
                <red>255</red><green>255</green><blue>255</blue>
                <include src="NorthernUI\hud_compass_entity.xml" />
-               <user3> <copy src="parent()" trait="user3" /> </user3>
                <user16><copy src="parent()" trait="user16" /></user16>
                <user18><copy src="parent()" trait="user18" /></user18>
                <string>NW</string>

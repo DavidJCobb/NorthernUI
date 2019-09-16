@@ -386,6 +386,8 @@ namespace CobbPatches {
                }
             }
             //
+            static float s_opState_prefLoopMin = 0.0F;
+            static float s_opState_prefLoopMax = 0.0F;
             bool Inner(const UInt16 operatorID, RE::Tile::Value* const kThis, RE::Tile::Value* const esp44, const float argument, RE::Tile::Value::Expression* const current) {
                //
                // This subroutine should generally only handle our custom operators, since we just 
@@ -539,7 +541,13 @@ namespace CobbPatches {
                      return true;
                   case _traitOpPrefCarousel:
                      //
-                     // Same as modulo, except that if the pref == the current working value, we make no changes.
+                     // Same as modulo, except that we never write a zero value. In other words:
+                     // 
+                     //  - If the pref == the current working value, we make no changes.
+                     //
+                     //  - If the pref == 0, then we set it to the current working value.
+                     //
+                     //  - Otherwise, we set the pref to its value modulo the current working value.
                      //
                      // Consider:
                      //
@@ -561,7 +569,9 @@ namespace CobbPatches {
                         UInt32 menuID  = Helpers::getValueContainingMenuID(kThis);
                         SInt32 value   = manager.getPrefCurrentValue(str, menuID);
                         SInt32 operand = kThis->num;
-                        if (value != operand)
+                        if (value <= 0)
+                           manager.setPrefValue(str, operand, menuID);
+                        else if (value != operand)
                            manager.setPrefValue(str, (value % operand), menuID);
                      }
                      return true;

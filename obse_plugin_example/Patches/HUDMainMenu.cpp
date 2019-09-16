@@ -171,8 +171,8 @@ namespace CobbPatches {
             auto tile = menu->tileCompassHeading;
             auto tMin = CALL_MEMBER_FN(tile, GetOrCreateTrait)(RE::kTagID_user2);
             auto tMax = CALL_MEMBER_FN(tile, GetOrCreateTrait)(RE::kTagID_user3);
-            auto iMin = RE::GMST::iMapMarkerRevealDistance->i;
-            auto iMax = RE::GMST::iMapMarkerVisibleDistance->i;
+            float iMin = RE::GMST::iMapMarkerRevealDistance->i;
+            float iMax = RE::GMST::iMapMarkerVisibleDistance->i;
             if (tMin->num != iMin)
                CALL_MEMBER_FN(tMin, SetFloatValue)(iMin);
             if (tMax->num != iMax)
@@ -200,7 +200,7 @@ namespace CobbPatches {
          // destroy all tiles and then create new ones; rather, it recycles
          // existing tiles until it has exhausted all of them; if at that point
          // there are still map markers to render, then it starts creating new
-         // tiles.The menu never deletes tiles from the compass; if there are
+         // tiles. The menu never deletes tiles from the compass; if there are
          // more tiles than there are map markers to display, then the extra
          // tiles have their <visible /> trait set to false.
          //

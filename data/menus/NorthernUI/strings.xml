@@ -439,6 +439,12 @@
    <_optionPrefHUDFadeCorestats>Fade HUD Stats:</_optionPrefHUDFadeCorestats>
    <_optionPrefHUDFadeEquipInfo>Fade HUD Equip Info:</_optionPrefHUDFadeEquipInfo>
    
+   <_optionPrefHUDLayout>HUD Layout:</_optionPrefHUDLayout>
+   <_optionPrefHUDLayoutValue00>Spread Across</_optionPrefHUDLayoutValue00>
+   <_optionPrefHUDLayoutValue01>Stack on Left</_optionPrefHUDLayoutValue01>
+   <_optionPrefHUDLayoutValue02>Stack at Center</_optionPrefHUDLayoutValue02>
+   <_optionPrefHUDLayoutValue03>Stack on Right</_optionPrefHUDLayoutValue03>
+   
    <_optDescLocalMapRes>Adjust the render resolution of the Local Map. Oblivion's world is divided into grid cells, and this option is measured in pixels per grid cell.</_optDescLocalMapRes>
    <_optDescShowHUDClock>Control whether the in-game time of day is displayed on the HUD.</_optDescShowHUDClock>
    <_optDescShowHUDInputViewer>Control whether your gamepad button presses and joystick input are displayed on the HUD.</_optDescShowHUDInputViewer>

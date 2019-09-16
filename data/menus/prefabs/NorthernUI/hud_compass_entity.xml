@@ -4,7 +4,6 @@
       tag, or your values will be overwritten with these defaults.
    <!------------------------------------------------------------- -->
    <user0> 0</user0>  <!-- tile heading, in degrees -->
-   <user3> 1</user3>  <!-- degree-to-pixel conversion factor -->
    <user16>0</user16> <!-- player heading -->
    <user18>0</user18> <!-- width of the compass body -->
    
