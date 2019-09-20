@@ -2,8 +2,8 @@
    <!-- args -->
    <user2>10</user2> <!-- slider jump distance -->
    <user3>1</user3> <!-- slider step distance -->
-   <user4>0</user4> <!-- slider min -->
-   <user5>100</user5> <!-- slider max -->
+   <user4>-999999</user4> <!-- slider min -->
+   <user5>999999</user5> <!-- slider max -->
    <user8>&false;</user8> <!-- slider shows numeric value? -->
    <user10>200</user10> <!-- label column width -->
    <user11></user11> <!-- label -->
@@ -406,6 +406,12 @@
                coded xxnPrefs() tile as a trait value. This neatly side-steps 
                the need to use accumulators in XML and therefore also the 
                need to control what value an accumulator initializes to.
+               
+               All of this, by the way, is the same reason why the default 
+               bounds for the scrollbar are -999999 and 999999; the defaults 
+               need to be guaranteed not to produce any actual changes to the 
+               pref's value before the scrollbar's "real" bounds, specified 
+               after the prefab, load.
             -->
             <copy src="parent()" trait="user13" />
          </_value_scrolled_to>

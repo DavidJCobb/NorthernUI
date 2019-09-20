@@ -386,8 +386,6 @@ namespace CobbPatches {
                }
             }
             //
-            static float s_opState_prefLoopMin = 0.0F;
-            static float s_opState_prefLoopMax = 0.0F;
             bool Inner(const UInt16 operatorID, RE::Tile::Value* const kThis, RE::Tile::Value* const esp44, const float argument, RE::Tile::Value::Expression* const current) {
                //
                // This subroutine should generally only handle our custom operators, since we just 
@@ -491,7 +489,7 @@ namespace CobbPatches {
                            // will have a nullptr string because its string hasn't been set up yet.
                            //
                            return true;
-                        if (!kThis->num) // skip changes-by-zero
+                        if (kThis->num == 0.0F) // skip changes-by-zero
                            return true;
                         UInt32 menuID = Helpers::getValueContainingMenuID(kThis);
                         UIPrefManager::GetInstance().modifyPrefValue(str, kThis->num, menuID);
@@ -560,7 +558,8 @@ namespace CobbPatches {
                      // For carousel, you'd see this sequence: 2, 1, 2, 1, 2
                      //
                      {
-                        if (!kThis->num)
+                        SInt32 operand = kThis->num;
+                        if (operand <= 0)
                            return true;
                         const char* str = Helpers::getStringOperandAsPrefName(current);
                         if (!str)
@@ -568,7 +567,6 @@ namespace CobbPatches {
                         auto&  manager = UIPrefManager::GetInstance();
                         UInt32 menuID  = Helpers::getValueContainingMenuID(kThis);
                         SInt32 value   = manager.getPrefCurrentValue(str, menuID);
-                        SInt32 operand = kThis->num;
                         if (value <= 0)
                            manager.setPrefValue(str, operand, menuID);
                         else if (value != operand)

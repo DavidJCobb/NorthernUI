@@ -10,7 +10,7 @@
 #include "Patches/Selectors.h"
 
 namespace {
-   const std::string& GetPrefDirectory() {
+   const std::string& GetPrefDirectory() { // folder for XML pref definitions
       static std::string path;
       if (path.empty()) {
          std::string	runtimePath = GetOblivionDirectory();
@@ -21,13 +21,13 @@ namespace {
       }
       return path;
    }
-   const std::string& GetSavePath() {
+   const std::string& GetSavePath() { // save file for pref values altered at run-time
       static std::string path;
       if (path.empty()) {
          std::string	runtimePath = GetOblivionDirectory();
          if (!runtimePath.empty()) {
             path = runtimePath;
-            path += "Data\\NorthernUI\\prefs\\saved.ini";
+            path += "Data\\OBSE\\Plugins\\NorthernUI.xmlprefs.ini";
          }
       }
       return path;
@@ -192,6 +192,7 @@ void UIPrefManager::setupDocument(cobb::XMLDocument& doc) {
 void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
    UInt32 nesting  = 0;
    bool   isInPref = false;
+   bool   showedNestWarning = false;
    //
    std::string prefName;
    float       prefDefault = 0.0F;
@@ -212,6 +213,12 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
                return;
             }
             isInPref = true;
+            //
+            // TODO: ignore prefs that are not nested directly under the root node
+            // (goal is so that if we extend the spec, we can put "extended" prefs 
+            // under some child node without older NorthernUI versions logging tons 
+            // of warnings; obviously we'll need to document that we're doing this)
+            //
          }
          ++nesting;
       } else if (token.code == cobb::kXMLToken_Attribute) {
@@ -256,6 +263,35 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
             } else {
                if (!hasDefault)
                   _MESSAGE("WARNING: Line %d: Loaded pref \"%s\" with no default value specified. Pref has been given the default value 0, but if that's what you want, then you really should specify it explicitly e.g. <pref name=\"%s\" default=\"0\" />.", token.line, prefName.c_str(), prefName.c_str());
+               if (nesting > 1) {
+                  //
+                  // We are in a child of the root node.
+                  //
+                  // I want to ignore <pref /> elements that aren't direct children of the root 
+                  // node as an extensibility measure: I want it to be possible to do something 
+                  // like this in the future:
+                  //
+                  // <prefset>
+                  //    <prefs version-min="3.0.0"> <!-- nothing in here is even seen by old NorthernUI -->
+                  //       <pref name="foo" some-new-feature="bar" />
+                  //    </prefs>
+                  //    <pref name="baz" default="0" />
+                  // </prefset>
+                  //
+                  // But I don't want to have to design that in advance; I want to handle it when 
+                  // it comes up (if it comes up) so that I can handle it in the context of what-
+                  // ever new feature I want to implement at that time.
+                  //
+                  if (!showedNestWarning) {
+                     showedNestWarning = true;
+                     _MESSAGE("WARNING: Line %d: Pref \"%s\" is not a direct child of the root node and will not be loaded. This warning will not be displayed again for this document.", token.line, prefName.c_str());
+                  }
+                  prefName    = "";
+                  prefDefault = 0.0F;
+                  hasDefault  = false;
+                  isInPref    = false;
+                  continue;
+               }
                this->prefs.emplace(prefName, prefDefault);
             }
             prefName = "";

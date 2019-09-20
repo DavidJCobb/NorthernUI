@@ -4,7 +4,24 @@
    <user11></user11> <!-- label -->
    <user12></user12> <!-- pref name -->
    <user13></user13> <!-- pref value i.e. copy -->
-   <_optionCount>1</_optionCount> <!-- number of possible options -->
+   <_optionCount>0</_optionCount> <!-- number of possible options -->
+   
+   <!--
+      The default LISTINDEX is sibling() + 1, but if you use 
+      that from the first option in the list, then sibling() 
+      selects the last sibling -- creating a cyclical refer-
+      ence. Specifying a const 0 won't fix it, but specifying 
+      a COPY operator with a const 0 will.
+      
+      A similar problem exists for the Y trait.
+      
+      So, the first option in the list must have:
+      
+         <listindex><copy>0</copy></listindex>
+         <y><copy>0</copy></y>
+      
+      AFTER the INCLUDE tag.
+   -->
    
    <_options_1>&lt;MISSING TEXT&gt;</_options_1>
    <_options_2>&lt;MISSING TEXT&gt;</_options_2>
@@ -81,6 +98,23 @@
       <xxnOpPrefModifyValue src="me()" trait="user12" />
       <copy src="me()" trait="_optionCount" />
       <xxnOpPrefCarousel src="me()" trait="user12" />
+      <!--
+         NOTES:
+         
+         The default value of _optionCount MUST BE LESS THAN OR EQUAL 
+         TO ZERO. The carousel operator has been programmed to ignore 
+         any attempt to carousel to a maximum of zero (because that 
+         doesn't make sense). If we specify a positive non-zero default 
+         value for _optionCount, then we will carousel by that value on 
+         load. (Remember: all operators in this trait execute when they 
+         load, and then once again when the trait itself loads; all of 
+         this happens *before* _optionCount is overridden after this 
+         prefab loads.)
+         
+         This system definitely has a lot of "gotchas" but it is at 
+         present the best way I have to allow these sorts of prefs 
+         without having to hardcode all of them.
+      -->
    </_setter>
    <_resetter>
       <copy src="menu()"   trait="user24" /><eq>1</eq>

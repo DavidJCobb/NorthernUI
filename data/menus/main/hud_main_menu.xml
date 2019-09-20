@@ -140,6 +140,8 @@
          <gt>1</gt>
       </_metersShouldStack>
       <!-- -->
+      <_spaceBetweenEquipIconsWhenStacking>8</_spaceBetweenEquipIconsWhenStacking>
+      <!-- -->
       <rect name="hudmain_health">
          <id>2</id>
          <include src="NorthernUI\meters\statbar.xml" />
@@ -239,18 +241,27 @@
             <!-- Spread Across: align with left edge of magicka bar -->
 				<copy src="sibling(hudmain_magic)" trait="x"/>
             <onlyifnot src="parent()" trait="_metersShouldStack" />
-            <add> <!-- Stack on Left -->
-               <copy src="hudmain_health" trait="x" />
-               <add  src="hudmain_health" trait="width" />
+            <add> <!-- Stack on Left / Stack on Right -->
+               <copy src="hudmain_weapon_charge" trait="width" />
+               <div>2</div>
+               <add  src="hudmain_weapon_charge" trait="x" />
+               <add>
+                  <copy src="parent()" trait="_spaceBetweenEquipIconsWhenStacking" />
+                  <div>2</div>
+               </add>
                <onlyif>
                   <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+                  <or>
+                     <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+                  </or>
                </onlyif>
             </add>
-            <add> <!-- Stack at Center / Stack On Right -->
+            <add> <!-- Stack at Center -->
                <copy src="hudmain_health" trait="x" />
-               <sub  src="me()" trait="width" />
+               <sub  src="me()"           trait="width" />
+               <sub>8</sub>
                <onlyif>
-                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><gte>3</gte>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>3</eq>
                </onlyif>
             </add>
 			</x>
@@ -259,11 +270,24 @@
             <copy>-16</copy>
             <sub  src="me()" trait="height" />
             <onlyifnot src="parent()" trait="_metersShouldStack" />
-            <add> <!-- Stack on Left / Stack at Center / Stack On Right -->
+            <add> <!-- Stack on Left / Stack On Right -->
+               <copy src="hudmain_weapon_charge" trait="y" />
+               <sub  src="me()" trait="height" />
+               <sub>8</sub>
+               <onlyif>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+                  <or>
+                     <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+                  </or>
+               </onlyif>
+            </add>
+            <add> <!-- Stack at Center -->
                <copy src="hudmain_fatigue" trait="y" />
                <add  src="hudmain_fatigue" trait="height" />
                <sub  src="me()" trait="height" />
-               <onlyif src="parent()" trait="_metersShouldStack" />
+               <onlyif>
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>3</eq>
+               </onlyif>
             </add>
          </y>
 			<alpha> <!-- dim when the player can't cast -->
@@ -302,25 +326,28 @@
 				<add  src="sibling(hudmain_fatigue)" trait="width" />
 				<sub  src="me()" trait="width" />
             <onlyifnot src="parent()" trait="_metersShouldStack" />
-            <add> <!-- Stack on Left -->
-               <copy src="hudmain_Magic_Icon" trait="x" />
-               <add  src="hudmain_Magic_Icon" trait="width" />
+            <add> <!-- Stack on Left / Stack on Right -->
+               <copy src="hudmain_weapon_charge" trait="width" />
+               <div>2</div>
+               <add  src="hudmain_weapon_charge" trait="x" />
+               <sub src="me()" trait="width" />
+               <sub>
+                  <copy src="parent()" trait="_spaceBetweenEquipIconsWhenStacking" />
+                  <div>2</div>
+               </sub>
                <onlyif>
                   <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+                  <or>
+                     <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+                  </or>
                </onlyif>
             </add>
             <add> <!-- Stack at Center -->
                <copy src="hudmain_fatigue" trait="x" />
                <add  src="hudmain_fatigue" trait="width" />
+               <add>8</add>
                <onlyif>
                   <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>3</eq>
-               </onlyif>
-            </add>
-            <add> <!-- Stack on Right -->
-               <copy src="hudmain_Magic_Icon" trait="x" />
-               <sub  src="me()" trait="width" />
-               <onlyif>
-                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
                </onlyif>
             </add>
 			</x>
@@ -330,9 +357,9 @@
             <sub  src="me()" trait="height" />
             <onlyifnot src="parent()" trait="_metersShouldStack" />
             <add> <!-- Stack on Left / Stack at Center / Stack On Right -->
-               <copy src="hudmain_fatigue" trait="y" />
-               <add  src="hudmain_fatigue" trait="height" />
+               <copy src="hudmain_weapon_charge" trait="y" />
                <sub  src="me()" trait="height" />
+               <sub>8</sub>
                <onlyif src="parent()" trait="_metersShouldStack" />
             </add>
          </y>
@@ -480,8 +507,8 @@
             </add>
             <onlyifnot src="parent()" trait="_metersShouldStack" />
             <add> <!-- Stack on Left / Stack at Center -->
-               <copy src="hudmain_weapon" trait="x" />
-               <add  src="hudmain_weapon" trait="width" />
+               <copy src="parent()" trait="_meterStackX" />
+               <add  src="parent()" trait="_meterWidth" />
                <onlyif>
                   <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
                   <or>
@@ -490,7 +517,7 @@
                </onlyif>
             </add>
             <add> <!-- Stack on Right -->
-               <copy src="hudmain_weapon" trait="x" />
+               <copy src="parent()" trait="_meterStackX" />
                <sub  src="me()" trait="width" />
                <onlyif>
                   <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>

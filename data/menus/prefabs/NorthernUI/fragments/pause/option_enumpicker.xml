@@ -7,6 +7,23 @@
    <user11></user11> <!-- label -->
    <string></string> <!-- enumpicker value -->
    
+   <!--
+      The default LISTINDEX is sibling() + 1, but if you use 
+      that from the first option in the list, then sibling() 
+      selects the last sibling -- creating a cyclical refer-
+      ence. Specifying a const 0 won't fix it, but specifying 
+      a COPY operator with a const 0 will.
+      
+      A similar problem exists for the Y trait.
+      
+      So, the first option in the list must have:
+      
+         <listindex><copy>0</copy></listindex>
+         <y><copy>0</copy></y>
+      
+      AFTER the INCLUDE tag.
+   -->
+   
    <user24> <!-- NorthernUI: XXNOptionsMenu: allow reset -->
       <copy src="menu()"   trait="_currentSubmenuID" />
       <eq   src="parent()" trait="_submenuID" />
