@@ -506,6 +506,8 @@ namespace RE {
          DEFINE_MEMBER_FN(GetWeaponOut, bool, 0x005E0DA0);
          DEFINE_MEMBER_FN(GetSkillMasteryLevelBySkill, UInt32, 0x005F23B0, UInt32 skillActorValue); // see enum RE::SkillMasteryLevel
          DEFINE_MEMBER_FN(IsHorse,                     bool,   0x005E3290);
+
+         bool IsKnockedDown(); // check used in HighProcess::Move
    };
 
    class Character : public Actor { // sizeof == 0x104?

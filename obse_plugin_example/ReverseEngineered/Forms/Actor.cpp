@@ -12,4 +12,22 @@ namespace RE {
    DEFINE_SUBROUTINE(AnimBodyState,  BodyStateFromAnimCode,  0x0051A9D0, AnimCode);
    DEFINE_SUBROUTINE(AnimCombatType, CombatTypeFromAnimCode, 0x0051A9E0, AnimCode);
    DEFINE_SUBROUTINE(AnimCode, MakeAnimCode, 0x0051A9B0, AnimBodyState, AnimCombatType, AnimGroupType);
+
+   bool Actor::IsKnockedDown() {
+      //
+      // Modeled on checks performed in HighProcess::Move circa 0x0063C810.
+      //
+      if (this->IsDead(0))
+         return true;
+      RE::BaseProcess* process = this->process;
+      if (!process)
+         return false;
+      if (process->GetProcessLevel() == kProcessLevel_High) {
+         auto hp = (RE::HighProcess*) process;
+         if (hp->unk2A9)
+            return true;
+      }
+      if (this->GetKnockedState() == kKnockedState_Normal || process->GetKnockedState() == 6)
+         return false;
+   }
 };

@@ -12,6 +12,12 @@ namespace RE {
 
       kDetectionState_Max
    };
+   enum ProcessLevel : UInt32 {
+      kProcessLevel_High = 0,
+      kProcessLevel_MiddleHigh = 1, // assumed
+      kProcessLevel_MiddleLow  = 2, // assumed
+      kProcessLevel_Low  = 3,
+   };
 
    class Actor;
    class TESObjectREFR;
@@ -66,7 +72,7 @@ namespace RE {
 
          virtual void	Destructor(void);
          virtual void	Unk_01(void) = 0;
-         virtual UInt32	GetProcessLevel(void) = 0;	// 0 - high, 3 - low
+         virtual ProcessLevel	GetProcessLevel(void) = 0;	// 0 - high, 3 - low
          virtual void	Unk_03(Actor* Act, UInt32 Arg1) = 0;  //Or Definition
          virtual void	ManagePackProcedure(Actor* Act) = 0;   //Or definition
          virtual void	Unk_05(UInt32 arg0, UInt32 arg1) = 0;

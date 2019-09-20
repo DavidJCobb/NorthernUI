@@ -42,20 +42,18 @@ namespace CobbPatches {
             //
             if (subject != (RE::Actor*)*g_thePlayer)
                return;
-            if (subject->IsDead(0))
+            if (subject->IsKnockedDown()) // also checks for death
                //
-               // The calculations we do below go horribly wrong when the player is dead, causing them 
-               // to rocket off a significant distance. In outdoor environments, this triggers a load 
-               // screen that preempts the game's attempt at letting you pick a save file to load after 
-               // death, causing the game to softlock at the load screen. This is not a crash -- if you 
-               // use memory hacking to set OSGlobals::quitToMainMenuQueued to true, then the game 
-               // immediately returns to the main menu, though I can't speak as to any side-effects -- 
-               // but it's obviously undesirable.
-               //
-               // If you're wondering how the player can move if they're dead? Well, we hook the virtual 
-               // Move function on HighProcess, and when the player is dead, that actually gets called 
-               // with a zero-length NiPoint3 as its argument. I don't remember exactly where and I 
-               // certainly don't know why.
+               // The calculations below malfunction horribly whenever the player is ragdolling, including 
+               // when they're dead, for unknown reasons. This malfunction causes the player to rocket off 
+               // a significant distance when trying to move. In outdoor environments, this triggers a load 
+               // screen that never completes. This is not a crash -- if you use memory hacking to set 
+               // OSGlobals::quitToMainMenuQueued to true, then the game immediately returns to the main 
+               // menu, though I can't speak as to any side-effects -- but it's obviously undesirable.
+               // 
+               // It's especially nasty for death because whenever the player dies, the game forces them 
+               // to carry out a zero-length movement, which immediately launches them and softlocks the 
+               // game.
                //
                return;
             auto input = RE::OSInputGlobals::GetInstance();
