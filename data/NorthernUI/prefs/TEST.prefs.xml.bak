@@ -9,4 +9,22 @@
    <pref name="TEST_NoDefault" />
    <pref name="TEST_TwoNamesasdfasdfasdf" name="TEST_TwoNames" default="0" />
    <pref name="TEST_TwoDefaults" default="1" default="2" />
+   <pref name="TEST_MinVersion" min-version="255.0.0.0" default="5" />
+   <pref name="TEST_MaxVersion" max-version="0.0.0.0" default="5" />
+   <pref name="TEST_GoodVersion" min-version="0.0.0.0" max-version="255.0.0.0" default="5" />
+   <pref name="TEST_PartialVersionA" max-version="2" default="5" />
+   <pref name="TEST_PartialVersionB" max-version="2.0" default="5" />
+   <pref name="TEST_PartialVersionC" max-version="2.0.0" default="5" />
+   <pref name="TEST_PartialVersionError01" max-version="2." default="5" />
+   <pref name="TEST_BadVersion01" max-version="." default="5" />
+   <pref name="TEST_BadVersion02" max-version=".." default="5" />
+   <pref name="TEST_BadVersion03" max-version="..." default="5" />
+   <pref name="TEST_BadVersion04" max-version="2.A" default="5" />
+   <pref name="TEST_BadVersion05" max-version="1.2.3.4.5" default="5" />
+   <pref name="TEST_BadVersion06" max-version="" default="5" />
+   <pref name="TEST_TwoMinVersions" min-version="0" min-version="3" default="5" />
+   <pref name="TEST_BadAndGoodVersion" min-version="INVALID" min-version="3" default="5" />
+   <pref name="TEST_VersionOverflow01" min-version="2147483648" default="5" />
+   <pref name="TEST_VersionOverflow02" min-version="21474836400" default="5" />
+   <pref name="TEST_VersionOverflow03" min-version="2147483650" default="5" />
 </prefset>

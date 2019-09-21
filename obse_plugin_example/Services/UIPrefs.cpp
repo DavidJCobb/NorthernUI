@@ -8,6 +8,7 @@
 #include "ReverseEngineered/UI/Menu.h"
 #include "ReverseEngineered/UI/Tile.h"
 #include "Patches/Selectors.h"
+#include "shared.h"
 
 namespace {
    const std::string& GetPrefDirectory() { // folder for XML pref definitions
@@ -189,14 +190,130 @@ void UIPrefManager::setupDocument(cobb::XMLDocument& doc) {
       doc.defineEntity(entity->name.m_data, value.c_str());
    }
 }
+
+namespace {
+   SInt32 _compareVersion(SInt32 a[4], SInt32 b[4]) {
+      for (UInt32 i = 0; i < 4; i++) {
+         auto ai = a[i];
+         auto bi = b[i];
+         if (ai == -1 || bi == -1)
+            return 0;
+         if (ai == bi)
+            continue;
+         if (ai < bi)
+            return -1;
+         return 1;
+      }
+      return 0;
+   }
+   struct ModVersion {
+      static constexpr SInt32 ce_unspecified = -1;
+      //
+      union {
+         struct {
+            SInt32 major;
+            SInt32 minor;
+            SInt32 patch;
+            SInt32 build;
+         };
+         SInt32 parts[4] = { ce_unspecified, ce_unspecified, ce_unspecified, ce_unspecified };
+      };
+      //
+      ModVersion() {};
+      ModVersion(UInt32 full) {
+         this->major = full >> 0x18;
+         this->minor = (full >> 0x10) & 0xFF;
+         this->patch = (full >> 0x08) & 0xFF;
+         this->build = full & 0xFF;
+      }
+      ModVersion(SInt32 a, SInt32 b, SInt32 c, UInt32 d) : major(a), minor(b), patch(c), build(d) {};
+      //
+      int compare(const ModVersion& other) const {
+         for (UInt32 i = 0; i < 4; i++) {
+            auto ai = this->parts[i];
+            auto bi = other.parts[i];
+            if (ai == -1 || bi == -1)
+               return 0;
+            if (ai == bi)
+               continue;
+            if (ai < bi)
+               return -1;
+            return 1;
+         }
+         return 0;
+      }
+      inline bool operator==(const ModVersion& other) const {
+         return this->compare(other) == 0;
+      }
+      inline bool operator<(const ModVersion& other) const {
+         return this->compare(other) < 0;
+      }
+      inline bool operator> (const ModVersion& other) const { return other < *this; }
+      inline bool operator<=(const ModVersion& other) const { return !(*this > other); }
+      inline bool operator>=(const ModVersion& other) const { return !(*this < other); }
+      //
+      bool empty() const {
+         return (this->major == ce_unspecified && this->minor == ce_unspecified && this->patch == ce_unspecified && this->build == ce_unspecified);
+      }
+      //
+      bool parse(const cobb::XMLToken& token, const std::string& prefName, const char* termName) { // TODO: use me
+         //
+         // termName == "minimum" or "maximum"; used for logging
+         //
+         auto   val  = token.value.c_str();
+         UInt32 size = token.value.size();
+         if (size == 0) {
+            _MESSAGE("WARNING: Line %d: Cannot assign a blank %s version to pref \"%s\".", token.line, termName, prefName.c_str());
+            return false;
+         }
+         UInt32 index = 0;
+         bool   valid = true;
+         for (UInt32 i = 0; i < size; i++) {
+            char c = val[i];
+            if (c == '.') {
+               if (i == 0 || i == size - 1 || (i + 1 < size && val[i + 1] == '.')) {
+                  _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; syntax error.", token.line, termName, val, prefName.c_str());
+                  return false;
+               }
+               index++;
+               if (index > 3) {
+                  _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; the version number can only have up to four parts.", token.line, termName, val, prefName.c_str());
+                  return false;
+               }
+            } else if (c >= '0' && c <= '9') {
+               auto p = this->parts[index];
+               if (p == ModVersion::ce_unspecified)
+                  p = 0;
+               else if (p > 10 && (p * 10 < 0 || p * 10 > std::extent<SInt32>::value - (c - '0'))) { // integer overflow check
+                  _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; part %d is too large to fit in a signed four-byte integer.", token.line, termName, val, prefName.c_str(), index + 1);
+                  return false;
+               }
+               this->parts[index] = p * 10 + (c - '0');
+            } else {
+               _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; found invalid character \"%c\".", token.line, termName, val, prefName.c_str(), c);
+               return false;
+            }
+         }
+         return true;
+      }
+   };
+}
 void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
+   constexpr SInt32 ce_notInPref = -1;
+   //
+   ModVersion modVersion(g_pluginVersion);
+   //
    UInt32 nesting  = 0;
-   bool   isInPref = false;
+   SInt32 isInPref = ce_notInPref;
    bool   showedNestWarning = false;
    //
    std::string prefName;
    float       prefDefault = 0.0F;
    bool        hasDefault = false;
+   ModVersion  minVersion;
+   ModVersion  maxVersion;
+   bool minVersionParseFailure = false; // true if ALL min-version attributes on a pref are invalid
+   bool maxVersionParseFailure = false; // true if ALL max-version attributes on a pref are invalid
    //
    for (auto it = doc.tokens.begin(); it != doc.tokens.end(); ++it) {
       auto& token = *it;
@@ -207,22 +324,16 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
                return;
             }
          }
+         ++nesting;
          if (token.name == "pref") {
-            if (isInPref) {
+            if (isInPref != ce_notInPref) {
                _MESSAGE("ERROR: Line %d: <pref /> elements cannot be nested. Aborting processing for this file.", token.line);
                return;
             }
-            isInPref = true;
-            //
-            // TODO: ignore prefs that are not nested directly under the root node
-            // (goal is so that if we extend the spec, we can put "extended" prefs 
-            // under some child node without older NorthernUI versions logging tons 
-            // of warnings; obviously we'll need to document that we're doing this)
-            //
+            isInPref = nesting;
          }
-         ++nesting;
       } else if (token.code == cobb::kXMLToken_Attribute) {
-         if (!isInPref)
+         if (isInPref == ce_notInPref || nesting != isInPref)
             continue;
          if (token.name == "name") {
             if (prefName.size())
@@ -251,6 +362,77 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
                _MESSAGE("WARNING: Line %d: Cannot assign value \"%s\" to pref (whose name has not yet loaded). Values must be floats.", token.line, val);
             continue;
          }
+         //
+         // version number attributes:
+         //
+         bool isMin = token.name == "min-version";
+         if (isMin || token.name == "max-version") {
+            const char* term = isMin ? "minimum" : "maximum";
+            //
+            if ((isMin && !minVersion.empty()) || (!isMin && !maxVersion.empty())) {
+               _MESSAGE("WARNING: Line %d: Pref \"%s\" has multiple %s allowed versions; only the last one to load will be kept.", token.line, prefName.c_str(), term);
+            }
+            //
+            ModVersion parsed;
+            auto   val   = token.value.c_str();
+            UInt32 size  = token.value.size();
+            if (size == 0) {
+               _MESSAGE("WARNING: Line %d: Cannot assign a blank %s version to pref \"%s\".", token.line, term, prefName.c_str());
+               if (isMin) {
+                  minVersionParseFailure = minVersion.empty();
+               } else {
+                  maxVersionParseFailure = maxVersion.empty();
+               }
+               continue;
+            }
+            UInt32 index = 0;
+            bool   valid = true;
+            for (UInt32 i = 0; i < size; i++) {
+               char c = val[i];
+               if (c == '.') {
+                  if (i == 0 || i == size - 1 || (i + 1 < size && val[i + 1] == '.')) {
+                     _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; syntax error.", token.line, term, val, prefName.c_str());
+                     valid = false;
+                     break;
+                  }
+                  index++;
+                  if (index > 3) {
+                     _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; the version number can only have up to four parts.", token.line, term, val, prefName.c_str());
+                     valid = false;
+                     break;
+                  }
+               } else if (c >= '0' && c <= '9') {
+                  auto p = parsed.parts[index];
+                  if (p == ModVersion::ce_unspecified)
+                     p = 0;
+                  else if (p > 10 && (p * 10 < 0 || p * 10 > std::extent<SInt32>::value - (c - '0'))) { // integer overflow check
+                     _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; part %d is too large to fit in a signed four-byte integer.", token.line, term, val, prefName.c_str(), index + 1);
+                     valid = false;
+                     break;
+                  }
+                  parsed.parts[index] = p * 10 + (c - '0');
+               } else {
+                  _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; found invalid character \"%c\".", token.line, term, val, prefName.c_str(), c);
+                  valid = false;
+                  break;
+               }
+            }
+            if (!valid) {
+               if (isMin) {
+                  minVersionParseFailure = minVersion.empty();
+               } else {
+                  maxVersionParseFailure = maxVersion.empty();
+               }
+               continue;
+            }
+            if (isMin) {
+               minVersion = parsed;
+               minVersionParseFailure = false;
+            } else {
+               maxVersion = parsed;
+               maxVersionParseFailure = false;
+            }
+         }
       } else if (token.code == cobb::kXMLToken_ElementClose) {
          --nesting;
          if (token.name != "pref")
@@ -260,47 +442,30 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
                _MESSAGE("WARNING: Line %d: Pref name \"%s\" contains disallowed characters; discarding. Pref names cannot begin with underscores, and cannot contain spaces, slashes, parentheses, at-symbols, or double-quotes.", token.line, prefName.c_str());
             } else if (this->getPrefByName(prefName.c_str())) {
                _MESSAGE("WARNING: Line %d: Duplicate pref \"%s\" detected; discarding.", token.line, prefName.c_str());
+            } else if (minVersionParseFailure || maxVersionParseFailure) {
+               _MESSAGE("WARNING: Line %d: Pref \"%s\" tried and failed to specify valid version constraints; discarding.", token.line, prefName.c_str());
             } else {
                if (!hasDefault)
                   _MESSAGE("WARNING: Line %d: Loaded pref \"%s\" with no default value specified. Pref has been given the default value 0, but if that's what you want, then you really should specify it explicitly e.g. <pref name=\"%s\" default=\"0\" />.", token.line, prefName.c_str(), prefName.c_str());
-               if (nesting > 1) {
-                  //
-                  // We are in a child of the root node.
-                  //
-                  // I want to ignore <pref /> elements that aren't direct children of the root 
-                  // node as an extensibility measure: I want it to be possible to do something 
-                  // like this in the future:
-                  //
-                  // <prefset>
-                  //    <prefs version-min="3.0.0"> <!-- nothing in here is even seen by old NorthernUI -->
-                  //       <pref name="foo" some-new-feature="bar" />
-                  //    </prefs>
-                  //    <pref name="baz" default="0" />
-                  // </prefset>
-                  //
-                  // But I don't want to have to design that in advance; I want to handle it when 
-                  // it comes up (if it comes up) so that I can handle it in the context of what-
-                  // ever new feature I want to implement at that time.
-                  //
-                  if (!showedNestWarning) {
-                     showedNestWarning = true;
-                     _MESSAGE("WARNING: Line %d: Pref \"%s\" is not a direct child of the root node and will not be loaded. This warning will not be displayed again for this document.", token.line, prefName.c_str());
-                  }
-                  prefName    = "";
-                  prefDefault = 0.0F;
-                  hasDefault  = false;
-                  isInPref    = false;
-                  continue;
+               //
+               // Test remaining requirements.
+               //
+               if (minVersion <= modVersion && modVersion <= maxVersion) {
+                  this->prefs.emplace(prefName, prefDefault);
                }
-               this->prefs.emplace(prefName, prefDefault);
             }
             prefName = "";
          } else {
             _MESSAGE("WARNING: Discarding pref lacking a name attribute. Element was closed on line %d.", token.line);
          }
+         prefName = "";
          prefDefault = 0.0F;
          hasDefault = false;
-         isInPref = false;
+         isInPref   = ce_notInPref;
+         minVersion = ModVersion();
+         maxVersion = ModVersion();
+         minVersionParseFailure = false;
+         maxVersionParseFailure = false;
       }
    }
 }
