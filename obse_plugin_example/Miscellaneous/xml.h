@@ -33,19 +33,12 @@ namespace cobb {
       std::vector<XMLToken>     tokens;
       std::vector<CustomEntity> entities;
       bool caseInsensitive = false;
+      bool isFragment      = false; // if true, then we don't require there to be only one root node
       bool stripWhitespace = false;
 
       void clear(); // for looping over multiple files, it's better to create one XMLDocument outside of the loop and clear it every iteration; that way, you only need to configure it once
       void defineEntity(const char* entity, const char* substitution);
       void defineEntity(const char* entity, const std::string& substitution);
-
-      //
-      // meetsStrictRequirements
-      //
-      //    Returns true if the document has only one top-level node i.e. only 
-      //    one root. May add additional tests to this in the future.
-      //
-      bool meetsStrictRequirements() const; // TODO: should probably just be built into the parser
 
       //
       // Used by the parser:

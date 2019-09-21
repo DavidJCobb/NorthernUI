@@ -33,3 +33,11 @@
       <pref name="TEST_NestedPref" default="5" />
    </nest>
 </prefset>
+
+<!--
+   This file contains unit tests for NorthernUI, to verify that its 
+   XML parser is properly detecting and handling specific cases in-
+   cluding syntax errors.
+   
+   You can safely ignore or delete this file.
+-->

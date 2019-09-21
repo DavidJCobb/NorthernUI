@@ -480,13 +480,14 @@ void UIPrefManager::loadDefinitions() {
             continue;
          }
          file.close();
+         _MESSAGE(" - Loading: %s", path.c_str());
          //
          cobb::parseXML(doc, data.c_str(), data.size());
          data.clear();
          this->processDocument(doc);
          doc.clear();
          //
-         _MESSAGE(" - Loaded: %s", path.c_str());
+         _MESSAGE(" - File loaded.");
       }
    } while (FindNextFileA(handle, &state));
    FindClose(handle);

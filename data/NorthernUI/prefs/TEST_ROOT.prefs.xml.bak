@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<prefset></prefset>
+<prefset>
+   <pref name="TEST_BadFileStructure" default="5" />
+</prefset>
+
+<!--
+   This file contains unit tests for NorthernUI, to verify that its 
+   XML parser is properly detecting and handling specific cases in-
+   cluding syntax errors.
+   
+   You can safely ignore or delete this file.
+-->

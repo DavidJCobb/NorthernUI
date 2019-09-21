@@ -80,29 +80,6 @@ namespace cobb {
    void XMLDocument::clear() {
       this->tokens.clear();
    }
-   bool XMLDocument::meetsStrictRequirements() const {
-      bool   foundRoot = false;
-      UInt32 nesting = 0;
-      for (auto it = this->tokens.begin(); it != this->tokens.end(); ++it) {
-         auto& token = *it;
-         switch (token.code) {
-            case kXMLToken_ElementOpen:
-               if (nesting == 0 && foundRoot) {
-                  //
-                  // ERROR: A document can only have one root element.
-                  //
-                  return false;
-               }
-               ++nesting;
-               foundRoot = true;
-               break;
-            case kXMLToken_ElementClose:
-               --nesting;
-               break;
-         }
-      }
-      return true;
-   }
 
    void XMLDocument::defineEntity(const char* entity, const char* substitution) {
       this->entities.emplace_back(entity, substitution);
@@ -464,7 +441,7 @@ namespace cobb {
          _MESSAGE("XML parse error: runaway attribute-value with opening quotation mark '%c', beginning on line %d, reached the end of the document.", currentQuote, currentQuoteLine);
          return false;
       }
-      if (state != kState_InContent) {
+      if (state != kState_InContent) { // report runaway states
          switch (state) {
             case kState_InAttribute:
                _MESSAGE("XML parse error: runaway attribute reached the end of the document. Token began near line %d.", stateChangeLine);
@@ -500,11 +477,19 @@ namespace cobb {
          return false;
       }
       {  // Verify proper nesting.
+         bool foundRoot = false;
          std::vector<XMLToken*> hierarchy;
          for (auto it = doc.tokens.begin(); it != doc.tokens.end(); ++it) {
             auto& token = *it;
             switch (token.code) {
                case kXMLToken_ElementOpen:
+                  if (!doc.isFragment && !hierarchy.size()) {
+                     if (foundRoot) {
+                        _MESSAGE("XML parse error on line %d: there can only be one root node.", token.line);
+                        return false;
+                     }
+                     foundRoot = true;
+                  }
                   hierarchy.push_back(&token);
                   break;
                case kXMLToken_ElementClose:
