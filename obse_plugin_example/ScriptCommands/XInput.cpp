@@ -233,7 +233,7 @@ static bool Cmd_Exec_GetGamepadJoystickMagnitude(COMMAND_ARGS) {
    //
    enum Stick {
       kStick_Left  = 0,
-      kStick_Right = 0,
+      kStick_Right = 1,
    };
    enum Axis {
       kAxis_Magnitude = 0,
