@@ -1,0 +1,331 @@
+<!doctype html>
+<html>
+   <head>
+      <title>NorthernUI Documentation: Prefs</title>
+      <style>
+         html{background:#888;padding:0;margin:0}
+         body{background:#FFF;max-width:960px;padding:3rem;margin:0 auto;font-family:calibri,verdana,sans-serif}
+         
+         pre{background:#E8E8E8;padding:.5em}
+         
+         *:first-child{margin-top:0}
+         *:last-child{margin-bottom:0}
+         
+         dd{}
+         dt{font-weight:bold}
+         dd{margin-bottom:1em}
+         
+         ul>li,
+         ol>li{margin:1em 0}
+         
+         ol>li::marker{font-weight:bold}
+      </style>
+   </head>
+   <body>
+      <h1>NorthernUI Prefs (developer documentation)</h1>
+   
+      <p>The "pref" system allows UI authors to implement user-configurable options without requiring users to edit files manually, and without having to hardcode the options into a DLL. Each such option &mdash; a "UI pref" or simply "pref" &mdash; is defined in a special XML file and can have its value changed at run-time using specific XML operators. In essence, Oblivion XML traits can be used as setters &mdash; as "code," so to speak, rather than content.</p>
+      <p>I implemented this solely so I could add HUD options and whatnot without having to hardcode every single one of them; PlayStation button icons are one example of something I could've used this system for had I thought of it earlier. I'm documenting the system for the public because there are quite a few mods that inject content into the HUD, and some are actively maintained and attempt to be compatible with NorthernUI; since NorthernUI 2.0 uses prefs as the basis for not only HUD scaling options, but also options to change large portions of the HUD layout, any mods wishing to be fully compatible will need to know how this system works and how to use it.</p>
+
+      <h2>Overview</h2>
+      <p>At startup, NorthernUI will open every *.XML file in Oblivion/Data/NorthernUI/prefs. These files will be assumed to contain definitions for UI prefs. Each definition consists of the pref's name and its default value. A basic pref file should look like this:</p>
+<pre>﻿&lt;?xml version="1.0"?>
+&lt;prefset>
+   lt;pref name="NameOfMyPref" default="5" />
+&lt;/prefset></pre>
+
+      <p>Once a pref is defined, you can use its value in menu XML:</p>
+
+<pre>&lt;rect name="example">
+   &lt;red> &lt;copy src="xxnPrefs()" trait="_NameOfMyPref" /> &lt;/red>
+&lt;/rect></pre>
+
+      <p>You can also modify the value in menu XML:</p>
+
+<pre>&lt;rect name="checkbox">
+   &lt;_setter>
+      &lt;copy src="me()" trait="clicked" />
+      &lt;xxnOpPrefModifyValue>NameOfMyPref&lt;/xxnOpPrefModifyValue>
+      &lt;copy>2&lt;/copy>
+      &lt;xxnOpPrefCarousel>NameOfMyPref&lt;/xxnOpPrefCarousel>
+   &lt;/_setter>
+&lt;/rect></pre>
+
+<p>And you can reset it to its default from menu XML:</p>
+
+<pre>&lt;rect name="reset_button">
+   &lt;_resetter>
+      &lt;copy src="me()" trait="clicked" />
+      &lt;eq>1&lt;/eq>
+      &lt;xxnOpPrefResetValue>NameOfMyPref&lt;/xxnOpPrefResetValue>
+   &lt;/_resetter>
+&lt;/rect></pre>
+
+<p>The current values of all prefs are saved in Oblivion/Data/Plugins/OBSE/NorthernUI.xmlprefs.ini.</p>
+
+
+<h2>System details</h2>
+<h3>How are prefs made available to the UI?</h3>
+<p>NorthernUI creates a hidden tile whose traits can be referenced by way of the xxnPrefs() selector. It then takes each pref, prefixes the prefs' names with an underscore, and creates traits with these names on the hidden tile. The values of these prefs are synchronized to these traits, such that operators can read the value of a pref using the SRC attribute.</p>
+<p>Note that Oblivion discards operators that refer to a non-existent tile, and that the xxnPrefs() tile will not exist if NorthernUI is not installed. Using this code snippet as an example, if NorthernUI isn't installed, then the trait's value will always be 5, and the &lt;mult&nbsp;/&gt; operator won't exist in memory.</p>
+
+<pre>&lt;rect name="example">
+   &lt;red>
+      &lt;copy>5&lt;/copy>
+      &lt;mult src="xxnPrefs()" trait="NameOfMyPref" />
+   &lt;/red>
+&lt;/rect></pre>
+
+<p>If you're using prefs, but you also need your code to work predictably even when NorthernUI is not installed, then you can work around this by supplying a fallback value:</p>
+
+<pre>&lt;rect name="example">
+   &lt;red>
+      &lt;copy>5&lt;/copy>
+      &lt;mult>
+         &lt;copy>0&lt;/copy> &lt;!-- fallback -->
+         &lt;copy src="xxnPrefs()" trait="NameOfMyPref" />
+      &lt;/mult>
+   &lt;/red>
+&lt;/rect></pre>
+
+<h3>How can the UI change a pref's value? When does that happen?</h3>
+<p>Specific operators have been made available and can be used to change the value of a pref. Changes are applied at the last possible moment. In order to understand what this means, we must first understand how Oblivion handles changes to traits. Consider the following code:</p>
+
+<pre>&lt;rect name="button">
+   &lt;!-- pretend I cared enough to write the code that makes something clickable here -->
+&lt;/rect>
+&lt;text name="counter">
+   &lt;user0>
+      &lt;add src="button" trait="clicked" />
+   &lt;/user0>
+   &lt;string>
+      &lt;copy src="me()" trait="user0" />
+   &lt;/string>
+&lt;/text></pre>
+
+<p>When the button is clicked, the game sets its "clicked" trait to 1. The game then looks through everything that pulls the "clicked" trait, and finds the "user0" trait on the counter. The game fully recomputes the user0 trait (by executing all of its operators in sequence), and then it looks through everything that pulls the "user0" trait. It finds the "string" trait on the counter, updates that, and sees that nothing pulls the trait. Satisfied, the game wraps up and is then done handling that one change to the "clicked" trait. (And then the game sets "clicked" back to 0 on the same frame, and the process repeats.) You may recognize that this is a <a href="https://en.wikipedia.org/wiki/Recursion" target="_blank">recursive</a> process.</p>
+<p>Operators, then, will "run" in three situations: when the game finishes parsing the operator while reading your menu's XML; when the game finishes parsing the operator's containing trait; and then any time the operator's containing trait recomputes its value as part of the above recursive process. This applies both to ordinary operators, like add, and to the operators that the UI pref system uses to modify a pref's value.</p>
+<p>When a pref operator runs, we change the pref's value immediately, but we don't save the change to a file, and we don't immediately forward the change to the xxnPrefs() tile. Instead, we wait until the trait recomputation process is finished &mdash; until we're "outside" of all recursion &mdash; and <em>then</em> we forward the change to the xxnPrefs() tile (which itself causes a trait recomputation). We still don't save the pref change to a file; that happens only when you exit the operator's containing menu.</p>
+
+<h2>Questions and common pitfalls</h2>
+<h3>Why are prefs only saved when a menu is closed?</h3>
+<p>The main motivation for this was sliders and scrollbars (which, actually, are the same thing in Oblivion).</p>
+<p>Sliders use XML to compute their values; all of the buttons are handled entirely by trait operators. Dragging, however, requires help from the executable. Accordingly, every slider has a spare trait that is used solely to give the executable an opportunity to influence the slider's value. When the executable wants to force a slider to a certain value, it first forces that specific trait to -999999; this forces the slider to an extremely low value, which is inevitably clamped to the slider's XML-defined minimum. Then, the executable forces the trait to the desired value, which updates the slider. Finally, the executable forces the trait back to 0, so that it doesn't do anything the next time you click a slider button. So, that's three changes made to the trait on every frame you drag the slider thumb.</p>
+<p>(Ordinary clicks result in two trait changes per frame (the "clicked" trait is set to 1 and then back to 0).)</p>
+<p>So, if we made changes to a pref every time a pref operator ran, then dragging a scrollbar would cause us to access and modify the saved pref file on the user's hard drive <em>three times per frame.</em> Yikes! It's much cleaner, much more performant, and much less stressful on the hard drive to just save settings when the menu closes.</p>
+
+<h3>Why is there an operator to "modify" a pref's value, but not an operator to "set" a pref's value?</h3>
+<p>A "set" operator would only be useful if we allowed XML to manage state, as is done for the values of sliders and scrollbars in the vanilla game. XML can manage state by using traits that never overwrite their last-stored values with &lt;copy /&gt; operators; however, these traits always initialize to zero. It is impossible to set the initial values of these traits to anything else due to how the game actually populates/computes/fills/etc. operator operands at run-time.</p>
+<p>Consider a trait like this:</p>
+
+<pre>&lt;trait>
+   &lt;operatorThatReturnsAValueOnlyOnceAndThenDoesNothing>
+      &lt;someHypotheticalLoadPrefOperator src="otherTile" trait="_prefName" />
+   &lt;/operatorThatReturnsAValueOnlyOnceAndThenDoesNothing>
+   &lt;add src="otherTile" trait="clicked" />
+   &lt;someHypotheticalSetPrefOperator src="otherTile" trait="_prefName" />
+&lt;/trait></pre>
+
+<p>When an operator is parsed and created, its containing trait is told to immediately recompute its value. This means that the &lt;trait&nbsp;/&gt; trait here actually computes its value multiple times before its containing tile has finished loading. The game also tells all traits in a tile to recompute when the tile itself is finished loading &mdash; just for good measure.</p>
+<p>If any SRC operator in this trait experiences an update, then the trait will recompute at that time as well. This is what allows this trait to react to (otherTile) being clicked.</p>
+<p>The (otherTile) you see referenced in there may not have had its traits load yet, in which case any operator referencing it has an operand of zero. This means that our "run once" operator will always return zero. Eventually, the trait in (otherTile) will load in, causing our &lt;trait&nbsp;/&gt; trait to recompute, but by then, our "run once" operator has already fired and disabled itself from running again.</p>
+<p>The fact of the matter is, there's no way to know when all SRC operators inside of a trait have resolved their values, and so there's no way to know when it's safe to run any sort of "run once" operator. Without a "run once" operator, you can't initialize an XML trait that maintains state to any value other than zero. This means that widgets for changing UI prefs, like sliders and checkboxes, wouldn't be able to display the pref's current value when their containing menu is opened.</p>
+<p>If we forego a direct "set" operator and just use a "modify" operator, with one or two other specialty operators as needed, then we can use a setup like this:</p>
+
+<pre>&lt;_setter>
+   &lt;copy src="otherTile" trait="clicked" />
+   &lt;xxnOpPrefModifyValue src="otherTile" trait="_prefName" />
+&lt;/_setter>
+&lt;trait>
+   &lt;copy src="xxnPrefs()" trait="_prefName" />
+&lt;/trait></pre>
+
+<p>In this case, XML doesn't maintain state at all. We just tell the game when to make changes.</p>
+
+<h3>Why do we use specific operators, like "modulo" and "carousel" and "clamp?" Can't we just do that stuff with the "modify" operator?</h3>
+<p>Consider the case of a checkbox: in order to map its value to true and false, we'd want a special variant on a modulo operator: we'd want to leave the value unchanged if it equals 2, but modulo it otherwise. So why can't we implement it in XML? Well, consider this:</p>
+
+<pre>&lt;_setter>
+   &lt;copy src="xxnPrefs()" trait="_Pref" />
+   &lt;sub>
+      &lt;not src="xxnPrefs()" trait="_Pref" />
+   &lt;/sub>
+   &lt;mult>-1&lt;/mult>
+   &lt;mult src="otherTile" trait="clicked" />
+   &lt;xxnOpPrefModifyValue>_Pref&lt;/xxnOpPrefModifyValue>
+&lt;/_setter>
+&lt;user0> &lt;!-- some trait to display the current state -->
+   &lt;copy src="xxnPrefs()" trait="_Pref" />
+&lt;/user0></pre>
+
+<p>In theory, that should achieve what we want, right? That should toggle the value between 2 and 1, by subtracting 1 whenever the current pref value is 2 and adding 1 whenever the current pref value is 1. However, there's a subtle problem here.</p>
+<p>When you click on a tile, the game sets the "clicked" trait to 1, and then sets it back to 0, all on the same frame. When the game finishes changing a trait's value &mdash; including all of the other operators that have to update in response &mdash; we process any pref value changes that occurred and propagate those changes to the UI. So here's the sequence of events that occurs with the above markup:</p>
+<ol>
+<li><p>The game sets "clicked" to 1. The _setter trait contains an operator that refers to the "clicked" trait, so the _setter trait is forced to recompute its value, executing all of its operators in sequence. This flips the checkbox pref's value between true and false.</p></li>
+<li><p>The operators in _setter make changes to a pref's value.</p></li>
+<li><p>The game finishes processing all traits and operators that had to update in response to "clicked" being set to 1. We now push all of the pref changes that were made to the UI...</p></li>
+<li><p>...which entails setting the "_Pref" trait on xxnPrefs(). The _setter trait contains an operator that refers to that "_Pref" trait, so the _setter trait is forced to recompute its value, executing all of its operators in sequence.</p></li>
+<li><p>The operators in _setter make changes to a pref's value. Our code has now run twice in a row, with the second run totally cancelling the first run out.</p></li>
+<li><p>The game finishes processing all traits and operators that had to update in response to the "_Pref" trait changing. (Fortunately, NorthernUI's DLL checks for recursion here, and it'll never update xxnPrefs() as a result of xxnPrefs() being updated; if that check wasn't there, then we would become trapped in infinite recursion.)</p></li>
+<li><p>The game sets "clicked" to 0. This kicks off the same sequence of events as when "clicked" was set to 1, except that since we &lt;mult&nbsp;/&gt; everything by "clicked," we just end up trying to modify the pref's value by zero twice in a row (which does nothing &mdash; the "modify" pref operator is programmed to ignore changes-by-zero).</p></li>
+</ol>
+<p>So prefs can only be modified with hardcoded operators: if the same trait that tries to modify a pref's value also pulls that pref's value (however directly or indirectly), then the modification goes wrong. Which is why we...</p>
+
+<pre>&lt;_setter>
+   &lt;copy src="me()" trait="clicked" />
+   &lt;xxnOpPrefModifyValue>_Pref&lt;/xxnOpPrefModifyValue>
+   &lt;copy>2&lt;/copy>
+   &lt;xxnOpPrefCarousel>_Pref&lt;/xxnOpPrefCarousel>
+&lt;/_setter></pre>
+
+<p>There. A working checkbox that alternates between &amp;false; and &amp;true;.</p>
+
+<h2>Reference</h2>
+<h3>Available operators</h3>
+<p>Before we can go over the operators available for altering prefs, we must first define our terms. Consider the add operator in this code snippet:</p>
+
+<pre>&lt;copy>5&lt;/copy>
+&lt;sub>1&lt;/sub>
+&lt;add>3&lt;/add></pre>
+
+<p>The add operator returns the result of ((5 - 1) + 3), or (4 + 3). Here, 4 shall be called the "input," and 3 shall be called the "operand." The operator's output, 7, shall be called the "result" or the "return value."</p>
+<p>There are two things, also, to note about any operators that take a pref name as their operand: these operators are not guaranteed to be compatible with MenuQue's undocumented string operators (e.g. "append"); and it doesn't matter whether the pref name is prefixed with an underscore (i.e. "_prefName" is treated as "prefName" for consistency with xxnPrefs()).</p>
+
+<dl>
+   <dt>xxnOpPrefCarousel</dt>
+   <dd>
+      <p>The operand is a string and indicates the name of the pref to modify. This is similar to a modulo operator, except that it never returns zero or a negative number. If the input is zero, then this operator does nothing; if the pref's current value is less than or equal to zero, then the pref will be set to the input; if the pref is already equal to the input, then it shall not be changed; otherwise, the pref will be set to its current value modulo the input.</p>
+      <p>This operator's result is the input, unmodified.</p>
+   </dd>
+   <dt>xxnOpPrefClampToMax</dt>
+   <dd>
+      <p>The operand is a string and indicates the name of the pref to modify. The pref will be set to whichever is larger: its current value, or the input.</p>
+      <p>This operator's result is the input, unmodified.</p>
+   </dd>
+   <dt>xxnOpPrefClampToMin</dt>
+   <dd>
+      <p>The operand is a string and indicates the name of the pref to modify. The pref will be set to whichever is smaller: its current value, or the input.</p>
+      <p>This operator's result is the input, unmodified.</p>
+   </dd>
+   <dt>xxnOpPrefModifyValue</dt>
+   <dd>
+      <p>The operand is a string and indicates the name of the pref to modify. The pref's value will be increased by the input. (If the input is zero, then no change is made.)</p>
+      <p>This operator's result is the input, unmodified.</p>
+   </dd>
+   <dt>xxnOpPrefModulo</dt>
+   <dd>
+      <p>The operand is a string and indicates the name of the pref to modify. The pref will be set to its current value modulo the input.</p>
+      <p>This operator's result is the input, unmodified.</p>
+   </dd>
+   <dt>xxnOpPrefResetValue</dt>
+   <dd>
+      <p>The operand is a string and indicates the name of the pref to modify. If the input is equal to 2 (i.e. &amp;true;), then the pref will be reset to its default value. Otherwise, this operator does nothing.</p>
+      <p>This operator's result is the input, unmodified.</p>
+   </dd>
+</dl>
+
+<h3>Pref definitions</h3>
+<p>NorthernUI will look over the Oblivion/Data/NorthernUI/prefs/ folder and attempt to load any XML file inside as a "pref definitions" file. NorthernUI only checks for loose files; BSA-packaged files in this directory will not be detected or loaded.</p>
+<p>If an XML file fails to parse, then nothing will be done with the file. If major errors are found in the parsed data, then all content after the error will be skipped. If minor errors are found in the parsed data, then the affected data will be thrown out.</p>
+
+<h4>Major errors</h4>
+<ul>
+   <li>A root node that is not named &lt;prefset&nbsp;/&gt;</li>
+   <li>A &lt;pref&nbsp;/&gt; element nested inside of another &lt;pref&nbsp;/&gt; element</li>
+</ul>
+
+<h4>Minor errors</h4>
+<ul>
+<li>A pref element with no name; the pref will be discarded</li>
+<li>A pref whose name starts with an underscore, or whose name contains spaces, slashes (forward or back), double-quotes, at-signs, or parentheses; the pref will be discarded</li>
+<li>A pref with the same name as another pref; the earliest-loaded pref is the one that is kept</li>
+<li>A pref that has one or more min-version attributes, none of which have valid values; the pref will be discarded</li>
+<li>A pref that has one or more max-version attributes, none of which have valid values; the pref will be discarded</li>
+</ul>
+
+<h4>Warnings</h4>
+<ul>
+<li>A pref with multiple name attributes; the last name encountered during parsing will be used</li>
+<li>A pref with multiple default values; the last valid value encountered during parsing will be used</li>
+<li>A pref whose default value is not a valid number; the value will be skipped</li>
+<li>A pref with no valid default value; it will use 0 as its default value (I reserve the right to change how the mod reacts to this in the future)</li>
+<li>A pref with multiple min-version attributes; the last valid version number encountered during parsing will be used</li>
+<li>A pref with multiple max-version attributes; the last valid version number encountered during parsing will be used</li>
+</ul>
+
+﻿<hr />
+
+<p>The following attributes are considered valid for pref elements:</p>
+<dl>
+   <dt>name</dt>
+   <dd>Required. Specifies the pref's name.<dd>
+   <dt>default</dt>
+   <dd>Specifies the pref's initial value.<dd>
+   <dt>min-version</dt>
+   <dd>Optional. A series of one or more numbers separated by periods, indicating a version number. If this attribute exists and NorthernUI's version number is below the one specified here, then the pref will not be loaded into memory. The value of this attribute is considered invalid if: it is zero-length; it contains any glyphs other than numeric digits and periods; it contains two or more consecutive periods; it starts or ends with a period; it contains more than four numbers separated with periods; or any of its numbers are higher than 2147483647.<dd>
+   <dt>max-version</dt>
+   <dd>Optional. A value of the same format and with the same constraints as that of the min-version attribute. If this attribute exists and NorthernUI's version number is above the one specified here, then the pref will not be loaded into memory. Note that you are allowed to specify just a min-version attribute or just a max-version attribute; you don't have to use both.<dd>
+</dl>
+<hr />
+
+<p>The XML parser is custom-made and not fully spec-conformant, but it is stricter than Oblivion's parser and enforces the following rules:</p>
+<ul>
+   <li>XML declarations are optional and their contents are ignored, but if they are present, then they must be at the very start of the file. Nothing &mdash; not even comments or whitespace &mdash; may precede them.</li>
+   <li>Unrecognized XML entities are a syntax error and cause the parser to abort. Documents parsed as UI prefs support all of the XML entities defined in Oblivion XML, including those added by OBSE plug-ins.</li>
+   <li>CDATA is supported in text-content, tag names, and attribute names.</li>
+   <li>Improperly-nested tags and unclosed tags are a syntax error, unlike in Oblivion, and will consistently cause parse failures.</li>
+   <li>Per spec, two consecutive dashes ("--") are not allowed inside of comments except as part of the start or end delimiters.</li>
+   <li>Attribute values may be wrapped in double-quotes or single-quotes, unlike in Oblivion, which only supports double-quotes. The same quotation mark must be used for the start and the end of the value.</li>
+</ul>
+<p>All errors and warnings are written to NorthernUI's log file. The log file also lists the values of all loaded prefs at startup.</p>
+
+<h2>Appendix A: Pref operators for common widgets</h2>
+<h3>Checkbox</h3>
+<p>This allows for values 1 and 2.</p>
+
+<pre>&lt;_setter>
+   &lt;copy src="me()" trait="clicked" />
+   &lt;xxnOpPrefModifyValue src="me()" trait="_nameOfMyPref" />
+   &lt;copy>2&lt;/copy>
+   &lt;xxnOpPrefCarousel src="me()" trait="_nameOfMyPref" />
+&lt;/_setter></pre>
+
+<h3>Enumpicker</h3>
+<p>This widget allows you to cycle through a set of predefined values using a "next" button and a "previous" button. The XML below allows for values between 1 and _optionCount, inclusive.</p>
+
+<pre>&lt;_setter>
+   &lt;copy>0&lt;/copy>
+   &lt;add>
+      &lt;copy src="child(button_right)" trait="clicked" />
+      &lt;sub  src="child(button_left)" trait="clicked" />
+   &lt;/add>
+   &lt;xxnOpPrefModifyValue src="me()" trait="_nameOfMyPref" />
+   &lt;copy src="me()" trait="_optionCount" />
+   &lt;xxnOpPrefCarousel src="me()" trait="_nameOfMyPref" />
+&lt;/_setter></pre>
+
+<h3>Slider</h3>
+<p>To be put on the slider's thumb:</p>
+
+<pre>&lt;_setter>
+   &lt;copy>0&lt;/copy>
+   &lt;add>
+      &lt;copy src="sibling(horizontal_scroll_right)" trait="clicked" />
+      &lt;sub  src="sibling(horizontal_scroll_left)" trait="clicked" />
+      &lt;mult src="parent()" trait="user3" /> &lt;!-- step distance -->
+   &lt;/add>
+   &lt;add>
+      &lt;copy src="sibling(horizontal_scroll_rightside)" trait="clicked"/>
+      &lt;sub  src="sibling(horizontal_scroll_leftside)" trait="clicked"/>
+      &lt;mult src="parent()" trait="user4" /> &lt;!-- jump distance -->
+   &lt;/add>
+   &lt;add src="me()"     trait="user9" />
+   &lt;add src="parent()" trait="user5" />
+   &lt;xxnOpPrefModifyValue src="parent()" trait="_nameOfMyPref" />
+   &lt;copy src="parent()" trait="user1" />
+   &lt;xxnOpPrefClampToMin src="parent()" trait="_nameOfMyPref" />
+   &lt;copy src="parent()" trait="user2" />
+   &lt;xxnOpPrefClampToMax src="parent()" trait="_nameOfMyPref" />
+&lt;/_setter></pre>
+   </body>
+</html>

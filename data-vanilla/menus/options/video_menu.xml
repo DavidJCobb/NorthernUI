@@ -2069,7 +2069,7 @@
 					<copy>10</copy>
 					<add>
 						<copy> 30 </copy>
-						<onlyif> &xenon; </onlyif>
+						<onlyif src="NorthernUI()" trait="_xxnGamepadAvailable" />
 					</add>
 				</sub>
 			</x>

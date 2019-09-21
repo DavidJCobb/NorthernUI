@@ -82,11 +82,14 @@
          <onlyifnot src="xxnPrefs()" trait="_NorthernUIFadeHUDCorestatsWhenFull" />
          <add>
             <copy src="menu()" trait="user24" />
-            <onlyif src="xxnPrefs()" trait="_NorthernUIFadeHUDCorestatsWhenFull" />
+            <onlyif>
+               <copy>&false;</copy> <!-- fallback -->
+               <copy src="xxnPrefs()" trait="_NorthernUIFadeHUDCorestatsWhenFull" />
+            </onlyif>
          </add>
       </_meterAlpha>
       <_meterZoom>
-         <copy>100</copy>
+         <copy>100</copy> <!-- fallback -->
          <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
          <max>50</max>
          <div>2</div> <!-- 100% scale -> 50% zoom -->
@@ -94,7 +97,7 @@
       <_meterWidth>
          <copy>320</copy>
          <mult>
-            <copy>100</copy>
+            <copy>100</copy> <!-- fallback -->
             <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCorestats" />
             <max>50</max>
          </mult>
@@ -105,7 +108,10 @@
          <onlyifnot src="xxnPrefs()" trait="_NorthernUIFadeHUDEquipWidgetsWhenFull" />
          <add>
             <copy src="menu()" trait="user24" />
-            <onlyif src="xxnPrefs()" trait="_NorthernUIFadeHUDEquipWidgetsWhenFull" />
+            <onlyif>
+               <copy>&false;</copy> <!-- fallback -->
+               <copy src="xxnPrefs()" trait="_NorthernUIFadeHUDEquipWidgetsWhenFull" />
+            </onlyif>
          </add>
       </_equipWidgetAlpha>
       <!-- -->
@@ -113,14 +119,18 @@
          <!-- Stack on Left -->
          <copy src="parent()" trait="_marginX" />
          <onlyif>
-            <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+            <copy>1</copy> <!-- fallback -->
+            <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+            <eq>2</eq>
          </onlyif>
          <add> <!-- Stack at Center -->
             <copy src="me()" trait="width" />
             <sub  src="hudmain_health" trait="width" />
             <div>2</div>
             <onlyif>
-               <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>3</eq>
+               <copy>1</copy> <!-- fallback -->
+               <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+               <eq>3</eq>
             </onlyif>
          </add>
          <add> <!-- Stack on Right -->
@@ -128,14 +138,16 @@
             <sub  src="hudmain_health" trait="width" />
             <sub  src="me()" trait="_marginX" />
             <onlyif>
-               <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+               <copy>1</copy> <!-- fallback -->
+               <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+               <eq>4</eq>
             </onlyif>
          </add>
          <!-- and just for future maintainability's sake: -->
          <onlyif src="me()" trait="_metersShouldStack" />
       </_meterStackX>
       <_metersShouldStack>
-         <copy>0</copy>
+         <copy>1</copy> <!-- fallback -->
          <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
          <gt>1</gt>
       </_metersShouldStack>
@@ -226,7 +238,7 @@
 			<depth>1</depth>
 			<locus>&true;</locus>
          <zoom>
-            <copy>100</copy>
+            <copy>100</copy> <!-- fallback -->
             <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleWpnSplIcon" />
             <max>25</max>
          </zoom>
@@ -250,9 +262,13 @@
                   <div>2</div>
                </add>
                <onlyif>
-                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+                  <copy>1</copy> <!-- fallback -->
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+                  <eq>2</eq>
                   <or>
-                     <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+                     <copy>1</copy> <!-- fallback -->
+                     <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+                     <eq>4</eq>
                   </or>
                </onlyif>
             </add>
@@ -275,8 +291,11 @@
                <sub  src="me()" trait="height" />
                <sub>8</sub>
                <onlyif>
-                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+                  <copy>1</copy> <!-- fallback -->
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+                  <eq>2</eq>
                   <or>
+                     <copy>1</copy> <!-- fallback -->
                      <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
                   </or>
                </onlyif>
@@ -286,7 +305,9 @@
                <add  src="hudmain_fatigue" trait="height" />
                <sub  src="me()" trait="height" />
                <onlyif>
-                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>3</eq>
+                  <copy>1</copy> <!-- fallback -->
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+                  <eq>3</eq>
                </onlyif>
             </add>
          </y>
@@ -336,9 +357,13 @@
                   <div>2</div>
                </sub>
                <onlyif>
-                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>2</eq>
+                  <copy>1</copy> <!-- fallback -->
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+                  <eq>2</eq>
                   <or>
-                     <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+                     <copy>1</copy> <!-- fallback -->
+                     <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+                     <eq>4</eq>
                   </or>
                </onlyif>
             </add>
@@ -347,7 +372,9 @@
                <add  src="hudmain_fatigue" trait="width" />
                <add>8</add>
                <onlyif>
-                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>3</eq>
+                  <copy>1</copy> <!-- fallback -->
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+                  <eq>3</eq>
                </onlyif>
             </add>
 			</x>
@@ -520,7 +547,9 @@
                <copy src="parent()" trait="_meterStackX" />
                <sub  src="me()" trait="width" />
                <onlyif>
-                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" /><eq>4</eq>
+                  <copy>1</copy> <!-- fallback -->
+                  <copy src="xxnPrefs()" trait="_NorthernUIHUDLayout" />
+                  <eq>4</eq>
                </onlyif>
             </add>
          </x>
@@ -597,7 +626,7 @@
             </onlyif>
          </user0>
          <zoom>
-            <copy>100</copy>
+            <copy>100</copy> <!-- fallback -->
             <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleWpnChgMeter" />
             <max>50</max>
             <div>3</div> <!-- 100% scale -> 33% zoom -->
@@ -622,13 +651,13 @@
       </x>
       <y>32</y>
       <zoom> <!-- graphics scale -->
-         <copy>100</copy>
+         <copy>100</copy> <!-- fallback -->
          <copy src="xxnPrefs()" trait="_NorthernUISkyHUDScaleCompass" />
          <max>25</max>
-         <!-- 100% scale -> 37.5% zoom: -->
+         <!-- 100% scale -> 37% zoom: -->
          <div>
             <copy>100</copy>
-            <div>  37.5</div>
+            <div>  37</div>
          </div>
       </zoom>
       
