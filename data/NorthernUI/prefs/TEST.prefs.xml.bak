@@ -27,4 +27,9 @@
    <pref name="TEST_VersionOverflow01" min-version="2147483648" default="5" />
    <pref name="TEST_VersionOverflow02" min-version="21474836400" default="5" />
    <pref name="TEST_VersionOverflow03" min-version="2147483650" default="5" />
+   <pref name="TEST_VersionNOTOverflow01" min-version="2147483647" default="5" />
+   
+   <nest>
+      <pref name="TEST_NestedPref" default="5" />
+   </nest>
 </prefset>

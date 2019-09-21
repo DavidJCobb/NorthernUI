@@ -192,21 +192,7 @@ void UIPrefManager::setupDocument(cobb::XMLDocument& doc) {
 }
 
 namespace {
-   SInt32 _compareVersion(SInt32 a[4], SInt32 b[4]) {
-      for (UInt32 i = 0; i < 4; i++) {
-         auto ai = a[i];
-         auto bi = b[i];
-         if (ai == -1 || bi == -1)
-            return 0;
-         if (ai == bi)
-            continue;
-         if (ai < bi)
-            return -1;
-         return 1;
-      }
-      return 0;
-   }
-   struct ModVersion {
+   struct ModVersion { // used for version constraints on prefs
       static constexpr SInt32 ce_unspecified = -1;
       //
       union {
@@ -232,7 +218,7 @@ namespace {
          for (UInt32 i = 0; i < 4; i++) {
             auto ai = this->parts[i];
             auto bi = other.parts[i];
-            if (ai == -1 || bi == -1)
+            if (ai == ce_unspecified || bi == ce_unspecified)
                return 0;
             if (ai == bi)
                continue;
@@ -281,14 +267,18 @@ namespace {
                   return false;
                }
             } else if (c >= '0' && c <= '9') {
-               auto p = this->parts[index];
+               auto  p     = this->parts[index];
+               UInt8 digit = c - '0';
                if (p == ModVersion::ce_unspecified)
                   p = 0;
-               else if (p > 10 && (p * 10 < 0 || p * 10 > std::extent<SInt32>::value - (c - '0'))) { // integer overflow check
+               else if (
+                  (p > 10 && (p * 10 < 0 || p * 10 > std::extent<SInt32>::value - digit))
+               || (p == 214748364 && digit > 7)
+               ) { // integer overflow check
                   _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; part %d is too large to fit in a signed four-byte integer.", token.line, termName, val, prefName.c_str(), index + 1);
                   return false;
                }
-               this->parts[index] = p * 10 + (c - '0');
+               this->parts[index] = p * 10 + digit;
             } else {
                _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; found invalid character \"%c\".", token.line, termName, val, prefName.c_str(), c);
                return false;
@@ -367,57 +357,13 @@ void UIPrefManager::processDocument(cobb::XMLDocument& doc) {
          //
          bool isMin = token.name == "min-version";
          if (isMin || token.name == "max-version") {
-            const char* term = isMin ? "minimum" : "maximum";
+            const char* termName = isMin ? "minimum" : "maximum";
             //
             if ((isMin && !minVersion.empty()) || (!isMin && !maxVersion.empty())) {
-               _MESSAGE("WARNING: Line %d: Pref \"%s\" has multiple %s allowed versions; only the last one to load will be kept.", token.line, prefName.c_str(), term);
+               _MESSAGE("WARNING: Line %d: Pref \"%s\" has multiple %s allowed versions; only the last one to load will be kept.", token.line, prefName.c_str(), termName);
             }
-            //
             ModVersion parsed;
-            auto   val   = token.value.c_str();
-            UInt32 size  = token.value.size();
-            if (size == 0) {
-               _MESSAGE("WARNING: Line %d: Cannot assign a blank %s version to pref \"%s\".", token.line, term, prefName.c_str());
-               if (isMin) {
-                  minVersionParseFailure = minVersion.empty();
-               } else {
-                  maxVersionParseFailure = maxVersion.empty();
-               }
-               continue;
-            }
-            UInt32 index = 0;
-            bool   valid = true;
-            for (UInt32 i = 0; i < size; i++) {
-               char c = val[i];
-               if (c == '.') {
-                  if (i == 0 || i == size - 1 || (i + 1 < size && val[i + 1] == '.')) {
-                     _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; syntax error.", token.line, term, val, prefName.c_str());
-                     valid = false;
-                     break;
-                  }
-                  index++;
-                  if (index > 3) {
-                     _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; the version number can only have up to four parts.", token.line, term, val, prefName.c_str());
-                     valid = false;
-                     break;
-                  }
-               } else if (c >= '0' && c <= '9') {
-                  auto p = parsed.parts[index];
-                  if (p == ModVersion::ce_unspecified)
-                     p = 0;
-                  else if (p > 10 && (p * 10 < 0 || p * 10 > std::extent<SInt32>::value - (c - '0'))) { // integer overflow check
-                     _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; part %d is too large to fit in a signed four-byte integer.", token.line, term, val, prefName.c_str(), index + 1);
-                     valid = false;
-                     break;
-                  }
-                  parsed.parts[index] = p * 10 + (c - '0');
-               } else {
-                  _MESSAGE("WARNING: Line %d: Cannot assign %s version \"%s\" to pref \"%s\"; found invalid character \"%c\".", token.line, term, val, prefName.c_str(), c);
-                  valid = false;
-                  break;
-               }
-            }
-            if (!valid) {
+            if (!parsed.parse(token, prefName, termName)) {
                if (isMin) {
                   minVersionParseFailure = minVersion.empty();
                } else {
