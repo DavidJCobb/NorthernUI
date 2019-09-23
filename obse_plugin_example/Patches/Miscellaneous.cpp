@@ -894,7 +894,7 @@ namespace CobbPatches {
             auto root  = ui->menuRoot;
             bool isTitleScreen = false;
             UInt32 topmost = CALL_MEMBER_FN(ui, GetTopmostMenuID)();
-            if (topmost) {
+            if (topmost && topmost >= 0x3E9) { // the Big Four all register as 1
                for (auto node = root->childList.start; node; node = node->next) {
                   auto tile = node->data;
                   if (!tile)

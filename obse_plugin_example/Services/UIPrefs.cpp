@@ -17,7 +17,7 @@ namespace {
          std::string	runtimePath = GetOblivionDirectory();
          if (!runtimePath.empty()) {
             path = runtimePath;
-            path += "Data\\NorthernUI\\prefs\\";
+            path += "Data\\menus\\NorthernUI\\prefs\\";
          }
       }
       return path;
@@ -436,8 +436,14 @@ void UIPrefManager::loadDefinitions() {
    }
    if (handle == INVALID_HANDLE_VALUE) {
       auto e = GetLastError();
-      if (e != ERROR_FILE_NOT_FOUND) {
-         _MESSAGE("FindFirstFile failed (%d)", e);
+      switch (e) {
+         case ERROR_FILE_NOT_FOUND:
+            break;
+         case ERROR_PATH_NOT_FOUND:
+            _MESSAGE("The definitions path doesn't exist.");
+            break;
+         default:
+            _MESSAGE("FindFirstFile failed (%d)", e);
       }
       _MESSAGE(" - Done.");
       return;

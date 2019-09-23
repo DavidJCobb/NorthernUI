@@ -79,7 +79,10 @@
       <!-- -->
       <_meterAlpha>
          <copy>255</copy>
-         <onlyifnot src="xxnPrefs()" trait="_NorthernUIFadeHUDCorestatsWhenFull" />
+         <onlyifnot>
+            <copy>&false;</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUIFadeHUDCorestatsWhenFull" />
+         </onlyifnot>
          <add>
             <copy src="menu()" trait="user24" />
             <onlyif>
@@ -105,7 +108,10 @@
       </_meterWidth>
       <_equipWidgetAlpha>
          <copy>255</copy>
-         <onlyifnot src="xxnPrefs()" trait="_NorthernUIFadeHUDEquipWidgetsWhenFull" />
+         <onlyifnot>
+            <copy>&false;</copy>
+            <copy src="xxnPrefs()" trait="_NorthernUIFadeHUDEquipWidgetsWhenFull" />
+         </onlyifnot>
          <add>
             <copy src="menu()" trait="user24" />
             <onlyif>
