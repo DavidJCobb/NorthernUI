@@ -1,0 +1,4 @@
+<!-- Use this prefab to specify a normal font: no outline, normal font 
+     size. This will be suitable for body text. -->
+<font>1</font>
+<xxnFontPath><copy src="NorthernUI()" trait="_fontNormal" /></xxnFontPath>

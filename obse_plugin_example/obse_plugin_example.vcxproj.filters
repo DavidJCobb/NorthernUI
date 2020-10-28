@@ -274,7 +274,6 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
-    <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\Commands_ActiveEffect.h" />
     <ClInclude Include="..\obse\obse\Commands_Actor.h" />
     <ClInclude Include="..\obse\obse\Commands_ActorValue.h" />
@@ -375,7 +374,6 @@
     <ClInclude Include="..\obse\obse\ThreadLocal.h" />
     <ClInclude Include="..\obse\obse\Utilities.h" />
     <ClInclude Include="..\obse\obse\VarMap.h" />
-    <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
     <ClInclude Include="..\obse\obse\*.h" />
@@ -2180,7 +2178,6 @@
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="..\obse\obse\*.cpp" />
     <ClInclude Include="Patches\NewMenus\Helpers\EnumpickerNonTmpl.h" />
-    <ClInclude Include="Miscellaneous\large_bitset.h" />
     <ClInclude Include="Services\PatchManagement.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\GameplayMenu.h" />
     <ClInclude Include="ReverseEngineered\UI\Menus\AudioMenu.h" />
@@ -8078,6 +8075,8 @@
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\RegisterTrait.txt" />
     <Text Include="ReverseEngineered\DOCS\MenuQue\SetMenuEventHandler.txt" />
     <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\AnimateTrait.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\Tile\ResolveTraitReference.txt" />
+    <Text Include="ReverseEngineered\DOCS\Subroutines by class\HUDMainMenu\HandleFrame.txt" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NorthernUI.rc" />

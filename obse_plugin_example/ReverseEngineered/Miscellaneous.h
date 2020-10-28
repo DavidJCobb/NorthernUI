@@ -38,9 +38,9 @@ namespace RE {
       DEFINE_SUBROUTINE_EXTERN(UInt32, strncmp, 0x009864D9, const char*, const char*, size_t);
       DEFINE_SUBROUTINE_EXTERN(char*,  strtok,  0x0098349C, char* strToken, const char* delim);
 
-      static constexpr UInt32* CONST_SEEK_SET = (UInt32*)0x00A853D0;
-      static constexpr UInt32* CONST_SEEK_CUR = (UInt32*)0x00A853D4;
-      static constexpr UInt32* CONST_SEEK_END = (UInt32*)0x00A853D8;
+      extern UInt32* const CONST_SEEK_SET;
+      extern UInt32* const CONST_SEEK_CUR;
+      extern UInt32* const CONST_SEEK_END;
    };
 
    DEFINE_SUBROUTINE_EXTERN(const char*, ActorValueIndexToSkillName, 0x00565CC0, UInt32 avIndex);

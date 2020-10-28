@@ -15,6 +15,8 @@ extern const UInt32 g_pluginVersion;
 #else
 #endif
 
+extern uint32_t g_oblivionReloadedVersion;
+
 #define DEFINE_SUBROUTINE_EXTERN(retType, name, address, ...) extern retType(*name##)(__VA_ARGS__);
 #define DEFINE_SUBROUTINE(retType, name, address, ...) retType(*name##)(__VA_ARGS__) = (retType(*)(__VA_ARGS__))address;
 // Creates a function pointer to an assembly subroutine.

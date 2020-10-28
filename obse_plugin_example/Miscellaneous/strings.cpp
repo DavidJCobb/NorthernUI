@@ -444,7 +444,7 @@ namespace cobb {
       // Works xmlEntity == a string of the form "&#123;". Returns -1 if 
       // parsing fails.
       //
-      assert((xmlEntity[0] == '&') && (xmlEntity[1] == '#'), __FUNC__ " must receive a string that is a valid numeric XML entity, e.g. &#123;.");
+      assert((xmlEntity[0] == '&') && (xmlEntity[1] == '#') && __FUNC__ " must receive a string that is a valid numeric XML entity, e.g. &#123;.");
       UInt32 i = 2;
       UInt32 r = 0;
       if (xmlEntity[2] == 'x') {

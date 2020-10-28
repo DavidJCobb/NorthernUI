@@ -12,9 +12,9 @@ namespace RE {
    bool*  const bCameraInertiaResetQueued = (bool*) 0x00B14E4D;
    DetectionState* const iPlayerCurrentDetectionState = (DetectionState*) 0x00B3B368;
    // 0x00B3BB05 may be an "auto vanity" bool, but auto vanity also sets 0x00B3BB04 to true
-
-   //constexpr float* fPlayerMoveAnimMult = (float*)0x00B14E58;
-   //constexpr float* fPlayerTurnAnimMult = (float*)0x00B14E5C;
+   
+   float* const fPlayerMoveAnimMult = (float*)0x00B14E58; // also affects movement speed
+   float* const fPlayerTurnAnimMult = (float*)0x00B14E5C; // for Q/W keys
 
    __declspec(naked) void ModPCMiscStat(UInt32 statIndex, UInt32 changeBy) {
       //
@@ -43,17 +43,22 @@ namespace RE {
       // in true third-person, or third-person as a proxy for immersive first-
       // person.
       //
-      struct ORRenderer {
-         UInt32 padding[0xB40 / 4];
-         UInt8  unkB40;
-         bool   isFirstPerson; // B41
-         UInt8  unkB42;
-         UInt8  unkB43;
-      };
+      // UPDATE: As of Oblivion Reloaded version 8.0.0, NiDX9Renderer is 
+      // expanded to an even larger size, and the bool we want has moved.
+      //
       UInt32 rendererSize = *(UInt32*)0x0076BD75;
       if (rendererSize >= 0xB44) {
-         auto renderer = (ORRenderer*) *g_renderer;
-         return renderer->isFirstPerson;
+         //
+         // OBSE has shimmed the NiDX9Renderer instance.
+         //
+         bool value;
+         auto renderer = (uint8_t*)(g_renderer);
+         if (rendererSize > 0xB44) {
+            value = *(renderer + 0xB82);
+         } else {
+            value = *(renderer + 0xB41);
+         }
+         return value;
       }
       return false;
    }

@@ -18,6 +18,7 @@
       <!-- TEXT ENCODING
          0 = Win-1252 (ANSI)
          1 = Win-1251 (Cyrillic)
+         2 = Win-1250 (Polish)
          
          This must be set so that NorthernUI knows what font files to use.
       -->

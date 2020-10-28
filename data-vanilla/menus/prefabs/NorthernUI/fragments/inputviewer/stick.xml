@@ -1,0 +1,113 @@
+<!-- <rect name="LS"> -->
+   <!-- input: -->
+   <user0>0</user0> <!-- stick X -->
+   <user1>0</user1> <!-- stick Y -->
+   <user2>0</user2> <!-- stick mag -->
+   <user3>&left;</user3> <!-- what side of the screen we're on -->
+
+   <!-- definition: -->
+   <locus>&true;</locus>
+   <width>64</width>
+   <height>64</height>
+   
+   <text name="x-coord">
+      <string><copy src="parent()" trait="user0" /></string>
+      <include src="NorthernUI\fonts\small.xml" />
+      <red>255</red><green>255</green><blue>255</blue>
+      <x>
+         <copy src="parent()" trait="width" />
+         <add>8</add>
+         <onlyif>
+            <copy src="parent()" trait="user3" /><eq>&right;</eq>
+         </onlyif>
+         <add>
+            <copy>-8</copy>
+            <sub  src="me()" trait="width" />
+            <onlyif>
+               <copy src="parent()" trait="user3" /><eq>&left;</eq>
+            </onlyif>
+         </add>
+      </x>
+      <y>
+         <copy src="parent()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <div>2</div>
+      </y>
+   </text>
+   <text name="y-coord">
+      <string><copy src="parent()" trait="user1" /></string>
+      <include src="NorthernUI\fonts\small.xml" />
+      <red>255</red><green>255</green><blue>255</blue>
+      <x>
+         <copy src="parent()" trait="width" />
+         <sub  src="me()"     trait="width" />
+         <div>2</div>
+      </x>
+      <y>
+         <copy>0</copy>
+         <sub>8</sub>
+         <sub  src="me()"     trait="height" />
+      </y>
+   </text>
+   
+   <image name="circle">
+      <locus>&true;</locus>
+      <x>0</x>
+      <y>0</y>
+      <width><copy src="me()" trait="filewidth" /></width>
+      <height><copy src="me()" trait="fileheight" /></height>
+      <filename>Menus\NorthernUI\inputviewer\stickback.dds</filename>
+      <alpha>160</alpha>
+      
+      <user0><copy src="parent()" trait="user0" /></user0> <!-- stick X -->
+      <user1><copy src="parent()" trait="user1" /></user1> <!-- stick Y -->
+      <user2><copy src="parent()" trait="user2" /></user2> <!-- stick mag -->
+      
+      <text name="magnitude">
+         <depth>3</depth>
+         <string><copy src="parent()" trait="user2" /></string>
+         <include src="NorthernUI\fonts\small.xml" />
+         <red>255</red><green>255</green><blue>255</blue>
+         <x>
+            <copy src="parent()" trait="width" />
+            <sub  src="me()"     trait="width" />
+            <div>2</div>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+      </text>
+      <image name="marker">
+         <depth>2</depth>
+         <filename>Menus\NorthernUI\Shared\white.dds</filename>
+         <x>
+            <copy src="parent()" trait="user0" />
+            <div>100</div>
+            <mult>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </mult>
+            <add>
+               <copy src="parent()" trait="width" />
+               <div>2</div>
+            </add>
+         </x>
+         <y>
+            <copy src="parent()" trait="user1" />
+            <div>100</div>
+            <mult>
+               <copy src="parent()" trait="height" />
+               <div>2</div>
+            </mult>
+            <add>
+               <copy src="parent()" trait="height" />
+               <div>2</div>
+            </add>
+         </y>
+         <width>2</width>
+         <height>2</height>
+      </image>
+   </image>
+<!-- </rect> -->

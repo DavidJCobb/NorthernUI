@@ -1,0 +1,326 @@
+<!-- Data\menus\NorthernUI\xxnhudinputviewermenu.xml -->
+<menu name="HUDInputViewerMenu">
+   <class>1056</class>
+	<stackingtype>&does_not_stack;</stackingtype>
+	<alpha>0</alpha>
+	<locus>&true;</locus>
+	<depth>-50</depth>
+	<x>0</x>
+	<y>0</y>
+	<menufade>0.25</menufade>
+   
+   <user0>&false;</user0> <!-- if true, we should not display (similar to HUDMainMenu user3) -->
+   
+   <user1>0</user1> <!-- input bitmask for faces: bits YXBA -->
+   <user2>0</user2> <!-- input bitmask for D-pad: bits RLDU -->
+   <user3>0</user3> <!-- input bitmask: 0, 1, 2, 4 = LS, RS, LT, RT -->
+   <user4>0</user4> <!-- input bitmask: 0, 1, 2, 4 = LB, RB, Back, Start -->
+   <user5>0</user5> <!-- input LS X -->
+   <user6>0</user6> <!-- input LS Y -->
+   <user7>0</user7> <!-- input RS X -->
+   <user8>0</user8> <!-- input RS Y -->
+   <user9>0</user9> <!-- input LS magnitude -->
+   <user10>0</user10> <!-- input RS magnitude -->
+   <user24>-1</user24> <!-- gamepad being displayed, or -1 if none connected -->
+   
+   <listclip>
+      <copy src="menu()" trait="user0" />
+      <or>
+         <not src="NorthernUI()" trait="_xxnShowHUDInputViewer" />
+      </or>
+   </listclip>
+   
+   <rect name="content_root">
+      <locus>&true;</locus>
+      <x>
+         <copy src="screen()" trait="width" />
+         <sub  src="me()"     trait="width" />
+         <div>2</div>
+      </x>
+      <y>
+         <copy src="screen()" trait="height" />
+         <sub  src="me()"     trait="height" />
+         <sub>87</sub> <!-- move to above vanilla compass -->
+      </y>
+      <width>
+         <copy src="child()" trait="x" />
+         <add  src="child()" trait="width" />
+      </width>
+      <height>
+         <copy src="screen()" trait="cropY" />
+         <add>32</add>
+      </height>
+      <visible>
+         <copy src="menu()" trait="user24" /><gte>0</gte>
+      </visible>
+      
+      <rect name="LS">
+         <include src="NorthernUI\fragments\inputviewer\stick.xml"/>
+         <x>0</x>
+         <y>
+            <copy src="sibling(buttons)" trait="y" />
+            <add  src="sibling(buttons)" trait="height" />
+            <sub  src="me()" trait="height" />
+         </y>
+         <user0><copy src="menu()" trait="user5" /></user0> <!-- stick X -->
+         <user1><copy src="menu()" trait="user6" /></user1> <!-- stick Y -->
+         <user2><copy src="menu()" trait="user9" /></user2> <!-- stick mag -->
+         <user3>&left;</user3> <!-- what side of the screen we're on -->
+      </rect>
+      <rect name="buttons">
+         <locus>&true;</locus>
+         <x>
+            <copy src="sibling()" trait="x" />
+            <add  src="sibling()" trait="width" />
+            <add>16</add>
+         </x>
+         <y>
+            <copy src="parent()" trait="height" />
+            <sub  src="me()"     trait="height" />
+            <div>2</div>
+         </y>
+         <width>
+            <copy src="child()" trait="x" />
+            <add  src="child()" trait="width" />
+         </width>
+         <height><copy src="child()" trait="height" /></height>
+         
+         <_spacing>4</_spacing>
+         
+         <rect name="for_easy_reordering">
+            <x>
+               <copy>0</copy>
+               <sub src="parent()"  trait="_spacing" />
+            </x>
+            <width>0</width>
+         </rect>
+         <rect name="btn_lt">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>280</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user3" />
+                     <xxnOpBinaryAND>4</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+         <rect name="btn_lb">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>274</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user4" />
+                     <xxnOpBinaryAND>1</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+         <rect name="btn_ls">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>272</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user3" />
+                     <xxnOpBinaryAND>1</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+         <rect name="btn_a">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>276</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user1" />
+                     <xxnOpBinaryAND>1</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+         <rect name="btn_b">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>277</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user1" />
+                     <xxnOpBinaryAND>2</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+         <rect name="btn_x">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>278</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user1" />
+                     <xxnOpBinaryAND>4</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+         <rect name="btn_y">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>279</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user1" />
+                     <xxnOpBinaryAND>8</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+         <rect name="btn_rs">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>273</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user3" />
+                     <xxnOpBinaryAND>2</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+         <rect name="btn_rb">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>275</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user4" />
+                     <xxnOpBinaryAND>2</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+         <rect name="btn_rt">
+            <x>
+               <copy src="sibling()" trait="x" />
+               <add  src="sibling()" trait="width" />
+               <add  src="parent()"  trait="_spacing" />
+            </x>
+            <y>0</y>
+            <include src="NorthernUI\key.xml"/>
+            <_keyCode>281</_keyCode>
+            <user23>
+               <copy>128</copy>
+               <max>
+                  <copy>255</copy>
+                  <onlyif>
+                     <copy src="menu()" trait="user3" />
+                     <xxnOpBinaryAND>8</xxnOpBinaryAND>
+                     <neq>0</neq>
+                  </onlyif>
+               </max>
+            </user23>
+         </rect>
+      </rect>
+      <rect name="RS">
+         <include src="NorthernUI\fragments\inputviewer\stick.xml"/>
+         <x>
+            <copy src="sibling()" trait="x" />
+            <add  src="sibling()" trait="width" />
+            <add>16</add>
+         </x>
+         <y>
+            <copy src="sibling(buttons)" trait="y" />
+            <add  src="sibling(buttons)" trait="height" />
+            <sub  src="me()" trait="height" />
+         </y>
+         <user0><copy src="menu()" trait="user7" /></user0> <!-- stick X -->
+         <user1><copy src="menu()" trait="user8" /></user1> <!-- stick Y -->
+         <user2><copy src="menu()" trait="user10" /></user2> <!-- stick mag -->
+         <user3>&right;</user3> <!-- what side of the screen we're on -->
+      </rect>
+   </rect>
+</menu>

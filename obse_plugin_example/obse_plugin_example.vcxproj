@@ -25,13 +25,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -257,7 +257,6 @@
     <ClInclude Include="Miscellaneous\debug.h" />
     <ClInclude Include="Miscellaneous\file.h" />
     <ClInclude Include="Miscellaneous\InGameDate.h" />
-    <ClInclude Include="Miscellaneous\large_bitset.h" />
     <ClInclude Include="Miscellaneous\math.h" />
     <ClInclude Include="Miscellaneous\rotation.h" />
     <ClInclude Include="Miscellaneous\strings.h" />

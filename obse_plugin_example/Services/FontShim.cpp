@@ -17,6 +17,8 @@ FontShim& FontShim::GetInstance() {
 }
 
 FontShim::FontInfo* FontShim::GetFont(UInt32 index) {
+   if (index == 0xFFFFFFFF) // XML files that incorrectly request font ID 0 will crash NorthernUI or access random memory in vanilla; return font 1 instead. example: DarNified Daedric main menu
+      return RE::FontManager::GetSingleton()->fontInfos[0];
    if (FontShim::IsVanillaIndex(index))
       return RE::FontManager::GetSingleton()->fontInfos[index];
    index = FontShim::ToVectorIndex(index);

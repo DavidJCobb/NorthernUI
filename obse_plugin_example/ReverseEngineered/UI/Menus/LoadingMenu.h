@@ -4,7 +4,7 @@
 #include "ReverseEngineered/Systems/Timing.h"
 
 namespace RE {
-   constexpr float* fCachedLoadingBarSegmentPercentages = (float*)0x00B3B3DC; // four floats; cached in LoadingMenu constructor
+   extern float* const fCachedLoadingBarSegmentPercentages = (float*)0x00B3B3DC; // four floats; cached in LoadingMenu constructor
 
    DEFINE_SUBROUTINE_EXTERN(void, ForceLoadingScreenProgress,       0x0057B950, UInt32 segmentIndex, float progressWithinSegment);
    DEFINE_SUBROUTINE_EXTERN(void, ForceLoadingScreenProgress_Inner, 0x005ADEC0, UInt32 segmentIndex, float progressWithinSegment); // skips InterfaceManager existence check and other stuff

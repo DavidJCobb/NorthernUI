@@ -226,6 +226,8 @@ extern "C" {
 
       g_pluginHandle = obse->GetPluginHandle();
 
+      g_oblivionReloadedVersion = obse->GetPluginVersion("OblivionReloaded");
+
       // set up serialization callbacks when running in the runtime
       if (!obse->isEditor) {
          #if COBB_USING_SERIALIZATION == 1

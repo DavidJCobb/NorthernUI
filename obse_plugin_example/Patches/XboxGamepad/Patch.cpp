@@ -83,7 +83,6 @@ namespace CobbPatches {
          //    the Xbox build (as one might infer from the sheer size of this 
          //    file). Hard to say whether the speed issue affects the Xbox build.
          //
-         static_assert(RE::fPlayerMoveAnimMult == (float*)0x00B14E58, "Movement zeroing fix: fPlayerMoveAnimMult is in a different place.");
          __declspec(naked) void Outer() {
             _asm {
                // vanilla: test eax, eax;

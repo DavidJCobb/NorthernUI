@@ -79,7 +79,7 @@ namespace CobbPatches {
       };
       //
       namespace RegistrationFixes {
-         constexpr UInt32* iHighestTempIndex = (UInt32*)0x00B13BC0;
+         UInt32* const iHighestTempIndex = (UInt32*)0x00B13BC0;
          //
          // Oblivion tries to remember the highest registered index for temporary 
          // (underscore-prefixed) traits. However, it apparently never actually 

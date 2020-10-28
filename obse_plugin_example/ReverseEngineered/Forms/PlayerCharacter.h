@@ -16,8 +16,8 @@ namespace RE {
    // Values computed during movement processing; used to control the speed of the walking and 
    // turning animations (with the caveat that the walking animation speed also influences the 
    // speed at which the actor moves).
-   extern constexpr float* fPlayerMoveAnimMult = (float*)0x00B14E58; // also affects movement speed
-   extern constexpr float* fPlayerTurnAnimMult = (float*)0x00B14E5C; // for Q/W keys
+   extern float* const fPlayerMoveAnimMult; // also affects movement speed
+   extern float* const fPlayerTurnAnimMult; // for Q/W keys
 
    class PlayerCharacter : public Character { // sizeof == 0x800
       public:

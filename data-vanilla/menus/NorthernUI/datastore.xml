@@ -17,4 +17,8 @@
    <_xxnShowHUDClock>&false;</_xxnShowHUDClock>
    <_xxnShowHUDInputViewer>&false;</_xxnShowHUDInputViewer>
    <_xxnXInputPatchApplied>&false;</_xxnXInputPatchApplied>
+   
+   <!-- Fonts for the input viewer -->
+   <_fontNormal>Data\Fonts\OpenSans_22CB_Normal_Win1252.fnt</_fontNormal>
+   <_fontSmall>Data\Fonts\OpenSans_15CB_Normal_Win1252.fnt</_fontSmall>
 </rect>

@@ -183,7 +183,7 @@ namespace CobbPatches {
                //
                std::string output;
                cobb::snprintf(output,
-                  "TUMBLER %d\nOffset: %f\nHang timer: %s\nHang duration: %s\nUnk0C: %f\nUnk10: %f\nVelocity: %f\Raised: %d\nSolved: %d\nUnk1A: %d\n",
+                  "TUMBLER %d\nOffset: %f\nHang timer: %s\nHang duration: %s\nUnk0C: %f\nUnk10: %f\nVelocity: %f\nRaised: %d\nSolved: %d\nUnk1A: %d\n",
                   i,
                   tumbler.heightOffset,
                   unk04.c_str(),

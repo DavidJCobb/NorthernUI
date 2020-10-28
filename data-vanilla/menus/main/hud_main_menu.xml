@@ -470,7 +470,7 @@
 				<_handonly>
 					<copy src="parent()" trait="user0"/>
 					<eq> 1 </eq>
-				<_handonly>
+				</_handonly>
 			</image>
 			
 			<text name="hudmain_weapon_ammo">

@@ -47,17 +47,22 @@
    <!-- All font files, sorted by encoding
       0 = Windows-1252 (ANSI)
       1 = Windows-1251 (Cyrillic)
+      2 = Windows-1250 (Polish)
    -->
    <_fontsNormal_1>Data\Fonts\OpenSans_22CB_Normal_Win1252.fnt</_fontsNormal_1>
    <_fontsNormal_2>Data\Fonts\OpenSans_22CB_Normal_Win1251.fnt</_fontsNormal_2>
+   <_fontsNormal_3>Data\Fonts\OpenSans_22CB_Normal_Win1250.fnt</_fontsNormal_3>
    <_fontsLarge_1>Data\Fonts\OpenSans_50CB_Normal_Win1252.fnt</_fontsLarge_1>
    <_fontsLarge_2>Data\Fonts\OpenSans_50CB_Normal_Win1251.fnt</_fontsLarge_2>
    <_fontsMediumLargeUpper_1>Data\Fonts\OpenSans_36CB_Uppercase_Win1252.fnt</_fontsMediumLargeUpper_1>
    <_fontsMediumLargeUpper_2>Data\Fonts\OpenSans_36CB_Uppercase_Win1251.fnt</_fontsMediumLargeUpper_2>
+   <_fontsMediumLargeUpper_3>Data\Fonts\OpenSans_36CB_Uppercase_Win1250.fnt</_fontsMediumLargeUpper_3>
    <_fontsShadowed_1>Data\Fonts\OpenSans_22CB_Shadowed_Win1252.fnt</_fontsShadowed_1>
    <_fontsShadowed_2>Data\Fonts\OpenSans_22CB_Shadowed_Win1251.fnt</_fontsShadowed_2>
+   <_fontsShadowed_3>Data\Fonts\OpenSans_22CB_Shadowed_Win1250.fnt</_fontsShadowed_3>
    <_fontsSmall_1>Data\Fonts\OpenSans_15CB_Normal_Win1252.fnt</_fontsSmall_1>
    <_fontsSmall_2>Data\Fonts\OpenSans_15CB_Normal_Win1251.fnt</_fontsSmall_2>
+   <_fontsSmall_3>Data\Fonts\OpenSans_15CB_Normal_Win1250.fnt</_fontsSmall_3>
    
    <!-- Computed font paths, to be made available to the rest of the mod -->
    <_fontNormal>

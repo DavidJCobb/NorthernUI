@@ -677,8 +677,8 @@ namespace CobbPatches {
                   s_frame = kFrameState_NotReady;
                }
             };
+            static_assert(offsetof(RE::ContainerMenu, quantityMenuInProgress) == 0x54, "ContainerMenu's flag for the QuantityMenu being open has moved! Update this x86 patch!");
             __declspec(naked) void Outer_Frame() {
-               static_assert(offsetof(RE::ContainerMenu, quantityMenuInProgress) == 0x54, "ContainerMenu's flag for the QuantityMenu being open has moved! Update this x86 patch!");
                _asm {
                   push eax; // protect
                   mov  al, byte ptr [esi + 0x54]; // bool al = this->unk54;

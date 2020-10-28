@@ -243,7 +243,7 @@ UInt8 InGameDate::GetSeason() const noexcept {
       case 8:
       case 9:
       case 10:
-         return 3;
+         return 2;
    }
    return 0;
 };

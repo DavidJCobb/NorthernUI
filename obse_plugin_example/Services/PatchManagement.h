@@ -1,5 +1,5 @@
 #pragma once
-#include "Miscellaneous/large_bitset.h"
+#include <bitset>
 #include <mutex>
 
 //
@@ -45,15 +45,21 @@ class PatchManager {
       //
       typedef void(*PatchFunc)();
       struct Patch {
-         Patch(const char* name, PatchFunc func, std::initializer_list<size_t> r) : name(name), func(func), requirements(r) {};
-         Patch(const char* name, PatchFunc func, std::vector<size_t> r) : name(name), func(func), requirements(r) {};
+         Patch(const char* name, PatchFunc func, std::initializer_list<size_t> r) : name(name), func(func) {
+            for (auto f : r)
+               this->requirements.set(f);
+         };
+         Patch(const char* name, PatchFunc func, std::vector<size_t> r) : name(name), func(func) {
+            for (auto f : r)
+               this->requirements.set(f);
+         };
          //
          const char* name = ""; // can't be const char* const -- that would prevent std::vector from moving elements when there are removals from the middle
          PatchFunc   func = nullptr;
-         cobb::large_bitset<Req::COUNT> requirements;
+         std::bitset<Req::COUNT> requirements;
       };
       std::vector<Patch> pendingPatches;
-      cobb::large_bitset<Req::COUNT> alreadyFired;
+      std::bitset<Req::COUNT> alreadyFired;
       std::mutex lock;
       //
    public:
