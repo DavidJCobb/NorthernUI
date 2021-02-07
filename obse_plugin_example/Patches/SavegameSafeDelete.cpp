@@ -26,6 +26,8 @@ namespace CobbPatches {
          // NOTE: This hook actually also applies to the SaveMenu, so we patch it 
          // in a similar manner. Could we just patch MainMenu instead?
          //
+         static bool s_nextIsOverwrite = false; // overwriting a save file involves deleting it and then writing to that filename
+         //
          namespace CopiedOBSE { // Anything copied from CPP files.
             std::string ConvertSaveFileName(std::string name) {
                // name not passed by const reference so we can modify it temporarily
@@ -81,17 +83,42 @@ namespace CobbPatches {
          };
          void __stdcall Inner(const char* path) {
             //::Serialization::HandleDeleteGame(path); // SKSE code; see Hooks_SaveLoad.cpp
-            {  // Contents of OBSE Serialization::HandleDeleteGame(path):
+            {  // based on OBSE Serialization::HandleDeleteGame(path):
                std::string	savePath = CopiedOBSE::ConvertSaveFileName(path);
-               //DeleteFile(savePath.c_str());
-               Recycle(savePath.c_str());
+               if (s_nextIsOverwrite)
+                  DeleteFile(savePath.c_str());
+               else
+                  Recycle(savePath.c_str());
             }
-            Recycle(path);
+            if (s_nextIsOverwrite)
+               DeleteFile(path);
+            else
+               Recycle(path);
+            s_nextIsOverwrite = false;
          };
 
+         namespace ButDontRecycleWhenOverwriting {
+            __declspec(naked) void Inner() {
+               _asm {
+                  pushad;
+                  mov  s_nextIsOverwrite, 0x01;
+                  popad;
+                  mov  eax, 0x00453480; // TESSaveLoadGame::DeleteSaveFile
+                  call eax;
+                  mov  eax, 0x0045F662;
+                  jmp  eax;
+               }
+            }
+            void Apply() {
+               WriteRelJump(0x0045F65D, (UInt32)&Inner);
+            }
+         }
+
          void DelayedApply() {
-            WriteRelCall(0x004534A6, (UInt32)&Inner);
+            WriteRelCall(0x004534A6, (UInt32)&Inner); // TESSaveLoadGame::DeleteSaveFile+0x26
             _MESSAGE("Intercepted the MainMenu constructor. Patched the menu to delete save files to the Recycle Bin.");
+            //
+            ButDontRecycleWhenOverwriting::Apply();
          };
 
          /*__declspec(naked) void SetupHook_MainMenu() {

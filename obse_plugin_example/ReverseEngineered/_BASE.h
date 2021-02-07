@@ -54,11 +54,11 @@ namespace RE {
    DEFINE_SUBROUTINE_EXTERN(void, SprintfBSStringT, 0x00402E30, BSStringT* out, const char* format, ...);
 
    template<typename T>
-   struct LinkedPointerList {
+   struct tList {
       T* data;
-      LinkedPointerList<T>* next;
+      tList<T>* next;
 
-      MEMBER_FN_PREFIX(LinkedPointerList);
+      MEMBER_FN_PREFIX(tList);
       DEFINE_MEMBER_FN(Append,  void, 0x0067B1E0, T* item);
       DEFINE_MEMBER_FN(Prepend, void, 0x00446CB0, T* item);
 
@@ -71,5 +71,42 @@ namespace RE {
             node = next;
          } while (node);
       }
+
+      struct iterator {
+         friend struct tList<T>; // for constructor access
+         protected:
+            tList<T>* node;
+            //
+            iterator(tList<T>* t) : node(t) {}
+            //
+         public:
+            iterator& operator++() { // prefix
+               if (!this->node)
+                  return *this;
+               this->node = this->node->next;
+               return *this;
+            }
+            iterator operator++(int) { // postfix
+               iterator temp(this->node);
+               ++temp;
+               return temp;
+            }
+            T* operator*() const {
+               return this->node->data;
+            }
+            //
+            inline bool operator==(const iterator& o) const noexcept { return this->node == o.node; }
+            inline bool operator!=(const iterator& o) const noexcept { return this->node != o.node; }
+      };
+      iterator begin() { return iterator(this); }
+      iterator end() { return iterator(nullptr); }
+      iterator find(T* value) {
+         auto it = this->begin();
+         for (; it != this->end(); ++it)
+            if (*it == value)
+               return it;
+         return it;
+      }
    };
+   template<typename T> using LinkedPointerList = tList<T>;
 };

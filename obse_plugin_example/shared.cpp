@@ -1,6 +1,6 @@
 #include "shared.h"
 
-const UInt32 g_pluginVersion = 0x02000200; // major, minor, patch, build
+const UInt32 g_pluginVersion = 0x02000300; // major, minor, patch, build
 //
 // REMINDER: UPDATE THE RESOURCE FILE IN THE PROJECT ROOT AS WELL, SO THAT 
 // THE VERSION NUMBER SHOWN WHEN RIGHT-CLICKING THE DLL AND GOING TO DETAILS 

@@ -585,7 +585,7 @@ void PlayerCharacter::Subroutine00671620(float Arg1) {
    //       basic checks, e.g. "abort if no WASD flags are set" and "use special 
    //       handling for diagonal movements + scripted idles."
    //
-   this->process->Unk_B3(this, esp5C); // at 0x00672F04
+   this->process->Move(this, esp5C); // virtual 0xB3 // at 0x00672F04
    this->HandleBorderRegions(); // updates last-safe-position, or snaps the player to it and shows a "you can't go that way" message
    if (esp6C || esp68 || esp14 & 0xF) {
       esp13 = true;

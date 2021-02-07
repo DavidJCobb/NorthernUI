@@ -12,6 +12,8 @@
 #include "ReverseEngineered/Miscellaneous.h" // RE::NiMatrix33
 #include "Services/INISettings.h"
 
+#include "NewMenus/XXNHUDDebugMenu.h"
+
 NiNode* _GetNodeByName(NiNode* root, const char* name) {
    if (root->m_pcName && _stricmp(root->m_pcName, name) == 0)
       return root;
@@ -37,11 +39,18 @@ namespace CobbPatches {
          void _stdcall Inner(RE::Actor* subject, NiVector3& posDelta) {
             if (!NorthernUI::INI::Features::bEnhancedMovement360Movement.bCurrent)
                return;
-            if (NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent == NorthernUI::kEnhancedMovementCameraType_FreeMovement)
-               return;
             //
             if (subject != (RE::Actor*)*g_thePlayer)
                return;
+            if (NorthernUI::INI::Features::iEnhancedMovementCameraMode.iCurrent == NorthernUI::kEnhancedMovementCameraType_FreeMovement) {
+               //
+               // When we're in third-person view, the "free" camera handles movement by always moving the 
+               // player-actor forward and just changing the actor's facing direction.
+               //
+               auto* player = (RE::PlayerCharacter*)*g_thePlayer;
+               if (player->isThirdPerson && !player->IsOblivionReloadedImmersiveFirstPerson())
+                  return;
+            }
             if (subject->IsKnockedDown()) // also checks for death
                //
                // The calculations below malfunction horribly whenever the player is ragdolling, including 
@@ -65,6 +74,13 @@ namespace CobbPatches {
             float y = (float)yRaw * RE::INI::Controls::fJoystickMoveFBMult->f;
             x = (std::max)(-ce_speedCap, (std::min)(ce_speedCap, x * 0.02F)); // same multipliers as in the vanilla code circa 0x006720CB
             y = (std::max)(-ce_speedCap, (std::min)(ce_speedCap, y * 0.02F));
+            { // properly cap diagonals, too
+               float l = std::sqrt((x * x) + (y * y));
+               if (l > ce_speedCap) {
+                  x = x / l * ce_speedCap;
+                  y = y / l * ce_speedCap;
+               }
+            }
             float length = std::sqrt((posDelta.x * posDelta.x) + (posDelta.y * posDelta.y) + (posDelta.z * posDelta.z));
             //
             // We're scaling the movement by the input, but the movement has already been scaled by a multiplier 

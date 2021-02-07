@@ -105,8 +105,11 @@ void MessageHandler(OBSEMessagingInterface::Message* msg) {
          PatchManager::GetInstance().FireEvent(PatchManager::Req::X_PostLoad);
          break;
       case OBSEMessagingInterface::kMessage_LoadGame:
+         _MESSAGE("MessageHandler received load message with file path %s", msg->data);
+         CobbPatches::QuestAddedMenu::SuppressDLCSpamRetroactiveFix::Execute();
+         break;
       case OBSEMessagingInterface::kMessage_SaveGame:
-         _MESSAGE("MessageHandler received save/load message with file path %s", msg->data);
+         _MESSAGE("MessageHandler received load message with file path %s", msg->data);
          break;
       /*case OBSEMessagingInterface::kMessage_Precompile: // log spam from editor
          {

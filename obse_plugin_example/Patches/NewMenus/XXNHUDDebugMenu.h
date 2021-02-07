@@ -29,6 +29,7 @@ class XXNHUDDebugMenu : public RE::Menu {
          enum {
             kTileID_SmoothWASDStatus   = 1000,
             kTileID_SmoothWASDJoystick = 1001,
+            kTileID_EnhancedMovement   = 1002,
          };
          enum {
             kSmoothWASDStatusTrait_IsPressingAncillary = kTileValue_user0,
@@ -51,5 +52,19 @@ class XXNHUDDebugMenu : public RE::Menu {
          void ShowSmoothWASDJoystick(SInt32 x, SInt32 y, float angle, SInt8 angleSlice, bool isPerfectDirection);
          void ShowSmoothWASDStatus  (SInt8 dominant, SInt8 ancillary, bool isPressingAncillary);
       } handlerXInput;
+      struct EnhancedMovement {
+         static constexpr int tile_id = 1002;
+         //
+         enum class trait_id {
+            knocked_down = kTileValue_user0,
+            x            = kTileValue_user1,
+            y            = kTileValue_user2,
+            last_update  = kTileValue_user3,
+         };
+         //
+         RE::Tile* root = nullptr;
+
+         bool HandleTileIDChange(SInt32 newID, RE::Tile* tile);
+      } handlerEnhMovement;
 };
-RE::Tile* ShowXXNHUDDebugMenu();
+extern RE::Tile* ShowXXNHUDDebugMenu(); // outside code should call XXNHUDDebugMenu::Get instead
